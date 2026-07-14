@@ -1,136 +1,131 @@
-# Script Director — Animation Pipeline
+# 剧本导演 — 动画管线
 
-## When to Use
+## 使用时机
 
-This stage turns the approved proposal into animation-ready beats. The script must leave room for motion, staging, and hold time — and must integrate the research findings and respect the selected animation mode.
+此阶段将已批准的方案转化为适合动画的节拍。剧本必须为运动、舞台布置和停留时间留出空间——并且必须整合调研发现，尊重选定的动画模式。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `proposal_packet` from Proposal Director | Selected concept, animation mode, target duration, reuse strategy |
-| Optional artifact | `research_brief` from Research Director | Data points, audience insights, accuracy constraints |
-| Meta skill | `skills/meta/voice-performance-director.md` | Structured TTS delivery cues for natural, expressive narration |
-| Tools | `transcriber` | Optional source transcript support |
+| Schema | `schemas/artifacts/script.schema.json` | 产物验证 |
+| 前置产物 | 来自方案导演的 `proposal_packet` | 选定概念、动画模式、目标时长、复用策略 |
+| 可选产物 | 来自调研导演的 `research_brief` | 数据点、受众洞察、准确性约束 |
+| 元技能 | `skills/meta/voice-performance-director.md` | 结构化的 TTS 语音提示，用于自然、富有表现力的叙述 |
+| 工具 | `transcriber` | 可选的源字幕支持 |
 
-## Process
+## 流程
 
-### 1. Absorb the Proposal
+### 1. 吸收方案
 
-Read the `proposal_packet.selected_concept` thoroughly. Extract:
+彻底阅读 `proposal_packet.selected_concept`。提取：
 
-- **Title and hook** — the opening must deliver on this promise
-- **Animation mode** — `manim`, `remotion`, `ai_video`, `diagram_stills`, or `mixed`. This constrains how you write.
-- **Narrative structure** — `progressive_build`, `myth_busting`, `journey`, etc. Follow it.
-- **Target duration** — word budget = target_seconds × 2.5 words/sec (at 150 WPM)
-- **Key points** — from `selected_concept.key_points`
-- **Reuse strategy** — recurring motifs mean recurring script structures
+- **标题和钩子**——开头必须兑现这个承诺
+- **动画模式**——`manim`、`remotion`、`ai_video`、`diagram_stills` 或 `mixed`。这约束了你的写作方式。
+- **叙事结构**——`progressive_build`、`myth_busting`、`journey` 等。遵循它。
+- **目标时长**——字数预算 = 目标秒数 × 2.5 字/秒（按 150 WPM 计算）
+- **关键点**——来自 `selected_concept.key_points`
+- **复用策略**——重复出现的主题元素意味着重复出现的剧本结构
 
-If `research_brief` is available, also extract:
-- **Data points** — weave specific, sourced facts into the narration (not vague claims)
-- **Audience misconceptions** — address them directly in the script
-- **Mathematical accuracy notes** — constraints on what can and cannot be simplified
+如果 `research_brief` 可用，还要提取：
+- **数据点**——将具体的、有来源的事实编织到旁白中（不是模糊的声明）
+- **受众误解**——在剧本中直接解决它们
+- **数学准确性说明**——关于什么可以简化、什么不可简化的约束
 
-### 2. Write in Animation Beats
+### 2. 按动画节拍编写
 
-Each section should express ONE clear visual idea:
+每个部分应表达一个清晰的视觉想法：
 
-- **Statement** — introduce a concept (entrance animation)
-- **Demonstration** — show it working (the main animation)
-- **Transformation** — morph from one state to another (transition)
-- **Comparison** — show two things side by side (split screen or sequential)
-- **Conclusion** — land the insight (hold + emphasis)
+- **陈述**——介绍一个概念（入场动画）
+- **演示**——展示其运作（主要动画）
+- **变换**——从一个状态变形到另一个状态（转场）
+- **比较**——并排展示两件事（分屏或顺序）
+- **结论**——落地洞察（停留 + 强调）
 
-If the piece is narration-led, also create `voice_performance` and section
-`delivery_cues` using `skills/meta/voice-performance-director.md`. Motion-heavy
-videos need vocal breathing room: mark pauses where the viewer must absorb an
-animation, and mark emphasis where a reveal, transform, or comparison lands.
+如果作品是叙述主导的，还要使用 `skills/meta/voice-performance-director.md` 创建 `voice_performance` 和部分的 `delivery_cues`。运动较多的视频需要语音呼吸空间：标记观众必须吸收动画的停顿，并标记揭示、变换或比较落地的强调点。
 
-**Animation mode affects writing style:**
+**动画模式影响写作风格：**
 
-| Mode | Writing Style |
+| 模式 | 写作风格 |
 |------|---------------|
-| Manim | Precise, mathematical. Each beat maps to a specific geometric transformation. Write narration that describes what's being shown. |
-| Remotion | Data-driven, punchy. Each beat maps to a chart/component animation. Narration complements the visual data. |
-| AI Video | Descriptive, evocative. Each beat describes a scene the AI should generate. Narration adds context the visual can't convey. |
-| Diagram Stills | Explanatory, progressive. Each beat adds a layer to a building diagram. Narration walks through the build. |
-| Mixed | Varies per section — tag each section's mode in metadata. |
+| Manim | 精确、数学化。每个节拍映射到特定的几何变换。编写描述正在展示内容的旁白。 |
+| Remotion | 数据驱动、有冲击力。每个节拍映射到图表/组件动画。旁白补充视觉数据。 |
+| AI 视频 | 描述性、唤起性。每个节拍描述 AI 应生成的场景。旁白增加视觉无法传达的上下文。 |
+| 图表静态帧 | 解释性、渐进式。每个节拍为正在构建的图表添加一层。旁白引导构建过程。 |
+| 混合 | 每部分不同——在元数据中标记每个部分的模式。 |
 
-### 3. Keep On-Screen Text Tight
+### 3. 保持屏幕文本精简
 
-Animation-heavy pieces fail when the viewer has to read too much while motion is happening:
+动画密集的作品在观众需要在运动发生时阅读太多内容时会失败：
 
-- **Max 8 words** for on-screen titles
-- **Max 15 words** for on-screen descriptions
-- Prefer phrases over sentences
-- Prefer numbers and labels over paragraphs
-- Mathematical notation is fine — it IS the content in math-animation mode
+- **屏幕标题最多 8 个字**
+- **屏幕描述最多 15 个字**
+- 优先使用短语而非句子
+- 优先使用数字和标签而非段落
+- 数学符号没问题——在数学动画模式下，它就是内容本身
 
-### 4. Leave Room for Visual Holds
+### 4. 为视觉停留留出空间
 
-Do NOT fill every second with new information. The scene plan will need time for:
+不要每秒钟都塞满新信息。场景计划需要为以下内容留出时间：
 
-- **Entrances** (0.5-1s): objects appearing on screen
-- **Reveals** (1-2s): progressive disclosure of complexity
-- **Holds** (1-3s): letting the viewer absorb what they see
-- **Exits** (0.5s): clearing the stage for the next beat
+- **入场**（0.5-1 秒）：对象出现在屏幕上
+- **揭示**（1-2 秒）：复杂性的渐进展示
+- **停留**（1-3 秒）：让观众吸收所见内容
+- **退出**（0.5 秒）：为下一个节拍清场
 
-**Rule of thumb:** For every 10 seconds of narration, budget 3-4 seconds of visual breathing room. A 90-second video should have ~60-65 seconds of narration and ~25-30 seconds of visual holds.
+**经验法则：** 每 10 秒旁白，预留 3-4 秒的视觉呼吸空间。一个 90 秒的视频应有大约 60-65 秒旁白和 25-30 秒视觉停留时间。
 
-### 5. Use Metadata for Motion Intent
+### 5. 使用元数据表达运动意图
 
-Recommended metadata keys per section:
+每部分推荐的元数据键：
 
-- `beat_type`: statement / demonstration / transformation / comparison / conclusion
-- `animation_mode`: which mode this section uses (important for mixed mode)
-- `text_constraints`: max words for on-screen text in this section
-- `narration_plan`: how narration relates to visual (describes / complements / silent)
-- `visual_priority`: what the viewer should focus on (the animation, the text, the data)
-- `hold_time_seconds`: minimum visual hold time after this section's content
-- `delivery_cues`: pace, energy, emphasis, pause timing, and provider-ready narration text for TTS
-- `data_source`: if this section uses a research data point, reference it
+- `beat_type`：statement / demonstration / transformation / comparison / conclusion
+- `animation_mode`：该部分使用哪种模式（混合模式下很重要）
+- `text_constraints`：该部分屏幕文本的最大字数
+- `narration_plan`：旁白与视觉的关系（描述 / 补充 / 静默）
+- `visual_priority`：观众应关注什么（动画、文本还是数据）
+- `hold_time_seconds`：该部分内容之后的最小视觉停留时间
+- `delivery_cues`：节奏、能量、强调、停顿时机以及用于 TTS 的 provider-ready 旁白文本
+- `data_source`：如果该部分使用调研数据点，引用它
 
-### 6. Research Integration
+### 6. 调研整合
 
-If a `research_brief` is available:
+如果 `research_brief` 可用：
 
-- Use at least 2 data points from the research in the narration
-- Ground the hook in the research's most surprising finding
-- Address at least 1 audience misconception if the narrative structure supports it
-- Cite sources naturally ("According to [source]..." or "A [year] study found...")
-- Do NOT invent statistics — only use what the research found
+- 在旁白中使用至少 2 个调研中的数据点
+- 将钩子建立在调研中最令人惊讶的发现上
+- 如果叙事结构支持，至少解决 1 个受众误解
+- 自然地引用来源（"根据[来源]..."或"一项[年份]的研究发现..."）
+- 不要编造统计数据——只使用调研发现的内容
 
-### 7. Quality Gate
+### 7. 质量关卡
 
-Before submitting the script, verify:
+在提交剧本前，验证：
 
-- [ ] Every section supports ONE strong visual idea
-- [ ] On-screen text is concise (phrases, not paragraphs)
-- [ ] Timing is animation-friendly (holds budgeted)
-- [ ] Narration-led sections include concrete delivery cues and a voice-performance sample section
-- [ ] Word count is within ±10% of target duration
-- [ ] Animation mode is respected in writing style
-- [ ] Research data points are integrated (if research_brief available)
-- [ ] Mathematical accuracy is maintained (if applicable)
-- [ ] Later stages can map scenes cleanly from this script
+- [ ] 每个部分支持一个强有力的视觉想法
+- [ ] 屏幕文本简洁（短语，而非段落）
+- [ ] 时机对动画友好（预留了停留时间）
+- [ ] 叙述主导的部分包括具体的语音提示和语音表现示例部分
+- [ ] 字数在目标时长的 ±10% 以内
+- [ ] 写作风格尊重动画模式
+- [ ] 调研数据点已整合（如果 research_brief 可用）
+- [ ] 数学准确性得以保持（如适用）
+- [ ] 后期阶段可以从此剧本清晰地映射场景
 
-### Mid-Production Fact Verification
+### 中期制作事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在剧本写作过程中遇到不确定性：
+- 使用 `web_search` 在将事实声明写入剧本之前验证其准确性
+- 使用 `web_search` 查找参考图像以确保视觉准确性
+- 在决策日志中记录验证：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+剧本中的每个事实声明都应是可追溯到 `research_brief` 的。如果你做出不在调研中的声明，进行额外调研并添加来源。不要编造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Writing too many ideas into one section.** One beat = one visual idea.
-- **Treating captions and on-screen text as the same thing.** Subtitles are narration transcribed. On-screen text is designed content that's part of the animation.
-- **Forgetting that motion needs pause and emphasis.** Budget hold times.
-- **Ignoring the animation mode.** A Manim script reads differently than an AI video script.
-- **Writing research-less scripts when a research_brief exists.** If the research found surprising data, use it. Generic scripts waste the research investment.
-- **Oversimplifying math to the point of being wrong.** Check the research brief's accuracy notes.
+- **在一个部分中塞入太多想法。** 一个节拍 = 一个视觉想法。
+- **将字幕和屏幕文本视为同一件事。** 字幕是旁白的转录。屏幕文本是设计好的内容，是动画的一部分。
+- **忘记运动需要停顿和强调。** 预留停留时间。
+- **忽略动画模式。** Manim 剧本的写法与 AI 视频剧本不同。
+- **在 research_brief 存在的情况下编写无调研的剧本。** 如果调研发现了令人惊讶的数据，使用它。泛泛的剧本浪费了调研投资。
+- **过度简化数学到错误的地步。** 检查调研简报的准确性说明。

@@ -1,22 +1,22 @@
 ---
 name: scale-swap-transition
-description: Coordinated shrink-out + spring pop-in morph-like transition between two elements — no SVG path interpolation needed.
+description: 两个元素之间协调的缩小退出 + 弹簧弹入变形过渡 — 无需 SVG 路径插值。
 metadata:
   tags: transition, morph, scale, swap, spring, pop
 ---
 
-# Scale-Swap Transition
+# 缩放交换过渡
 
-Simulates a "morph" between two DOM elements by overlapping exit and entrance scale animations. Lighter weight than [card-morph-anchor](card-morph-anchor.md) (which morphs container dimensions) and easier than SVG path interpolation.
+通过重叠退出和进入缩放动画来模拟两个 DOM 元素之间的"变形"。比 [card-morph-anchor](card-morph-anchor.md)（变形容器尺寸）更轻量，比 SVG 路径插值更简单。
 
-## How It Works
+## 工作原理
 
-At a single trigger time, two coordinated tweens fire:
+在单个触发时间，两个协调的补间触发：
 
-1. **Outgoing element**: scale `1.0 → EXIT_SCALE` + opacity `1 → 0` (fast `power2.in`)
-2. **Incoming element**: scale `EXIT_SCALE → 1.0` + opacity `0 → 1` (bouncy `back.out(${BOUNCE_FACTOR})` with overshoot)
+1. **退出元素**：缩放 `1.0 → EXIT_SCALE` + 不透明度 `1 → 0`（快速 `power2.in`）
+2. **进入元素**：缩放 `EXIT_SCALE → 1.0` + 不透明度 `0 → 1`（带过冲的弹跳 `back.out(${BOUNCE_FACTOR})`）
 
-A small `OVERLAP` window during which both are mid-tween creates the "morph" illusion. Incoming sits on top via z-index so the outgoing's fade-tail doesn't bleed through.
+一个小的 `OVERLAP` 窗口，在此期间两者都处于补间中间，创造了"变形"错觉。进入元素通过 z-index 位于顶部，使退出元素的淡出尾部不渗透过来。
 
 ## HTML
 
@@ -79,7 +79,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
   gap: CARD_INNER_GAP;
   border-radius: CARD_RADIUS;
   padding: CARD_PADDING;
-  /* Both elements share transform-origin so they "morph" around the same anchor */
+  /* 两个元素共享 transform-origin，使它们围绕同一锚点"变形" */
   transform-origin: 50% 50%;
   will-change: transform, opacity;
 }
@@ -105,7 +105,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
   color: {textColor};
 }
 .incoming {
-  /* Incoming starts hidden + smaller, will pop in */
+  /* 进入元素开始时隐藏 + 较小，将弹入 */
   z-index: 2;
   background: {incomingBg};
   border: 1px solid {incomingBorder};
@@ -122,7 +122,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -130,7 +130,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // Outgoing: shrink + fade fast
+  // 退出：快速缩小 + 淡出
   tl.to(
     "#outgoing",
     {
@@ -142,8 +142,8 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
     TRIGGER,
   );
 
-  // Incoming: scale up + fade in with overshoot, starts slightly BEFORE outgoing
-  // finishes (OVERLAP creates the morph illusion).
+  // 进入：带过冲放大 + 淡入，在退出完成前稍早开始
+  //（OVERLAP 创建变形错觉）。
   tl.to(
     "#incoming",
     {
@@ -155,7 +155,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
     TRIGGER + EXIT_DUR - OVERLAP,
   );
 
-  // Subline reveals AFTER the incoming card settles
+  // 副标题在进入卡片稳定后揭示
   tl.fromTo(
     "#sub",
     { opacity: 0, y: SUB_REVEAL_Y_PX },
@@ -163,7 +163,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
     TRIGGER + EXIT_DUR + SUB_REVEAL_DELAY,
   );
 
-  // Brand fades in early for context
+  // 品牌提前淡入以设置上下文
   tl.from(
     ".brand",
     { opacity: 0, y: BRAND_REVEAL_Y_PX, duration: BRAND_REVEAL_DUR, ease: "power3.out" },
@@ -174,15 +174,15 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
 </script>
 ```
 
-## Variations
+## 变体
 
-### Delayed inner content reveal
+### 延迟内部内容揭示
 
-The classic pattern: morph the container, then reveal inner text once the container has settled (as in the example above with `.sub`). The 0.2-0.4s gap between morph end and content reveal lets the viewer's eye land on the new container shape before reading the content.
+经典模式：变形容器，然后在容器稳定后揭示内部文本（如上面 `.sub` 示例）。变形结束和内容揭示之间的 0.2-0.4 秒间隔让观看者眼睛在阅读内容之前着陆在新容器形状上。
 
-### Triple swap (3-state cycle)
+### 三次交换（3 状态循环）
 
-Chain: A→B→C with two triggers `TRIGGER_AB` and `TRIGGER_BC`. Each transition needs its own pair of tweens, and the previous incoming becomes the next outgoing. Useful for state evolution narratives (e.g. early-state → mid-state → final-state labels).
+链式：A→B→C，两个触发点 `TRIGGER_AB` 和 `TRIGGER_BC`。每个转换需要自己的补间对，且之前的进入成为下一个退出。适用于状态演变叙事（例如早期状态 → 中期状态 → 最终状态标签）。
 
 ```js
 tl.to("#stateA", { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR }, TRIGGER_AB);
@@ -199,100 +199,100 @@ tl.to(
 );
 ```
 
-### Color-shift transition (no scale)
+### 颜色偏移过渡（无缩放）
 
-For a flat morph between two same-shape states, drop the scale and keep only opacity + a brief background hue tween. Less dramatic but matches a more product-UI tone.
+对于两个相同形状状态之间的平面变形，去掉缩放，仅保持不透明度 + 简短背景色调补间。戏剧性较小，但更匹配产品 UI 基调。
 
-## How to Choose Values
+## 如何选择值
 
-### Timing (seconds)
+### 时间（秒）
 
-- **TRIGGER** — when the swap fires.
-  - Constraints: must be ≥ the outgoing element's settled time + a presence-dwell so the outgoing "lands" before transforming
-- **EXIT_DUR** — outgoing shrink + fade duration.
-  - Range: 0.3-0.5 s
-- **ENTER_DUR** — incoming pop-in duration.
-  - Range: 0.45-0.7 s (longer than `EXIT_DUR` to let the overshoot settle)
-- **OVERLAP** — how much the entrance starts before the exit finishes.
-  - Range: 0.1-0.2 s
-  - Constraints: too much (>0.3 s) makes both clearly visible together (no morph); too little (<0.05 s) leaves a visible empty gap
-- **SUB_REVEAL_DELAY** — gap between incoming settle and subline reveal.
-  - Range: 0.2-0.4 s; reveals during the morph compete with the swap for attention
-- **SUB_REVEAL_DUR** — subline fade-in.
-  - Range: 0.3-0.5 s
-- **BRAND_REVEAL_AT** — when the brand/context line fades in.
-  - Constraints: must be < `TRIGGER` (brand is context for the swap, not synchronous with it)
-- **BRAND_REVEAL_DUR** — brand fade-in duration.
-  - Range: 0.4-0.8 s
+- **TRIGGER** — 交换触发时间。
+  - 约束：必须 ≥ 退出元素的稳定时间 + 存在停留，使退出在变换前"着陆"
+- **EXIT_DUR** — 退出缩小 + 淡出时长。
+  - 范围：0.3-0.5 秒
+- **ENTER_DUR** — 进入弹入时长。
+  - 范围：0.45-0.7 秒（比 `EXIT_DUR` 长，让过冲稳定）
+- **OVERLAP** — 进入在退出完成前提前开始的量。
+  - 范围：0.1-0.2 秒
+  - 约束：太多（>0.3 秒）使两者同时清晰可见（无变形）；太少（<0.05 秒）留下可见的空隙
+- **SUB_REVEAL_DELAY** — 进入稳定和副标题揭示之间的间隔。
+  - 范围：0.2-0.4 秒；变形期间的揭示与交换竞争注意力
+- **SUB_REVEAL_DUR** — 副标题淡入。
+  - 范围：0.3-0.5 秒
+- **BRAND_REVEAL_AT** — 品牌/上下文行淡入时间。
+  - 约束：必须 < `TRIGGER`（品牌是交换的上下文，不与交换同步）
+- **BRAND_REVEAL_DUR** — 品牌淡入时长。
+  - 范围：0.4-0.8 秒
 
-### Physics
+### 物理
 
-- **EXIT_SCALE** — target scale for outgoing (and starting scale for incoming).
-  - Range: 0.6-0.8; smaller exits feel more dramatic but risk reading as "vanish" instead of "morph"
-- **BOUNCE_FACTOR** — `back.out(${BOUNCE_FACTOR})` overshoot on the incoming.
-  - Range: 1.4 (soft) - 1.8 (firm) - 2.2 (cartoony)
+- **EXIT_SCALE** — 退出的目标缩放（和进入的起始缩放）。
+  - 范围：0.6-0.8；更小的退出感觉更戏剧性但可能读作"消失"而非"变形"
+- **BOUNCE_FACTOR** — 进入上的 `back.out(${BOUNCE_FACTOR})` 过冲。
+  - 范围：1.4（柔和）- 1.8（坚定）- 2.2（卡通）
 
-### Positioning offsets
+### 定位偏移
 
-- **SUB_REVEAL_Y_PX** — subline initial y offset (positive = below resting).
-  - Range: 8-20 px
-- **BRAND_REVEAL_Y_PX** — brand initial y offset.
-  - Range: 10-24 px
+- **SUB_REVEAL_Y_PX** — 副标题初始 y 偏移（正 = 休息位置下方）。
+  - 范围：8-20 px
+- **BRAND_REVEAL_Y_PX** — 品牌初始 y 偏移。
+  - 范围：10-24 px
 
-### Layout
+### 布局
 
-- **STACK_GAP** — gap between swap container and brand line.
-  - Range: 40-96 px
-- **SWAP_WRAP_W / SWAP_WRAP_H** — fixed swap container dimensions; both cards `inset: 0` inside.
-  - Constraints: pick dimensions that fit both states' content; the wrap does not resize during the swap
-- **CARD_INNER_GAP** — gap between icon and title inside a card.
-  - Range: 16-32 px
-- **CARD_RADIUS / CARD_PADDING** — card corner radius and inner padding.
-  - Range: radius 24-40 px; padding 32-64 px
-- **ICON_SIZE / TITLE_SIZE / SUB_SIZE / BRAND_SIZE** — typographic sizes.
-  - Constraints: titles dominate (~80-120 px at 1080p); sub and brand are accent-sized
-- **TITLE_TRACKING / BRAND_TRACKING** — letter-spacing on uppercase labels.
-  - Range: 4-16 px (uppercase reads better with positive tracking)
+- **STACK_GAP** — 交换容器和品牌行之间的间距。
+  - 范围：40-96 px
+- **SWAP_WRAP_W / SWAP_WRAP_H** — 固定交换容器尺寸；内部两张卡片 `inset: 0`。
+  - 约束：选择适合两个状态内容的尺寸；容器在交换期间不调整大小
+- **CARD_INNER_GAP** — 卡片内图标和标题之间的间距。
+  - 范围：16-32 px
+- **CARD_RADIUS / CARD_PADDING** — 卡片圆角和内部填充。
+  - 范围：radius 24-40 px；padding 32-64 px
+- **ICON_SIZE / TITLE_SIZE / SUB_SIZE / BRAND_SIZE** — 排版尺寸。
+  - 约束：标题主导（1080p 下 ~80-120 px）；副标题和品牌为重音大小
+- **TITLE_TRACKING / BRAND_TRACKING** — 大写标签上的字母间距。
+  - 范围：4-16 px（大写配合正跟踪更好）
 
-### Tokens
+### 标记
 
-- **{sceneBg}** — background gradient/color
-- **{font}** — typographic stack
-- **{textColor}** / **{accentColor}** / **{brandColor}** — semantic color tokens
-- **{outgoingBg}** / **{outgoingBorder}** — outgoing card surface + border (typically warm or pre-action hue)
-- **{incomingBg}** / **{incomingBorder}** — incoming card surface + border (typically cool or post-action hue)
-- **{outgoingIcon}** / **{incomingIcon}** — single glyph/emoji per state
-- **{outgoingLabel}** / **{incomingLabel}** — state labels
-- **{incomingSubline}** — supporting copy that fades in after the incoming settles
-- **{Brand}** — brand line shown beneath the swap
+- **{sceneBg}** — 背景渐变/颜色
+- **{font}** — 排版栈
+- **{textColor}** / **{accentColor}** / **{brandColor}** — 语义颜色标记
+- **{outgoingBg}** / **{outgoingBorder}** — 退出卡片表面 + 边框（通常为暖色或动作前色调）
+- **{incomingBg}** / **{incomingBorder}** — 进入卡片表面 + 边框（通常为冷色或动作后色调）
+- **{outgoingIcon}** / **{incomingIcon}** — 每个状态的单个字形/表情符号
+- **{outgoingLabel}** / **{incomingLabel}** — 状态标签
+- **{incomingSubline}** — 进入稳定后淡入的支持文案
+- **{Brand}** — 交换下方显示的品牌行
 
-## Key Principles
+## 关键原则
 
-- **Incoming z-index ABOVE outgoing** — without this, the outgoing's fade-tail (opacity 0.3-0.5) bleeds through the incoming's lower opacity and creates a "double-exposed" muddy frame
-- **Both elements share `transform-origin: 50% 50%`** — different origins make the morph feel like one thing teleporting somewhere else
-- **`OVERLAP` in the 0.1-0.2 s window** — too much overlap and both are clearly visible together (no morph); too little and there's a visible empty gap
-- **Bouncy ease ONLY for the incoming** — outgoing uses `power2.in` (rushing away), incoming uses `back.out(${BOUNCE_FACTOR})` (arriving with weight). Reverse it and the swap feels mechanical
-- **Inner content reveals AFTER container settles** — see `SUB_REVEAL_DELAY`. Reveals during the morph compete for attention and lose
-- **Climax dwell ≥1 s after final state lands** — see SKILL universal constraints. After incoming + subline both settle, hold for ≥1 s
-- **Brand reveal early, not at the swap** — context (brand, eyebrow) sets the stage; the swap is the headline. If brand reveals AT the swap, it competes
+- **进入元素的 z-index 高于退出元素** — 否则退出的淡出尾部（不透明度 0.3-0.5）渗透进入元素的较低不透明度，创建"双重曝光"的模糊帧
+- **两个元素共享 `transform-origin: 50% 50%`** — 不同的原点使变形感觉像一个东西传送到了别处
+- **`OVERLAP` 在 0.1-0.2 秒窗口内** — 重叠太多两者都清晰可见（无变形）；太少则有可见空隙
+- **仅在进入上使用弹跳缓动** — 退出使用 `power2.in`（匆匆离开），进入使用 `back.out(${BOUNCE_FACTOR})`（带着重量到达）。反过来则交换感觉机械
+- **内部内容在容器稳定后揭示** — 参见 `SUB_REVEAL_DELAY`。变形期间的揭示竞争注意力且失败
+- **最终状态着陆后高潮停留 ≥1 秒** — 参见 SKILL 通用约束。进入 + 副标题都稳定后，保持 ≥1 秒
+- **品牌提前揭示，不在交换时** — 上下文（品牌、眉标）设置舞台；交换是标题。如果品牌在交换时揭示，它会竞争
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **No CSS `transition`** on either swap element — competes with GSAP
-- **`will-change: transform, opacity`** on both swap elements
-- **Both elements use `position: absolute; inset: 0`** in the same wrapper — they occupy the same footprint, swap fades one out and pops one in
-- **Don't `display: none` the outgoing** after fade — leave it at `opacity: 0` so layout doesn't reflow
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **两个交换元素上无 CSS `transition`** — 与 GSAP 竞争
+- **两个交换元素上设置 `will-change: transform, opacity`**
+- **两个元素在同一个包裹容器中使用 `position: absolute; inset: 0`** — 它们占据相同空间，交换淡出一个并弹入一个
+- **淡出后不要 `display: none` 退出元素** — 将其保持在 `opacity: 0` 以免布局回流
 
-## Combinations
+## 组合
 
-- [press-release-spring.md](press-release-spring.md) — button press TRIGGERS the swap (cause and effect)
-- [sine-wave-loop.md](sine-wave-loop.md) — idle breathing on the final state
-- [card-morph-anchor.md](card-morph-anchor.md) — alternative for SHAPE-changing transitions (this rule is for SAME-shape state swaps)
+- [press-release-spring.md](press-release-spring.md) — 按钮按**触发**交换（因果）
+- [sine-wave-loop.md](sine-wave-loop.md) — 最终状态上的空闲呼吸
+- [card-morph-anchor.md](card-morph-anchor.md) — 用于**形状**变化过渡的替代方案（此规则用于**相同形状**状态交换）
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — two coordinated tweens with overlap
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 带重叠的两个协调补间
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

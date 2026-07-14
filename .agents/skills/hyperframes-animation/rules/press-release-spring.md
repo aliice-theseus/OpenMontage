@@ -1,22 +1,22 @@
 ---
 name: press-release-spring
-description: Tactile button press with linear compression, spring-based elastic recovery, and layered visual feedback (shadow shrink + release burst + background glow).
+description: 触觉按钮按下，带线性压缩、基于弹簧的弹性恢复和分层视觉反馈（阴影缩小 + 释放爆发 + 背景辉光）。
 metadata:
   tags: spring, press, interaction, button, physics, glow, burst, ui
 ---
 
-# Press-Release Spring Chain
+# 按下-释放弹簧链
 
-Separates input (linear compression) from output (spring recovery) to create tactile feel. The overshoot is a natural byproduct of the spring config, not manually coded. Pairs with secondary motion (shadow shrink, release burst, background glow) layered on the same trigger frame.
+将输入（线性压缩）与输出（弹簧恢复）分离，创造触觉感觉。过冲是弹簧配置的自然副产品，非手动编码。与在同一触发帧上分层的次级运动（阴影缩小、释放爆发、背景辉光）配对。
 
-## How It Works
+## 工作原理
 
-Two distinct phases split at the **release** moment:
+两个不同的阶段在**释放**时刻分割：
 
-1. **Press**: linear ease → compression (`scale: 1 → PRESS_SCALE`, shadow shrinks). Linear, not spring — the dip must read as instant/tactile, not squishy.
-2. **Release**: `back.out(${BOUNCE_FACTOR})` spring → elastic pop back to `1.0` (overshoot proportional to `BOUNCE_FACTOR`). Optional burst glow ring expands behind the button; optional background environmental glow fades in.
+1. **按下**：线性缓动 → 压缩（`scale: 1 → PRESS_SCALE`，阴影缩小）。线性，非弹簧 — 下压必须读作瞬时/触觉，而非软绵绵。
+2. **释放**：`back.out(${BOUNCE_FACTOR})` 弹簧 → 弹性弹回 `1.0`（过冲与 `BOUNCE_FACTOR` 成比例）。可选爆发辉光环在按钮后扩大；可选背景环境辉光淡入。
 
-State continuity is critical: the release tween's start value MUST equal the press tween's end value, or the spring snaps to a different position. GSAP threads this automatically when both tweens target the same property at adjacent positions on the same timeline.
+状态连续性至关重要：释放补间的起始值**必须**等于按下补间的结束值，否则弹簧会跳到不同位置。当两个补间在同一时间线的相邻位置定位相同属性时，GSAP 自动处理这一点。
 
 ## HTML
 
@@ -56,7 +56,7 @@ State continuity is critical: the release tween's start value MUST equal the pre
 .btn {
   position: relative;
   z-index: 2;
-  /* Visual weight: ≥4% of canvas for the press to read on a 1080p frame */
+  /* 视觉重量：在 1080p 画面上按下可读需要 ≥4% 的画布 */
   width: BTN_WIDTH;
   height: BTN_HEIGHT;
   background: {btnBg};
@@ -68,13 +68,13 @@ State continuity is critical: the release tween's start value MUST equal the pre
   letter-spacing: BTN_LETTER_SPACING;
   color: {btnTextColor};
   text-transform: uppercase;
-  /* Anchor compression on the center — see Critical Constraints */
+  /* 将压缩锚定在中心 — 参见关键约束 */
   transform-origin: 50% 50%;
-  /* Initial floating shadow — large + diffuse */
+  /* 初始浮动阴影 — 大而扩散 */
   box-shadow: {btnRestShadow};
 }
 .burst {
-  /* Sits BEHIND the button, same footprint */
+  /* 位于按钮后面，相同占地面积 */
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -87,7 +87,7 @@ State continuity is critical: the release tween's start value MUST equal the pre
   pointer-events: none;
 }
 .bg-glow {
-  /* Full-stage radial — extends beyond the stage with negative inset */
+  /* 全舞台径向 — 通过负 inset 扩展到舞台之外 */
   position: absolute;
   inset: BG_GLOW_INSET;
   background: {bgGlowGradient};
@@ -96,7 +96,7 @@ State continuity is critical: the release tween's start value MUST equal the pre
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -104,7 +104,7 @@ State continuity is critical: the release tween's start value MUST equal the pre
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // Phase 1 — press (linear compression)
+  // 阶段 1 — 按下（线性压缩）
   tl.to(
     "#btn",
     {
@@ -116,8 +116,8 @@ State continuity is critical: the release tween's start value MUST equal the pre
     PRESS_START,
   );
 
-  // Phase 2 — release (spring back with overshoot)
-  // CRITICAL: start scale == end of phase 1 (PRESS_SCALE) to maintain state continuity.
+  // 阶段 2 — 释放（带过冲的弹簧回弹）
+  // 关键：起始缩放 == 阶段 1（PRESS_SCALE）的结束值以保持状态连续性。
   tl.to(
     "#btn",
     {
@@ -129,7 +129,7 @@ State continuity is critical: the release tween's start value MUST equal the pre
     RELEASE_START,
   );
 
-  // Phase 3 — burst glow (radial pop behind button), triggered with release
+  // 阶段 3 — 爆发辉光（按钮后的径向弹出），与释放同时触发
   tl.fromTo(
     "#burst",
     { scale: 1, opacity: 0 },
@@ -141,10 +141,10 @@ State continuity is critical: the release tween's start value MUST equal the pre
     },
     RELEASE_START,
   );
-  // Burst then fades out
+  // 爆发然后淡出
   tl.to("#burst", { opacity: 0, duration: BURST_FADE_DUR, ease: "power2.in" }, BURST_FADE_START);
 
-  // Phase 4 — background environmental glow fades in after release
+  // 阶段 4 — 背景环境辉光在释放后淡入
   tl.to(
     "#bg-glow",
     {
@@ -159,28 +159,28 @@ State continuity is critical: the release tween's start value MUST equal the pre
 </script>
 ```
 
-## Variations
+## 变体
 
-### Subtle press (status save / muted CTA)
+### 微妙按下（状态保存 / 静音 CTA）
 
-Less compression, gentler overshoot, smaller burst. `PRESS_SCALE` toward the high end of its range (~0.96), `BOUNCE_FACTOR` toward the low end (~1.4), `BURST_PEAK_SCALE` and `BURST_PEAK_OPACITY` reduced.
+较少压缩，较温和过冲，较小爆发。`PRESS_SCALE` 朝向范围高端（~0.96），`BOUNCE_FACTOR` 朝向范围低端（~1.4），`BURST_PEAK_SCALE` 和 `BURST_PEAK_OPACITY` 减小。
 
-### Dramatic press (hero CTA / "ship it" moment)
+### 戏剧性按下（主角 CTA / "发货"时刻）
 
-Deeper compression, more overshoot, larger burst. `PRESS_SCALE` toward the low end (~0.88), `BOUNCE_FACTOR` toward the high end (~2.5), `BURST_PEAK_SCALE` and `BURST_PEAK_OPACITY` maxed.
+更深压缩，更多过冲，更大爆发。`PRESS_SCALE` 朝向范围低端（~0.88），`BOUNCE_FACTOR` 朝向范围高端（~2.5），`BURST_PEAK_SCALE` 和 `BURST_PEAK_OPACITY` 最大化。
 
-### Color shift during press
+### 按下期间颜色偏移
 
-Darken the button mid-press, return on release. Same timeline positions as the scale tweens — interpolated `backgroundColor` on `#btn`. State continuity rule still applies: the release-color tween's start equals the press-color tween's end.
+在按下中段使按钮变暗，在释放时恢复。与缩放补间相同的时间线位置 — 在 `#btn` 上插值的 `backgroundColor`。状态连续性规则仍然适用：释放颜色补间的起始等于按下颜色补间的结束。
 
 ```js
 tl.to("#btn", { backgroundColor: "{btnPressedColor}", duration: PRESS_DUR }, PRESS_START);
 tl.to("#btn", { backgroundColor: "{btnRestColor}", duration: RELEASE_DUR }, RELEASE_START);
 ```
 
-### State change at release (approve / confirm pattern)
+### 释放时状态变化（批准/确认模式）
 
-When the press signals confirmation, swap the button's resting color to a success token at `RELEASE_START` (instead of returning to `{btnRestColor}`), then pop a checkmark via a separate `back.out(${CHECK_BOUNCE})` tween at the same position. The button is now in its terminal state — no further presses expected.
+当按下确认信号时，在 `RELEASE_START` 时（而非返回到 `{btnRestColor}`）将按钮的休息颜色交换为成功标记，然后通过在同一位置的独立 `back.out(${CHECK_BOUNCE})` 补间弹出勾选标记。按钮现在处于终端状态 — 不再期望进一步按下。
 
 ```js
 tl.to("#btn", { backgroundColor: "{successColor}", duration: RELEASE_DUR }, RELEASE_START);
@@ -191,106 +191,106 @@ tl.to(
 );
 ```
 
-## How to Choose Values
+## 如何选择值
 
-### Geometry
+### 几何
 
-- **BTN_WIDTH / BTN_HEIGHT** — button footprint.
-  - Range: button area ≥ 3-5% of canvas (a 320×68 button at 1080p is ~1% and reads as visually insignificant)
-  - Effects: smaller → press barely reads; larger → press dominates the frame
-  - Constraints: `BTN_WIDTH × BTN_HEIGHT / (canvasW × canvasH) ≥ 0.03`
-- **BTN_RADIUS** — corner radius.
-  - Range: `BTN_HEIGHT × 0.15` (sharp/modern) → `BTN_HEIGHT / 2` (pill)
-- **BTN_FONT_SIZE / BTN_LETTER_SPACING** — typographic weight.
-  - Range: `BTN_FONT_SIZE ≈ BTN_HEIGHT × 0.4-0.5`; letter-spacing 4-10 px reads as "actionable label"
+- **BTN_WIDTH / BTN_HEIGHT** — 按钮占地面积。
+  - 范围：按钮面积 ≥ 画布的 3-5%（1080p 下 320×68 的按钮约 1%，读作视觉上微不足道）
+  - 效果：较小 → 按下几乎不可读；较大 → 按下主导画面
+  - 约束：`BTN_WIDTH × BTN_HEIGHT / (canvasW × canvasH) ≥ 0.03`
+- **BTN_RADIUS** — 圆角半径。
+  - 范围：`BTN_HEIGHT × 0.15`（锐利/现代）→ `BTN_HEIGHT / 2`（胶囊）
+- **BTN_FONT_SIZE / BTN_LETTER_SPACING** — 排版重量。
+  - 范围：`BTN_FONT_SIZE ≈ BTN_HEIGHT × 0.4-0.5`；字母间距 4-10 px 读作"可操作标签"
 
-### Press dynamics
+### 按下动力学
 
-- **PRESS_SCALE** — compression depth.
-  - Range: 0.88 (dramatic) → 0.92 (default) → 0.96 (subtle)
-  - Effects: lower → more tactile / weightier; higher → barely-there acknowledgment
-  - Constraints: never <0.85 (button feels broken) or >0.98 (no perceptible dip)
-- **PRESS_DUR** — compression duration.
-  - Range: 0.10-0.30 s
-  - Effects: shorter → snappier / "instant-feeling"; longer → slow squish
-  - Constraints: shorter than `RELEASE_DUR` (input is faster than spring recovery)
-- **RELEASE_DUR** — spring recovery duration.
-  - Range: 0.40-0.90 s
-  - Effects: shorter → tight pop; longer → loose, wobbly settle
-- **BOUNCE_FACTOR** — `back.out(BOUNCE_FACTOR)` overshoot strength.
-  - Range: 1.4 (soft) → 2.0 (firm pop) → 2.8 (cartoony)
-  - Effects: low end barely overshoots; high end reads as cartoonish; tune by feel
-  - Alternative: switch to `elastic.out(amplitude, period)` for a rubbery oscillation instead of a single overshoot
-- **PRESS_START / RELEASE_START** — timeline positions.
-  - Constraints: `RELEASE_START = PRESS_START + PRESS_DUR` (state continuity — see Critical Constraints)
+- **PRESS_SCALE** — 压缩深度。
+  - 范围：0.88（戏剧性）→ 0.92（默认）→ 0.96（微妙）
+  - 效果：较低 → 更触觉/更重；较高 → 几乎不可察觉的确认
+  - 约束：决不低于 0.85（按钮感觉损坏）或高于 0.98（无明显下压）
+- **PRESS_DUR** — 压缩时长。
+  - 范围：0.10-0.30 秒
+  - 效果：更短 → 更干脆/"瞬时感"；更长 → 缓慢挤压
+  - 约束：比 `RELEASE_DUR` 短（输入比弹簧恢复快）
+- **RELEASE_DUR** — 弹簧恢复时长。
+  - 范围：0.40-0.90 秒
+  - 效果：更短 → 紧密弹出；更长 → 宽松、摇晃稳定
+- **BOUNCE_FACTOR** — `back.out(BOUNCE_FACTOR)` 过冲强度。
+  - 范围：1.4（柔和）→ 2.0（坚定弹出）→ 2.8（卡通）
+  - 效果：低端几乎没有过冲；高端读作卡通化；按感觉调节
+  - 替代：切换到 `elastic.out(amplitude, period)` 以获得橡胶振荡而非单次过冲
+- **PRESS_START / RELEASE_START** — 时间线位置。
+  - 约束：`RELEASE_START = PRESS_START + PRESS_DUR`（状态连续性 — 参见关键约束）
 
-### Burst glow
+### 爆发辉光
 
-- **BURST_PEAK_SCALE** — radial pop max scale.
-  - Range: 3 (subtle) → 6 (default) → 8 (dramatic)
-  - Constraints: ≤ ~8 — beyond that the radial gradient pixelates visibly
-- **BURST_PEAK_OPACITY** — burst max opacity.
-  - Range: 0.4 (subtle) → 0.8 (default) → 1.0 (dramatic)
-- **BURST_GROW_DUR / BURST_FADE_DUR** — grow vs. fade timing.
-  - Range: 0.4-0.7 s each; default grow ≈ fade
-- **BURST_BLUR** — gaussian blur on the burst layer.
-  - Range: 40-100 px; smaller reads as a hard ring, larger as ambient haze
+- **BURST_PEAK_SCALE** — 径向弹出最大缩放。
+  - 范围：3（微妙）→ 6（默认）→ 8（戏剧性）
+  - 约束：≤ ~8 — 超过此值径向渐变像素化明显
+- **BURST_PEAK_OPACITY** — 爆发最大不透明度。
+  - 范围：0.4（微妙）→ 0.8（默认）→ 1.0（戏剧性）
+- **BURST_GROW_DUR / BURST_FADE_DUR** — 增长 vs 淡出时间。
+  - 范围：每个 0.4-0.7 秒；默认增长 ≈ 淡出
+- **BURST_BLUR** — 爆发层上的高斯模糊。
+  - 范围：40-100 px；较小读作硬环，较大读作环境雾
 
-### Background glow
+### 背景辉光
 
-- **BG_GLOW_PEAK_OPACITY** — peak environmental glow.
-  - Range: 0.1 (subtle) → 0.25 (default) → 0.45 (dramatic)
-  - Constraints: ≤ 0.45 — higher washes the whole composition
-- **BG_GLOW_FADE_DUR** — fade-in duration.
-  - Range: 0.6-1.0 s
-- **BG_GLOW_INSET** — negative inset so the radial extends past the stage edges.
-  - Range: typically `-300` to `-500` px on a 1920×1080 canvas
+- **BG_GLOW_PEAK_OPACITY** — 环境辉光峰值。
+  - 范围：0.1（微妙）→ 0.25（默认）→ 0.45（戏剧性）
+  - 约束：≤ 0.45 — 更高会冲刷整个组合
+- **BG_GLOW_FADE_DUR** — 淡入时长。
+  - 范围：0.6-1.0 秒
+- **BG_GLOW_INSET** — 负 inset，使径向扩展到舞台边缘之外。
+  - 范围：在 1920×1080 画布上通常为 `-300` 到 `-500` px
 
-### Optional "approve" variation
+### 可选"批准"变体
 
-- **CHECK_BOUNCE** — checkmark pop overshoot.
-  - Range: 1.4-2.0; firmer than the button's main `BOUNCE_FACTOR` to read as a punctuating "stamp"
-- **CHECK_POP_DUR** — checkmark scale-up duration.
-  - Range: 0.3-0.6 s
+- **CHECK_BOUNCE** — 勾选标记弹出过冲。
+  - 范围：1.4-2.0；比按钮的主 `BOUNCE_FACTOR` 更坚定，读作标点性的"盖章"
+- **CHECK_POP_DUR** — 勾选标记放大时长。
+  - 范围：0.3-0.6 秒
 
-### Tokens
+### 标记
 
-- **{btnBg} / {btnRestColor} / {btnPressedColor}** — primary button surface; pressed darker than rest
-- **{btnRestShadow} / {btnPressedShadow}** — rest shadow is large + diffuse; pressed is small + tight (the button "sinks toward the surface")
-- **{burstGradient}** — radial; saturated near center, fading to transparent (color should be darker + more saturated than `{btnBg}` — same-color glow looks washed out)
-- **{bgGlowGradient}** — full-stage radial, low-opacity tint of `{btnBg}`'s hue family
-- **{successColor}** — confirmation green / brand-success for the approve variation
+- **{btnBg} / {btnRestColor} / {btnPressedColor}** — 主要按钮表面；按下比休息深
+- **{btnRestShadow} / {btnPressedShadow}** — 休息阴影大而扩散；按下小而紧（按钮"向表面下沉"）
+- **{burstGradient}** — 径向；中心饱和，渐变为透明（颜色应比 `{btnBg}` 更深、更饱和 — 同色辉光看起来褪色）
+- **{bgGlowGradient}** — 全舞台径向，`{btnBg}` 色调系的低不透明度着色
+- **{successColor}** — 确认绿色/品牌成功色，用于批准变体
 
-## Key Principles
+## 关键原则
 
-- **State continuity** — release start value MUST exactly match press end value. With a GSAP timeline, the first tween's end value automatically becomes the second tween's start when they target the same property at adjacent times.
-- **Visual weight** — button area should be **≥3-5% of canvas**. Smaller and the press reads as visually insignificant.
-- **Linear press, spring release** — the compression is `power1.in/out`, the recovery is `back.out`. Both spring → squishy; both linear → mechanical / no overshoot punch.
-- **Anchor compression on center** — `transform-origin: 50% 50%` (default). Otherwise the button collapses asymmetrically.
-- **Burst behind, not in front** — burst `z-index: 1`, button `z-index: 2`. If burst sits in front, it occludes the button at peak opacity.
-- **Glow color darker + more saturated than element** — bright surface → dark, saturated glow. Same-color glow looks washed out.
-- **Don't tween `boxShadow` and `filter` together on the same element** — they compete in the layout pipeline; pick one. Shadow on the button, blur on a separate burst layer.
-- **Climax beats need dwell time** — after the burst peak + label/wordmark reveal, the composition must run for **≥1s more** (≥2s for "dramatic" variants) before ending. A reveal at `t=DURATION−0.2s` reads as "flashed and gone."
+- **状态连续性** — 释放起始值必须精确匹配按下结束值。使用 GSAP 时间线，当它们在同一时间线上相邻时间定位相同属性时，第一个补间的结束值自动成为第二个补间的起始值。
+- **视觉重量** — 按钮面积应 **≥ 画布的 3-5%**。更小则按下读作视觉上微不足道。
+- **线性按下，弹簧释放** — 压缩是 `power1.in/out`，恢复是 `back.out`。两者都弹簧 → 软绵绵；都线性 → 机械/无过冲冲击。
+- **压缩锚定在中心** — `transform-origin: 50% 50%`（默认）。否则按钮不对称塌缩。
+- **爆发在后面，不在前面** — 爆发 `z-index: 1`，按钮 `z-index: 2`。如果爆发在前面，它在峰值不透明度时遮挡按钮。
+- **辉光颜色比元素更深、更饱和** — 亮表面 → 暗、饱和辉光。同色辉光看起来褪色。
+- **不要在同一元素上同时补间 `boxShadow` 和 `filter`** — 它们在布局管线中竞争；选择其一。阴影在按钮上，模糊在独立的爆发层上。
+- **高潮节拍需要停留时间** — 爆发峰值 + 标签/wordmark 揭示后，组合必须在结束前继续运行 **≥1 秒**（"戏剧性"变体 ≥2 秒）。在 `t=DURATION−0.2s` 的揭示读作"闪烁然后消失。"
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **No CSS `transition`** on the button — those interpolate independently of HF seek and cause flicker
-- **`will-change: transform`** if the button compounds with other animation layers
-- **`RELEASE_START = PRESS_START + PRESS_DUR`** — adjacency on the same property is what makes state continuity automatic; gap or overlap breaks it
-- **Burst max scale ≤ ~8** — beyond that the radial gradient pixelates visibly
-- **Background glow `opacity ≤ 0.45`** — higher and it washes the whole composition
-- **GSAP transform aliases only**: `x`, `y`, `scale`, `rotation`. Never tween `width` / `height` / `left` / `top`.
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **按钮上无 CSS `transition`** — 那些会独立于 HF 定位插值并导致闪烁
+- **如果按钮与其他动画层组合，设置 `will-change: transform`**
+- **`RELEASE_START = PRESS_START + PRESS_DUR`** — 相同属性上的相邻位置是状态连续性自动保持的关键；间隙或重叠会破坏它
+- **爆发最大缩放 ≤ ~8** — 超过此值径向渐变像素化明显
+- **背景辉光 `opacity ≤ 0.45`** — 更高会冲刷整个组合
+- **仅使用 GSAP 变换别名**：`x`、`y`、`scale`、`rotation`。永远不要补间 `width` / `height` / `left` / `top`。
 
-## Combinations
+## 组合
 
-- [sine-wave-loop.md](sine-wave-loop.md) — idle micro-float on the button BEFORE the press (slight breathing, sells "ready")
-- [center-outward-expansion.md](center-outward-expansion.md) — burst of badges outward synced to the press release
-- [cursor-click-ripple.md](cursor-click-ripple.md) — cursor click that triggers the press
+- [sine-wave-loop.md](sine-wave-loop.md) — 按下前按钮上的空闲微浮动（轻微呼吸，传达"就绪"）
+- [center-outward-expansion.md](center-outward-expansion.md) — 徽章爆发向外，与释放同步
+- [cursor-click-ripple.md](cursor-click-ripple.md) — 触发按下的光标点击
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — `back.out` ease + multi-tween coordination
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — `back.out` 缓动 + 多补间协调
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

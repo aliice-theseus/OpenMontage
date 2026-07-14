@@ -1,28 +1,28 @@
-# Script Director - Podcast Repurpose Pipeline
+# 脚本导演 - 播客二次利用流水线
 
-## When To Use
+## 何时使用
 
-This stage creates the transcript truth, speaker attribution, highlight set, and chapter structure that every later stage depends on.
+此阶段创建转录文本真相、说话人归属、精彩片段集和章节结构，这些是所有后续阶段所依赖的基础。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["idea"]["brief"]` | Deliverable mix and source truth |
-| Tools | `transcriber`, `audio_enhance` | Diarized transcript and cleanup |
+| Schema | `schemas/artifacts/script.schema.json` | Artifact 验证 |
+| 前置 artifact | `state.artifacts["idea"]["brief"]` | 交付物组合和源真相 |
+| 工具 | `transcriber`, `audio_enhance` | 带说话人标记的转录文本和音频清理 |
 
-## Process
+## 流程
 
-### 1. Protect Transcript Quality
+### 1. 保护转录文本质量
 
-If the source audio is weak, use `audio_enhance` before or alongside transcription. Speaker diarization quality directly affects quote attribution and clip quality.
+如果源音频质量较差，请在转录之前或同时使用 `audio_enhance`。说话人分离（Speaker Diarization）质量直接影响引用归属和片段质量。
 
-### 2. Produce A Speaker-Aware Transcript
+### 2. 生成带说话人信息的转录文本
 
-Diarization is not optional for multi-speaker episodes. Verify speaker mapping early and store the richer diarization detail in `script.metadata`.
+对于多说话人剧集，说话人分离是不可选的。尽早验证说话人映射，并将更丰富的说话人分离细节存储在 `script.metadata` 中。
 
-Recommended metadata keys:
+推荐的 metadata 键：
 
 - `speaker_map`
 - `transcript_path`
@@ -30,52 +30,52 @@ Recommended metadata keys:
 - `highlight_candidates`
 - `rejected_highlights`
 
-### 3. Rank Highlight Moments
+### 3. 对精彩时刻进行排名
 
-Use the episode transcript to find:
+使用剧集转录文本找到：
 
-- concise insights,
-- surprising claims,
-- emotional peaks,
-- debates,
-- practical advice,
-- memorable phrasing.
+- 简洁的见解，
+- 令人惊讶的主张，
+- 情感高潮，
+- 辩论点，
+- 实用建议，
+- 令人难忘的措辞。
 
-Every highlight should be evaluated for:
+每个精彩片段应从以下方面评估：
 
-- standalone clarity,
-- hook strength,
-- attribution confidence,
-- platform fit.
+- 独立清晰度，
+- 钩子强度，
+- 归属可信度，
+- 平台适配度。
 
-### 4. Build Chapters For Long-Form Packaging
+### 4. 为长格式打包构建章节
 
-If the user wants a full-episode companion asset, identify the topic shifts now. These become chapter markers and later visual transition points.
+如果用户需要全剧集伴随资产，请在此处识别话题转折点。这些将成为章节标记和后续的视觉过渡点。
 
-### 5. Keep The Schema Clean
+### 5. 保持 Schema 整洁
 
-Use `sections[]` for the structured production-facing segments and put the richer highlight inventory in metadata.
+使用 `sections[]` 作为面向制作的结构化段落，将更丰富的精彩片段清单放在 metadata 中。
 
-### 6. Quality Gate
+### 6. 质量门禁
 
-- speaker attribution is trustworthy,
-- the highlight set is strong enough for the requested deliverables,
-- weak clips are rejected instead of padded,
-- chapter markers cover the long-form conversation cleanly.
+- 说话人归属可信，
+- 精彩片段集足以满足要求的交付物，
+- 弱片段被拒绝而非填充，
+- 章节标记清晰地覆盖了长格式对话。
 
-### Mid-Production Fact Verification
+### 制作中期的事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在编写脚本时遇到不确定性：
+- 使用 `web_search` 在将事实性声明写入脚本前进行验证
+- 使用 `web_search` 查找参考图片以确保视觉准确性
+- 在决策日志中记录验证信息：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+脚本中的每个事实性声明都应能追溯回 `research_brief`。
+如果你提出了研究中没有的声明，请进行额外研究并添加来源。
+不要编造统计数据、日期或归属信息。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Treating diarization errors as minor when they change who said the quote.
-- Selecting clips that need too much earlier context.
-- Overfitting the batch to one section of the episode.
+- 将改变引用说话人的说话人分离错误视为小问题。
+- 选择需要过多前文背景的片段。
+- 将整个批次过度集中于剧集的某一节。

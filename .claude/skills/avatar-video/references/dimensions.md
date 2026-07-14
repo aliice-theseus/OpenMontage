@@ -3,34 +3,34 @@ name: dimensions
 description: Resolution options (720p/1080p) and aspect ratios for HeyGen videos
 ---
 
-# Video Dimensions and Resolution
+# 视频尺寸和分辨率
 
-HeyGen supports various video dimensions and aspect ratios to fit different platforms and use cases.
+HeyGen 支持多种视频尺寸和宽高比，以适应不同的平台和用例。
 
-## Standard Resolutions
+## 标准分辨率
 
-### Landscape (16:9)
+### 横屏（16:9）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用例 |
 |------------|-------|--------|----------|
-| 720p | 1280 | 720 | Standard quality, faster processing |
-| 1080p | 1920 | 1080 | High quality, most common |
+| 720p | 1280 | 720 | 标准质量，处理更快 |
+| 1080p | 1920 | 1080 | 高质量，最常用 |
 
-### Portrait (9:16)
+### 竖屏（9:16）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用例 |
 |------------|-------|--------|----------|
-| 720p | 720 | 1280 | Mobile-first content |
-| 1080p | 1080 | 1920 | High quality vertical |
+| 720p | 720 | 1280 | 移动优先内容 |
+| 1080p | 1080 | 1920 | 高质量竖屏 |
 
-### Square (1:1)
+### 方形（1:1）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用例 |
 |------------|-------|--------|----------|
-| 720p | 720 | 720 | Social media posts |
-| 1080p | 1080 | 1080 | High quality square |
+| 720p | 720 | 720 | 社交媒体帖子 |
+| 1080p | 1080 | 1080 | 高质量方形 |
 
-## Setting Dimensions
+## 设置尺寸
 
 ### TypeScript
 
@@ -79,7 +79,7 @@ curl -X POST "https://api.heygen.com/v2/video/generate" \
   }'
 ```
 
-## Dimension Helper Functions
+## 尺寸辅助函数
 
 ```typescript
 type AspectRatio = "16:9" | "9:16" | "1:1" | "4:3" | "4:5";
@@ -123,7 +123,7 @@ const tikTokDimensions = getDimensions("9:16", "1080p");
 const instagramDimensions = getDimensions("1:1", "1080p");
 ```
 
-## Platform-Specific Recommendations
+## 各平台推荐
 
 ### YouTube
 
@@ -143,7 +143,7 @@ const shortFormConfig = {
 };
 ```
 
-### Instagram Feed Post
+### Instagram Feed 帖子
 
 ```typescript
 const instagramFeedConfig = {
@@ -170,9 +170,9 @@ const twitterConfig = {
 };
 ```
 
-## Avatar IV Dimensions
+## Avatar IV 尺寸
 
-For Avatar IV (photo-based avatars), dimensions are set via orientation:
+对于 Avatar IV（基于照片的虚拟形象），尺寸通过方向设置：
 
 ```typescript
 type VideoOrientation = "portrait" | "landscape" | "square";
@@ -189,9 +189,9 @@ function getAvatarIVDimensions(orientation: VideoOrientation): Dimensions {
 }
 ```
 
-## Custom Dimensions
+## 自定义尺寸
 
-HeyGen supports custom dimensions within limits:
+HeyGen 支持在限制范围内的自定义尺寸：
 
 ```typescript
 const customConfig = {
@@ -203,11 +203,11 @@ const customConfig = {
 };
 ```
 
-### Dimension Constraints
+### 尺寸限制
 
-- **Minimum**: 128px on any side
-- **Maximum**: 4096px on any side
-- **Must be even numbers**: Both width and height must be divisible by 2
+- **最小值**：任意边至少 128px
+- **最大值**：任意边不超过 4096px
+- **必须为偶数**：宽度和高度都必须能被 2 整除
 
 ```typescript
 function validateDimensions(width: number, height: number): boolean {
@@ -224,20 +224,20 @@ function validateDimensions(width: number, height: number): boolean {
 }
 ```
 
-## Resolution vs. Credit Cost
+## 分辨率与积分成本
 
-Higher resolutions may consume more credits:
+更高的分辨率可能消耗更多积分：
 
-| Resolution | Relative Cost |
+| 分辨率 | 相对成本 |
 |------------|---------------|
-| 720p | Base rate |
-| 1080p | ~1.5x base rate |
+| 720p | 基准费率 |
+| 1080p | 约 1.5 倍基准费率 |
 
-Consider using 720p for drafts and testing, then 1080p for final output.
+建议在草稿和测试时使用 720p，最终输出时使用 1080p。
 
-## Background Considerations
+## 背景注意事项
 
-Match background image/video dimensions to your video dimensions:
+将背景图片/视频尺寸与视频尺寸匹配：
 
 ```typescript
 // For 1080p landscape video
@@ -256,7 +256,7 @@ const config = {
 };
 ```
 
-## Creating a Video Config Factory
+## 创建视频配置工厂
 
 ```typescript
 interface VideoConfigOptions {

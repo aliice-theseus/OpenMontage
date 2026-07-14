@@ -3,11 +3,11 @@ name: remotion-integration
 description: Using HeyGen avatar videos in Remotion compositions
 ---
 
-# HeyGen + Remotion Integration
+# HeyGen + Remotion 集成
 
-This guide covers workflows for generating HeyGen avatar videos and using them in Remotion compositions.
+本指南涵盖了生成 HeyGen 虚拟形象视频并在 Remotion 合成中使用它们的工作流程。
 
-## Quick Start
+## 快速开始
 
 ```typescript
 // 1. Get avatar with default voice
@@ -27,45 +27,45 @@ const videoId = await generateVideo({
 // 4. Use in Remotion with motion graphics overlaid on top
 ```
 
-## Overview
+## 概述
 
-A typical workflow:
-1. Generate avatar video with HeyGen
-2. Wait for completion and get video URL
-3. Download or use URL directly in Remotion
-4. Compose with other elements (backgrounds, overlays, animations)
+典型工作流程：
+1. 使用 HeyGen 生成虚拟形象视频
+2. 等待完成并获取视频 URL
+3. 下载 Remotion 或在 Remotion 中直接使用 URL
+4. 与其他元素组合（背景、叠加层、动画）
 
-## Choosing the Right Output Format
+## 选择正确的输出格式
 
-| Your Composition | Recommended | Why |
+| 您的合成 | 推荐 | 原因 |
 |------------------|-------------|-----|
-| Avatar as presenter with overlays | MP4 + background | Simpler, overlays go on top |
-| Loom-style (avatar over screen recording) | WebM + `closeUp`, mask in Remotion | Need transparency, apply circle mask in CSS |
-| Avatar overlaid ON other video/content | WebM (transparent) | Need to see through to content behind |
-| Full-screen avatar | MP4 + background | Standard approach |
+| 虚拟形象作为主持人带叠加层 | MP4 + 背景 | 更简单，叠加层在上方 |
+| Loom 风格（虚拟形象叠在屏幕录制上） | WebM + `closeUp`，在 Remotion 中遮罩 | 需要透明度，在 CSS 中应用圆形遮罩 |
+| 虚拟形象叠加在其他视频/内容上 | WebM（透明） | 需要看到后面的内容 |
+| 全屏虚拟形象 | MP4 + 背景 | 标准方法 |
 
-**Use MP4 with background for most cases.** Use WebM when you need to see content *behind* the avatar.
+**大多数情况下使用 MP4 带背景。** 当您需要看到虚拟形象*后面*的内容时使用 WebM。
 
-**Note:** WebM only supports `normal` and `closeUp` styles. For circular framing, use CSS `border-radius: 50%` in Remotion.
+**注意：** WebM 仅支持 `normal` 和 `closeUp` 样式。对于圆形构图，在 Remotion 中使用 CSS `border-radius: 50%`。
 
-## Recommended: Parallel Development Workflow
+## 推荐：并行开发工作流程
 
-HeyGen video generation takes **10-15+ minutes**. Don't wait - work in parallel:
+HeyGen 视频生成需要 **10-15+ 分钟**。不要等待——并行工作：
 
-1. **Start HeyGen generation** - save `video_id` to a file, exit immediately
-2. **Build Remotion composition** - use a placeholder or the avatar's `preview_video_url` (a short loop)
-3. **Check HeyGen status** periodically or when done building
-4. **Swap placeholder** for real video URL once ready
+1. **启动 HeyGen 生成** - 将 `video_id` 保存到文件，立即退出
+2. **构建 Remotion 合成** - 使用占位符或虚拟形象的 `preview_video_url`（短循环）
+3. **定期**或构建完成后**检查 HeyGen 状态**
+4. **用真实视频 URL 替换占位符**
 
-**Estimate duration from script**: ~150 words/minute speech rate, so `wordCount / 150 * 60 * fps` gives approximate frames.
+**根据脚本估算时长**：~150 单词/分钟的语速，所以 `wordCount / 150 * 60 * fps` 可得到近似帧数。
 
-**Composition tip**: Design components to work with or without the avatar video, so motion graphics can be tested independently.
+**合成提示**：设计组件使其无论是否有虚拟形象视频都能工作，这样动态图形可以独立测试。
 
-## Dimension Alignment
+## 尺寸对齐
 
-**Critical**: Match HeyGen output dimensions to your Remotion composition.
+**关键**：确保 HeyGen 输出尺寸与 Remotion 合成匹配。
 
-### Common Dimension Presets
+### 常用尺寸预设
 
 ```typescript
 // Shared dimension constants for both HeyGen and Remotion
@@ -81,7 +81,7 @@ const DIMENSIONS = {
 type DimensionPreset = keyof typeof DIMENSIONS;
 ```
 
-### HeyGen Video Generation
+### HeyGen 视频生成
 
 ```typescript
 // Generate HeyGen video with specific dimensions
@@ -127,7 +127,7 @@ async function generateHeyGenVideo(
 }
 ```
 
-### Remotion Composition Setup
+### Remotion 合成设置
 
 ```tsx
 // remotion/src/Root.tsx
@@ -158,11 +158,11 @@ export const RemotionRoot: React.FC = () => {
 };
 ```
 
-## Generating Avatar Video for Remotion
+## 为 Remotion 生成虚拟形象视频
 
-### Standard: MP4 with Background
+### 标准：带背景的 MP4
 
-Most Remotion compositions work best with MP4 + background. Overlays and motion graphics go on top:
+大多数 Remotion 合成最适合使用 MP4 + 背景。叠加层和动态图形放在上方：
 
 ```typescript
 async function generateAvatarForRemotion(
@@ -208,9 +208,9 @@ async function generateAvatarForRemotion(
 }
 ```
 
-### Transparent Background (WebM)
+### 透明背景 (WebM)
 
-Only use when you need to see content *behind* the avatar (e.g., avatar overlaid on screen recording):
+仅当您需要看到虚拟形象*后面*的内容时使用（例如，虚拟形象叠加在屏幕录制上）：
 
 ```typescript
 // Use /v1/video.webm endpoint for transparent background
@@ -231,15 +231,15 @@ const response = await fetch("https://api.heygen.com/v1/video.webm", {
 });
 ```
 
-## Using HeyGen Video in Remotion
+## 在 Remotion 中使用 HeyGen 视频
 
-### Important: Use OffthreadVideo for Frame-Accurate Rendering
+### 重要：使用 OffthreadVideo 实现帧精确渲染
 
-**Always use `OffthreadVideo` instead of `Video`** for HeyGen avatar videos. The basic `Video` component uses the browser's video decoder which isn't frame-accurate, causing jitter during rendering. `OffthreadVideo` extracts frames via FFmpeg for smooth, accurate playback.
+对于 HeyGen 虚拟形象视频，**始终使用 `OffthreadVideo`** 而不是 `Video`。基本的 `Video` 组件使用浏览器的视频解码器，它不是帧精确的，会导致渲染时出现抖动。`OffthreadVideo` 通过 FFmpeg 提取帧，实现流畅、精确的播放。
 
-`OffthreadVideo` is included in the core `remotion` package - no additional install needed.
+`OffthreadVideo` 包含在核心 `remotion` 包中——无需额外安装。
 
-### Basic Usage
+### 基本用法
 
 ```tsx
 // remotion/src/AvatarComposition.tsx
@@ -267,9 +267,9 @@ export const AvatarComposition: React.FC<AvatarCompositionProps> = ({
 };
 ```
 
-### WebM with Transparent Background (Recommended)
+### 带透明背景的 WebM（推荐）
 
-Using WebM from `/v1/video.webm` - no chroma keying needed:
+使用 `/v1/video.webm` 的 WebM——无需色度键：
 
 ```tsx
 import { OffthreadVideo, AbsoluteFill, Sequence } from "remotion";
@@ -306,9 +306,9 @@ export const AvatarWithMotionGraphics: React.FC<{
 };
 ```
 
-### Loom-Style: Circle Avatar Over Screen Recording
+### Loom 风格：圆形虚拟形象叠在屏幕录制上
 
-Use `closeUp` style + WebM, then apply circular mask in Remotion:
+使用 `closeUp` 样式 + WebM，然后在 Remotion 中应用圆形遮罩：
 
 ```tsx
 import { OffthreadVideo, AbsoluteFill } from "remotion";
@@ -342,11 +342,11 @@ export const LoomStyleComposition: React.FC<{
 };
 ```
 
-**Note:** WebM doesn't support `circle` style - use `normal` or `closeUp` and apply circular masking via CSS.
+**注意：** WebM 不支持 `circle` 样式——使用 `normal` 或 `closeUp` 并通过 CSS 应用圆形遮罩。
 
-### Legacy: Green Screen with Chroma Key
+### 旧版：带色度键的绿幕
 
-If using MP4 with green background (not recommended - use WebM instead):
+如果使用带绿色背景的 MP4（不推荐——请使用 WebM）：
 
 ```tsx
 // Note: True chroma key requires WebGL or post-processing
@@ -359,7 +359,7 @@ If using MP4 with green background (not recommended - use WebM instead):
 />
 ```
 
-### Layered Composition
+### 分层合成
 
 ```tsx
 import { OffthreadVideo, Sequence, useVideoConfig, Img } from "remotion";
@@ -436,9 +436,9 @@ export const LayeredAvatarComposition: React.FC<LayeredAvatarProps> = ({
 };
 ```
 
-## Complete Workflow
+## 完整工作流程
 
-### Generate and Compose
+### 生成与合成
 
 ```typescript
 import { bundle } from "@remotion/bundler";
@@ -501,7 +501,7 @@ async function generateAvatarVideoForRemotion(
 }
 ```
 
-### Dynamic Duration with calculateMetadata
+### 使用 calculateMetadata 实现动态时长
 
 ```tsx
 // remotion/src/AvatarComposition.tsx
@@ -532,11 +532,11 @@ export const calculateAvatarMetadata: CalculateMetadataFunction<
 />
 ```
 
-## Best Practices
+## 最佳实践
 
-### 1. Use Green Screen for Flexibility
+### 1. 使用绿幕以获得灵活性
 
-Generate HeyGen videos with green screen background when you want to composite:
+当您想要合成时，使用绿幕背景生成 HeyGen 视频：
 
 ```typescript
 background: {
@@ -545,9 +545,9 @@ background: {
 }
 ```
 
-### 2. Match Frame Rates
+### 2. 匹配帧率
 
-HeyGen default is 25 fps. Consider this when setting Remotion fps:
+HeyGen 默认为 25 fps。在设置 Remotion fps 时考虑这一点：
 
 ```typescript
 // Option 1: Match HeyGen's 25 fps
@@ -560,23 +560,23 @@ fps: 25
 />
 ```
 
-### 3. URL vs Download: When to Use Each
+### 3. URL 与下载：何时使用哪种
 
-**Use URL directly** when:
-- Previewing in Remotion Studio (`npm run dev`)
-- URL won't expire before render completes
-- You want faster iteration during development
+**直接使用 URL** 当：
+- 在 Remotion Studio 中预览（`npm run dev`）
+- URL 在渲染完成前不会过期
+- 您希望在开发期间更快迭代
 
 ```tsx
 // Direct URL usage - simpler, faster for dev
 <OffthreadVideo src={avatarVideoUrl} />
 ```
 
-**Download first** when:
-- URL has expiration (HeyGen URLs expire after ~24 hours)
-- Rendering will happen later or repeatedly
-- Network reliability is a concern
-- You need offline rendering
+**先下载** 当：
+- URL 有有效期（HeyGen URL 约 24 小时后过期）
+- 渲染将在之后或重复进行
+- 网络可靠性有问题
+- 您需要离线渲染
 
 ```typescript
 // Download with retry for reliability
@@ -606,7 +606,7 @@ async function downloadVideoWithRetry(
 const localPath = await downloadVideoWithRetry(avatarVideoUrl, "./public/avatar.mp4");
 ```
 
-**Hybrid approach** (recommended for production):
+**混合方法**（推荐用于生产环境）：
 ```typescript
 // Save both URL and local path in metadata
 const metadata = {
@@ -619,9 +619,9 @@ const metadata = {
 const videoSrc = fs.existsSync(localPath) ? staticFile("avatar.mp4") : avatarVideoUrl;
 ```
 
-### 4. Handle Avatar Positioning
+### 4. 处理虚拟形象定位
 
-Common avatar positions in compositions:
+合成中常见的虚拟形象位置：
 
 ```typescript
 const AVATAR_POSITIONS = {
@@ -633,16 +633,16 @@ const AVATAR_POSITIONS = {
 };
 ```
 
-## Output Formats
+## 输出格式
 
-### HeyGen Output
-- Format: MP4 (H.264)
-- Audio: AAC
-- Resolution: As specified in request
+### HeyGen 输出
+- 格式：MP4 (H.264)
+- 音频：AAC
+- 分辨率：按请求中指定的
 
-### Remotion Output
-- Codec: H.264 (default), VP8, VP9, ProRes
-- Match or exceed HeyGen quality settings
+### Remotion 输出
+- 编码：H.264（默认）、VP8、VP9、ProRes
+- 匹配或超过 HeyGen 质量设置
 
 ```typescript
 await renderMedia({
@@ -652,17 +652,17 @@ await renderMedia({
 });
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Video Not Playing in Remotion
+### 视频在 Remotion 中不播放
 
-1. Check URL accessibility (CORS issues)
-2. Verify video format compatibility
-3. Try downloading locally first
+1. 检查 URL 可访问性（CORS 问题）
+2. 验证视频格式兼容性
+3. 尝试先本地下载
 
-### Dimension Mismatch
+### 尺寸不匹配
 
-Ensure both HeyGen and Remotion use identical dimensions:
+确保 HeyGen 和 Remotion 使用相同的尺寸：
 
 ```typescript
 // Shared config
@@ -679,12 +679,12 @@ dimension: { width: VIDEO_CONFIG.width, height: VIDEO_CONFIG.height }
 <Composition width={VIDEO_CONFIG.width} height={VIDEO_CONFIG.height} />
 ```
 
-### Video Jitter During Rendering
+### 渲染期间视频抖动
 
-If avatar video appears jittery or stuttery in rendered output:
+如果虚拟形象视频在渲染输出中出现抖动或卡顿：
 
-1. **Use `OffthreadVideo` instead of `Video`** - The basic `Video` component uses the browser's video decoder which isn't frame-accurate
-2. Update imports (no additional install needed - it's in core `remotion`):
+1. **使用 `OffthreadVideo` 代替 `Video`** - 基本的 `Video` 组件使用浏览器的视频解码器，它不是帧精确的
+2. 更新导入（无需额外安装——它在核心 `remotion` 中）：
    ```tsx
    // Before (causes jitter)
    import { Video } from "remotion";
@@ -692,14 +692,14 @@ If avatar video appears jittery or stuttery in rendered output:
    // After (frame-accurate)
    import { OffthreadVideo } from "remotion";
    ```
-3. For WebM with transparency, add the `transparent` prop:
+3. 对于带透明度的 WebM，添加 `transparent` 属性：
    ```tsx
    <OffthreadVideo src={avatarWebmUrl} transparent />
    ```
 
-### Audio Sync Issues
+### 音频同步问题
 
-If avatar audio drifts:
-- Verify source video frame rate
-- Check for encoding issues
-- Consider re-encoding with consistent settings
+如果虚拟形象音频漂移：
+- 验证源视频帧率
+- 检查编码问题
+- 考虑使用一致的设置重新编码

@@ -1,24 +1,24 @@
 ---
-title: Use React DOM Resource Hints
+title: 使用 React DOM 资源提示
 impact: HIGH
-impactDescription: reduces load time for critical resources
+impactDescription: 减少关键资源的加载时间
 tags: rendering, preload, preconnect, prefetch, resource-hints
 ---
 
-## Use React DOM Resource Hints
+## 使用 React DOM 资源提示
 
-**Impact: HIGH (reduces load time for critical resources)**
+**影响：高（减少关键资源的加载时间）**
 
-React DOM provides APIs to hint the browser about resources it will need. These are especially useful in server components to start loading resources before the client even receives the HTML.
+React DOM 提供了向浏览器提示它将需要的资源的 API。这些在服务端组件中特别有用，可以在客户端收到 HTML 之前就开始加载资源。
 
-- **`prefetchDNS(href)`**: Resolve DNS for a domain you expect to connect to
-- **`preconnect(href)`**: Establish connection (DNS + TCP + TLS) to a server
-- **`preload(href, options)`**: Fetch a resource (stylesheet, font, script, image) you'll use soon
-- **`preloadModule(href)`**: Fetch an ES module you'll use soon
-- **`preinit(href, options)`**: Fetch and evaluate a stylesheet or script
-- **`preinitModule(href)`**: Fetch and evaluate an ES module
+- **`prefetchDNS(href)`**：为你预期要连接的域名解析 DNS
+- **`preconnect(href)`**：与服务器建立连接（DNS + TCP + TLS）
+- **`preload(href, options)`**：获取你即将使用的资源（样式表、字体、脚本、图片）
+- **`preloadModule(href)`**：获取你即将使用的 ES 模块
+- **`preinit(href, options)`**：获取并立即评估样式表或脚本
+- **`preinitModule(href)`**：获取并立即评估 ES 模块
 
-**Example (preconnect to third-party APIs):**
+**示例（预连接到第三方 API）：**
 
 ```tsx
 import { preconnect, prefetchDNS } from 'react-dom'
@@ -27,20 +27,20 @@ export default function App() {
   prefetchDNS('https://analytics.example.com')
   preconnect('https://api.example.com')
 
-  return <main>{/* content */}</main>
+  return <main>{/* 内容 */}</main>
 }
 ```
 
-**Example (preload critical fonts and styles):**
+**示例（预加载关键字体和样式）：**
 
 ```tsx
 import { preload, preinit } from 'react-dom'
 
 export default function RootLayout({ children }) {
-  // Preload font file
+  // 预加载字体文件
   preload('/fonts/inter.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
 
-  // Fetch and apply critical stylesheet immediately
+  // 立即获取并应用关键样式表
   preinit('/styles/critical.css', { as: 'style' })
 
   return (
@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**Example (preload modules for code-split routes):**
+**示例（为代码分割路由预加载模块）：**
 
 ```tsx
 import { preloadModule, preinitModule } from 'react-dom'
@@ -64,22 +64,22 @@ function Navigation() {
   return (
     <nav>
       <a href="/dashboard" onMouseEnter={preloadDashboard}>
-        Dashboard
+        仪表盘
       </a>
     </nav>
   )
 }
 ```
 
-**When to use each:**
+**每种 API 的适用场景：**
 
-| API | Use case |
+| API | 使用场景 |
 |-----|----------|
-| `prefetchDNS` | Third-party domains you'll connect to later |
-| `preconnect` | APIs or CDNs you'll fetch from immediately |
-| `preload` | Critical resources needed for current page |
-| `preloadModule` | JS modules for likely next navigation |
-| `preinit` | Stylesheets/scripts that must execute early |
-| `preinitModule` | ES modules that must execute early |
+| `prefetchDNS` | 稍后要连接的第三方域名 |
+| `preconnect` | 立即要获取的 API 或 CDN |
+| `preload` | 当前页面所需的关键资源 |
+| `preloadModule` | 可能下一次导航需要的 JS 模块 |
+| `preinit` | 必须早期执行的样式表/脚本 |
+| `preinitModule` | 必须早期执行的 ES 模块 |
 
-Reference: [React DOM Resource Preloading APIs](https://react.dev/reference/react-dom#resource-preloading-apis)
+参考：[React DOM Resource Preloading APIs](https://react.dev/reference/react-dom#resource-preloading-apis)

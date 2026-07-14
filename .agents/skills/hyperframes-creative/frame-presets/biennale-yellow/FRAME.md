@@ -2,11 +2,11 @@
 version: alpha
 name: Biennale Yellow — Frame (video / frame layer)
 description: >
-  Video-first companion to Biennale Yellow's design.md. The unit is the frame (1920×1080). Atoms
-  are identical and sacred — warm parchment grounds, a single deep indigo ink, solar yellow deployed
-  as bloom / panel / tile underprint, Instrument Serif display + Archivo sans + JetBrains Mono data,
-  1px hairline rules as the only border, atmospheric depth (no shadows), and the bottom-right
-  pagenum. Composition + frame scale rewritten. Restraint is the rule; motion out of scope.
+  Biennale Yellow 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣——暖羊皮纸底色、单一深靛蓝油墨、太阳黄作为
+  光晕/面板/瓷砖底色、Instrument Serif 展示 + Archivo 无衬线 + JetBrains Mono 数据、
+  1px 发丝线作为唯一边框、氛围深度（无阴影）以及右下角
+  页码。构图 + 帧比例已重写。克制是规则；运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -88,202 +88,188 @@ components:
     description: "The only persistent chrome."
 ---
 
-# Biennale Yellow — Frame (video / frame layer)
+# Biennale Yellow — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Biennale Yellow at frame scale is a **literary-editorial system** in the register of an art
-biennale catalogue: warm parchment, a single deep indigo ink, and solar yellow as atmosphere. No
-cards, no buttons, no shadows, no rounded corners — the structural vocabulary is just **paper, ink,
-and yellow.** Depth is delivered by soft radial **sun blooms**, not elevation.
+帧尺度的 Biennale Yellow 是一个**文学编辑系统**，风格如艺术双年展目录：暖羊皮纸、单一深靛蓝油墨、太阳黄作为氛围。没有卡片、没有按钮、没有阴影、没有圆角——结构词汇只是**纸、墨和黄色。** 深度由柔和径向**太阳光晕**传达，而非抬升。
 
-The voice is three faces in rigid roles: **Instrument Serif** (weight 400, tight line-height,
-negative tracking) carries every display, numeral, and quote from 40px to 720px+; **Archivo** carries
-body and the wide-tracked uppercase micro-label; **JetBrains Mono** carries every date, figure, and
-the pagenum. Text is **always ink** — contrast comes from size and weight, never color. The mood
-sits between a folded museum brochure and a slow-reading literary quarterly: confident, atmospheric,
-deeply restrained.
+声音是三个严格角色的面孔：**Instrument Serif**（字重 400，紧行高，负字距）承载所有展示、数字和引用（40px 到 720px+）；**Archivo** 承载正文和大写追踪的微标签；**JetBrains Mono** 承载所有日期、数字和页码。文字**始终是墨水色**——对比来自大小和字重，而非颜色。情绪介于折页博物馆手册和慢读文学季刊之间：自信、氛围感、深度克制。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Warm parchment ground** on every frame; never white, never gray.
-- **Single ink** (`{colors.ink}`) for all type and all rules; **solar yellow** as bloom / panel / tile.
-- **Instrument Serif 400** display (tight, negative-tracked); **Archivo** body + micro-labels; **JetBrains Mono** data.
-- **1px hairline rules** are the only border — no thicker weight exists; **no shadows, no rounded corners**.
-- **Sun bloom** is the primary depth layer on every frame; an ember counter-bloom adds warm-cool tension.
-- **Editorial-restrained** — sparse reads as elegant; crowding breaks the catalogue feel.
+- **暖羊皮纸底色**在每一帧上；从不白色，从不灰色。
+- **单一墨水色**（`{colors.ink}`）用于所有文字和所有标尺；**太阳黄**作为光晕/面板/瓷砖。
+- **Instrument Serif 400** 展示（紧，负字距）；**Archivo** 正文 + 微标签；**JetBrains Mono** 数据。
+- **1px 发丝线**是唯一边框——不存在更粗的字重；**无阴影，无圆角**。
+- **太阳光晕**是每帧的主要深度层；余烬反向光晕增加了暖冷张力。
+- **编辑克制**——稀疏读起来优雅；拥挤破坏目录感。
 
-## The Frame
+## 帧
 
-### Frame Craft Bar
+### 帧工艺检查
 
-Three eyeball tests gate every frame before any structural check:
+三个目测测试在任何结构检查之前检查每一帧：
 
-- **Squint** — one Instrument Serif moment dominates at 3–6× its neighbor; the sun bloom centers the eye.
-- **Silence** — frames read **55–60% empty**; the **ledger is the one dense exception** (density via quiet hairline repetition, not richness).
-- **Restraint** — **one ink color** for all type and rules; **one sun bloom** per frame (+ optional subordinate ember); never invert (no yellow text on ink).
-- **Reference** — aim at an **art-biennale catalogue / slow exhibition poster / literary quarterly**; failure looks like a **flat CMS template** (no bloom) or a **bordered-card deck**.
+- **眯眼** — 一个 Instrument Serif 元素以 3-6 倍于其邻居的效果主导；太阳光晕聚焦视线。
+- **静默** — 帧读起来 **55-60% 为空**；**分类账是唯一密集例外**（通过安静发丝线重复实现密度，而非丰富性）。
+- **克制** — **一种墨水色**用于所有文字和标尺；每帧**一个太阳光晕**（+ 可选从属余烬）；绝不自相矛盾（没有墨水色上的黄色文字）。
+- **参考** — 目标是**艺术双年展目录 / 慢展览海报 / 文学季刊**；失败看起来像**平面 CMS 模板**（无光晕）或**带边框的卡片组**。
 
-- **Primary:** 1920×1080 (16:9). Display authored in **`cqw`** (`px ÷ 1920 × 100 = cqw`).
-- **Vertical:** 1080×1920 (9:16). **Square:** 1080×1080 (1:1).
-- **Safe area:** `pad-edge` 4cqw (40–76px equivalent) — the elegance depends on edge negative space; only blooms, tiles, and panels bleed.
+- **主要：** 1920×1080 (16:9)。展示尺寸以 **`cqw`** 编写（`px ÷ 1920 × 100 = cqw`）。
+- **竖版：** 1080×1920 (9:16)。**方形：** 1080×1080 (1:1)。
+- **安全区域：** `pad-edge` 4cqw（等效 40-76px）——优雅依赖于边缘负空间；只有光晕、瓷砖和面板可出血。
 
-**The container law (load-bearing).** Every frame ground sets `container-type: size`; ALL
-frame-relative units are `cqw`/`cqh` against it — never `vw`. Hairlines stay 1px; bloom sizes scale
-as `%` of the frame.
+**容器定律（承重）。** 每个帧底色设置 `container-type: size`；所有
+帧相对单位都是针对它的 `cqw`/`cqh`——从不用 `vw`。发丝线保持 1px；光晕大小以帧的 `%` 缩放。
 
-## Colors
+## 颜色
 
-Tokens identical to the source. `{colors.paper}` is the universal ground; `{colors.ink}` (deep
-indigo navy) is **every line of type and every rule** — there is no secondary text color.
-`{colors.sun}` deploys three ways: the **bloom** (radial atmosphere), the **yellow-panel**
-(full-bleed poster fill, ink on top), and the **block-tile** underprint. `{colors.sun-soft}`/`haze`
-are bloom mid/outer stops. `{colors.ember}` appears **only** as a 15–22% counter-bloom — never a
-fill, never text. **The system never inverts** — ink on sun is correct; yellow text on ink does not exist.
+令牌与源相同。`{colors.paper}` 是通用底色；`{colors.ink}`（深
+靛蓝海军蓝）是**每一行文字和每一条标尺**——没有次要文字颜色。
+`{colors.sun}` 有三种部署方式：**光晕**（径向氛围）、**黄面板**
+（全出血海报填充，墨水色在顶部）和 **block-tile** 底色。`{colors.sun-soft}`/`haze`
+是光晕中间/外部梯度。`{colors.ember}` **仅**作为 15-22% 的反向光晕出现——从不是
+填充，从不是文字。**系统从不自相矛盾**——太阳上的墨水色是正确的；黄色文字在墨水色上不存在。
 
-## Typography
+## 排版
 
-Two ramps. The **reading/data ramp** (Archivo body 0.85cqw ink, micro-labels in px, JetBrains Mono
-data) carries copy + chrome; the **display ramp** (Instrument Serif `ledger-title` 1.55cqw →
-`numeral-jumbo` 28cqw) carries every headline, numeral, and quote.
+两个坡道。**阅读/数据坡道**（Archivo 正文 0.85cqw 墨水色，微标签用 px，JetBrains Mono
+数据）承载文案 + 铬色；**展示坡道**（Instrument Serif `ledger-title` 1.55cqw →
+`numeral-jumbo` 28cqw）承载所有标题、数字和引用。
 
-- **Legibility floor:** any load-bearing line ≥ **1.4cqw**; mono/labels in px are chrome only.
-- **Fit-to-measure:** size the headline to its length. Cap the block at **≤ 78cqw**; ≤3 words → `display`; 4–6 → `headline`; 7+ → `headline-sm`. The jumbo numeral is a divider's whole point — don't shrink it.
-- **Instrument Serif is weight 400 only** (its contrast is the weight signal), tight line-height (0.84–1.06), negative tracking; **micro-labels uppercase Archivo 600, ≥0.16em**; **mono for all numerals/dates**. No bold serif, no second text color, no mono in body/display.
+- **可读性下限：** 任何承重行 ≥ **1.4cqw**；px 单位的等宽/标签仅为铬色。
+- **适应测量：** 根据标题长度调整大小。将块限制在 **≤ 78cqw**；≤3 词 → `display`；4-6 → `headline`；7+ → `headline-sm`。巨型数字是分隔的全部意义——不要缩小它。
+- **Instrument Serif 仅为字重 400**（其对比度就是字重信号），紧行高（0.84-1.06），负字距；**微标签大写 Archivo 600，≥0.16em**；**所有数字/日期用等宽**。无粗体衬线，无第二文字颜色，正文/展示中无等宽。
 
-## Depth & Surface
+## 深度与表面
 
-Atmospheric, not structural. Depth from:
+氛围式，而非结构式。深度来自：
 
-- **Sun bloom** — the primary layer: a layered radial (sun 70–95% core → sun-soft → haze 18–22% → paper 0%), 42–70% of the frame. One per frame.
-- **Ember bloom** — a 15–22% peach counter-bloom in the opposite corner; always subordinate.
-- **Block-tile underprint** — translucent yellow rectangles on an 8×4 grid (cover/colophon).
-- **Yellow panel** — the one "hard" color statement: a flooded column/third, ink on top.
-- **Hairline rules** — 1px ink for structural separation (soft 18–20% variant for dense rows).
+- **太阳光晕** — 主层：分层径向（太阳 70-95% 核心 → sun-soft → haze 18-22% → paper 0%），帧的 42-70%。每帧一个。
+- **余烬光晕** — 对面角落的 15-22% 桃色反向光晕；始终从属。
+- **Block-tile 底色** — 8×4 网格上的半透明黄色矩形（封面/版权页）。
+- **黄面板** — 唯一"硬"颜色声明：充满的列/三分之一，墨水色在顶部。
+- **发丝线标尺** — 1px 墨水色用于结构分隔（密集行的柔和 18-20% 变体）。
 
-**Ceiling:** zero box-shadow, zero text-shadow, zero rounded corner, no border thicker than 1px.
+**上限：** 零 box-shadow，零 text-shadow，零圆角，无边框粗于 1px。
 
-## Shapes
+## 形状
 
-- **0 radius on everything** — strict rectangles. Blooms are edgeless (they fade into paper).
+- **所有内容 0 圆角** — 严格矩形。光晕无边缘（它们淡入纸张）。
 
-## Components
+## 组件
 
-- **sun-bloom / ember-bloom / block-tile** — the atmospheric depth set. **yellow-panel** — the poster-fill statement.
-- **hairline-rule** — the only border (1px ink; soft variant for dense rows).
-- **strand-row / ledger-row / footer-band** — the editorial list, tabular calendar, and metadata strip.
-- **vertical-rail** — rotated chapter marker. **pagenum** — the bottom-right mono chrome.
+- **sun-bloom / ember-bloom / block-tile** — 氛围深度集。**yellow-panel** — 海报填充声明。
+- **hairline-rule** — 唯一边框（1px 墨水色；密集行的柔和变体）。
+- **strand-row / ledger-row / footer-band** — 编辑列表、表格日历和元数据条。
+- **vertical-rail** — 旋转的章节标记。**pagenum** — 右下角等宽铬色。
 
-## Frame Treatments
+## 帧处理
 
-> Recipe: ground · container · composes · focal · chrome · accent · silence · Fixed/Free · density.
-> A sun bloom + bottom-right pagenum on every frame; sparse is the default.
+> 配方：背景 · 容器 · 组成 · 焦点 · 铬色 · 强调 · 静默 · 固定/自由 · 密度。
+> 每帧一个太阳光晕 + 右下角页码；稀疏是默认设置。
 
-### 1 · Cover (identity · move: display + sun bloom · left)
+### 1 · 封面（标识 · 动作：展示 + 太阳光晕 · 左）
 
-**Ground** paper + a large sun-bloom (left-of-center) + an ember counter-bloom (opposite corner).
-**Composes** micro-label, display, date-rail, footer-band, pagenum. **Focal** a 2-line Instrument
-Serif `display` (italic key word) in ink, left, under a micro-label. **Chrome** a serif date-rail
-top-right; a 4-column footer-band at the foot. **Accent** the sun bloom + yellow. **Silence** the
-bloom holds the open space. **Fixed** ink type, one bloom, 1px footer rules, no shadow. **Free**
-title, date, footer cells. **Density** low.
+**背景** 纸 + 一个大太阳光晕（中心偏左）+ 一个余烬反向光晕（对角）。
+**组成** 微标签、展示、日期轨、页脚带、页码。**焦点** 墨水色中 2 行 Instrument
+Serif `display`（斜体关键词），左对齐，在微标签下方。**铬色** 右上角衬线日期轨；
+底部 4 列页脚带。**强调** 太阳光晕 + 黄色。**静默** 光晕占据空白空间。**固定** 墨水色文字、一个光晕、1px 页脚规则、无阴影。**自由**
+标题、日期、页脚单元格。**密度** 低。
 
-### 2 · Chapter Divider (section · move: jumbo numeral · vertical rail)
+### 2 · 章节分隔（章节 · 动作：巨型数字 · 垂直轨）
 
-**Ground** paper + a corner-anchored sun-bloom. **Composes** vertical-rail, numeral-jumbo,
-headline-sm. **Focal** a single huge Instrument Serif `numeral-jumbo` (≈28cqw) dominating, with a
-serif title beneath. **Chrome** a rotated vertical-rail label up the left edge; pagenum. **Accent**
-the bloom behind the numeral. **Silence** ~60%. **Fixed** serif 400, jumbo numeral, rail label.
-**Free** the ordinal, title, rail text. **Density** low.
+**背景** 纸 + 角落锚定的太阳光晕。**组成** 垂直轨、巨型数字、
+特小标题。**焦点** 单个巨大的 Instrument Serif `numeral-jumbo`（≈28cqw）主导，下方带有
+衬线标题。**铬色** 沿左边缘旋转的垂直轨标签；页码。**强调**
+数字背后的光晕。**静默** ~60%。**固定** 衬线 400、巨型数字、轨标签。
+**自由** 序数、标题、轨文字。**密度** 低。
 
-### 3 · Ledger (catalog · move: hairline tabular rows · the dense frame)
+### 3 · 分类账（目录 · 动作：发丝线表格行 · 密集帧）
 
-**Ground** paper (bloom optional, subtle). **Composes** headline-sm + micro-label topbar, ledger-rows.
-**Focal** a 4-column tabular calendar — mono date · serif title · sans venue · mono duration —
-separated by hairline-soft rules under a 1px ink header rule. **Chrome** pagenum. **Accent** none —
-density through quiet repetition, not color. **Silence** tight — the density exception (achieved by
-repetition, not richness). **Fixed** hairline rules, mono dates, serif titles. **Free** rows, venues.
-**Density** dense-exception.
+**背景** 纸（光晕可选，微妙）。**组成** 特小标题 + 微标签顶部栏、分类账行。
+**焦点** 一个 4 列表格日历 — 等宽日期 · 衬线标题 · 无衬场地 · 等宽时长 —
+由发丝线柔和规则分隔，上方为 1px 墨水色标题规则。**铬色** 页码。**强调** 无 —
+通过安静重复实现密度，而非颜色。**静默** 紧 — 密度例外（通过
+重复实现，而非丰富性）。**固定** 发丝线规则、等宽日期、衬线标题。**自由** 行、场地。
+**密度** 密集例外。
 
-### 4 · Manifesto / Quote (quote · move: italic serif · centered bloom)
+### 4 · 宣言/引用（引用 · 动作：斜体衬线 · 居中光晕）
 
-**Ground** paper + a centered sun-bloom. **Composes** numeral-lg quote mark, display-it, attribution.
-**Focal** a 2-line Instrument Serif **italic** `display-it` quote in ink, centered, under an
-oversized serif quote mark. **Chrome** a micro-label attribution. **Accent** the centered bloom.
-**Silence** ~60% — deliberately open. **Fixed** italic serif, one bloom, ink. **Free** quote,
-attribution. **Density** low.
+**背景** 纸 + 居中太阳光晕。**组成** 大号数字引用标记、展示斜体、署名。
+**焦点** 墨水色中 2 行 Instrument Serif **斜体** `display-it` 引用，居中，位于
+超大衬线引用标记下方。**铬色** 微标签署名。**强调** 居中光晕。
+**静默** ~60% — 故意开放。**固定** 斜体衬线、一个光晕、墨水色。**自由** 引用、
+署名。**密度** 低。
 
-### 5 · Poster Panel (statement · move: yellow panel · split)
+### 5 · 海报面板（声明 · 动作：黄色面板 · 分割）
 
-**Ground** paper with a full-bleed `{colors.sun}` `yellow-panel` (column or third). **Composes**
-yellow-panel, micro-label, headline. **Focal** an Instrument Serif `headline` in ink sitting **on
-the sun panel** (ink-on-yellow — a signature). **Chrome** micro-label; pagenum. **Accent** the panel
-itself. **Silence** the paper side stays open. **Fixed** ink-on-sun, panel meets paper directly (no
-border), no shadow. **Free** headline, panel side/width. **Density** low.
+**背景** 纸，带全出血 `{colors.sun}` `yellow-panel`（列或三分之一）。**组成**
+黄色面板、微标签、标题。**焦点** Instrument Serif `headline` 墨水色放置在**太阳面板上**
+（墨水色在黄色上 — 标志性）。**铬色** 微标签；页码。**强调** 面板
+本身。**静默** 纸张侧保持开放。**固定** 墨水色在太阳上、面板直接接触纸（无
+边框）、无阴影。**自由** 标题、面板侧/宽度。**密度** 低。
 
-### 6 · Strand List (programme · move: numbered editorial rows · left)
+### 6 · 串行列表（节目 · 动作：编号编辑行 · 左）
 
-**Ground** paper + a subtle sun-bloom. **Composes** micro-label, headline-sm, strand-rows. **Focal**
-a numbered list — serif numeral + serif title + sans body, hairline-soft separators. **Chrome**
-micro-label; pagenum. **Accent** the bloom. **Silence** moderate; rows breathe. **Fixed** serif
-numerals, hairline-soft rules. **Free** items, copy. **Density** standard.
+**背景** 纸 + 微妙太阳光晕。**组成** 微标签、特小标题、串行行。**焦点**
+编号列表 — 衬线数字 + 衬线标题 + 无衬正文、发丝线柔和分隔符。**铬色**
+微标签；页码。**强调** 光晕。**静默** 中等；行有呼吸空间。**固定** 衬线
+数字、发丝线柔和规则。**自由** 项目、文案。**密度** 标准。
 
-## Composition Rules
+## 构图规则
 
-### Do
+### 该做
 
-- Start on **warm parchment**; add **one sun bloom** (optionally an ember counter-bloom) — atmosphere is the depth.
-- Set every line in **ink**; use **Instrument Serif 400** (tight, negative-tracked) for display, **Archivo** body, **JetBrains Mono** for all numerals/dates.
-- Make every separator a **1px ink hairline** (soft variant for dense rows); flood a **yellow panel** for poster moments (ink on top).
-- Keep micro-labels **uppercase Archivo 600, 0.16–0.32em**; pin the **pagenum** bottom-right.
-- Lean sparse; left/asymmetric on cover/chapter/list, centered on manifesto.
+- 从**暖羊皮纸**开始；添加**一个太阳光晕**（可选余烬反向光晕）— 氛围即深度。
+- 每一行使用**墨水色**；展示使用 **Instrument Serif 400**（紧、负字距），**Archivo** 正文，所有数字/日期使用 **JetBrains Mono**。
+- 每个分隔符使用 **1px 墨水色发丝线**（密集行用柔和变体）；海报时刻使用**黄色面板**（墨水色在上）。
+- 微标签保持**大写 Archivo 600, 0.16–0.32em**；**页码**固定在右下角。
+- 倾向稀疏；封面/章节/列表左对齐/不对称，宣言居中。
 
-### Don't
+### 不该做
 
-- No drop shadows, no rounded corners, no bordered cards, no border thicker than 1px.
-- No second text color; no bold Instrument Serif; no inverted ink grounds.
-- No mono for body/display; no font substitutes.
-- Don't crowd the canvas — sparse reads as elegant; don't omit the bloom (flat parchment reads as a CMS template).
-- Don't blow a headline edge-to-edge — step the ramp down.
+- 无投影、无圆角、无带边框卡片、无边框粗于 1px。
+- 无第二种文字颜色；无粗体 Instrument Serif；无反转墨水色背景。
+- 正文/展示无等宽；无字体替代。
+- 不要拥挤画布 — 稀疏读起来优雅；不要省略光晕（平面羊皮纸读起来像 CMS 模板）。
+- 不要将标题扩展到边缘 — 降低坡道等级。
 
-## Aspect-Ratio Behavior
+## 宽高比行为
 
-| Treatment       | 16:9                                           | 9:16                       | 1:1                        |
-| --------------- | ---------------------------------------------- | -------------------------- | -------------------------- |
-| Cover           | display left, date-rail top-right, footer foot | display top, footer stacks | display upper, footer foot |
-| Chapter Divider | jumbo numeral, rail left                       | numeral centered, rail top | numeral centered           |
-| Ledger          | 4-col rows                                     | drop venue col → 3-col     | 3-col                      |
-| Manifesto       | centered italic                                | centered, taller           | centered                   |
-| Poster Panel    | side panel + paper                             | top/bottom panel band      | panel third                |
-| Strand List     | numbered rows                                  | rows (tighter)             | rows                       |
+| 处理            | 16:9                                         | 9:16                      | 1:1                       |
+| --------------- | -------------------------------------------- | ------------------------- | ------------------------- |
+| 封面            | 展示左、日期轨右上、页脚底部                    | 展示顶、页脚堆叠            | 展示上、页脚底部           |
+| 章节分隔        | 巨型数字、轨左                                | 数字居中、轨顶             | 数字居中                  |
+| 分类账          | 4 列行                                       | 丢弃场地列→3列            | 3列                       |
+| 宣言            | 居中斜体                                      | 居中、更高                | 居中                      |
+| 海报面板        | 侧面板 + 纸                                   | 顶/底面板带               | 面板三分之一               |
+| 串行列表        | 编号行                                        | 行（更紧）                | 行                        |
 
-`pad-edge` holds on the short edge; display clamps use the shorter axis so portrait doesn't blow out
-headlines. Keep load-bearing lines ≥ 1.4cqw. Ledger/strand fixed first columns may tighten on 9:16.
+`pad-edge` 在短边上保持；展示钳制使用较短的轴，因此竖屏不会使标题过度膨胀。保持承重行 ≥ 1.4cqw。分类账/串行固定的首列在 9:16 上可能会收紧。
 
-## Approved Entities
+## 已批准实体
 
-No real customers, logos, or vendors are defined in the source — render any such mark as a
-placeholder. Programme titles, venues, and dates are content; the system supplies paper, ink, yellow.
+源中未定义真实客户、标识或供应商 — 将任何此类标记渲染为占位符。节目名称、场地和日期是内容；系统提供纸、墨水、黄色。
 
-## Numerals & Claims (hard rule)
+## 数字与声明（硬性规则）
 
-Never invent figures, dates, durations, or counts at frame scale. Render slots as `— figure —`,
-`{metric}`, `NN JUN`, `N m`. Ledger dates/durations and chart values especially carry placeholders
-until the script supplies them. Chapter ordinals (01, 02…) are decorative.
+在帧尺度上永远不要发明数字、日期、时长或计数。将插槽渲染为 `— figure —`、`{metric}`、`NN JUN`、`N m`。分类账日期/时长和图表值尤其带有占位符，直到脚本提供它们。章节序数（01, 02…）是装饰性的。
 
-## Pre-Render Self-Audit
+## 渲染前自查
 
-- **Squint** — one serif display moment dominates; the bloom centers the eye.
-- **Silence** — sparse frames 55–60% open; only the ledger runs dense (via repetition, not richness).
-- **One color** — ink for all text + rules; sun for bloom/panel/tile; ember counter-bloom only; no inversion.
-- **Type** — Instrument Serif 400 tight negative-tracked, fit-to-measure; micro-labels uppercase 0.16em+; mono numerals; ≥1.4cqw floor.
-- **Depth** — 0 shadow, 0 rounded corner, 1px hairlines only; one sun bloom present.
-- **Anchor** — left on cover/chapter/list, centered on manifesto; pagenum bottom-right.
-- **Fabrication** — every numeral/date traces to the script, else placeholder.
+- **眯眼** — 一个衬线展示时刻主导；光晕聚焦视线。
+- **静默** — 稀疏帧 55-60% 开放；只有分类账运行密集（通过重复，而非丰富性）。
+- **一种颜色** — 墨水色用于所有文字 + 规则；太阳用于光晕/面板/瓷砖；仅余烬反向光晕；无反色。
+- **类型** — Instrument Serif 400 紧负字距、适应测量；微标签大写 0.16em+；等宽数字；≥1.4cqw 下限。
+- **深度** — 0 阴影、0 圆角、仅 1px 发丝线；存在一个太阳光晕。
+- **锚定** — 封面/章节/列表左对齐、宣言居中；页码右下角。
+- **制作** — 每个数字/日期追踪到脚本，否则为占位符。
 
-## Known Gaps
+## 已知差距
 
-- **Motion intentionally out of scope.** frame.md specifies composition only; the source's 280ms crossfade is a deck mechanic.
-- **Instrument Serif + Archivo + JetBrains Mono via Google Fonts.** CJK: Smiley Sans (display) / Noto Serif SC (body) / Noto Sans SC (labels); italic serif and mono tabular figures have no exact Hanzi equal — keep ledger dates Latin.
-- **9:16 / 1:1 are guidance**; the `min(vw,vh)` clamp pattern keeps display from blowing out — verify per ratio.
-- Sun/ember blooms, block tiles, yellow panels, and hairline rules are CSS-only; no external imagery is required.
+- **运动有意不在此范围。** frame.md 仅指定构图；源的 280ms 交叉淡入淡出是幻灯片机制。
+- **Instrument Serif + Archivo + JetBrains Mono 通过 Google Fonts。** CJK：Smiley Sans（展示）/ Noto Serif SC（正文）/ Noto Sans SC（标签）；斜体衬线和等宽表格数字没有精确的汉字对应 — 保持分类账日期为拉丁文。
+- **9:16 / 1:1 为指导性**；`min(vw,vh)` 钳制模式防止展示过度膨胀 — 按比例验证。
+- 太阳/余烬光晕、block 瓷砖、黄色面板和发丝线规则仅 CSS；无需外部图片。

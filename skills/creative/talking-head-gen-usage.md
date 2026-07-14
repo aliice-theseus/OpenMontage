@@ -1,137 +1,137 @@
-# Talking Head Generation Usage for OpenMontage
+# OpenMontage 说话人头像生成使用指南
 
-> Sources: SadTalker paper (Zhang et al. 2023), MuseTalk documentation, existing Layer 2 skills
-> at `skills/creative/face-restore-usage.md` and `skills/creative/enhancement-strategy.md`
+> 来源：SadTalker 论文 (Zhang et al. 2023)、MuseTalk 文档、现有 Layer 2 技能
+> 位于 `skills/creative/face-restore-usage.md` 和 `skills/creative/enhancement-strategy.md`
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-DEFAULT MODEL:    sadtalker
-INPUT:            One face photo + one audio file → animated talking video
-EXPRESSION:       expression_scale=1.0 (0.5 = subtle, 1.5 = expressive)
-STILL MODE:       false (true = mouth-only animation, head stays fixed)
-PREPROCESS:       crop (default — crops face, animates, pastes back)
-KEY RULE:         Generate audio FIRST, then pass to talking_head
+默认模型：        sadtalker
+输入：            一张面部照片 + 一个音频文件 → 动画说话视频
+表情强度：        expression_scale=1.0（0.5 = 微妙，1.5 = 丰富表情）
+静止模式：        false（true = 仅嘴部动画，头部保持固定）
+预处理：          crop（默认 — 裁剪面部、动画化、粘贴回原图）
+关键规则：         先生成音频，再传给 talking_head
 ```
 
-## When to Use the talking_head Tool
+## 何时使用 talking_head 工具
 
-| Scenario | Use talking_head? |
-|----------|-------------------|
-| Avatar spokesperson video from a single photo | Yes |
-| Personalized message — animate a headshot with custom narration | Yes |
-| No video footage exists but a photo is available | Yes |
-| Multi-language avatar — same face, different audio tracks | Yes |
-| Existing video footage needs processing | No — use the talking-head pipeline |
-| Lip-syncing existing video to new audio | No — use the `lip_sync` tool |
+| 场景 | 使用 talking_head？ |
+|------|---------------------|
+| 从单张照片生成虚拟代言人视频 | 是 |
+| 个性化消息 — 用自定义旁白动画化头像 | 是 |
+| 没有视频素材但有一张照片 | 是 |
+| 多语言虚拟人 — 相同面部，不同音频轨道 | 是 |
+| 现有视频素材需要处理 | 否 — 使用说话人头像流程 |
+| 将现有视频唇形同步到新音频 | 否 — 使用 `lip_sync` 工具 |
 
-## Input Requirements
+## 输入要求
 
-### Photo
+### 照片
 
-- Clear, front-facing face with good lighting
-- Minimum resolution: 256x256px
-- Best results: 512x512 or larger
-- Neutral expression, direct eye contact
-- Avoid: extreme angles, accessories covering the face (large sunglasses, masks), multiple faces in the image
+- 清晰、正面的面部，光照良好
+- 最低分辨率：256x256px
+- 最佳效果：512x512或更大
+- 中性表情，直接眼神接触
+- 避免：极端角度、遮盖面部的配饰（大太阳镜、口罩）、图像中有多张脸
 
-### Audio
+### 音频
 
-- Clean speech audio — WAV or MP3
-- Sample rate: 16kHz or higher
-- Audio duration determines output video duration
-- Remove background noise before feeding into talking_head — clean audio produces cleaner lip sync
+- 清晰的语音音频 — WAV 或 MP3
+- 采样率：16kHz或更高
+- 音频时长决定输出视频时长
+- 在输入到 talking_head 前去除背景噪音 — 干净的音频产生更干净的唇形同步
 
-## Model Selection
+## 模型选择
 
-| Model | Strengths | Weaknesses |
-|-------|----------|------------|
-| sadtalker | Natural head motion, good expression range, well-tested | Can struggle with extreme expressions |
-| musetalk | Higher quality lip sync, sharper mouth region | More constrained head motion |
+| 模型 | 优势 | 劣势 |
+|------|------|------|
+| sadtalker | 自然的头部运动、良好的表情范围、经过充分测试 | 极端表情时可能不理想 |
+| musetalk | 更高质量的唇形同步、更清晰的嘴部区域 | 头部运动受限 |
 
-**Default to `sadtalker`** unless lip sync precision is the top priority.
+**默认使用 `sadtalker`**，除非唇形同步精度是最高优先级。
 
-## Settings Reference
+## 设置参考
 
-### Preprocess Modes
+### 预处理模式
 
-| Mode | What It Does | When to Use |
-|------|-------------|-------------|
-| `crop` | Crops face region, animates, pastes back into original frame | Default — best for headshots and portraits |
-| `resize` | Resizes full input to model dimensions | When you want full-frame output at model resolution |
-| `full` | No preprocessing — input passed directly | Advanced — input must already be correctly sized for the model |
+| 模式 | 功能 | 使用场景 |
+|------|------|----------|
+| `crop` | 裁剪面部区域、动画化、粘贴回原始画面 | 默认 — 最适合头像照和肖像 |
+| `resize` | 将完整输入缩放到模型尺寸 | 当想要模型分辨率下的全画幅输出时 |
+| `full` | 无预处理 — 直接传递输入 | 高级 — 输入必须已经正确调整到模型尺寸 |
 
-### expression_scale Tuning
+### expression_scale 调节
 
-| Value | Effect | Use Case |
-|-------|--------|----------|
-| 0.5 | Subtle, minimal head movement | Corporate, formal, conservative |
-| 0.7 | Calm, professional | Business presentations, news-style |
-| 1.0 | Natural conversational (default) | General-purpose, explainers |
-| 1.5 | Expressive, energetic | Social media, engaging content |
-| >1.5 | Risk of artifacts | Avoid unless intentionally stylized |
+| 值 | 效果 | 使用场景 |
+|------|------|----------|
+| 0.5 | 微妙、最小头部运动 | 企业、正式、保守 |
+| 0.7 | 冷静、专业 | 商务演示、新闻风格 |
+| 1.0 | 自然对话（默认） | 通用、讲解类 |
+| 1.5 | 表情丰富、有活力 | 社交媒体、吸引人的内容 |
+| >1.5 | 有伪影风险 | 除非有意风格化，否则避免 |
 
 ### still_mode
 
-| Value | Effect | Use Case |
-|-------|--------|----------|
-| `false` (default) | Head moves naturally while speaking | More realistic, conversational feel |
-| `true` | Only mouth animates, head stays fixed | Formal/corporate look, or when head motion causes artifacts |
+| 值 | 效果 | 使用场景 |
+|------|------|----------|
+| `false`（默认） | 说话时头部自然运动 | 更真实、对话感 |
+| `true` | 仅嘴部动画，头部保持固定 | 正式/企业外观，或头部运动导致伪影时 |
 
-## Common Workflows
+## 常见工作流程
 
-### 1. Avatar Spokesperson
-
-```
-photo + elevenlabs_tts → talking_head → face_enhance → compose
-```
-
-Standard avatar video: generate speech from script, animate the photo, polish the face, compose into final video.
-
-### 2. Multi-Language Avatar
+### 1. 虚拟代言人
 
 ```
-photo + tts per language → talking_head per language → compose variants
+照片 + elevenlabs_tts → talking_head → face_enhance → compose
 ```
 
-Same face photo, different audio tracks per language. Each produces a separate talking-head video for localized content.
+标准虚拟人视频：从脚本生成语音、动画化照片、美化面部、合成到最终视频。
 
-### 3. Quick Social Content
-
-```
-headshot + script → piper_tts → talking_head → subtitle_gen → compose
-```
-
-Fast turnaround social video: generate speech locally, animate, add subtitles, compose.
-
-### 4. Photo-to-Explainer
+### 2. 多语言虚拟人
 
 ```
-talking_head output → compose with diagram overlays
+照片 + 每种语言 tts → 每种语言 talking_head → 合成多版本
 ```
 
-Use the talking-head video as a presenter layer, then overlay diagrams, charts, or screen recordings during composition.
+相同面部照片，每种语言不同音频轨道。每种语言生成单独的说话人头像视频用于本地化内容。
 
-## Quality Checklist
+### 3. 快速社交内容
 
-Before accepting talking_head output, verify:
+```
+头像照 + 脚本 → piper_tts → talking_head → subtitle_gen → compose
+```
 
-- [ ] Lip movements match the audio naturally
-- [ ] Head motion looks organic, not robotic
-- [ ] No visual artifacts around face edges or jaw
-- [ ] Eyes blink naturally (not frozen or blinking too fast)
-- [ ] Output resolution is acceptable for the target platform
-- [ ] Expression intensity matches the tone of the narration
+快速制作的社交视频：本地生成语音、动画化、添加字幕、合成。
 
-## Applying to OpenMontage
+### 4. 照片转讲解
 
-When using the `talking_head` tool:
+```
+talking_head 输出 → 叠加图表合成
+```
 
-1. **Generate audio FIRST** (via `tts_selector`, `elevenlabs_tts`, `openai_tts`, or `piper_tts`), then pass to talking_head
-2. **Use `expression_scale=1.0` as baseline** — only increase for high-energy content
-3. **Always apply `face_enhance` AFTER talking_head** to polish the output
-4. **For corporate/professional content**, use `still_mode=true` and `expression_scale=0.7`
-5. **Source photo quality directly impacts output quality** — use the best available photo
-6. **Crop mode is the safest default** — only use `resize` or `full` if crop produces bad framing
-7. **Preview a 5-second clip before generating the full video** — catch artifacts early
-8. **Fallback strategy:** if SadTalker is unavailable but Wav2Lip is, record a simple static video from the photo and lip-sync it with the `lip_sync` tool instead
+使用说话人头像视频作为主持人层，然后在合成期间叠加图表、图或屏幕录制。
+
+## 质量检查清单
+
+在接受 talking_head 输出之前，验证：
+
+- [ ] 嘴唇运动与音频自然匹配
+- [ ] 头部运动看起来有机，不机械
+- [ ] 面部边缘或下巴周围无可见伪影
+- [ ] 眼睛自然眨眼（不冻结或眨眼过快）
+- [ ] 输出分辨率对目标平台可接受
+- [ ] 表情强度匹配旁白的语气
+
+## 应用于 OpenMontage
+
+使用 `talking_head` 工具时：
+
+1. **先生成音频**（通过 `tts_selector`、`elevenlabs_tts`、`openai_tts` 或 `piper_tts`），再传给 talking_head
+2. **使用 `expression_scale=1.0` 作为基线** — 仅为高能量内容增加
+3. **在 talking_head 之后始终应用 `face_enhance`** 以美化输出
+4. **企业/专业内容**使用 `still_mode=true` 和 `expression_scale=0.7`
+5. **源照片质量直接影响输出质量** — 使用最佳可用照片
+6. **裁剪模式是最安全的默认值** — 仅在裁剪产生不良构图时使用 `resize` 或 `full`
+7. **在生成完整视频前预览5秒片段** — 及早发现伪影
+8. **回退策略：** 如果 SadTalker 不可用但 Wav2Lip 可用，从照片录制简单的静态视频并使用 `lip_sync` 工具进行唇形同步

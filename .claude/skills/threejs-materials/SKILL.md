@@ -1,16 +1,16 @@
 ---
 name: threejs-materials
-description: Three.js materials - PBR, basic, phong, shader materials, material properties. Use when styling meshes, working with textures, creating custom shaders, or optimizing material performance.
+description: Three.js 材质 — PBR、基础、Phong、着色器材质、材质属性。在样式化网格、处理纹理、创建自定义着色器或优化材质性能时使用。
 ---
 
-# Three.js Materials
+# Three.js 材质
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
 
-// PBR material (recommended for realistic rendering)
+// PBR 材质（推荐用于逼真渲染）
 const material = new THREE.MeshStandardMaterial({
   color: 0x00ff00,
   roughness: 0.5,
@@ -20,24 +20,24 @@ const material = new THREE.MeshStandardMaterial({
 const mesh = new THREE.Mesh(geometry, material);
 ```
 
-## Material Types Overview
+## 材质类型概览
 
-| Material             | Use Case                              | Lighting           |
+| 材质 | 使用场景 | 光照 |
 | -------------------- | ------------------------------------- | ------------------ |
-| MeshBasicMaterial    | Unlit, flat colors, wireframes        | No                 |
-| MeshLambertMaterial  | Matte surfaces, performance           | Yes (diffuse only) |
-| MeshPhongMaterial    | Shiny surfaces, specular highlights   | Yes                |
-| MeshStandardMaterial | PBR, realistic materials              | Yes (PBR)          |
-| MeshPhysicalMaterial | Advanced PBR, clearcoat, transmission | Yes (PBR+)         |
-| MeshToonMaterial     | Cel-shaded, cartoon look              | Yes (toon)         |
-| MeshNormalMaterial   | Debug normals                         | No                 |
-| MeshDepthMaterial    | Depth visualization                   | No                 |
-| ShaderMaterial       | Custom GLSL shaders                   | Custom             |
-| RawShaderMaterial    | Full shader control                   | Custom             |
+| MeshBasicMaterial | 无光照、纯色、线框 | 否 |
+| MeshLambertMaterial | 哑光表面、性能优先 | 是（仅漫反射） |
+| MeshPhongMaterial | 光泽表面、高光 | 是 |
+| MeshStandardMaterial | PBR、逼真材质 | 是（PBR） |
+| MeshPhysicalMaterial | 高级 PBR、清漆、透射 | 是（PBR+） |
+| MeshToonMaterial | 卡通着色、动漫风格 | 是（卡通） |
+| MeshNormalMaterial | 调试法线 | 否 |
+| MeshDepthMaterial | 深度可视化 | 否 |
+| ShaderMaterial | 自定义 GLSL 着色器 | 自定义 |
+| RawShaderMaterial | 完全着色器控制 | 自定义 |
 
 ## MeshBasicMaterial
 
-No lighting calculations. Fast, always visible.
+无光照计算。快速，始终可见。
 
 ```javascript
 const material = new THREE.MeshBasicMaterial({
@@ -46,22 +46,22 @@ const material = new THREE.MeshBasicMaterial({
   opacity: 0.5,
   side: THREE.DoubleSide, // FrontSide, BackSide, DoubleSide
   wireframe: false,
-  map: texture, // Color/diffuse texture
-  alphaMap: alphaTexture, // Transparency texture
-  envMap: envTexture, // Reflection texture
-  reflectivity: 1, // Env map intensity
-  fog: true, // Affected by scene fog
+  map: texture, // 颜色/漫反射纹理
+  alphaMap: alphaTexture, // 透明纹理
+  envMap: envTexture, // 反射纹理
+  reflectivity: 1, // 环境贴图强度
+  fog: true, // 受场景雾影响
 });
 ```
 
 ## MeshLambertMaterial
 
-Diffuse-only lighting. Fast, no specular highlights.
+仅漫反射光照。快速，无高光。
 
 ```javascript
 const material = new THREE.MeshLambertMaterial({
   color: 0x00ff00,
-  emissive: 0x111111, // Self-illumination color
+  emissive: 0x111111, // 自发光颜色
   emissiveIntensity: 1,
   map: texture,
   emissiveMap: emissiveTexture,
@@ -72,17 +72,17 @@ const material = new THREE.MeshLambertMaterial({
 
 ## MeshPhongMaterial
 
-Specular highlights. Good for shiny, plastic-like surfaces.
+具有高光。适用于光泽的塑料感表面。
 
 ```javascript
 const material = new THREE.MeshPhongMaterial({
   color: 0x0000ff,
-  specular: 0xffffff, // Highlight color
-  shininess: 100, // Highlight sharpness (0-1000)
+  specular: 0xffffff, // 高光颜色
+  shininess: 100, // 高光锐度（0-1000）
   emissive: 0x000000,
-  flatShading: false, // Flat vs smooth shading
+  flatShading: false, // 平面 vs 平滑着色
   map: texture,
-  specularMap: specTexture, // Per-pixel shininess
+  specularMap: specTexture, // 逐像素光泽度
   normalMap: normalTexture,
   normalScale: new THREE.Vector2(1, 1),
   bumpMap: bumpTexture,
@@ -92,94 +92,94 @@ const material = new THREE.MeshPhongMaterial({
 });
 ```
 
-## MeshStandardMaterial (PBR)
+## MeshStandardMaterial（PBR）
 
-Physically-based rendering. Recommended for realistic results.
+基于物理的渲染。推荐用于逼真效果。
 
 ```javascript
 const material = new THREE.MeshStandardMaterial({
   color: 0xffffff,
-  roughness: 0.5, // 0 = mirror, 1 = diffuse
-  metalness: 0.0, // 0 = dielectric, 1 = metal
+  roughness: 0.5, // 0 = 镜面，1 = 漫反射
+  metalness: 0.0, // 0 = 非金属，1 = 金属
 
-  // Textures
-  map: colorTexture, // Albedo/base color
-  roughnessMap: roughTexture, // Per-pixel roughness
-  metalnessMap: metalTexture, // Per-pixel metalness
-  normalMap: normalTexture, // Surface detail
+  // 纹理
+  map: colorTexture, // 漫反射/基础颜色
+  roughnessMap: roughTexture, // 逐像素粗糙度
+  metalnessMap: metalTexture, // 逐像素金属度
+  normalMap: normalTexture, // 表面细节
   normalScale: new THREE.Vector2(1, 1),
-  aoMap: aoTexture, // Ambient occlusion (uses uv2!)
+  aoMap: aoTexture, // 环境光遮蔽（使用 uv2！）
   aoMapIntensity: 1,
-  displacementMap: dispTexture, // Vertex displacement
+  displacementMap: dispTexture, // 顶点位移
   displacementScale: 0.1,
   displacementBias: 0,
 
-  // Emissive
+  // 自发光
   emissive: 0x000000,
   emissiveIntensity: 1,
   emissiveMap: emissiveTexture,
 
-  // Environment
+  // 环境
   envMap: envTexture,
   envMapIntensity: 1,
 
-  // Other
+  // 其他
   flatShading: false,
   wireframe: false,
   fog: true,
 });
 
-// Note: aoMap requires second UV channel
+// 注意：aoMap 需要第二 UV 通道
 geometry.setAttribute("uv2", geometry.attributes.uv);
 ```
 
-## MeshPhysicalMaterial (Advanced PBR)
+## MeshPhysicalMaterial（高级 PBR）
 
-Extends MeshStandardMaterial with advanced features.
+扩展 MeshStandardMaterial，提供高级功能。
 
 ```javascript
 const material = new THREE.MeshPhysicalMaterial({
-  // All MeshStandardMaterial properties plus:
+  // 所有 MeshStandardMaterial 属性外加：
 
-  // Clearcoat (car paint, lacquer)
-  clearcoat: 1.0, // 0-1 clearcoat layer strength
+  // 清漆（车漆、漆面）
+  clearcoat: 1.0, // 0-1 清漆层强度
   clearcoatRoughness: 0.1,
   clearcoatMap: ccTexture,
   clearcoatRoughnessMap: ccrTexture,
   clearcoatNormalMap: ccnTexture,
   clearcoatNormalScale: new THREE.Vector2(1, 1),
 
-  // Transmission (glass, water)
-  transmission: 1.0, // 0 = opaque, 1 = fully transparent
+  // 透射（玻璃、水）
+  transmission: 1.0, // 0 = 不透明，1 = 完全透明
   transmissionMap: transTexture,
-  thickness: 0.5, // Volume thickness for refraction
+  thickness: 0.5, // 用于折射的体积厚度
   thicknessMap: thickTexture,
-  attenuationDistance: 1, // Absorption distance
+  attenuationDistance: 1, // 吸收距离
   attenuationColor: new THREE.Color(0xffffff),
 
-  // Refraction
-  ior: 1.5, // Index of refraction (1-2.333)
+  // 折射
+  ior: 1.5, // 折射率（1-2.333）
 
-  // Sheen (fabric, velvet)
+  // 光泽层（布料、天鹅绒）
   sheen: 1.0,
   sheenRoughness: 0.5,
   sheenColor: new THREE.Color(0xffffff),
   sheenColorMap: sheenTexture,
   sheenRoughnessMap: sheenRoughTexture,
 
-  // Iridescence (soap bubbles, oil slicks)
+  // 彩虹色（肥皂泡、油膜）
   iridescence: 1.0,
   iridescenceIOR: 1.3,
   iridescenceThicknessRange: [100, 400],
   iridescenceMap: iridTexture,
   iridescenceThicknessMap: iridThickTexture,
 
-  // Anisotropy (brushed metal)
+  // 各向异性（拉丝金属）
   anisotropy: 1.0,
   anisotropyRotation: 0,
   anisotropyMap: anisoTexture,
 
-  // Specular
+  // 高光
   specularIntensity: 1,
   specularColor: new THREE.Color(0xffffff),
   specularIntensityMap: specIntTexture,
@@ -187,7 +187,7 @@ const material = new THREE.MeshPhysicalMaterial({
 });
 ```
 
-### Glass Material Example
+### 玻璃材质示例
 
 ```javascript
 const glass = new THREE.MeshPhysicalMaterial({
@@ -201,7 +201,7 @@ const glass = new THREE.MeshPhysicalMaterial({
 });
 ```
 
-### Car Paint Example
+### 车漆示例
 
 ```javascript
 const carPaint = new THREE.MeshPhysicalMaterial({
@@ -215,15 +215,15 @@ const carPaint = new THREE.MeshPhysicalMaterial({
 
 ## MeshToonMaterial
 
-Cel-shaded cartoon look.
+卡通着色风格。
 
 ```javascript
 const material = new THREE.MeshToonMaterial({
   color: 0x00ff00,
-  gradientMap: gradientTexture, // Optional: custom shading gradient
+  gradientMap: gradientTexture, // 可选：自定义着色渐变
 });
 
-// Create step gradient texture
+// 创建阶梯渐变纹理
 const colors = new Uint8Array([0, 128, 255]);
 const gradientMap = new THREE.DataTexture(colors, 3, 1, THREE.RedFormat);
 gradientMap.minFilter = THREE.NearestFilter;
@@ -233,7 +233,7 @@ gradientMap.needsUpdate = true;
 
 ## MeshNormalMaterial
 
-Visualize surface normals. Useful for debugging.
+可视化表面法线。用于调试。
 
 ```javascript
 const material = new THREE.MeshNormalMaterial({
@@ -244,7 +244,7 @@ const material = new THREE.MeshNormalMaterial({
 
 ## MeshDepthMaterial
 
-Render depth values. Used for shadow maps, DOF effects.
+渲染深度值。用于阴影贴图、景深效果。
 
 ```javascript
 const material = new THREE.MeshDepthMaterial({
@@ -254,35 +254,35 @@ const material = new THREE.MeshDepthMaterial({
 
 ## PointsMaterial
 
-For point clouds.
+用于点云。
 
 ```javascript
 const material = new THREE.PointsMaterial({
   color: 0xffffff,
   size: 0.1,
-  sizeAttenuation: true, // Scale with distance
+  sizeAttenuation: true, // 随距离缩放
   map: pointTexture,
   alphaMap: alphaTexture,
   transparent: true,
-  alphaTest: 0.5, // Discard pixels below threshold
-  vertexColors: true, // Use per-vertex colors
+  alphaTest: 0.5, // 丢弃低于阈值的像素
+  vertexColors: true, // 使用逐顶点颜色
 });
 
 const points = new THREE.Points(geometry, material);
 ```
 
-## LineBasicMaterial & LineDashedMaterial
+## LineBasicMaterial 与 LineDashedMaterial
 
 ```javascript
-// Solid lines
+// 实线
 const lineMaterial = new THREE.LineBasicMaterial({
   color: 0xffffff,
-  linewidth: 1, // Note: >1 only works on some systems
+  linewidth: 1, // 注意：>1 仅在某些系统上有效
   linecap: "round",
   linejoin: "round",
 });
 
-// Dashed lines
+// 虚线
 const dashedMaterial = new THREE.LineDashedMaterial({
   color: 0xffffff,
   dashSize: 0.5,
@@ -290,14 +290,14 @@ const dashedMaterial = new THREE.LineDashedMaterial({
   scale: 1,
 });
 
-// Required for dashed lines
+// 虚线需要
 const line = new THREE.Line(geometry, dashedMaterial);
 line.computeLineDistances();
 ```
 
-## ShaderMaterial
+## ShaderMaterial（着色器材质）
 
-Custom GLSL shaders with Three.js uniforms.
+带有 Three.js 内置 uniform 的自定义 GLSL 着色器。
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -323,7 +323,7 @@ const material = new THREE.ShaderMaterial({
     uniform sampler2D texture1;
 
     void main() {
-      // Use texture2D() for GLSL 1.0, texture() for GLSL 3.0 (glslVersion: THREE.GLSL3)
+      // GLSL 1.0 使用 texture2D()，GLSL 3.0 使用 texture() (glslVersion: THREE.GLSL3)
       vec4 texColor = texture2D(texture1, vUv);
       gl_FragColor = vec4(color * texColor.rgb, 1.0);
     }
@@ -332,22 +332,22 @@ const material = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
 });
 
-// Update uniform in animation loop
+// 在动画循环中更新 uniform
 material.uniforms.time.value = clock.getElapsedTime();
 ```
 
-### Built-in Uniforms (auto-provided)
+### 内置 Uniform（自动提供）
 
 ```glsl
-// Vertex shader
-uniform mat4 modelMatrix;         // Object to world
-uniform mat4 modelViewMatrix;     // Object to camera
-uniform mat4 projectionMatrix;    // Camera projection
-uniform mat4 viewMatrix;          // World to camera
-uniform mat3 normalMatrix;        // For transforming normals
-uniform vec3 cameraPosition;      // Camera world position
+// 顶点着色器
+uniform mat4 modelMatrix;         // 对象到世界
+uniform mat4 modelViewMatrix;     // 对象到摄像机
+uniform mat4 projectionMatrix;    // 摄像机投影
+uniform mat4 viewMatrix;          // 世界到摄像机
+uniform mat3 normalMatrix;        // 用于变换法线
+uniform vec3 cameraPosition;      // 摄像机世界位置
 
-// Attributes
+// 属性
 attribute vec3 position;
 attribute vec3 normal;
 attribute vec2 uv;
@@ -355,7 +355,7 @@ attribute vec2 uv;
 
 ## RawShaderMaterial
 
-Full control - no built-in uniforms/attributes.
+完全控制 — 无内置 uniform/属性。
 
 ```javascript
 const material = new THREE.RawShaderMaterial({
@@ -383,86 +383,83 @@ const material = new THREE.RawShaderMaterial({
 });
 ```
 
-## Common Material Properties
+## 常用材质属性
 
-All materials share these base properties:
+所有材质共享这些基础属性：
 
 ```javascript
-// Visibility
+// 可见性
 material.visible = true;
 material.transparent = false;
 material.opacity = 1.0;
-material.alphaTest = 0; // Discard pixels with alpha < value
+material.alphaTest = 0; // 丢弃 alpha < 值的像素
 
-// Rendering
+// 渲染
 material.side = THREE.FrontSide; // FrontSide, BackSide, DoubleSide
 material.depthTest = true;
 material.depthWrite = true;
 material.colorWrite = true;
 
-// Blending
+// 混合
 material.blending = THREE.NormalBlending;
 // NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, CustomBlending
 
-// Stencil
+// 模板
 material.stencilWrite = false;
 material.stencilFunc = THREE.AlwaysStencilFunc;
 material.stencilRef = 0;
 material.stencilMask = 0xff;
 
-// Polygon offset (z-fighting fix)
+// 多边形偏移（z 冲突修复）
 material.polygonOffset = false;
 material.polygonOffsetFactor = 0;
 material.polygonOffsetUnits = 0;
 
-// Misc
+// 杂项
 material.dithering = false;
 material.toneMapped = true;
 ```
 
-## Multiple Materials
+## 多材质
 
 ```javascript
-// Assign different materials to geometry groups
+// 将不同材质分配给几何体组
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const materials = [
-  new THREE.MeshBasicMaterial({ color: 0xff0000 }), // right
-  new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // left
-  new THREE.MeshBasicMaterial({ color: 0x0000ff }), // top
-  new THREE.MeshBasicMaterial({ color: 0xffff00 }), // bottom
-  new THREE.MeshBasicMaterial({ color: 0xff00ff }), // front
-  new THREE.MeshBasicMaterial({ color: 0x00ffff }), // back
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }), // 右
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // 左
+  new THREE.MeshBasicMaterial({ color: 0x0000ff }), // 上
+  new THREE.MeshBasicMaterial({ color: 0xffff00 }), // 下
+  new THREE.MeshBasicMaterial({ color: 0xff00ff }), // 前
+  new THREE.MeshBasicMaterial({ color: 0x00ffff }), // 后
 ];
 const mesh = new THREE.Mesh(geometry, materials);
 
-// Custom groups
+// 自定义组
 geometry.clearGroups();
 geometry.addGroup(0, 6, 0); // start, count, materialIndex
 geometry.addGroup(6, 6, 1);
 ```
 
-## Environment Maps
+## 环境贴图
 
 ```javascript
-// Load cube texture
+// 加载立方体贴图
 const cubeLoader = new THREE.CubeTextureLoader();
 const envMap = cubeLoader.load([
-  "px.jpg",
-  "nx.jpg", // positive/negative X
-  "py.jpg",
-  "ny.jpg", // positive/negative Y
-  "pz.jpg",
-  "nz.jpg", // positive/negative Z
+  "px.jpg", "nx.jpg", // 正/负 X
+  "py.jpg", "ny.jpg", // 正/负 Y
+  "pz.jpg", "nz.jpg", // 正/负 Z
 ]);
 
-// Apply to material
+// 应用到材质
 material.envMap = envMap;
 material.envMapIntensity = 1;
 
-// Or set as scene environment (affects all PBR materials)
+// 或设置为场景环境（影响所有 PBR 材质）
 scene.environment = envMap;
 
-// HDR environment (recommended)
+// HDR 环境（推荐）
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 const rgbeLoader = new RGBELoader();
 rgbeLoader.load("environment.hdr", (texture) => {
@@ -472,34 +469,34 @@ rgbeLoader.load("environment.hdr", (texture) => {
 });
 ```
 
-## Material Cloning and Modification
+## 材质的克隆和修改
 
 ```javascript
-// Clone material
+// 克隆材质
 const clone = material.clone();
 clone.color.set(0x00ff00);
 
-// Modify at runtime
+// 运行时修改
 material.color.set(0xff0000);
-material.needsUpdate = true; // Only needed for some changes
+material.needsUpdate = true; // 仅某些更改需要
 
-// When needsUpdate is required:
-// - Changing flat shading
-// - Changing texture
-// - Changing transparent
-// - Custom shader code changes
+// 何时需要 needsUpdate：
+// - 更改平面着色
+// - 更改纹理
+// - 更改透明
+// - 自定义着色器代码更改
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Reuse materials**: Same material = batched draw calls
-2. **Avoid transparent when possible**: Transparent materials require sorting
-3. **Use alphaTest instead of transparency**: When applicable, faster
-4. **Choose simpler materials**: Basic > Lambert > Phong > Standard > Physical
-5. **Limit active lights**: Each light adds shader complexity
+1. **重用材质**：相同材质 = 批处理绘制调用
+2. **尽量避免透明**：透明材质需要排序
+3. **适用时使用 alphaTest 替代透明度**：更快
+4. **选择更简单的材质**：Basic > Lambert > Phong > Standard > Physical
+5. **限制活跃灯光数**：每个灯光增加着色器复杂度
 
 ```javascript
-// Material pooling
+// 材质池化
 const materialCache = new Map();
 function getMaterial(color) {
   const key = color.toString(16);
@@ -509,12 +506,12 @@ function getMaterial(color) {
   return materialCache.get(key);
 }
 
-// Dispose when done
+// 使用完毕后释放
 material.dispose();
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-textures` - Texture loading and configuration
-- `threejs-shaders` - Custom shader development
-- `threejs-lighting` - Light interaction with materials
+- `threejs-textures` — 纹理加载和配置
+- `threejs-shaders` — 自定义着色器开发
+- `threejs-lighting` — 灯光与材质的交互

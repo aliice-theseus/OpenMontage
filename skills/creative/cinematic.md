@@ -1,145 +1,145 @@
-# Cinematic Video Pipeline
+# 电影感视频制作流程
 
-> Sources: No Film School editorial guides, StudioBinder filmmaking resources, Film Riot
-> production tutorials, CinematographyDB shot databases, Walter Murch "In the Blink of an Eye"
+> 来源：No Film School 编辑指南、StudioBinder 电影制作资源、Film Riot
+> 制作教程、CinematographyDB 镜头数据库、Walter Murch "眨眼之间"
 
-> For the universal cinematography vocabulary (camera, lens, motion, focus primitives, plus the 5-aspect Subject / Subject Motion / Scene / Spatial Framing / Camera spec), see `skills/creative/video-gen-prompting.md`. This file layers cinematic-specific conventions on top of those primitives — it does not redefine them.
+> 关于通用电影摄影词汇（相机、镜头、运动、对焦基元，以及5方面主体/主体动作/场景/空间构图/镜头规范），请参见 `skills/creative/video-gen-prompting.md`。本文件在这些基元之上叠加电影特定约定 — 不重新定义它们。
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-ASPECT RATIO:     2.39:1 (widescreen cinematic) or 16:9 with letterbox
-LETTERBOX:        Black bars at top/bottom — 1920x800 active area in 1920x1080 frame
-FRAME RATE:       24fps (cinematic standard)
-SHOT DURATION:    4-8 seconds average (longer than explainer, shorter than documentary)
-COLOR GRADE:      cinematic_warm or cinematic_cool profile
-AUDIO:            Layered: dialogue + ambient + Foley + score
-MUSIC:            60-90 BPM, orchestral or ambient, dynamic (not loop-based)
-TARGET LUFS:      -14 LUFS integrated, -24 LUFS for quiet moments
+宽高比：         2.39:1（宽银幕电影感）或带信箱效的 16:9
+信箱效果：       顶部/底部黑色横条 — 1920x1080 画面中 1920x800 活动区域
+帧率：            24fps（电影标准）
+镜头时长：        平均4-8秒（长于讲解类，短于纪录片）
+调色：            cinematic_warm 或 cinematic_cool 配置
+音频：            分层：对话 + 环境音 + 拟音 + 配乐
+音乐：            60-90 BPM，管弦乐或环境音，动态（非循环）
+目标 LUFS：      -14 LUFS 综合，安静时刻 -24 LUFS
 ```
 
-## Replace Mood Adjectives with Visual Causes
+## 用视觉原因替代情绪形容词
 
-> **"Cinematic" and "epic" don't constrain pixels.** The cinematic look comes from concrete choices: aspect ratio, lens, lighting key, color grade, shot duration, and audio layer count. State those — the rest is decoration.
+> **"电影感"和"史诗"不约束像素。** 电影感外观来自具体选择：宽高比、镜头、光照基调、调色、镜头时长和音频层数。列出这些 — 其余的是装饰。
 >
-> The CMU/Harvard CHAI study showed subjective phrasing varies wildly across annotators and model interpretations, which means a beat tagged "moody" routes to a different visual every render. Replace the adjective with the lighting + grade + shot-duration combination that produces moodiness. See `skills/creative/storytelling.md` "Anti-Subjective Rule" for the script-side equivalent.
+> CMU/Harvard CHAI 研究表明主观措辞在不同标注者和模型解释之间差异巨大，这意味着标记为"情绪化"的节拍每次渲染都会路由到不同的视觉。用产生情绪化的光照+调色+镜头时长组合替换形容词。参见 `skills/creative/storytelling.md` "反主观规则"了解脚本端的等效内容。
 >
-> | Mood adjective | Cinematic translation |
+> | 情绪形容词 | 电影感翻译 |
 > |---|---|
-> | "epic" | 2.39:1 letterbox, 24fps, 8s+ shot duration, orchestral score with crescendo |
-> | "moody" | `moody_dark` grade at 0.6, key light at 1/8 fill, 6s+ contemplative shots, ambient bed at -28dB |
-> | "intimate" | 1.85:1, 40-50mm equivalent, shallow DoF, 2 audio layers (dialogue + room tone), no music under dialogue |
-> | "cinematic" | (this word is banned — pick one of the above or describe the actual choices) |
+> | "史诗" | 2.39:1 信箱效果，24fps，8秒以上镜头时长，带渐强的管弦乐配乐 |
+> | "情绪化" | `moody_dark` 调色强度0.6，主光1/8补光，6秒以上沉思镜头，环境音床 -28dB |
+> | "亲密" | 1.85:1，40-50mm等效，浅景深，2层音频（对话+房间音），对话下无音乐 |
+> | "电影感" | （这个词禁止使用 — 选择上述一种或描述实际选择） |
 
-## Aspect Ratios
+## 宽高比
 
-| Ratio | Resolution (in 1080p frame) | Feel | When to Use |
-|-------|---------------------------|------|-------------|
-| **2.39:1** (anamorphic) | 1920x803 (138px bars each) | Epic, cinematic, grand | Cinematic explainers, brand films |
-| **2.35:1** (scope) | 1920x817 (131px bars each) | Classic film | Similar to 2.39:1, slightly taller |
-| **1.85:1** (flat) | 1920x1038 (21px bars each) | Moderate cinematic | Subtle letterbox, less dramatic |
-| **16:9** (no letterbox) | 1920x1080 | Standard | Default, no cinematic treatment |
+| 比例 | 分辨率（在1080p画面中） | 感觉 | 使用场景 |
+|------|------------------------|------|----------|
+| **2.39:1**（变形宽银幕） | 1920x803（各138px横条） | 史诗、电影感、宏大 | 电影感讲解、品牌影片 |
+| **2.35:1**（宽银幕） | 1920x817（各131px横条） | 经典电影 | 类似2.39:1，略高 |
+| **1.85:1**（平面） | 1920x1038（各21px横条） | 适度电影感 | 微妙信箱效果，不太戏剧 |
+| **16:9**（无信箱效果） | 1920x1080 | 标准 | 默认，无电影感处理 |
 
-### Implementing Letterbox in FFmpeg
+### 在 FFmpeg 中实现信箱效果
 
 ```bash
-# Add 2.39:1 letterbox (138px black bars top and bottom)
+# 添加 2.39:1 信箱效果（顶部和底部 138px 黑色横条）
 ffmpeg -i input.mp4 -vf "pad=1920:1080:0:138:black,crop=1920:1080:0:0" output.mp4
 
-# Or render at native ratio and pad:
+# 或以原生比例渲染并填充：
 ffmpeg -i input.mp4 -vf "scale=1920:803,pad=1920:1080:0:138:black" output.mp4
 ```
 
-**Rule:** Only use letterbox when the content genuinely benefits from cinematic framing. Don't letterbox a screen recording or talking head — it just wastes pixels.
+**规则：** 仅当内容真正受益于电影感构图时才使用信箱效果。不要给屏幕录制或说话人头像加信箱效果 — 这只是浪费像素。
 
-## Shot Duration and Pacing
+## 镜头时长与节奏
 
-### Average Shot Length by Style
+### 按风格的平均镜头长度
 
-| Style | Average Shot | Cuts/Minute |
-|-------|-------------|-------------|
-| Action/intense | 2-4s | 15-30 |
-| Standard cinematic | 4-8s | 8-15 |
-| Documentary | 6-12s | 5-10 |
-| Contemplative | 10-20s | 3-6 |
-| Montage sequence | 1-3s | 20-40 |
+| 风格 | 平均镜头 | 剪切/分钟 |
+|------|---------|----------|
+| 动作/紧张 | 2-4秒 | 15-30 |
+| 标准电影感 | 4-8秒 | 8-15 |
+| 纪录片 | 6-12秒 | 5-10 |
+| 沉思 | 10-20秒 | 3-6 |
+| 蒙太奇序列 | 1-3秒 | 20-40 |
 
-### Pacing Rhythm
+### 节奏韵律
 
-Cinematic pacing follows a **breathing rhythm** — vary shot length deliberately:
+电影感节奏遵循**呼吸韵律** — 有意识地改变镜头长度：
 
 ```
-Long (8s) → Medium (5s) → Short (3s) → Short (2s) → LONG (10s) → Medium (6s)
+长（8秒）→ 中（5秒）→ 短（3秒）→ 短（2秒）→ 长（10秒）→ 中（6秒）
 ```
 
-**Never use the same shot length 3 times in a row** — it creates monotony.
+**永远不要让相同镜头长度连续出现3次** — 会产生单调感。
 
-### The Murch Rule
+### Murch 规则
 
-Walter Murch's editing priorities (in order of importance):
-1. **Emotion** — does the cut serve the emotional arc?
-2. **Story** — does the cut advance the narrative?
-3. **Rhythm** — does the cut feel right in the pacing?
-4. **Eye trace** — where is the viewer looking?
-5. **2D plane** — screen geography (180-degree rule)
-6. **3D space** — spatial continuity
+Walter Murch 的剪辑优先级（按重要性排序）：
+1. **情感** — 剪切是否服务于情感弧线？
+2. **故事** — 剪切是否推进叙事？
+3. **节奏** — 剪切在节奏上是否感觉正确？
+4. **视线追踪** — 观众在看哪里？
+5. **2D平面** — 屏幕地理（180度规则）
+6. **3D空间** — 空间连续性
 
-For OpenMontage explainers using cinematic style: prioritize rhythm and story over spatial concerns (since we're often cutting between generated images, not continuous footage).
+对于使用电影感风格的 OpenMontage 讲解类视频：优先考虑节奏和故事而非空间问题（因为我们经常在生成的图像之间剪切，而非连续素材）。
 
-## Audio Layering
+## 音频分层
 
-Cinematic audio has **4 layers** (not just voiceover + music):
+电影感音频有 **4层**（不仅仅是画外音+音乐）：
 
-| Layer | Level | Content |
-|-------|-------|---------|
-| **Dialogue/narration** | -12 dB peak | Primary voice |
-| **Music/score** | -24 to -18 dB | Orchestral, ambient, dynamic |
-| **Ambient/room tone** | -30 to -24 dB | Environmental sound bed |
-| **Foley/SFX** | -18 to -12 dB | Specific action sounds |
+| 层 | 电平 | 内容 |
+|----|------|------|
+| **对话/旁白** | -12 dB 峰值 | 主要语音 |
+| **音乐/配乐** | -24 至 -18 dB | 管弦乐、环境音、动态 |
+| **环境音/房间音** | -30 至 -24 dB | 环境声音床 |
+| **拟音/音效** | -18 至 -12 dB | 特定动作声音 |
 
-### Music for Cinematic
+### 电影感音乐
 
-| Characteristic | Value |
-|---------------|-------|
-| BPM | 60-90 (slower than standard explainer) |
-| Genre | Orchestral, ambient, piano, cinematic electronic |
-| Dynamics | Dynamic (crescendos, swells, quiet moments) — NOT loop-based |
-| Key changes | At narrative turning points |
-| Silence | Deliberately remove music for 3-5s at key reveals |
+| 特征 | 值 |
+|------|-----|
+| BPM | 60-90（慢于标准讲解类） |
+| 流派 | 管弦乐、环境音、钢琴、电影电子 |
+| 动态 | 动态的（渐强、渐弱、安静时刻）— 非循环 |
+| 调性变化 | 在叙事转折点 |
+| 静默 | 在关键揭示处有意移除音乐3-5秒 |
 
-### Ambient Sound
+### 环境音
 
-Add a subtle ambient layer to fill silence and create depth:
-- Room tone / air conditioning hum (very low, -35 dB)
-- Environmental sounds matching the topic (city, nature, lab)
-- Generates "presence" even during narration pauses
+添加微妙的环境音层来填充寂静并创造深度：
+- 房间音/空调嗡嗡声（非常低，-35 dB）
+- 匹配主题的环境声（城市、自然、实验室）
+- 即使在旁白停顿也生成"存在感"
 
-## Color Grading for Cinematic
+## 电影感调色
 
-| Look | Profile | Intensity | Characteristics |
-|------|---------|-----------|----------------|
-| **Warm cinematic** | `cinematic_warm` | 0.85 | Orange highlights, lifted shadows |
-| **Teal & orange** | `cinematic_cool` | 0.7 | Classic Hollywood blockbuster look |
-| **Moody dark** | `moody_dark` | 0.6 | Crushed blacks, low saturation |
-| **Vintage film** | `vintage_film` | 0.7 | Faded, warm tint, reduced contrast |
+| 外观 | 配置 | 强度 | 特征 |
+|------|------|------|------|
+| **暖色电影感** | `cinematic_warm` | 0.85 | 橙色高光，提亮阴影 |
+| **青橙色** | `cinematic_cool` | 0.7 | 经典好莱坞大片外观 |
+| **情绪化暗色** | `moody_dark` | 0.6 | 压暗黑色，低饱和度 |
+| **复古胶片** | `vintage_film` | 0.7 | 褪色、暖色调、降低对比度 |
 
-**Cinematic grading rules:**
-- Shadows should be slightly lifted (never pure black)
-- Highlights should be slightly rolled off (never pure white)
-- Skin tones must stay on the vectorscope skin tone line
-- Consistency across all clips — one LUT/profile for the entire video
-- **If a beat is described as "moody," rewrite as the lighting + grade + shot-duration combination that produces moodiness.** Don't pass mood adjectives to the asset/edit stages.
+**电影感调色规则：**
+- 阴影应略微提亮（绝不要纯黑）
+- 高光应略微滚降（绝不要纯白）
+- 肤色必须保持在矢量示波器的肤色线上
+- 所有片段的一致性 — 整个视频一个 LUT/配置
+- **如果一个节拍被描述为"情绪化"，重写为产生情绪化的光照+调色+镜头时长组合。** 不要将情绪形容词传递给资产/剪辑阶段。
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When building cinematic-style content:
+构建电影感风格内容时：
 
-1. **Set aspect ratio** — use 2.39:1 letterbox for true cinematic, or 16:9 with `cinematic_warm` grade for subtle
-2. **Render at 24fps** if the content is purely generated/animated (set in `video_compose`)
-3. **Shot duration 4-8 seconds average** — vary deliberately, never same length 3x
-4. **Layer audio** — narration + music + ambient minimum; add Foley SFX at key moments
-5. **Music at 60-90 BPM**, dynamic (not looping) — use `music_gen` with "cinematic orchestral" prompt
-6. **Remove music for 3-5 seconds** at key reveals — silence is powerful
-7. **Color grade with `cinematic_warm` or `cinematic_cool`** at 0.7-0.85 intensity
-8. **Image prompts** should include "cinematic lighting, shallow depth of field, film grain" for matching aesthetic
-9. **Slower narration** — 140-150 WPM (slower than standard 155 WPM explainer pace)
+1. **设置宽高比** — 真正的电影感使用2.39:1信箱效果，或16:9配合 `cinematic_warm` 调色得到微妙效果
+2. **以24fps渲染**（在 `video_compose` 中设置），如果内容是纯生成/动画的
+3. **镜头时长平均4-8秒** — 有意识变化，永不连续3次相同长度
+4. **分层音频** — 至少旁白+音乐+环境音；关键时刻添加拟音/音效
+5. **音乐60-90 BPM**，动态（非循环）— 使用 `music_gen` 配合"电影管弦乐"提示
+6. **在关键揭示处移除音乐3-5秒** — 静默是强大的
+7. **以 `cinematic_warm` 或 `cinematic_cool` 调色**，强度0.7-0.85
+8. **图像提示应包含"电影光效、浅景深、胶片颗粒"** 以匹配美学
+9. **较慢的旁白** — 140-150词/分钟（慢于标准155词/分钟的讲解节奏）

@@ -1,51 +1,51 @@
-# typewriter-reveal — Typewriter Reveal
+# typewriter-reveal — 打字机揭示
 
-**intent**: A live text caret types (and edits) a line as a human would, then either collapses it to a point and pops a brand payoff, or holds it under a persistent brand mark while a sub-line types/swaps into the final CTA — making "someone is typing this" the engine of the shot.
+**意图**：一个实时文本光标像人一样输入（和编辑）一行文字，然后要么将其折叠到一个点并弹出品牌回报，要么在持久品牌标记下保持它，同时子行输入/交换到最终 CTA——使"有人在输入这个"成为镜头的驱动力。
 
-**roles served**
+**服务角色**
 
-- Hook (from hook-typed-line-to-reveal): Type a relatable question/statement live, then COLLAPSE it and spring-pop the brand — a logo lockup OR a product-UI moment ("here's the everyday pain, now here's us").
-- Brand_Outro (from brand-outro-persistent-mark-cta-rail): Hold the hero mark dead-center/top the whole shot while a sub-line beneath it swaps or types its way into the final CTA — landing the ask once the logo is already established.
+- Hook（来自 hook-typed-line-to-reveal）：实时输入一个相关的问题/陈述，然后**折叠**它并弹簧弹出品牌——一个 logo 组合或一个产品 UI 时刻（"这是日常的痛点，现在这是我们"）。
+- Brand_Outro（来自 brand-outro-persistent-mark-cta-rail）：在整场镜头中，主角标记保持居中/顶部，其下方的一行子行交换或输入到最终 CTA——在 logo 已经建立后落地请求。
 
-**duration**: 3.6–7s (Brand_Outro 3.6–6.0s · Hook 5.5–7s)
+**时长**：3.6–7 秒（Brand_Outro 3.6–6.0 秒 · Hook 5.5–7 秒）
 
-**shot structure** (one consolidated template; `[slots]` are product-agnostic)
+**镜头结构**（一个统一模板；`[slots]` 与产品无关）
 
-- Scene 1 (0.0–~2.0s): On a solid `[bg color]` field, a blinking text-input caret `|` sits at the line start, then `[primary line]` TYPES on character-by-character with the caret trailing.
-  - _Variant — Hook_: nothing else is on screen; the typed `[hook line]` owns the frame. (Sub-variant: the line types inside UI chrome — a rounded `[input/pill]` — and the whole assembly continuously TRANSLATES leftward + scales slightly so the active caret stays pinned near frame-center while earlier words scroll off and clip past the left edge — a ticker push.)
-  - _Variant — Brand_Outro_: a `[logo mark]` (+ optional `[wordmark]`) is already centered/upper and STAYS fully visible for the entire shot; an entry flourish plays on the mark itself (e.g. `[checkmark/icon]` strokes into the mark, or thin concentric rings ripple outward from it), and the typed `[tagline / product label]` is the SUB-LINE beneath the mark.
+- 场景 1（0.0–~2.0 秒）：在纯 `[bg color]` 场上，一个闪烁的文本输入光标 `|` 位于行首，然后 `[primary line]` 逐字输入，光标跟随。
+  - _变体 — Hook_：屏幕上没有其他内容；输入的 `[hook line]` 拥有整个画面。（子变体：行在 UI 界面内输入——一个圆角 `[input/pill]`——整个组合持续向左平移 + 略微缩放，使活动光标保持固定在画面中心附近，而较早的单词滚动离开并剪辑通过左边缘——一个滚动条推送。）
+  - _变体 — Brand_Outro_：一个 `[logo mark]`（+ 可选 `[wordmark]`）已经居中/上部，并在整场镜头中**保持**完全可见；标记本身播放一个入场装饰（例如，`[checkmark/icon]` 描画进入标记，或细同心环从标记向外扩散），输入的 `[tagline / product label]` 是标记下方的**子行**。
 
-- Scene 2 (~2.0–4.5s): The typed line is MODIFIED in place — the active text is edited rather than re-shot.
-  - _Variant — Hook_: final word(s) BACKSPACE out and a new word RETYPES (`[word A]` → `[word B]`), or the fill/caret snaps to `[accent color]` on the final word. Holds briefly.
-  - _Variant — Brand_Outro_: the sub-line is REMOVED in place — a direct hard CUT/replace (NO backspace) or a moving mask-WIPE erases it — while the mark performs a small idle move (gentle rotate / sparkle reposition); the mark never leaves frame.
+- 场景 2（~2.0–4.5 秒）：输入的行在原位**修改**——活动文本被编辑而非重新拍摄。
+  - _变体 — Hook_：最后一个词退格删除，新词重新输入（`[word A]` → `[word B]`），或填充/光标在最后一个词上跳转到 `[accent color]`。短暂保持。
+  - _变体 — Brand_Outro_：子行在原位被**移除**——直接硬切/替换（无退格）或移动遮罩擦除它——同时标记执行一个小空闲动作（轻微旋转/闪光重新定位）；标记从不离开画面。
 
-- Scene 3 — resolve:
-  - _Variant — Hook (collapse, ~0.3–0.7s)_: caret vanishes; the whole text/assembly COLLAPSES to a point at center (horizontal X-collapse or scale-to-0 zoom-out) and disappears, leaving a clean `[bg]`. Then (remainder) a centered `[brand element]` SPRING-POPS in:
-    - _logo-lockup sub-variant_: a `[mark/icon]` pops, then slides aside as a `[wordmark]` UNMASKS / slides out from behind it; both settle into a centered lockup.
-    - _product-UI sub-variant_: a `[UI control]` (e.g. button) pops; a `[cursor]` sweeps in from a corner and homes onto it; on contact a ~150ms state-FLIP — base cross-fades to `[accent color]`, icon inverts, and a soft radial GLOW blooms outward and persists.
-  - _Variant — Brand_Outro (~4.5s–end)_: the final `[CTA]` resolves in the sub-line slot — TYPED in with a caret and/or shown as a `[CTA in accent-color button]` beside plain text; an optional `[accent color]` GLOW ring / halo settles around the persistent mark. Holds to end. Final frame: `[logo mark]` + (glow ring) + `[CTA]`.
+- 场景 3 — 解析：
+  - _变体 — Hook（折叠，~0.3–0.7 秒）_：光标消失；整个文本/组合**折叠**到中心的一个点（水平 X 折叠或缩放至 0 缩小）并消失，留下干净的 `[bg]`。然后（剩余时间）一个居中的 `[brand element]` **弹簧弹出**：
+    - _logo 组合子变体_：一个 `[mark/icon]` 弹出，然后滑开，同时一个 `[wordmark]` **解除遮罩** / 从其后滑出；两者稳定到一个居中的组合。
+    - _产品 UI 子变体_：一个 `[UI control]`（例如按钮）弹出；一个 `[cursor]` 从角落扫入并锁定到它；接触时一个 ~150ms 状态翻转——基础交叉淡入到 `[accent color]`，图标反转，一个柔和的径向**辉光**扩散并持续。
+  - _变体 — Brand_Outro（~4.5 秒–结束）_：最终的 `[CTA]` 在子行位置解析——用光标**输入**显示和/或显示为 `[CTA in accent-color button]` 旁边有纯文本；一个可选的 `[accent color]` **辉光**环/光环围绕持久标记稳定。保持到结束。最终帧：`[logo mark]` +（辉光环）+ `[CTA]`。
 
-**motion vocabulary**: blinking text caret; character-by-character type-on; backspace-and-retype OR in-place hard-cut/mask-wipe text swap; optional leftward ticker push (assembly translates to keep caret centered); persistent centered hero mark (never vanishes) with entry flourish (icon stroke-draw, concentric ripple rings) and small idle move (rotate / sparkle); X-collapse / scale-to-0 zoom-out of the typed line; spring-pop brand reveal; wordmark unmask-slide into lockup; cursor sweep + UI state-flip + radial glow bloom; accent glow/halo ring settle; pill/button CTA reveal; hold.
+**动词语汇**：闪烁文本光标；逐字输入；退格重输入或原位硬切/遮罩擦拭文本交换；可选向左滚动条推送（组合平移以保持光标居中）；持久居中主角标记（从不消失）带入场装饰（图标描画，同心环扩散）和小空闲动作（旋转/闪光）；X 折叠/缩放至 0 缩小输入行；弹簧弹出品牌揭示；wordmark 解除遮罩滑入组合；光标扫入 + UI 状态翻转 + 径向辉光扩散；重音辉光/光环环稳定；胶囊/按钮 CTA 展示；保持。
 
-**rule mapping** (per motion verb → `rules/<id>.md`)
+**规则映射**（每个动作动词 → `rules/<id>.md`）
 
-- blinking text caret → `context-sensitive-cursor` (caret color-switch + blink)
-- character-by-character type-on → `discrete-text-sequence` (typing/typos/holds/backspace); recipe `gsap-effects` (typewriter)
-- backspace-and-retype → `discrete-text-sequence`
-- in-place hard-cut / replace text swap → `discrete-text-sequence` (whole-text state swaps)
-- mask-wipe erase of sub-line → `techniques.md` clip-path reveal (run in reverse)
-- leftward ticker push (assembly translates to keep caret centered) → `camera-cursor-tracking` (viewport follows a moving caret)
-- persistent hero mark hold → no motion rule needed (static anchor; intentional — it's the absence of motion)
-- entry flourish: icon stroke-draw into mark → `svg-path-draw`
-- entry flourish: concentric ripple rings from mark → `cursor-click-ripple` (ripple bloom)
-- small idle mark move (rotate / sparkle reposition) → `sine-wave-loop` (idle)
-- X-collapse / scale-to-0 zoom-out of typed line → `scale-swap-transition` (closest fit — it morphs/collapses elements at a shared center; approximation, since a standalone collapse-and-vanish without the paired same-center brand pop isn't its exact case)
-- spring-pop brand reveal → `spring-pop-entrance` (alt `physics-press-reaction`)
-- collapse-text → pop-brand as a same-center morph pair → `scale-swap-transition` (morph two elements at same center)
-- wordmark unmask-slide into lockup → `techniques.md` clip-path reveal (unmask); slide via `spring-pop-entrance`
-- cursor sweep onto UI control + press → `cursor-click-ripple` (cursor→target press + ripple)
-- UI state-flip (base/icon invert on contact) → `hacker-flip-3d`
-- radial glow bloom / accent glow-halo ring settle → `asr-keyword-glow` (accent glow); ring expansion via `center-outward-expansion`
-- pill/button CTA reveal → `spring-pop-entrance` (alt `scale-swap-transition`)
+- 闪烁文本光标 → `context-sensitive-cursor`（光标颜色切换 + 闪烁）
+- 逐字输入 → `discrete-text-sequence`（打字/错误/保持/退格）；配方 `gsap-effects`（打字机）
+- 退格重输入 → `discrete-text-sequence`
+- 原位硬切/替换文本交换 → `discrete-text-sequence`（全文本状态交换）
+- 遮罩擦拭擦除子行 → `techniques.md` clip-path 揭示（反向运行）
+- 向左滚动条推送（组合平移以保持光标居中）→ `camera-cursor-tracking`（视口跟随移动光标）
+- 持久主角标记保持 → 无需动效规则（静态锚点；有意为之——这是没有运动）
+- 入场装饰：图标描画进入标记 → `svg-path-draw`
+- 入场装饰：从标记发出的同心扩散环 → `cursor-click-ripple`（涟漪扩散）
+- 小空闲标记动作（旋转/闪光重新定位）→ `sine-wave-loop`（空闲）
+- X 折叠/缩放至 0 缩小输入行 → `scale-swap-transition`（最接近——它在共享中心变形/折叠元素；近似，因为没有配对同中心品牌弹出的独立折叠消失不是其确切用例）
+- 弹簧弹出品牌揭示 → `spring-pop-entrance`（备选 `physics-press-reaction`）
+- 折叠文本 → 弹出品牌作为同中心变形对 → `scale-swap-transition`（在同一中心变形两个元素）
+- wordmark 解除遮罩滑入组合 → `techniques.md` clip-path 揭示（解除遮罩）；通过 `spring-pop-entrance` 滑动
+- 光标扫入 UI 控件 + 按下 → `cursor-click-ripple`（光标→目标按下 + 涟漪）
+- UI 状态翻转（接触时基础/图标反转）→ `hacker-flip-3d`
+- 径向辉光扩散 / 重音辉光-光环环稳定 → `asr-keyword-glow`（重音辉光）；通过 `center-outward-expansion` 的环扩展
+- 胶囊/按钮 CTA 展示 → `spring-pop-entrance`（备选 `scale-swap-transition`）
 
-**camera modifier**: none required — camera is static for both roles. The Hook ticker push is an ELEMENT translate (the typed assembly slides leftward to keep the caret centered), not a camera move → modeled by `camera-cursor-tracking` rather than a true camera rule.
+**摄像机修饰**：无需——两个角色的摄像机都是静止的。Hook 滚动条推送是一个**元素**平移（输入的组合向左滑动以保持光标居中），不是摄像机移动 → 由 `camera-cursor-tracking` 建模，而非真正的摄像机规则。

@@ -1,565 +1,565 @@
-# OpenMontage Provider Guide
+# OpenMontage 提供商指南
 
-Everything you need to know about every provider in OpenMontage — setup instructions, pricing, free tiers, and what each unlocks.
+关于 OpenMontage 中每个提供商你需要知道的一切——设置说明、定价、免费层级以及每个提供商解锁的功能。
 
 ---
 
-## Quick Start: What Should I Set Up?
+## 快速开始：我应该设置什么？
 
-**Start free, add paid providers as you need them.** Here's the recommended order:
+**从免费开始，按需添加付费提供商。** 以下是推荐的顺序：
 
-| Step | Cost | What to set up | What it unlocks |
-|------|------|----------------|-----------------|
-| 1 | **$0** | Pexels + Pixabay | Stock photos and videos — enough to produce basic videos |
-| 2 | **$0** | Google API key | TTS with 700+ voices (1M chars/month free) + $300 new account credit |
-| 3 | **$0** | ElevenLabs | Premium TTS + music + SFX (10K chars/month free) |
-| 4 | **$0** | Piper (local install) | Fully offline TTS — no API key, no cost, no network |
-| 5 | **~$0.03/image** | fal.ai | FLUX images + Kling/Veo/MiniMax video + Recraft — broad single-key image + video coverage |
-| 6 | **~$0.04/image** | OpenAI | DALL-E 3 images + OpenAI TTS |
-| 7 | **~$0.04/image** | Google Imagen | Imagen 4 images (shares the Google API key) |
-| 8 | **$12/month** | Runway | Gen-4 video — highest quality AI video |
-| 9 | **pay-as-you-go** | HeyGen | Avatar videos, multi-model video gateway |
-| 10 | **pay-as-you-go** | Suno | Full song generation with vocals and lyrics |
-| 11 | **$0 + GPU** | Local video gen | WAN 2.1, Hunyuan, CogVideo, LTX — free, offline |
-| 12 | **$0 + GPU** | Local Diffusion | Stable Diffusion images — free, offline |
+| 步骤 | 成本 | 设置内容 | 解锁功能 |
+|------|------|---------|---------|
+| 1 | **$0** | Pexels + Pixabay | 素材库照片和视频——足以制作基础视频 |
+| 2 | **$0** | Google API 密钥 | TTS，700+ 种语音（每月 100 万字符免费）+ $300 新账户信用额度 |
+| 3 | **$0** | ElevenLabs | 高级 TTS + 音乐 + 音效（每月 1 万字符免费） |
+| 4 | **$0** | Piper（本地安装） | 完全离线 TTS——无需 API 密钥、无成本、无网络 |
+| 5 | **~$0.03/张** | fal.ai | FLUX 图像 + Kling/Veo/MiniMax 视频 + Recraft——单密钥覆盖广泛的图像和视频 |
+| 6 | **~$0.04/张** | OpenAI | DALL-E 3 图像 + OpenAI TTS |
+| 7 | **~$0.04/张** | Google Imagen | Imagen 4 图像（与 Google API 密钥共享） |
+| 8 | **$12/月** | Runway | Gen-4 视频——最高质量 AI 视频 |
+| 9 | **按量付费** | HeyGen | 虚拟形象视频、多模型视频网关 |
+| 10 | **按量付费** | Suno | 带人声和歌词的完整歌曲生成 |
+| 11 | **$0 + GPU** | 本地视频生成 | WAN 2.1、Hunyuan、CogVideo、LTX——免费、离线 |
+| 12 | **$0 + GPU** | 本地扩散模型 | Stable Diffusion 图像——免费、离线 |
 
-### Environment Variable Summary
+### 环境变量汇总
 
 ```bash
-# .env — add your keys here
+# .env——在此添加你的密钥
 
-# FREE (no cost, ever)
-PEXELS_API_KEY=              # Stock photos + videos
-PIXABAY_API_KEY=             # Stock photos + videos
+# 免费（永远免费）
+PEXELS_API_KEY=              # 素材库照片 + 视频
+PIXABAY_API_KEY=             # 素材库照片 + 视频
 
-# GOOGLE (one key, two tools, generous free tier)
+# GOOGLE（一个密钥，两个工具，慷慨的免费层级）
 GOOGLE_API_KEY=              # Google TTS + Google Imagen
 
-# VOICE + MUSIC
-ELEVENLABS_API_KEY=          # TTS, music, sound effects (10K chars/month free)
-OPENAI_API_KEY=              # OpenAI TTS + DALL-E 3 images
-XAI_API_KEY=                 # xAI Grok image generation/editing + Grok video generation
-DOUBAO_SPEECH_API_KEY=       # Volcengine Doubao Speech TTS (strong Mandarin narration)
-DOUBAO_SPEECH_VOICE_TYPE=    # Default Doubao speaker/voice type
+# 语音 + 音乐
+ELEVENLABS_API_KEY=          # TTS、音乐、音效（每月 1 万字符免费）
+OPENAI_API_KEY=              # OpenAI TTS + DALL-E 3 图像
+XAI_API_KEY=                 # xAI Grok 图像生成/编辑 + Grok 视频生成
+DOUBAO_SPEECH_API_KEY=       # 火山引擎豆包语音 TTS（强大的普通话旁白）
+DOUBAO_SPEECH_VOICE_TYPE=    # 默认豆包说话人/语音类型
 
-# MULTI-MODEL GATEWAY (one key, 6+ tools)
-FAL_KEY=                     # FLUX, Recraft, Kling, Veo, MiniMax video
+# 多模型网关（一个密钥，6+ 个工具）
+FAL_KEY=                     # FLUX、Recraft、Kling、Veo、MiniMax 视频
 
-# VIDEO
-HEYGEN_API_KEY=              # HeyGen avatar video gateway
-RUNWAY_API_KEY=              # Runway Gen-4 video (direct)
-SUNO_API_KEY=                # Suno music generation
+# 视频
+HEYGEN_API_KEY=              # HeyGen 虚拟形象视频网关
+RUNWAY_API_KEY=              # Runway Gen-4 视频（直连）
+SUNO_API_KEY=                # Suno 音乐生成
 
-# LOCAL (no keys needed — just GPU + install)
-VIDEO_GEN_LOCAL_ENABLED=     # Set to "true" for local video gen
-VIDEO_GEN_LOCAL_MODEL=       # wan2.1-1.3b, wan2.1-14b, hunyuan-1.5, ltx2-local, cogvideo-5b
+# 本地（无需密钥——只需 GPU + 安装）
+VIDEO_GEN_LOCAL_ENABLED=     # 设为 "true" 以启用本地视频生成
+VIDEO_GEN_LOCAL_MODEL=       # wan2.1-1.3b、wan2.1-14b、hunyuan-1.5、ltx2-local、cogvideo-5b
 ```
 
 ---
 
-## Cloud Providers
+## 云提供商
 
-### xAI — Grok Image + Video
+### xAI——Grok 图像 + 视频
 
-> **Best if you want one provider for image edits and reference-conditioned short video.** Grok covers both image generation/editing and video generation under one key.
+> **如果你想要一个同时提供图像编辑和参考条件短视频的提供商，这是最佳选择。** Grok 在一个密钥下同时覆盖图像生成/编辑和视频生成。
 
-**Tools unlocked:** `grok_image`, `grok_video`
-**Env var:** `XAI_API_KEY`
+**解锁的工具：** `grok_image`, `grok_video`
+**环境变量：** `XAI_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Create an xAI developer account
-2. Generate an API key in the xAI developer console
-3. Add to `.env`: `XAI_API_KEY=xai-...`
+1. 创建一个 xAI 开发者账户
+2. 在 xAI 开发者控制台生成 API 密钥
+3. 添加到 `.env`：`XAI_API_KEY=xai-...`
 
-#### What it's best for
+#### 最适合用于
 
-- Image editing and style transfer
-- Multi-image composites into one generated frame
-- Short reference-image videos where a person, garment, or product must carry into motion
+- 图像编辑和风格迁移
+- 将多张图像合成为一帧生成内容
+- 需要人物、服装或产品动起来的短参考图像视频
 
-#### Pricing
+#### 定价
 
-Current xAI docs pricing for the Grok media models:
+当前 xAI 文档中 Grok 媒体模型的定价：
 
-| Model | Price |
-|------|-------|
-| `grok-imagine-image` | $0.02 per generated image |
-| `grok-imagine-image` input images (edits/composites) | $0.002 per input image |
-| `grok-imagine-video` at 480p | $0.05/sec |
-| `grok-imagine-video` at 720p | $0.07/sec |
-| `grok-imagine-video` input images | $0.002 per input image |
+| 模型 | 价格 |
+|------|------|
+| `grok-imagine-image` | 每张生成图像 $0.02 |
+| `grok-imagine-image` 输入图像（编辑/合成） | 每张输入图像 $0.002 |
+| `grok-imagine-video` 480p | $0.05/秒 |
+| `grok-imagine-video` 720p | $0.07/秒 |
+| `grok-imagine-video` 输入图像 | 每张输入图像 $0.002 |
 
-OpenMontage now uses those published rates in the Grok tool estimators.
-
----
-
-### fal.ai — Multi-Model Gateway
-
-> **Broad single-key coverage.** One API key unlocks image and video providers across multiple models.
-
-**Tools unlocked:** `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video`
-**Env var:** `FAL_KEY`
-
-#### Setup
-
-1. Go to [fal.ai](https://fal.ai/) and click **Sign up** (GitHub or Google)
-2. Navigate to [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
-3. Click **Create Key**, copy it
-4. Add to `.env`: `FAL_KEY=your-key-here`
-
-#### Pricing
-
-No subscription — pure pay-as-you-go, no minimum spend.
-
-**Image generation:**
-
-| Model | Price | Per $1 |
-|-------|-------|--------|
-| FLUX Pro v1.1 | $0.05/image | 20 images |
-| FLUX Dev | $0.03/image | 33 images |
-| Recraft v3 | ~$0.04/image | 25 images |
-
-**Video generation:**
-
-| Model | Price | Per $1 |
-|-------|-------|--------|
-| Kling 2.5 Turbo Pro | $0.07/sec | 14 seconds |
-| MiniMax | ~$0.05/sec | 20 seconds |
-| Veo 3 | $0.40/sec | 2.5 seconds |
-| WAN 2.5 | $0.05/sec | 20 seconds |
-
-**Free tier:** None — but $0 to start, you only pay for what you use.
+OpenMontage 现在在 Grok 工具估算器中使用这些已公布的价格。
 
 ---
 
-### ElevenLabs — Voice, Music, Sound Effects
+### fal.ai——多模型网关
 
-> **Premium voice quality.** Best TTS for narration-heavy videos. Also generates music and sound effects.
+> **单密钥广泛覆盖。** 一个 API 密钥即可解锁跨多个模型的图像和视频提供商。
 
-**Tools unlocked:** `elevenlabs_tts`, `music_gen`
-**Env var:** `ELEVENLABS_API_KEY`
+**解锁的工具：** `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video`
+**环境变量：** `FAL_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [elevenlabs.io](https://elevenlabs.io) and click **Sign up**
-2. Go to **Profile** (bottom-left) > **API Keys**, or visit [elevenlabs.io/app/settings/api-keys](https://elevenlabs.io/app/settings/api-keys)
-3. Click **Create API Key**, name it, copy it
-4. Add to `.env`: `ELEVENLABS_API_KEY=xi_your-key-here`
+1. 前往 [fal.ai](https://fal.ai/) 并点击**注册**（GitHub 或 Google）
+2. 导航至 [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
+3. 点击**创建密钥**，复制它
+4. 添加到 `.env`：`FAL_KEY=your-key-here`
 
-#### Pricing
+#### 定价
 
-| Plan | Price | Characters/month | Key features |
-|------|-------|-------------------|--------------|
-| **Free** | $0 | 10,000 | 3 custom voices, API access, attribution required |
-| Starter | $5/mo | 30,000 | No attribution |
-| Creator | $22/mo | 100,000 | Professional voice cloning |
-| Pro | $99/mo | 500,000 | 96kbps audio, usage analytics |
-| Scale | $330/mo | 2,000,000 | Priority support |
+无需订阅——纯按量付费，无最低消费。
 
-**Free tier:** 10,000 characters/month (roughly 2-3 minutes of narration). API access included. Music generation and sound effects also available on free tier with limited credits.
+**图像生成：**
+
+| 模型 | 价格 | 每 $1 可生成 |
+|------|------|-------------|
+| FLUX Pro v1.1 | $0.05/张 | 20 张 |
+| FLUX Dev | $0.03/张 | 33 张 |
+| Recraft v3 | ~$0.04/张 | 25 张 |
+
+**视频生成：**
+
+| 模型 | 价格 | 每 $1 可生成 |
+|------|------|-------------|
+| Kling 2.5 Turbo Pro | $0.07/秒 | 14 秒 |
+| MiniMax | ~$0.05/秒 | 20 秒 |
+| Veo 3 | $0.40/秒 | 2.5 秒 |
+| WAN 2.5 | $0.05/秒 | 20 秒 |
+
+**免费层级：** 无——但 $0 即可开始，你只需为使用的部分付费。
 
 ---
 
-### Doubao Speech — Mandarin TTS
+### ElevenLabs——语音、音乐、音效
 
-> **Strong Mandarin narration.** Volcengine Doubao Speech is a good choice for Chinese explainer voiceovers and long-form narration that needs subtitle timing metadata.
+> **高级语音质量。** 对旁白密集型视频最佳的 TTS。还能生成音乐和音效。
 
-**Tools unlocked:** `doubao_tts`
-**Env vars:** `DOUBAO_SPEECH_API_KEY`, `DOUBAO_SPEECH_VOICE_TYPE`
+**解锁的工具：** `elevenlabs_tts`, `music_gen`
+**环境变量：** `ELEVENLABS_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Open the Volcengine Doubao Speech console and enable Speech Synthesis 2.0.
-2. Create a new-console API Key.
-3. Choose a Speech 2.0 voice type, for example `zh_female_vv_uranus_bigtts`.
-4. Add to `.env`:
+1. 前往 [elevenlabs.io](https://elevenlabs.io) 并点击**注册**
+2. 前往**个人资料**（左下角）> **API 密钥**，或访问 [elevenlabs.io/app/settings/api-keys](https://elevenlabs.io/app/settings/api-keys)
+3. 点击**创建 API 密钥**，命名，复制
+4. 添加到 `.env`：`ELEVENLABS_API_KEY=xi_your-key-here`
+
+#### 定价
+
+| 套餐 | 价格 | 字符数/月 | 主要功能 |
+|------|------|-----------|---------|
+| **免费** | $0 | 10,000 | 3 个自定义语音、API 访问、需注明来源 |
+| Starter | $5/月 | 30,000 | 无需注明来源 |
+| Creator | $22/月 | 100,000 | 专业语音克隆 |
+| Pro | $99/月 | 500,000 | 96kbps 音频、使用分析 |
+| Scale | $330/月 | 2,000,000 | 优先支持 |
+
+**免费层级：** 每月 10,000 字符（约 2-3 分钟旁白）。包含 API 访问。音乐生成和音效在免费层级也可用，但有限额。
+
+---
+
+### 豆包语音——普通话 TTS
+
+> **强大的普通话旁白。** 火山引擎豆包语音是中文讲解配音和需要字幕时间元数据的长篇旁白的良好选择。
+
+**解锁的工具：** `doubao_tts`
+**环境变量：** `DOUBAO_SPEECH_API_KEY`, `DOUBAO_SPEECH_VOICE_TYPE`
+
+#### 设置
+
+1. 打开火山引擎豆包语音控制台，启用语音合成 2.0。
+2. 创建一个新版控制台 API 密钥。
+3. 选择 Speech 2.0 语音类型，例如 `zh_female_vv_uranus_bigtts`。
+4. 添加到 `.env`：
    ```bash
    DOUBAO_SPEECH_API_KEY=your-api-key
    DOUBAO_SPEECH_VOICE_TYPE=zh_female_vv_uranus_bigtts
    ```
 
-#### API Notes
+#### API 说明
 
-OpenMontage uses the new-console API key flow:
+OpenMontage 使用新版控制台 API 密钥流程：
 
 ```text
 X-Api-Key: ${DOUBAO_SPEECH_API_KEY}
 X-Api-Resource-Id: seed-tts-2.0
 ```
 
-Do not pass a new-console API Key as `X-Api-App-Id` or `X-Api-Access-Key`. That mismatch can produce `load grant: requested grant not found`.
+不要将新版控制台 API 密钥作为 `X-Api-App-Id` 或 `X-Api-Access-Key` 传递。这种不匹配可能导致 `load grant: requested grant not found`。
 
-#### What It Is Best For
+#### 最适合用于
 
-- Natural Mandarin narration for Chinese-language explainers
-- Async long-form narration via `/api/v3/tts/submit` and `/api/v3/tts/query`
-- Character-level timing metadata for subtitle alignment
-- Calm educational pacing where the video duration can follow the approved voice rhythm
+- 中文讲解视频的自然普通话旁白
+- 通过 `/api/v3/tts/submit` 和 `/api/v3/tts/query` 实现的异步长篇旁白
+- 用于字幕对齐的字符级时间元数据
+- 平静的教育节奏，视频时长可以跟随已批准的语音节奏
 
-#### Pacing
+#### 节奏
 
-Start with `speech_rate: 0` for natural Mandarin delivery. If the approved format needs a tighter runtime, compare short samples at `speech_rate: 25` or `50` before generating the full narration. Do not force Doubao to match another provider's duration unless the user explicitly wants that tradeoff.
+从 `speech_rate: 0` 开始，获得自然的普通话表达。如果已批准格式需要更紧凑的时长，在生成完整旁白之前，比较 `speech_rate: 25` 或 `50` 的短样本。除非用户明确要求，否则不要强迫豆包匹配其他提供商的时长。
 
-#### Pricing
+#### 定价
 
-Doubao Speech 2.0 is billed by character package or usage in Volcengine. OpenMontage estimates cost from text length and prefers provider-returned usage metadata when available.
+豆包语音 2.0 在火山引擎中按字符包或使用量计费。OpenMontage 根据文本长度估算成本，并在提供方返回使用元数据时优先使用。
 
 ---
 
-### Google — TTS + Imagen (Shared Key)
+### Google——TTS + Imagen（共享密钥）
 
-> **One key, two tools.** Google Cloud TTS has 700+ voices in 50+ languages — the strongest localization option. Imagen 4 generates high-quality images.
+> **一个密钥，两个工具。** Google Cloud TTS 拥有 50 多种语言的 700+ 种语音——最强的本地化选项。Imagen 4 生成高质量图像。
 
-**Tools unlocked:** `google_tts`, `google_imagen`
-**Env var:** `GOOGLE_API_KEY`
+**解锁的工具：** `google_tts`, `google_imagen`
+**环境变量：** `GOOGLE_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [Google AI Studio](https://aistudio.google.com/) and sign in
-2. Navigate to [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
-3. Click **Create API Key**, select a Google Cloud project
-4. Copy the key
-5. Add to `.env`: `GOOGLE_API_KEY=AIza...`
+1. 前往 [Google AI Studio](https://aistudio.google.com/) 并登录
+2. 导航至 [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+3. 点击**创建 API 密钥**，选择一个 Google Cloud 项目
+4. 复制密钥
+5. 添加到 `.env`：`GOOGLE_API_KEY=AIza...`
 
-**For TTS specifically**, you also need to enable the Text-to-Speech API:
-1. Visit [console.cloud.google.com/apis/library/texttospeech.googleapis.com](https://console.cloud.google.com/apis/library/texttospeech.googleapis.com)
-2. Click **Enable**
-3. Make sure your API key's restrictions allow the Text-to-Speech API
+**对于 TTS 特定用途**，你还需要启用 Text-to-Speech API：
+1. 访问 [console.cloud.google.com/apis/library/texttospeech.googleapis.com](https://console.cloud.google.com/apis/library/texttospeech.googleapis.com)
+2. 点击**启用**
+3. 确保你的 API 密钥限制允许 Text-to-Speech API
 
-**For Imagen**, enable the Generative Language API:
-1. Visit [console.cloud.google.com/apis/library/generativelanguage.googleapis.com](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com)
-2. Click **Enable**
+**对于 Imagen**，启用 Generative Language API：
+1. 访问 [console.cloud.google.com/apis/library/generativelanguage.googleapis.com](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com)
+2. 点击**启用**
 
-#### Google TTS Pricing
+#### Google TTS 定价
 
-| Voice Type | Free tier | Paid (per 1M chars) | Notes |
-|-----------|-----------|---------------------|-------|
-| **Standard** | 1M chars/month | $4.00 | Basic quality, fast |
-| **WaveNet** | 1M chars/month | $16.00 | Natural-sounding |
-| **Neural2** | 1M chars/month | $16.00 | Best quality |
-| **Studio** | — | $24.00 | Professional studio voices |
-| **Chirp** | — | $4.00 | Conversational style |
+| 语音类型 | 免费层级 | 付费（每百万字符） | 说明 |
+|---------|---------|------------------|------|
+| **Standard** | 每月 100 万字符 | $4.00 | 基础质量，快速 |
+| **WaveNet** | 每月 100 万字符 | $16.00 | 自然听感 |
+| **Neural2** | 每月 100 万字符 | $16.00 | 最佳质量 |
+| **Studio** | — | $24.00 | 专业录音室语音 |
+| **Chirp** | — | $4.00 | 对话风格 |
 
-The free tiers apply *independently* — you get 1M Standard AND 1M WaveNet AND 1M Neural2 characters per month free. That's roughly 250+ minutes of narration per month at zero cost.
+免费层级是*独立*计算的——你每月免费获得 100 万 Standard AND 100 万 WaveNet AND 100 万 Neural2 字符。相当于每月约 250+ 分钟的免费旁白。
 
-#### Google Imagen Pricing
+#### Google Imagen 定价
 
-| Model | Price per image |
-|-------|----------------|
+| 模型 | 每张图像价格 |
+|------|-------------|
 | Imagen 4 Fast | $0.02 |
 | Imagen 4 Standard | $0.04 |
 | Imagen 4 Ultra | $0.06 |
 
-**Free tier for Imagen:** None. Paid tier only.
+**Imagen 免费层级：** 无。仅付费层级。
 
-**New account bonus:** Google Cloud offers **$300 in free credits** for new accounts (90-day trial), applicable to both TTS and Imagen.
+**新账户奖励：** Google Cloud 为新账户提供 **$300 免费信用额度**（90 天试用），适用于 TTS 和 Imagen。
 
-#### Google TTS Voice Types
+#### Google TTS 语音类型
 
-Google TTS offers 700+ voices across 50+ languages. Voice names follow the pattern `{language}-{type}-{letter}`:
+Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{language}-{type}-{letter}` 模式：
 
-| Type | Example | Quality | Cost |
-|------|---------|---------|------|
-| **Chirp 3 HD** | `en-US-Chirp3-HD-Orus` | **Best (2024, most natural)** | **Mid — default** |
-| Standard | `en-US-Standard-A` | Good | Cheapest |
-| WaveNet | `en-US-WaveNet-D` | Very good | Mid |
-| Neural2 | `en-US-Neural2-D` | Excellent | Mid |
-| Studio | `en-US-Studio-O` | Professional | Highest |
-| Journey | `en-US-Journey-D` | Conversational (long-form) | Mid |
+| 类型 | 示例 | 质量 | 成本 |
+|------|------|------|------|
+| **Chirp 3 HD** | `en-US-Chirp3-HD-Orus` | **最佳（2024 年，最自然）** | **中等——默认** |
+| Standard | `en-US-Standard-A` | 良好 | 最便宜 |
+| WaveNet | `en-US-WaveNet-D` | 很好 | 中等 |
+| Neural2 | `en-US-Neural2-D` | 优秀 | 中等 |
+| Studio | `en-US-Studio-O` | 专业 | 最高 |
+| Journey | `en-US-Journey-D` | 对话式（长篇） | 中等 |
 
-**Recommended voices:** `en-US-Chirp3-HD-Orus` (male, rich/cinematic), `en-US-Chirp3-HD-Aoede` (female, warm). These are Google's newest tier — most natural-sounding, uses the v1beta1 endpoint automatically.
+**推荐语音：** `en-US-Chirp3-HD-Orus`（男声，丰富/电影感），`en-US-Chirp3-HD-Aoede`（女声，温暖）。这些是 Google 最新层级——最自然的听感，自动使用 v1beta1 端点。
 
-**Languages include:** English (US, UK, AU, IN), Spanish, French, German, Italian, Portuguese, Japanese, Korean, Chinese (Mandarin, Cantonese), Arabic, Hindi, Russian, Dutch, Polish, Turkish, Vietnamese, Thai, Indonesian, and 30+ more.
+**支持的语言包括：** 英语（美国、英国、澳大利亚、印度）、西班牙语、法语、德语、意大利语、葡萄牙语、日语、韩语、中文（普通话、粤语）、阿拉伯语、印地语、俄语、荷兰语、波兰语、土耳其语、越南语、泰语、印尼语及 30 多种其他语言。
 
 ---
 
-### OpenAI — TTS + Image Generation
+### OpenAI——TTS + 图像生成
 
-> **Solid all-rounder.** DALL-E 3 handles complex multi-element compositions well. TTS is fast and affordable.
+> **扎实的全能选手。** DALL-E 3 擅长处理复杂的多元素构图。TTS 快速且实惠。
 
-**Tools unlocked:** `openai_tts`, `openai_image`
-**Env var:** `OPENAI_API_KEY`
+**解锁的工具：** `openai_tts`, `openai_image`
+**环境变量：** `OPENAI_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [platform.openai.com/signup](https://platform.openai.com/signup) and create an account
-2. Add a payment method at [platform.openai.com/account/billing](https://platform.openai.com/account/billing)
-3. Navigate to [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-4. Click **Create new secret key**, name it, copy it
-5. Add to `.env`: `OPENAI_API_KEY=sk-...`
+1. 前往 [platform.openai.com/signup](https://platform.openai.com/signup) 并创建账户
+2. 在 [platform.openai.com/account/billing](https://platform.openai.com/account/billing) 添加支付方式
+3. 导航至 [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+4. 点击**创建新的密钥**，命名，复制
+5. 添加到 `.env`：`OPENAI_API_KEY=sk-...`
 
-#### TTS Pricing
+#### TTS 定价
 
-| Model | Price per 1M characters |
-|-------|------------------------|
+| 模型 | 每百万字符价格 |
+|------|--------------|
 | tts-1 | $15.00 |
 | tts-1-hd | $30.00 |
 | gpt-4o-mini-tts | $12.00 |
 
-#### Image Pricing
+#### 图像定价
 
-| Model | Size | Quality | Price per image |
-|-------|------|---------|----------------|
+| 模型 | 尺寸 | 质量 | 每张图像价格 |
+|------|------|------|-------------|
 | DALL-E 3 | 1024x1024 | standard | $0.040 |
 | DALL-E 3 | 1024x1024 | hd | $0.080 |
 | DALL-E 3 | 1024x1792 | standard | $0.080 |
 | DALL-E 3 | 1024x1792 | hd | $0.120 |
 
-**Free tier:** None. Requires prepaid billing. Previously offered $5 in free credits for new accounts (discontinued for most signups).
+**免费层级：** 无。需要预付费账单。以前为新账户提供 $5 免费信用额度（大多数注册已停止）。
 
 ---
 
-### Runway — Gen-3/Gen-4 Video
+### Runway——Gen-3/Gen-4 视频
 
-> **Highest-rated AI video quality.** #1 on Elo rankings. Professional-grade video generation with Gen-3 Alpha Turbo, Gen-4 Turbo, and Gen-4 Aleph models.
+> **评分最高的 AI 视频质量。** Elo 排名第一。专业级视频生成，支持 Gen-3 Alpha Turbo、Gen-4 Turbo 和 Gen-4 Aleph 模型。
 
-**Tools unlocked:** `runway_video`
-**Env var:** `RUNWAY_API_KEY`
+**解锁的工具：** `runway_video`
+**环境变量：** `RUNWAY_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [dev.runwayml.com](https://dev.runwayml.com/) and create a developer account
-2. Subscribe to a paid plan (Standard or above — API requires subscription)
-3. Generate an API key from the developer portal
-4. Add to `.env`: `RUNWAY_API_KEY=key_...`
+1. 前往 [dev.runwayml.com](https://dev.runwayml.com/) 并创建开发者账户
+2. 订阅付费套餐（Standard 或以上——API 需要订阅）
+3. 从开发者门户生成 API 密钥
+4. 添加到 `.env`：`RUNWAY_API_KEY=key_...`
 
-#### Pricing
+#### 定价
 
-| Plan | Price | Credits/month | Video capacity |
-|------|-------|---------------|----------------|
-| **Free** | $0 | 125 one-time | ~5 seconds Gen-4 |
-| Standard | $12/mo | 625 | ~25 seconds Gen-4 |
-| Pro | $28/mo | 2,250 | ~90 seconds Gen-4 |
-| Unlimited | $76/mo | Unlimited (Explore Mode) | Unlimited Gen-4 Turbo |
+| 套餐 | 价格 | 信用额度/月 | 视频容量 |
+|------|------|------------|---------|
+| **免费** | $0 | 125（一次性） | Gen-4 约 5 秒 |
+| Standard | $12/月 | 625 | Gen-4 约 25 秒 |
+| Pro | $28/月 | 2,250 | Gen-4 约 90 秒 |
+| Unlimited | $76/月 | 无限（探索模式） | Gen-4 Turbo 无限 |
 
-**API pricing (approximate):**
+**API 定价（约）：**
 
-| Model | Price per second |
-|-------|-----------------|
+| 模型 | 每秒价格 |
+|------|---------|
 | Gen-3 Alpha Turbo | ~$0.05 |
 | Gen-4 Turbo | ~$0.05 |
 | Gen-4 Aleph | ~$0.15 |
 
-**Free tier:** 125 one-time credits (no monthly renewal). Enough for about 5 seconds of Gen-4 video. API access requires a paid subscription.
+**免费层级：** 125 一次性信用额度（无月度续费）。足够生成约 5 秒的 Gen-4 视频。API 访问需要付费订阅。
 
 ---
 
-### Higgsfield — Multi-Model Video Orchestrator
+### Higgsfield——多模型视频编排器
 
-> **Multi-model video platform.** Routes to Kling 3.0, Veo 3.1, Sora 2, WAN 2.5, and proprietary Soul Cinema through a single API. Includes Soul ID for character consistency across clips.
+> **多模型视频平台。** 通过单个 API 路由到 Kling 3.0、Veo 3.1、Sora 2、WAN 2.5 和专有 Soul Cinema。包括用于跨片段角色一致性的 Soul ID。
 
-**Tools unlocked:** `higgsfield_video`
-**Env vars:** `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET` (or combined `HIGGSFIELD_KEY=key:secret`)
+**解锁的工具：** `higgsfield_video`
+**环境变量：** `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET`（或组合 `HIGGSFIELD_KEY=key:secret`）
 
-#### Setup
+#### 设置
 
-1. Go to [cloud.higgsfield.ai](https://cloud.higgsfield.ai/) and create an account
-2. Subscribe to a plan (Starter or above for API access)
-3. Navigate to API Keys section at [cloud.higgsfield.ai/api-keys](https://cloud.higgsfield.ai/api-keys)
-4. Generate an API key and secret
-5. Add to `.env`:
+1. 前往 [cloud.higgsfield.ai](https://cloud.higgsfield.ai/) 并创建账户
+2. 订阅套餐（Starter 或以上以获得 API 访问）
+3. 导航至 [cloud.higgsfield.ai/api-keys](https://cloud.higgsfield.ai/api-keys) 的 API 密钥部分
+4. 生成 API 密钥和密钥
+5. 添加到 `.env`：
    ```
    HIGGSFIELD_API_KEY=your-api-key
    HIGGSFIELD_API_SECRET=your-api-secret
    ```
 
-#### Pricing
+#### 定价
 
-| Plan | Price | Notes |
-|------|-------|-------|
-| Free | $0 | Limited credits |
-| Starter | $15/mo | Basic allocation |
-| Plus | $34/mo | Mid-tier, ~33-56 Kling 3.0 clips |
-| Ultra | $84/mo | High volume |
+| 套餐 | 价格 | 说明 |
+|------|------|------|
+| 免费 | $0 | 有限信用额度 |
+| Starter | $15/月 | 基本配额 |
+| Plus | $34/月 | 中端，约 33-56 个 Kling 3.0 片段 |
+| Ultra | $84/月 | 高容量 |
 
-**Per-generation costs (approximate, via credits):**
+**每次生成成本（约，通过信用额度）：**
 
-| Model | Cost per clip |
-|-------|--------------|
-| Kling 3.0 | ~$0.10 (cheapest) |
+| 模型 | 每片段成本 |
+|------|----------|
+| Kling 3.0 | ~$0.10（最便宜） |
 | WAN 2.5 | ~$0.10 |
 | Soul Cinema | ~$0.15 |
 | Veo 3.1 | ~$0.50 |
 | Sora 2 | ~$0.50 |
 
-**Free tier:** Limited credits on signup. No monthly renewal on free plan.
+**免费层级：** 注册时有限信用额度。免费套餐无月度续费。
 
 ---
 
-### HeyGen — Avatar Video Gateway
+### HeyGen——虚拟形象视频网关
 
-> **Multi-model video gateway.** Access VEO, Sora, Runway, Kling, and Seedance through a single API.
+> **多模型视频网关。** 通过单个 API 访问 VEO、Sora、Runway、Kling 和 Seedance。
 
-**Tools unlocked:** `heygen_video`
-**Env var:** `HEYGEN_API_KEY`
+**解锁的工具：** `heygen_video`
+**环境变量：** `HEYGEN_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [app.heygen.com/register](https://app.heygen.com/register) and create an account
-2. Navigate to the API section in settings
-3. Generate your API key
-4. Add API balance (prepaid, separate from web plan credits)
-5. Add to `.env`: `HEYGEN_API_KEY=your-key-here`
+1. 前往 [app.heygen.com/register](https://app.heygen.com/register) 并创建账户
+2. 导航至设置中的 API 部分
+3. 生成你的 API 密钥
+4. 添加 API 余额（预付费，与 Web 套餐信用额度分开）
+5. 添加到 `.env`：`HEYGEN_API_KEY=your-key-here`
 
-#### Pricing
+#### 定价
 
-| Service | Price |
-|---------|-------|
-| Avatar video (Engine III) | $0.017/sec |
-| Avatar video (Engine IV) | $0.10/sec |
-| Prompt to Video | $0.033/sec |
-| Video Translation (Speed) | $0.05/sec |
-| Video Translation (Precision) | $0.10/sec |
+| 服务 | 价格 |
+|------|------|
+| 虚拟形象视频（Engine III） | $0.017/秒 |
+| 虚拟形象视频（Engine IV） | $0.10/秒 |
+| 提示词转视频 | $0.033/秒 |
+| 视频翻译（快速） | $0.05/秒 |
+| 视频翻译（精确） | $0.10/秒 |
 
-**Web plans:**
+**Web 套餐：**
 
-| Plan | Price | Notes |
-|------|-------|-------|
-| Free | $0 | 1 credit (demo) |
-| Creator | $24/mo | Limited credits |
-| Business | $72/mo | API access, more credits |
+| 套餐 | 价格 | 说明 |
+|------|------|------|
+| 免费 | $0 | 1 信用额度（演示） |
+| Creator | $24/月 | 有限信用额度 |
+| Business | $72/月 | API 访问，更多信用额度 |
 
-**Free tier:** 1 credit on web platform. API is pay-as-you-go with prepaid balance.
-
----
-
-### Suno — AI Music Generation
-
-> **Full songs with vocals and lyrics.** Any genre, up to 8 minutes. Instrumentals or vocal tracks.
-
-**Tools unlocked:** `suno_music`
-**Env var:** `SUNO_API_KEY`
-
-#### Setup
-
-1. Go to [suno.com](https://suno.com) and create a Suno account
-2. For API access, go to [sunoapi.org](https://sunoapi.org) and create an account
-3. Navigate to the dashboard and copy your API key
-4. Add credits (1 credit = $0.005 USD)
-5. Add to `.env`: `SUNO_API_KEY=your-key-here`
-
-#### Pricing
-
-**Suno platform:**
-
-| Plan | Price | Credits | Notes |
-|------|-------|---------|-------|
-| Free | $0 | 50/day | ~10 songs/day, non-commercial only |
-| Pro | $10/mo | 2,500/mo | Commercial license |
-| Premier | $30/mo | 10,000/mo | Commercial license |
-
-**API (via sunoapi.org):** Pay-as-you-go, 1 credit = $0.005. Each generation produces 2 tracks.
+**免费层级：** Web 平台 1 信用额度。API 是基于预付费余额的按量付费。
 
 ---
 
-### Pexels — Free Stock Media
+### Suno——AI 音乐生成
 
-> **Completely free.** No cost, no attribution required, commercial use allowed.
+> **带人声和歌词的完整歌曲。** 任意风格，最长 8 分钟。纯音乐或人声曲目。
 
-**Tools unlocked:** `pexels_image`, `pexels_video`
-**Env var:** `PEXELS_API_KEY`
+**解锁的工具：** `suno_music`
+**环境变量：** `SUNO_API_KEY`
 
-#### Setup
+#### 设置
 
-1. Go to [pexels.com/join](https://www.pexels.com/join/) and create a free account
-2. Navigate to [pexels.com/api](https://www.pexels.com/api/)
-3. Click **Your API Key** or request API access
-4. Copy your key from the dashboard
-5. Add to `.env`: `PEXELS_API_KEY=your-key-here`
+1. 前往 [suno.com](https://suno.com) 并创建 Suno 账户
+2. 对于 API 访问，前往 [sunoapi.org](https://sunoapi.org) 并创建账户
+3. 导航至仪表盘并复制你的 API 密钥
+4. 添加信用额度（1 信用额度 = $0.005 USD）
+5. 添加到 `.env`：`SUNO_API_KEY=your-key-here`
 
-#### Pricing
+#### 定价
 
-**Completely free.** No paid tiers. No attribution required. Commercial use allowed.
+**Suno 平台：**
 
-- 200 requests/hour
-- 20,000 requests/month
-- Photo and video search + download
+| 套餐 | 价格 | 信用额度 | 说明 |
+|------|------|---------|------|
+| 免费 | $0 | 50/天 | 约 10 首歌曲/天，仅非商业用途 |
+| Pro | $10/月 | 2,500/月 | 商业许可证 |
+| Premier | $30/月 | 10,000/月 | 商业许可证 |
 
----
-
-### Pixabay — Free Stock Media
-
-> **Completely free.** 5M+ royalty-free images and videos.
-
-**Tools unlocked:** `pixabay_image`, `pixabay_video`
-**Env var:** `PIXABAY_API_KEY`
-
-#### Setup
-
-1. Go to [pixabay.com/accounts/register](https://pixabay.com/accounts/register/) and create a free account
-2. Navigate to [pixabay.com/api/docs](https://pixabay.com/api/docs/)
-3. Your API key is displayed at the top of the docs page (after login)
-4. Copy the key
-5. Add to `.env`: `PIXABAY_API_KEY=your-key-here`
-
-#### Pricing
-
-**Completely free.** No paid tiers. No attribution required. Commercial use allowed.
-
-- ~100 requests/minute
-- 5,000 requests/hour
-- Photo and video search + download
-- Standard API limited to 1280px images (full resolution requires editorial API)
+**API（通过 sunoapi.org）：** 按量付费，1 信用额度 = $0.005。每次生成产生 2 首曲目。
 
 ---
 
-## Local Providers (Free, No API Key)
+### Pexels——免费素材库媒体
 
-These providers run entirely on your machine. No network, no API key, no cost. Some require a GPU.
+> **完全免费。** 无需成本、无需注明来源、允许商业使用。
 
-### Remotion — Programmatic Video Composition
+**解锁的工具：** `pexels_image`, `pexels_video`
+**环境变量：** `PEXELS_API_KEY`
 
-> **React-based video rendering.** Turns still images into animated video with spring physics, animated text cards, stat cards, charts, and transitions. **This is the key fallback when no video generation providers are configured** — the agent generates images and Remotion animates them into professional-looking video.
+#### 设置
 
-**Tool:** `video_compose` (with `operation="render"` — auto-routes to Remotion when needed)
-**Runtime:** CPU (Node.js required)
-**Env var:** None
+1. 前往 [pexels.com/join](https://www.pexels.com/join/) 并创建免费账户
+2. 导航至 [pexels.com/api](https://www.pexels.com/api/)
+3. 点击**你的 API 密钥**或请求 API 访问
+4. 从仪表盘复制你的密钥
+5. 添加到 `.env`：`PEXELS_API_KEY=your-key-here`
 
-#### Setup
+#### 定价
+
+**完全免费。** 无付费层级。无需注明来源。允许商业使用。
+
+- 200 次请求/小时
+- 20,000 次请求/月
+- 照片和视频搜索 + 下载
+
+---
+
+### Pixabay——免费素材库媒体
+
+> **完全免费。** 500 万+ 免版税图像和视频。
+
+**解锁的工具：** `pixabay_image`, `pixabay_video`
+**环境变量：** `PIXABAY_API_KEY`
+
+#### 设置
+
+1. 前往 [pixabay.com/accounts/register](https://pixabay.com/accounts/register/) 并创建免费账户
+2. 导航至 [pixabay.com/api/docs](https://pixabay.com/api/docs/)
+3. 你的 API 密钥显示在文档页面顶部（登录后）
+4. 复制密钥
+5. 添加到 `.env`：`PIXABAY_API_KEY=your-key-here`
+
+#### 定价
+
+**完全免费。** 无付费层级。无需注明来源。允许商业使用。
+
+- 约 100 次请求/分钟
+- 5,000 次请求/小时
+- 照片和视频搜索 + 下载
+- 标准 API 限制为 1280px 图像（全分辨率需要编辑 API）
+
+---
+
+## 本地提供商（免费，无需 API 密钥）
+
+这些提供商完全在你自己的机器上运行。无需网络、无需 API 密钥、无需成本。部分需要 GPU。
+
+### Remotion——程序化视频合成
+
+> **基于 React 的视频渲染。** 将静态图像转换为动画视频，支持弹簧物理、动画文字卡片、统计卡片、图表和转场。**这是当没有配置视频生成提供商时的关键回退方案**——代理生成图像，Remotion 将它们动画化为专业外观的视频。
+
+**工具：** `video_compose`（使用 `operation="render"`——在需要时自动路由到 Remotion）
+**运行时：** CPU（需要 Node.js）
+**环境变量：** 无
+
+#### 设置
 
 ```bash
-# Included in make setup, or install manually:
+# 包含在 make setup 中，或手动安装：
 cd remotion-composer && npm install && cd ..
 ```
 
-Requires **Node.js 18+** and `npx`. The `remotion-composer/` project is included in the repo.
+需要 **Node.js 18+** 和 `npx`。`remotion-composer/` 项目包含在仓库中。
 
-#### What Remotion Renders
+#### Remotion 渲染的内容
 
-| Component | What it produces |
-|-----------|-----------------|
-| **TextCard** | Animated title/body text with spring physics entrance |
-| **StatCard** | Animated statistics with count-up animations |
-| **ProgressBar** | Animated progress indicators |
-| **CalloutBox** | Highlighted callout panels with icon animations |
-| **ComparisonCard** | Side-by-side comparison layouts |
-| **BarChart / LineChart / PieChart** | Animated data visualizations |
-| **KPIGrid** | Multi-metric dashboard cards |
-| **Image scenes** | Still images with spring-animated motion (replaces Ken Burns) |
+| 组件 | 产生的内容 |
+|------|----------|
+| **TextCard** | 带有弹簧物理进入动画的动画标题/正文文本 |
+| **StatCard** | 带计数动画的动画统计数字 |
+| **ProgressBar** | 动画进度指示器 |
+| **CalloutBox** | 带图标动画的高亮标注面板 |
+| **ComparisonCard** | 并排比较布局 |
+| **BarChart / LineChart / PieChart** | 动画数据可视化 |
+| **KPIGrid** | 多指标仪表盘卡片 |
+| **图像场景** | 带弹簧动画运动的静态图像（替代 Ken Burns 效果） |
 
-#### When Does Remotion Activate?
+#### Remotion 何时激活？
 
-The `video_compose` tool's `render` operation auto-detects when Remotion is needed:
-- Cuts contain still images (`.png`, `.jpg`, etc.)
-- Cuts have `type` set to `text_card`, `stat_card`, `chart`, etc.
-- Cuts specify `animation` or `transition_in`/`transition_out`
+`video_compose` 工具的 `render` 操作自动检测何时需要 Remotion：
+- 剪辑包含静态图像（`.png`, `.jpg` 等）
+- 剪辑的 `type` 设置为 `text_card`、`stat_card`、`chart` 等
+- 剪辑指定了 `animation` 或 `transition_in`/`transition_out`
 
-If Remotion is not installed, compositions fall back to FFmpeg Ken Burns pan-and-zoom — functional but less engaging.
+如果未安装 Remotion，合成会回退到 FFmpeg Ken Burns 平移和缩放——能用但吸引力较低。
 
-**Cost:** Free. Always local.
+**成本：** 免费。始终本地运行。
 
 ---
 
-### HyperFrames - HTML/CSS/GSAP Video Composition
+### HyperFrames——HTML/CSS/GSAP 视频合成
 
-> **GSAP-native local rendering.** HyperFrames is the preferred runtime for motion-graphics-heavy HTML compositions and the `character-animation` pipeline's rigged SVG character acting.
+> **GSAP 原生本地渲染。** HyperFrames 是运动图形密集型 HTML 合成以及 `character-animation` 流水线的骨骼化 SVG 角色表演的首选运行时。
 
-**Tool:** `hyperframes_compose` directly, or `video_compose` with `edit_decisions.render_runtime="hyperframes"`
-**Runtime:** CPU (Node.js >= 22, FFmpeg, and `npx` required)
-**Env var:** None
+**工具：** 直接使用 `hyperframes_compose`，或使用 `edit_decisions.render_runtime="hyperframes"` 的 `video_compose`
+**运行时：** CPU（需要 Node.js >= 22、FFmpeg 和 `npx`）
+**环境变量：** 无
 
-#### Setup
+#### 设置
 
 ```bash
 node --version
@@ -567,209 +567,209 @@ ffmpeg -version
 npx --yes hyperframes doctor
 ```
 
-The CLI is consumed as `npx hyperframes`. Do not use `npx @hyperframes/cli`; that package name is not the OpenMontage runtime path.
+CLI 通过 `npx hyperframes` 使用。不要使用 `npx @hyperframes/cli`；该包名不是 OpenMontage 运行时路径。
 
-#### What HyperFrames Renders
+#### HyperFrames 渲染的内容
 
-| Use case | What it produces |
-|----------|------------------|
-| **Kinetic typography** | HTML/CSS text animation driven by GSAP timelines |
-| **Product / launch videos** | Structured HTML scenes, registry blocks, and transitions |
-| **Website-to-video** | Browser-captured site compositions with HyperFrames validation |
-| **Character animation** | SVG character rigs, pose/action timelines, and GSAP acting beats rendered to `renders/final.mp4` |
+| 用例 | 产生的内容 |
+|------|----------|
+| **动态文字** | 由 GSAP 时间线驱动的 HTML/CSS 文本动画 |
+| **产品/发布视频** | 结构化 HTML 场景、注册表块和转场 |
+| **网站转视频** | 浏览器捕获的网站合成，经过 HyperFrames 验证 |
+| **角色动画** | SVG 角色骨骼、姿势/动作时间线和 GSAP 表演节拍，渲染到 `renders/final.mp4` |
 
-HyperFrames workspaces live under `projects/<project-name>/hyperframes/`. Final videos still follow the normal OpenMontage convention: `projects/<project-name>/renders/final.mp4`.
+HyperFrames 工作区位于 `projects/<project-name>/hyperframes/`。最终视频仍然遵循标准的 OpenMontage 约定：`projects/<project-name>/renders/final.mp4`。
 
-**Cost:** Free. Always local.
+**成本：** 免费。始终本地运行。
 
 ---
 
-### Piper TTS — Offline Text-to-Speech
+### Piper TTS——离线文本转语音
 
-> **Completely free, fully offline TTS.** No network required. Good quality for drafts and budget-constrained projects.
+> **完全免费、完全离线的 TTS。** 无需网络。适用于草稿和预算受限项目的良好质量。
 
-**Tool:** `piper_tts`
-**Runtime:** CPU (no GPU needed)
-**Env var:** None
+**工具：** `piper_tts`
+**运行时：** CPU（无需 GPU）
+**环境变量：** 无
 
-#### Setup
+#### 设置
 
 ```bash
-# Install via pip
+# 通过 pip 安装
 pip install piper-tts
 
-# Or download the binary from GitHub
+# 或从 GitHub 下载二进制文件
 # https://github.com/rhasspy/piper/releases
 
-# Download a voice model (first run downloads automatically)
+# 下载语音模型（首次运行自动下载）
 piper --download-dir ~/.piper/models --model en_US-lessac-medium
 ```
 
-**Available voices:** ~30 English voices plus voices for German, French, Spanish, Italian, and other languages. Lower variety than cloud providers but completely free and offline.
+**可用语音：** 约 30 种英语语音，以及德语、法语、西班牙语、意大利语和其他语言的语音。种类比云提供商少，但完全免费且离线。
 
-**Quality:** Good for drafts, internal videos, and budget projects. For client-facing narration, use ElevenLabs or Google TTS.
+**质量：** 适合草稿、内部视频和预算项目。对于面向客户的旁白，使用 ElevenLabs 或 Google TTS。
 
 ---
 
-### Local Video Generation (GPU Required)
+### 本地视频生成（需要 GPU）
 
-> **Free AI video generation.** Requires an NVIDIA GPU with sufficient VRAM.
+> **免费 AI 视频生成。** 需要具有足够 VRAM 的 NVIDIA GPU。
 
-**Tools:** `wan_video`, `hunyuan_video`, `cogvideo_video`, `ltx_video_local`
-**Runtime:** Local GPU (CUDA required)
-**Env vars:** `VIDEO_GEN_LOCAL_ENABLED=true`, `VIDEO_GEN_LOCAL_MODEL=<model>`
+**工具：** `wan_video`, `hunyuan_video`, `cogvideo_video`, `ltx_video_local`
+**运行时：** 本地 GPU（需要 CUDA）
+**环境变量：** `VIDEO_GEN_LOCAL_ENABLED=true`, `VIDEO_GEN_LOCAL_MODEL=<model>`
 
-#### Setup
+#### 设置
 
 ```bash
-# 1. Install the GPU stack
+# 1. 安装 GPU 栈
 make install-gpu
-# Or manually:
+# 或手动安装：
 pip install diffusers transformers accelerate torch pillow requests
 
-# 2. Enable local generation in .env
+# 2. 在 .env 中启用本地生成
 VIDEO_GEN_LOCAL_ENABLED=true
 
-# 3. Choose a model based on your GPU VRAM
-VIDEO_GEN_LOCAL_MODEL=wan2.1-1.3b      # 6GB+ VRAM (entry-level)
-VIDEO_GEN_LOCAL_MODEL=wan2.1-14b       # 24GB+ VRAM (best local quality)
+# 3. 根据你的 GPU VRAM 选择模型
+VIDEO_GEN_LOCAL_MODEL=wan2.1-1.3b      # 6GB+ VRAM（入门级）
+VIDEO_GEN_LOCAL_MODEL=wan2.1-14b       # 24GB+ VRAM（最佳本地质量）
 VIDEO_GEN_LOCAL_MODEL=hunyuan-1.5      # 12GB+ VRAM
-VIDEO_GEN_LOCAL_MODEL=ltx2-local       # 8GB+ VRAM (fastest)
+VIDEO_GEN_LOCAL_MODEL=ltx2-local       # 8GB+ VRAM（最快）
 VIDEO_GEN_LOCAL_MODEL=cogvideo-5b      # 10GB+ VRAM
-VIDEO_GEN_LOCAL_MODEL=cogvideo-2b      # 6GB+ VRAM (lightest)
+VIDEO_GEN_LOCAL_MODEL=cogvideo-2b      # 6GB+ VRAM（最轻量）
 ```
 
-#### Model Comparison
+#### 模型比较
 
-| Model | VRAM | Quality | Speed | Best for |
-|-------|------|---------|-------|----------|
-| **WAN 2.1 (1.3B)** | 6GB | Good | Fast | Entry-level GPU, quick iteration |
-| **WAN 2.1 (14B)** | 24GB | Excellent | Slow | Best quality-to-VRAM ratio |
-| **Hunyuan 1.5** | 12GB | Very good | Medium | Mid-range GPUs |
-| **LTX-2** | 8GB | Good | Fastest | Quick drafts, lowest latency |
-| **CogVideo (5B)** | 10GB | Good | Medium | Balanced option |
-| **CogVideo (2B)** | 6GB | Fair | Fast | Low-VRAM experimentation |
+| 模型 | VRAM | 质量 | 速度 | 最适合 |
+|------|------|------|------|--------|
+| **WAN 2.1（1.3B）** | 6GB | 良好 | 快 | 入门级 GPU，快速迭代 |
+| **WAN 2.1（14B）** | 24GB | 优秀 | 慢 | 最佳质量与 VRAM 比 |
+| **Hunyuan 1.5** | 12GB | 很好 | 中等 | 中端 GPU |
+| **LTX-2** | 8GB | 良好 | 最快 | 快速草稿，最低延迟 |
+| **CogVideo（5B）** | 10GB | 良好 | 中等 | 均衡选择 |
+| **CogVideo（2B）** | 6GB | 一般 | 快 | 低 VRAM 实验 |
 
-**All local models support:** Image-to-video, text-to-video, offline generation, seeded reproducibility.
+**所有本地模型支持：** 图生视频、文生视频、离线生成、种子可复现性。
 
 ---
 
-### Local Diffusion — Offline Image Generation (GPU Required)
+### 本地扩散模型——离线图像生成（需要 GPU）
 
-> **Free Stable Diffusion image generation.** No API cost, fully offline.
+> **免费的 Stable Diffusion 图像生成。** 无 API 成本，完全离线。
 
-**Tool:** `local_diffusion`
-**Runtime:** Local GPU (CUDA required)
-**Env var:** None (enable by installing dependencies)
+**工具：** `local_diffusion`
+**运行时：** 本地 GPU（需要 CUDA）
+**环境变量：** 无（通过安装依赖启用）
 
-#### Setup
+#### 设置
 
 ```bash
 pip install diffusers transformers accelerate torch
 ```
 
-First run downloads the model (~4GB). Subsequent runs use the cached model.
+首次运行下载模型（约 4GB）。后续运行使用缓存的模型。
 
-**VRAM requirement:** 4GB+ (8GB recommended for 1024x1024 images)
+**VRAM 需求：** 4GB+（建议 8GB 用于 1024x1024 图像）
 
-**Supports:** Negative prompts, seeds, custom sizes. Quality is lower than FLUX or DALL-E 3 but completely free and offline.
-
----
-
-### LTX-2 on Modal — Self-Hosted Cloud GPU
-
-> **Run LTX-2 on Modal's cloud GPUs.** Your own endpoint, your own scale. More consistent than local GPU, cheaper than commercial APIs.
-
-**Tool:** `ltx_video_modal`
-**Runtime:** Cloud (self-hosted)
-**Env var:** `MODAL_LTX2_ENDPOINT_URL`
-
-#### Setup
-
-1. Create a [Modal](https://modal.com) account
-2. Deploy the LTX-2 endpoint (see Modal docs)
-3. Set the endpoint URL in `.env`: `MODAL_LTX2_ENDPOINT_URL=https://your-modal-endpoint`
-
-**Modal pricing:** ~$0.99/hour for A100 GPU time. Cost per video depends on generation time.
+**支持：** 负向提示词、种子、自定义尺寸。质量低于 FLUX 或 DALL-E 3，但完全免费且离线。
 
 ---
 
-### Other Local Tools (Always Available)
+### Modal 上的 LTX-2——自托管云 GPU
 
-These tools require only FFmpeg or Python packages — no GPU, no API key.
+> **在 Modal 的云 GPU 上运行 LTX-2。** 你自己的端点，你自己的规模。比本地 GPU 更稳定，比商业 API 更便宜。
 
-| Tool | Install | What it does |
-|------|---------|-------------|
-| **FFmpeg tools** (video_compose, video_stitch, video_trimmer, audio_mixer, audio_enhance, color_grade, face_enhance, frame_sampler, scene_detect) | `brew install ffmpeg` / `sudo apt install ffmpeg` / `winget install FFmpeg` | Video editing, audio processing, color grading, analysis |
-| **Transcriber** | `pip install faster-whisper` | Speech-to-text with word-level timestamps |
-| **Background Remove** | `pip install rembg` (CPU) or `pip install rembg[gpu]` | Remove image/video backgrounds |
-| **Upscale** | `pip install realesrgan` (requires PyTorch + CUDA) | Real-ESRGAN image/video upscaling |
-| **Face Restore** | `pip install gfpgan` (requires PyTorch) | CodeFormer/GFPGAN face restoration |
-| **Code Snippet** | `pip install Pygments Pillow` | Syntax-highlighted code images |
-| **Diagram Gen** | `npm install -g @mermaid-js/mermaid-cli` | Mermaid diagram rendering |
-| **Math Animate** | `pip install manim` | ManimCE mathematical animations |
-| **Subtitle Gen** | No install needed | SRT/VTT subtitle file generation |
-| **Video Understand** | `pip install transformers torch` | CLIP/BLIP-2 visual analysis |
-| **Talking Head** | Clone [SadTalker](https://github.com/OpenTalker/SadTalker) | Avatar animation from photo + audio |
-| **Lip Sync** | Clone [Wav2Lip](https://github.com/Rudrabha/Wav2Lip) | Audio-driven lip synchronization |
+**工具：** `ltx_video_modal`
+**运行时：** 云端（自托管）
+**环境变量：** `MODAL_LTX2_ENDPOINT_URL`
+
+#### 设置
+
+1. 创建 [Modal](https://modal.com) 账户
+2. 部署 LTX-2 端点（参见 Modal 文档）
+3. 在 `.env` 中设置端点 URL：`MODAL_LTX2_ENDPOINT_URL=https://your-modal-endpoint`
+
+**Modal 定价：** A100 GPU 时间约 $0.99/小时。每个视频的成本取决于生成时间。
 
 ---
 
-## Provider-to-Tool Mapping
+### 其他本地工具（始终可用）
 
-| Provider | Env Var | Tools Unlocked | Cost |
-|----------|---------|---------------|------|
-| **Pexels** | `PEXELS_API_KEY` | `pexels_image`, `pexels_video` | Free |
-| **Pixabay** | `PIXABAY_API_KEY` | `pixabay_image`, `pixabay_video` | Free |
-| **Piper** | — (install only) | `piper_tts` | Free |
-| **Google** | `GOOGLE_API_KEY` | `google_tts`, `google_imagen` | Free tier + paid |
-| **ElevenLabs** | `ELEVENLABS_API_KEY` | `elevenlabs_tts`, `music_gen` | Free tier + paid |
-| **fal.ai** | `FAL_KEY` | `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video` | Pay-as-you-go |
-| **OpenAI** | `OPENAI_API_KEY` | `openai_tts`, `openai_image` | Paid only |
-| **xAI** | `XAI_API_KEY` | `grok_image`, `grok_video` | Paid only |
-| **Runway** | `RUNWAY_API_KEY` | `runway_video` | Free trial + paid |
-| **Higgsfield** | `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET` | `higgsfield_video` | Subscription ($15-84/mo) |
-| **HeyGen** | `HEYGEN_API_KEY` | `heygen_video` | Pay-as-you-go |
-| **Suno** | `SUNO_API_KEY` | `suno_music` | Pay-as-you-go |
-| **Local GPU** | `VIDEO_GEN_LOCAL_ENABLED` | `wan_video`, `hunyuan_video`, `cogvideo_video`, `ltx_video_local` | Free (GPU required) |
-| **Local Diffusion** | — (install only) | `local_diffusion` | Free (GPU required) |
-| **Modal** | `MODAL_LTX2_ENDPOINT_URL` | `ltx_video_modal` | Self-hosted cloud |
+这些工具仅需要 FFmpeg 或 Python 包——无需 GPU、无需 API 密钥。
 
----
-
-## Capability Coverage
-
-How many providers cover each capability:
-
-| Capability | Cloud Providers | Local Providers | Free Options |
-|-----------|----------------|-----------------|--------------|
-| **Image Generation** | FLUX, Grok, Google Imagen, DALL-E 3, Recraft | Local Diffusion | Pexels, Pixabay (stock) |
-| **Video Generation** | Grok, Kling, Runway, Veo, Higgsfield, MiniMax, HeyGen | WAN, Hunyuan, CogVideo, LTX | Pexels, Pixabay (stock) |
-| **Text-to-Speech** | ElevenLabs, Google TTS, OpenAI | Piper | Piper, Google free tier, ElevenLabs free tier |
-| **Music Generation** | ElevenLabs, Suno | — | ElevenLabs free tier |
-| **Post-Production** | — | FFmpeg (compose, stitch, trim, mix, enhance, grade) | All free |
-| **Analysis** | — | WhisperX, Scene Detect, Frame Sampler, CLIP/BLIP-2 | All free |
-| **Enhancement** | — | Upscale, BG Remove, Face Enhance, Face Restore | All free |
-| **Avatar** | — | SadTalker, Wav2Lip | All free |
+| 工具 | 安装 | 功能 |
+|------|------|------|
+| **FFmpeg 工具**（video_compose, video_stitch, video_trimmer, audio_mixer, audio_enhance, color_grade, face_enhance, frame_sampler, scene_detect） | `brew install ffmpeg` / `sudo apt install ffmpeg` / `winget install FFmpeg` | 视频编辑、音频处理、调色、分析 |
+| **Transcriber** | `pip install faster-whisper` | 带词级时间戳的语音转文本 |
+| **背景移除** | `pip install rembg`（CPU）或 `pip install rembg[gpu]` | 移除图像/视频背景 |
+| **放大** | `pip install realesrgan`（需要 PyTorch + CUDA） | Real-ESRGAN 图像/视频放大 |
+| **人脸修复** | `pip install gfpgan`（需要 PyTorch） | CodeFormer/GFPGAN 人脸修复 |
+| **代码片段** | `pip install Pygments Pillow` | 语法高亮代码图像 |
+| **图表生成** | `npm install -g @mermaid-js/mermaid-cli` | Mermaid 图表渲染 |
+| **数学动画** | `pip install manim` | ManimCE 数学动画 |
+| **字幕生成** | 无需安装 | SRT/VTT 字幕文件生成 |
+| **视频理解** | `pip install transformers torch` | CLIP/BLIP-2 视觉分析 |
+| **虚拟形象** | 克隆 [SadTalker](https://github.com/OpenTalker/SadTalker) | 从照片 + 音频创建虚拟形象动画 |
+| **唇形同步** | 克隆 [Wav2Lip](https://github.com/Rudrabha/Wav2Lip) | 音频驱动的唇形同步 |
 
 ---
 
-## FAQ
+## 提供商到工具的映射
 
-**Q: What's the absolute minimum I need to produce a video?**
-A: FFmpeg + Node.js (both free, local). FFmpeg handles video assembly, audio mixing, and subtitles. With Node.js, Remotion renders still images into animated video — so even without any video generation API, the agent generates images and Remotion turns them into professional-looking video with spring animations, text cards, and transitions. Add Piper TTS for free narration and Pexels/Pixabay for free stock footage.
+| 提供商 | 环境变量 | 解锁的工具 | 成本 |
+|--------|---------|-----------|------|
+| **Pexels** | `PEXELS_API_KEY` | `pexels_image`, `pexels_video` | 免费 |
+| **Pixabay** | `PIXABAY_API_KEY` | `pixabay_image`, `pixabay_video` | 免费 |
+| **Piper** | —（仅安装） | `piper_tts` | 免费 |
+| **Google** | `GOOGLE_API_KEY` | `google_tts`, `google_imagen` | 免费层级 + 付费 |
+| **ElevenLabs** | `ELEVENLABS_API_KEY` | `elevenlabs_tts`, `music_gen` | 免费层级 + 付费 |
+| **fal.ai** | `FAL_KEY` | `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video` | 按量付费 |
+| **OpenAI** | `OPENAI_API_KEY` | `openai_tts`, `openai_image` | 仅付费 |
+| **xAI** | `XAI_API_KEY` | `grok_image`, `grok_video` | 仅付费 |
+| **Runway** | `RUNWAY_API_KEY` | `runway_video` | 免费试用 + 付费 |
+| **Higgsfield** | `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET` | `higgsfield_video` | 订阅（$15-84/月） |
+| **HeyGen** | `HEYGEN_API_KEY` | `heygen_video` | 按量付费 |
+| **Suno** | `SUNO_API_KEY` | `suno_music` | 按量付费 |
+| **本地 GPU** | `VIDEO_GEN_LOCAL_ENABLED` | `wan_video`, `hunyuan_video`, `cogvideo_video`, `ltx_video_local` | 免费（需要 GPU） |
+| **本地扩散模型** | —（仅安装） | `local_diffusion` | 免费（需要 GPU） |
+| **Modal** | `MODAL_LTX2_ENDPOINT_URL` | `ltx_video_modal` | 自托管云端 |
 
-**Q: I don't have any video generation providers. Can I still make videos?**
-A: Yes. The agent generates still images (via any image provider — even free stock from Pexels/Pixabay) and Remotion composes them into animated video with spring physics transitions, text cards, stat cards, and charts. This is the default path for explainer and animation pipelines when no video gen is configured.
+---
 
-**Q: What's one low-friction way to get AI-generated images and video?**
-A: fal.ai (`FAL_KEY`) is one pay-as-you-go option with broad single-key coverage. It unlocks FLUX images plus multiple video providers. No subscription — pay only for what you generate.
+## 能力覆盖范围
 
-**Q: I have a GPU. What can I run locally for free?**
-A: Set `VIDEO_GEN_LOCAL_ENABLED=true` and install `diffusers`. You get WAN 2.1, Hunyuan, CogVideo, and LTX video generation plus Stable Diffusion image generation — all free, all offline.
+每个能力有多少提供商覆盖：
 
-**Q: Which TTS provider should I use?**
-A: For quality → ElevenLabs. For localization (50+ languages) → Google TTS. For budget → Google free tier (1M chars/month). For offline → Piper.
+| 能力 | 云提供商 | 本地提供商 | 免费选项 |
+|------|---------|-----------|---------|
+| **图像生成** | FLUX、Grok、Google Imagen、DALL-E 3、Recraft | 本地扩散模型 | Pexels、Pixabay（素材库） |
+| **视频生成** | Grok、Kling、Runway、Veo、Higgsfield、MiniMax、HeyGen | WAN、Hunyuan、CogVideo、LTX | Pexels、Pixabay（素材库） |
+| **文本转语音** | ElevenLabs、Google TTS、OpenAI | Piper | Piper、Google 免费层级、ElevenLabs 免费层级 |
+| **音乐生成** | ElevenLabs、Suno | — | ElevenLabs 免费层级 |
+| **后期制作** | — | FFmpeg（合成、拼接、裁剪、混音、增强、调色） | 全部免费 |
+| **分析** | — | WhisperX、场景检测、帧采样器、CLIP/BLIP-2 | 全部免费 |
+| **增强** | — | 放大、背景移除、人脸增强、人脸修复 | 全部免费 |
+| **虚拟形象** | — | SadTalker、Wav2Lip | 全部免费 |
 
-**Q: Do I need all these providers?**
-A: No. Start with what you have. The selector pattern auto-routes to whatever's available. Missing a provider? The system falls through to the next one automatically.
+---
+
+## 常见问题
+
+**问：制作视频所需的最低配置是什么？**
+答：FFmpeg + Node.js（均免费、本地运行）。FFmpeg 处理视频组装、音频混音和字幕。配合 Node.js，Remotion 将静态图像渲染为动画视频——因此即使没有任何视频生成 API，代理也能生成图像，Remotion 将它们转化成带有弹簧动画、文字卡片和转场的专业外观视频。添加 Piper TTS 获取免费旁白，Pexels/Pixabay 获取免费素材库素材。
+
+**问：我没有配置任何视频生成提供商。还能制作视频吗？**
+答：可以。代理生成静态图像（通过任何图像提供商——甚至来自 Pexels/Pixabay 的免费素材库素材），Remotion 将它们合成为带有弹簧物理转场、文字卡片、统计卡片和图表的动画视频。当没有配置视频生成时，这是讲解和动画流水线的默认路径。
+
+**问：获取 AI 生成的图像和视频有什么低门槛的方法？**
+答：fal.ai（`FAL_KEY`）是一个按量付费选项，单密钥覆盖广泛。它解锁 FLUX 图像以及多个视频提供商。无需订阅——只为你生成的内容付费。
+
+**问：我有 GPU。本地可以免费运行什么？**
+答：设置 `VIDEO_GEN_LOCAL_ENABLED=true` 并安装 `diffusers`。你将获得 WAN 2.1、Hunyuan、CogVideo 和 LTX 视频生成，以及 Stable Diffusion 图像生成——全部免费，全部离线。
+
+**问：应该使用哪个 TTS 提供商？**
+答：追求质量 → ElevenLabs。追求本地化（50+ 语言）→ Google TTS。追求预算 → Google 免费层级（每月 100 万字符）。追求离线 → Piper。
+
+**问：我需要所有这些提供商吗？**
+答：不需要。从你已有的开始。选择器模式自动路由到任何可用的方案。缺少某个提供商？系统会自动回退到下一个。

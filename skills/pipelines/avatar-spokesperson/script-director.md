@@ -1,49 +1,49 @@
-# Script Director - Avatar Spokesperson Pipeline
+# 剧本总监 - 虚拟形象发言人管线
 
-## When To Use
+## 使用时机
 
-Turn the approved brief into scene-safe spoken copy for an avatar presenter. The quality bar is not literary flourish. It is spoken clarity, believable pacing, and one clean point per scene.
+将已批准的创意简报转化为适合虚拟形象主持人逐场使用的口语化脚本。质量标准不是文采斐然，而是口语清晰度、可信的节奏感，以及每场一个干净利落的要点。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/avatar-spokesperson-best-practices.md`
 - `skills/creative/storytelling.md`
 
-## Process
+## 流程
 
-### 1. Write For Speech, Not For Slides
+### 1. 为口语而写，不为幻灯片而写
 
-Prefer:
+优先使用：
 
-- short sentences,
-- direct verbs,
-- one idea per beat,
-- explicit transitions,
-- conversational emphasis.
+- 短句，
+- 直接动词，
+- 每个节拍一个想法，
+- 明确的过渡，
+- 对话式的强调。
 
-If the copy sounds like a brochure when read aloud, rewrite it.
+如果朗读起来像宣传册，那就重写。
 
-### 2. Break Into Scene-Safe Chunks
+### 2. 分解为场景安全的段落
 
-Avatar scenes are easier to manage when each section is compact. A useful starting point is:
+每个段落保持紧凑，虚拟形象场景更易于管理。一个有用的起点是：
 
-- hook,
-- value statement,
-- proof or feature beat,
-- CTA.
+- 开场钩子，
+- 价值主张，
+- 证明或功能点，
+- CTA。
 
-### 3. Keep On-Screen Text Light
+### 3. 保持屏幕文字精简
 
-The presenter is already carrying attention. Use on-screen text only for:
+主持人本身已经承载了观众的注意力。屏幕文字仅用于：
 
-- product names,
-- short proof points,
-- CTA copy,
-- legal or compliance text that must appear.
+- 产品名称，
+- 简短证明点，
+- CTA 文案，
+- 必须出现的法律或合规文本。
 
-### 4. Use Metadata For Delivery Notes
+### 4. 使用元数据记录交付说明
 
-Recommended metadata keys:
+推荐元数据键：
 
 - `scene_copy_map`
 - `cta_language`
@@ -51,26 +51,26 @@ Recommended metadata keys:
 - `supplied_script_source`
 - `legal_text_requirements`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the copy sounds spoken,
-- scene lengths are realistic,
-- CTA placement is clear,
-- text overlays are restrained.
+- 文案听起来像口语，
+- 场景长度合理，
+- CTA 位置清晰，
+- 文字叠加克制使用。
 
-### Mid-Production Fact Verification
+### 制作中的事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在脚本撰写过程中遇到不确定的信息：
+- 使用 `web_search` 核实事实性声明，确认无误后再写入脚本
+- 使用 `web_search` 查找参考图片以确保视觉准确性
+- 在决策日志中记录核查：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+脚本中的每一个事实性声明都应当可追溯至 `research_brief`。
+如果你做出了研究中没有的声明，请进行额外研究并补充来源。
+不要编造统计数据、日期或引用来源。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Overstuffing one scene because the script reads well on paper.
-- Duplicating the same sentence in speech and large text overlays.
-- Writing humor or improvisational beats the avatar path cannot sell.
+- 因为脚本在纸面上读起来不错而过度填充一个场景。
+- 在口语和大型文字叠加中重复同一句话。
+- 编写虚拟形象路径无法演绎的幽默或即兴节拍。

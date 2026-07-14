@@ -1,33 +1,29 @@
-# Video Reference Analyst — Meta Skill
+# 视频参考分析师 — 元技能
 
-## When to Use
+## 何时使用
 
-When the user provides a video URL (YouTube, Shorts, Instagram, TikTok, or any URL)
-or a local video file as a REFERENCE — meaning "make me something like this," not
-"edit this footage."
+当用户提供视频 URL（YouTube、Shorts、Instagram、TikTok 或任何 URL）或本地视频文件作为**参考**时——意思是"帮我做一个像这样的东西"，而不是"剪辑这段素材"。
 
-If the user says "edit this video" or "cut this into clips," route to the appropriate
-footage-led pipeline (clip-factory, talking-head, hybrid) instead. This skill is for
-REFERENCE-based production.
+如果用户说"编辑这个视频"或"把这个剪成片段"，则路由到合适的基于素材的流水线（clip-factory、talking-head、hybrid）。本技能用于**基于参考**的制作。
 
-## Detection Signals
+## 检测信号
 
-Trigger this skill when:
-- User pastes a YouTube/Shorts/Instagram/TikTok URL
-- User says "something like this," "inspired by," "in this style," "similar to"
-- User uploads a video and says "I want one like this"
-- User says "I saw this video and want to make something like it"
+在以下情况下触发本技能：
+- 用户粘贴 YouTube/Shorts/Instagram/TikTok URL
+- 用户说"像这样的东西"、"受...启发"、"这种风格"、"类似..."
+- 用户上传视频并说"我想要一个像这样的"
+- 用户说"我看到这个视频，想做一个类似的"
 
-Do NOT trigger when:
-- User provides footage and says "edit this" or "cut this" → use source_media_review
-- User provides audio and says "make a video for this" → standard pipeline
-- User just wants a transcript → use TranscriptFetcher directly
+在以下情况下**不要**触发：
+- 用户提供素材并说"编辑这个"或"剪这个"→ 使用 source_media_review
+- 用户提供音频并说"为这个做个视频"→ 标准流水线
+- 用户只想要字幕 → 直接使用 TranscriptFetcher
 
-## Protocol
+## 协议
 
-### Step 1: Analyze the Reference
+### 第 1 步：分析参考视频
 
-Run VideoAnalyzer with `analysis_depth: "standard"`:
+使用 `analysis_depth: "standard"` 运行 VideoAnalyzer：
 
 ```python
 video_analyzer.execute({
@@ -37,80 +33,69 @@ video_analyzer.execute({
 })
 ```
 
-Read the resulting VideoAnalysisBrief. Before proceeding, present a summary to the
-user. This is NOT a raw dump. It's a conversational interpretation, and it MUST be
-structured by the 5 aspects so downstream stages can lift fields directly:
+读取生成的 VideoAnalysisBrief。在继续之前，向用户呈现摘要。这不是原始数据转储。而是对话式的解读，并且**必须**按 5 个方面进行结构化，以便下游阶段可以直接提取字段：
 
 ```
-"I've watched the video. Here's what I see:
+"我已经观看了视频。以下是我的分析：
 
-**Content:** [2-sentence summary of what the video is about]
-**Style:** [1 sentence — pacing, visual treatment, energy]
-**Structure:** [X scenes over Y seconds, pacing style]
-**Motion:** [N of M scenes are motion clips / animated stills / static images.
-This video uses [AI-generated video clips / still images with pan-zoom / a mix].]
+**内容：** [2句话总结视频内容]
+**风格：** [1句话——节奏、视觉处理方式、能量感]
+**结构：** [X个场景，Y秒时长，节奏风格]
+**动态：** [N个场景中有M个是动态片段/动画静态图/静态图片。
+该视频使用[AI生成视频片段/带平移缩放的静态图片/混合]的方式。]
 
-**5-aspect breakdown (per shot or per shot-group):**
-- Subject: [type, count, attributes; subject transitions across shots: revealing / disappearing / switching / complex-alternating; or N/A]
-- Subject Motion: [actions in temporal order; interactions; or N/A]
-- Scene: [overlays (text/graphics) listed separately; POV (drone/OTS/macro/etc.); setting; time of day; dynamics]
-- Spatial Framing: [shot size; subject position; depth; height-relative; how it changes]
-- Camera: [playback speed; lens; height; angle; focus/DoF; steadiness; movement]
+**5方面分解（按镜头或镜头组）：**
+- 主体（Subject）：[类型、数量、属性；镜头间的主体转换：展示/消失/切换/复杂交替；或 N/A]
+- 主体运动（Subject Motion）：[按时间顺序的动作；互动模式；或 N/A]
+- 场景（Scene）：[叠加层（文字/图形）单独列出；视角（无人机/过肩镜头/微距等）；环境；时间段；动态]
+- 空间构图（Spatial Framing）：[景别；主体位置；景深；相对高度；变化方式]
+- 镜头（Camera）：[播放速度；镜头类型；高度；角度；对焦/景深；稳定性；运动方式]
 
-**What makes it work:** [2-3 specific things — the hook technique, the pacing,
-the visual transitions, the narration style]
+**它之所以出色在于：** [2-3个具体原因——钩子技巧、节奏、
+视觉转场、旁白风格]
 
-Now let me check what I can do with your current setup..."
+现在让我检查一下你当前的设置能做什么..."
 ```
 
-The 5-aspect block above is the **canonical form** that `proposal-director`, `script-director`, and `scene-director` will read. Do not collapse it back into prose — keep the labels.
+上面的 5 方面部分是 **规范格式**，`proposal-director`、`script-director` 和 `scene-director` 将直接读取。不要将其折叠回散文——保留标签。
 
-**Motion classification is critical.** The VideoAnalysisBrief now includes per-scene
-`motion_type` ("motion_clip", "animated_still", "static_image") and `flow_variance`.
-Use this to determine the production approach:
+**动态分类至关重要。** VideoAnalysisBrief 现在包含每个场景的 `motion_type`（"motion_clip"、"animated_still"、"static_image"）和 `flow_variance`。使用它来确定制作方法：
 
-- If most scenes are `motion_clip` → the reference uses **video generation** (Kling,
-  MiniMax, etc.) → plan around video gen tools, not image gen
-- If most scenes are `animated_still` → the reference uses **still images with
-  Ken Burns / pan-zoom** → image gen + Remotion/FFmpeg composition is appropriate
-- If mixed → note which sections use motion and which use stills
+- 如果大多数场景是 `motion_clip` → 参考使用**视频生成**（Kling、MiniMax 等）→ 围绕视频生成工具规划，而非图像生成
+- 如果大多数场景是 `animated_still` → 参考使用**带 Ken Burns/平移缩放的静态图像**→ 图像生成 + Remotion/FFmpeg 合成合适
+- 如果混合 → 注明哪些部分使用动态片段，哪些使用静态图片
 
-**Never guess** whether a reference uses images or video. Read the `motion_type` field.
-Getting this wrong leads to proposing the wrong pipeline and wrong tool path.
+**永远不要猜测**参考使用的是图像还是视频。读取 `motion_type` 字段。搞错这一点会导致提出错误的流水线和错误的工具路径。
 
-**Vision analysis:** After presenting the structural data, examine the extracted
-keyframes yourself. You ARE a multimodal model — look at the keyframe images and
-enrich the VideoAnalysisBrief with:
-- Per-frame descriptions (subjects, text, composition, color)
-- Cross-frame visual continuity and style consistency
-- Genre classification and production quality assessment
-- Color palette extraction (dominant colors across keyframes)
-- Typography style if on-screen text is present
-- Transition patterns visible between sequential keyframes
+**视觉分析：** 在呈现结构数据后，自行查看提取的关键帧。你**是**一个多模态模型——查看关键帧图像并用以下内容丰富 VideoAnalysisBrief：
+- 每帧描述（主体、文字、构图、色彩）
+- 帧间视觉连续性和风格一致性
+- 类型分类和制作质量评估
+- 色彩调色板提取（关键帧中的主色）
+- 如果存在屏幕文字，记录字体风格
+- 连续关键帧之间可见的转场模式
 
-Update the brief's `content_analysis`, `style_profile`, and `replication_guidance`
-fields with your visual observations. This is where the analysis becomes truly
-comprehensive — the tools provide structure; your vision provides understanding.
+用你的视觉观察更新 brief 的 `content_analysis`、`style_profile` 和 `replication_guidance` 字段。这就是分析变得真正全面的地方——工具提供结构，你的视觉提供理解。
 
-### 5-Aspect Structured Output (MANDATORY)
+### 5 方面结构化输出（强制要求）
 
-The analyst's report MUST break down the reference video into the **five aspects** from the CMU/Harvard CHAI study (also the canonical structure used in `skills/creative/video-gen-prompting.md`). A narrative-only summary is no longer sufficient — downstream stages (proposal, script, scene-director) ingest the 5-aspect form directly without re-parsing prose.
+分析师报告**必须**将参考视频分解为来自 CMU/Harvard CHAI 研究的**五个方面**（也是 `skills/creative/video-gen-prompting.md` 中使用的规范结构）。仅叙事性摘要已不再足够——下游阶段（提案、脚本、场景导演）直接读取 5 方面形式，无需重新解析散文。
 
-**Decision-tree captioning policy.** For each detected shot, walk all five aspects in order:
+**决策树式描述策略。** 对每个检测到的镜头，按顺序遍历所有五个方面：
 
-> - **Subject:** type, attributes (count, age, role, costume, distinguishing features), multiple-subject disambiguation, transitions across shots (revealing / disappearing / switching / complex-alternating).
-> - **Subject Motion:** actions in temporal order; group/interaction patterns (parallel, sequential, reactive); locomotion vs gesture vs facial.
-> - **Scene:** **overlays separately** (text, lower thirds, graphics, watermark — call these out as their own layer, do not merge into setting) + POV (drone, aerial, OTS, macro, top-down, dashcam, FPV, handheld, locked-off) + setting + time of day + dynamics (weather, particles, crowd movement).
-> - **Spatial Framing:** shot size (ECU/CU/MS/WS/EWS), subject position in frame, depth (foreground/midground/background usage), height-relative (above/at/below subject) — and how each of these **changes** across the shot if the camera or subject moves.
-> - **Camera:** playback speed (real-time / slow-mo / time-lapse), lens distortion (anamorphic, fish-eye, tilt-shift), height (ground / eye / overhead), angle (high / low / Dutch), focus / DoF (rack focus, deep focus, shallow), steadiness (locked / handheld / gimbal), movement (push / pull / pan / tilt / dolly / truck / crane / orbit).
+> - **主体（Subject）：** 类型、属性（数量、年龄、角色、服装、显著特征）、多主体消歧、镜头间转换（展示/消失/切换/复杂交替）。
+> - **主体运动（Subject Motion）：** 按时间顺序的动作；群体/互动模式（并行、顺序、反应式）；全身运动 vs 手势 vs 面部表情。
+> - **场景（Scene）：** **叠加层单独列出**（文字、下三分之一、图形、水印——将其作为独立图层标出，不要混入背景）+ 视角（无人机、航拍、过肩镜头、微距、俯视、行车记录仪、第一人称、手持、固定机位）+ 环境 + 时间段 + 动态（天气、粒子、人群运动）。
+> - **空间构图（Spatial Framing）：** 景别（极特写/特写/中景/全景/极远景）、主体在画面中的位置、景深（前景/中景/背景运用）、相对高度（高于/平行于/低于主体）——以及当镜头或主体移动时这些元素在镜头中的**变化**方式。
+> - **镜头（Camera）：** 播放速度（实时/慢动作/延时摄影）、镜头畸变（变形宽银幕、鱼眼、移轴）、高度（地面/视线/俯拍）、角度（俯角/仰角/荷兰角）、对焦/景深（拉焦、深焦、浅景深）、稳定性（固定/手持/稳定器）、运动（推/拉/摇/俯仰/移动/横移/升降/环绕）。
 >
-> **Mark any aspect explicitly as N/A** if it doesn't apply (e.g., "Subject: N/A — pure scenery shot," or "Scene overlays: N/A — no graphics"). **Silent omission is the most common analyst failure** and produces ambiguous downstream prompts.
+> **如果某个方面不适用，则明确标记为 N/A**（例如，"主体：N/A——纯风景镜头"，或"场景叠加层：N/A——无图形"）。**沉默性省略是分析师最常见的失败**，会导致下游提示不明确。
 
-See `skills/creative/video-gen-prompting.md` for primitive definitions and the canonical vocabulary used at every aspect.
+参见 `skills/creative/video-gen-prompting.md` 了解每个方面的原始定义和规范词汇。
 
-### Step 2: Capability Audit
+### 第 2 步：能力审计
 
-Run standard preflight:
+运行标准预检：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.support_envelope(), indent=2))"
@@ -118,200 +103,173 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.capability_catalog(), indent=2))"
 ```
 
-Map the reference video's requirements against available capabilities:
+将参考视频的需求与可用能力进行映射：
 
 ```
-REFERENCE NEEDS          YOUR CAPABILITIES          GAP
+参考视频需求          你的能力                    差距
 ─────────────────────    ─────────────────────      ──────────
-Video clips (sci-fi)     Video gen: 0/12 configured BLOCKED without key
-Narration (deep male)    TTS: ElevenLabs available  READY
-Background music         Music: MusicGen available  READY
-Composition engine       Remotion: available        READY
-                         HyperFrames: available     READY
-                         FFmpeg: available          READY (standalone ops)
+视频片段（科幻）        视频生成：0/12 已配置      被密钥阻止
+旁白（深沉男声）        TTS：ElevenLabs 可用       已就绪
+背景音乐                音乐：MusicGen 可用         已就绪
+合成引擎                Remotion：可用              已就绪
+                        HyperFrames：可用           已就绪
+                        FFmpeg：可用                已就绪（独立操作）
 ```
 
-**Composition engine selection:** Remotion and HyperFrames are parallel, non-ranked
-composition runtimes — do NOT pre-lock either one here. When both are available, the
-"Present Both Composition Runtimes (HARD RULE)" gate in `AGENT_GUIDE.md` governs the
-choice: present both options to the user with tradeoffs at the proposal stage and wait
-for explicit approval before locking `render_runtime`. Silently picking a default is
-forbidden. FFmpeg is not a composition runtime in this flow — it is reserved for
-standalone operations (trim, transcode, subtitle burn) outside the composition pipeline.
+**合成引擎选择：** Remotion 和 HyperFrames 是并行、非排序的合成运行时——在此处**不要**预先锁定任何一个。当两者都可用时，`AGENT_GUIDE.md` 中的"呈现两个合成运行时（硬性规则）"门控制着选择：在提案阶段向用户呈现两者，附带权衡说明，并在获得明确批准后才锁定 `render_runtime`。禁止默默选择默认项。在此流程中，FFmpeg 不是合成运行时——它保留用于合成流水线之外的独立操作（裁剪、转码、烧录字幕）。
 
-Be honest about gaps. If video generation is needed but unavailable, say so clearly:
+诚实地面对差距。如果需要视频生成但不可用，请明确说明：
 
 ```
-"This reference uses generated sci-fi footage. Right now you don't have any video
-generation providers configured. Here are your options:
+"这个参考使用了生成的科幻素材。目前你没有配置任何视频
+生成提供商。以下是你的选择：
 
-• Add the gateway or provider key recommended by `provider_menu()` for video generation
-• If multiple provider options are available, summarize the tradeoffs and recommend one based on the user's brief
-• Proceed without video gen → I'll use stock footage + Remotion animations instead
-  (different feel, but still works)
+• 添加 `provider_menu()` 推荐的用于视频生成的网关或提供商密钥
+• 如果有多个提供商选项，总结权衡并根据用户需求推荐一个
+• 不使用视频生成继续→我将改用素材库视频 + Remotion 动画
+  （感觉会不同，但仍可用）
 
-Which would you prefer?"
+你倾向于哪个？"
 ```
 
-Read install_instructions from the registry for each unavailable tool — do NOT
-hardcode key names, provider names, or setup URLs.
+从注册表中读取每个不可用工具的安装指引——**不要**硬编码密钥名称、提供商名称或设置 URL。
 
-### Step 3: Ask Critical Questions
+### 第 3 步：提出关键问题
 
-Before proposing, gather what the VideoAnalysisBrief doesn't tell you:
+在提出方案之前，收集 VideoAnalysisBrief 未提供的信息：
 
-1. "Do you want narration in your version, or visuals-only with music?"
-2. **If narration: lock the audio architecture now.** Ask:
-   "How should the story be told? Options:
-   • **Single narrator** — one voice tells the whole story (like a Pixar short)
-   • **Character dialogue** — characters speak to each other, no narrator
-   • **Narrator + character voices** — narrator drives the story, characters
-     have occasional dialogue lines"
-   This decision shapes the script, voice casting, and budget. It MUST be
-   resolved before proposals — do not defer it to the script or compose stage.
-3. "How long should your video be? The reference is [X] seconds."
-4. "Is there a specific topic/subject you want, or should I riff on the
-   same theme as the reference?"
-5. "Any elements from the reference you specifically love or hate?"
+1. "你的版本需要旁白吗，还是只要纯视觉加音乐？"
+2. **如果要旁白：现在就锁定音频架构。** 询问：
+   "故事应该如何讲述？选项：
+   • **单一叙述者** — 一个声音讲述整个故事（如皮克斯短片）
+   • **角色对话** — 角色之间互相说话，没有叙述者
+   • **叙述者 + 角色声音** — 叙述者推动故事，角色有偶尔的对话台词"
+   这个决定会决定剧本、配音选角和预算。**必须在提案之前解决**——不要推迟到脚本或合成阶段。
+3. "你的视频要多长？参考视频是 [X] 秒。"
+4. "有特定的主题/话题吗，还是我应该围绕参考视频的相同主题即兴发挥？"
+5. "参考视频中有你特别喜欢或讨厌的元素吗？"
 
-Do NOT ask all at once. Lead with the most important gap. If the user's initial
-message already answers some of these, skip those.
+不要一次性问完所有问题。从最重要的缺口开始。如果用户的初始消息已经回答了其中一些问题，跳过它们。
 
-### Step 3b: Lightweight Research
+### 第 3b 步：轻量级研究
 
-**This step is mandatory.** Even with a clear reference video and user direction,
-the agent must do targeted research before proposing concepts. Do NOT skip this
-and rely solely on the reference analysis + your own knowledge.
+**此步骤是强制性的。** 即使有清晰的参考视频和用户方向，agent 也必须在提出概念之前进行有针对性的研究。不要跳过此步骤，仅依靠参考分析和你自己的知识。
 
-Research scope (keep it focused — this is not the full research-director stage):
+研究范围（保持专注——这不是完整的研究指导阶段）：
 
-1. **Content landscape:** Search for 3-5 existing videos similar to what the user
-   wants. What works? What's been overdone? What angles are fresh? This grounds
-   your proposals in what's actually out there, not just what you imagine.
+1. **内容格局：** 搜索 3-5 个与用户想要的类似的现有视频。什么有效？什么已经被做滥了？什么角度是新鲜的？这使你的建议扎根于实际存在的内容，而不仅仅是你想象的内容。
 
-2. **Style/technique research:** Search for best practices relevant to the
-   production approach:
-   - If AI video gen: which models handle this subject best? Known prompting
-     patterns? Character consistency techniques?
-   - If animation: what animation styles suit this content?
-   - If the reference has a distinctive technique: how is it achieved?
+2. **风格/技术研究：** 搜索与制作方法相关的最佳实践：
+   - 如果是 AI 视频生成：哪些模型最适合这个主题？已知的提示模式？角色一致性技术？
+   - 如果是动画：哪些动画风格适合这个内容？
+   - 如果参考有独特的技术：它是如何实现的？
 
-3. **Subject-matter research:** If the user's topic has factual content (science,
-   history, how-things-work), gather 3-5 specific data points or facts that could
-   make the video more interesting. Even for entertainment/comedy videos, research
-   what makes similar content engaging (tropes, hooks, payoff patterns).
+3. **主题研究：** 如果用户的话题包含事实性内容（科学、历史、工作原理），收集 3-5 个可能使视频更有趣的具体数据点或事实。即使是娱乐/喜剧视频，也要研究是什么让类似内容具有吸引力（套路、钩子、笑点模式）。
 
-**How to present:** Don't dump raw research. Weave findings into your proposals:
-- "I looked at similar channels — most food personification videos use X, so our
-  twist of Y would stand out"
-- "Kling handles anthropomorphic characters well when you use [specific technique]"
-- "The top-performing 60-second comedy shorts all use a 3-beat structure: setup,
-  escalation, unexpected payoff"
+**如何呈现：** 不要倾倒原始研究。将发现融入你的建议中：
+- "我查看了类似的频道——大多数食物拟人化视频使用 X，所以我们加入 Y 的创意会脱颖而出"
+- "Kling 在你使用 [特定技术] 时能够很好地处理拟人化角色"
+- "表现最佳的 60 秒喜剧短片都使用 3 拍结构：铺垫、升级、意外反转"
 
-**Time budget:** 2-3 minutes of web search. This is a lightweight pass, not a
-deep investigation. The full research-director stage runs later inside the
-pipeline if needed.
+**时间预算：** 2-3 分钟的网页搜索。这是轻量级通行证，不是深度调查。完整的研究指导阶段如果需要，稍后在流水线内部运行。
 
-### Step 4: Creative Proposals (2-3 variants)
+### 第 4 步：创意方案（2-3 个变体）
 
-MANDATORY: The agent must NEVER propose a carbon copy. The reference is inspiration,
-not a template. Each proposal must have clear creative differentiation.
+强制要求：agent **绝不能**提出完全复制的方案。参考是灵感，不是模板。每个方案必须有明确的创意差异化。
 
-Use this structure for each variant:
+对每个变体使用此结构：
 
 ```
-## Option [A/B/C]: "[Title]"
+## 选项 [A/B/C]：「[标题]」
 
-**Inspired by:** [what it keeps from the reference — pacing, structure, tone]
-**Creative twist:** [what it changes — angle, subject, visual treatment, hook]
+**灵感来源：** [保留参考中的哪些元素——节奏、结构、基调]
+**创意转折：** [改变了什么——角度、主题、视觉处理、钩子]
 
-**Visual plan:**
-- Playbook: [closest match + customizations]
-- Visual treatment: [how visuals will be created — which tools, which providers]
-- Composition: [Remotion (default when available) / FFmpeg (fallback only)]
-- Motion: [video gen clips / Remotion spring animations on stills / etc.]
-- Clip duration strategy: [maximize clip duration to minimize API calls and cost.
-  Most providers support 5s and 10s clips. Prefer 10s clips and consolidate
-  adjacent scenes into single clips where narratively coherent. A 60s video
-  needs 6×10s clips, not 12×5s — half the cost, fewer cuts, smoother motion.]
+**视觉方案：**
+- 剧本： [最接近的匹配 + 自定义调整]
+- 视觉处理： [视觉将如何创建——哪些工具、哪些提供商]
+- 合成： [Remotion（默认可用时）/ FFmpeg（仅后备）]
+- 动态： [视频生成片段 / Remotion 弹簧动画叠加静态图 / 等]
+- 片段时长策略： [最大化片段时长以减少 API 调用和成本。
+  大多数提供商支持 5 秒和 10 秒片段。优先使用 10 秒片段，将相邻场景
+  合并为单个片段（叙事连贯的前提下）。一个 60 秒视频
+  需要 6×10 秒片段，而不是 12×5 秒——一半的成本，更少的剪辑，更流畅的运动。]
 
-**Audio plan:**
-- Audio architecture: [single narrator / character dialogue / narrator + characters]
-- Voice casting: [voice name + ID for each role — narrator, character A, etc.]
-- TTS provider: [selected from available providers via tts_selector preflight —
-  Google Chirp3-HD (best value: near-free, expressive, 24kHz),
-  ElevenLabs (voice cloning only), OpenAI gpt-4o-mini-tts (good with
-  instructions param), Piper (offline/free). Do NOT hardcode a provider —
-  run preflight to check what's configured and recommend the best available.
-  **Default recommendation: Google Chirp3-HD** unless voice cloning is needed.]
-- Music: [library track / generated / none]
-- Sound design: [any special audio needs]
+**音频方案：**
+- 音频架构： [单一叙述者 / 角色对话 / 叙述者 + 角色]
+- 配音选角： [每个角色的语音名称和 ID——叙述者、角色 A 等]
+- TTS 提供商： [从可用提供商中选择——通过 tts_selector 预检选择——
+  Google Chirp3-HD（最佳性价比：近乎免费、富有表现力、24kHz）、
+  ElevenLabs（仅语音克隆）、OpenAI gpt-4o-mini-tts（适合带 instructions 参数）、
+  Piper（离线/免费）。不要硬编码提供商——
+  运行预检检查已配置的内容并推荐最佳可用。
+  **默认推荐：Google Chirp3-HD**，除非需要语音克隆。]
+- 音乐： [库曲目 / 生成 / 无]
+- 声音设计： [任何特殊音频需求]
 
-**Duration:** [X seconds]
-**Estimated cost per provider option:**
-Present a provider comparison table so the user can choose:
+**时长：** [X 秒]
+**各提供商选项的预估成本：**
+提供提供商比较表格供用户选择：
 ```
-Provider        Quality    Speed      Cost (N clips)    Total
-─────────      ────────   ─────      ──────────────    ─────
-VEO 3.1        Highest    Slow       $X.XX             $X.XX
-Kling Pro      High       Medium     $X.XX             $X.XX
-Sora V2        High       Medium     $X.XX             $X.XX
-LTX Distilled  Lower      Fastest    $X.XX             $X.XX
+提供商        质量      速度        成本（N 个片段）    总计
+─────────      ────────   ─────      ──────────────     ─────
+VEO 3.1        最高       慢          $X.XX              $X.XX
+Kling Pro      高         中          $X.XX              $X.XX
+Sora V2        高         中          $X.XX              $X.XX
+LTX Distilled  较低       最快        $X.XX              $X.XX
 ```
-+ Image generation: $X.XX (N images × $X.XX each via [provider])
-+ TTS narration: $X.XX (N words via [provider])
-+ Music: $X.XX ([source])
++ 图像生成：$X.XX（N 张图像 × 每张 $X.XX，通过 [提供商]）
++ TTS 旁白：$X.XX（N 个词，通过 [提供商]）
++ 音乐：$X.XX（[来源]）
 
-**Do NOT pick the provider for the user.** Present the options with
-costs, recommend one with a brief reason, and let them decide.
+**不要替用户选择提供商。** 提供选项并附上
+成本，简要推荐一个，然后让他们决定。
 
-**Honest assessment:** [What this will look like realistically — don't oversell]
+**诚实评估：** [这在现实中会是什么样——不要过度推销]
 
-**Layer 3 skills:** [List the agent_skills from each tool that will be used.
-  These MUST be read before writing any generation prompts. E.g.:
-  - Video gen: `ai-video-gen` skill for provider-specific prompt patterns
-  - Image gen: `flux-best-practices` for FLUX prompt engineering
-  - TTS: `elevenlabs` or `openai-docs` for voice tuning
-  Skipping Layer 3 skills is a governance violation.]
+**第 3 层技能：** [列出每个工具将使用的 agent_skills。
+  在编写任何生成提示之前必须阅读这些。例如：
+  - 视频生成：针对提供商特定提示模式的 `ai-video-gen` 技能
+  - 图像生成：用于 FLUX 提示工程的 `flux-best-practices`
+  - TTS：用于语音调优的 `elevenlabs` 或 `openai-docs`
+  跳过第 3 层技能是治理违规。]
 ```
 
-**Differentiation patterns:**
+**差异化模式：**
 
-| Pattern | Example |
+| 模式 | 示例 |
 |---------|---------|
-| **Same structure, different subject** | Reference: "How black holes work" → Ours: "How neutron stars work" with same pacing |
-| **Same subject, different angle** | Reference: "Kubernetes explained" → Ours: "Kubernetes from a security engineer's POV" |
-| **Same tone, different visual treatment** | Reference: stock footage + voiceover → Ours: animated motion graphics + voiceover |
-| **Same content, different platform** | Reference: 10-min YouTube → Ours: 60-sec Shorts version with faster pacing |
-| **Counter-take** | Reference: "Why AI will replace jobs" → Ours: "Why AI won't replace YOUR job" |
+| **相同结构，不同主题** | 参考："黑洞如何工作"→ 我们的："中子星如何工作"，相同节奏 |
+| **相同主题，不同角度** | 参考："Kubernetes 详解"→ 我们的："从安全工程师视角看 Kubernetes" |
+| **相同基调，不同视觉处理** | 参考：素材库视频 + 配音 → 我们的：动画动态图形 + 配音 |
+| **相同内容，不同平台** | 参考：10 分钟 YouTube → 我们的：60 秒 Shorts 版本，节奏更快 |
+| **反套路** | 参考："为什么 AI 将取代工作"→ 我们的："为什么 AI 不会取代你的工作" |
 
-**Cost transparency is mandatory.** Each concept must include:
-- Itemized cost estimate at the user's requested duration
-- Cost broken down by: image gen, video gen, TTS, music, total
-- Provider names for each cost line
-- Honest note about what the budget buys vs. doesn't buy
+**成本透明是强制性的。** 每个概念必须包括：
+- 按用户要求的时长计算的逐项成本估算
+- 成本分解：图像生成、视频生成、TTS、音乐、总计
+- 每个成本项目的提供商名称
+- 关于预算能买到什么和买不到什么的诚实说明
 
-**Recommendation:** Always recommend one option with a brief reason why. Don't leave
-the user paralyzed with equal choices.
+**推荐：** 始终推荐一个选项，并附上简短理由。不要让用户在同等选择中无所适从。
 
-### Step 4b: Layer 3 Skill Gate (MANDATORY)
+### 第 4b 步：第 3 层技能门控（强制要求）
 
-**Before ANY asset generation** (sample or full production), the agent MUST:
+**在任何资产生成之前**（样本或完整制作），agent **必须**：
 
-1. Read the **Layer 2 skill** for each tool from `skills/` directory (usage guidance, input schemas, best practices)
-2. Check the `agent_skills` field on every tool that will be used
-3. Read each referenced **Layer 3 skill** in `.agents/skills/` (provider-specific prompting)
-4. Apply the provider-specific prompting guidance to all generation prompts
+1. 从 `skills/` 目录读取每个工具的**第 2 层技能**（使用指南、输入 schema、最佳实践）
+2. 检查将使用的每个工具的 `agent_skills` 字段
+3. 在 `.agents/skills/` 中读取每个引用的**第 3 层技能**（提供商特定的提示工程）
+4. 将提供商特定的提示工程指导应用于所有生成提示
 
-**NEVER read tool source code (*.py) to understand how to use a tool.**
-Skills exist precisely so the agent doesn't need to read implementation code.
-Layer 2 skills describe *what* and *when*. Layer 3 skills describe *how*.
+**永远不要阅读工具源代码（*.py）来了解如何使用工具。**
+技能的存在正是为了让 agent 无需阅读实现代码。
+第 2 层技能描述*什么*和*何时*。第 3 层技能描述*如何*。
 
-This is NOT optional. The AGENT_GUIDE says: *"Layer 3 is not optional.
-Every generation tool has an agent_skills field. Read them before writing
-prompts."*
+这**不是**可选的。AGENT_GUIDE 说：*"第 3 层不是可选的。
+每个生成工具都有一个 agent_skills 字段。在编写提示之前阅读它们。"*
 
-Example checklist before generating:
+生成前的示例检查表：
 ```
 Tool              agent_skills              Read?
 ────────────      ────────────────────      ─────
@@ -321,97 +279,83 @@ elevenlabs_tts    elevenlabs, text-to-speech [ ]
 video_compose     remotion-best-practices   [ ]
 ```
 
-Do NOT proceed to Step 5 until all relevant Layer 3 skills are read.
-The difference between a generic prompt and a skill-informed prompt is
-the difference between "usable" and "cinematic."
+在所有相关的第 3 层技能被读取之前，不要进行到第 5 步。
+通用提示和技能告知提示之间的区别就是"可用"和"电影级"之间的区别。
 
-### Step 5: Sample-First Production (MANDATORY)
+### 第 5 步：先样本后生产（强制要求）
 
-After the user picks a variant, ALWAYS say:
-
-```
-"Great choice. Before I commit to the full [X]-second video, I'll produce a
-10-15 second sample first — the opening hook + one middle scene. This lets you
-hear the voice, see the visual style, and feel the pacing before we go all-in.
-
-Estimated sample cost: $[X.XX]
-Shall I proceed with the sample?"
-```
-
-The sample is NOT optional. Even if the user says "just do the whole thing," push
-back gently:
+在用户选择变体后，**始终**说：
 
 ```
-"I'd really recommend the sample first — it's a tiny fraction of the cost and
-lets us catch any style mismatches early. If you love it, I'll proceed to the
-full video immediately."
+"好选择。在我投入到完整的 [X] 秒视频之前，我会先制作一个
+10-15 秒的样本——开场钩子加一个中间场景。这样你可以
+听到声音、看到视觉风格、感受节奏，然后我们再全力以赴。
+
+预估样本成本：$[X.XX]
+要开始制作样本吗？"
 ```
 
-Only skip the sample if the user insists after being advised.
+样本**不是**可选的。即使用户说"直接做完整的"，也要温和地坚持：
 
-**Sample contents:**
-- 1-2 representative scenes (the hook + one middle scene)
-- Actual TTS narration with chosen voice
-- Actual generated/stock visuals
-- Music bed snippet
-- Subtitle style preview
+```
+"我强烈建议先做样本——这只是总成本的一小部分，
+能让我们及早发现风格不匹配。如果你喜欢，我会立即继续制作完整视频。"
+```
 
-**Sample checkpoint:**
-Present the sample with: "Here's a preview. Does this feel right? Things I can
-adjust: voice, visual style, pacing, music, colors."
+只有在用户被告知后仍坚持时，才跳过样本。
 
-Iterate on sample feedback until approved. Store samples at:
-`projects/<name>/assets/sample/sample_v{N}.mp4`
+**样本内容：**
+- 1-2 个有代表性的场景（钩子 + 一个中间场景）
+- 使用选定语音的实际 TTS 旁白
+- 实际生成/素材库视觉内容
+- 音乐背景片段
+- 字幕样式预览
 
-### Step 6: Enter Pipeline (HARD REDIRECT)
+**样本检查点：**
+呈现样本并说："这是预览。感觉对吗？我可以调整的内容：语音、视觉风格、节奏、音乐、颜色。"
 
-After sample approval, the agent MUST enter the pipeline. This is not optional.
+根据样本反馈进行迭代，直到获得批准。样本存储在：`projects/<name>/assets/sample/sample_v{N}.mp4`
 
-**Mandatory steps:**
-1. Read the pipeline manifest: `pipeline_defs/animation.yaml` (or whichever
-   pipeline matches the production type)
-2. Execute **stage by stage** in order — research → proposal → script →
-   scene_plan → assets → edit → compose → publish
-3. Before EACH stage, read its director skill from
-   `skills/pipelines/<pipeline>/<stage>-director.md`
-4. Produce the required artifacts at each stage
-5. Hit every checkpoint where `checkpoint_required: true`
-6. Get user approval where `human_approval_default: true`
+### 第 6 步：进入流水线（硬性重定向）
 
-**Do NOT collapse stages.** Do not jump from "user approved proposal" to
-"generate all assets." The pipeline stages exist to enforce quality gates,
-artifact dependencies, and review checkpoints. Skipping them is a governance
-violation.
+样本批准后，agent **必须**进入流水线。这不是可选的。
 
-**Context to carry into the pipeline:**
-- VideoAnalysisBrief as grounding context in the research/proposal stage
-- User's chosen variant as the approved direction
-- Sample feedback incorporated into the brief
-- All creative differentiation decisions recorded in the decision_log
-- Audio architecture and voice casting decisions from Step 3
-- Layer 3 skills already read from Step 4b
+**强制步骤：**
+1. 读取流水线清单：`pipeline_defs/animation.yaml`（或与制作类型匹配的任何流水线）
+2. **按阶段顺序执行**——研究 → 提案 → 脚本 → 场景规划 → 资产 → 编辑 → 合成 → 发布
+3. 在每个阶段之前，从 `skills/pipelines/<pipeline>/<stage>-director.md` 读取其指导技能
+4. 在每个阶段生成所需的工件
+5. 在每个 `checkpoint_required: true` 处停留检查点
+6. 在 `human_approval_default: true` 处获取用户批准
 
-The pipeline takes over from here. The VideoAnalysisBrief travels alongside the
-standard artifacts, providing reference grounding at every stage.
+**不要合并阶段。** 不要从"用户批准提案"直接跳到"生成所有资产"。流水线阶段的存在是为了强制执行质量门控、工件依赖和审查检查点。跳过它们是治理违规。
 
-## Multiple Reference Videos
+**需要带入流水线的上下文：**
+- VideoAnalysisBrief 作为研究/提案阶段的基础上下文
+- 用户选择的变体作为已批准的方向
+- 样本反馈已整合入 brief
+- 所有创意差异化决策已记录在 decision_log 中
+- 第 3 步的音频架构和配音选角决策
+- 第 4b 步已读取的第 3 层技能
 
-When the user provides multiple reference URLs:
+流水线从这里接手。VideoAnalysisBrief 与标准工件一起传递，在每个阶段提供参考基础。
 
-1. Analyze each video separately (run VideoAnalyzer on each)
-2. Present a comparative summary: "Video A does X well, Video B does Y well"
-3. In proposals, note which elements are inspired by which reference
-4. The VideoAnalysisBrief for the primary reference travels with the pipeline;
-   secondary references are noted in the research_brief
+## 多个参考视频
 
-## Error Handling
+当用户提供多个参考 URL 时：
 
-| Failure | Action |
+1. 分别分析每个视频（在每个视频上运行 VideoAnalyzer）
+2. 呈现比较摘要："视频 A 在 X 方面做得好，视频 B 在 Y 方面做得好"
+3. 在提案中，注明哪些元素受哪个参考启发
+4. 主参考的 VideoAnalysisBrief 随流水线传递；次要参考在研究简报中注明
+
+## 错误处理
+
+| 失败 | 操作 |
 |---------|--------|
-| URL download fails | Report error, suggest: try another URL, provide local file, or proceed without reference |
-| No captions available | Download video, transcribe with Whisper locally |
-| Scene detection fails | Fall back to uniform frame sampling |
-| All analysis fails | Ask user to describe the reference video verbally, proceed with standard creative intake |
+| URL 下载失败 | 报告错误，建议：尝试其他 URL、提供本地文件，或在没有参考的情况下继续 |
+| 无字幕可用 | 下载视频，使用本地 Whisper 转录 |
+| 场景检测失败 | 回退到均匀关键帧采样 |
+| 所有分析失败 | 请用户口头描述参考视频，继续进行标准创意接收 |
 
-Never silently skip analysis steps. If something fails, tell the user what happened
-and what the impact is on the analysis quality.
+永远不要默默跳过分析步骤。如果某步骤失败，告诉用户发生了什么以及这对分析质量的影响。

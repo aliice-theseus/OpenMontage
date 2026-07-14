@@ -1,130 +1,106 @@
-# Remotion Skill
+# Remotion 技能
 
-## When to Use
+## 使用时机
 
-Use Remotion for advanced video composition from Phase 3 onward — anywhere that requires
-React-based scene assembly, parametric templates, animated overlays, transitions, or
-data-driven batch rendering. For simple cuts, burns, and encodes, prefer FFmpeg directly.
+从第三阶段开始，在需要基于 React 的场景组装、参数化模板、动画叠加层、转场或数据驱动的批量渲染时，使用 Remotion 进行高级视频合成。对于简单的剪切、烧录和编码，优先直接使用 FFmpeg。
 
-## Relationship to Remotion Agent Skills
+## 与 Remotion Agent 技能的关系
 
-The **installed agent skills** (`.agents/skills/remotion-best-practices/`) teach correct
-Remotion API usage — imports, timing, animation constraints, code patterns.
-**This file** teaches how OpenMontage uses Remotion — which compositions map to pipeline
-stages, how artifacts flow in, and how renders are triggered.
+**已安装的 agent 技能**（`.agents/skills/remotion-best-practices/`）教授正确的 Remotion API 用法——导入、时机、动画约束、代码模式。**本文件**教授 OpenMontage 如何使用 Remotion——哪些合成映射到流水线阶段、工件如何流入、以及渲染如何触发。
 
-## Remotion-First Routing
+## Remotion 优先路由
 
-**Remotion is the DEFAULT composition engine for ALL final renders when available.**
-It handles video clips (via `<OffthreadVideo>`), still images, animated scenes,
-component types, transitions, and mixed content — all in a single React-based
-render pass.
+**Remotion 是所有最终渲染的默认合成引擎（当可用时）。** 它通过基于 React 的单一渲染过程处理视频片段（通过 `<OffthreadVideo>`）、静态图像、动画场景、组件类型、转场和混合内容。
 
-FFmpeg is the **fallback** — used only when Remotion is unavailable, or for
-simple standalone operations that don't benefit from React rendering.
+FFmpeg 是**回退方案**——仅在 Remotion 不可用时，或用于不需要 React 渲染的简单独立操作时使用。
 
-| Use Case | Backend | Why |
+| 使用场景 | 后端 | 原因 |
 |----------|---------|-----|
-| Final video render (any content type) | **Remotion** | Default for all compositions |
-| Video clips + animated stills + text cards | **Remotion** | Mixed content in one pass |
-| Video-only cuts with transitions | **Remotion** | Native `<OffthreadVideo>` + transitions |
-| Animated diagrams/text cards | **Remotion** | Frame-by-frame control |
-| Data-driven batch videos | **Remotion** | Zod props + parametric renders |
-| Word-level captions (in composition) | **Remotion** | CaptionOverlay with word highlight — superior to SRT |
-| Audio embedding (narration + music) | **Remotion** | Native `<Audio>` components with volume/fade |
-| Simple trim, concat (no composition) | FFmpeg | Instant, no Node dependency |
-| Subtitle burn-in (standalone, post-hoc) | FFmpeg | Only for adding subs to an already-rendered video without re-rendering |
-| Face enhance, color grade | FFmpeg | Filter-based, deterministic |
-| Remotion unavailable | FFmpeg | Automatic fallback |
+| 最终视频渲染（任何内容类型） | **Remotion** | 所有合成的默认选择 |
+| 视频片段 + 动画静态图 + 文字卡片 | **Remotion** | 混合内容一次渲染完成 |
+| 纯视频剪辑加转场 | **Remotion** | 原生 `<OffthreadVideo>` + 转场 |
+| 动画图表/文字卡片 | **Remotion** | 逐帧控制 |
+| 数据驱动批量视频 | **Remotion** | Zod props + 参数化渲染 |
+| 单词级字幕（合成内） | **Remotion** | CaptionOverlay 带单词高亮——优于 SRT |
+| 音频嵌入（旁白 + 音乐） | **Remotion** | 原生 `<Audio>` 组件，支持音量/淡入淡出 |
+| 简单裁剪、拼接（无合成） | FFmpeg | 即时处理，无需 Node 依赖 |
+| 字幕烧录（独立、事后处理） | FFmpeg | 仅用于向已渲染完成的视频添加字幕而无需重新渲染 |
+| 人脸增强、调色 | FFmpeg | 基于滤镜，确定性 |
+| Remotion 不可用 | FFmpeg | 自动回退 |
 
-**Note:** The `render` operation auto-routes to Remotion by default. FFmpeg is
-only selected when Remotion is not installed or the agent explicitly calls
-`operation='compose'` for standalone operations. The agent can also write custom
-Remotion compositions on the fly via the capability-extension protocol when no
-existing composition covers the layout (e.g., custom PiP, split-screen).
+**注意：** `render` 操作默认自动路由到 Remotion。仅当 Remotion 未安装或 agent 显式调用 `operation='compose'` 进行独立操作时，才会选择 FFmpeg。当现有合成不覆盖特定布局时（例如自定义画中画、分屏），agent 还可以通过能力扩展协议即时编写自定义 Remotion 合成。
 
-## Supported Scene Types (Cut Types)
+## 支持的场景类型（剪辑类型）
 
-The Explainer composition supports the following cut types:
+Explainer 合成支持以下剪辑类型：
 
-| Type | Props Required | Best For |
+| 类型 | 所需属性 | 最佳用途 |
 |------|---------------|----------|
-| `text_card` | `text` | Statements, titles, closing messages |
-| `stat_card` | `stat`, optional `subtitle`, `accentColor` | Big numbers, impactful metrics |
-| `hero_title` | `text`, optional `heroSubtitle` | Opening titles, dramatic reveals |
-| `callout` | `text`, optional `title`, `callout_type` (info/warning/tip/quote) | Tips, quotes, important notes |
-| `comparison` | `leftLabel`, `rightLabel`, `leftValue`, `rightValue` | Before/after, A/B, versus |
-| `bar_chart` | `chartData` [{label, value}], optional `title`, `chartAnimation` | Category comparisons, rankings |
-| `line_chart` | `chartSeries` [{label, data: [{x,y}]}], optional `title` | Trends, time series, growth |
-| `pie_chart` | `chartData` [{label, value}], optional `donut`, `centerLabel` | Proportions, breakdowns |
-| `kpi_grid` | `chartData` [{label, value, prefix, suffix, change, icon}] | Dashboards, traction metrics |
-| `progress_bar` | `progress` (0-100), optional `progressSegments` | Journey viz, completion, stacked metrics |
-| `anime_scene` | `images` (1-4 paths), optional `animation`, `particles`, `particleColor`, `particleCount`, `particleIntensity`, `vignette`, `lightingFrom`, `lightingTo` | Anime/Ghibli-style scenes with multi-image crossfade, camera motion, particle overlays |
+| `text_card` | `text` | 陈述、标题、结尾信息 |
+| `stat_card` | `stat`，可选 `subtitle`、`accentColor` | 大数字、有影响力的指标 |
+| `hero_title` | `text`，可选 `heroSubtitle` | 开场标题、震撼揭示 |
+| `callout` | `text`，可选 `title`、`callout_type`（info/warning/tip/quote） | 提示、引用、重要说明 |
+| `comparison` | `leftLabel`、`rightLabel`、`leftValue`、`rightValue` | 前后对比、A/B 测试、对决 |
+| `bar_chart` | `chartData` [{label, value}]，可选 `title`、`chartAnimation` | 类别比较、排名 |
+| `line_chart` | `chartSeries` [{label, data: [{x,y}]}]，可选 `title` | 趋势、时间序列、增长 |
+| `pie_chart` | `chartData` [{label, value}]，可选 `donut`、`centerLabel` | 比例、构成分析 |
+| `kpi_grid` | `chartData` [{label, value, prefix, suffix, change, icon}] | 仪表盘、增长指标 |
+| `progress_bar` | `progress`（0-100），可选 `progressSegments` | 进度可视化、完成度、堆叠指标 |
+| `anime_scene` | `images`（1-4 个路径），可选 `animation`、`particles`、`particleColor`、`particleCount`、`particleIntensity`、`vignette`、`lightingFrom`、`lightingTo` | 动漫/吉卜力风格场景，包含多图交叉淡入淡出、摄像机运动、粒子叠加 |
 
-**Chart animations:** `grow-up`, `slide-in`, `pop` (bar), `draw`, `fade-in` (line), `spin`, `expand`, `sequential` (pie), `count-up`, `pop`, `cascade` (kpi)
+**图表动画：** `grow-up`、`slide-in`、`pop`（柱状图）、`draw`、`fade-in`（折线图）、`spin`、`expand`、`sequential`（饼图）、`count-up`、`pop`、`cascade`（KPI）
 
-### Anime Scene — Multi-Image Crossfade + Particles
+### 动漫场景——多图交叉淡入淡出 + 粒子
 
-The `anime_scene` type renders 1-4 images with smooth crossfade transitions, cinematic camera motion, and animated particle overlays. This creates the illusion of animation from still images.
+`anime_scene` 类型渲染 1-4 张图像，带有平滑的交叉淡入淡出转场、电影级摄像机运动和动画粒子叠加。这可以从静态图像中创造出动画般的视觉效果。
 
-**Camera motion types:** `zoom-in`, `zoom-out`, `pan-left`, `pan-right`, `ken-burns`, `drift-up`, `drift-down`, `parallax`, `static`
+**摄像机运动类型：** `zoom-in`、`zoom-out`、`pan-left`、`pan-right`、`ken-burns`、`drift-up`、`drift-down`、`parallax`、`static`
 
-**Particle types:** `fireflies` (floating golden orbs), `petals` (falling cherry blossoms), `sparkles` (twinkling stars), `mist` (drifting fog layers), `light-rays` (crepuscular rays)
+**粒子类型：** `fireflies`（飘浮的金色光球）、`petals`（飘落的樱花）、`sparkles`（闪烁的星星）、`mist`（飘动的雾层）、`light-rays`（晨光射线）
 
-**Key prop:** `sceneDurationSeconds` is automatically passed by `SceneRenderer` — this fixes a critical Remotion pitfall where `useVideoConfig().durationInFrames` returns the full composition duration, not the scene's Sequence duration.
+**关键属性：** `sceneDurationSeconds` 由 `SceneRenderer` 自动传入——这修复了一个关键的 Remotion 陷阱，即 `useVideoConfig().durationInFrames` 返回的是整个合成的时长，而非场景的 Sequence 时长。
 
-**Multi-image crossfade math:** Each image owns an equal time segment. Fade-out of image N and fade-in of image N+1 OVERLAP by `crossfadeDur` (~1.2s) so there's never a dead frame. Generate 2-3 images per scene from the same visual system, but vary the shot, subject, and lighting per beat. Nearby seeds help create subtle motion without flattening the whole sequence into one repeated prompt.
+**多图交叉淡入淡出算法：** 每张图像拥有相等的时间段。图像 N 的淡出和图像 N+1 的淡入在 `crossfadeDur`（约1.2秒）内重叠，确保不会出现空白帧。从同一视觉系统为每个场景生成 2-3 张图像，但改变镜头、主体和光照节奏。相近的随机种子有助于创造微妙动画，而不会让整个序列因重复提示而变得平淡。
 
-**Reference composition:** `remotion-composer/public/demo-props/mori-no-seishin.json` — 6 anime scenes, 30 seconds, with particles, lighting, overlays, and ambient music.
+**参考合成：** `remotion-composer/public/demo-props/mori-no-seishin.json`——6个动漫场景，30秒，包含粒子、灯光、叠加和氛围音乐。
 
-**Style playbook:** `styles/anime-ghibli.yaml` — Ghibli-inspired aesthetic with color palette, typography, motion parameters, and FLUX prompt prefix.
+**风格手册：** `styles/anime-ghibli.yaml`——以吉卜力为灵感的美学风格，包含调色板、字体排版、运动参数和 FLUX 提示前缀。
 
-**Zero-key video strategy:** When no image or video generation is available, build
-entire videos from these component types. A well-composed sequence of hero_title →
-kpi_grid → bar_chart → comparison → stat_card → text_card produces a polished,
-professional video with zero external dependencies.
+**零素材视频策略：** 当无法生成图像或视频时，完全通过这些组件类型构建整个视频。精心编排的 hero_title → kpi_grid → bar_chart → comparison → stat_card → text_card 序列可以制作出精致、专业的视频，无需任何外部依赖。
 
-### The Proven Formula for Zero-Key Videos
+### 零素材视频的可靠公式
 
-These rules were discovered through systematic render testing and produce cinematic results:
+以下规则是通过系统化渲染测试发现的，能够产生电影级效果：
 
-**1. Commit to one background family per video.** Use a coherent background treatment derived from the playbook or custom identity instead of forcing every sequence into the same dark dashboard look.
-This prevents jarring white↔dark flash transitions and makes chart colors pop dramatically.
-The goal is visual cohesion, not a mandatory dark theme.
+**1. 每个视频只使用一个背景系列。** 使用从风格手册或自定义标识中衍生的连贯背景处理方案，而不是强制每个序列都使用相同的深色仪表盘风格。这可以避免刺眼的白↔深色闪动转场，并使图表颜色更加突出。目标是视觉连贯性，而非强制使用深色主题。
 
-**2. Flat props format.** All scene properties go at the TOP LEVEL of the cut object
-(e.g., `cut.text`, `cut.chartData`), NOT nested under a `props` key.
+**2. 扁平属性格式。** 所有场景属性直接放在剪辑对象的顶层（例如 `cut.text`、`cut.chartData`），而不是嵌套在 `props` 键下。
 
-**3. KPI Grid data rules:**
-- `value` must be a small, human-readable number. The component auto-formats ≥1M→"XM", ≥1K→"XK".
-  For "8.1 Billion" use `value: 8.1, suffix: " Billion"`. Never use raw huge numbers with a suffix.
-- `change` must be a NUMBER (e.g., `3.2`), not a string (e.g., NOT `"+3.2%"`).
+**3. KPI 网格数据规则：**
+- `value` 必须是一个小型的、人类可读的数字。组件自动格式化 ≥1M 为 "XM"，≥1K 为 "XK"。对于 "8.1 Billion"，使用 `value: 8.1, suffix: " Billion"`。切勿使用原始大数字加后缀。
+- `change` 必须是**数字**（例如 `3.2`），而不是字符串（例如**不要**使用 `"+3.2%"`）。
 
-**4. Comparison and Callout theming:**
-- `comparison` accepts `backgroundColor` and `color` (text color) for dark themes.
-- `callout` accepts `backgroundColor` which sets both the container and card background.
+**4. Comparison 和 Callout 主题：**
+- `comparison` 接受 `backgroundColor` 和 `color`（文字颜色）以支持深色主题。
+- `callout` 接受 `backgroundColor`，同时设置容器和卡片背景。
 
-**5. Overlays add polish.**
-- `section_title` overlays group scenes narratively ("THE CRISIS", "THE DATA").
-- `stat_reveal` overlays float dramatic numbers over chart scenes (e.g., "10x" in corner).
+**5. 叠加层增加精致感。**
+- `section_title` 叠加层在叙事上对场景进行分组（"危机"、"数据"）。
+- `stat_reveal` 叠加层在图表场景上浮动醒目数字（例如角落里的 "10x"）。
 
-**6. Scene pacing:** 4-6 seconds per scene, 8-10 scenes for a 45-50s video. Give chart
-animations at least 4 seconds to complete. Hero title needs only 4 seconds.
+**6. 场景节奏：** 每个场景 4-6 秒，45-50 秒的视频使用 8-10 个场景。给图表动画至少 4 秒完成。标题场景只需要 4 秒。
 
-**7. Color palette cohesion.** Pick 4-5 accent colors that relate to the topic and use
-them consistently across charts, overlays, and accents. Use the same chartColors array
-across bar/pie/line scenes for visual unity.
+**7. 调色板连贯性。** 选择 4-5 个与主题相关的强调色，并在图表、叠加层和装饰中一致使用。在柱状图/饼图/折线图场景中使用相同的 chartColors 数组以保持视觉统一。
 
-**Reference compositions:** See `remotion-composer/public/demo-props/climate-dashboard.json`
-as the gold standard, and other demo files for additional patterns.
+**参考合成：** 参见 `remotion-composer/public/demo-props/climate-dashboard.json` 作为黄金标准，以及其他演示文件中的更多模式。
 
-### Pre-Render Validation (mandatory)
+### 渲染前验证（必须执行）
 
-**Always run `composition_validator` before rendering.** It catches:
-- Missing asset files (images, audio) that would cause render failures
-- Narration audio longer than video duration (audio gets cut off)
-- Music shorter than video (silence at end)
-- Invalid cut timings (out ≤ in)
+**在渲染之前，务必运行 `composition_validator`。** 它能捕获以下问题：
+- 缺失的资源文件（图片、音频），会导致渲染失败
+- 旁白音频时长超过视频时长（音频会被截断）
+- 音乐短于视频（结尾出现静音）
+- 无效的剪辑时序（out ≤ in）
 
 ```python
 from tools.analysis.composition_validator import CompositionValidator
@@ -132,77 +108,77 @@ result = CompositionValidator().execute({
     "composition_path": "path/to/composition.json",
     "assets_root": "remotion-composer/public",
 })
-# result.data["valid"] must be True before rendering
+# result.data["valid"] 在渲染前必须为 True
 ```
 
-**Audio duration alignment:**
-- After generating TTS narration, the tool returns `audio_duration_seconds`.
-- If narration exceeds video duration: shorten script and regenerate, OR extend the last scene.
-- Use `tools.analysis.audio_probe.probe_duration(path)` to check any audio file's duration.
-- Music should be ≥ video duration; the player handles fade-out via `fadeOutSeconds`.
+**音频时长对齐：**
+- 生成 TTS 旁白后，工具会返回 `audio_duration_seconds`。
+- 如果旁白超过视频时长：缩短脚本并重新生成，或延长最后一个场景。
+- 使用 `tools.analysis.audio_probe.probe_duration(path)` 检查任何音频文件的时长。
+- 音乐应 ≥ 视频时长；播放器通过 `fadeOutSeconds` 处理淡出。
 
-## Architecture
+## 架构
 
 ```
 remotion-composer/
 ├── src/
-│   ├── Root.tsx              # Composition registry
-│   ├── compositions/         # One file per pipeline type
-│   │   ├── Explainer.tsx     # Generated explainer composition
-│   │   ├── AnimatedScene.tsx # Individual animated scene
-│   │   └── TitleCard.tsx     # Standalone title card
-│   ├── components/           # Reusable visual building blocks
-│   │   ├── Caption.tsx       # Subtitle/caption renderer
+│   ├── Root.tsx              # 合成注册表
+│   ├── compositions/         # 每种流水线类型一个文件
+│   │   ├── Explainer.tsx     # 生成的讲解合成
+│   │   ├── AnimatedScene.tsx # 单个动画场景
+│   │   └── TitleCard.tsx     # 独立标题卡片
+│   ├── components/           # 可复用的视觉构建块
+│   │   ├── Caption.tsx       # 字幕/说明文字渲染器
 │   │   ├── DiagramOverlay.tsx
 │   │   ├── ProgressBar.tsx
 │   │   └── TransitionWrapper.tsx
-│   └── styles/               # Tailwind + playbook-derived styles
-├── public/                   # Static assets (fonts, LUTs)
+│   └── styles/               # Tailwind + 风格手册派生样式
+├── public/                   # 静态资源（字体、LUT）
 ├── package.json
 ├── remotion.config.ts
 └── tsconfig.json
 ```
 
-## Pipeline Integration
+## 流水线集成
 
-### How Artifacts Map to Remotion Props
+### 工件到 Remotion 属性的映射
 
-| OpenMontage Artifact | Remotion Prop | Maps To |
+| OpenMontage 工件 | Remotion 属性 | 映射目标 |
 |---------------------|---------------|---------|
-| `scene_plan.json` → `scenes[]` | `scenes` prop | `<TransitionSeries>` children |
-| `scene.type` | Component selector | `talking_head` → `<Video>`, `diagram` → `<DiagramOverlay>`, etc. |
-| `scene.start_seconds` / `end_seconds` | `from` / `durationInFrames` | `fps * seconds` conversion |
-| `scene.transition_in` / `transition_out` | `<TransitionSeries.Transition>` | `fade`, `slide`, `wipe` |
-| `asset_manifest.json` → assets | `assets` prop | `staticFile()` or absolute paths |
-| `style_playbook` | `theme` prop | Colors, fonts, animation curves |
-| `edit_decisions.json` → cuts | `cuts` prop | `<Series>` with trimmed `<Video>` segments |
-| `media_profile` | Composition dimensions | `width`, `height`, `fps` from profile |
+| `scene_plan.json` → `scenes[]` | `scenes` 属性 | `<TransitionSeries>` 子元素 |
+| `scene.type` | 组件选择器 | `talking_head` → `<Video>`、`diagram` → `<DiagramOverlay>` 等 |
+| `scene.start_seconds` / `end_seconds` | `from` / `durationInFrames` | `fps * 秒数` 转换 |
+| `scene.transition_in` / `transition_out` | `<TransitionSeries.Transition>` | `fade`、`slide`、`wipe` |
+| `asset_manifest.json` → assets | `assets` 属性 | `staticFile()` 或绝对路径 |
+| `style_playbook` | `theme` 属性 | 颜色、字体、动画曲线 |
+| `edit_decisions.json` → cuts | `cuts` 属性 | `<Series>` 包含裁剪后的 `<Video>` 片段 |
+| `media_profile` | 合成尺寸 | 来自配置文件的 `width`、`height`、`fps` |
 
-### Render Invocation
+### 渲染调用
 
-The orchestrator calls Remotion renders via CLI:
+编排器通过 CLI 调用 Remotion 渲染：
 
 ```bash
-# Standard render (composition name is "Explainer", no entry point needed)
+# 标准渲染（合成名称为 "Explainer"，无需入口点）
 npx remotion render Explainer \
   --props="public/demo-props/my-video.json" \
   --output=output/final.mp4 \
   --codec=h264 --crf=18
 
-# With specific media profile
+# 指定媒体配置
 npx remotion render Explainer \
   --width=1080 --height=1920 --fps=30 \
   --props="public/demo-props/my-video.json" \
   --output=output.mp4
 ```
 
-**Note:** Do NOT specify `src/index.ts` as entry point — Remotion auto-discovers compositions. The composition name is `Explainer` (not `ExplainerVideo`).
+**注意：** 不要将 `src/index.ts` 指定为入口点——Remotion 会自动发现合成。合成名称为 `Explainer`（不是 `ExplainerVideo`）。
 
-In Python, invoke via `subprocess` from `video_compose.py` when `backend="remotion"`.
+在 Python 中，当 `backend="remotion"` 时，通过 `video_compose.py` 中的 `subprocess` 调用。
 
-### Media Profile Mapping
+### 媒体配置映射
 
-| OpenMontage Profile | Remotion Config |
+| OpenMontage 配置 | Remotion 配置 |
 |--------------------|-----------------|
 | `youtube_landscape` | `width: 1920, height: 1080, fps: 30` |
 | `youtube_shorts` | `width: 1080, height: 1920, fps: 30` |
@@ -211,14 +187,14 @@ In Python, invoke via `subprocess` from `video_compose.py` when `backend="remoti
 | `instagram_square` | `width: 1080, height: 1080, fps: 30` |
 | `cinematic_wide` | `width: 2560, height: 1080, fps: 24` |
 
-## Key Patterns
+## 关键模式
 
-### Scene Plan to Composition
+### 场景计划到合成
 
-Each scene in `scene_plan.json` becomes a child of `<TransitionSeries>`:
+`scene_plan.json` 中的每个场景都成为 `<TransitionSeries>` 的子元素：
 
 ```tsx
-// Pseudocode — actual component in remotion-composer/src/compositions/Explainer.tsx
+// 伪代码——实际组件在 remotion-composer/src/compositions/Explainer.tsx 中
 const Explainer: React.FC<ExplainerProps> = ({ scenes, theme, assets }) => {
   return (
     <TransitionSeries>
@@ -240,9 +216,9 @@ const Explainer: React.FC<ExplainerProps> = ({ scenes, theme, assets }) => {
 };
 ```
 
-### Dynamic Duration with calculateMetadata
+### 使用 calculateMetadata 实现动态时长
 
-When TTS audio determines video length (generated explainers), use `calculateMetadata`:
+当 TTS 音频决定视频长度时（生成的讲解视频），使用 `calculateMetadata`：
 
 ```tsx
 export const ExplainerVideo = {
@@ -261,12 +237,12 @@ export const ExplainerVideo = {
 };
 ```
 
-### Style Playbook to Theme
+### 风格手册到主题
 
-Style playbooks (`skills/styles/`) define visual parameters. Map them to Remotion themes:
+风格手册（`skills/styles/`）定义视觉参数。将其映射到 Remotion 主题：
 
 ```tsx
-// Derived from the style playbook YAML
+// 源自风格手册 YAML
 const cleanProfessional = {
   background: "#FFFFFF",
   text: "#1A1A1A",
@@ -274,19 +250,19 @@ const cleanProfessional = {
   fontFamily: "Inter",
   headingWeight: 600,
   transitionType: "fade",
-  transitionDuration: 15, // frames
+  transitionDuration: 15, // 帧数
   animationEasing: "easeInOutCubic",
 };
 ```
 
-### Audio Layering
+### 音频分层
 
-Narration + background music + SFX as parallel `<Audio>` components.
+旁白 + 背景音乐 + 音效作为并行的 `<Audio>` 组件。
 
-**Music offset and looping:** The `audio.music` config supports:
-- `offsetSeconds` — skip quiet intros, start from the energetic part of the track. Use `tools/analysis/audio_energy.py` to find the optimal offset automatically.
-- `loop` — loop the music if it's shorter than the video. Remotion handles this natively.
-- `fadeInSeconds` / `fadeOutSeconds` — smooth volume ramps at start/end.
+**音乐偏移和循环：** `audio.music` 配置支持：
+- `offsetSeconds`——跳过安静的引子，从曲目最有能量的部分开始。使用 `tools/analysis/audio_energy.py` 自动寻找最佳偏移量。
+- `loop`——如果音乐短于视频则循环播放。Remotion 原生支持。
+- `fadeInSeconds` / `fadeOutSeconds`——在开始/结束时平滑音量渐变。
 
 ```json
 "audio": {
@@ -310,67 +286,62 @@ Narration + background music + SFX as parallel `<Audio>` components.
       <Audio src={cue.url} volume={cue.volume} />
     </Sequence>
   ))}
-  {/* Visual layers */}
+  {/* 视觉层 */}
 </AbsoluteFill>
 ```
 
-### Cost Tracking
+### 成本追踪
 
-Remotion renders are CPU-intensive but $0 API cost. Track via cost_tracker:
-- `estimate`: based on composition duration × resolution tier
-- `reserve`: 0 (no API spend)
-- `reconcile`: wall-clock render time for benchmarking
+Remotion 渲染是 CPU 密集型但 API 成本为 $0。通过 cost_tracker 追踪：
+- `estimate`：基于合成时长 × 分辨率级别
+- `reserve`：0（无 API 支出）
+- `reconcile`：壁钟渲染时间，用于基准测试
 
-## Critical Constraints
+## 关键约束
 
-- **No CSS animations or transitions** — they don't render correctly. Use `useCurrentFrame()` + `interpolate()` for all motion.
-- **No Tailwind animation classes** — `animate-*` classes break frame-based rendering. Static Tailwind utilities are fine.
-- **Always clamp interpolate()** — use `extrapolateLeft: 'clamp', extrapolateRight: 'clamp'` to prevent values shooting past endpoints.
-- **`useVideoConfig().durationInFrames` returns COMPOSITION duration, not Sequence duration** — This is the #1 Remotion footgun. If your composition is 31s (930 frames) and a scene's `<Sequence>` is 5s (150 frames), `durationInFrames` still returns 930 inside that scene. Any crossfade, camera motion, or timing logic that uses `durationInFrames` directly will be wildly wrong. **Fix:** Pass `sceneDurationSeconds` as a prop from the parent and compute `effectiveDuration = Math.round(sceneDurationSeconds * fps)` inside the component. The `AnimeScene` component implements this pattern.
-- **Node.js 18+ required** — listed as optional in minimum system, required in recommended.
-- **Render in series, not parallel** — unless the machine has enough RAM. Each render spawns a Chromium instance.
+- **不要使用 CSS 动画或转场**——它们无法正确渲染。所有运动使用 `useCurrentFrame()` + `interpolate()`。
+- **不要使用 Tailwind 动画类**——`animate-*` 类会破坏基于帧的渲染。静态 Tailwind 工具类可以正常使用。
+- **始终对 interpolate() 进行钳制**——使用 `extrapolateLeft: 'clamp', extrapolateRight: 'clamp'` 防止值超出端点。
+- **`useVideoConfig().durationInFrames` 返回的是合成的时长，而不是 Sequence 的时长**——这是 Remotion 的头号陷阱。如果你的合成是 31 秒（930 帧），而场景的 `<Sequence>` 是 5 秒（150 帧），`durationInFrames` 在该场景内部仍然返回 930。任何直接使用 `durationInFrames` 的交叉淡入淡出、摄像机运动或时机逻辑都会大错特错。**修复方法：** 从父组件传入 `sceneDurationSeconds` 作为属性，并在组件内部计算 `effectiveDuration = Math.round(sceneDurationSeconds * fps)`。`AnimeScene` 组件实现了这一模式。
+- **需要 Node.js 18+**——在最低系统中列为可选，推荐系统中为必需。
+- **依次渲染，不要并行**——除非机器有足够的内存。每个渲染会启动一个 Chromium 实例。
 
-## Post-Render Verification Protocol (ALL pipelines)
+## 渲染后验证协议（所有流水线）
 
-**Every Remotion render MUST be verified before presenting to the user.** This protocol applies
-to ALL pipelines, not just explainer. Pipeline-specific compose-directors may extend it but
-must not skip any step.
+**每次 Remotion 渲染在呈现给用户之前必须经过验证。** 此协议适用于所有流水线，不仅仅是讲解视频。流水线特定的 compose-director 可以扩展它，但不得跳过任何步骤。
 
-**Step 1: Probe the output file (GATE — blocks all other steps):**
+**步骤 1：探测输出文件（关卡——阻止所有其他步骤）：**
 ```bash
 ffprobe -v quiet -print_format json -show_format -show_streams rendered_video.mp4
 ```
-Verify ALL of:
-- [ ] Video stream exists with correct resolution and FPS
-- [ ] **Audio stream exists** — if missing, STOP immediately, fix audio config, re-render
-- [ ] Duration within ±5% of target
-- [ ] File size is reasonable (not 0 bytes, not suspiciously small)
+验证所有项目：
+- [ ] 视频流存在且分辨率和 FPS 正确
+- [ ] **音频流存在**——如果缺失，立即停止，修复音频配置，重新渲染
+- [ ] 时长在目标的 ±5% 范围内
+- [ ] 文件大小合理（不是 0 字节，也不异常地小）
 
-**If audio stream is missing, do NOT proceed.** This means narration/music were not embedded.
-The most common cause: audio sources were mixed externally but never passed in the Remotion
-`audio` prop. Fix: add `audio.narration` and `audio.music` to composition props and re-render.
+**如果缺少音频流，请不要继续。** 这意味着旁白/音乐未被嵌入。最常见的原因：音频源在外部混合但从未传入 Remotion 的 `audio` 属性。修复方法：将 `audio.narration` 和 `audio.music` 添加到合成属性并重新渲染。
 
-**Step 2: Extract review frames** at scene midpoints and visually inspect each one.
+**步骤 2：在场景中间点提取审核帧**，并目视检查每一帧。
 
-**Step 3: Transcribe the rendered video's audio** using WhisperX/transcriber tool.
-- If 0 words returned → audio is silent despite stream existing → investigate
-- If word count < 80% of script → audio is cut off → investigate
-- Compare last transcribed word to last scripted word
+**步骤 3：使用 WhisperX/transcriber 工具转写渲染视频的音频。**
+- 如果返回 0 个单词 → 音频虽然存在流但为静音 → 调查原因
+- 如果单词数 < 脚本的 80% → 音频被截断 → 调查原因
+- 比较最后一个转写的单词与脚本的最后一个单词
 
-**Step 4: Present structured review** to user with file stats, audio verification results,
-visual findings, and caption status before declaring the video complete.
+**步骤 4：向用户呈现结构化审核报告**，包含文件统计、音频验证结果、视觉发现和字幕状态，然后才能宣布视频完成。
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] Composition duration matches sum of scene durations minus transition overlaps
-- [ ] All `staticFile()` references resolve to existing assets
-- [ ] Transitions don't cut off content (account for overlap in timing)
-- [ ] **Audio stream present in rendered output** (ffprobe confirms codec_type: "audio")
-- [ ] **Narration words verified via transcription** (not just assumed from props)
-- [ ] Audio layers are in sync with visual scenes
-- [ ] Captions/subtitles rendering correctly (Remotion CaptionOverlay preferred over FFmpeg SRT)
-- [ ] Theme colors match the active style playbook
-- [ ] Output resolution and FPS match the target media profile
-- [ ] Render completes without Chromium timeout errors
-- [ ] Final output plays correctly on target platform
-- [ ] Text-bearing scenes (CTA, titles) use Remotion text_card, NOT AI-generated images with text
+- [ ] 合成时长等于各场景时长之和减去转场重叠部分
+- [ ] 所有 `staticFile()` 引用解析到已存在的资源
+- [ ] 转场不会截断内容（在时机中考虑重叠部分）
+- [ ] **渲染输出中存在音频流**（ffprobe 确认 codec_type: "audio"）
+- [ ] **旁白单词已通过转写验证**（不仅仅是假设属性正确）
+- [ ] 音频层与视觉场景同步
+- [ ] 字幕/说明文字渲染正确（优先使用 Remotion CaptionOverlay 而非 FFmpeg SRT）
+- [ ] 主题颜色与激活的风格手册一致
+- [ ] 输出分辨率和 FPS 匹配目标媒体配置
+- [ ] 渲染完成且无 Chromium 超时错误
+- [ ] 最终输出在目标平台上播放正常
+- [ ] 包含文字的场景（CTA、标题）使用 Remotion 的 text_card，而非 AI 生成的带文字图像

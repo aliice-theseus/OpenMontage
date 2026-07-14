@@ -1,11 +1,11 @@
 ---
 name: threejs-postprocessing
-description: Three.js post-processing - EffectComposer, bloom, DOF, screen effects. Use when adding visual effects, color grading, blur, glow, or creating custom screen-space shaders.
+description: Three.js 后期处理 — EffectComposer、泛光、景深、屏幕特效。在添加视觉效果、色彩校正、模糊、发光或创建自定义屏幕空间着色器时使用。
 ---
 
-# Three.js Post-Processing
+# Three.js 后期处理
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
@@ -13,30 +13,30 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 
-// Setup composer
+// 设置合成器
 const composer = new EffectComposer(renderer);
 
-// Render scene
+// 渲染场景
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
 
-// Add bloom
+// 添加泛光
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  1.5, // strength
-  0.4, // radius
-  0.85, // threshold
+  1.5, // 强度
+  0.4, // 半径
+  0.85, // 阈值
 );
 composer.addPass(bloomPass);
 
-// Animation loop - use composer instead of renderer
+// 动画循环 — 使用合成器而非渲染器
 function animate() {
   requestAnimationFrame(animate);
-  composer.render(); // NOT renderer.render()
+  composer.render(); // 不是 renderer.render()
 }
 ```
 
-## EffectComposer Setup
+## EffectComposer 设置
 
 ```javascript
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -44,17 +44,17 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 
 const composer = new EffectComposer(renderer);
 
-// First pass: render scene
+// 第一道：渲染场景
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
 
-// Add more passes...
+// 添加更多通道...
 composer.addPass(effectPass);
 
-// Last pass should render to screen
-effectPass.renderToScreen = true; // Default for last pass
+// 最后一道应渲染到屏幕
+effectPass.renderToScreen = true; // 最后一道默认
 
-// Handle resize
+// 处理窗口大小变化
 function onResize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -67,45 +67,45 @@ function onResize() {
 }
 ```
 
-## Common Effects
+## 常用特效
 
-### Bloom (Glow)
+### 泛光（发光）
 
 ```javascript
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  1.5, // strength - intensity of glow
-  0.4, // radius - spread of glow
-  0.85, // threshold - brightness threshold
+  1.5, // strength — 发光强度
+  0.4, // radius — 发光扩散范围
+  0.85, // threshold — 亮度阈值
 );
 
 composer.addPass(bloomPass);
 
-// Adjust at runtime
+// 运行时调整
 bloomPass.strength = 2.0;
 bloomPass.threshold = 0.5;
 bloomPass.radius = 0.8;
 ```
 
-### Selective Bloom
+### 选择性泛光
 
-Apply bloom only to specific objects.
+仅对特定对象应用泛光。
 
 ```javascript
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 
-// Layer setup
+// 图层设置
 const BLOOM_LAYER = 1;
 const bloomLayer = new THREE.Layers();
 bloomLayer.set(BLOOM_LAYER);
 
-// Mark objects to bloom
+// 标记要泛光的对象
 glowingMesh.layers.enable(BLOOM_LAYER);
 
-// Dark material for non-blooming objects
+// 非泛光对象的暗色材质
 const darkMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
 const materials = {};
 
@@ -123,19 +123,19 @@ function restoreMaterial(obj) {
   }
 }
 
-// Custom render loop
+// 自定义渲染循环
 function render() {
-  // Render bloom pass
+  // 渲染泛光通道
   scene.traverse(darkenNonBloomed);
   composer.render();
   scene.traverse(restoreMaterial);
 
-  // Render final scene over bloom
+  // 在泛光之上渲染最终场景
   renderer.render(scene, camera);
 }
 ```
 
-### FXAA (Anti-Aliasing)
+### FXAA（抗锯齿）
 
 ```javascript
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
@@ -149,7 +149,7 @@ fxaaPass.material.uniforms["resolution"].value.set(
 
 composer.addPass(fxaaPass);
 
-// Update on resize
+// 窗口大小变化时更新
 function onResize() {
   fxaaPass.material.uniforms["resolution"].value.set(
     1 / window.innerWidth,
@@ -158,7 +158,7 @@ function onResize() {
 }
 ```
 
-### SMAA (Better Anti-Aliasing)
+### SMAA（更好的抗锯齿）
 
 ```javascript
 import { SMAAPass } from "three/addons/postprocessing/SMAAPass.js";
@@ -171,16 +171,14 @@ const smaaPass = new SMAAPass(
 composer.addPass(smaaPass);
 ```
 
-### SSAO (Ambient Occlusion)
+### SSAO（环境光遮蔽）
 
 ```javascript
 import { SSAOPass } from "three/addons/postprocessing/SSAOPass.js";
 
 const ssaoPass = new SSAOPass(
-  scene,
-  camera,
-  window.innerWidth,
-  window.innerHeight,
+  scene, camera,
+  window.innerWidth, window.innerHeight,
 );
 ssaoPass.kernelRadius = 16;
 ssaoPass.minDistance = 0.005;
@@ -188,74 +186,74 @@ ssaoPass.maxDistance = 0.1;
 
 composer.addPass(ssaoPass);
 
-// Output modes
+// 输出模式
 ssaoPass.output = SSAOPass.OUTPUT.Default;
-// SSAOPass.OUTPUT.Default - Final composited output
-// SSAOPass.OUTPUT.SSAO - Just the AO
-// SSAOPass.OUTPUT.Blur - Blurred AO
-// SSAOPass.OUTPUT.Depth - Depth buffer
-// SSAOPass.OUTPUT.Normal - Normal buffer
+// SSAOPass.OUTPUT.Default — 最终合成输出
+// SSAOPass.OUTPUT.SSAO — 仅环境光遮蔽
+// SSAOPass.OUTPUT.Blur — 模糊后的 AO
+// SSAOPass.OUTPUT.Depth — 深度缓冲
+// SSAOPass.OUTPUT.Normal — 法线缓冲
 ```
 
-### Depth of Field (DOF)
+### 景深
 
 ```javascript
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 
 const bokehPass = new BokehPass(scene, camera, {
-  focus: 10.0, // Focus distance
-  aperture: 0.025, // Aperture (smaller = more DOF)
-  maxblur: 0.01, // Max blur amount
+  focus: 10.0, // 对焦距离
+  aperture: 0.025, // 光圈（越小景深越大）
+  maxblur: 0.01, // 最大模糊量
 });
 
 composer.addPass(bokehPass);
 
-// Update focus dynamically
+// 动态更新对焦
 bokehPass.uniforms["focus"].value = distanceToTarget;
 ```
 
-### Film Grain
+### 胶片颗粒
 
 ```javascript
 import { FilmPass } from "three/addons/postprocessing/FilmPass.js";
 
 const filmPass = new FilmPass(
-  0.35, // noise intensity
-  0.5, // scanline intensity
-  648, // scanline count
-  false, // grayscale
+  0.35, // 噪点强度
+  0.5, // 扫描线强度
+  648, // 扫描线数量
+  false, // 灰度
 );
 
 composer.addPass(filmPass);
 ```
 
-### Vignette
+### 暗角
 
 ```javascript
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { VignetteShader } from "three/addons/shaders/VignetteShader.js";
 
 const vignettePass = new ShaderPass(VignetteShader);
-vignettePass.uniforms["offset"].value = 1.0; // Vignette size
-vignettePass.uniforms["darkness"].value = 1.0; // Vignette intensity
+vignettePass.uniforms["offset"].value = 1.0; // 暗角大小
+vignettePass.uniforms["darkness"].value = 1.0; // 暗角强度
 
 composer.addPass(vignettePass);
 ```
 
-### Color Correction
+### 色彩校正
 
 ```javascript
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { ColorCorrectionShader } from "three/addons/shaders/ColorCorrectionShader.js";
 
 const colorPass = new ShaderPass(ColorCorrectionShader);
-colorPass.uniforms["powRGB"].value = new THREE.Vector3(1.2, 1.2, 1.2); // Power
-colorPass.uniforms["mulRGB"].value = new THREE.Vector3(1.0, 1.0, 1.0); // Multiply
+colorPass.uniforms["powRGB"].value = new THREE.Vector3(1.2, 1.2, 1.2); // 幂
+colorPass.uniforms["mulRGB"].value = new THREE.Vector3(1.0, 1.0, 1.0); // 乘
 
 composer.addPass(colorPass);
 ```
 
-### Gamma Correction
+### Gamma 校正
 
 ```javascript
 import { GammaCorrectionShader } from "three/addons/shaders/GammaCorrectionShader.js";
@@ -264,35 +262,35 @@ const gammaPass = new ShaderPass(GammaCorrectionShader);
 composer.addPass(gammaPass);
 ```
 
-### Pixelation
+### 像素化
 
 ```javascript
 import { RenderPixelatedPass } from "three/addons/postprocessing/RenderPixelatedPass.js";
 
-const pixelPass = new RenderPixelatedPass(6, scene, camera); // 6 = pixel size
+const pixelPass = new RenderPixelatedPass(6, scene, camera); // 6 = 像素大小
 
 composer.addPass(pixelPass);
 ```
 
-### Glitch Effect
+### 故障效果
 
 ```javascript
 import { GlitchPass } from "three/addons/postprocessing/GlitchPass.js";
 
 const glitchPass = new GlitchPass();
-glitchPass.goWild = false; // Continuous glitching
+glitchPass.goWild = false; // 连续故障
 
 composer.addPass(glitchPass);
 ```
 
-### Halftone
+### 半色调
 
 ```javascript
 import { HalftonePass } from "three/addons/postprocessing/HalftonePass.js";
 
 const halftonePass = new HalftonePass(window.innerWidth, window.innerHeight, {
-  shape: 1, // 1 = dot, 2 = ellipse, 3 = line, 4 = square
-  radius: 4, // Dot size
+  shape: 1, // 1 = 点, 2 = 椭圆, 3 = 线, 4 = 方形
+  radius: 4, // 点大小
   rotateR: Math.PI / 12,
   rotateB: (Math.PI / 12) * 2,
   rotateG: (Math.PI / 12) * 3,
@@ -305,15 +303,14 @@ const halftonePass = new HalftonePass(window.innerWidth, window.innerHeight, {
 composer.addPass(halftonePass);
 ```
 
-### Outline
+### 轮廓线
 
 ```javascript
 import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 
 const outlinePass = new OutlinePass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  scene,
-  camera,
+  scene, camera,
 );
 
 outlinePass.edgeStrength = 3;
@@ -323,22 +320,22 @@ outlinePass.pulsePeriod = 0;
 outlinePass.visibleEdgeColor.set(0xffffff);
 outlinePass.hiddenEdgeColor.set(0x190a05);
 
-// Select objects to outline
+// 选择要添加轮廓的对象
 outlinePass.selectedObjects = [mesh1, mesh2];
 
 composer.addPass(outlinePass);
 ```
 
-## Custom ShaderPass
+## 自定义 ShaderPass
 
-Create your own post-processing effects.
+创建自己的后期处理效果。
 
 ```javascript
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 
 const CustomShader = {
   uniforms: {
-    tDiffuse: { value: null }, // Required: input texture
+    tDiffuse: { value: null }, // 必需：输入纹理
     time: { value: 0 },
     intensity: { value: 1.0 },
   },
@@ -359,7 +356,7 @@ const CustomShader = {
     void main() {
       vec2 uv = vUv;
 
-      // Wave distortion
+      // 波浪扭曲
       uv.x += sin(uv.y * 10.0 + time) * 0.01 * intensity;
 
       vec4 color = texture2D(tDiffuse, uv);
@@ -371,11 +368,11 @@ const CustomShader = {
 const customPass = new ShaderPass(CustomShader);
 composer.addPass(customPass);
 
-// Update in animation loop
+// 在动画循环中更新
 customPass.uniforms.time.value = clock.getElapsedTime();
 ```
 
-### Invert Colors Shader
+### 反转颜色着色器
 
 ```javascript
 const InvertShader = {
@@ -401,7 +398,7 @@ const InvertShader = {
 };
 ```
 
-### Chromatic Aberration
+### 色差
 
 ```javascript
 const ChromaticAberrationShader = {
@@ -435,7 +432,7 @@ const ChromaticAberrationShader = {
 };
 ```
 
-## Combining Multiple Effects
+## 组合多个效果
 
 ```javascript
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -448,28 +445,26 @@ import { GammaCorrectionShader } from "three/addons/shaders/GammaCorrectionShade
 
 const composer = new EffectComposer(renderer);
 
-// 1. Render scene
+// 1. 渲染场景
 composer.addPass(new RenderPass(scene, camera));
 
-// 2. Bloom
+// 2. 泛光
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.5,
-  0.4,
-  0.85,
+  0.5, 0.4, 0.85,
 );
 composer.addPass(bloomPass);
 
-// 3. Vignette
+// 3. 暗角
 const vignettePass = new ShaderPass(VignetteShader);
 vignettePass.uniforms["offset"].value = 0.95;
 vignettePass.uniforms["darkness"].value = 1.0;
 composer.addPass(vignettePass);
 
-// 4. Gamma correction
+// 4. Gamma 校正
 composer.addPass(new ShaderPass(GammaCorrectionShader));
 
-// 5. Anti-aliasing (always last before output)
+// 5. 抗锯齿（始终在输出前最后一道）
 const fxaaPass = new ShaderPass(FXAAShader);
 fxaaPass.uniforms["resolution"].value.set(
   1 / window.innerWidth,
@@ -478,26 +473,26 @@ fxaaPass.uniforms["resolution"].value.set(
 composer.addPass(fxaaPass);
 ```
 
-## Render to Texture
+## 渲染到纹理
 
 ```javascript
-// Create render target
+// 创建渲染目标
 const renderTarget = new THREE.WebGLRenderTarget(512, 512);
 
-// Render scene to target
+// 将场景渲染到目标
 renderer.setRenderTarget(renderTarget);
 renderer.render(scene, camera);
 renderer.setRenderTarget(null);
 
-// Use texture
+// 使用纹理
 const texture = renderTarget.texture;
 otherMaterial.map = texture;
 ```
 
-## Multi-Pass Rendering
+## 多通道渲染
 
 ```javascript
-// Multiple composers for different scenes/layers
+// 不同场景/图层的多个合成器
 const bgComposer = new EffectComposer(renderer);
 bgComposer.addPass(new RenderPass(bgScene, camera));
 
@@ -505,67 +500,65 @@ const fgComposer = new EffectComposer(renderer);
 fgComposer.addPass(new RenderPass(fgScene, camera));
 fgComposer.addPass(bloomPass);
 
-// Combine in render loop
+// 在渲染循环中组合
 function animate() {
-  // Render background without clearing
+  // 渲染背景，不清除
   renderer.autoClear = false;
   renderer.clear();
 
   bgComposer.render();
 
-  // Render foreground over it
+  // 在前景之上渲染
   renderer.clearDepth();
   fgComposer.render();
 }
 ```
 
-## WebGPU Post-Processing (Three.js r150+)
+## WebGPU 后期处理（Three.js r150+）
 
 ```javascript
 import { postProcessing } from "three/addons/nodes/Nodes.js";
 import { pass, bloom, dof } from "three/addons/nodes/Nodes.js";
 
-// Using node-based system
+// 使用基于节点的系统
 const scenePass = pass(scene, camera);
 const bloomNode = bloom(scenePass, 0.5, 0.4, 0.85);
 
 const postProcessing = new THREE.PostProcessing(renderer);
 postProcessing.outputNode = bloomNode;
 
-// Render
+// 渲染
 function animate() {
   postProcessing.render();
 }
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Limit passes**: Each pass adds a full-screen render
-2. **Lower resolution**: Use smaller render targets for blur passes
-3. **Disable unused effects**: Toggle passes on/off
-4. **Use FXAA over MSAA**: Less expensive anti-aliasing
-5. **Profile with DevTools**: Check GPU usage
+1. **限制通道数**：每个通道增加一次全屏渲染
+2. **降低分辨率**：对模糊通道使用更小的渲染目标
+3. **禁用未使用的效果**：切换通道的启用状态
+4. **使用 FXAA 而非 MSAA**：更便宜的抗锯齿
+5. **使用 DevTools 分析**：检查 GPU 使用情况
 
 ```javascript
-// Disable pass
+// 禁用通道
 bloomPass.enabled = false;
 
-// Reduce bloom resolution
+// 降低泛光分辨率
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
-  strength,
-  radius,
-  threshold,
+  strength, radius, threshold,
 );
 
-// Only apply effects in high-performance scenarios
+// 仅在高性能场景应用效果
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 if (!isMobile) {
   composer.addPass(expensivePass);
 }
 ```
 
-## Handle Resize
+## 处理窗口大小变化
 
 ```javascript
 function onWindowResize() {
@@ -579,7 +572,7 @@ function onWindowResize() {
   renderer.setSize(width, height);
   composer.setSize(width, height);
 
-  // Update pass-specific resolutions
+  // 更新各通道的分辨率
   if (fxaaPass) {
     fxaaPass.material.uniforms["resolution"].value.set(
       1 / (width * pixelRatio),
@@ -595,8 +588,8 @@ function onWindowResize() {
 window.addEventListener("resize", onWindowResize);
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-shaders` - Custom shader development
-- `threejs-textures` - Render targets
-- `threejs-fundamentals` - Renderer setup
+- `threejs-shaders` — 自定义着色器开发
+- `threejs-textures` — 渲染目标
+- `threejs-fundamentals` — 渲染器设置

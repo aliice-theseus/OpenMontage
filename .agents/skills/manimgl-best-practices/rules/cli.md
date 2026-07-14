@@ -1,407 +1,408 @@
-# Command Line Interface in ManimGL
+# ManimGL 命令行界面
 
-ManimGL uses the `manimgl` command for rendering scenes. It offers powerful flags for different workflows.
+ManimGL 使用 `manimgl` 命令渲染场景。它提供了适用于不同工作流的强大标志。
 
-## Basic Usage
+## 基本用法
 
-### Running a Scene
+### 运行场景
 
 ```bash
-# Basic syntax
+# 基本语法
 manimgl scene_file.py SceneName
 
-# Example
+# 示例
 manimgl my_animation.py SquareToCircle
 ```
 
-### Auto-Select Scene
+### 自动选择场景
 
 ```bash
-# If only one scene in file, it runs automatically
+# 如果文件中只有一个场景，它将自动运行
 manimgl my_animation.py
 
-# If multiple scenes, presents a menu to choose from
+# 如果有多个场景，将显示菜单供选择
 manimgl my_animations.py
 ```
 
-## Common Flags
+## 常用标志
 
-### Writing to File
+### 写入文件
 
 ```bash
-# Write to file (no preview)
+# 写入文件（无预览）
 manimgl scene.py MyScene -w
 
-# Write and open the file
+# 写入并打开文件
 manimgl scene.py MyScene -o
 
-# Show final frame only
+# 仅显示最后一帧
 manimgl scene.py MyScene -s
 
-# Save final frame as image and show
+# 将最后一帧保存为图像并显示
 manimgl scene.py MyScene -so
 ```
 
-### Interactive Mode
+### 交互模式
 
 ```bash
-# Skip to line 15 and enter interactive mode
+# 跳到第 15 行并进入交互模式
 manimgl scene.py MyScene -se 15
 
-# Interactive mode at specific line
+# 在指定行进入交互模式
 manimgl scene.py MyScene --skip_animations --embed 20
 ```
 
-### Display Options
+### 显示选项
 
 ```bash
-# Fullscreen window
+# 全屏窗口
 manimgl scene.py MyScene -f
 
-# Custom window size
+# 自定义窗口大小
 manimgl scene.py MyScene --resolution 1920,1080
 
-# Hide progress bar
+# 隐藏进度条
 manimgl scene.py MyScene --quiet
 ```
 
-## Quality and Resolution
+## 质量和分辨率
 
-### Resolution Presets
+### 分辨率预设
 
 ```bash
-# Low quality (for testing)
+# 低质量（用于测试）
 manimgl scene.py MyScene -l
 
-# Medium quality
+# 中等质量
 manimgl scene.py MyScene -m
 
-# High quality (1080p)
+# 高质量（1080p）
 manimgl scene.py MyScene -h
 
-# 4K quality
+# 4K 质量
 manimgl scene.py MyScene --uhd
 
-# Custom resolution
+# 自定义分辨率
 manimgl scene.py MyScene --resolution 2560,1440
 ```
 
-### Frame Rate
+### 帧率
 
 ```bash
-# Set frame rate (default is 60)
+# 设置帧率（默认为 60）
 manimgl scene.py MyScene --frame_rate 30
 
-# Lower frame rate for faster renders
+# 较低帧率以加快渲染速度
 manimgl scene.py MyScene --frame_rate 15
 ```
 
-## Advanced Flags
+## 高级标志
 
-### Skip to Specific Animation
+### 跳到特定动画
 
 ```bash
-# Skip to nth animation
+# 跳到第 n 个动画
 manimgl scene.py MyScene -n 5
 
-# Skip animations (instant mode)
+# 跳过动画（即时模式）
 manimgl scene.py MyScene --skip_animations
 ```
 
-### Output Options
+### 输出选项
 
 ```bash
-# Specify output file
+# 指定输出文件
 manimgl scene.py MyScene -o output.mp4
 
-# Save as GIF
+# 保存为 GIF
 manimgl scene.py MyScene --format gif
 
-# Transparent background
+# 透明背景
 manimgl scene.py MyScene --transparent
 ```
 
-### Configuration
+### 配置
 
 ```bash
-# Use custom config file
+# 使用自定义配置文件
 manimgl scene.py MyScene --config_file custom_config.yml
 
-# Set specific config values
+# 设置特定配置值
 manimgl scene.py MyScene --config camera_config.frame_rate=30
 ```
 
-## Interactive Development
+## 交互式开发
 
-### The -se Flag
+### -se 标志
 
-The `-se` (skip and embed) flag is ManimGL's killer feature:
+`-se`（跳过并嵌入）标志是 ManimGL 的杀手级功能：
 
 ```bash
-# Drop into interactive shell at line 15
+# 在第 15 行进入交互式 shell
 manimgl scene.py MyScene -se 15
 ```
 
-In the interactive shell:
+在交互式 shell 中：
 
 ```python
-# Use abbreviated commands (no self.)
+# 使用精简命令（无需 self.）
 play(circle.animate.shift(RIGHT))
 add(Square())
 remove(circle)
 wait(2)
 
-# Copy code to clipboard, then:
-checkpoint_paste()              # Run with animations
-checkpoint_paste(skip=True)     # Run instantly
-checkpoint_paste(record=True)   # Record while running
+# 将代码复制到剪贴板，然后：
+checkpoint_paste()              # 带动画运行
+checkpoint_paste(skip=True)     # 立即运行
+checkpoint_paste(record=True)   # 录制运行过程
 
-# Interactive camera control
-touch()  # Press 'd' + mouse to rotate, 'z' + scroll to zoom
+# 交互式相机控制
+touch()  # 按 'd' + 鼠标旋转，'z' + 滚轮缩放
 
-# Exit
+# 退出
 exit()
 ```
 
-## File Organization
+## 文件组织
 
-### Running from Different Directories
+### 从不同目录运行
 
 ```bash
-# From same directory as manimlib/
+# 从与 manimlib/ 相同的目录
 manimgl project/scene.py MyScene
 
-# With absolute path
+# 使用绝对路径
 manimgl /full/path/to/scene.py MyScene
 
-# With relative path
+# 使用相对路径
 manimgl ../other_project/scene.py MyScene
 ```
 
-## Combining Flags
+## 组合标志
 
-### Common Combinations
+### 常见组合
 
 ```bash
-# High quality, write and open
+# 高质量，写入并打开
 manimgl scene.py MyScene -h -o
 
-# Low quality, fullscreen, for testing
+# 低质量，全屏，用于测试
 manimgl scene.py MyScene -l -f
 
-# Skip animations, final frame only
+# 跳过动画，仅最后一帧
 manimgl scene.py MyScene -s --skip_animations
 
-# Interactive at line 20, low quality
+# 在第 20 行交互，低质量
 manimgl scene.py MyScene -l -se 20
 
-# Save as GIF, high quality
+# 保存为 GIF，高质量
 manimgl scene.py MyScene -h --format gif -o
 ```
 
-## Workflow Examples
+## 工作流示例
 
-### Development Workflow
+### 开发工作流
 
 ```bash
-# 1. Initial testing (low quality, fast)
+# 1. 初步测试（低质量，快速）
 manimgl scene.py MyScene -l
 
-# 2. Interactive debugging at specific point
+# 2. 在特定点交互式调试
 manimgl scene.py MyScene -l -se 25
 
-# 3. Check final frame
+# 3. 检查最后一帧
 manimgl scene.py MyScene -s
 
-# 4. Final render (high quality, save and open)
+# 4. 最终渲染（高质量，保存并打开）
 manimgl scene.py MyScene -h -o
 ```
 
-### Quick Preview Workflow
+### 快速预览工作流
 
 ```bash
-# Show final frame immediately
+# 立即显示最后一帧
 manimgl scene.py MyScene -s
 
-# If it looks good, render full animation
+# 如果看起来不错，渲染完整动画
 manimgl scene.py MyScene -o
 ```
 
-### Batch Rendering
+### 批量渲染
 
 ```bash
-# Render multiple scenes
+# 渲染多个场景
 for scene in Scene1 Scene2 Scene3; do
     manimgl scenes.py $scene -h -w
 done
 ```
 
-## Debugging Flags
+## 调试标志
 
-### Verbose Output
+### 详细输出
 
 ```bash
-# Show detailed output
+# 显示详细输出
 manimgl scene.py MyScene --verbose
 
-# Show all debug info
+# 显示所有调试信息
 manimgl scene.py MyScene --debug
 ```
 
-### Profiling
+### 性能分析
 
 ```bash
-# Show performance stats
+# 显示性能统计
 manimgl scene.py MyScene --profile
 
-# Detailed timing information
+# 详细时间信息
 manimgl scene.py MyScene --timing
 ```
 
-## Configuration Override
+## 配置覆盖
 
-### Temporary Config Changes
+### 临时配置更改
 
 ```bash
-# Override window size
-manimgl scene.py MyScene --config window_config.size=fullscreen
+# 覆盖单个值
+manimgl scene.py MyScene --config camera_config.frame_rate=30
 
-# Override output directory
-manimgl scene.py MyScene --config directories.output=/tmp/manim
-
-# Multiple overrides
+# 覆盖多个值
 manimgl scene.py MyScene \
-    --config camera_config.frame_rate=30 \
-    --config camera_config.pixel_width=1280
+  --config camera_config.frame_rate=30 \
+  --config camera_config.pixel_width=1280 \
+  --config camera_config.pixel_height=720
+
+# 覆盖输出目录
+manimgl scene.py MyScene --config directories.output=/tmp/manim_output
 ```
 
-## Help and Information
+## 帮助和信息
 
-### Getting Help
+### 获取帮助
 
 ```bash
-# Show all available flags
+# 显示所有可用标志
 manimgl --help
 
-# Show version
+# 显示版本
 manimgl --version
 
-# List scenes in file without running
+# 列出文件中的场景而不运行
 manimgl scene.py --list_scenes
 ```
 
-## Full CLI Reference
+## 完整 CLI 参考
 
-### All Major Flags
+### 所有主要标志
 
 ```bash
-# Quality/Resolution
+# 质量/分辨率
 -l, --low_quality           # 480p, 15fps
 -m, --medium_quality        # 720p, 30fps
 -h, --high_quality          # 1080p, 60fps
 --uhd                       # 4K, 60fps
---resolution WIDTHxHEIGHT   # Custom resolution
+--resolution WIDTHxHEIGHT   # 自定义分辨率
 
-# Output
--w, --write_file            # Write to file
--o, --open                  # Write and open
--s, --show_last_frame       # Show final frame
---format FORMAT             # Output format (mp4, gif, png)
---transparent               # Transparent background
+# 输出
+-w, --write_file            # 写入文件
+-o, --open                  # 写入并打开
+-s, --show_last_frame       # 显示最后一帧
+--format FORMAT             # 输出格式（mp4, gif, png）
+--transparent               # 透明背景
 
-# Playback
--f, --fullscreen            # Fullscreen window
--n NUM, --skip_to NUM       # Skip to animation number
---skip_animations           # Skip all animations
+# 播放
+-f, --fullscreen            # 全屏窗口
+-n NUM, --skip_to NUM       # 跳到动画编号
+--skip_animations           # 跳过所有动画
 
-# Interactive
--e, --embed                 # Drop into IPython shell
---skip_animations --embed   # Interactive at end (skip animations)
--se LINE, --skip_and_embed  # Interactive at line number
+# 交互
+-e, --embed                 # 进入 IPython shell
+--skip_animations --embed   # 结束时交互（跳过动画）
+-se LINE, --skip_and_embed  # 在指定行号交互
 
-# Configuration
---config_file FILE          # Custom config file
---config KEY=VALUE          # Override config value
+# 配置
+--config_file FILE          # 自定义配置文件
+--config KEY=VALUE          # 覆盖配置值
 
-# Debugging
---verbose                   # Verbose output
---debug                     # Debug mode
---quiet                     # Minimize output
---profile                   # Performance profiling
+# 调试
+--verbose                   # 详细输出
+--debug                     # 调试模式
+--quiet                     # 最小化输出
+--profile                   # 性能分析
 
-# Other
---version                   # Show version
---help                      # Show help
---list_scenes               # List scenes in file
+# 其他
+--version                   # 显示版本
+--help                      # 显示帮助
+--list_scenes               # 列出文件中的场景
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use -l for development**: Fast iteration with low quality
-2. **Use -se for debugging**: Interactive mode at problem points
-3. **Use -s for quick checks**: Verify final frame before full render
-4. **Use -h -o for final**: High quality output when ready
-5. **Combine flags wisely**: `-l -f` for fullscreen testing
-6. **Custom configs**: Use different configs for different projects
-7. **Script common commands**: Create shell aliases for frequent tasks
+1. **开发时使用 -l**：低质量快速迭代
+2. **调试时使用 -se**：在问题点使用交互模式
+3. **快速检查使用 -s**：在完整渲染前验证最后一帧
+4. **最终发布使用 -h -o**：准备好时使用高质量输出
+5. **明智地组合标志**：`-l -f` 用于全屏测试
+6. **自定义配置**：为不同项目使用不同配置
+7. **脚本化常用命令**：为频繁任务创建 shell 别名
 
-## Common Aliases
+## 常用别名
 
-Add to `.bashrc` or `.zshrc`:
+添加到 `.bashrc` 或 `.zshrc`：
 
 ```bash
-# Quick preview
+# 快速预览
 alias mgl='manimgl -l'
 
-# Final render
+# 最终渲染
 alias mgf='manimgl -h -o'
 
-# Interactive debug
+# 交互式调试
 alias mgd='manimgl -l -se'
 
-# Show final frame
+# 显示最后一帧
 alias mgs='manimgl -s'
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Common Issues
+### 常见问题
 
 ```bash
-# Scene not found
-manimgl scene.py  # Lists all scenes if you don't specify
+# 场景未找到
+manimgl scene.py  # 如果不指定，列出所有场景
 
-# Can't find manimlib
-# Ensure you're in the directory with manimlib/ or use full paths
+# 找不到 manimlib
+# 确保在包含 manimlib/ 的目录中，或使用完整路径
 
-# Window not showing
-# Check window_config in custom_config.yml
+# 窗口不显示
+# 检查 custom_config.yml 中的 window_config
 
-# Poor performance
-# Use -l flag, reduce frame_rate, or lower resolution
+# 性能不佳
+# 使用 -l 标志，降低 frame_rate 或分辨率
 ```
 
-## Example Commands
+## 示例命令
 
 ```bash
-# Simple preview
+# 简单预览
 manimgl examples/basic_animations.py SquareToCircle
 
-# High quality render
+# 高质量渲染
 manimgl examples/basic_animations.py SquareToCircle -h -o
 
-# Interactive debugging at line 30
+# 在第 30 行交互式调试
 manimgl examples/basic_animations.py SquareToCircle -se 30
 
-# Save as GIF
+# 保存为 GIF
 manimgl examples/basic_animations.py SquareToCircle --format gif -o
 
-# Custom resolution
+# 自定义分辨率
 manimgl examples/basic_animations.py SquareToCircle --resolution 2560,1440
 
-# Skip to 5th animation and show
+# 跳到第 5 个动画并显示
 manimgl examples/basic_animations.py SquareToCircle -n 5
 
-# Fullscreen, low quality for testing
+# 全屏，低质量，用于测试
 manimgl examples/basic_animations.py SquareToCircle -l -f
 ```

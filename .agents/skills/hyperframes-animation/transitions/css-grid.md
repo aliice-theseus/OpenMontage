@@ -1,10 +1,10 @@
-## Grid
+## 网格
 
-### Grid Dissolve
+### 网格溶解
 
-Grid of colored cells covers the frame in a ripple from center. Scene swaps at 50% coverage. Cells fade out in ripple.
+彩色单元格的网格从中心以涟漪形式覆盖画面。在 50% 覆盖时交换场景。单元格以涟漪淡出。
 
-**12-cell** (4x3, each 480x270): standard
-**120-cell** (12x10, each 160x108): dense variant — lower opacity (0.75), tighter ripple
+**12 单元格**（4x3，各 480x270）：标准
+**120 单元格**（12x10，各 160x108）：密集变体 — 较低不透明度（0.75），更紧密的涟漪
 
-Cells are created dynamically in JS, sorted by distance from center for ripple stagger.
+单元格在 JS 中动态创建，按距中心距离排序以获得涟漪错开。

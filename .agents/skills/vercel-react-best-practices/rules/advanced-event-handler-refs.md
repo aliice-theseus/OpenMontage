@@ -1,15 +1,15 @@
 ---
-title: Store Event Handlers in Refs
+title: 将事件处理程序存储在 Refs 中
 impact: LOW
-impactDescription: stable subscriptions
+impactDescription: 稳定订阅
 tags: advanced, hooks, refs, event-handlers, optimization
 ---
 
-## Store Event Handlers in Refs
+## 将事件处理程序存储在 Refs 中
 
-Store callbacks in refs when used in effects that shouldn't re-subscribe on callback changes.
+当在不应因回调更改而重新订阅的 effects 中使用回调时，将其存储在 refs 中。
 
-**Incorrect (re-subscribes on every render):**
+**不正确（每次渲染都重新订阅）：**
 
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
@@ -20,7 +20,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
 }
 ```
 
-**Correct (stable subscription):**
+**正确（稳定订阅）：**
 
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
@@ -37,7 +37,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
 }
 ```
 
-**Alternative: use `useEffectEvent` if you're on latest React:**
+**替代方案：如果你使用最新版 React，可以使用 `useEffectEvent`：**
 
 ```tsx
 import { useEffectEvent } from 'react'
@@ -52,4 +52,4 @@ function useWindowEvent(event: string, handler: (e) => void) {
 }
 ```
 
-`useEffectEvent` provides a cleaner API for the same pattern: it creates a stable function reference that always calls the latest version of the handler.
+`useEffectEvent` 为同一模式提供了更清晰的 API：它创建一个总是调用最新版本处理程序的稳定函数引用。

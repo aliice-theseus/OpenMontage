@@ -1,23 +1,23 @@
 ---
 name: rate-limiting
-description: Understanding and handling BFL API rate limits
+description: 理解和处理 BFL API 速率限制
 ---
 
-# Rate Limiting
+# 速率限制
 
-BFL API enforces rate limits to ensure fair usage and system stability.
+BFL API 实施速率限制以确保公平使用和系统稳定性。
 
-## Current Limits
+## 当前限制
 
-| Endpoint Category      | Concurrent Requests |
-| ---------------------- | ------------------- |
-| Standard (most models) | 24                  |
+| 端点类别               | 并发请求数 |
+| ---------------------- | ---------- |
+| 标准（大多数模型）     | 24         |
 
-**Concurrent requests** means in-flight requests (submitted but not yet completed).
+**并发请求**指的是正在处理中的请求（已提交但尚未完成）。
 
-## Rate Limit Headers
+## 速率限制头部
 
-Check response headers for rate limit status:
+检查响应头中的速率限制状态：
 
 ```
 X-RateLimit-Limit: 24
@@ -25,9 +25,9 @@ X-RateLimit-Remaining: 23
 X-RateLimit-Reset: 1640000000
 ```
 
-## HTTP 429 Response
+## HTTP 429 响应
 
-When rate limited, you receive HTTP 429:
+当达到速率限制时，您会收到 HTTP 429：
 
 ```json
 {
@@ -37,11 +37,11 @@ When rate limited, you receive HTTP 429:
 }
 ```
 
-## Handling Strategies
+## 处理策略
 
-### 1. Client-Side Tracking
+### 1. 客户端侧跟踪
 
-Track active requests to stay under limits:
+跟踪活动请求以保持在限制以下：
 
 ```python
 from threading import Lock, Semaphore
@@ -52,31 +52,31 @@ class RateLimitedClient:
         self.semaphore = Semaphore(max_concurrent)
 
     def generate(self, model, prompt, **kwargs):
-        with self.semaphore:  # Blocks if at limit
+        with self.semaphore:  # 达到限制时阻塞
             return self._make_request(model, prompt, **kwargs)
 
     def _make_request(self, model, prompt, **kwargs):
-        # Submit request
+        # 提交请求
         response = requests.post(...)
         polling_url = response.json()["polling_url"]
 
-        # Poll until complete (request still "active")
+        # 轮询直到完成（请求仍"活跃"）
         return self._poll(polling_url)
 ```
 
-### 2. Retry with Exponential Backoff
+### 2. 带指数退避的重试
 
 ```python
 import time
 
 def request_with_retry(endpoint, payload, headers, max_retries=5):
-    """Make request with automatic retry on rate limit."""
+    """在速率限制时自动重试的请求。"""
     for attempt in range(max_retries):
         response = requests.post(endpoint, json=payload, headers=headers)
 
         if response.status_code == 429:
             retry_after = int(response.headers.get('Retry-After', 5))
-            wait_time = retry_after * (2 ** attempt)  # Exponential backoff
+            wait_time = retry_after * (2 ** attempt)  # 指数退避
             print(f"Rate limited. Waiting {wait_time}s...")
             time.sleep(wait_time)
             continue
@@ -87,9 +87,9 @@ def request_with_retry(endpoint, payload, headers, max_retries=5):
     raise Exception("Max retries exceeded due to rate limiting")
 ```
 
-### 3. Queue-Based Architecture
+### 3. 基于队列的架构
 
-For high-volume applications:
+适用于高吞吐量应用：
 
 ```python
 from queue import Queue
@@ -104,13 +104,13 @@ class RequestQueue:
         self.max_concurrent = max_concurrent
         self.lock = Lock()
 
-        # Start worker threads
+        # 启动工作线程
         for _ in range(max_concurrent):
             worker = Thread(target=self._worker, daemon=True)
             worker.start()
 
     def submit(self, model, prompt, callback):
-        """Submit request to queue."""
+        """提交请求到队列。"""
         self.queue.put({
             'model': model,
             'prompt': prompt,
@@ -118,7 +118,7 @@ class RequestQueue:
         })
 
     def _worker(self):
-        """Process queue items."""
+        """处理队列项。"""
         while True:
             item = self.queue.get()
             try:
@@ -130,10 +130,10 @@ class RequestQueue:
                 self.queue.task_done()
 
     def _process(self, item):
-        # Make request and poll
+        # 发送请求并轮询
         ...
 
-# Usage
+# 使用示例
 queue = RequestQueue("your-api-key")
 
 def handle_result(result, error):
@@ -145,7 +145,7 @@ def handle_result(result, error):
 queue.submit("flux-2-pro", "A sunset", handle_result)
 ```
 
-### 4. Async with Semaphore
+### 4. 异步信号量
 
 ```python
 import asyncio
@@ -160,7 +160,7 @@ class AsyncRateLimitedClient:
     async def generate(self, model, prompt):
         async with self.semaphore:
             async with aiohttp.ClientSession() as session:
-                # Submit
+                # 提交
                 async with session.post(
                     f"https://api.bfl.ai/v1/{model}",
                     headers=self.headers,
@@ -169,7 +169,7 @@ class AsyncRateLimitedClient:
                     data = await response.json()
                     polling_url = data["polling_url"]
 
-                # Poll until complete
+                # 轮询直到完成
                 while True:
                     async with session.get(
                         polling_url,
@@ -182,11 +182,11 @@ class AsyncRateLimitedClient:
                             raise Exception(data.get("error"))
                     await asyncio.sleep(2)
 
-# Usage
+# 使用示例
 async def main():
     client = AsyncRateLimitedClient("your-api-key")
 
-    # Generate 50 images with rate limiting
+    # 带速率限制生成 50 张图像
     prompts = [f"Image {i}" for i in range(50)]
     tasks = [client.generate("flux-2-pro", p) for p in prompts]
     results = await asyncio.gather(*tasks)
@@ -194,7 +194,7 @@ async def main():
 asyncio.run(main())
 ```
 
-## Monitoring Rate Limits
+## 监控速率限制
 
 ```python
 class RateLimitMonitor:
@@ -217,19 +217,19 @@ class RateLimitMonitor:
         }
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Track active requests** - Know how many are in-flight
-2. **Implement client-side limits** - Stay under limits proactively
-3. **Use semaphores** - Clean way to limit concurrency
-4. **Queue for high volume** - Buffer requests when traffic spikes
-5. **Monitor headers** - React to remaining quota
-6. **Graceful degradation** - Queue or delay when near limits
-7. **Different limits per endpoint** - Remember Kontext Max is 6, not 24
+1. **跟踪活动请求** - 了解有多少正在处理中
+2. **实现客户端侧限制** - 主动保持在限制以下
+3. **使用信号量** - 限制并发的简洁方式
+4. **高吞吐量时使用队列** - 流量高峰时缓冲请求
+5. **监控头部** - 对剩余配额做出反应
+6. **优雅降级** - 接近限制时排队或延迟
+7. **不同端点不同限制** - 记住 Kontext Max 是 6，不是 24
 
-## Regional Distribution
+## 区域分发
 
-For very high volume, consider distributing across regions:
+对于非常高的吞吐量，考虑跨区域分发：
 
 ```python
 ENDPOINTS = [
@@ -239,8 +239,8 @@ ENDPOINTS = [
 ]
 
 def get_endpoint():
-    """Round-robin or least-loaded selection."""
+    """轮询或最少负载选择。"""
     return random.choice(ENDPOINTS)
 ```
 
-Note: Verify regional rate limits are independent before relying on this strategy.
+注意：在依赖此策略之前，请验证区域速率限制是否独立。

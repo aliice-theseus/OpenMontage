@@ -1,442 +1,442 @@
-# Step 3: Storyboard + Script
+# 步骤 3：故事板 + 脚本
 
-Marketing videos are made concept-first. **The order is: message → narrative arc → beats that serve the arc → which assets and techniques bring each beat to life.** Captured assets (SVG logos, brand illustrations, hero art, gradients) are first-class beat content alongside composed beats — many of them will carry their own beats. The constraint is only that you shouldn't _start_ from the asset inventory ("we have these screenshots, let's build a slideshow"). Start from the message, then weave in the right captured assets and the right composed elements per beat.
+营销视频是概念优先制作的。**顺序是：信息 → 叙事弧 → 服务弧的节拍 → 哪些资源和技巧将每个节拍变为现实。** 捕获的资源（SVG Logo、品牌插画、英雄艺术、渐变）与组合节拍同为一级节拍内容——其中许多将承载自己的节拍。唯一的约束是你不应该从资产清单开始（「我们有这些截图，让我们建个幻灯片」）。从信息开始，然后每个节拍融入正确的捕获资源和正确的组合元素。
 
-**Read `capture/extracted/asset-descriptions.md` before writing beats.** Know what's in the capture. The brand's actual visual identity — its real logo, its real illustrations, its real gradients, its real hero art — is what makes the video feel like _this_ brand and not a generic dark cinematic template. Most beats will use one or two captured assets layered with composed motion.
+**在写节拍之前阅读 `capture/extracted/asset-descriptions.md`。** 知道捕获中有什么。品牌的实际视觉标识——其真实的 Logo、真实的插画、真实的渐变、真实的英雄艺术——是让视频感觉像_这个_品牌而不是通用暗色电影模板的原因。大多数节拍会使用一到两个捕获的资源，与组合动效叠加。
 
-## First decision: CONCEPT
+## 第一个决定：概念
 
-Before pacing, before beats, before anything else — write the concept block at the top of `STORYBOARD.md`. Carry forward what was decided in Step 2's brief:
+在节奏、节拍或任何其他内容之前——在 `STORYBOARD.md` 顶部编写概念块。继承步骤 2 简报中决定的内容：
 
 ```markdown
-**Message:** [the ONE thing this video must communicate — one sentence]
-**Arc:** [Problem→Solution / Reveal / Demonstration / Vibe / Comparison — and a one-sentence shape of how it unfolds]
-**Audience:** [who's watching, where they're watching — TikTok scrollers, LinkedIn viewers, embedded on landing page]
-**Brand voice:** [confident / playful / clinical / urgent / premium — pulled from DESIGN.md]
-**Why this matters now:** [GTM context if relevant — launch, feature ship, brand reposition, ongoing demo]
+**信息：** [这个视频必须传达的一件事——一句话]
+**弧：** [问题→解决方案 / 揭示 / 演示 / 氛围 / 对比——以及一句描述它如何展开的话]
+**受众：** [谁在看，在哪里看——TikTok 刷屏者、LinkedIn 观众、嵌入在着陆页上]
+**品牌声音：** [自信 / 俏皮 / 冷静 / 紧迫 / 高级——从 DESIGN.md 中提取]
+**为什么此时重要：** [相关的上市背景——发布、功能上线、品牌重新定位、持续演示]
 ```
 
-If any of those rows are blank, the storyboard cannot land. Go back to the brief — don't substitute "show the kanban" for a message.
+如果其中任何一行是空白的，故事板就无法落地。回到简报——不要用「展示看板」替代信息。
 
-**The single-sentence test:** _"What makes this video different from a generic [video type] for any [industry] brand?"_ If you can't answer it from the rows above, the concept isn't sharp enough. Sharpen it before writing pacing or beats.
+**一句话测试：** _「这个视频与通用的[视频类型]相比有什么不同？」_ 如果你不能从上面的行中回答出来，概念不够锐利。在写节奏或节拍之前锐化它。
 
 ---
 
-## Second decision: PACING
+## 第二个决定：节奏
 
-With the concept locked, pick the pacing that serves it. This determines beat count, beat duration, and architecture — every downstream choice flows from here.
+概念锁定后，选择服务它的节奏。这决定了节拍数、节拍时长和架构——每个下游选择都源于此。
 
-Read the message and arc from the concept block above plus the style direction from Step 2's brief. Map to one of these:
+读取概念块中的信息和弧，以及步骤 2 简报中的风格方向。映射到以下之一：
 
-| User says                                                   | Pacing       | Beat count | Beat duration | Architecture                                               |
+| 用户说 | 节奏 | 节拍数 | 节拍时长 | 架构 |
 | ----------------------------------------------------------- | ------------ | ---------- | ------------- | ---------------------------------------------------------- |
-| "fast", "punchy", "rapid cuts", "energetic", "social ad"    | **Fast**     | 8–15       | 0.7–1.8s      | Single-file stacked beats, hard cuts                       |
-| "demo", "walkthrough", "product tour", "show features"      | **Moderate** | 4–6        | 3–5s          | Sub-compositions, CSS crossfades                           |
-| "cinematic", "premium", "slow", "let it breathe", "elegant" | **Slow**     | 3–4        | 5–8s          | Sub-compositions, long crossfades                          |
-| "launch", "announcement", "story", "narrative"              | **Arc**      | 5–7        | varies        | Slow opener → building middle → fast peak → resolved close |
+| 「快」、「有力」、「快速切换」、「充满活力」、「社交广告」 | **快** | 8–15 | 0.7–1.8s | 单一文件堆叠节拍，硬切 |
+| 「演示」、「导览」、「产品巡览」、「展示功能」 | **中等** | 4–6 | 3–5s | 子作品，CSS 交叉淡入淡出 |
+| 「电影感」、「高级」、「慢」、「让它呼吸」、「优雅」 | **慢** | 3–4 | 5–8s | 子作品，长交叉淡入淡出 |
+| 「发布」、「公告」、「故事」、「叙事」 | **弧** | 5–7 | 可变 | 慢开场 → 构建中间 → 快速高峰 → 解决结尾 |
 
-**Write your pacing choice at the top of STORYBOARD.md.** Example: `**Pacing: Fast** — 12 beats, stacked divs, hard cuts.`
+**在 STORYBOARD.md 顶部写下你的节奏选择。** 示例：`**节奏：快** — 12 个节拍，堆叠 div，硬切。`
 
-If the user said "dark cinematic feel" — that's SLOW, not fast. If they said "rapid cuts, bold typography" — that's FAST. Don't default to moderate when the prompt gives you a clear signal.
+如果用户说了「暗色电影感」——那是慢，不是快。如果他们说了「快速切换，粗体排版」——那是快。当提示给了你明确的信号时，不要默认使用中等。
 
 ---
 
-## Technique-pick checklist (REQUIRED, do this BEFORE writing beat copy)
+## 技巧选择清单（必需，在写节拍文案之前做）
 
-For every beat you plan, name **2–4 techniques** it will use. A beat with one technique is a slideshow frame — if you can't name two, redesign that beat.
+为你计划的每个节拍命名 **2–4 个技巧**。只有一个技巧的节拍是幻灯片帧——如果你不能命名两个，重新设计那个节拍。
 
-Pick from the inventory in [capabilities.md](capabilities.md) and implementation patterns in [techniques.md](../../hyperframes/references/techniques.md). Examples of composable beats:
+从 [capabilities.md](capabilities.md) 中的清单和 [techniques.md](../../hyperframes/references/techniques.md) 中的实现模式选择。可组合节拍的示例：
 
 ```
-Beat 3: composed kanban (4 cards-as-divs per column) + counter chip on In-Progress + back.out entrance stagger
-  techniques: layered panels (capabilities §1), counter via tl.set (techniques #15),
-              GSAP stagger with back.out(1.7) (techniques #4)
-  customize:  real project name "Atlas Q3", brand purple #5b3fff, realistic backlog items
+节拍 3：组合看板（每列 4 张卡片即 div）+「进行中」上的计数器标签 + back.out 交错入场
+  技巧：分层面板（capabilities §1）、通过 tl.set 的计数器（techniques #15）、
+        GSAP 交错带 back.out(1.7)（techniques #4）
+  定制：实际项目名称「Atlas Q3」、品牌紫色 #5b3fff、真实的待办列表项
 ```
 
-**Customize is the actual deliverable** — what makes this beat THIS brand's beat. Brand colors, real content, narration-sync timing. Generic "show the kanban" with no concrete techniques, no customize plan, no brand-specific data = lazy thinking. Beats must be invented from this brand's identity, not assembled from generic UI shapes.
+**定制是实际的交付物**——让这个节拍成为这个品牌的节拍。品牌颜色、真实内容、旁白同步时序。通用的「展示看板」没有具体技巧、没有定制计划、没有品牌特定数据 = 懒惰的思考。节拍必须从这个品牌的标识中创造出来，而不是从通用 UI 形状中组装而来。
 
 ---
 
-**Re-read these files before writing:**
+**在写作之前重新阅读这些文件：**
 
-- **DESIGN.md** — your color palette, font rules, components, Do's/Don'ts. Every visual must be grounded in this brand identity. If it says "white backgrounds with purple accent" — plan light scenes, not dark moody ones.
-- **Asset discovery — view the contact sheets carefully, every cell.** Open `capture/assets/contact-sheet-*.jpg` and `capture/assets/svgs/contact-sheet-*.jpg`. Both are paginated — view every page (`contact-sheet-1.jpg`, `contact-sheet-2.jpg`, etc.). **For each page, name 5 specific assets you can see before moving on.** Past agents have reported "viewed the contact sheet" after one glance and then wrote beats referencing assets that didn't exist or missed the brand logo entirely. Don't be that agent. When you find an asset that earns its place in a beat, note the filename from the label and reference it as `capture/assets/<filename>`. If a thumbnail is too small to judge resolution / fine detail, open the individual file. Also read `capture/extracted/asset-descriptions.md` for one-line summaries. **Never use contact sheets or scroll screenshots in the video itself** — contact sheets have grid labels baked in; scroll screenshots are raw browser captures. Both are for AI to BROWSE and understand the site, not to place in compositions.
-- **[techniques.md](../../hyperframes/references/techniques.md)** — 13 primitive animation techniques with code patterns. Pick for beats, these are starting points to adapt, not templates to copy.
-- **[text-effects.md](../../hyperframes/references/text-effects.md)** — 24 named text animation effects from the separate `pixel-point/animate-text` skill. The reference page tells you how to load the upstream skill; the IDs are listed inline. Assign a specific effect ID to every headline, label, and copy element in every beat — not generic "fades in" descriptions.
+- **DESIGN.md**——你的调色板、字体规则、组件、做/不做。每个视觉必须扎根于这个品牌标识。如果它说「白色背景配紫色强调」——规划亮色场景，不是暗色氛围场景。
+- **资源发现——仔细查看联系表的每个单元格。** 打开 `capture/assets/contact-sheet-*.jpg` 和 `capture/assets/svgs/contact-sheet-*.jpg`。两者都是分页的——查看每一页（`contact-sheet-1.jpg`、`contact-sheet-2.jpg` 等）。**对于每一页，在继续之前说出 5 个你能看到的具体资源。** 过去的代理在一瞥之后报告「查看联系表」，然后写了引用不存在资源或完全错过了品牌 Logo 的节拍。不要成为那样的代理。当你找到值得在节拍中占有一席之地的资源时，从标签中记下文件名并引用为 `capture/assets/<filename>`。如果缩略图太小无法判断分辨率/精细细节，打开单个文件。还要阅读 `capture/extracted/asset-descriptions.md` 获取一句话摘要。**不要在视频本身中使用联系表或滚动截图**——联系表有嵌入的网格标签；滚动截图是原始的浏览器捕获。两者都是供 AI 浏览和理解网站用的，不是放在作品中的。
+- **[techniques.md](../../hyperframes/references/techniques.md)**——13 个原始动画技巧及代码模式。为节拍选择，这些是需要适配的起点，不是要复制的模板。
+- **[text-effects.md](../../hyperframes/references/text-effects.md)**——来自独立的 `pixel-point/animate-text` 技能的 24 个命名的文本动画效果。参考页面告诉您如何加载上游技能；ID 内联列出。为每个节拍中的每个标题、标签和文案元素分配一个特定的效果 ID——而不是通用的「淡入」描述。
 
-The storyboard is the creative north star. It tells the engineer exactly what to build for each beat — mood, camera, animations, transitions, assets, appearance, sound. Write it as if you're briefing a motion designer who's never seen the website.
+故事板是创意的北极星。它精确地告诉工程师每个节拍要构建什么——情绪、镜头、动画、过渡、资源、外观、音效。写得像你在给一个从未见过网站的动态设计师做简报一样。
 
-**Incorporate the user's specific requests.** If they asked for "a 3D MacBook reveal" — that's in the storyboard. If they said "surprise me" — go ambitious, but just stay within the style direction.
+**融入用户的特定请求。** 如果他们要求「3D MacBook 揭示」——那就在故事板中。如果他们说了「给我惊喜」——志向远大，但要保持在风格方向内。
 
-Save as `STORYBOARD.md` in the project directory.
-
----
-
-## Consider: Would Research Improve This Video?
-
-Before diving into beats, pause and think: **would focused research make this video meaningfully better?**
-
-This is NOT always needed. A simple social ad for a SaaS product probably doesn't need market research. But some videos benefit from context the website alone doesn't provide:
-
-**Research when:**
-
-- The video is for a competitive market — look at how competitors present their product, what visual language the industry uses, what trends are hot
-- The video represents a company/product you know little about — search for reviews, press coverage, user opinions, company history to understand what matters to their audience
-- The user asked for something specific to their field — a fintech launch video benefits from understanding how Stripe, Ramp, Mercury position themselves visually
-- The video needs to reference real-world data, trends, or context not on the website
-
-**Skip research when:**
-
-- It's a straightforward brand reel or social ad from a clear website
-- The user gave very specific creative direction ("I want exactly X, Y, Z")
-- The website already contains all the context needed (features, stats, testimonials)
-
-**What to research:** Competitor videos in the space, trending visual styles for the industry, audience expectations, any company context that helps you make better creative decisions. A 2-minute web search can give you the edge between a generic video and one that feels like it was made by someone who understands the market.
+保存为项目目录中的 `STORYBOARD.md`。
 
 ---
 
-## Global Direction
+## 考虑：研究会让这个视频更好吗？
 
-Every STORYBOARD.md starts with global settings:
+在深入节拍之前，暂停思考：**有重点的研究能让这个视频有意义的更好吗？**
+
+这**不**总是需要的。SaaS 产品的简单社交广告可能不需要市场调研。但有些视频受益于网站本身不提供的上下文：
+
+**在以下情况下研究：**
+
+- 视频面向竞争激烈的市场——查看竞争对手如何展示他们的产品、行业使用什么视觉语言、什么趋势热门
+- 视频代表你不了解的公司/产品——搜索评论、媒体报道、用户意见、公司历史以了解什么对他们的受众重要
+- 用户要求了其领域的特定内容——金融科技发布视频受益于理解 Stripe、Ramp、Mercury 如何在视觉上定位自己
+- 视频需要引用网站上不存在的现实世界数据、趋势或上下文
+
+**在以下情况下跳过研究：**
+
+- 这是来自清晰网站的直截了当的品牌短片或社交广告
+- 用户给了非常具体的创意方向（「我确切想要 X、Y、Z」）
+- 网站已经包含所需的所有上下文（功能、统计、推荐）
+
+**研究什么：** 领域内的竞品视频、行业的热门视觉风格、受众期望、任何帮助你做出更好创意决策的公司背景。2 分钟的网络搜索可以给你带来通用视频和感觉像是由了解市场的人制作的视频之间的优势。
+
+---
+
+## 全局方向
+
+每个 STORYBOARD.md 以全局设置开始：
 
 ```markdown
-**Format:** 1920×1080
-**Audio:** [TTS provider] voiceover + underscore + SFX
-**VO direction:** [voice character — e.g., "mid-age male, calm confident delivery,
-Apple keynote register — economy of words, silence between sentences is a feature"]
-**Style basis:** DESIGN.md (brand colors, fonts, components from the captured site)
+**格式：** 1920×1080
+**音频：** [TTS 提供商] 配音 + 背景音乐 + SFX
+**配音方向：** [语音特征——例如：「中年男性，冷静自信的朗读，
+Apple 主题演讲级别——用词精炼，句子之间的静默是一个特色」]
+**风格基础：** DESIGN.md（来自捕获网站的品牌颜色、字体、组件）
 ```
 
-**Global guardrails** — read [video-composition.md](../../hyperframes/references/video-composition.md) first. It defines the medium rules: density, color presence, scale, frame composition, and how design.md is brand truth not layout spec. Then apply these capture-specific additions:
+**全局护栏**——首先阅读 [video-composition.md](../../hyperframes/references/video-composition.md)。它定义了媒介规则：密度、颜色存在感、比例、框架构图，以及 design.md 是品牌真相而非布局规范。然后应用这些捕获特定的补充：
 
-- Captured assets are accents on composed beats, not the beats themselves — see Asset Audit below for which assets earn a place (typically 2-4 across the whole video).
-- Use different techniques from techniques.md — not across the whole video, per beat. Don't default to basic fade/scale/opacity — mix in SVG path drawing, HTML-in-canvas, shaders, scrolling effects or movement effect, CSS 3D transforms, typing effects, counter animations, canvas procedural art. Each beat should feel like its own visual world. Use as many as makes sense for the storyboard.
+- 捕获的资源是组合节拍上的强调，而不是节拍本身——参见下面的资源审计，了解哪些资源值得占有一席之地（通常跨整个视频 2-4 个）。
+- 使用 techniques.md 中的不同技巧——不是在整个视频中，而是每个节拍。不要默认使用基本的淡入/缩放/不透明度——混合使用 SVG 路径绘制、HTML-in-canvas、着色器、滚动效果或移动效果、CSS 3D 变换、打字效果、计数器动画、canvas 程序化艺术。每个节拍应该感觉像自己的视觉世界。使用尽可能多的，只要对故事板有意义。
 
-**Underscore/music direction** (if applicable):
+**背景音乐/音乐方向**（如果适用）：
 
-- Describe the mood, reference artists, when it swells or drops
-- Example: "Minimal electronic. Warm sustained pad already playing when the video starts. Sits underneath everything, never competing with VO. Swells gently during the flex section, drops to near-nothing for the comparison, resolves on a final chord."
+- 描述情绪、参考艺术家、何时增强或减弱
+- 示例：「极简电子。温暖的持续垫音在视频开始时已经在播放。一直在所有内容下方，从不与配音竞争。在特色部分柔和增强，在对比部分降到几乎没有，在最终和弦上解决。」
 
 ---
 
-## Required Capabilities Discovery
+## 必需的能力发现
 
-Before writing any beats, you have to run these commands and paste the output below the Global Direction section. This tells you what's available beyond the standard techniques.
+在写任何节拍之前，你必须运行这些命令并将输出粘贴在全局方向部分下方。这告诉你除了标准技巧之外还有什么可用。
 
 ```bash
-# 1. Check available shader transitions (installed in registry/blocks/)
-ls registry/blocks/ 2>/dev/null | grep -E 'chromatic|cinematic|cross-warp|domain-warp|flash|glitch|gravitational|light-leak|ridged|ripple|sdf|swirl|thermal|whip' || echo "No shader transitions installed"
+# 1. 检查可用的着色器过渡（安装在 registry/blocks/ 中）
+ls registry/blocks/ 2>/dev/null | grep -E 'chromatic|cinematic|cross-warp|domain-warp|flash|glitch|gravitational|light-leak|ridged|ripple|sdf|swirl|thermal|whip' || echo "未安装着色器过渡"
 
-# 2. Check available VFX blocks
-ls registry/blocks/ 2>/dev/null | grep vfx || echo "No VFX blocks installed"
+# 2. 检查可用的 VFX 块
+ls registry/blocks/ 2>/dev/null | grep vfx || echo "未安装 VFX 块"
 
-# 3. Browse what's available to install
+# 3. 浏览可用安装的内容
 npx hyperframes catalog --type block 2>/dev/null | head -40
 ```
 
-There might be VFX blocks available (vfx-liquid-glass, vfx-iphone-device, vfx-shatter, vfx-portal, etc.), use them for hero treatments instead of basic perspective tilt. You need to install any you want with `npx hyperframes add <name>`. Don't use too many shaders — maximum 2 per video unless user wants differently.
+可能有可用的 VFX 块（vfx-liquid-glass、vfx-iphone-device、vfx-shatter、vfx-portal 等），用于英雄处理而非基本透视倾斜。你需要用 `npx hyperframes add <name>` 安装任何你想要的。不要使用太多着色器——每个视频最多 2 个，除非用户有不同要求。
 
-**Shader transitions — block name ≠ shader name.** When you run the commands above and see `domain-warp-dissolve` in `registry/blocks/`, the HyperShader runtime name is `domain-warp` (without "-dissolve"). After installing a block, open its showcase HTML (`compositions/<block-name>.html`) and find the actual shader name used in `HyperShader.init()`. That is what you put in the storyboard. Then delete the showcase file — it's a demo only and will pollute your compositions/ directory with lint warnings.
+**着色器过渡——块名 ≠ 着色器名。** 当你运行上面的命令并在 `registry/blocks/` 中看到 `domain-warp-dissolve` 时，HyperShader 运行时名称是 `domain-warp`（没有「-dissolve」）。安装块后，打开其展示 HTML（`compositions/<block-name>.html`）并找到 `HyperShader.init()` 中使用的实际着色器名称。那就是你放在故事板中的名称。然后删除展示文件——它只是一个演示，会用 lint 警告污染你的 `compositions/` 目录。
 
-## Asset Audit — REQUIRED before writing beats (non-skippable)
+## 资源审计——在写节拍之前必需（不可跳过）
 
-The skill's #1 purpose is to USE the brand's captured assets — not rebuild them from CSS. Most of your beats should feature at least one captured asset: a hero illustration, a signature SVG, product photography, brand mark, distinctive graphic. **If your STORYBOARD.md ends with only the logo used, you have failed this step.**
+此技能的 #1 目的是**使用**品牌的捕获资源——而不是从 CSS 重建它们。你的大多数节拍应该至少展示一个捕获资源：英雄插画、签名 SVG、产品摄影、品牌标志、特色图形。**如果你的 STORYBOARD.md 最终只使用了 Logo，你在这个步骤失败了。**
 
-**Why this gate exists:** Earlier sessions wrote their own "Asset Audit" that said SKIP for 60+ of 65 captured assets, used only the logo, and shipped a video that visually was indistinguishable from a generic dark-mode SaaS launch. The captured MetaBrain illustration, the GitHub-sync diagram, the knowledge-base hero — all left on the floor. The signature visuals that make a brand recognizable were absent. Don't repeat that.
+**为什么存在这个关卡：** 早期的会话编写了自己的「资源审计」，对 65 个捕获资源中的 60+ 说了跳过，只使用了 Logo，并交付了一个在视觉上与通用暗色模式 SaaS 发布没有区别的视频。捕获的 MetaBrain 插画、GitHub 同步图、知识库英雄——全部被丢弃。使品牌可识别的标志性视觉元素缺失了。不要重复这一点。
 
-**Required pre-storyboard procedure:**
+**故事板前必需的程序：**
 
-1. **View every page of `capture/assets/contact-sheet-*.jpg`** AND every page of `capture/assets/svgs/contact-sheet-*.jpg`. These are the sheets generated by capture for this exact purpose. Open each page; scan cell-by-cell. Do not skim — you are looking for the brand's visual identity, frame by frame.
+1. **查看 `capture/assets/contact-sheet-*.jpg` 的每一页**以及 `capture/assets/svgs/contact-sheet-*.jpg` 的每一页。这些是捕获为此确切目的生成的表格。打开每一页；逐单元格扫描。不要浏览——你正在寻找品牌的视觉标识，逐帧进行。
 
-2. **For each contact sheet page, paste this block into STORYBOARD.md under an "Asset Audit" section:**
+2. **对于每个联系表页面，将此块粘贴到 STORYBOARD.md 的「资源审计」部分下：**
 
 ```
-Contact sheet: capture/assets/contact-sheet-1.jpg (page 1 of N)
-  5 most visually distinctive assets I see (filename + one-sentence description of what the image shows):
-  1. <filename>: <what's actually pictured — not the filename, the content>
-  2. <filename>: <description>
-  3. <filename>: <description>
-  4. <filename>: <description>
-  5. <filename>: <description>
+联系表：capture/assets/contact-sheet-1.jpg（第 1 页，共 N 页）
+   我看到的 5 个视觉上最独特的资源（文件名 + 一句话描述图片展示的内容）：
+   1. <filename>：<实际图片内容——不是文件名，是内容>
+   2. <filename>：<描述>
+   3. <filename>：<描述>
+   4. <filename>：<描述>
+   5. <filename>：<描述>
 ```
 
-Repeat for every contact sheet page. The number of pages × 5 is your candidate asset pool.
+为每个联系表页面重复。页数 × 5 是你的候选资源池。
 
-3. **For each beat in STORYBOARD.md**, choose USE or SKIP for each candidate asset:
-   - **USE** means the asset appears in the beat's HTML at build time (`<img src=...>`, inline SVG, `background-image: url(...)`).
-   - **SKIP** requires a one-sentence reason explaining why this asset doesn't serve this beat. "Doesn't fit storyboard" is not a reason — name which storyboard moment failed to find a use for it.
+3. **对于 STORYBOARD.md 中的每个节拍**，为每个候选资源选择使用或跳过：
+   - **使用**意味着资源在构建时出现在节拍的 HTML 中（`<img src=...>`、内联 SVG、`background-image: url(...)`）。
+   - **跳过**需要一句话解释为什么此资源不为这个节拍服务。「不适合故事板」不是理由——说出哪个故事板时刻未能为它找到用途。
 
-4. **Brand-defaults floor:** at least ONE beat must use the brand's signature visual (hero illustration, hero photograph, or signature diagram — not the logo). If you've named 5+ candidate hero illustrations in step 2 above and zero of them appear in any beat, that is the failure mode this gate exists to catch.
+4. **品牌默认底线：** 至少**一个**节拍必须使用品牌的签名视觉（英雄插画、英雄照片或签名图表——不是 Logo）。如果你在上面的步骤 2 中命名了 5+ 个候选英雄插画，而其中零个出现在任何节拍中，这就是此关卡旨在捕获的失败模式。
 
-**Forbidden:**
+**禁止：**
 
-- Writing "SKIP" for every asset except the logo without per-asset justification
-- Reading `capture/extracted/asset-descriptions.md` (the text file) and making decisions from filenames alone, without opening the contact sheets
-- Concluding "I'll rebuild the GitHub-sync diagram in CSS" when the brand's own SVG of that diagram is sitting in `capture/assets/`. Use the real asset.
+- 除了 Logo 外为每个资源写「跳过」而没有按资源提供理由
+- 阅读 `capture/extracted/asset-descriptions.md`（文本文件）并仅凭文件名做决定，而不打开联系表
+- 得出「我将在 CSS 中重建 GitHub 同步图」的结论，而品牌自己的该图 SVG 就坐在 `capture/assets/` 中。使用真实的资源。
 
-If your final beat list uses less than ~30% of relevant captured assets (relevant = anything except the favicon and tiny UI icons), revisit. The brand is visually carried by its own art; rebuilding it from divs erases what makes it recognizable.
+如果你最终的节拍列表使用了少于约 30% 的相关捕获资源（相关 = 除了 favicon 和小 UI 图标之外的任何内容），重新审视。品牌的视觉由其自己的艺术承载；从 div 重建会抹去使其可识别的东西。
 
-### HTML-in-Canvas — plan for it here, build in Step 5
+### HTML-in-Canvas——在这里规划，在步骤 5 构建
 
-The `drawElementImage` Chrome API captures any live HTML/CSS as a GPU-accelerated texture at 60fps. This is HyperFrames' highest-impact capability — it lets you render captured product screenshots or UI through:
+`drawElementImage` Chrome API 以 60fps 将任何实时 HTML/CSS 捕获为 GPU 加速纹理。这是 HyperFrames 影响最大的能力——它允许你通过以下方式渲染捕获的产品截图或 UI：
 
-- **3D geometry** — a rotating iPhone or laptop model, a sphere, a curved surface
-- **WebGL shaders** — liquid glass refraction, shatter into fragments, portal reveal, noise distortion
-- **Post-processing** — bloom, depth-of-field, film grain, color grading
+- **3D 几何体**——旋转的 iPhone 或笔记本电脑模型、球体、曲面
+- **WebGL 着色器**——液态玻璃折射、粉碎成碎片、传送门揭示、噪点扭曲
+- **后处理**——泛光、景深、胶片颗粒、调色
 
-When planning beats, decide which ones deserve an HTML-in-Canvas treatment vs. a standard GSAP animation. If you want it, name it in the storyboard — Step 5 will read [`../../hyperframes/references/html-in-canvas-patterns.md`](../../hyperframes/references/html-in-canvas-patterns.md) for implementation. You don't need to specify the API details here.
+在规划节拍时，决定哪些值得 HTML-in-Canvas 处理与标准 GSAP 动画。如果你想要它，在故事板中命名它——步骤 5 将读取 [`../../hyperframes/references/html-in-canvas-patterns.md`](../../hyperframes/references/html-in-canvas-patterns.md) 进行实现。你不需要在这里指定 API 细节。
 
-### SFX assignment — happens here, not in Step 5
+### SFX 分配——在这里发生，而不是在步骤 5
 
-**Before writing beats,** read the SFX manifest. Locate it from your current directory:
+**在写节拍之前，** 阅读 SFX 清单。从当前目录定位它：
 
 ```bash
 find "$HOME" -path '*/website-to-video/assets/sfx/manifest.json' -maxdepth 10 2>/dev/null | head -1
 ```
 
-Or if you already copied SFX into the project (Step 5 does this), read your local `sfx/manifest.json`. Each entry has a filename, duration in seconds, and description. Assign **specific SFX files** to exact moments in the storyboard. Step 5 implements what you specify here — it makes no SFX decisions.
+或者如果你已经将 SFX 复制到项目中（步骤 5 会做），阅读你本地的 `sfx/manifest.json`。每个条目有文件名、时长（秒）和描述。将**特定的 SFX 文件**分配给故事板中的确切时刻。步骤 5 实现你在这里指定的内容——它不做任何 SFX 决定。
 
-Per beat, specify SFX like:
+每个节拍，像这样指定 SFX：
 
-- `sfx/impact-bass-1.mp3` at `0.2s`, volume `0.35` — on the hero image snapping into frame
-- `sfx/chime.mp3` at `3.8s`, volume `0.5` — on the logo appearing
+- `sfx/impact-bass-1.mp3` 在 `0.2s`，音量 `0.35`——在英雄图像切入画面时
+- `sfx/chime.mp3` 在 `3.8s`，音量 `0.5`——在 Logo 出现时
 
-**Less is more.** Most beats need zero SFX. One SFX per beat is typical; multiple only if the beat has genuinely distinct punctuation moments. Never place SFX on shader transitions directly — shader transitions are already an audio-visual event.
+**少即是多。** 大多数节拍需要零个 SFX。每个节拍一个 SFX 是典型的；多个仅当节拍有真正独特的标点时刻。永远不要直接将 SFX 放在着色器过渡上——着色器过渡本身已经是一个视听事件。
 
-**How to place each sound type** (industry-standard rules):
+**如何放置每种声音类型**（行业标准规则）：
 
-- **Impact/hit sounds** (`impact-bass-1`, `ping`, `pop`, `glitch-*`): peak is at the start of the clip. Trigger exactly at the visual moment. Let the decay tail bleed into the next scene — this is normal, called a J-Cut, and sounds professional. `data-duration` = full manifest duration, never trimmed.
-- **Riser/build-up sounds** (`riser`, `whoosh-cinematic`): peak is at the END of the clip. To make the peak land on a climax moment (a transition, a reveal), trigger at `climax_time - sfx_duration`. For `riser.mp3` (10.03s) peaking at a t=20s transition: trigger at t=9.97s.
-- **Short accent sounds** (`click`, `click-soft`, `chime`, `sparkle`, `ping`): trigger at the exact visual punctuation moment. Duration is short, no tail concern.
+- **冲击/打击音**（`impact-bass-1`、`ping`、`pop`、`glitch-*`）：峰值在片段开始处。正好在视觉时刻触发。让衰减尾巴混入下一个场景——这是正常的，称为 J-Cut，听起来专业。`data-duration` = 清单全长，从不裁剪。
+- **上升/构建音**（`riser`、`whoosh-cinematic`）：峰值在片段的**结尾**。为了使峰值落在一个高潮时刻（过渡、揭示），在 `climax_time - sfx_duration` 处触发。对于 `riser.mp3`（10.03s）在 t=20s 过渡处达到峰值：在 t=9.97s 触发。
+- **短强调音**（`click`、`click-soft`、`chime`、`sparkle`、`ping`）：在确切的视觉标点时刻触发。时长短，无尾巴问题。
 
-**Volume when SFX overlaps narration:** HyperFrames has no automatic audio ducking. If an SFX plays under spoken narration, set its volume to 0.2–0.3 max, not 0.5+. Specify this in the storyboard entry so Step 5 wires it correctly.
+**当 SFX 与旁白重叠时的音量：** HyperFrames 没有自动音频闪避。如果 SFX 在口语旁白下播放，将其音量设置为最大 0.2–0.3，而不是 0.5+。在故事板条目中指定此内容，以便步骤 5 正确连接。
 
-**data-duration rule** (for Step 5 to implement): always equals the manifest's duration field exactly. Never set it shorter to "fit" the remaining beat time — truncating an impact mid-decay is the exact problem causing the cut-off sounds in v2 videos.
+**data-duration 规则**（供步骤 5 实现）：始终精确等于清单的 duration 字段。不要将其设置得更短以「适应」剩余的节拍时间——在中间截断冲击音正是导致 v2 视频中声音截断的问题。
 
-### Architecture Constraint: Each Beat is an Independent Composition
+### 架构约束：每个节拍是一个独立的作品
 
-Each beat is built as a separate HTML file (`compositions/beat-N.html`). These are loaded independently — they do NOT share state, WebGL contexts, Three.js scenes, or DOM elements with other beats. This means:
+每个节拍作为单独的 HTML 文件（`compositions/beat-N.html`）构建。它们是独立加载的——它们**不**与其他节拍共享状态、WebGL 上下文、Three.js 场景或 DOM 元素。这意味着：
 
-- **No "persistent" elements across beats** — you can't have a MacBook model that stays on screen while only the screen content changes between beats 2, 3, 4. Each beat loads its own MacBook from scratch. If you want visual continuity, each beat must independently set up the element at the same position/rotation, so it APPEARS continuous.
-- **No shared 3D scenes** — each beat that uses Three.js creates its own renderer, scene, and camera. If beats 2 and 3 both show a rotating laptop, they each load the model independently and must start from matching positions.
-- **Shader transitions happen between beats** (in index.html), not within beats. Don't plan a shader transition "inside" a beat.
+- **没有跨节拍的「持久」元素**——你不能有一个 MacBook 模型在节拍 2、3、4 之间屏幕内容变化时保持屏幕显示。每个节拍从头加载自己的 MacBook。如果你想要视觉连续性，每个节拍必须独立地将元素设置在同一位置/旋转，使其看起来是连续的。
+- **没有共享的 3D 场景**——每个使用 Three.js 的节拍创建自己的渲染器、场景和相机。如果节拍 2 和 3 都显示旋转的笔记本电脑，它们各自独立加载模型，并且必须从匹配的位置开始。
+- **着色器过渡发生在节拍之间**（在 index.html 中），而不是节拍内部。不要规划节拍「内部」的着色器过渡。
 
-Plan your storyboard within these constraints. If you describe "the MacBook stays in place while content swaps," you need to specify that each beat independently recreates the MacBook at the same position — not that it persists.
+在这些约束内规划你的故事板。如果你描述「MacBook 保持在原位而内容切换」，你需要指定每个节拍独立重新创建 MacBook 在同一位置——而不是它持久存在。
 
-### Device Mockups: Use the Registry Block
+### 设备模型：使用注册表块
 
-If the storyboard calls for a MacBook or iPhone mockup, use the pre-built `vfx-iphone-device` registry block — it has both **iPhone 15 Pro Max AND MacBook Pro** GLTF models with live HTML-in-Canvas screens, camera choreography, and glass lens morphing. Install with `npx hyperframes add vfx-iphone-device`.
+如果故事板需要 MacBook 或 iPhone 模型，使用预构建的 `vfx-iphone-device` 注册表块——它同时具有 **iPhone 15 Pro Max 和 MacBook Pro** GLTF 模型，带有实时 HTML-in-Canvas 屏幕、相机编排和玻璃镜头变形。使用 `npx hyperframes add vfx-iphone-device` 安装。
 
-Do NOT hand-code a Three.js device scene from scratch. The registry block handles UV mapping, screen textures, lighting, and camera angles correctly. Hand-coded versions consistently produce broken screen textures, wrong UV flipping, and path resolution bugs. Use the block.
+不要从头手动编写 Three.js 设备场景。注册表块正确处理 UV 映射、屏幕纹理、灯光和相机角度。手动编写的版本会持续产生破损的屏幕纹理、错误的 UV 翻转和路径解析错误。使用块。
 
 ---
 
-## Per-Beat Direction
+## 逐节拍方向
 
-Each beat is a SHOT, not a layout. Write what the CAMERA does and what the FRAME reveals — not "what's positioned where on the page."
+每个节拍是一个**镜头**，而不是一个布局。写**相机**做什么以及**画面**揭示什么——而不是「什么东西在页面上位于什么位置。」
 
-### A beat is a shot — pick the framing before writing CSS
+### 节拍是镜头——在写 CSS 之前选择景框
 
-Every beat header should declare its shot type in the first line. **Shot types:**
+每个节拍标题应在其第一行声明景框类型。**景框类型：**
 
-| Shot                  | Use for                                                                                  | What the frame contains                                               |
+| 镜头 | 用于 | 画面包含 |
 | --------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **Extreme close-up**  | a single card / number / character / cursor / button as the entire subject               | one element fills 60–90% of frame, everything else blurred or absent  |
-| **Close-up**          | a small UI region (a single column, a card stack, a chart, a code block)                 | the subject fills 40–60% of frame with depth-layered context behind   |
-| **Medium**            | a section of UI — kanban with 3 columns, chat with 3 messages, dashboard with 2-3 panels | the subject fills 60–80% of frame, edges of nearby UI bleed in        |
-| **Wide**              | full UI assembly visible — only when the WHOLE thing is the point                        | full UI at 70–90% scale with deliberate negative space                |
-| **Over-the-shoulder** | viewer "behind" the user — cursor / hands / device foreground, UI midground              | foreground element bottom 1/3, UI fills upper 2/3 with parallax depth |
-| **Dutch angle**       | tension, urgency, "something's off"                                                      | the frame is tilted 4–8°, content composed to feel unstable           |
+| **极特写** | 单个卡片/数字/字符/光标/按钮作为整个主体 | 一个元素填满画面的 60–90%，其他一切模糊或缺失 |
+| **特写** | 小的 UI 区域（单列、卡片堆、图表、代码块） | 主体填满画面的 40–60%，后面有深度分层的上下文 |
+| **中景** | UI 的一个区域——3 列的看板、3 条消息的聊天、2-3 个面板的仪表板 | 主体填满画面的 60–80%，附近 UI 的边缘渗入 |
+| **广角** | 完整的 UI 布局可见——仅当**整个**事情是重点时 | 完整 UI 以 70–90% 的比例呈现，带有有意的负空间 |
+| **过肩镜头** | 观众「在」用户「后面」——光标/手/设备在前景，UI 在中景 | 前景元素在底部 1/3，UI 填满上部 2/3 带视差深度 |
+| **荷兰角** | 紧张、紧迫、「有什么不对」 | 画面倾斜 4–8°，内容编排得不稳定 |
 
-**The "wide shot" trap:** _Every_ beat at wide framing looks like a screenshot in CSS. Most product-demo videos should be 60% close-up + close-up + 20% medium + 10% wide + 10% extreme close-up. Wide is the rare establishing shot, not the default.
+**「广角陷阱」：** 每个节拍都是广角景框看起来像 CSS 中的截图。大多数产品演示视频应该是 60% 特写 + 特写 + 20% 中景 + 10% 广角 + 10% 极特写。广角是稀有的建立镜头，不是默认设置。
 
-### Camera motion is the subject, not the elements
+### 相机运动是主体，而不是元素
 
-In website thinking: elements animate in, then sit still while the user reads. In video thinking: the camera moves THROUGH the scene. The composition shifts.
+在网站思维中：元素动画进入，然后在用户阅读时静止不动。在视频思维中：相机**穿过**场景移动。构图在变化。
 
-Every beat needs at least one camera-style move. Pick from:
+每个节拍至少需要一个相机风格的运动。从以下选择：
 
-- **Dolly in** — composition scales 1.0 → 1.08 over the beat duration, slight x/y drift
-- **Dolly out / pull-back** — composition scales 1.15 → 1.0, revealing more context
-- **Push** — fast scale-up (1.0 → 1.05, ~0.5s power3.out) on a key moment
-- **Parallax pan** — background drifts opposite to foreground at different speeds
-- **Orbit** — the subject rotates in 3D, or the camera circles it
-- **Rack focus** — blur shifts from one element to another (background blurs as foreground sharpens)
+- **推近**——构图在节拍时长内缩放 1.0 → 1.08，轻微 x/y 漂移
+- **拉远/后退**——构图缩放 1.15 → 1.0，揭示更多上下文
+- **推进**——在关键时刻快速放大（1.0 → 1.05，约 0.5s power3.out）
+- **视差平移**——背景以不同速度反向于前景漂移
+- **环绕**——主体在 3D 中旋转，或相机围绕它旋转
+- **焦距转移**——模糊从一个元素转移到另一个元素（前景锐化时背景模糊）
 
-If a beat has NO camera-style move and elements only animate inward at the start, it will read as a webpage with entrance animations. That's not a video beat.
+如果一个节拍**没有**相机风格的运动，元素只在开始时向内动画，它会读作带有入场动画的网页。那不是视频节拍。
 
-### Forbidden patterns (the video-as-webpage failures)
+### 禁止模式（视频即网页的失败）
 
-These appear in nearly every iteration where sub-agents revert to website thinking. Refuse to write any beat that includes:
+这些出现在几乎每次子代理回归到网站思维的迭代中。拒绝编写包含以下任何内容的节拍：
 
-- ❌ **macOS / browser window chrome** as a frame around the content — traffic-light dots, URL bars, browser tabs, breadcrumbs — UNLESS the beat IS specifically about that chrome (e.g., "the macOS window itself is the subject of the shot")
-- ❌ **Sidebars, navigation rails, page headers, page footers** unless the beat demonstrates navigation as its concept
-- ❌ **"Centered card / panel / window with 60–120px margin on all sides"** — that's the standard webpage layout; videos use the full frame and meaningful negative space
-- ❌ **"Hold with breathing" micro-animations** where elements move y: ±1–2px or scale 1.01 — invisible at video resolution; this is sub-agents pretending the beat has motion when it doesn't
-- ❌ **Settled holds longer than 1.5s** with no continuous camera or compositional change — fix by adding camera dolly, depth-layer parallax, or new sub-elements entering mid-beat
-- ❌ **Hover-state demonstrations** — videos have no hover; if the brand has a hover effect to communicate, find a way to show the BEFORE and AFTER as discrete frames, not a hover simulation
-- ❌ **Tooltips and modal cards "for context"** that explain what something is — videos communicate through visual language, not popup hint text
+- ❌ **macOS / 浏览器窗口 chrome** 作为内容周围的框架——信号灯点、URL 栏、浏览器标签、面包屑——除非该节拍**就是**关于那个 chrome（例如，「macOS 窗口本身是镜头的主题」）
+- ❌ **侧边栏、导航栏、页眉、页脚**，除非该节拍以导航为其概念进行演示
+- ❌ **「居中卡片/面板/窗口，四周 60–120px 边距」**——那是标准网页布局；视频使用完整画面和有意的负空间
+- ❌ **「用呼吸感维持」微动画**，其中元素移动 y: ±1–2px 或缩放 1.01——在视频分辨率下不可见；这是子代理假装节拍有动效而实际没有
+- ❌ **超过 1.5s 的静止保持**，没有持续的相机或构图变化——通过添加相机推近、深度层视差或新子元素在节拍中途进入来修复
+- ❌ **悬停状态演示**——视频没有悬停；如果品牌有需要传达的悬停效果，找到将前后作为离散帧展示的方法，而不是悬停模拟
+- ❌ **「用于上下文」的工具提示和模态卡片**来解释某些内容是什么——视频通过视觉语言传达，而不是弹出提示文本
 
-### Required for every beat (the floor for video grammar)
+### 每个节拍需要的内容（视频语法的底线）
 
-Every beat must specify, in its visual description:
+每个节拍必须在其视觉描述中指定：
 
-1. **Shot type** (one of the six above)
-2. **Camera move** (which one, when it starts, how long it lasts)
-3. **Depth strategy** (what's in foreground / midground / background, how they parallax)
-4. **Motion magnitudes** that read at video scale (30px+ y/x movements, scale changes ≥0.05, opacity transitions ≥0.5)
-5. **The shot's purpose** — what specifically is the viewer supposed to feel or notice in this 3–5 seconds?
+1. **景框类型**（上述六种之一）
+2. **相机运动**（哪个，何时开始，持续多久）
+3. **深度策略**（前景/中景/背景中有什么，它们如何视差）
+4. **在视频比例下可读的运动幅度**（30px+ 的 y/x 移动，≥0.05 的缩放变化，≥0.5 的不透明度过渡）
+5. **这个镜头的目的**——在这 3–5 秒内观众应该感觉到或注意到什么？
 
 ---
 
-### Existing beat-level fields (below) layer on top of the shot grammar above
+### 现有的节拍级字段（下方）叠加在以上镜头语法之上
 
-Each beat is a WORLD, not a layout. Write what the viewer EXPERIENCES before you write CSS specs.
+每个节拍是一个**世界**，而不是一个布局。写观众**体验**什么，然后才是 CSS 规格。
 
-**Motion verbs** — every animated element gets one. Pick from the beat's concept, not from an energy bucket:
+**运动动词**——每个动画元素得到一个。从节拍的概念中选择，而不是从能量桶中：
 
-- **Impact:** SLAMS, CRASHES, PUNCHES, DROPS, SHATTERS
-- **Directional:** SLIDES, PUSHES, WIPES, CUTS
-- **Reveals:** DRAWS, FILLS, GROWS, ASSEMBLES, COUNTS UP
-- **Organic:** FLOATS, DRIFTS, BREATHES, PULSES, ORBITS
-- **Mechanical:** TYPES ON, CLICKS, LOCKS IN, SNAPS, STEPS
+- **冲击：** 猛击、撞击、重击、下落、粉碎
+- **方向：** 滑动、推送、擦除、切割
+- **揭示：** 绘制、填充、增长、组装、计数
+- **有机：** 漂浮、漂移、呼吸、脉动、环绕
+- **机械：** 打字、点击、锁定、卡入、步进
 
-**Transition decision matrix** — shader vs CSS vs hard cut:
-| Shader transition for | CSS crossfade for | Hard cut for |
+**过渡决策矩阵**——着色器 vs CSS vs 硬切：
+| 着色器过渡用于 | CSS 交叉淡入淡出用于 | 硬切用于 |
 |---|---|---|
-| Hero reveals, logo unveils, "wow" moments | Continuous motion between beats, editorial pacing | Rapid-fire lists, percussive edits, comedy timing |
+| 英雄揭示、Logo 揭幕、「哇」时刻 | 节拍间的连续运动、编辑节奏 | 快速列表、打击式剪辑、喜剧时机 |
 
-1–2 shader transitions per video (hero + CTA). Too many flatten their impact. Mix shader and CSS crossfade in one HyperShader composition by omitting `shader` on any transition entry.
+每个视频 1–2 个着色器过渡（英雄 + CTA）。太多会扁平化它们的影响。通过在任何过渡条目中省略 `shader`，在一个 HyperShader 作品中混合着色器和 CSS 交叉淡入淡出。
 
-**Rhythm** — declare your scene rhythm before implementing: fast-fast-SLOW-fast-SHADER-hold. The rhythm comes from the brand and content, not a template.
+**节奏**——在实现之前声明你的场景节奏：快-快-慢-快-着色器-保持。节奏来自品牌和内容，而不是模板。
 
-Use the pacing you decided at the top of this step. The beat count, duration, and architecture are already set.
+使用你在此步骤顶部决定的节奏。节拍数、时长和架构已经设置。
 
-**Cut the video to match the narration length** — if the script produces 22 seconds of audio, the video should be 24 seconds with a 2-second CTA hold, not 30 seconds with 8 seconds of dead silence. Empty time at the end where nothing is happening loses the viewer.
+**将视频剪裁到匹配旁白长度**——如果脚本产生 22 秒的音频，视频应该是 24 秒带 2 秒的 CTA 保持，而不是 30 秒带 8 秒的死寂。末尾没有事情发生的空白时间会失去观众。
 
-**Frame-filling rule:** When describing visuals per beat, specify sizes as FRAME FILL PERCENTAGES, not pixels. "Product screenshot fills 80% of frame" not "600px wide card."
+**填满画面规则：** 在描述每个节拍的视觉时，将大小指定为**画面填充百分比**，而不是像素。「产品截图填满 80% 的画面」而不是「600px 宽的卡片。」
 
-**Use whatever primitives the beat needs — alone or in combination.** A beat can layer HTML/CSS, SVG (captured or hand-drawn), WebGL/Canvas shaders, Three.js scenes, captured illustrations and photographs, kinetic typography, captured Lottie — all at once if the scene calls for that. They're inputs to one output (the video frame); there's no rule mapping intent to primitive. The video should feel **alive in every frame** — motion that's continuous and tangible, **like things exist in a physical world**. Narrow no-go: never paste a product-UI screenshot as load-bearing content (the slideshow pattern). Everything else is open.
+**使用节拍需要的任何原语——单独或组合。** 一个节拍可以叠加 HTML/CSS、SVG（捕获或手绘）、WebGL/Canvas 着色器、Three.js 场景、捕获的插画和照片、动态排版、捕获的 Lottie——如果场景需要，可以同时使用所有。它们都是同一输出（视频帧）的输入；没有规则将意图映射到原语。视频应该在**每一帧中都充满生机**——运动是持续且可触碰的，**就像事物存在于物理世界中**。狭义的禁止：从不将产品 UI 截图粘贴为承重内容（幻灯片模式）。其他一切都是开放的。
 
-**Opener default: fast intro to stop the scrollers.** Even a cinematic video should start with a punch — a flash, a shader bloom, a logo strike, a kinetic word build, a particle burst — anything that lands inside the first 1.0–1.5 seconds. Slow intros work for prestige trailers; videos shipping anywhere social or feed-based need a hook that beats the 1.5-second scroll threshold. Plan the opener as the most ambitious beat in the storyboard, not the gentlest one.
+**开场默认：快速引入以阻止刷屏者。** 即使是电影感视频也应该以冲击力开始——闪光、着色器绽放、Logo 打击、动态文字构建、粒子爆发——任何在前 1.0–1.5 秒内落地的东西。慢开场适合威望预告片；任何发布在社交或信息流中的视频需要一个超过 1.5 秒滚动阈值的钩子。将开场规划为故事板中最雄心勃勃的节拍，而不是最温和的。
 
-**CTA / closing beats** are consistently the weakest. Agents treat them as "logo + tagline + done." A good CTA should: make the logo entrance an event (SVG path draw, scale with overshoot, or anything awesome really), have continuous background motion, and hold only 2-3 seconds after the last spoken word — NOT 8-10 seconds of silence.
+**CTA / 结尾节拍**一直以来是最薄弱的。代理将它们视为「Logo + 标语 + 完成。」一个好的 CTA 应该：让 Logo 入场成为一个事件（SVG 路径绘制、缩放带过冲、或任何很棒的东西）、有持续的背景运动、并且只在最后一句口播词之后保持 2-3 秒——而不是 8-10 秒的静默。
 
-**VO start timing — decide here, not in Step 5.** When does the narration actually begin relative to the first visual? Options: (a) VO starts over the visual intro (heard before content settles — creates urgency), (b) VO starts after the visual intro settles (viewer sees the opening, then hears the voice — creates drama), (c) a few seconds of music-only visual before VO enters. None of these is a default — pick based on the brand and the opening beat's concept. State the intended narration start time explicitly in the storyboard's Global Direction, e.g. `**Narration start:** 0.8s (after hero intro settles)`. Step 5 wires this as the audio element's `data-start`.
+**配音开始时机——在这里决定，不在步骤 5。** 旁白相对于第一个视觉何时实际开始？选项：(a) 配音在视觉介绍上开始（内容稳定前听到——制造紧迫感），(b) 配音在视觉介绍稳定后开始（观众看到开场，然后听到声音——制造戏剧性），(c) 配音进入前几秒纯音乐视觉。这些都不是默认——基于品牌和开场节拍的概念选择。在故事板的全局方向中显式说明预期的旁白开始时间，例如 `**旁白开始：** 0.8s（英雄介绍稳定后）`。步骤 5 将其连接为音频元素的 `data-start`。
 
-**Concept-first beats.** Every beat starts with its CONCEPT — not "what technique to use" but "what does this scene should show, what did the previous showed and what will the next show...?" What idea is being communicated? The crazy and interesting concept drives every technical decision.
+**概念优先的节拍。** 每个节拍以其**概念**开始——不是「使用什么技巧」而是「这个场景应该展示什么、前一个展示了什么、下一个将展示什么……？」传达了哪个想法？疯狂而有趣的概念驱动每个技术决策。
 
-In the capture pipeline, each beat includes:
+在捕获流程中，每个节拍包括：
 
-### Concept
+### 概念
 
-What does this scene REPRESENT in terms of previous (if exists) and next scenes? Not "show features" but a specific idea and logic.
+这个场景在之前（如果存在）和下一个场景方面**代表**什么？不是「展示功能」而是一个具体的想法和逻辑。
 
-### VO cue
+### 配音提示
 
-Which narration line plays over this beat (Also keep in mind the whole narration of the video to understand and keep in mind the flow).
+哪个旁白行在这个节拍上播放（还要记住整个视频的旁白以理解并记住流程）。
 
-### Visual description
+### 视觉描述
 
-What the viewer sees — described cinematically, not as CSS specs. Use camera language and production motion designer vocabulary (pan, zoom, drift, settle, and more of those words). Think in layers — what's supposed to happen in the foreground, midground, background simultaneously?
+观众看到什么——用电影语言描述，而不是 CSS 规格。使用镜头语言和制作动态设计师词汇（平移、缩放、漂移、稳定，以及更多这些词）。分层思考——前景、中景、背景同时应该发生什么？
 
-**When a captured asset is the primary visual** (logo opener / closer, hero illustration with parallax, hero photograph with motion treatment, gradient as full-bleed background, etc.): specify which asset, how much of the frame it fills (%), and where text/labels go relative to its safe zones. Don't blindly center text over busy product UI. The narrow no-go: never paste a product-UI screenshot as full-bleed beat content — that's the slideshow pattern this workflow exists to break. Captured logos, illustrations, hero art, and photography are fine as primary visuals when the concept calls for them.
+**当捕获的资源是主要视觉时**（Logo 开场/结尾、带视差的英雄插画、带运动处理的英雄照片、作为全出血背景的渐变等）：指定哪个资源、它填满画面多少百分比（%）、文本/标签相对于其安全区域放在哪里。不要盲目将文本居中放在繁忙的产品 UI 上。狭义的禁止：从不将产品 UI 截图粘贴为全出血节拍内容——那是此工作流存在的目的是打破的幻灯片模式。当概念需要时，捕获的 Logo、插画、英雄艺术和摄影作为主要视觉是完全可以的。
 
-### Composition + Accents
+### 组合 + 强调
 
-Two things, both required:
+两件事，都需要：
 
-**Composed (load-bearing — what carries the beat):**
+**组合（承重——承载节拍的内容）：**
 
-- Describe the UI / element / scene you're building from scratch: markup structure, the techniques powering it (cite [capabilities.md](capabilities.md) sections + [techniques.md](../../hyperframes/references/techniques.md) entries), key animation events. E.g. "Composed kanban: 3 column divs, 4 cards each, drag-and-drop with `back.out(1.7)` entrance stagger, counter chip on In-Progress incrementing via `tl.set()`."
-- **Brand-inflect:** brand colors from DESIGN.md, real product data (project names, real metrics, real copy — not placeholder labels), narration-sync moments. Make this beat THIS brand's beat, not a generic UI demo.
+- 描述你从头构建的 UI/元素/场景：标记结构、驱动它的技巧（引用 [capabilities.md](capabilities.md) 章节 + [techniques.md](../../hyperframes/references/techniques.md) 条目）、关键动画事件。例如：「组合看板：3 列 div，每列 4 张卡片，拖放带 `back.out(1.7)` 入场交错，进行中列上的计数器标签通过 `tl.set()` 递增。」
+- **品牌注入：** DESIGN.md 中的品牌颜色、真实产品数据（项目名、真实指标、真实文案——不是占位符标签）、旁白同步时刻。让这个节拍成为这个品牌的节拍，而不是通用的 UI 演示。
 
-**Accents (decoration only — what brand-inflects the beat):**
+**强调（仅装饰——为节拍注入品牌特征的内容）：**
 
-- Optional. Most beats need 0-1 accent. Format: `capture/assets/<filename>` — how it appears: position, opacity, treatment, motion (e.g. `capture/assets/logo.svg` — top-left, 60×60, fades in at 0.4s, breathes during hold).
-- Common accent uses (when the primary visual is something else): brand logo stamped on a UI beat, hero illustration as a depth layer behind kinetic type, gradient image as ambient background wash. When the captured asset IS the primary visual (logo drawing itself on the opener, hero illustration with parallax as a hero beat), it isn't an accent — it's the beat content; document it under Composition, not here.
-- If a beat has no obvious accent need, leave this blank. The primary visual is enough.
+- 可选。大多数节拍需要 0-1 个强调。格式：`capture/assets/<filename>`——它如何出现：位置、不透明度、处理、运动（例如 `capture/assets/logo.svg`——左上角，60×60，0.4s 淡入，保持期间呼吸）。
+- 常见的强调用途（当主要视觉是其他内容时）：品牌 Logo 印在 UI 节拍上、英雄插画作为动态文字后面的深度层、渐变图像作为环境背景洗色。当捕获的资源是主要视觉时（Logo 在开场自行绘制、带视差的英雄插画作为英雄节拍），它不是强调——它是节拍内容；在组合下记录，不在此处。
+- 如果一个节拍没有明显的强调需求，留空。主要视觉就够了。
 
-Write this section for THIS project's actual brand and the assets audited above — not from memory.
+为这个项目的实际品牌和上面审计的资源编写此章节——而不是凭记忆。
 
-### Text Animations
+### 文本动画
 
-Every text element in this beat must name a specific effect from the catalog. The reference page is at [`../../hyperframes/references/text-effects.md`](../../hyperframes/references/text-effects.md) (or locate it with `find "$HOME" -path '*/hyperframes/references/text-effects.md' -maxdepth 10 2>/dev/null | head -1`). It lists 24 effect IDs (from the separate `pixel-point/animate-text` skill); pick what fits the brand and this beat's mood — don't default to the same effect every beat.
+这个节拍中的每个文本元素必须从目录中命名一个特定的效果。参考页面在 [`../../hyperframes/references/text-effects.md`](../../hyperframes/references/text-effects.md)（或用 `find "$HOME" -path '*/hyperframes/references/text-effects.md' -maxdepth 10 2>/dev/null | head -1` 定位它）。它列出了 24 个效果 ID（来自独立的 `pixel-point/animate-text` 技能）；选择适合品牌和此节拍情绪的那个——不要每个节拍都默认使用同一个效果。
 
-Format (FORMAT EXAMPLES of structure, not prescriptions — pick based on brand/mood/context):
+格式（结构的格式示例，不是规定——根据品牌/情绪/上下文选择）：
 
-- `[element — e.g. "main headline"]`: `[effect-id]`
-- `[element — e.g. "eyebrow label"]`: `[effect-id]`
+- `[元素——例如「主标题」]`：`[效果-id]`
+- `[元素——例如「眉标签」]`：`[效果-id]`
 
-At build time, the sub-agent loads `/animate-text` (the upstream skill) and reads each named effect's spec from `.agents/skills/animate-text/assets/effects/<id>.json`. No creative decisions at build time — just spec retrieval and implementation.
+在构建时，子代理加载 `/animate-text`（上游技能）并从 `.agents/skills/animate-text/assets/effects/<id>.json` 读取每个命名效果的规格。构建时没有创意决策——只有规格检索和实现。
 
-### Beat Timing
+### 节拍时序
 
-Two numbers Step 5 needs to wire `data-start` and `data-duration` correctly:
+步骤 5 正确连接 `data-start` 和 `data-duration` 需要的两个数字：
 
-- **HyperShader transition in at:** `[time]s` (the `time:` value in the transitions array for the transition INTO this beat — or 0 for beat 1)
-- **GSAP timeline duration:** `[duration]s` (how long this beat's internal animations run — when does the last tween end?)
+- **进入此节拍的着色器过渡在：** `[time]s`（过渡数组中进入此节拍的 `time:` 值——或节拍 1 为 0）
+- **GSAP 时间线时长：** `[duration]s`（此节拍内部动画运行多久——最后一个动画何时结束？）
 
-Example: `Transition in at: 4.2s · GSAP duration: 5.5s` → Step 5 sets `data-start="4.2" data-duration="5.5"`.
+示例：`过渡进入在：4.2s · GSAP 时长：5.5s` → 步骤 5 设置 `data-start="4.2" data-duration="5.5"`。
 
-### Animation Sequence — must span the ENTIRE beat
+### 动画序列——必须覆盖整个节拍
 
-A beat is a SCENE with internal life, not a single entrance followed by a static hold. Things should be happening throughout the entire duration — new elements appearing, existing elements transforming, camera drifting, details revealing, sub-moments unfolding.
+节拍是一个有内部生命的**场景**，而不是一个入口后跟静态保持。在整个时长内应该有事情在发生——新元素出现、现有元素变换、相机漂移、细节揭示、子时刻展开。
 
-If your animation sequence only has events in the first 2 seconds and the beat lasts longer, the rest is dead air. Plan moments across the full duration. Nothing should sit unchanged for more than ~2 seconds — if an element is on screen, give it continuous motion (drift, breathe, pulse, parallax).
+如果你的动画序列只在前 2 秒有事件，而节拍持续更长，其余的是死气。规划跨全时长的时刻。没有东西应该超过约 2 秒不变——如果一个元素在屏幕上，给它持续的运动（漂移、呼吸、脉动、视差）。
 
-Describe the feel precisely: "snappy overshoot bounce settling into place" → back.out; "slow heavy drift" → power1.inOut. Vague adjectives are useless.
+精确描述感觉：「敏捷的过冲弹跳稳定到位」→ back.out；「缓慢沉重的漂移」→ power1.inOut。模糊的形容词是无用的。
 
 ---
 
-## Brand Accents Pass (LAST creative decision — happens after beats are written)
+## 品牌强调通过（最后一个创意决定——在节拍写完后进行）
 
-Your beats are now conceptually defined. Each one has a primary visual that carries it (composed UI, captured asset, kinetic typography, WebGL, etc.). **Now**, do a single pass to decide which captured assets — if any — earn an accent role on the beats where another primitive carries the visual.
+你的节体现在已经概念上定义好了。每个节拍都有一个承载它的主要视觉（组合 UI、捕获资源、动态排版、WebGL 等）。**现在**，做一次单独的通路，决定哪些捕获的资源——如果有的话——在以其他原语承载视觉的节拍上获得强调角色。
 
-This is the LAST creative pass before file-tree time. It comes here intentionally: assets serve concept-defined beats — as primary visual or as accent, depending on what each beat needs — but they don't seed beats. If you find yourself wanting to add a beat _because_ an asset would look cool, the asset is doing the storyboarding — go back and rewrite that beat from the message instead.
+这是文件树时间之前的最后一个创意通路。它故意放在这里：资源服务于概念定义的节拍——作为主要视觉或强调，取决于每个节拍需要什么——但它们不产生节拍。如果你发现自己想_因为_一个资源看起来很酷而添加节拍，资源在做故事板的工作——返回并从信息重写那个节拍。
 
-### Brand defaults (nice-to-haves for most brand videos)
+### 品牌默认（大多数品牌视频的锦上添花）
 
-Two defaults that work for most brand-focused videos. Skip them when the concept calls for it; they're not hard requirements.
+两个适用于大多数品牌视频的默认。当概念需要时跳过它们；它们不是硬性要求。
 
-1. **The brand mark in opener + closer.** For most brand videos, the logo / wordmark SVG lands in the opener (as the entry tag) and the closer (as the sign-off). It gives the viewer the brand at both ends of the watch. Skip when the concept calls for it — e.g., a teaser that deliberately delays the brand reveal until beat 3 for narrative tension, or a video where the brand mark would feel redundant against the captured hero art.
+1. **开场 + 结尾中的品牌标记。** 对于大多数品牌视频，Logo/字标 SVG 落在开场中（作为进入标签）和结尾中（作为签名）。它让观众在观看的两端都看到品牌。当概念需要时跳过——例如，故意推迟品牌揭示到节拍 3 以获得叙事张力的预告片，或品牌标记会与捕获的英雄艺术感觉冗余的视频。
 
-2. **The site's signature visual somewhere in the video.** Every captured site has one: a gradient wave, a hero illustration, a distinctive product UI mark, the wordmark animation, a color combination, a hero photograph. It's whatever a viewer who knows the brand would point at and say "that's them." Find it during Step 0; place it where the concept can use it. Not required — but if a brand video doesn't include this, ask whether the video still feels like _this_ brand.
+2. **网站上某个地方的签名视觉。** 每个捕获的网站都有一个：渐变波浪、英雄插画、独特的产品 UI 标记、字标动画、颜色组合、英雄照片。它是任何知道品牌的观众会指着说「那就是他们」的东西。在步骤 0 中找到它；将其放在概念可以使用它的地方。不是必需的——但如果品牌视频不包含这个，问这个视频是否仍然感觉像_这个_品牌。
 
-These are defaults, not requirements. Beyond them, aim for 2-4 brand accents total across the whole video, not per beat. Most beats need 0-1. Everything beyond the floor has to justify itself against the question: _"Does this asset make the beat MORE this brand, or is it filler?"_
+这些是默认设置，不是要求。除了它们之外，整个视频的目标是总共 2-4 个品牌强调，而不是每个节拍。大多数节拍需要 0-1个。底线以上的所有内容必须根据问题来证明自己的合理性：_「这个资源是让节拍更_这个品牌_，还是填充物？」_
 
-Print this table once your beats are written:
+一旦你的节拍写好了，打印此表：
 
-| Asset                          | Type     | Where (beat #)  | Role                                                                            |
+| 资源 | 类型 | 在哪里（节拍 #） | 角色 |
 | ------------------------------ | -------- | --------------- | ------------------------------------------------------------------------------- |
-| stripe-logo.svg                | SVG      | Beat 1 + Beat N | Brand mark (opener stroke-draw, closer hold)                                    |
-| wave-fallback-desktop.png      | Gradient | Beat 3 bg layer | Ambient depth wash behind composed dashboard                                    |
-| datavizstatic3x.png            | Data viz | SKIP            | Compose the stats from divs + counter animations instead                        |
-| enterprise-accordion-hertz.png | Photo    | SKIP            | Compose the customer-story UI from divs with the brand's testimonial card style |
-| icon-3.svg                     | Icon     | SKIP            | Decorative, too small to matter                                                 |
+| stripe-logo.svg | SVG | 节拍 1 + 节拍 N | 品牌标记（开场描边绘制、结尾保持） |
+| wave-fallback-desktop.png | 渐变 | 节拍 3 背景层 | 组合仪表板后面的环境深度洗色 |
+| datavizstatic3x.png | 数据可视化 | 跳过 | 改为用 div + 计数器动画组合统计数据 |
+| enterprise-accordion-hertz.png | 照片 | 跳过 | 用品牌推荐卡片样式从 div 组合客户故事 UI |
+| icon-3.svg | 图标 | 跳过 | 装饰性，太小不重要 |
 
-Mark assets `SKIP` when a composed equivalent (dashboards, kanban, chat, terminal, file tree, calendar, pricing cards, etc.) does a better job — that's the strong default for product UI. Use the brand's _real_ data (project names, real metrics, real product copy) in composed beats — never the placeholder labels a screenshot would have.
+当组合等价物（仪表板、看板、聊天、终端、文件树、日历、定价卡等）做得更好时，将资源标记为跳过——那是产品 UI 的强默认。在组合节拍中使用品牌的_真实_数据（项目名、真实指标、真实产品文案）——而不是截图中可能有的占位符标签。
 
-**Update each beat's Composition + Accents section** based on what this pass produced. Most beats stay accent-free. The few that earn one get a single line under "Accents" with the file, position, opacity, and motion.
+**根据此通路产生的结果更新每个节拍的组合 + 强调部分。** 大多数节拍保持无强调。获得强调的几个在「强调」下得到一行，包含文件、位置、不透明度和运动。
 
-**The bar:** Every beat's visuals use whatever combination of primitives the scene needs. Accents are optional brand inflections layered on top; the brand-defaults section above (logo in opener + closer, signature visual once) covers most brand videos but isn't a hard requirement.
+**标准：** 每个节拍的视觉使用场景需要的任何原语组合。强调是可选的品牌转折叠加在上面；上面的品牌默认部分（开场 + 结尾中的 Logo，签名视觉一次）覆盖了大多数品牌视频，但不是硬性要求。
 
 ---
 
-## Production Architecture
+## 制作架构
 
-Include this file tree at the bottom of the storyboard:
+在故事板底部包含此文件树：
 
 ```
 project/
-├── index.html                    root — VO + underscore + beat orchestration
-├── DESIGN.md                     brand reference (from Step 1)
-├── SCRIPT.md                     narration text (from Step 3)
-├── STORYBOARD.md                 THIS FILE — creative north star
-├── transcript.json               word-level timestamps (from Step 4)
-├── narration.wav                 TTS audio (from Step 4)
-├── capture/                      captured website data (from Step 0)
+├── index.html                    根——配音 + 背景音乐 + 节拍编排
+├── DESIGN.md                     品牌参考（来自步骤 1）
+├── SCRIPT.md                     旁白文本（来自步骤 3）
+├── STORYBOARD.md                 此文件——创意北极星
+├── transcript.json               词语级时间戳（来自步骤 4）
+├── narration.wav                 TTS 音频（来自步骤 4）
+├── capture/                      捕获的网站数据（来自步骤 0）
 │   ├── screenshots/
 │   ├── assets/
 │   │   ├── svgs/
@@ -462,111 +462,111 @@ project/
 
 ---
 
-## Example: Beat-by-Beat Format
+## 示例：逐节拍格式
 
-The two beats below are from the real Claude Design × HyperFrames production video. They show the expected level of specificity — exact timing, exact GSAP values, exact animation sequences.
+下面的两个节拍来自真实的 Claude Design × HyperFrames 制作视频。它们显示了预期的详细程度——精确的时序、精确的 GSAP 值、精确的动画序列。
 
-**Why only 2 beats are shown:** Earlier versions of this reference showed all 10 beats, and agents pattern-matched from them regardless of the brand being captured. Moodboard layouts, capabilities grids, and orbital letter closers started appearing in every video. The concepts in those beats are specific to HyperFrames as a product — they should not appear in a video about a fintech tool or a wellness app. Only two beats are shown here to demonstrate the format level, not to suggest these specific techniques.
+**为什么只显示 2 个节拍：** 此参考的早期版本显示了所有 10 个节拍，代理们无论捕获的品牌是什么都从中模式匹配。情绪板布局、能力网格和环形字母结尾开始出现在每个视频中。那些节拍中的概念特定于 HyperFrames 作为产品——它们不应该出现在关于金融科技工具或健康应用的视频中。这里只显示两个节拍以演示格式级别，而不是建议这些具体技巧。
 
-### BEAT 1 — LIGHT BALL OPENER (0:00–0:03)
+### 节拍 1 — 光球开场（0:00–0:03）
 
-**Concept:** No title card, no fade from black. A single point of warm light appears in total darkness. It blooms into a horizon-spanning glow. The viewer leans in before a single word is spoken.
+**概念：** 没有标题卡，没有从黑色淡入。一个温暖光的单点在完全黑暗中出现。它绽放为一个横跨地平线的光晕。观众在第一个词被说出之前就前倾了。
 
-**Visual:** Deep black canvas (#050507) with grain overlay (mix-blend-mode: overlay, 0.12 opacity) and extended vignette (inset: -200px for long falloff). The `.ball-core` is a 40px radial-gradient orb (white center → accent → transparent). Animation sequence:
+**视觉：** 深黑色画布（#050507）带颗粒叠加（mix-blend-mode：overlay，0.12 不透明度）和扩展暗角（inset：-200px 用于长衰减）。`.ball-core` 是一个 40px 径向渐变球体（白色中心 → 强调色 → 透明）。动画序列：
 
-- 0.0s: Orb appears tiny (scale: 0.15, opacity: 0→1, 0.18s, expo.out)
-- 0.18s: Orb grows continuously (scale: 0.4→1.4, 0.7s, power1.in). Simultaneously the `.ball-halo` (140% width, 70% height ellipse, accent-tinted radial-gradient, blur: 60px) blooms in (scale: 0.4→1, opacity: 0→1, 0.55s, sine.out)
-- 0.65s: Orb keeps growing as it fades (scale: 1.4→8, opacity: 1→0, 0.4s, power2.in) — the point of light dissolves into pure glow. Halo expands further (scale: 1→1.25, opacity: 0.85)
-- 0.85s: Horizontal beam line emerges from center (scaleX: 0→1, 0.4s, expo.out) with warm box-shadow glow (0 0 24px 1px rgba(255,240,220,0.4))
-- 1.0s: Title "Claude Design × HyperFrames" fades up above the line (opacity: 0→1, y: 14→0, 0.7s, power3.out). Ampersand in italic accent color.
-- 1.3s: Date subtitle appears below the line (0.6s, power2.out). Monospace font, 0.32em letter-spacing, uppercase.
-- 2.2s: Bottom credit line fades in ("This entire video was made with HyperFrames in Claude Design")
-- 3.0–4.4s: Hold — halo breathes (opacity drifts to 0.55, scale to 1.4, sine.inOut), headline drifts slightly (y: -3px)
-- 4.4s: Everything fades to black together (0.6s, power2.in)
+- 0.0s：球体显得很小（scale：0.15，opacity：0→1，0.18s，expo.out）
+- 0.18s：球体持续增长（scale：0.4→1.4，0.7s，power1.in）。同时 `.ball-halo`（140% 宽度，70% 高度椭圆，强调色调径向渐变，blur：60px）绽放（scale：0.4→1，opacity：0→1，0.55s，sine.out）
+- 0.65s：球体在淡出时继续增长（scale：1.4→8，opacity：1→0，0.4s，power2.in）——光点溶解为纯光晕。光晕进一步扩展（scale：1→1.25，opacity：0.85）
+- 0.85s：水平光束线从中心出现（scaleX：0→1，0.4s，expo.out）带温暖的 box-shadow 光晕（0 0 24px 1px rgba(255,240,220,0.4)）
+- 1.0s：标题「Claude Design × HyperFrames」在线条上方淡入（opacity：0→1，y：14→0，0.7s，power3.out）。& 符号用斜体强调色。
+- 1.3s：日期副标题在线条下方出现（0.6s，power2.out）。等宽字体，0.32em 字母间距，大写。
+- 2.2s：底部信用行淡入（「此整个视频是用 HyperFrames 在 Claude Design 中制作的」）
+- 3.0–4.4s：保持——光晕呼吸（不透明度漂移到 0.55，缩放到 1.4，sine.inOut），标题轻微漂移（y：-3px）
+- 4.4s：所有内容一起淡出为黑色（0.6s，power2.in）
 
-Corner marks (monospace, 11px, 0.45 opacity) at top-left and bottom-right for editorial feel.
+角标（等宽，11px，0.45 不透明度）在左上和右下，用于编辑风格。
 
-**SFX:** Deep ambient bass pad already playing from frame 1.
-
----
-
-_(Beats 2–9 intentionally omitted. See above for why.)_
-
-### BEAT 10 — ORBITAL LETTERS / CLOSE (example of a closing beat spec)
-
-**VO:** (resolving — the brand name assembles)
-
-**Concept:** Individual letterforms of "HYPER FRAMES" burst in from alternating sides, each with rotation and offset. They bounce into place with back.out(2.0) overshoot. An accent line draws itself across the width. An orbit ring expands with a glowing dot tracing a full 360° rotation. A tagline types itself out: "HTML in. Video out." with deliberate pauses after each word. Everything breathes after assembly — letters float gently, glow pulses, connector lines shimmer.
-
-**Visual:** Deep black. Center glow: 900px radial-gradient orb (accent #e8a769 at 0.35 → 0.12 → 0.025 → transparent), blur(100px).
-
-**Animation sequence:**
-
-- 0.1s: 12 character elements ("H Y P E R [space] F R A M E S") enter staggered 0.06s apart, each from y: 80 with alternating x offset (odd: -30, even: +30) and rotation: -15. Landing: back.out(2.0), 0.7s — gives each letter a satisfying overshoot bounce.
-- 1.0s: Accent SVG line draws across the full 1920px width (strokeDashoffset: 1920→0, 0.6s, power3.out). #e8a769 stroke, 2px.
-- 1.0s: Glow breathes in (opacity: 0→0.2, sine.inOut, 0.4s), then back to 0.1.
-- 1.4s: Orbit ring (600px circle, 1px border rgba(accent, 0.3)) expands from scale: 0.5 to 1.0 (expo.out, 0.5s). A glowing orbit dot (8px, accent color, box-shadow glow) on the ring traces a full 360° rotation over 2.5s (linear easing — constant speed).
-- 1.25s onward: Letters begin a subtle float — alternating directions (y: ±2px, sine.inOut, 1.4s, yoyo, repeat 1), staggered 0.04s. Keeps the assembled word feeling alive.
-- 1.8s: Tagline types itself in monospace (24px, accent color, 0.15em letter-spacing): "HTML" (pause 0.2s), " in." (pause 0.25s), " Video" (pause 0.1s), " out." — each segment at 0.03s per character using steps(N) easing for discrete character appearance.
-- 1.8s onward: Glow continues gentle breathing (opacity: 0.1→0.14, sine.inOut, 1.2s, yoyo, repeat 1).
-
-**SFX:** Soft chime on letter assembly completion. Silence under the tagline typing — let it land.
+**SFX：** 从帧 1 开始已经在播放的深环境贝斯垫音。
 
 ---
 
-## Write the Narration Script (same step — write alongside the storyboard)
+_（节拍 2–9 有意省略。见上方原因。）_
 
-The script and storyboard are one step. Every beat already has a VO cue — the script is just all those VO cues assembled into a single document. As you write each beat, write its narration line. Then assemble them into `SCRIPT.md`.
+### 节拍 10 — 环形字母 / 结尾（结尾节拍规格示例）
 
-The script serves the storyboard — write words that fit the visual plan, not the other way around. Reference real product features, real stats, and real components from `capture/extracted/visible-text.txt`. Use exact numbers.
+**配音：** （解决中——品牌名称组装）
 
-**Script length depends on the creative direction, not a formula.** A cinematic video with dramatic pauses and visual-only moments might have 40 words across 30 seconds. A rapid feature showcase might pack 100 words into 30 seconds. The storyboard's pacing and style (from Step 2's brief) determine how much narration vs. silence the video needs. Some beats are narrated; some are pure visual. Let the creative plan drive the word count, not the other way around.
+**概念：** 「HYPER FRAMES」的单个字母形式从交替侧冲入，每个带旋转和偏移。它们以 back.out(2.0) 过冲弹跳到位置。一条强调线自行绘制过全宽。一个环形轨道扩展，发光的点追踪完整的 360° 旋转。一句标语自行打出：「HTML in. Video out.」每个词后有意的停顿。组装后一切呼吸——字母轻轻浮动、光晕脉动、连接线闪烁。
 
-The key constraint: don't pad with dead silence where nothing is happening. If a beat has no narration, something visual must be carrying the viewer's attention. Empty frames = lost viewers.
+**视觉：** 深黑色。中心光晕：900px 径向渐变球体（强调色 #e8a769 在 0.35 → 0.12 → 0.025 → 透明），blur(100px)。
 
-Save as `SCRIPT.md` in the project directory.
+**动画序列：**
 
-**Script writing rules:**
+- 0.1s：12 个字符元素（「H Y P E R [空格] F R A M E S」）以 0.06s 交错进入，每个从 y：80 带交替 x 偏移（奇数：-30，偶数：+30）和旋转：-15。着陆：back.out(2.0)，0.7s——给每个字母一个令人满意的过冲弹跳。
+- 1.0s：强调 SVG 线绘制过完整的 1920px 宽度（strokeDashoffset：1920→0，0.6s，power3.out）。#e8a769 描边，2px。
+- 1.0s：光晕呼吸进入（opacity：0→0.2，sine.inOut，0.4s），然后回到 0.1。
+- 1.4s：环形轨道（600px 圆，1px 边框 rgba(accent, 0.3)）从 scale：0.5 扩展到 1.0（expo.out，0.5s）。一个发光的轨道点（8px，强调色，box-shadow 光晕）在环上追踪完整 360° 旋转，持续 2.5s（线性缓动——恒定速度）。
+- 1.25s 后：字母开始微妙的浮动——交替方向（y：±2px，sine.inOut，1.4s，yoyo，重复 1），0.04s 交错。保持组装的词感觉有生机。
+- 1.8s：标语用等宽字体自行打出（24px，强调色，0.15em 字母间距）：「HTML」（停顿 0.2s）、「 in.」（停顿 0.25s）、「 Video」（停顿 0.1s）、「 out.」——每个片段以 0.03s 每字符的速度，使用 steps(N) 缓动实现离散字符出现。
+- 1.8s 后：光晕继续温和呼吸（opacity：0.1→0.14，sine.inOut，1.2s，yoyo，重复 1）。
 
-- ~2.5 words/sec natural pace. 15s = ~37 words, 30s = ~75 words.
-- Use contractions ("it's", "you'll"). Read it out loud — if it sounds robotic, rewrite.
-- Write numbers as spoken: `$1.9T` → "nearly two trillion dollars", `API` → "A P I", `10x` → "ten times"
-- **Hook first** — bold claim, provocative question, contrast, or shocking number. Never "Welcome to..." or "Introducing..."
-- Structure: Hook → Story → Proof → CTA. 15s ads can skip Story.
+**SFX：** 字母组装完成时的柔和铃声。标语打字时静默——让它落地。
 
 ---
 
-## User Review Gate
+## 编写旁白脚本（同一步骤——与故事板一起编写）
 
-After writing the storyboard AND the script, present BOTH to the user for review. The storyboard and script are coupled — the user needs to see them together to judge whether the video works.
+脚本和故事板是一个步骤。每个节拍已经有配音提示——脚本只是所有配音提示汇编成单个文档。在编写每个节拍时，写出它的旁白行。然后将它们汇编成 `SCRIPT.md`。
 
-### How to Present
+脚本服务故事板——写适合视觉计划的词语，而不是反过来。从 `capture/extracted/visible-text.txt` 引用真实的产品功能、真实统计和真实组件。使用精确的数字。
 
-Summarize the plan clearly. Don't dump the full STORYBOARD.md — give the user a beat-by-beat overview they can scan in 30 seconds:
+**脚本长度取决于创意方向，而不是公式。** 带有戏剧性停顿和纯视觉时刻的电影感视频可能在 30 秒内只有 40 个字。快速功能展示可能在 30 秒内包含 100 个字。故事板的节奏和风格（来自步骤 2 的简报）决定了视频需要多少旁白 vs 静默。有些节倍有旁白；有些是纯视觉。让创意计划驱动词数，而不是反过来。
 
-> **Here's what I've planned for your [duration] [type]:**
+关键约束：不要用什么都没有发生的死寂来填充。如果一个节拍没有旁白，必须有视觉内容在承载观众的注意力。空帧 = 失去观众。
+
+保存为项目目录中的 `SCRIPT.md`。
+
+**脚本写作规则：**
+
+- ~2.5 词/秒自然速度。15s = ~37 词，30s = ~75 词。
+- 使用缩约形式（「it's」、「you'll」）。大声朗读——如果听起来像机器人，重写。
+- 数字按口语写：`$1.9T` →「近两万亿美元」，`API` →「A P I」，`10x` →「十倍」
+- **先抓住注意力**——大胆声明、 provocative 问题、对比或令人震惊的数字。永远不要「欢迎来到……」或「介绍……」
+- 结构：钩子 → 故事 → 证明 → CTA。15s 的广告可以跳过故事。
+
+---
+
+## 用户审核关卡
+
+在编写故事板**和**脚本后，将两者呈现给用户审核。故事板和脚本是耦合的——用户需要一起看到它们才能判断视频是否可行。
+
+### 如何呈现
+
+清晰地总结计划。不要倾倒完整的 STORYBOARD.md——给用户一个他们能在 30 秒内浏览的逐节拍概览：
+
+> **以下是我为你的 [时长] [类型] 规划的内容：**
 >
-> **Beat 1 (0:00–0:04):** [one sentence — what happens visually + what the narration says]
-> **Beat 2 (0:04–0:10):** [one sentence]
-> **Beat 3 (0:10–0:18):** [one sentence] _(hero beat — 3D MacBook reveal with bloom effect)_
-> ...
-> **Beat N (closing):** [one sentence — CTA/logo]
+> **节拍 1（0:00–0:04）：** [一句话——视觉上发生了什么 + 旁白说了什么]
+> **节拍 2（0:04–0:10）：** [一句话]
+> **节拍 3（0:10–0:18）：** [一句话] _（英雄节拍——3D MacBook 揭示带泛光效果）_
+> …
+> **节拍 N（结尾）：** [一句话——CTA/Logo]
 >
-> **Style:** [dimension summary — e.g., "Cinematic pacing, dark mood, dramatic transitions for hero, clean for the rest"]
-> **Narration:** [first and last line of the script]
-> **Total duration:** [X]s with [N] beats
+> **风格：** [维度总结——例如：「电影感节奏，暗色情绪，英雄处戏剧性过渡，其余简洁」]
+> **旁白：** [脚本的第一行和最后一行]
+> **总时长：** [X]s 带 [N] 个节拍
 >
-> **Does this match what you envisioned?** I can adjust: beats, pacing, specific effects, the script tone, or anything else. Or if this looks good, I'll proceed to voice generation.
+> **这与你的设想匹配吗？** 我可以调整：节拍、节奏、特定效果、脚本语调或其他任何内容。或者如果这看起来不错，我将继续到语音生成。
 
-### What to do with feedback
+### 如何处理反馈
 
-- **"Looks good" / approval** → proceed to Step 4 (VO)
-- **Specific feedback** ("make beat 3 longer", "change the opening to be faster", "I don't want the typing effect") → update STORYBOARD.md and SCRIPT.md, re-present
-- **Major direction change** ("actually I want it more playful, not cinematic") → revisit Step 2's brief dimensions, rewrite storyboard
-- **Iterate until the user is satisfied.** This is the cheapest place to make changes — changing a storyboard beat costs 30 seconds. Changing a built composition costs 5 minutes.
+- **「看起来不错」/ 批准** → 进入步骤 4（配音）
+- **具体反馈**（「让节拍 3 更长」、「将开场改为更快」、「我不想要打字效果」）→ 更新 STORYBOARD.md 和 SCRIPT.md，重新呈现
+- **主要方向变化**（「实际上我想要更多俏皮，不是电影感」）→ 重新审视步骤 2 的简报维度，重写故事板
+- **迭代直到用户满意。** 这是做更改最便宜的地方——更改故事板节拍只需 30 秒。更改构建好的作品需要 5 分钟。
 
-### Gate
+### 关卡
 
-Both STORYBOARD.md and SCRIPT.md exist AND the user has explicitly approved the plan.
+STORYBOARD.md 和 SCRIPT.md 都存在**且**用户已明确批准计划。
 
-**Autonomous mode exception:** if the user signaled autonomous mode in Step 2 ("surprise me" / "decide for me" / "just build it"), skip the approval wait. Present the storyboard summary inline as a heads-up and proceed straight to Step 4.
+**自主模式例外：** 如果用户在步骤 2 中指示了自主模式（「给我惊喜」/「替我做决定」/「直接构建」），跳过批准等待。内联呈现故事板摘要作为提示，并直接进入步骤 4。

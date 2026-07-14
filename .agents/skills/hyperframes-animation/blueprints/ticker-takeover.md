@@ -1,29 +1,29 @@
-# ticker-takeover — Ticker Displace / Takeover
+# ticker-takeover — 滚动条置换 / 接管
 
-**intent**: A context phrase types in, an accent word cycles through options like a slot-machine to suggest "this could be many things," then a hero CRASHES in from off-screen and physically shoves the text aside — "actually, this is what it is." A collision, not a fade.
+**意图**：一个上下文短语输入，一个重音词像老虎机一样循环通过几个选项，暗示"这可以是很多东西"，然后一个主角从屏幕外**猛冲**进来，物理上将文本推开——"实际上，这就是它。"一个碰撞，而非淡入淡出。
 
-**roles served**
+**服务角色**
 
-- Hook (from `takeover-ticker-displace`): when a static lead-in phrase + a cycling accent word should be **physically replaced** (not cross-dissolved) by a hero arriving with momentum, and the final frame is the hero alone. Reach for it when the takeover should read as an impact.
-- Brand_Outro: the same collision used as a sign-off — options cycle, the brand mark crashes in and owns the frame.
+- Hook（来自 `takeover-ticker-displace`）：当一个静态引导短语 + 一个循环重音词应该被一个带着动量到达的主角**物理替换**（非交叉溶解），且最终画面只有主角时使用。当接管应读出为冲击时使用。
+- Brand_Outro：同样的碰撞用作签退——选项循环，品牌标记猛冲进来并拥有画面。
 
-**duration**: 5–7s
+**时长**：5–7 秒
 
-**shot structure** (a `[bg]` canvas; one text group on the left/center that gets ejected by an incoming hero)
+**镜头结构**（一个 `[bg]` canvas；一个文本组在左侧/中心，被进入的主角弹出）
 
-- **Scene 1 (0.0–~1.4s) — context build.** A typewriter lays down a `[lead-in phrase]` character-by-character (smooth, no typos — selling confidence, not human chaos). Camera static.
-- **Scene 2 (~1.4–3.0s) — the cycling beat.** An `[accent word]` slot inside the line ticks through 2–3 `[options]` on a vertical spring-roll (each click a new word), suggesting breadth — "many things this could be." (More than ~3 reads as filler.)
-- **Scene 3 (~3.0–4.2s) — the collision (signature move).** A `[hero]` crashes in from off-screen with momentum and physically SHOVES the whole text group aside — the text reacts to the impact (gets displaced), it does not fade. The hero lands **heavy** — a longer settle, not a zip — so it reads as mass, not speed.
-- **Scene 4 (~4.2–end) — the hero alone.** The hero settles dead-center and reads still. Holds.
+- **场景 1（0.0–~1.4 秒）——上下文构建。** 一个打字机逐字放置一个 `[lead-in phrase]`（平滑，无输入错误——传达自信，而非人为混乱）。摄像机静止。
+- **场景 2（~1.4–3.0 秒）——循环节拍。** 行内的一个 `[accent word]` 槽位在垂直弹簧卷上滴答通过 2–3 个 `[options]`（每次点击一个新词），暗示广度——"这可以是很多东西。"（超过 ~3 个读作填充。）
+- **场景 3（~3.0–4.2 秒）——碰撞（标志性动作）。** 一个 `[hero]` 从屏幕外带着动量猛冲进来，物理上**推开**整个文本组——文本对冲击做出反应（被移位），它不淡出。主角**沉重地**着陆——较长的稳定，而非快速收尾——因此它读作质量，而非速度。
+- **场景 4（~4.2–结束）——仅主角。** 主角在正中心稳定并静止阅读。保持。
 
-**motion vocabulary**: smooth character typewriter; vertical spring-ticker word roll (2–3 steps); off-screen hero crash-in with momentum; reactive displacement of the struck text group; heavy long-tail landing (not bouncy); dual-axis subtle jitter on the resting hero.
+**动词语汇**：平滑字符打字机；垂直弹簧-滚动条单词滚动（2–3 步）；屏幕外主角猛冲进入动量；被撞击文本组反应性移位；沉重长尾着陆（非弹跳）；休息主角上的双轴细微抖动。
 
-**rule mapping**
+**规则映射**
 
-- smooth single-phrase typewriter lead-in → `discrete-text-sequence` (smooth-slice / continuous `floor(progress)` form — no typo machinery)
-- accent word slot-machine cycling through options → `vertical-spring-ticker` (`STEPS` = number of options the hero will replace; the rule's footer-reveal is unused — Scene 3 takes its place)
-- hero shoves the text group aside on impact → `reactive-displacement` (the text is the displaced mass; express the hero's "heavy land" as a longer `power2` settle, not the rule's default `back.out`)
-- hero's fast off-screen crash-in → `motion-blur-streak` (directional velocity blur resolving sharp as it lands)
-- resting-hero aliveness → `sine-wave-loop` (low-amplitude dual-frequency register — scale + rotation jitter composing onto the hero's final landed scale; never a yoyo around 1)
+- 平滑单短语打字机引导 → `discrete-text-sequence`（平滑切片/连续 `floor(progress)` 形式——无输入错误机制）
+- 重音词老虎机型循环通过选项 → `vertical-spring-ticker`（`STEPS` = 主角将替换的选项数；规则的页脚揭示未被使用——场景 3 取代了它的位置）
+- 主角在冲击时推开文本组 → `reactive-displacement`（文本是被移位的大块；将主角的"沉重着陆"表达为更长的 `power2` 稳定，而非规则的默认 `back.out`）
+- 主角的快速屏幕外猛冲进入 → `motion-blur-streak`（方向速度模糊，着陆时清晰）
+- 休息主角的生动感 → `sine-wave-loop`（低振幅双频寄存器——缩放 + 旋转抖动组合到主角的最终着陆缩放上；从不围绕 1 做 yoyo）
 
-**camera modifier**: camera-static — the displacement happens in element space (the hero moves the text), so there is no real camera move; the impact is the only motion.
+**摄像机修饰**：摄像机静止——位移发生在元素空间（主角移动文本），因此没有真正的摄像机移动；冲击是唯一的运动。

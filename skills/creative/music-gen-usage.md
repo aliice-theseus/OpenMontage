@@ -1,135 +1,135 @@
-# Music Generation Usage for OpenMontage
+# OpenMontage 音乐生成使用指南
 
-> Sources: ElevenLabs Music API documentation, ElevenLabs best practices guide, Artlist BPM
-> guide, existing Layer 3 skills at `.agents/skills/music/` and `.agents/skills/elevenlabs/`
+> 来源：ElevenLabs Music API 文档、ElevenLabs 最佳实践指南、Artlist BPM 指南、
+> 现有 Layer 3 技能位于 `.agents/skills/music/` 和 `.agents/skills/elevenlabs/`
 
-## Quick Reference Card
-
-```
-API MODEL:        music_v1
-MIN DURATION:     3,000ms (3s)
-MAX DURATION:     600,000ms (10 min)
-INSTRUMENTAL:     Always set force_instrumental=true for video background
-COST:             ~$0.05 per 30 seconds
-KEY RULE:         Music must be 18-20 dB below narration (see sound-design.md)
-```
-
-## BPM Selection by Video Type
-
-| Video Type | BPM Range | Prompt Fragment |
-|-----------|-----------|-----------------|
-| Educational explainer | 80-100 | "gentle ambient electronic, 90 BPM" |
-| Corporate / tech | 100-120 | "upbeat corporate pop, 110 BPM, positive" |
-| Epic / dramatic reveal | 60-80 | "cinematic orchestral, 70 BPM, building tension" |
-| Fast-paced montage | 120-140 | "energetic electronic, 130 BPM, driving beat" |
-| Meditation / calm | 50-70 | "ambient drone, 60 BPM, peaceful" |
-| Comedy / lighthearted | 100-130 | "playful ukulele pop, 120 BPM, whimsical" |
-| Sad / reflective | 60-80 | "melancholic piano, 65 BPM, minor key" |
-| Action / hype | 140-170 | "high-intensity drum and bass, 160 BPM" |
-
-## Key and Mood Mapping
-
-| Mood | Key | Musical Characteristics |
-|------|-----|----------------------|
-| Happy / upbeat | C major, G major | Bright, resolved, energetic |
-| Serious / professional | D minor, A minor | Grounded, authoritative |
-| Mysterious / curious | E minor, B minor | Tension, anticipation |
-| Triumphant / inspiring | D major, Bb major | Expansive, climactic |
-| Melancholic / thoughtful | F minor, C minor | Reflective, emotional |
-| Neutral / ambient | C major, Am (no strong key) | Unobtrusive, background |
-
-## Prompt Engineering
-
-### Structure
+## 快速参考卡
 
 ```
-[GENRE/STYLE], [BPM], [KEY/MOOD], [INSTRUMENTS], [ENERGY LEVEL], [PURPOSE]
+API 模型：         music_v1
+最小时长：         3,000ms（3秒）
+最大时长：         600,000ms（10分钟）
+器乐：             视频背景始终设置 force_instrumental=true
+费用：             约每30秒$0.05
+关键规则：         音乐必须比旁白低18-20 dB（参见 sound-design.md）
 ```
 
-### Examples
+## 按视频类型的 BPM 选择
 
-**Educational explainer:**
+| 视频类型 | BPM 范围 | 提示片段 |
+|----------|----------|----------|
+| 教育讲解 | 80-100 | "轻柔环境电子乐，90 BPM" |
+| 企业/科技 | 100-120 | "欢快企业流行乐，110 BPM，积极向上" |
+| 史诗/戏剧揭示 | 60-80 | "电影管弦乐，70 BPM，营造紧张感" |
+| 快节奏蒙太奇 | 120-140 | "活力电子乐，130 BPM，强劲节拍" |
+| 冥想/平静 | 50-70 | "环境音 drone，60 BPM，宁静" |
+| 喜剧/轻松 | 100-130 | "俏皮尤克里里流行乐，120 BPM，奇思妙想" |
+| 悲伤/沉思 | 60-80 | "忧郁钢琴，65 BPM，小调" |
+| 动作/热血 | 140-170 | "高强度鼓点贝斯，160 BPM" |
+
+## 调性与情绪映射
+
+| 情绪 | 调性 | 音乐特征 |
+|------|------|----------|
+| 快乐/欢快 | C大调, G大调 | 明亮、稳定、有活力 |
+| 严肃/专业 | D小调, A小调 | 扎实、权威 |
+| 神秘/好奇 | E小调, B小调 | 张力、期待 |
+| 胜利/鼓舞 | D大调, Bb大调 | 广阔、高潮感 |
+| 忧郁/深思 | F小调, C小调 | 沉思、情感 |
+| 中性/环境 | C大调, Am（无明显调性） | 不突兀、背景 |
+
+## 提示词工程
+
+### 结构
+
 ```
-Gentle lo-fi ambient electronic, 90 BPM, C major, soft synth pads and light
-percussion, calm and steady energy, background music for narration
+[流派/风格], [BPM], [调性/情绪], [乐器], [能量级别], [用途]
 ```
 
-**Corporate product demo:**
-```
-Modern upbeat corporate pop, 110 BPM, G major, acoustic guitar and light drums,
-positive energy building gradually, underscore for product walkthrough
-```
+### 示例
 
-**Technical deep-dive:**
+**教育讲解：**
 ```
-Minimal ambient electronic, 80 BPM, A minor, soft Rhodes piano and subtle
-bass, contemplative and focused, background music for technical explanation
+轻柔 lo-fi 环境电子乐，90 BPM，C大调，柔和合成器音垫和轻
+打击乐，平静稳定的能量，旁白背景音乐
 ```
 
-### Key Prompting Rules
+**企业产品演示：**
+```
+现代欢快企业流行乐，110 BPM，G大调，原声吉他和轻鼓，
+积极能量逐渐增强，产品讲解的衬托音乐
+```
 
-1. **Always include "background" or "underscore"** — tells the model to stay dynamically even
-2. **Always use `force_instrumental=true`** — lyrics compete with narration
-3. **Specify BPM explicitly** — don't rely on genre to set tempo
-4. **Avoid "bright hi-hats" or "prominent vocals"** — high-frequency busy elements compete with speech in the 2-4 kHz intelligibility band
-5. **Include energy direction** — "steady energy" for explainers, "building gradually" for reveals
+**技术深度解析：**
+```
+极简环境电子乐，80 BPM，A小调，柔和 Rhodes 钢琴和微妙
+低音，沉思而专注，技术讲解的背景音乐
+```
 
-## Duration Matching
+### 关键提示规则
 
-### Exact Duration
+1. **始终包含"背景"或"衬托"** — 告诉模型保持动态均匀
+2. **始终使用 `force_instrumental=true`** — 歌词与旁白竞争
+3. **明确指定 BPM** — 不要依赖流派来设定节奏
+4. **避免"明亮的镲片"或"突出的人声"** — 高频繁忙元素与语音在2-4 kHz清晰度频段竞争
+5. **包含能量方向** — 讲解类用"稳定能量"，揭示用"逐渐增强"
+
+## 时长匹配
+
+### 精确时长
 
 ```python
 result = music_gen.execute({
     "prompt": "Gentle ambient, 90 BPM, background underscore",
-    "duration_seconds": 150,  # Match video length
+    "duration_seconds": 150,  # 匹配视频长度
     "output_path": "assets/music/background.mp3"
 })
 ```
 
-### Section-Mapped (Advanced)
+### 段落映射（高级）
 
-For videos with distinct acts, generate sections separately:
+对于有明显幕段的视频，分段生成：
 
-| Video Section | Duration | Music Style |
-|--------------|----------|-------------|
-| Intro / hook | 8-10s | Soft, building |
-| Main explanation | 90-120s | Steady, neutral |
-| Key reveal | 20-30s | Intensified, fuller |
-| Outro | 10-15s | Fading, gentle |
+| 视频段落 | 时长 | 音乐风格 |
+|----------|------|----------|
+| 开场/钩子 | 8-10秒 | 柔和，逐渐增强 |
+| 主要讲解 | 90-120秒 | 稳定，中性 |
+| 关键揭示 | 20-30秒 | 加强，更丰满 |
+| 结尾 | 10-15秒 | 渐弱，柔和 |
 
-Generate each as a separate track and crossfade in the `audio_mixer`.
+每段生成为单独的轨道，在 `audio_mixer` 中交叉淡入淡出。
 
-## Looping for Long Videos
+## 长视频的循环
 
-For videos longer than the generated track:
+对于比生成的轨道更长的视频：
 
-1. Generate a track 30-60% of video length
-2. Use FFmpeg to create a seamless loop:
+1. 生成长度为视频长度30-60%的轨道
+2. 使用 FFmpeg 创建无缝循环：
    ```bash
    ffmpeg -stream_loop 2 -i music.mp3 -c copy music_looped.mp3
    ```
-3. Add a 2-3 second crossfade at loop points in `audio_mixer`
+3. 在 `audio_mixer` 中的循环点添加2-3秒交叉淡入淡出
 
-**Better approach:** Generate at the exact video duration. ElevenLabs supports up to 10 minutes per generation.
+**更好的方法：** 以精确的视频时长生成。ElevenLabs 支持每次生成长达10分钟。
 
-## Stem Isolation
+## 音轨分离
 
-For cleaner ducking control, generate isolated stems:
+为了更清晰的闪避控制，生成独立的音轨：
 
-- `"solo electric guitar in E minor, 90 BPM"` — guitar-only track
-- `"soft ambient pad in C major, 80 BPM"` — synth pad only
-- Layer stems in FFmpeg during composition for precise ducking control
+- `"E小调独奏电吉他，90 BPM"` — 仅吉他轨道
+- `"C大调柔和环境音垫，80 BPM"` — 仅合成器音垫
+- 在合成期间在 FFmpeg 中分层音轨以实现精确的闪避控制
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When using the `music_gen` tool:
+使用 `music_gen` 工具时：
 
-1. **Match BPM to content type** using the table above — don't default to a generic prompt
-2. **Always set `force_instrumental=true`** — no lyrics under narration
-3. **Include "background" or "underscore"** in every prompt
-4. **Set duration to match video length** — avoid looping when possible
-5. **Budget check** — at $0.05/30s, a 3-minute video costs ~$0.30 for music
-6. **Duck music 18-20 dB below narration** — see `skills/creative/sound-design.md` for ducking rules
-7. **Cut 2-4 kHz on the music bed** in `audio_mixer` to clear the speech intelligibility band
-8. **Test on phone speakers** — if narration disappears behind music, duck more aggressively
-9. **One track per video** — avoid switching music styles mid-video unless there's a clear narrative shift
+1. **使用上表将 BPM 匹配到内容类型** — 不要使用通用提示
+2. **始终设置 `force_instrumental=true`** — 旁白下无歌词
+3. **在每个提示中包含"背景"或"衬托"**
+4. **设置时长匹配视频长度** — 尽可能避免循环
+5. **预算检查** — 按$0.05/30秒，3分钟视频的音乐费用约$0.30
+6. **将音乐比旁白闪避18-20 dB** — 见 `skills/creative/sound-design.md` 了解闪避规则
+7. **在 `audio_mixer` 中衰减音乐轨道的2-4 kHz** 以清理语音清晰度频段
+8. **在手机扬声器上测试** — 如果旁白被音乐淹没，更积极地闪避
+9. **每个视频一个轨道** — 除非有明确的叙事转变，避免在视频中切换音乐风格

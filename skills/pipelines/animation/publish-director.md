@@ -1,45 +1,45 @@
-# Publish Director - Animation Pipeline
+# 发布导演 — 动画管线
 
-## When To Use
+## 使用时机
 
-Package the animation so the metadata, thumbnail concept, and platform framing reflect the actual visual system of the project.
+打包动画，使元数据、缩略图概念和平台框架反映项目实际的视觉系统。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["compose"]["render_report"]`, `state.artifacts["proposal"]["proposal_packet"]`, `state.artifacts["research"]["research_brief"]`, `state.artifacts["script"]["script"]` | Final outputs and topic framing |
-| Playbook | Active style playbook | Visual naming consistency |
+| Schema | `schemas/artifacts/publish_log.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["compose"]["render_report"]`、`state.artifacts["proposal"]["proposal_packet"]`、`state.artifacts["research"]["research_brief"]`、`state.artifacts["script"]["script"]` | 最终输出和主题框架 |
+| 样式手册 | 活跃的样式手册 | 视觉命名一致性 |
 
-## Process
+## 流程
 
-### 1. Match Packaging To The Animation Mode
+### 1. 使打包与动画模式匹配
 
-Examples:
+示例：
 
-- diagram-heavy videos should look structured and legible,
-- kinetic-type pieces should package around strong copy,
-- illustrative animation should package around hero imagery.
+- 图表密集的视频应看起来结构清晰、易读，
+- 动态排版作品应围绕强有力的文案打包，
+- 插画风格动画应围绕主角图像打包。
 
-### 2. Preserve Visual-System Truth
+### 2. 保留视觉系统的真实性
 
-Store in `publish_log.metadata`:
+存储在 `publish_log.metadata` 中：
 
 - `animation_mode`
 - `hero_frame_notes`
 - `thumbnail_concept`
 - `platform_notes`
 
-### 3. Quality Gate
+### 3. 质量关卡
 
-- metadata fits the actual animation mode,
-- thumbnail concept matches the final visual system,
-- exports are labeled by purpose and platform,
-- the package is usable without extra manual work.
+- 元数据符合实际的动画模式，
+- 缩略图概念与最终视觉系统匹配，
+- 导出文件按用途和平台标记，
+- 打包后的作品无需额外手工即可使用。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Writing generic metadata that ignores the animation style.
-- Creating a thumbnail concept unrelated to the final frames.
-- Mixing platform variants without clear labels.
+- 编写忽略动画风格的通用元数据。
+- 创建与最终画面无关的缩略图概念。
+- 混合平台变体而没有清晰的标签。

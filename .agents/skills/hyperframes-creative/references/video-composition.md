@@ -1,63 +1,63 @@
-# Video Composition
+# 视频构图
 
-Video frames are not web pages. These rules apply to every composition regardless of brand, style, or design spec.
+视频帧不是网页。无论品牌、风格或设计规范如何，以下规则适用于每个合成。
 
-## The Design Spec Is Brand, Not Layout
+## 设计规范是品牌，不是布局
 
-The design spec (`frame.md` or `design.md`) defines what the brand looks like: colors, fonts, personality, constraints. It does NOT define how to compose a video frame. Use brand colors at video-appropriate intensity — not at web-UI opacity.
+设计规范（`frame.md` 或 `design.md`）定义品牌的外观：颜色、字体、个性、约束。它不定义如何构图视频帧。以适合视频的强度使用品牌颜色——而不是网页 UI 的不透明度。
 
-**Strict from the design spec:** hex values (including background color), font families, weight relationships, Do's and Don'ts. If the user chose a light canvas, use a light canvas. If they chose dark, use dark. Do not override their palette.
+**严格遵循设计规范：** 十六进制值（包括背景色）、字体系列、字重关系、该做与不该做。如果用户选择了浅色画布，就使用浅色画布。如果他们选择了深色，就使用深色。不要覆盖他们的调色板。
 
-**Adapt for video:** type sizes, spacing, decorative opacity, border weight, component treatments. A web UI card at `border: 1px solid #e2e3e6` with `box-shadow: 0 2px 4px rgba(0,0,0,0.06)` is invisible on video. The brand color is sacred; the application is yours.
+**针对视频调整：** 字体大小、间距、装饰不透明度、边框粗细、组件处理。一个 `border: 1px solid #e2e3e6` 且 `box-shadow: 0 2px 4px rgba(0,0,0,0.06)` 的网页 UI 卡片在视频中是看不见的。品牌颜色是神圣的；应用方式是你的自由。
 
-## Density
+## 密度
 
-A beat with 3 elements looks empty. A beat with 8-10 feels alive.
+只有 3 个元素的节拍看起来很空。有 8-10 个元素的节拍感觉有生命力。
 
-Every scene needs:
+每个场景需要：
 
-- **Background texture** — radial glow, oversized ghost type, color panel, grain, grid. Never solid flat color.
-- **Midground content** — the actual message. Cards, stats, code blocks, images.
-- **Foreground accents** — dividers, labels, data bars, registration marks, monospace metadata. The details that make it feel produced, not generated.
+- **背景纹理** — 径向光晕、超大幽灵文字、色彩面板、颗粒、网格。永远不要纯色平面。
+- **中景内容** — 实际信息。卡片、统计数据、代码块、图片。
+- **前景点缀** — 分割线、标签、数据条、注册标记、等宽元数据。这些细节让它感觉是制作出来的，而非生成出来的。
 
-Aim for 8-10 visual elements per scene. Two of those should be decorative elements the user didn't ask for — you add them because empty frames look broken.
+目标是每场景 8-10 个视觉元素。其中两个应是用户未要求的装饰元素——你添加它们是因为空画面看起来有问题。
 
-## Color Presence
+## 色彩存在感
 
-Muted is fine. Flat is not. Every scene should have at least one color that pulls the eye.
+柔和可以。平淡不行。每个场景至少应有一种颜色能吸引眼球。
 
-- Brand accent should be VISIBLE — not a 5% opacity glow lost in compression. 15-25% for atmospheric, full saturation for focal elements.
-- **Light canvases work differently than dark.** On dark: accent glows pop naturally. On light: use bolder borders (2px+ solid), stronger structural elements (rules, dividers), and full-saturation accent hits. Light backgrounds need texture (subtle grain, patterns) to avoid the "blank slide" feel. Don't switch to dark — make light cinematic.
-- **No full-screen linear gradients on dark backgrounds.** They band visibly under H.264 compression. Use a radial gradient, a solid fill, or solid + localized glow instead.
-- Tint neutrals toward the brand hue. Dead gray reads as undesigned.
+- 品牌强调色应**可见**——而不是在压缩中丢失的 5% 不透明度光晕。氛围用 15-25%，焦点元素用全饱和。
+- **浅色画布与深色不同。** 在深色上：强调色光晕自然突出。在浅色上：使用更粗的边框（2px+ 实线）、更强的结构元素（标尺、分割线）和全饱和的强调色命中。浅色背景需要纹理（微妙颗粒、图案）以避免"空白幻灯片"的感觉。不要切换到深色——让浅色具有电影感。
+- **深色背景上不要使用全屏线性渐变。** 它们在 H.264 压缩下会明显出现条带。使用径向渐变、纯色填充或纯色 + 局部光晕代替。
+- 将中性色向品牌色调偏移。死灰色读起来像是未经设计的。
 
-## Scale
+## 比例
 
-Web sizes are invisible on video. Everything scales up.
+网页尺寸在视频上是不可见的。一切都要放大。
 
-| Element            | Web     | Video    |
-| ------------------ | ------- | -------- |
-| Headlines          | 32-48px | 64-120px |
-| Body text          | 14-16px | 28-42px  |
-| Labels             | 12px    | 18-24px  |
-| Decorative opacity | 3-8%    | 12-25%   |
-| Borders            | 1px     | 2-4px    |
-| Padding            | 16-32px | 60-140px |
+| 元素             | 网页      | 视频      |
+| ----------------- | -------- | --------- |
+| 标题              | 32-48px  | 64-120px  |
+| 正文              | 14-16px  | 28-42px   |
+| 标签              | 12px     | 18-24px   |
+| 装饰不透明度       | 3-8%     | 12-25%    |
+| 边框              | 1px      | 2-4px     |
+| 内边距            | 16-32px  | 60-140px  |
 
-If you're writing a font-size under 24px in a video composition, justify it. If you're writing decorative opacity under 10%, it's invisible.
+如果你在视频合成中编写小于 24px 的字体大小，请证明其合理性。如果你编写低于 10% 的装饰不透明度，它是不可见的。
 
-## Motion Intensity
+## 运动强度
 
-Subtle reads as static at 30fps. Err toward more movement than feels safe.
+在 30fps 下，微妙的效果读起来是静态的。宁可偏向比感觉安全的更多的运动。
 
-- Every decorative element should have ambient motion: breathe, drift, pulse, orbit. Static decoratives feel dead.
-- Vary motion per scene — don't repeat the same ambient pattern.
-- Scene entrances should use 3+ different eases and directions. If every element enters from `y: 30, opacity: 0`, the scene has no choreography.
+- 每个装饰元素都应有环境运动：呼吸、漂移、脉动、轨道运动。静态的装饰感觉像死的一样。
+- 每个场景变化运动——不要重复相同的环境模式。
+- 场景入场应使用 3 种以上不同的缓动和方向。如果每个元素都从 `y: 30, opacity: 0` 进入，这个场景就没有编排。
 
-## Frame Composition
+## 画面构图
 
-- **Two focal points minimum.** The eye needs somewhere to travel.
-- **Fill the frame.** Hero text: 60-80% of frame width.
-- **Anchor to edges.** Pin content to left/top or right/bottom. Centered-and-floating is a web layout pattern.
-- **Split frames.** Data panel left, content right. Top bar with metadata, full-width below. Zone-based layouts over centered stacks.
-- **Structural elements.** Rules, dividers, border panels. They create visual paths and animate well (`scaleX: 0` → `1`).
+- **至少两个焦点。** 眼睛需要有地方可看。
+- **填满画幅。** 主标题文字：画幅宽度的 60-80%。
+- **锚定到边缘。** 将内容固定在左/上或右/下。居中浮动是网页布局模式。
+- **分割画幅。** 左侧数据面板，右侧内容。顶部带有元数据的状态栏，下方全宽。基于区域布局优于居中堆叠。
+- **结构元素。** 标尺、分割线、边框面板。它们创建视觉路径并且动画效果好（`scaleX: 0` → `1`）。

@@ -1,66 +1,66 @@
-# grid-card-assemble — Grid / Card Assemble
+# grid-card-assemble — 网格 / 卡片组装
 
-**intent**: N items (tiles / cards / logos / list-lines) self-assemble in a staggered cascade into a grid or vertical list and hold — a "look how much / who / what it does" beat that enumerates breadth at once; an optional camera zoom-OUT pulls back to reveal the assembled array sitting inside a vaster whole.
+**意图**：N 个项目（方块 / 卡片 / logo / 列表行）以错开级联方式自组装成网格或垂直列表并保持——一次"看多少/谁/它做什么"节拍，一次性列举广度；一个可选的摄像机拉远-ZOOM 拉回，揭示组装好的阵列位于更大的整体内。
 
-**roles served**
+**服务角色**
 
-- Key_Feature (from key-feature-card-grid-assemble): a grid of labeled feature tiles/pills (icon + label) cascades one-by-one into a 2-col-brick / 3×3 grid, then holds near-static with a slow push-in — enumerate many capabilities, no live UI, no cursor.
-- Key_Feature (from key-feature-glass-card-camera-reveal): open TIGHT on 2–3 glowing icons; a camera zoom-OUT unfolds a row of glassmorphism cards that grow from behind the icons (icons shrink to card headers), center card scales forward, the group floats, then sweeps out — a "pillars revealed at once" reveal variant of the same assemble shape.
-- Benefits (from benefits-vertical-list): short value phrases populate a single vertical list ~1 item/sec, co-resident and accumulating; each line enters via a spring marker-pop + check-draw + pill mask-wipe, OR the whole stack snaps up one slot per beat (slot-machine) so the newest lands in the bright focal slot.
-- Social_Proof (from social-proof-logo-grid-zoom-out): a wall of partner/app logos builds into a center grid (whole-enter / randomized pop-in / column slide-up), an optional headline + accent-gradient proof-number fills in above, then a continuous camera zoom-OUT shrinks the array to reveal a vast ecosystem; optional fixed HUD/viewfinder brackets; optional grid slide-up fly-out exit.
+- Key_Feature（来自 key-feature-card-grid-assemble）：一个标记的功能方块/胶囊网格（图标 + 标签）逐个级联成 2 列砖 / 3×3 网格，然后几乎静态保持，缓慢推进——列举许多能力，无实时 UI，无光标。
+- Key_Feature（来自 key-feature-glass-card-camera-reveal）：紧开在 2–3 个发光图标上；一个摄像机拉远-ZOOM 展开一行玻璃态卡片，从图标后生长出来（图标缩小为卡片头部），中心卡片向前缩放，组浮动，然后扫出——一个"一次揭示支柱"的展示变体，与相同的组装形态。
+- Benefits（来自 benefits-vertical-list）：短价值短语填充一个垂直列表，约 1 项/秒，共存并累积；每行通过弹簧标记弹出 + 勾选绘制 + 胶囊遮罩擦拭进入，或整个堆栈每节拍向上快照一个槽位（老虎机），使最新的落在明亮的聚焦槽中。
+- Social_Proof（来自 social-proof-logo-grid-zoom-out）：一面合作伙伴/应用 logo 墙构建成中心网格（整体进入 / 随机弹出 / 列上滑），一个可选的标题 + 重音渐变证明数字在上方填充，然后连续摄像机拉远-ZOOM 缩小阵列以揭示广阔生态系统；可选固定 HUD/取景器括号；可选网格上滑飞出退出。
 
-**duration**: 3.0–10.5s (Social_Proof 3.0–6s · Key_Feature grid 5.8–7.3s · Key_Feature glass-card 6.5s · Benefits list 6.5–10.5s, scaling ~1 item/sec with count)
+**时长**：3.0–10.5 秒（Social_Proof 3.0–6 秒 · Key_Feature 网格 5.8–7.3 秒 · Key_Feature 玻璃卡片 6.5 秒 · Benefits 列表 6.5–10.5 秒，约 1 项/秒随计数缩放）
 
-**shot structure** (consolidated template — concrete motion verbs, [slots])
+**镜头结构**（统一模板 — 具体动作动词，[slots]）
 
-- **Scene 1 (0.0–~1.0s) — open + first arrivals.** On a `[gradient / radial / dark background]` (optional `[dot-grid / drifting-watermark]` texture), an empty `[grid or list region]` is established and items begin to ASSEMBLE in a quick staggered cascade (~0.04–0.08s gap; list pacing ~1 item/sec). Each `[item: feature tile / pill / logo tile / benefit line]` fades + slides/scales a short distance directly into its slot (low drama — no scatter, no big bounce; spring overshoot reserved for accent markers). Camera static. An opening `[headline / hook]` may fill in line-by-line above the array, with any `[proof number]` counting up in an `[accent gradient]`.
-- **Scene 2 (~1.0s–~Xs) — array resolves + holds.** Remaining items finish arriving; layout resolves into the final `[2-col-brick / 3×3 grid / dense mosaic / stacked list]`. The completed array HOLDS, alive but resting: a gentle continuous parallax/sine FLOAT on the tiles and/or a slow camera push-in (faint scale-up). Optional `[accent-color]` glow TRAVELS across/behind the tiles.
-- **Scene 3 (~Xs–end) — settle / reveal / exit.** Everything settles and holds to the end, OR the optional camera modifier runs (see below), OR a `[closing line / CTA]` book-ends the array.
+- **场景 1（0.0–~1.0 秒）——开篇 + 首批到达。** 在 `[gradient / radial / dark background]` 上（可选 `[dot-grid / drifting-watermark]` 纹理），建立一个空的 `[grid or list region]`，项目开始以快速错开级联**组装**（~0.04–0.08 秒间隔；列表节奏 ~1 项/秒）。每个 `[item: feature tile / pill / logo tile / benefit line]` 直接淡入+滑入/缩放一小段距离进入其槽位（低戏剧性——无散开、无大弹跳；弹簧过冲保留给重音标记）。摄像机静止。一个开篇 `[headline / hook]` 可以在阵列上方逐行填充，任何 `[proof number]` 以 `[accent gradient]` 计数递增。
+- **场景 2（~1.0 秒–~Xs）——阵列解析 + 保持。** 剩余项目完成到达；布局解析为最终的 `[2-col-brick / 3×3 grid / dense mosaic / stacked list]`。完成的阵列**保持**，活跃但休息：方块上温和的连续视差/正弦**浮动**和/或缓慢摄像机推进（微弱缩放）。可选 `[accent-color]` 辉光在方块之间/之后**移动**。
+- **场景 3（~Xs–结束）——稳定 / 揭示 / 退出。** 一切稳定并保持到结束，或可选摄像机修饰运行（见下），或一个 `[closing line / CTA]` 为阵列收尾。
 
-Variants (where roles diverge from the template):
+角色与模板分叉的变体：
 
-- **Variant — Key_Feature grid**: items are labeled `[icon + feature-label]` tiles/pills assembling into a 2-col-brick / 3×3 grid; near-static hold with slow push-in + optional traveling-glow sweep; headline book-ends (`[hook]` → `[CTA]`). No camera reveal.
-- **Variant — Key_Feature glass-card-reveal**: the assemble is CAMERA-DRIVEN, not element-stagger. Open tight on `[2–3 glowing icons]`; camera zoom-OUT grows `[N]` glass cards out from behind the icons (icons shrink ~50% to become card headers), `[center card]` scales ~105% and moves forward to overlap the sides (quick spring); cards hold side-by-side with continuous parallax float; exit = fast motion-blur SWEEP slides the cards off-frame.
-- **Variant — Benefits vertical-list**: a single vertical `[benefit-line]` stack, ~1 item/sec, two sub-modes — (a) BUILD: each line stays fully lit; entry = `[marker]` spring-pop + `[check/icon]` draw-in + `[pill]` mask-wipe of the text; (b) SNAP: the whole stack steps up one slot per beat (~0.1s eased) so the newest line lands in the bright focal slot and lines leaving it dim by position. Static camera; optional perpetual `[decorative orbit/disc]` on the opposite side. No camera reveal.
-- **Variant — Social_Proof logo-wall-zoom-out**: intro beat (`[trusted-by headline]` card OR a `[product screenshot]`) crossfades/cuts to a center logo grid that builds (whole-enter / randomized pop-in / column slide-up); a continuous camera zoom-OUT then shrinks the whole grid toward center to reveal a vast ecosystem and holds; optional fixed HUD/viewfinder brackets; optional exit = whole grid SLIDES UP and flies out through the top.
+- **变体 — Key_Feature 网格**：项目是标记的 `[icon + feature-label]` 方块/胶囊，组装成 2 列砖 / 3×3 网格；几乎静态保持，带缓慢推进 + 可选移动辉光扫过；标题收尾（`[hook]` → `[CTA]`）。无摄像机揭示。
+- **变体 — Key_Feature 玻璃卡片揭示**：组装是**摄像机驱动**的，而非元素错开。紧开在 `[2–3 glowing icons]` 上；摄像机拉远-ZOOM 从图标后**生长**出 `[N]` 玻璃卡片（图标缩小 ~50% 成为卡片头部），`[center card]` 缩放 ~105% 并向前移动重叠侧翼（快速弹簧）；卡片并排保持，带连续视差浮动；退出 = 快速运动模糊**扫过**将卡片滑出画面。
+- **变体 — Benefits 垂直列表**：一个垂直 `[benefit-line]` 堆栈，约 1 项/秒，两个子模式 — (a) **构建**：每行保持完全点亮；入场 = `[marker]` 弹簧弹出 + `[check/icon]` 绘制 + `[pill]` 文本的遮罩擦拭；(b) **快照**：整个堆栈每节拍向上步进一个槽位（~0.1 秒缓动）使最新行落在明亮聚焦槽中，离开它的行按位置变暗。静态摄像机；可选对面持续 `[decorative orbit/disc]`。无摄像机揭示。
+- **变体 — Social_Proof logo 墙拉远-zoom**：介绍节拍（`[trusted-by headline]` 卡片或一个 `[product screenshot]`）交叉淡入/切到中心 logo 网格，该网格构建（整体进入 / 随机弹出 / 列上滑）；连续摄像机拉远-ZOOM 然后将整个网格向中心缩小以揭示广阔生态系统并保持；可选固定 HUD/取景器括号；可选退出 = 整个网格**上滑**并通过顶部飞出。
 
-**motion vocabulary**: item stagger-assemble (fade + short slide/scale into slot) · brick/grid/list layout resolve · randomized pop-in · column slide-up · vertical-list step (slot-machine snap-and-hold) · spring-overshoot marker pop · check/icon draw-in · pill/label mask-wipe reveal · dim-by-position de-emphasis · line-by-line headline fill · accent-gradient number count-up · near-static hold · gentle parallax/sine float on hold · slow camera push-in · camera zoom-OUT reveal (continuous OR phased pull-back) · cards-grow-from-behind-icons · icon-shrink-to-header · center-card scale-up + forward overlap (spring) · traveling-glow sweep · fixed HUD/viewfinder brackets · motion-blur slide-out sweep (exit) · grid slide-up fly-out (exit) · book-end headline fade · perpetual decorative orbit/loop.
+**动词语汇**：项目错开组装（淡入 + 短滑/缩放进槽位）· 砖/网格/列表布局解析 · 随机弹出 · 列上滑 · 垂直列表步进（老虎机快照并保持）· 弹簧过冲标记弹出 · 勾选/图标绘制 · 胶囊/标签遮罩擦拭揭示 · 按位置变暗去强调 · 逐行标题填充 · 重音渐变数字计数递增 · 几乎静态保持 · 温和视差/正弦浮动 · 缓慢摄像机推进 · 摄像机拉远-ZOOM 揭示（连续或分阶段拉回）· 卡片从图标后生长 · 图标缩小为头部 · 中心卡片放大 + 向前重叠（弹簧）· 移动辉光扫过 · 固定 HUD/取景器括号 · 运动模糊滑出扫过（退出）· 网格上滑飞出（退出）· 收尾标题淡入 · 持续装饰轨道/循环。
 
-**rule mapping** (motion verb → `rule-id`)
+**规则映射**（动作动词 → `rule-id`）
 
-- item stagger-assemble into slot → `center-outward-expansion` (per-item stagger + short-path slide variant; for a wall too dense for a true center burst, use it in its "starting partially-spread"/direct-into-slot form — see merge tension)
-- brick/grid/list layout resolve → `center-outward-expansion` (target positions = final layout slots)
-- randomized pop-in stagger → `gsap-effects` (stagger recipe; randomized `from`/order)
-- column slide-up into grid → `gsap-effects` (per-column staggered slide-up)
-- vertical-list step / slot-machine snap-and-hold → `vertical-spring-ticker` (STEPS = number of line advances)
-- spring-overshoot marker pop → `spring-pop-entrance` (back.out spring) — also `gsap-effects` for the staggered pop chain
-- check / icon draw-in inside marker → `svg-path-draw`
-- live line-art icon in a tile (internal parts) → `svg-icon-enrichment`
-- pill / label mask-wipe text reveal → `techniques.md` (clip-path reveal)
-- dim-by-position de-emphasis → `gsap-effects` (per-line opacity by slot position; no dedicated rule)
-- line-by-line headline fill → `discrete-text-sequence`
-- accent-gradient proof number count-up → `counting-dynamic-scale`
-- gentle parallax / sine float on hold → `sine-wave-loop` (apply the concurrent-elements amplitude `/√N` rule for a held grid)
-- slow camera push-in → `multi-phase-camera` (steady-push phase pattern)
-- center-card scale-up + forward overlap → `spring-pop-entrance` (the quick spring) + `techniques.md` CSS-3D (z-depth overlap)
-- cards-grow-from-behind-icons / icon-shrink-to-header → driven by the camera reveal (`multi-phase-camera`) — the grow/shrink are scale tweens chorded to the pull-back phase; no separate rule
-- fixed HUD / viewfinder brackets → `ai-tracking-box` (static-bracket variant — overlay frame, not tracking)
-- book-end headline fade → `discrete-text-sequence` (or `gsap-effects` fade)
-- perpetual decorative orbit / disc / loop → `sine-wave-loop` (or `orbit-3d-entry` if it's an orbiting badge ring)
-- traveling-glow sweep across/behind tiles → `ambient-glow-bloom` (one-pass traveling glow sweep across the tiles)
-- motion-blur slide-out sweep (glass-card exit) → `motion-blur-streak` (directional velocity blur on the fast sweep that carries the cards off-frame)
-- grid slide-up fly-out exit → `gsap-effects` (plain staggered translate-off-frame; no dedicated rule needed — a basic exit tween, not a missing capability)
+- 项目错开组装进槽位 → `center-outward-expansion`（逐项错开 + 短路径滑动变体；对于太密无法真正中心爆发的墙，使用其"起始部分展开"/直接入槽形式 — 参见合并张力）
+- 砖/网格/列表布局解析 → `center-outward-expansion`（目标位置 = 最终布局槽位）
+- 随机弹出错开 → `gsap-effects`（错开配方；随机 `from`/顺序）
+- 列上滑进入网格 → `gsap-effects`（逐列错开上滑）
+- 垂直列表步进 / 老虎机快照并保持 → `vertical-spring-ticker`（STEPS = 行前进次数）
+- 弹簧过冲标记弹出 → `spring-pop-entrance`（back.out 弹簧）— 以及 `gsap-effects` 用于错开弹出链
+- 标记内勾选/图标绘制 → `svg-path-draw`
+- 方块中的实描画图标（内部部件）→ `svg-icon-enrichment`
+- 胶囊/标签遮罩擦拭文本揭示 → `techniques.md`（clip-path 揭示）
+- 按位置变暗去强调 → `gsap-effects`（按槽位位置的每行不透明度；无专用规则）
+- 逐行标题填充 → `discrete-text-sequence`
+- 重音渐变证明数字计数递增 → `counting-dynamic-scale`
+- 温和视差/正弦浮动 → `sine-wave-loop`（对保持的网格应用并发元素振幅 `/√N` 规则）
+- 缓慢摄像机推进 → `multi-phase-camera`（稳定推进阶段模式）
+- 中心卡片放大 + 向前重叠 → `spring-pop-entrance`（快速弹簧）+ `techniques.md` CSS-3D（z 深度重叠）
+- 卡片从图标后生长 / 图标缩小为头部 → 由摄像机揭示驱动（`multi-phase-camera`）— 生长/缩小是与拉回阶段和弦的缩放补间；无单独规则
+- 固定 HUD / 取景器括号 → `ai-tracking-box`（静态括号变体 — 叠加框，非跟踪）
+- 收尾标题淡入 → `discrete-text-sequence`（或 `gsap-effects` 淡入）
+- 持续装饰轨道/盘/循环 → `sine-wave-loop`（或如果是轨道徽章环则为 `orbit-3d-entry`）
+- 方块之间/之后移动辉光扫过 → `ambient-glow-bloom`（一次穿过方块的移动辉光扫过）
+- 运动模糊滑出扫过（玻璃卡片退出）→ `motion-blur-streak`（携带卡片出画面的快速扫过上的方向速度模糊）
+- 网格上滑飞出退出 → `gsap-effects`（普通错开平移出画面；无需专用规则 — 基本退出补间，非缺失能力）
 
-**camera modifier — zoom-OUT reveal** (optional; the role-defining move for the glass-card and logo-wall variants): a camera wrapper around the whole array scales DOWN over the hold, revealing the assembled grid/cards sitting inside a larger environment (ecosystem scale, or a row of cards unfolding from tight icons).
+**摄像机修饰 — 拉远-ZOOM 揭示**（可选；玻璃卡片和 logo 墙变体的角色定义动作）：围绕整个阵列的摄像机包裹在保持期间缩**小**，揭示组装的阵列/卡片位于更大的环境中（生态系统规模，或从紧图标展开的一行卡片）。
 
-- Continuous single-pass zoom-out (Social_Proof ecosystem pull-back) → `viewport-change` (one wrapper, `cam.scale` ↓ via onUpdate — single source of truth)
-- Phased pull-back → focus → settle, with built-in drift (Key_Feature tight-icons → cards-unfold) → `multi-phase-camera` (use the "Dramatic reveal: push → neutral → pull" / pull-back phase pattern; grow/shrink of cards chords to the pull-back phase)
+- 连续单次拉远-zoom（Social_Proof 生态系统拉回）→ `viewport-change`（一个包裹，`cam.scale` ↓ 通过 onUpdate — 单一真相源）
+- 分阶段拉回 → 聚焦 → 稳定，带内置漂移（Key_Feature 紧图标 → 卡片展开）→ `multi-phase-camera`（使用"戏剧性揭示：推进 → 中性 → 拉出"/拉回阶段模式；卡片的生长/缩小与拉回阶段和弦）
 
 ---
 
 ```
-BLUEPRINT: grid-card-assemble — serves Key_Feature, Benefits, Social_Proof (folded 4 drafts)
-RULE GAPS: none — traveling-glow sweep → ambient-glow-bloom; motion-blur slide-out sweep (exit) → motion-blur-streak; grid slide-up fly-out (exit) → gsap-effects (plain translate)
+蓝图：grid-card-assemble — 服务于 Key_Feature、Benefits、Social_Proof（折叠 4 个草稿）
+规则缺口：无 — 移动辉光扫过 → ambient-glow-bloom；运动模糊滑出扫过（退出）→ motion-blur-streak；网格上滑飞出（退出）→ gsap-effects（普通平移）
 ```
 
-Merge tension: `center-outward-expansion` (the natural backing for stagger-assemble) caps cleanly at 3–8 items and explicitly warns 8+ causes mid-flight overlap chaos — but a Social_Proof logo wall is deliberately dense (12+ tiles), so for that variant the items must NOT burst from a shared center; they slide a short distance directly into their own slot (the rule's "starting partially-spread"/short-path form, or a `gsap-effects` per-item stagger), which the consolidated Scene-1 verb already specifies as "short distance directly into its slot."
+合并张力：`center-outward-expansion`（错开组装的天然支持）在 3–8 项时干净封顶，并明确警告 8+ 会导致中途飞行重叠混乱 — 但 Social_Proof logo 墙有意密集（12+ 方块），因此对于该变体，项目必须**不**从共享中心爆发；它们直接滑一小段距离进入自己的槽位（规则的"起始部分展开"/短路径形式，或 `gsap-effects` 逐项错开），合并后的场景 1 动词已指定为"直接进入其槽位的短距离"。

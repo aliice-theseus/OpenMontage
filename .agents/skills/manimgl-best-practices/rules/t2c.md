@@ -1,17 +1,17 @@
-# Tex to Color Map (t2c) in ManimGL
+# ManimGL 中的 Tex 到颜色映射（t2c）
 
-The `t2c` parameter (tex_to_color_map) is a powerful feature for coloring specific parts of LaTeX expressions.
+`t2c` 参数（tex_to_color_map）是一个强大的功能，用于为 LaTeX 表达式的特定部分着色。
 
-## Basic t2c Usage
+## 基本 t2c 用法
 
-### Coloring Math Symbols
+### 为数学符号着色
 
 ```python
 from manimlib import *
 
 class T2CExample(Scene):
     def construct(self):
-        # Color specific variables
+        # 为特定变量着色
         equation = Tex(
             R"E = mc^2",
             t2c={"E": BLUE, "m": GREEN, "c": YELLOW}
@@ -19,10 +19,10 @@ class T2CExample(Scene):
         self.add(equation)
 ```
 
-### Coloring Substrings
+### 为子字符串着色
 
 ```python
-# Color parts of the formula
+# 为公式的部分着色
 formula = Tex(
     R"\int_0^1 x^2 \, dx = \frac{1}{3}",
     t2c={
@@ -33,26 +33,26 @@ formula = Tex(
 )
 ```
 
-## Advanced t2c Patterns
+## 高级 t2c 模式
 
-### Coloring Multiple Instances
+### 为多个实例着色
 
 ```python
-# All instances of a variable get colored
+# 变量的所有实例都被着色
 series = Tex(
     R"\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}",
     t2c={
-        "n": BLUE,     # Colors all 'n's
+        "n": BLUE,     # 所有 'n' 都被着色
         R"\pi": RED,
         R"\sum": GREEN
     }
 )
 ```
 
-### Using isolate with t2c
+### 将 isolate 与 t2c 结合使用
 
 ```python
-# Isolate specific parts for individual control
+# 隔离特定部分以便单独控制
 equation = Tex(
     R"a^2 + b^2 = c^2",
     isolate=["a", "b", "c", "^2"],
@@ -65,32 +65,32 @@ equation = Tex(
 )
 ```
 
-## Dynamic Coloring
+## 动态着色
 
 ### set_color_by_tex
 
 ```python
-# Color after creation
+# 创建后着色
 formula = Tex(R"f(x) = x^2 + 2x + 1")
 formula.set_color_by_tex("x", BLUE)
 formula.set_color_by_tex("f", GREEN)
 formula.set_color_by_tex("1", YELLOW)
 ```
 
-### Gradient Coloring
+### 渐变着色
 
 ```python
-# Apply gradient to entire formula
+# 对整个公式应用渐变
 formula = Tex(R"\nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t}")
 formula.set_submobject_colors_by_gradient(BLUE, GREEN, YELLOW)
 ```
 
-## Text Coloring (Text class)
+## 文本着色（Text 类）
 
-### t2c for Text Objects
+### Text 对象的 t2c
 
 ```python
-# Color words in Text
+# 为 Text 中的单词着色
 text = Text(
     "The quick brown fox jumps",
     t2c={
@@ -101,10 +101,10 @@ text = Text(
 )
 ```
 
-### Multiple Styling Options
+### 多个样式选项
 
 ```python
-# Combine t2c, t2f, t2s, t2w
+# 组合 t2c、t2f、t2s、t2w
 text = Text(
     "Different styles and colors",
     t2c={"Different": RED, "colors": BLUE},
@@ -114,14 +114,14 @@ text = Text(
 )
 ```
 
-## Complex Examples
+## 复杂示例
 
-### Physics Equation with Color Coding
+### 带颜色编码的物理方程
 
 ```python
 class ColoredPhysicsEquation(Scene):
     def construct(self):
-        # Maxwell's equation with color-coded components
+        # 带颜色编码组件的麦克斯韦方程
         maxwell = Tex(
             R"\nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t}",
             t2c={
@@ -135,36 +135,36 @@ class ColoredPhysicsEquation(Scene):
         self.wait()
 ```
 
-### Step-by-Step Derivation
+### 逐步推导
 
 ```python
 class ColoredDerivation(Scene):
     def construct(self):
-        # Initial equation
+        # 初始方程
         eq1 = Tex(
             R"(a + b)^2 = a^2 + 2ab + b^2",
             t2c={"a": BLUE, "b": GREEN}
         )
 
-        # Expanded form
+        # 展开形式
         eq2 = Tex(
             R"(a + b)^2 = (a + b)(a + b)",
             t2c={"a": BLUE, "b": GREEN}
         )
 
-        # Show transformation
+        # 展示变换
         self.play(Write(eq1))
         self.wait()
         self.play(TransformMatchingTex(eq1, eq2))
         self.wait()
 ```
 
-### Highlighting Specific Terms
+### 高亮特定项
 
 ```python
 class HighlightTerms(Scene):
     def construct(self):
-        # Quadratic formula with highlighted discriminant
+        # 带高亮判别式的二次公式
         formula = Tex(
             R"x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}",
             t2c={
@@ -172,11 +172,11 @@ class HighlightTerms(Scene):
                 "b": BLUE,
                 "a": GREEN,
                 "c": YELLOW,
-                R"b^2 - 4ac": RED  # Discriminant in red
+                R"b^2 - 4ac": RED  # 判别式用红色
             }
         )
 
-        # Add label for discriminant
+        # 为判别式添加标签
         discriminant_label = Text("Discriminant", color=RED, font_size=30)
         discriminant_label.next_to(formula, DOWN)
 
@@ -185,33 +185,33 @@ class HighlightTerms(Scene):
         self.wait()
 ```
 
-## Coloring LaTeX Operators
+## 为 LaTeX 运算符着色
 
 ```python
-# Color different operator types
+# 为不同运算符类型着色
 expression = Tex(
     R"\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}",
     t2c={
-        R"\int": BLUE,          # Integral
-        "e": GREEN,              # Exponential
-        R"\pi": RED,            # Pi
-        "x": YELLOW,            # Variable
-        "2": ORANGE             # Exponent
+        R"\int": BLUE,          # 积分号
+        "e": GREEN,              # 指数
+        R"\pi": RED,            # 圆周率
+        "x": YELLOW,            # 变量
+        "2": ORANGE             # 指数
     }
 )
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use raw strings with R**: Always use `R"..."` for LaTeX strings in ManimGL
-2. **Test isolate first**: Use `isolate=` to verify what can be colored independently
-3. **Consistent color scheme**: Use meaningful colors (e.g., variables in blue, constants in green)
-4. **Don't over-color**: Too many colors can be distracting
-5. **Color for emphasis**: Highlight the important parts you want viewers to focus on
+1. **使用原始字符串加 R**：在 ManimGL 中始终使用 `R"..."` 表示 LaTeX 字符串
+2. **先测试 isolate**：使用 `isolate=` 验证哪些部分可以独立着色
+3. **一致的颜色方案**：使用有意义的颜色（如变量用蓝色，常量用绿色）
+4. **不要过度着色**：过多的颜色可能分散注意力
+5. **颜色用于强调**：高亮希望观众关注的重要部分
 
-## Common Patterns
+## 常见模式
 
-### Creating a color scheme for math
+### 为数学创建配色方案
 
 ```python
 MATH_COLORS = {
@@ -231,38 +231,38 @@ equation = Tex(
 )
 ```
 
-### Animating color changes
+### 动画化颜色变化
 
 ```python
 class AnimateColorChange(Scene):
     def construct(self):
         formula = Tex(R"f(x) = x^2")
 
-        # Start with one color
+        # 从一种颜色开始
         formula.set_color(BLUE)
         self.add(formula)
         self.wait()
 
-        # Animate to different colors
+        # 动画变更为不同颜色
         self.play(formula.animate.set_color_by_tex("x", RED))
         self.wait()
 ```
 
-## Troubleshooting
+## 故障排除
 
-### If t2c doesn't work:
+### 如果 t2c 不起作用：
 
-1. Check if the substring exists exactly in the LaTeX string
-2. Use `isolate=` to separate the part you want to color
-3. Remember that spacing matters in LaTeX
-4. Use raw strings `R"..."` not regular strings
+1. 检查子字符串是否与 LaTeX 字符串中的内容完全匹配
+2. 使用 `isolate=` 分离要着色的部分
+3. 记住 LaTeX 中的空格很重要
+4. 使用原始字符串 `R"..."` 而非普通字符串
 
-### Example of common issue:
+### 常见问题示例：
 
 ```python
-# This might not work if spaces don't match:
-wrong = Tex(R"a+b", t2c={"a + b": RED})  # Won't match "a+b"
+# 如果空格不匹配，这可能不起作用：
+wrong = Tex(R"a+b", t2c={"a + b": RED})  # 无法匹配 "a+b"
 
-# This will work:
+# 这样会有效：
 right = Tex(R"a + b", t2c={"a": RED, "b": BLUE})
 ```

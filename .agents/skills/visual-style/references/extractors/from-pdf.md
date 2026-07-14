@@ -1,215 +1,214 @@
-# Extract from PDF / Brand Guide
+# 从 PDF / 品牌指南提取
 
-Generate a `visual-style.md` from a PDF brand guide or style document.
+从 PDF 品牌指南或样式文档生成 `visual-style.md`。
 
-## Workflow
+## 工作流
 
-1. **Receive PDF** — User uploads a brand guide, style guide, or design document
-2. **Parse sections** — Identify color, typography, layout, and guidelines sections
-3. **Map to fields** — Translate brand guide specifications to visual-style.md fields
-4. **Fill gaps** — Generate `style_prompt_full` from the structured data
-5. **Output** — Complete `visual-style.md`
-6. **Validate** — Ensure all required fields are present
+1. **接收 PDF** — 用户上传品牌指南、样式指南或设计文档
+2. **解析章节** — 识别颜色、排版、布局和指南章节
+3. **映射到字段** — 将品牌指南规格转换为 visual-style.md 字段
+4. **填补空白** — 从结构化数据生成 `style_prompt_full`
+5. **输出** — 完整的 `visual-style.md`
+6. **验证** — 确保所有必填字段存在
 
-## Common Brand Guide Sections
+## 常见品牌指南章节
 
-| Brand Guide Section | Maps To |
+| 品牌指南章节 | 映射到 |
 |--------------------|---------|
-| Brand Overview / Mission | `style_prompt_short`, `mood.keywords` |
-| Color Palette | `colors.*` |
-| Primary Colors | `colors.primary` |
-| Secondary/Accent Colors | `colors.accent` |
-| Typography | `typography.*` |
-| Headlines | `typography.display` |
-| Body Copy | `typography.body` |
-| Grid System | `layout.grid` |
-| Spacing | `layout.notes` |
-| Do's and Don'ts | `typography.rules`, `mood.avoid` |
-| Voice & Tone | `mood.keywords`, `style_prompt_full` |
-| Photography Style | `mood.keywords`, `mood.avoid` |
-| Iconography | `style_prompt_full` |
+| 品牌概述 / 使命 | `style_prompt_short`、`mood.keywords` |
+| 调色板 | `colors.*` |
+| 主色 | `colors.primary` |
+| 辅助/强调色 | `colors.accent` |
+| 排版 | `typography.*` |
+| 标题 | `typography.display` |
+| 正文 | `typography.body` |
+| 网格系统 | `layout.grid` |
+| 间距 | `layout.notes` |
+| 应做与不应做 | `typography.rules`、`mood.avoid` |
+| 语气与语调 | `mood.keywords`、`style_prompt_full` |
+| 摄影风格 | `mood.keywords`、`mood.avoid` |
+| 图标设计 | `style_prompt_full` |
 
-## Extraction Prompt
+## 提取提示
 
-Use this prompt when parsing a brand guide PDF:
+解析品牌指南 PDF 时使用此提示：
 
 ```
-Parse this brand guide PDF and generate a visual-style.md.
+解析此品牌指南 PDF 并生成 visual-style.md。
 
-Map the brand guide sections to visual-style.md fields:
+将品牌指南章节映射到 visual-style.md 字段：
 
-REQUIRED:
-- name: Brand name + "Brand Style"
-- version: "1.0"
-- style_prompt_short: Synthesize from brand overview/mission
-- style_prompt_full: Combine ALL visual specifications into a coherent
-  generation prompt. Include specific hex codes, font names, spacing
-  values, and design principles.
-- colors.primary: From "Primary Colors" section
+必填：
+- name：品牌名称 + "品牌风格"
+- version："1.0"
+- style_prompt_short：从品牌概述/使命综合
+- style_prompt_full：将所有视觉规格组合成连贯的
+  生成提示。包括具体的十六进制码、字体名称、间距
+  值和设计原则。
+- colors.primary：来自"主色"章节
 
-FROM COLOR SECTIONS:
-- colors.primary: Primary palette (convert all color specs to hex)
-- colors.accent: Secondary/accent colors
-- colors.neutral: Grays, backgrounds, supporting colors
+来自颜色章节：
+- colors.primary：主调色板（将所有颜色规格转换为十六进制）
+- colors.accent：辅助/强调色
+- colors.neutral：灰色、背景、辅助色
 
-FROM TYPOGRAPHY SECTIONS:
-- typography.display: Headline font specs
-- typography.body: Body copy font specs
-- typography.caption: Caption/label specs (if defined)
-- typography.rules: Any typography guidelines or restrictions
+来自排版章节：
+- typography.display：标题字体规格
+- typography.body：正文字体规格
+- typography.caption：说明文字/标签规格（如已定义）
+- typography.rules：任何排版指南或限制
 
-FROM LAYOUT SECTIONS:
-- layout.grid: Grid system specifications
-- layout.alignment: Alignment rules
-- layout.notes: Spacing, margins, padding guidelines
+来自布局章节：
+- layout.grid：网格系统规格
+- layout.alignment：对齐规则
+- layout.notes：间距、边距、填充指南
 
-FROM GUIDELINES SECTIONS:
-- mood.keywords: Extract from voice/tone/personality sections
-- mood.avoid: Extract from "Don't" lists, incorrect usage examples
+来自指南章节：
+- mood.keywords：从语气/语调/个性章节提取
+- mood.avoid：从"不应做"列表、错误使用示例提取
 
-Be precise:
-- Convert all color specifications to hex (RGB, CMYK, Pantone → hex)
-- Use exact font family names as specified
-- Include specific measurements where given
-- Preserve the brand's stated values in style_prompt_full
+精确：
+- 将所有颜色规格转换为十六进制（RGB、CMYK、Pantone → hex）
+- 使用指定的精确字体族名称
+- 包括给出的具体测量值
+- 在 style_prompt_full 中保留品牌声明的价值观
 
-Output format:
-Complete YAML frontmatter between --- delimiters
-Plus Markdown body sections (## Design Principles from brand philosophy)
+输出格式：
+--- 分隔符之间的完整 YAML 前置元数据
+加上 Markdown 正文章节（## Design Principles 来自品牌哲学）
 ```
 
-## Color Conversion Reference
+## 颜色转换参考
 
-Brand guides often specify colors in multiple formats:
+品牌指南通常以多种格式指定颜色：
 
-| Format | Example | Hex Conversion |
+| 格式 | 示例 | 十六进制转换 |
 |--------|---------|----------------|
-| Hex | #FF5500 | Use directly |
+| Hex | #FF5500 | 直接使用 |
 | RGB | 255, 85, 0 | → #FF5500 |
-| CMYK | 0, 67, 100, 0 | Approximate to hex |
-| Pantone | PMS 021 C | Look up hex equivalent |
-| HSL | 20°, 100%, 50% | Convert to hex |
+| CMYK | 0, 67, 100, 0 | 近似为十六进制 |
+| Pantone | PMS 021 C | 查找对应的十六进制 |
+| HSL | 20°, 100%, 50% | 转换为十六进制 |
 
-For Pantone colors, use the official Pantone-to-hex mapping or note the Pantone code in the `role` field.
+对于 Pantone 颜色，使用官方的 Pantone 到十六进制映射或在 `role` 字段中注明 Pantone 代码。
 
-## Example Output
+## 示例输出
 
-Given a corporate brand guide PDF:
+给定公司品牌指南 PDF：
 
 ```yaml
 ---
-name: "Acme Corp Brand Style"
+name: "Acme Corp 品牌风格"
 version: "1.0"
 tags:
-  - corporate
-  - technology
-author: "Extracted from Acme Brand Guidelines v2.3"
+  - 企业
+  - 科技
+author: "从 Acme 品牌指南 v2.3 提取"
 source_url: ""
 created: "2026-03-12"
 
 style_prompt_short: >
-  Professional tech brand with bold blue accents.
-  Clean, trustworthy, forward-thinking.
+  专业科技品牌，大胆的蓝色强调。
+  干净、可信、前瞻性思维。
 
 style_prompt_full: >
-  Acme Corp brand style. Professional technology company aesthetic.
-  Primary blue (#0052CC) for brand elements, CTAs, and emphasis.
-  Navy (#172B4D) for headings and high-contrast text. Clean white
-  (#FFFFFF) backgrounds with generous whitespace. Neutral grays
-  for supporting content. Typography uses Roboto for digital
-  and Avenir for print — clean, geometric sans-serifs that convey
-  precision. 8-point spacing grid. Rounded corners (4px) on
-  interactive elements. Photography should be authentic, diverse,
-  and optimistic — no stock photo clichés. Iconography is outlined,
-  2px stroke, rounded caps. Professional but approachable. Never
-  corporate-stuffy or overly playful.
+  Acme Corp 品牌风格。专业科技公司美学。
+  主蓝色 (#0052CC) 用于品牌元素、行动号召和强调。
+  深蓝 (#172B4D) 用于标题和高对比度文字。干净的白色
+  (#FFFFFF) 背景配宽敞留白。中性灰色
+  用于辅助内容。排版使用 Roboto 用于数字
+  和 Avenir 用于印刷 — 传达精度的干净几何无衬线字体。
+  8 点间距网格。交互元素圆角 (4px)。
+  摄影应真实、多样且乐观 — 无图库照片陈词滥调。
+  图标为线框风格，2px 描边，圆角端点。
+  专业但平易近人。绝不企业式古板或过于俏皮。
 
 colors:
   primary:
-    - name: "Acme Blue"
+    - name: "Acme 蓝"
       hex: "#0052CC"
-      role: "primary brand color, CTAs, links"
-    - name: "Navy"
+      role: "主要品牌色，行动号召，链接"
+    - name: "深蓝"
       hex: "#172B4D"
-      role: "headings, high-contrast text"
+      role: "标题，高对比度文字"
   accent:
-    - name: "Success Green"
+    - name: "成功绿"
       hex: "#36B37E"
-      role: "positive states, confirmations"
-    - name: "Warning Yellow"
+      role: "正面状态，确认"
+    - name: "警告黄"
       hex: "#FFAB00"
-      role: "warnings, attention"
-    - name: "Error Red"
+      role: "警告，注意"
+    - name: "错误红"
       hex: "#DE350B"
-      role: "errors, destructive actions"
+      role: "错误，破坏性操作"
   neutral:
-    - name: "White"
+    - name: "白色"
       hex: "#FFFFFF"
-      role: "primary background"
-    - name: "Light Gray"
+      role: "主要背景"
+    - name: "浅灰"
       hex: "#F4F5F7"
-      role: "secondary backgrounds, cards"
-    - name: "Mid Gray"
+      role: "次要背景，卡片"
+    - name: "中灰"
       hex: "#6B778C"
-      role: "secondary text, placeholders"
-    - name: "Dark Gray"
+      role: "次要文字，占位符"
+    - name: "深灰"
       hex: "#42526E"
-      role: "body text"
+      role: "正文"
 
 typography:
   display:
     family: "Roboto"
     weight: "700"
-    style: "sentence case, -0.02em tracking"
+    style: "句首大写，-0.02em 字距"
   body:
     family: "Roboto"
     weight: "400"
-    style: "16px base, 1.5 line height"
+    style: "16px 基础，1.5 行高"
   caption:
     family: "Roboto"
     weight: "500"
-    style: "12px, uppercase for labels"
+    style: "12px，标签大写"
   rules:
-    - "Roboto for all digital applications"
-    - "Avenir for print materials"
-    - "Minimum body text size: 14px"
-    - "Maximum line length: 75 characters"
-    - "Use Medium (500) weight for emphasis, not bold"
+    - "所有数字应用使用 Roboto"
+    - "印刷材料使用 Avenir"
+    - "最小正文字号：14px"
+    - "最大行长：75 个字符"
+    - "使用 Medium (500) 字重表示强调，而非 bold"
 
 layout:
-  grid: "8-point grid, 12 columns"
-  alignment: "Left-aligned text, center-aligned hero content"
-  aspect_ratio: "16:9 for presentations"
+  grid: "8 点网格，12 列"
+  alignment: "左对齐文字，居中主角内容"
+  aspect_ratio: "演示文稿 16:9"
   notes:
-    - "Minimum margin: 24px (mobile), 48px (desktop)"
-    - "Standard spacing: 8, 16, 24, 32, 48, 64px"
-    - "Card border-radius: 4px"
-    - "Button border-radius: 4px"
+    - "最小边距：24px（移动端），48px（桌面端）"
+    - "标准间距：8, 16, 24, 32, 48, 64px"
+    - "卡片边框圆角：4px"
+    - "按钮边框圆角：4px"
 
 motion:
   transitions:
-    - "ease-out, 200ms for micro-interactions"
-    - "ease-in-out, 300ms for page transitions"
-  animation_style: "Subtle, purposeful. Animation should clarify, not decorate."
-  pacing: "Quick, responsive feedback"
+    - "ease-out，200ms 微交互"
+    - "ease-in-out，300ms 页面过渡"
+  animation_style: "微妙、有目的。动画应阐明，而非装饰。"
+  pacing: "快速、响应式反馈"
 
 mood:
   keywords:
-    - "professional"
-    - "trustworthy"
-    - "innovative"
-    - "approachable"
-    - "precise"
-  era: "Contemporary tech (2020s)"
-  cultural_reference: "Enterprise SaaS, developer tools"
+    - "专业"
+    - "可信"
+    - "创新"
+    - "平易近人"
+    - "精确"
+  era: "当代科技（2020 年代）"
+  cultural_reference: "企业 SaaS，开发者工具"
   avoid:
-    - "overly playful or casual tone"
-    - "generic stock photography"
-    - "gradients on brand elements"
-    - "more than 3 colors in one composition"
-    - "centered body text"
-    - "all-caps body text"
-    - "drop shadows deeper than 2px"
+    - "过于俏皮或随意的语气"
+    - "通用图库摄影"
+    - "品牌元素上的渐变"
+    - "一个构图中超过 3 种颜色"
+    - "居中正文"
+    - "全大写正文"
+    - "深度超过 2px 的投影"
 
 assets:
   reference_images: []
@@ -219,25 +218,25 @@ assets:
 
 ## Design Principles
 
-From Acme Brand Guidelines:
+来自 Acme 品牌指南：
 
-1. **Clarity over cleverness** — Communication should be immediately understood
-2. **Consistency builds trust** — Every touchpoint reinforces the brand
-3. **Purposeful restraint** — Add only what adds value
-4. **Accessible by default** — Design for everyone
+1. **清晰胜过机巧** — 沟通应立即可理解
+2. **一致性建立信任** — 每个接触点强化品牌
+3. **有目的的克制** — 只添加增加价值的内容
+4. **默认可访问** — 为所有人设计
 
 ## Extraction Notes
 
-Extracted from "Acme Brand Guidelines v2.3" (PDF, 48 pages).
-Color values converted from Pantone specifications.
-Typography mapped from "Digital Standards" section.
-Do's and Don'ts synthesized into mood.avoid list.
+从"Acme 品牌指南 v2.3"（PDF，48 页）提取。
+颜色值从 Pantone 规格转换。
+排版从"数字标准"章节映射。
+应做与不应做综合到 mood.avoid 列表中。
 ```
 
-## Tips
+## 技巧
 
-- **Prioritize specificity** — Brand guides are precise; preserve exact values
-- **Don't invent** — If a section isn't in the PDF, leave the field empty
-- **Synthesize style_prompt_full** — This should read like a brief you'd give a designer
-- **Capture the don'ts** — `mood.avoid` is often explicitly stated in brand guides
-- **Note the source** — Include page numbers or section names in Extraction Notes
+- **优先精确** — 品牌指南是精确的；保留精确值
+- **不要发明** — 如果 PDF 中没有某个章节，保持字段为空
+- **综合 style_prompt_full** — 读起来应像给设计师的简报
+- **捕获不应做的内容** — `mood.avoid` 通常在品牌指南中明确说明
+- **注明来源** — 在提取说明中包括页码或章节名称

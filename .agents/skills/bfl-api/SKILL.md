@@ -1,84 +1,84 @@
 ---
 name: bfl-api
-description: BFL FLUX API integration guide covering endpoints, async polling patterns, rate limiting, error handling, webhooks, and regional endpoints with Python and TypeScript code examples.
+description: BFL FLUX API 集成指南，涵盖端点、异步轮询模式、速率限制、错误处理、webhook 和区域端点，包含 Python 和 TypeScript 代码示例。
 metadata:
   author: Black Forest Labs
   version: "1.0.0"
   tags: flux, bfl, api, integration, webhooks, rate-limiting
 ---
 
-# BFL API Integration Guide
+# BFL API 集成指南
 
-Use this skill when integrating BFL FLUX APIs into applications for image generation, editing, and processing.
+在将 BFL FLUX API 集成到应用程序中进行图像生成、编辑和处理时使用此技能。
 
-## First: Check API Key
+## 首先：检查 API 密钥
 
-**Before generating images, verify your API key is set:**
+**在生成图像之前，请验证您的 API 密钥已设置：**
 
 ```bash
 echo $BFL_API_KEY
 ```
 
-If empty or you see "Not authenticated" errors, see [API Key Setup](#api-key-setup) below.
+如果为空或看到"Not authenticated"错误，请参阅下面的 [API 密钥设置](#api-key-setup)。
 
-## Important: Image URLs Expire in 10 Minutes
+## 重要提示：图片 URL 10 分钟后过期
 
-Result URLs from the API are temporary. Download images immediately after generation completes - do not store or cache the URLs themselves.
+来自 API 的结果 URL 是临时的。生成完成后请立即下载图片——不要存储或缓存 URL 本身。
 
-## When to Use
+## 何时使用
 
-- Setting up BFL API client
-- Implementing async polling patterns
-- Handling rate limits and errors
-- Configuring webhooks for production
-- Selecting regional endpoints
-- Building production-ready integrations
+- 设置 BFL API 客户端
+- 实现异步轮询模式
+- 处理速率限制和错误
+- 配置生产环境的 Webhook
+- 选择区域端点
+- 构建生产就绪的集成
 
-## Quick Reference
+## 快速参考
 
-### Base Endpoints
+### 基础端点
 
-| Region | Endpoint                | Use Case                    |
-| ------ | ----------------------- | --------------------------- |
-| Global | `https://api.bfl.ai`    | Default, automatic failover |
-| EU     | `https://api.eu.bfl.ai` | GDPR compliance             |
-| US     | `https://api.us.bfl.ai` | US data residency           |
+| 区域   | 端点                       | 用途                           |
+| ------ | -------------------------- | ------------------------------ |
+| 全局   | `https://api.bfl.ai`       | 默认，自动故障转移             |
+| 欧盟   | `https://api.eu.bfl.ai`    | GDPR 合规                      |
+| 美国   | `https://api.us.bfl.ai`    | 美国数据驻留                   |
 
-### Model Endpoints & Pricing
+### 模型端点与定价
 
-> **Credit pricing:** 1 credit = $0.01 USD. FLUX.2 uses megapixel-based pricing (cost scales with resolution).
+> **积分定价：** 1 积分 = 0.01 美元。FLUX.2 使用基于百万像素的定价（成本随分辨率变化）。
 
-#### FLUX.2 Models
+#### FLUX.2 模型
 
-| Model             | Path                  | 1st MP | +MP  | 1MP T2I | 1MP I2I | Best For                           |
-| ----------------- | --------------------- | ------ | ---- | ------- | ------- | ---------------------------------- |
-| FLUX.2 [klein] 4B | `/v1/flux-2-klein-4b` | 1.4c   | 0.1c | $0.014  | $0.015  | Real-time, high volume             |
-| FLUX.2 [klein] 9B | `/v1/flux-2-klein-9b` | 1.5c   | 0.2c | $0.015  | $0.017  | Balanced quality/speed             |
-| FLUX.2 [pro]      | `/v1/flux-2-pro`      | 3c     | 1.5c | $0.03   | $0.045  | Production, fast turnaround        |
-| FLUX.2 [max]      | `/v1/flux-2-max`      | 7c     | 3c   | $0.07   | $0.10   | Maximum quality                    |
-| FLUX.2 [flex]     | `/v1/flux-2-flex`     | 5c     | 5c   | $0.05   | $0.10   | Typography, adjustable controls    |
-| FLUX.2 [dev]      | -                     | -      | -    | Free    | Free    | Local development (non-commercial) |
+| 模型                   | 路径                     | 首 MP | +MP  | 1MP T2I | 1MP I2I | 最佳用途                            |
+| ---------------------- | ------------------------ | ----- | ---- | ------- | ------- | ----------------------------------- |
+| FLUX.2 [klein] 4B     | `/v1/flux-2-klein-4b`   | 1.4c  | 0.1c | $0.014  | $0.015  | 实时，高吞吐量                       |
+| FLUX.2 [klein] 9B     | `/v1/flux-2-klein-9b`   | 1.5c  | 0.2c | $0.015  | $0.017  | 平衡质量/速度                        |
+| FLUX.2 [pro]          | `/v1/flux-2-pro`        | 3c    | 1.5c | $0.03   | $0.045  | 生产环境，快速周转                   |
+| FLUX.2 [max]          | `/v1/flux-2-max`        | 7c    | 3c   | $0.07   | $0.10   | 最高质量                            |
+| FLUX.2 [flex]         | `/v1/flux-2-flex`       | 5c    | 5c   | $0.05   | $0.10   | 排版，可调控制                      |
+| FLUX.2 [dev]          | -                       | -     | -    | 免费    | 免费    | 本地开发（非商业用途）              |
 
-> **Pricing formula:** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)` in cents
+> **定价公式：** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)` 单位为分
 
-#### FLUX.1 Models
+#### FLUX.1 模型
 
-| Model                | Path                     | Price/Image | Best For                      |
-| -------------------- | ------------------------ | ----------- | ----------------------------- |
-| FLUX.1 Kontext [pro] | `/v1/flux-kontext`       | $0.04       | Image editing with context    |
-| FLUX.1 Kontext [max] | `/v1/flux-kontext-max`   | $0.08       | Max quality editing           |
-| FLUX1.1 [pro]        | `/v1/flux-pro-1.1`       | $0.04       | Standard T2I, fast & reliable |
-| FLUX1.1 [pro] Ultra  | `/v1/flux-pro-1.1-ultra` | $0.06       | Ultra high-resolution         |
-| FLUX1.1 [pro] Raw    | `/v1/flux-pro-1.1-raw`   | $0.06       | Candid photography feel       |
-| FLUX.1 Fill [pro]    | `/v1/flux-pro-1.0-fill`  | $0.05       | Inpainting                    |
+| 模型                      | 路径                         | 价格/图片 | 最佳用途                         |
+| ------------------------- | ---------------------------- | --------- | -------------------------------- |
+| FLUX.1 Kontext [pro]      | `/v1/flux-kontext`           | $0.04     | 带上下文的图片编辑               |
+| FLUX.1 Kontext [max]      | `/v1/flux-kontext-max`       | $0.08     | 最高质量编辑                     |
+| FLUX1.1 [pro]             | `/v1/flux-pro-1.1`           | $0.04     | 标准 T2I，快速可靠               |
+| FLUX1.1 [pro] Ultra       | `/v1/flux-pro-1.1-ultra`     | $0.06     | 超高分辨率                       |
+| FLUX1.1 [pro] Raw         | `/v1/flux-pro-1.1-raw`       | $0.06     | 自然摄影感觉                     |
+| FLUX.1 Fill [pro]         | `/v1/flux-pro-1.0-fill`      | $0.05     | 修复填充                         |
 
-> **Tip:** All FLUX.2 models support image editing via the `input_image` parameter - no separate editing endpoint needed. Use [bfl.ai/pricing](https://bfl.ai/pricing) calculator for exact costs at different resolutions.
+> **提示：** 所有 FLUX.2 模型都通过 `input_image` 参数支持图片编辑——无需单独的编辑端点。使用 [bfl.ai/pricing](https://bfl.ai/pricing) 计算器了解不同分辨率的精确成本。
 
-### Image Input for Editing
+### 用于编辑的图片输入
 
-**Preferred: Use URLs directly** - simpler and more convenient than base64.
+**推荐：直接使用 URL** —— 比 base64 更简单方便。
 
-**Single image editing:**
+**单图编辑：**
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -90,7 +90,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   }'
 ```
 
-**Multi-reference editing:**
+**多参考编辑：**
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -103,113 +103,113 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   }'
 ```
 
-The API fetches URLs automatically. Both URL and base64 work, but URLs are recommended when available.
+API 自动获取 URL。URL 和 base64 都可用，但推荐在可用时使用 URL。
 
-### Multi-Reference I2I
+### 多参考 I2I
 
-FLUX.2 models support multiple input images for combining elements, style transfer, and character consistency:
+FLUX.2 模型支持多张输入图片，用于组合元素、风格迁移和角色一致性：
 
-| Model                 | Max References |
-| --------------------- | -------------- |
-| FLUX.2 [klein]        | 4 images       |
-| FLUX.2 [pro/max/flex] | 8 images       |
+| 模型                    | 最大参考数 |
+| ----------------------- | ---------- |
+| FLUX.2 [klein]          | 4 张图片   |
+| FLUX.2 [pro/max/flex]   | 8 张图片   |
 
-**Parameters:** `input_image`, `input_image_2`, `input_image_3`, ... `input_image_8`
+**参数：** `input_image`、`input_image_2`、`input_image_3`、…… `input_image_8`
 
-**Prompt pattern:** Reference images by number in your prompt:
+**提示模式：** 在提示中通过序号引用图片：
 
 - "The subject from image 1 in the environment from image 2"
 - "Apply the style of image 2 to the scene in image 1"
 - "The person from image 1 wearing the outfit from image 2, in the pose from image 3"
 
-> For detailed multi-reference patterns (character consistency, style transfer, pose guidance), see `flux-best-practices/rules/multi-reference-editing.md`
+> 详细了解多参考模式（角色一致性、风格迁移、姿态引导），请参阅 `flux-best-practices/rules/multi-reference-editing.md`
 
-### Rate Limits
+### 速率限制
 
-| Tier                      | Concurrent Requests |
-| ------------------------- | ------------------- |
-| Standard (most endpoints) | 24                  |
+| 层级                        | 并发请求数 |
+| --------------------------- | ---------- |
+| 标准（大多数端点）          | 24         |
 
-### Polling vs Webhooks
+### 轮询 vs Webhook
 
-| Approach     | Use When                                                                             |
-| ------------ | ------------------------------------------------------------------------------------ |
-| **Polling**  | Scripts, CLI tools, local development, single requests, simple integrations          |
-| **Webhooks** | Production apps, high volume, server-to-server, when you need immediate notification |
+| 方式         | 使用场景                                                                   |
+| ------------ | -------------------------------------------------------------------------- |
+| **轮询**     | 脚本、CLI 工具、本地开发、单次请求、简单集成                               |
+| **Webhook**  | 生产应用、高吞吐量、服务器到服务器、需要即时通知时                         |
 
-**Start with polling** - it's simpler and works everywhere. Switch to webhooks when you need to scale or want event-driven architecture.
+**从轮询开始** —— 它更简单且适用于所有场景。当需要扩展或希望使用事件驱动架构时切换到 webhook。
 
-### Key Behaviors
+### 关键行为
 
-- **Polling**: Response includes `polling_url` for async results
-- **URL Expiration**: Result URLs expire after 10 minutes
-- **Webhook Support**: Configure `webhook_url` for production workloads
+- **轮询**：响应包含用于异步结果的 `polling_url`
+- **URL 过期**：结果 URL 在 10 分钟后过期
+- **Webhook 支持**：为生产工作负载配置 `webhook_url`
 
-## API Key Setup
+## API 密钥设置
 
-**Required**: The `BFL_API_KEY` environment variable must be set before using the API.
+**必需**：使用 API 前必须设置 `BFL_API_KEY` 环境变量。
 
-### Quick Check
+### 快速检查
 
 ```bash
 echo $BFL_API_KEY
 ```
 
-### If Not Set
+### 如果未设置
 
-1. **Get a key**: Go to https://dashboard.bfl.ai/get-started → Click **"Create Key"** → Select organization
-2. **Save to `.env`** (recommended for persistence):
+1. **获取密钥**：前往 https://dashboard.bfl.ai/get-started → 点击 **"Create Key"** → 选择组织
+2. **保存到 `.env`**（推荐持久化）：
    ```bash
    echo 'BFL_API_KEY=bfl_your_key_here' >> .env
-   echo '.env' >> .gitignore  # Don't commit secrets
+   echo '.env' >> .gitignore  # 不要提交密钥
    ```
 
-See [references/api-key-setup.md](references/api-key-setup.md) for detailed setup instructions.
+详细设置说明请参阅 [references/api-key-setup.md](references/api-key-setup.md)。
 
-## Authentication
+## 认证
 
 ```bash
 x-key: YOUR_API_KEY
 ```
 
-## Basic Request Flow
+## 基本请求流程
 
 ```
-1. POST request to model endpoint
-   └─> Response: { "polling_url": "..." }
+1. POST 请求到模型端点
+   └─> 响应：{ "polling_url": "..." }
 
-2. GET polling_url (repeat until complete)
-   └─> Response: { "status": "Pending" | "Ready" | "Error", ... }
+2. GET polling_url（重复直到完成）
+   └─> 响应：{ "status": "Pending" | "Ready" | "Error", ... }
 
-3. When Ready, download result URL
-   └─> URL expires in 10 minutes - download immediately
+3. 状态为 Ready 时，下载结果 URL
+   └─> URL 在 10 分钟后过期 - 请立即下载
 ```
 
-## Related
+## 相关参考
 
-- **Prompting best practices** (T2I, I2I, typography, colors): see the **flux-best-practices** skill
-- **Multi-reference patterns** (character consistency, style transfer, pose guidance): see `flux-best-practices/rules/multi-reference-editing.md`
+- **提示词最佳实践**（T2I、I2I、排版、颜色）：请参阅 **flux-best-practices** 技能
+- **多参考模式**（角色一致性、风格迁移、姿态引导）：请参阅 `flux-best-practices/rules/multi-reference-editing.md`
 
-## References
+## 参考文档
 
-- [references/api-key-setup.md](references/api-key-setup.md) - **API key creation and configuration**
-- [references/endpoints.md](references/endpoints.md) - Complete endpoint documentation
-- [references/polling-patterns.md](references/polling-patterns.md) - Async polling implementation
-- [references/rate-limiting.md](references/rate-limiting.md) - Rate limit handling strategies
-- [references/error-handling.md](references/error-handling.md) - Error codes and recovery
-- [references/webhook-integration.md](references/webhook-integration.md) - Webhook setup and security
+- [references/api-key-setup.md](references/api-key-setup.md) - **API 密钥创建和配置**
+- [references/endpoints.md](references/endpoints.md) - 完整端点文档
+- [references/polling-patterns.md](references/polling-patterns.md) - 异步轮询实现
+- [references/rate-limiting.md](references/rate-limiting.md) - 速率限制处理策略
+- [references/error-handling.md](references/error-handling.md) - 错误码和恢复
+- [references/webhook-integration.md](references/webhook-integration.md) - Webhook 设置和安全
 
-### Code Examples
+### 代码示例
 
-> **Note:** cURL examples are preferred by default as they work universally without requiring Python or Node.js. Use language-specific clients when building production applications.
+> **注意：** 默认推荐使用 cURL 示例，因为它们无需 Python 或 Node.js 即可通用工作。构建生产应用程序时使用语言特定的客户端。
 
-- [references/code-examples/curl-examples.sh](references/code-examples/curl-examples.sh) - **cURL examples (recommended)**
-- [references/code-examples/python-client.py](references/code-examples/python-client.py) - Python client
-- [references/code-examples/typescript-client.ts](references/code-examples/typescript-client.ts) - TypeScript client
+- [references/code-examples/curl-examples.sh](references/code-examples/curl-examples.sh) - **cURL 示例（推荐）**
+- [references/code-examples/python-client.py](references/code-examples/python-client.py) - Python 客户端
+- [references/code-examples/typescript-client.ts](references/code-examples/typescript-client.ts) - TypeScript 客户端
 
-## Quick Start Example
+## 快速入门示例
 
-### 1. Submit Generation Request
+### 1. 提交生成请求
 
 ```bash
 curl -s -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -218,35 +218,35 @@ curl -s -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   -d '{"prompt": "A serene mountain landscape at sunset", "width": 1024, "height": 1024}'
 ```
 
-Response:
+响应：
 
 ```json
 { "id": "abc123", "polling_url": "https://api.bfl.ai/v1/get_result?id=abc123" }
 ```
 
-### 2. Poll for Result
+### 2. 轮询结果
 
 ```bash
 curl -s "POLLING_URL" -H "x-key: $BFL_API_KEY"
 ```
 
-Response when ready:
+就绪时的响应：
 
 ```json
 { "status": "Ready", "result": { "sample": "https://...", "seed": 1234 } }
 ```
 
-### 3. Download Image
+### 3. 下载图片
 
 ```bash
 curl -s -o output.png "IMAGE_URL"
 ```
 
-> **Tip:** Result URLs expire in 10 minutes. Download immediately after status becomes `Ready`.
+> **提示：** 结果 URL 在 10 分钟后过期。状态变为 `Ready` 后请立即下载。
 
-### 4. Multi-Reference Example
+### 4. 多参考示例
 
-Combine elements from multiple images:
+从多张图片组合元素：
 
 ```bash
 curl -s -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -261,4 +261,4 @@ curl -s -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   }'
 ```
 
-Reference images by number in your prompt. See [Multi-Reference I2I](#multi-reference-i2i) for limits and patterns.
+在提示中通过序号引用图片。有关限制和模式，请参阅 [多参考 I2I](#multi-reference-i2i)。

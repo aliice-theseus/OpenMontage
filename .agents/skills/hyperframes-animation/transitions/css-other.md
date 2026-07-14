@@ -1,8 +1,8 @@
-## Other
+## 其他
 
-### Gravity Drop
+### 重力掉落
 
-Old scene falls down with slight rotation. New scene was behind it. Needs z-index.
+旧场景带轻微旋转向下坠落。新场景在其后面。需要 z-index。
 
 ```js
 tl.set(new, { opacity: 1, zIndex: 1 }, T);
@@ -12,9 +12,9 @@ tl.set(old, { opacity: 0, zIndex: "auto" }, T + 0.5);
 tl.set(new, { zIndex: "auto" }, T + 0.5);
 ```
 
-### Morph Circle
+### 变形圆
 
-A circle scales up from center to fill frame (becoming the new scene's background color). New scene content fades in on top.
+一个圆从中心放大填满画面（成为新场景的背景颜色）。新场景内容在其上淡入。
 
 ```js
 tl.set("#morph-circle", { background: newBgColor, opacity: 1, scale: 0 }, T);

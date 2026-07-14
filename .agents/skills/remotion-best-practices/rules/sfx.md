@@ -1,11 +1,11 @@
 ---
 name: sfx
-description: Including sound effects
+description: 包含音效
 metadata:
   tags: sfx, sound, effect, audio
 ---
 
-To include a sound effect, use the `<Audio>` tag:
+要包含音效，请使用 `<Audio>` 标签：
 
 ```tsx
 import { Audio } from "@remotion/sfx";
@@ -13,7 +13,7 @@ import { Audio } from "@remotion/sfx";
 <Audio src={"https://remotion.media/whoosh.wav"} />;
 ```
 
-The following sound effects are available:
+以下音效可用：
 
 - `https://remotion.media/whoosh.wav`
 - `https://remotion.media/whip.wav`
@@ -23,4 +23,4 @@ The following sound effects are available:
 - `https://remotion.media/shutter-modern.wav`
 - `https://remotion.media/shutter-old.wav`
 
-For more sound effects, search the internet. A good resource is https://github.com/kapishdima/soundcn/tree/main/assets.
+如需更多音效，请搜索互联网。一个好的资源是 https://github.com/kapishdima/soundcn/tree/main/assets。

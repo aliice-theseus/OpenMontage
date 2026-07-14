@@ -1,86 +1,86 @@
-# Rules Index
+# 规则索引
 
-Atomic motion recipes. Each lives at `rules/<name>.md`. Compose 2-4 per scene with a single paused timeline.
+原子运动配方。每个位于 `rules/<name>.md`。每场景组合 2-4 个，使用单个暂停时间线。
 
-## Text & Typography
-
-<rules>
-<hacker-flip-3d path="rules/hacker-flip-3d.md">Character-level 3D rotation with deterministic glyph substitution (decryption). GSAP `back.out` ease + per-glyph `onUpdate` for the flicker hash. Tags: text, 3d, reveal, decode</hacker-flip-3d>
-<vertical-spring-ticker path="rules/vertical-spring-ticker.md">Slot-machine vertical scrolling using stepped GSAP tweens within a masked column. Tags: text, ticker, scroll, vertical</vertical-spring-ticker>
-<counting-dynamic-scale path="rules/counting-dynamic-scale.md">Counter where font size grows with the value for escalating emphasis. Single GSAP tween on a numeric proxy. Tags: counter, scale, font-size, number, dynamic</counting-dynamic-scale>
-<discrete-text-sequence path="rules/discrete-text-sequence.md">Replace entire text states at time thresholds for non-linear typing (typos, holds, bulk additions, backspaces). GSAP onUpdate-driven reverse search. Tags: text, typing, discrete, threshold, non-linear</discrete-text-sequence>
-<asr-keyword-glow path="rules/asr-keyword-glow.md">Highlight keywords with glow + scale + color synced to ASR word timestamps. Two GSAP tweens per word drive a CSS custom property `--glow` through attack-decay-rest envelope. Tags: asr, audio-sync, highlight, glow, keyword, text</asr-keyword-glow>
-<3d-text-depth-layers path="rules/3d-text-depth-layers.md">Multiple offset text layers (N divs at `(i*dx, i*dy)` with decreasing alpha) create a stacked 3D extrusion illusion on large typography. Tags: text, 3d, depth, layers, shadow, typography, stacked</3d-text-depth-layers>
-<context-sensitive-cursor path="rules/context-sensitive-cursor.md">Typing cursor whose `background-color` switches at segment boundaries plus square-wave blink via `(tl.time() % cycle) < cycle/2`. Tags: cursor, color, context, typewriter, styling, segment</context-sensitive-cursor>
-<dynamic-content-sequencing path="rules/dynamic-content-sequencing.md">Pre-compute a flat `[{startTime, endTime, ...}]` array from a script of `{textMain, textAccent, charSpeed, hold}` entries. Each phrase's window = `chars × charSpeed + hold`. Content-driven duration, no hand-tuned offsets. Tags: timeline, sequencing, dynamic, duration, script-driven</dynamic-content-sequencing>
-<kinetic-beat-slam path="rules/kinetic-beat-slam.md">Percussive kinetic typography — short phrases slam in on ONE shared beat array with DISTINCT per-phrase entrances (scale-slam / side-snap / rise-rotate), optional rhythm chrome (metronome ticks, beat bar), then a locked finale. The recipe for "punchy / rhythmic" taglines. Tags: text, kinetic, typography, beat, rhythm, slam, percussive, punchy</kinetic-beat-slam>
-</rules>
-
-## Data & Stats
+## 文本与排版
 
 <rules>
-<counting-dynamic-scale path="rules/counting-dynamic-scale.md">Counter whose font size grows with the value; seek-safe `onUpdate`, `Math.round`, `tabular-nums`, multi-stat chord. (Also listed under Text & Typography.) Tags: counter, number, stat, count-up</counting-dynamic-scale>
-<stat-bars-and-fills path="rules/stat-bars-and-fills.md">Data-viz primitives that pair a number with a graphic — growth bars (CSS `scaleY` stagger), progress fill (bar `scaleX` or measured SVG ring), and fractional star-rating wipe (`clip-path`). Transforms only, seek-safe. Pick single-focus vs split-frame and hold it. Tags: data, stats, chart, bars, progress, ring, stars, rating, infographic</stat-bars-and-fills>
+<hacker-flip-3d path="rules/hacker-flip-3d.md">字符级 3D 旋转，带确定性字形替换（解密）。GSAP `back.out` 缓动 + 逐字形 `onUpdate` 用于闪烁哈希。标签：text, 3d, reveal, decode</hacker-flip-3d>
+<vertical-spring-ticker path="rules/vertical-spring-ticker.md">在遮罩列中使用步进 GSAP 补间的老虎机型垂直滚动。标签：text, ticker, scroll, vertical</vertical-spring-ticker>
+<counting-dynamic-scale path="rules/counting-dynamic-scale.md">字号随值增长的计数器，递增强调。数字代理上的单个 GSAP 补间。标签：counter, scale, font-size, number, dynamic</counting-dynamic-scale>
+<discrete-text-sequence path="rules/discrete-text-sequence.md">在时间阈值处替换整个文本状态，实现非线性打字（输入错误、保持、批量添加、退格）。GSAP onUpdate 驱动的反向搜索。标签：text, typing, discrete, threshold, non-linear</discrete-text-sequence>
+<asr-keyword-glow path="rules/asr-keyword-glow.md">以辉光 + 缩放 + 颜色高亮关键词，与 ASR 单词时间戳同步。每个单词两个 GSAP 补间通过攻击-衰减-保持包络驱动 CSS 自定义属性 `--glow`。标签：asr, audio-sync, highlight, glow, keyword, text</asr-keyword-glow>
+<3d-text-depth-layers path="rules/3d-text-depth-layers.md">多个偏移文本层（N 个 div 在 `(i*dx, i*dy)` 处递减 alpha）在大号字体上创建堆叠的 3D 挤压幻觉。标签：text, 3d, depth, layers, shadow, typography, stacked</3d-text-depth-layers>
+<context-sensitive-cursor path="rules/context-sensitive-cursor.md">打字光标，其 `background-color` 在段边界切换，加上通过 `(tl.time() % cycle) < cycle/2` 的方波闪烁。标签：cursor, color, context, typewriter, styling, segment</context-sensitive-cursor>
+<dynamic-content-sequencing path="rules/dynamic-content-sequencing.md">从 `{textMain, textAccent, charSpeed, hold}` 条目的脚本预计算平坦的 `[{startTime, endTime, ...}]` 数组。每个短语窗口 = `chars × charSpeed + hold`。内容驱动时长，无手调偏移。标签：timeline, sequencing, dynamic, duration, script-driven</dynamic-content-sequencing>
+<kinetic-beat-slam path="rules/kinetic-beat-slam.md">打击式动感排版 — 简短短语在一个共享节拍数组上猛烈进入，每个短语有**不同**的入场（缩放撞击/侧边快照/上升旋转），可选节奏镀铬（节拍器滴答、节拍条），然后锁定终曲。"有力/节奏"标语的配方。标签：text, kinetic, typography, beat, rhythm, slam, percussive, punchy</kinetic-beat-slam>
 </rules>
 
-## Camera & Viewport
+## 数据与统计
 
 <rules>
-<coordinate-target-zoom path="rules/coordinate-target-zoom.md">Zoom into non-centered elements via scale (outer wrapper) + counter-translation (inner wrapper). Tags: camera, zoom, scale, translate</coordinate-target-zoom>
-<camera-cursor-tracking path="rules/camera-cursor-tracking.md">Two-phase virtual camera that locks the viewport to a moving focal point (typing cursor) — static initial framing then focal-point-locked tracking. Uses browser-native `getBoundingClientRect()` / `ctx.measureText()` after `document.fonts.ready`. Tags: camera, tracking, viewport, two-phase, typing</camera-cursor-tracking>
-<multi-phase-camera path="rules/multi-phase-camera.md">Sequential camera-zoom system (pull-back / focus / push) plus continuous micro-drift. Tags: camera, zoom, phase, drift, scale, cinematic</multi-phase-camera>
-<viewport-change path="rules/viewport-change.md">Virtual camera — simulate zoom / pan / focus-lock by transforming a single `.world` wrapper containing all scene content. Single-element composite transform `translate(x,y) scale(S)`; counter-translate math is `T = -offset × S` (DIFFERENT from coordinate-target-zoom's `T = -offset`). Tags: viewport, camera, zoom, pan, focus-lock</viewport-change>
-<depth-of-field-blur path="rules/depth-of-field-blur.md">Selective rack-focus — GSAP-tween `filter: blur()` (+ slight opacity dim) on off-focus layers via a `--dof` var while the focal element stays sharp; single pull, two-plane rack, or blur-the-cluster-while-pushing-in. Finite, deterministic, seek-safe. Tags: blur, depth-of-field, focus, rack-focus, dim, spotlight</depth-of-field-blur>
+<counting-dynamic-scale path="rules/counting-dynamic-scale.md">字号随值增长的计数器；seek 安全 `onUpdate`、`Math.round`、`tabular-nums`、多统计和弦。（也列在文本与排版下。）标签：counter, number, stat, count-up</counting-dynamic-scale>
+<stat-bars-and-fills path="rules/stat-bars-and-fills.md">将数字与图形配对的数据可视化原语 — 增长条（CSS `scaleY` 错开）、进度填充（条 `scaleX` 或测量的 SVG 环）和分数星级评分擦拭（`clip-path`）。仅变换，seek 安全。选择单焦点 vs 分屏并保持。标签：data, stats, chart, bars, progress, ring, stars, rating, infographic</stat-bars-and-fills>
 </rules>
 
-## Layout & Network
+## 摄像机与视口
 
 <rules>
-<avatar-cloud-network path="rules/avatar-cloud-network.md">Avatars on an elliptical ring with SVG connection lines to a center point, staggered entry. Cloud center coordinates must match the centerpiece element exactly. Tags: avatar, cloud, network, social-proof, stagger</avatar-cloud-network>
-<3d-page-scroll path="rules/3d-page-scroll.md">Full webpage rendered as a tilted 3D card whose internal content scrolls to reveal specific sections. Pair with asr-keyword-glow for on-page keyword highlighting. Tags: 3d, page, scroll, webpage, tilt, perspective, product-demo</3d-page-scroll>
-<center-outward-expansion path="rules/center-outward-expansion.md">Elements start clustered at screen center and expand outward to final positions. Each element gets its target position via CSS once; GSAP tweens transform `x` / `y` offsets to 0 in lockstep with a shared driver. Tags: expansion, scatter, center, reveal, layout, sync</center-outward-expansion>
-<split-tilt-cards path="rules/split-tilt-cards.md">Two cards side-by-side with opposing rotationY tilts (+/- baseTilt) and entry slides from their respective sides. Continuous floating runs in phase opposition (`Math.PI` offset). Tags: 3d, cards, split, tilt, comparison, symmetric</split-tilt-cards>
-<orbit-3d-entry path="rules/orbit-3d-entry.md">Elements flip in from 3D space (`rotateX` + `rotateY` + `translateZ`) then settle into a continuous elliptical orbit. **Critical**: entry MUST flip in-place at the orbital starting position (`gsap.set` BEFORE phase 1), not at scene center. Tags: orbit, 3d, flip, ellipse, circular, icon, entry, continuous</orbit-3d-entry>
-<ai-tracking-box path="rules/ai-tracking-box.md">AI detection overlay — yellow `#facc15` L-bracket corners + confidence label (fluctuating 95-99%) following a target on a sine arc path. Box position recomputed per-frame from target position (never tweened separately). Tags: ai, tracking, bounding-box, detection, corner, ml</ai-tracking-box>
-<depth-scatter-assemble path="rules/depth-scatter-assemble.md">N elements scatter into / reassemble from a rotating 3D depth-cloud — each starts at a deterministic index-derived 3D offset (translateZ + rotateX/Y + scatter) and settles to a clean flat layout; tumble-swap and radial-explode variants. preserve-3d + perspective, transform-only, seek-safe. Tags: 3d, scatter, assemble, tumble, depth, perspective, glyphs</depth-scatter-assemble>
+<coordinate-target-zoom path="rules/coordinate-target-zoom.md">通过缩放（外部包裹容器）+ 反向平移（内部包裹容器）缩放到非居中元素。标签：camera, zoom, scale, translate</coordinate-target-zoom>
+<camera-cursor-tracking path="rules/camera-cursor-tracking.md">双阶段虚拟摄像机，将视口锁定到移动焦点（打字光标）— 静态初始构图然后焦点锁定跟踪。在 `document.fonts.ready` 后使用浏览器原生 `getBoundingClientRect()` / `ctx.measureText()`。标签：camera, tracking, viewport, two-phase, typing</camera-cursor-tracking>
+<multi-phase-camera path="rules/multi-phase-camera.md">顺序摄像机缩放系统（拉回/聚焦/推进）加连续微漂移。标签：camera, zoom, phase, drift, scale, cinematic</multi-phase-camera>
+<viewport-change path="rules/viewport-change.md">虚拟摄像机 — 通过变换包含所有场景内容的单个 `.world` 包裹容器模拟缩放/平移/焦点锁定。单元素复合变换 `translate(x,y) scale(S)`；反向平移数学为 `T = -offset × S`（不同于 coordinate-target-zoom 的 `T = -offset`）。标签：viewport, camera, zoom, pan, focus-lock</viewport-change>
+<depth-of-field-blur path="rules/depth-of-field-blur.md">选择性焦距拉动 — 通过 `--dof` 变量在脱焦层上 GSAP 补间 `filter: blur()`（+轻微不透明度变暗），同时聚焦元素保持清晰；单次拉动、双平面切换、或推进时模糊集群。有限、确定性、seek 安全。标签：blur, depth-of-field, focus, rack-focus, dim, spotlight</depth-of-field-blur>
 </rules>
 
-## SVG & Icons
+## 布局与网络
 
 <rules>
-<svg-icon-enrichment path="rules/svg-icon-enrichment.md">Animate internal SVG elements (rotating hands, oscillating blades, pulsing dots, dash-flow lines) so icons feel alive. **Critical**: use SVG `setAttribute('transform', 'rotate(deg cx cy)')` for explicit center — CSS `transform-origin` + `transform-box: fill-box` interprets origin in bbox-local coords (off-center for thin lines). Tags: svg, icon, animation, micro-animation, rotation, pulse</svg-icon-enrichment>
-<svg-path-draw path="rules/svg-path-draw.md">SVG outline draws itself stroke-by-stroke via `stroke-dasharray` / `stroke-dashoffset`. Measure with `getTotalLength()` at composition setup, set initial dashoffset = length, GSAP tweens to 0. For circular progress rings, rotate the stroke `-90deg` so drawing starts at 12 o'clock. Tags: svg, stroke, draw, vector, path, dasharray</svg-path-draw>
+<avatar-cloud-network path="rules/avatar-cloud-network.md">椭圆环上的头像，带 SVG 连接到中心点的线，错开进入。云中心坐标必须与中心件元素精确匹配。标签：avatar, cloud, network, social-proof, stagger</avatar-cloud-network>
+<3d-page-scroll path="rules/3d-page-scroll.md">完整网页渲染为倾斜的 3D 卡片，其内部内容滚动以揭示特定部分。与 asr-keyword-glow 配合作页面关键词高亮。标签：3d, page, scroll, webpage, tilt, perspective, product-demo</3d-page-scroll>
+<center-outward-expansion path="rules/center-outward-expansion.md">元素从屏幕中心聚集开始扩展到最终位置。每个元素通过 CSS 获得其目标位置一次；GSAP 补间变换 `x` / `y` 与共享驱动器步调一致偏移到 0。标签：expansion, scatter, center, reveal, layout, sync</center-outward-expansion>
+<split-tilt-cards path="rules/split-tilt-cards.md">两张卡片并排，相反 rotationY 倾斜（+/- 基础倾斜）并从各自侧边滑入。连续浮动以相位相反运行（`Math.PI` 偏移）。标签：3d, cards, split, tilt, comparison, symmetric</split-tilt-cards>
+<orbit-3d-entry path="rules/orbit-3d-entry.md">元素从 3D 空间翻转入场（`rotateX` + `rotateY` + `translateZ`）然后稳定到连续椭圆轨道。**关键**：入场必须在轨道起始位置原位翻转（`gsap.set` 在阶段 1**之前**），而非场景中心。标签：orbit, 3d, flip, ellipse, circular, icon, entry, continuous</orbit-3d-entry>
+<ai-tracking-box path="rules/ai-tracking-box.md">AI 检测叠加 — 黄色 `#facc15` L 形支架角 + 置信度标签（波动 95-99%）在正弦弧路径上跟随目标。框位置每帧从目标位置重新计算（从不单独补间）。标签：ai, tracking, bounding-box, detection, corner, ml</ai-tracking-box>
+<depth-scatter-assemble path="rules/depth-scatter-assemble.md">N 个元素散开进入/从旋转的 3D 深度云重新组装 — 每个从确定性的索引派生的 3D 偏移（translateZ + rotateX/Y + 散开）开始并稳定到干净的平面布局；翻滚交换和径向爆炸变体。preserve-3d + perspective，仅变换，seek 安全。标签：3d, scatter, assemble, tumble, depth, perspective, glyphs</depth-scatter-assemble>
 </rules>
 
-## Idle & Ambient
+## SVG 与图标
 
 <rules>
-<sine-wave-loop path="rules/sine-wave-loop.md">Continuous breathing/idle ambient motion. Two forms: GSAP `sine.inOut` yoyo with finite repeats (preferred when standalone) or onUpdate reading `tl.time()` (preferred when multiplying onto another live value). Tags: idle, loop, breathing, sine, ambient</sine-wave-loop>
-<ambient-glow-bloom path="rules/ambient-glow-bloom.md">Un-triggered soft radial glow that blooms in behind a hero element and holds with a bounded idle breathe, or a single-pass traveling sheen across a surface. No click, no word-sync; peak opacity ≤ ~0.45, finite/deterministic. Tags: glow, bloom, ambient, radial, sheen, hero</ambient-glow-bloom>
+<svg-icon-enrichment path="rules/svg-icon-enrichment.md">动画化内部 SVG 元素（旋转指针、振荡刀片、脉冲点、虚线流线）使图标感觉生动。**关键**：使用 SVG `setAttribute('transform', 'rotate(deg cx cy)')` 用于显式中心 — CSS `transform-origin` + `transform-box: fill-box` 在 bbox 局部坐标中解释原点（对于细线条偏离中心）。标签：svtg, icon, animation, micro-animation, rotation, pulse</svg-icon-enrichment>
+<svg-path-draw path="rules/svg-path-draw.md">SVG 轮廓逐笔绘制自身，通过 `stroke-dasharray` / `stroke-dashoffset`。在组合设置时使用 `getTotalLength()` 测量，设置初始 dashoffset = 长度，GSAP 补间到 0。对于环形进度环，将描画旋转 `-90deg`，使绘制从 12 点钟开始。标签：svg, stroke, draw, vector, path, dasharray</svg-path-draw>
 </rules>
 
-## Transition & Motion
+## 空闲与环境
 
 <rules>
-<reactive-displacement path="rules/reactive-displacement.md">Physical-collision transition where an entering element's GSAP tween drives the exiting element's displacement. Three concurrent tweens at the same timeline position with victim durations 40-50% of the intruder's. Tags: transition, physics, collision, displacement, push</reactive-displacement>
-<press-release-spring path="rules/press-release-spring.md">Tactile button press: linear compression then spring recovery via two adjacent GSAP tweens on the same property. Variations: color transition, shadow depth via CSS vars, release burst, background glow. Tags: spring, press, button, interaction, physics, glow, burst</press-release-spring>
-<physics-press-reaction path="rules/physics-press-reaction.md">Physical click simulation — two sequential GSAP scale tweens (down to 0.9, up to 1.0) approximate a spring with overshoot. Pass a single targets array `["#cta", "#cursor"]` to compress both together for tactile contact feel. Tags: spring, click, physics, press, interaction, cursor</physics-press-reaction>
-<cursor-click-ripple path="rules/cursor-click-ripple.md">Animated cursor moves to a target, depresses cursor + target together on click, emits an expanding ripple with attack-decay opacity envelope. Element lives in DOM from t=0 with `opacity: 0` (no conditional rendering). Tags: cursor, click, ripple, interaction, mouse, button, keyframes</cursor-click-ripple>
-<scale-swap-transition path="rules/scale-swap-transition.md">Coordinated morph between two DOM elements at the same screen center. Exit cluster shrinks + fades; entrance pops in with `back.out(2)` overshoot. Tags: transition, morph, scale, swap</scale-swap-transition>
-<card-morph-anchor path="rules/card-morph-anchor.md">Container morphs apparent size + corner radius + surface treatment between two shots, then fades to reveal the real target underneath. HyperFrames substitutes uniform `scale` for the forbidden `width`/`height` tween, plus paint-only `borderRadius`/`background`/`boxShadow`. Tags: morph, anchor, transition, border-radius, container, shape, handoff</card-morph-anchor>
-<spring-pop-entrance path="rules/spring-pop-entrance.md">The canonical ENTRANCE pop — an element (or staggered group) arrives by springing `scale: 0 → 1` with `back.out` overshoot, `fromTo` so it's correct at t=0 under seek. Single hero, staggered group (≤500ms cap), overshoot tuned by personality. Distinct from `press-release-spring` (a click/press reaction). Tags: spring, entrance, pop, scale-in, overshoot, stagger, arrival</spring-pop-entrance>
-<motion-blur-streak path="rules/motion-blur-streak.md">Fake directional velocity blur on a fast entrance / camera push-through — blur peaks at max speed, resolves to 0 at the settle. Two paths: SVG `feGaussianBlur` stdDeviation on the motion axis (proxy-tweened), or a deterministic echo/ghost trail that collapses into the lead. Entrances / mid-shot only. Tags: motion-blur, streak, velocity, ghost, echo, fast</motion-blur-streak>
+<sine-wave-loop path="rules/sine-wave-loop.md">连续呼吸/空闲环境运动。两种形式：GSAP `sine.inOut` yoyo 有限重复（独立时首选）或读取 `tl.time()` 的 onUpdate（乘到另一个实时值上时首选）。标签：idle, loop, breathing, sine, ambient</sine-wave-loop>
+<ambient-glow-bloom path="rules/ambient-glow-bloom.md">无触发柔和径向辉光，在主角元素后绽放并保持带有限空闲呼吸，或一次穿过表面的单次移动光泽。无点击、无单词同步；峰值不透明度 ≤ ~0.45，有限/确定性。标签：glow, bloom, ambient, radial, sheen, hero</ambient-glow-bloom>
 </rules>
 
-## Effect Recipes (moved from hyperframes-creative)
+## 过渡与运动
 
 <rules>
-<gsap-effects path="rules/gsap-effects.md">Drop-in GSAP timeline patterns — typewriter, audio visualizer, and other reusable choreography blocks. Tags: gsap, recipe, drop-in, typewriter, audio-visualizer</gsap-effects>
-<css-marker-patterns path="rules/css-marker-patterns.md">Pure CSS + GSAP implementations of marker-highlight drawing modes — highlight (yellow sweep), circle (hand-drawn ellipse), burst (radiating lines), scribble (chaotic), sketchout (rough rectangle outline). Tags: css, marker, highlight, text, emphasis</css-marker-patterns>
+<reactive-displacement path="rules/reactive-displacement.md">物理碰撞过渡，进入元素的 GSAP 补间驱动退出元素的位移。在相同时间线位置的三个并发补间，受害者时长为侵入者的 40-50%。标签：transition, physics, collision, displacement, push</reactive-displacement>
+<press-release-spring path="rules/press-release-spring.md">触觉按钮按下：线性压缩然后弹簧恢复，通过相同属性上的两个相邻 GSAP 补间。变体：颜色过渡、通过 CSS 变量的阴影深度、释放爆发、背景辉光。标签：spring, press, button, interaction, physics, glow, burst</press-release-spring>
+<physics-press-reaction path="rules/physics-press-reaction.md">物理点击模拟 — 两个顺序 GSAP 缩放补间（降到 0.9，升到 1.0）近似带过冲的弹簧。传递单个目标数组 `["#cta", "#cursor"]` 同时压缩两者以获得触觉接触感。标签：spring, click, physics, press, interaction, cursor</physics-press-reaction>
+<cursor-click-ripple path="rules/cursor-click-ripple.md">动画光标移动到目标，在点击时同时下压光标 + 目标，发出带攻击-衰减不透明度包络的扩展涟漪。元素从 t=0 在 DOM 中存在，带 `opacity: 0`（无条件渲染）。标签：cursor, click, ripple, interaction, mouse, button, keyframes</cursor-click-ripple>
+<scale-swap-transition path="rules/scale-swap-transition.md">两个 DOM 元素在同一屏幕中心的协调变形。退出集群缩小 + 淡出；进入以 `back.out(2)` 过冲弹入。标签：transition, morph, scale, swap</scale-swap-transition>
+<card-morph-anchor path="rules/card-morph-anchor.md">容器在两种镜头之间变形表观尺寸 + 圆角半径 + 表面处理，然后淡出以揭示其下真实目标。HyperFrames 用均匀 `scale` 替代禁止的 `width`/`height` 补间，加上仅绘制的 `borderRadius`/`background`/`boxShadow`。标签：morph, anchor, transition, border-radius, container, shape, handoff</card-morph-anchor>
+<spring-pop-entrance path="rules/spring-pop-entrance.md">规范的入场弹出 — 元素（或错开组）通过 `back.out` 过冲 `scale: 0 → 1` 弹簧进入，`fromTo` 使其在 seek 下 t=0 时正确。单主角、错开组（≤500ms 上限）、过冲按个性调谐。与 `press-release-spring`（点击/按下反应）不同。标签：spring, entrance, pop, scale-in, overshoot, stagger, arrival</spring-pop-entrance>
+<motion-blur-streak path="rules/motion-blur-streak.md">快速入场/摄像机推进穿过的伪造方向速度模糊 — 模糊在最大速度时达到峰值，在稳定时解析为 0。两条路径：运动轴上的 SVG `feGaussianBlur` stdDeviation（通过代理补间），或塌缩到前导的确定性回声/鬼影轨迹。仅入场/镜头中段。标签：motion-blur, streak, velocity, ghost, echo, fast</motion-blur-streak>
 </rules>
 
-## See Also
+## 特效配方（从 hyperframes-creative 迁移）
 
-- `blueprints-index.md` — the scene-shape templates (this skill's "blueprints") that compose these rules into full shots
-- `techniques.md` — broader motion-design techniques (SVG path drawing, Canvas 2D, CSS 3D, kinetic type, variable fonts, compositing); a few rules cite it
-- `transitions/` — scene-transition catalog (shared skill; story owns `transition_in`, the harness injects it)
+<rules>
+<gsap-effects path="rules/gsap-effects.md">即用 GSAP 时间线模式 — 打字机、音频可视化器和其他可重用的编排块。标签：gsap, recipe, drop-in, typewriter, audio-visualizer</gsap-effects>
+<css-marker-patterns path="rules/css-marker-patterns.md">标记高亮绘制模式的纯 CSS + GSAP 实现 — 高亮（黄色扫过）、圆圈（手绘椭圆）、爆发（辐射线）、涂鸦（混乱）、素描（粗糙矩形轮廓）。标签：css, marker, highlight, text, emphasis</css-marker-patterns>
+</rules>
+
+## 参见
+
+- `blueprints-index.md` — 场景形状模板（此技能的"蓝图"），将规则组合成完整镜头
+- `techniques.md` — 更广泛的动效设计技巧（SVG 路径绘制、Canvas 2D、CSS 3D、动感排版、可变字体、合成）；几个规则引用它
+- `transitions/` — 场景过渡目录（共享技能；故事拥有 `transition_in`，线束注入它）

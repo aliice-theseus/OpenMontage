@@ -2,11 +2,11 @@
 version: alpha
 name: Broadside — Frame (video / frame layer)
 description: >
-  Video-first companion to Broadside's design.md. The unit is the frame (1920×1080). Atoms are
-  identical and sacred — the two-register surface system (dark ink-black / fire-orange), massive
-  Barlow in lowercase weight 900 treated as graphic primitive, IBM Plex Mono chrome (uppercase,
-  0.14em), the single fire-orange accent, the flat plane, and 1px hairline dividers. Composition +
-  frame scale rewritten for the frame. Motion out of scope.
+  Broadside 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣 — 双色域表面系统 (深墨黑 / 火焰橙)、巨大
+  Barlow 小写字重 900 作为图形基元、IBM Plex Mono 铬色 (大写、
+  0.14em)、单一火焰橙强调色、平面和 1px 发丝线分隔线。构图 +
+  帧比例已为帧重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -90,30 +90,22 @@ components:
     description: "Three stacked words + one oversized title opposite."
 ---
 
-# Broadside — Frame (video / frame layer)
+# Broadside — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Broadside at frame scale is a **protest-poster system where type is so large it stops reading as
-text and becomes graphic primitive.** Barlow `display` at 13cqw puts a single lowercase word
-nearly across the frame. The system runs in **two registers**: a dark ink-black ground with cream
-text for documentation, and a fire-orange ground with dark ink for declaration. Fire-orange is the
-_only_ color — accent on dark, environment on orange. The plane is flat; hierarchy is weight, size,
-and 1px hairlines.
+帧尺度下的 Broadside 是一个**抗议海报系统，文字如此之大以至于不再读作文本而成为图形基元。** 13cqw 的 Barlow `display` 将单个小写单词几乎横跨整个画框。系统运行在**两个色域**中：深墨黑底色配奶油色文字用于记录，火焰橙底色配深墨水色用于声明。火焰橙是_唯一_颜色——在深色上是强调色，在橙色上是整个环境。平面是平的；层级是字重、大小和 1px 发丝线。
 
-**Barlow** carries every text role from display to body — expressive range from weight (400–900)
-and size, not face contrast. **IBM Plex Mono** is chrome only (numbers, kickers, tags, axis labels,
-the `/` bullet marker), always uppercase and tracked. Display is **lowercase** — the system's most
-distinctive single decision, a deliberate inversion of the brutalist norm.
+**Barlow** 承载从展示到正文的每个文本角色——表现力范围来自字重（400-900）和大小，而非字体对比。**IBM Plex Mono** 仅为铬色（数字、眉标、标签、轴标签、`/` 项目符号标记），始终大写并追踪。展示是**小写**——系统最独特的决定，是对粗野主义规范的有意反转。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Two registers** — dark (cream text) / orange (ink text). No cream/paper register.
-- **Massive lowercase Barlow 900**, negative-tracked, as graphic primitive (display 13cqw).
-- **Fire-orange is the only color** — accent on dark, full environment on orange.
-- **IBM Plex Mono chrome** — uppercase, 0.14em; the `/` bullet marker; mono catalogue numbers.
-- **Flat plane** — no shadow, no radius (save nav dots), no gradient; 1px hairlines carry structure.
-- **Low density** — one statement per frame, bullets capped at three, chrome suppressed on declarative frames.
+- **两个色域** — 深色（奶油色文字）/ 橙色（墨水色文字）。无奶油/纸色域。
+- **巨大 Barlow 900 小写**、负字距、作为图形基元（展示 13cqw）。
+- **火焰橙是唯一颜色** — 深色上强调，橙色上全环境。
+- **IBM Plex Mono 铬色** — 大写、0.14em；`/` 项目符号标记；等宽目录数字。
+- **平面** — 无阴影、无圆角（除导航点外）、无渐变；1px 发丝线承载结构。
+- **低密度** — 每帧一个声明、项目符号最多三个、声明帧上铬色被抑制。
 
 ## The Frame
 

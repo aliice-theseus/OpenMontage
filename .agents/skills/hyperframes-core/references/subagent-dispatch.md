@@ -1,41 +1,41 @@
-# Subagent dispatch — harness adapter
+# 子代理调度 — 适配器适配
 
-The video workflows (`product-launch-video` / `faceless-explainer` / `pr-to-video` / `motion-graphics` / `general-video`) describe subagent dispatch in harness-neutral verbs. This file maps those verbs to the primitives of whatever agent harness you are running on. Read it once per run, before the first dispatch; everything else in the workflows (dispatch packets, file artifacts, exit-code gates, Resume tables) is harness-independent and needs no translation.
+视频工作流（`product-launch-video` / `faceless-explainer` / `pr-to-video` / `motion-graphics` / `general-video`）使用与适配器无关的动词来描述子代理调度。本文件将这些动词映射到您当前运行的任何代理适配器的原语。每次运行前读取一次，在第一次调度之前；工作流中的其他所有内容（调度包、文件产物、退出码门控、Resume 表）都与适配器无关，无需翻译。
 
-## The contract (identical on every harness)
+## 约定（所有适配器相同）
 
-- **DISPATCH(role_file, dispatch_context)** — start one child agent whose prompt is the **full contents of the named `agents/<role>.md` file** followed by the `## Dispatch context` block from the workflow, copied **verbatim** (never digested or paraphrased). Every harness below accepts arbitrary task text, so this works everywhere; never rely on the child seeing your conversation, memory, or skills — the prompt and the files on disk are its entire world.
-- **Parallel fan-out** — when a step says "start N workers in parallel", the workers are mutually independent (no ordering, no shared state beyond the filesystem). Run as many concurrently as your harness allows.
-- **WAIT** — a step's completion criterion is always **the expected artifact existing on disk** (e.g. `compositions/<scene-id>.html`), never the harness's completion notification (some harnesses deliver results best-effort). After waiting, verify the artifacts; a missing artifact means that child failed — re-dispatch it once with the same prompt before surfacing an error.
+- **DISPATCH(role_file, dispatch_context)** — 启动一个子代理，其提示词是命名 `agents/<role>.md` 文件的**完整内容**，后跟工作流中的 `## Dispatch context` 块，**逐字复制**（不要消化或意译）。下面的每个适配器都接受任意任务文本，因此这到处都适用；永远不要依赖子代理看到你的对话、记忆或技能 — 提示词和磁盘上的文件是其整个世界。
+- **并行扇出** — 当一个步骤说"并行启动 N 个工作器"时，工作者们是相互独立的（没有顺序，除了文件系统外没有共享状态）。在你的适配器允许的范围内尽可能多地并发运行。
+- **WAIT** — 步骤的完成标准始终是**磁盘上存在预期的产物**（例如 `compositions/<scene-id>.html`），而不是适配器的完成通知（某些适配器尽力交付结果）。等待后，验证产物；缺失产物意味着该子代理失败 — 在报错之前使用相同的提示词重新调度一次。
 
-## Concurrency cap → batching rule (cap never changes scope)
+## 并发上限 → 批处理规则（上限从不改变工作量）
 
-A harness concurrency limit **reduces parallelism, not work**: every scene still gets built, one scene per dispatch, with the available slots chewing through the full list.
+适配器并发限制**减少并行度，而不是工作量**：每个场景仍然被构建，每次调度一个场景，使用可用槽位处理完整列表。
 
-- Harness queues excess children internally (Claude Code; Hermes `delegate_task` beyond `max_concurrent_children`) → submit **all N at once** and let the queue drain.
-- Harness hard-caps active children (e.g. OpenClaw `maxChildrenPerAgent`) → dispatch in **waves of the cap size**: start `cap` workers, wait for their artifacts, start the next wave, until all N scenes exist. Example: 9 scenes on a cap-3 harness = 3 waves of 3 — never drop scenes, never merge scenes into one worker to fit the cap.
+- 适配器内部排队多余子代理（Claude Code；Hermes `delegate_task` 超出 `max_concurrent_children`）→ 一次性提交**所有 N 个**，让队列自然消耗。
+- 适配器硬限制活跃子代理数量（例如 OpenClaw `maxChildrenPerAgent`）→ 按**上限大小的批次**调度：启动 `cap` 个工作器，等待它们的产物，启动下一批，直到所有 N 个场景都存在。示例：9 个场景，cap-3 适配器 = 3 批，每批 3 个 — 绝不丢弃场景，也不合并场景到一个工作器以适应上限。
 
-## Primitive map
+## 原语映射
 
-| Verb in the workflows            | Claude Code                                                         | Codex CLI                                                                                   | OpenClaw                                                                               | Hermes Agent                                                                                                   |
-| -------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| DISPATCH                         | `Agent` tool, `subagent_type: "general-purpose"`                    | `spawn_agent` (built-in `worker` role; prompt carries the role file)                        | `sessions_spawn` (role file rides in `task`; child only auto-loads AGENTS.md/TOOLS.md) | `delegate_task` — put role file + context into each task's `context` (child system prompt is not customizable) |
-| parallel fan-out                 | multiple Agent calls in one message, each `run_in_background: true` | multiple `spawn_agent` calls (async by design) or `spawn_agents_on_csv` for uniform batches | repeated `sessions_spawn` (always non-blocking)                                        | one `delegate_task(tasks=[...])` batch call                                                                    |
-| WAIT                             | background-task completion notifications arrive automatically       | `wait_agent` with all child IDs                                                             | `sessions_yield` (never poll session lists)                                            | `delegate_task` returns when all tasks finish (blocking the turn is normal)                                    |
-| default concurrency              | min(16, cores − 2), excess queues                                   | 6 (`agents.max_threads`)                                                                    | 5 active per session, 8 global                                                         | 3 (`delegation.max_concurrent_children`)                                                                       |
-| re-dispatch after a gate failure | new Agent call, same prompt + the error/`## Repair context`         | new `spawn_agent`, same prompt + the error                                                  | new `sessions_spawn`, same `task` + the error                                          | new `delegate_task`, same `context` + the error                                                                |
+| 工作流中的动词            | Claude Code                                                         | Codex CLI                                                                                   | OpenClaw                                                                               | Hermes Agent                                                                                                   |
+| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| DISPATCH                  | `Agent` 工具，`subagent_type: "general-purpose"`                    | `spawn_agent`（内置 `worker` 角色；提示词携带角色文件）                                      | `sessions_spawn`（角色文件放在 `task` 中；子代理仅自动加载 AGENTS.md/TOOLS.md）        | `delegate_task` — 将角色文件 + 上下文放入每个任务的 `context` 中（子代理系统提示词不可自定义）                    |
+| 并行扇出                  | 在一条消息中多次调用 Agent，每次 `run_in_background: true`           | 多次 `spawn_agent` 调用（异步设计）或使用 `spawn_agents_on_csv` 实现统一批次                    | 重复 `sessions_spawn`（始终非阻塞）                                                     | 一次 `delegate_task(tasks=[...])` 批量调用                                                                      |
+| WAIT                      | 后台任务完成通知自动到达                                                | `wait_agent` 带上所有子代理 ID                                                               | `sessions_yield`（绝不轮询会话列表）                                                    | `delegate_task` 在所有任务完成时返回（阻塞该轮是正常的）                                                          |
+| 默认并发                  | min(16, cores − 2)，超出排队                                           | 6（`agents.max_threads`）                                                                   | 每会话 5 个活跃，全局 8 个                                                              | 3（`delegation.max_concurrent_children`）                                                                       |
+| 门控失败后重新调度        | 新的 Agent 调用，相同提示词 + 错误/`## Repair context`                | 新的 `spawn_agent`，相同提示词 + 错误                                                       | 新的 `sessions_spawn`，相同 `task` + 错误                                               | 新的 `delegate_task`，相同 `context` + 错误                                                                     |
 
-Harness-specific notes:
+适配器特定说明：
 
-- **Codex**: children inherit the parent cwd and cannot change it — exactly what these pipelines need (shared `PROJECT_DIR`). Prefer prompt-carried roles over `.codex/agents/*.toml` registration; the workflows already deliver roles in the prompt. **Codex policy-gates spawning on the user explicitly requesting delegation — a skill instruction alone does not satisfy it, and you will be tempted to skip the tool without even trying.** Do not silently degrade: on Codex, if the user has not granted delegation this session, **ask one line** — "OK to run this workflow's workers as parallel subagents?" — **folded into the workflow's first existing user pause** (e.g. the API-key question) so the run pauses only once; at the latest, before the first dispatch step. An affirmative — or a standing grant in the workspace `AGENTS.md` or the kickoff prompt — unlocks native dispatch for the whole session. Only without a grant: prefer ladder rung 1 below (headless `codex exec` children) for the scene fan-out; inline serial is the last resort.
-- **OpenClaw**: result announcement is best-effort (lost on gateway restart) — the artifact-on-disk WAIT rule above is the source of truth, not the announce message.
-- **Hermes**: children get a fresh conversation and only see what you put in `context`, and only the final summary returns — both already match the workflows' design (dispatch packets carry everything; results land on disk). Requires a **local execution backend** (the pipelines exchange data through `PROJECT_DIR` and packet files on the shared filesystem; Docker/remote backends break that).
-- **Any other harness**, or subagents unavailable/disabled — degrade down this ladder:
-  1. Headless CLI children: write each child prompt to a file, start the CLI per worker as a background shell process (redirect stdin from /dev/null, output to a log), then collect artifacts from disk.
-  2. Inline serial execution: do each role yourself, one at a time — read the role file, follow it with the dispatch context as if you were the child, finish, then return to the runbook. Load only one role's resources at a time (a scene's role file + its packet), and still run every per-role self-check before moving on.
+- **Codex**：子代理继承父级 cwd 且无法更改 — 这正是这些流水线所需要的（共享 `PROJECT_DIR`）。优先使用提示词携带的角色，而不是 `.codex/agents/*.toml` 注册；工作流已经在提示词中提供了角色。**Codex 的策略要求在用户明确请求委托时才能启动子代理 — 单独的技能指令不满足此要求，而且你可能会倾向于甚至不尝试就跳过该工具。** 不要默默地降级：在 Codex 上，如果用户在本会话中没有授予委托权限，**问一行** — "可以运行此工作流的工作器作为并行子代理吗？" — **合并到工作流已有的第一个用户暂停点**（例如 API 密钥问题），这样运行只暂停一次；最晚在第一次调度步骤之前。肯定的回答 — 或工作区 `AGENTS.md` 或启动提示词中的常设授权 — 为整个会话解锁原生调度。只有在没有授权的情况下：优先选择下面阶梯第 1 级（无头 `codex exec` 子代理）用于场景扇出；内联串行是最后的手段。
+- **OpenClaw**：结果通知是尽力而为的（网关重启后丢失）— 上面提到的"磁盘上产物" WAIT 规则是真实来源，而不是通知消息。
+- **Hermes**：子代理获得全新的对话，只能看到你放在 `context` 中的内容，只返回最终摘要 — 两者都已经符合工作流的设计（调度包携带一切；结果落在磁盘上）。需要**本地执行后端**（流水线通过共享文件系统上的 `PROJECT_DIR` 和包文件交换数据；Docker/远程后端会破坏这一点）。
+- **任何其他适配器**，或子代理不可用/禁用 — 沿此阶梯降级：
+  1. 无头 CLI 子代理：将每个子代理提示词写入文件，作为后台 shell 进程为每个工作器启动 CLI（从 /dev/null 重定向 stdin，输出到日志），然后从磁盘收集产物。
+  2. 内联串行执行：自己扮演每个角色，一次一个 — 读取角色文件，像你是子代理一样使用调度上下文跟随它，完成，然后返回运行手册。一次只加载一个角色的资源（场景的角色文件 + 其包），并且在继续之前仍然运行每个角色的自我检查。
 
-## Vocabulary mapping (older phrasing you may meet in agent prompts)
+## 词汇映射（你在代理提示词中可能遇到的旧说法）
 
-- "in the same message" / `run_in_background: true` — Claude Code idioms for "concurrently / as a background child"; apply your harness's equivalent from the table.
-- "Skill `X`" / "loaded with the Skill tool" — load skill X; on harnesses without a skill-loading tool, read `<skills-root>/X/SKILL.md` directly (the skills root is the directory containing this skill family; derive it from `SKILL_DIR` in your dispatch context).
-- `Read` / `Write` / `Edit` / `Bash` — capability names (read file / write file / edit in place / run shell); map to your harness's tools.
+- "in the same message" / `run_in_background: true` — Claude Code 的用语，意思是"并发地 / 作为后台子代理"；从表格中应用你的适配器的等效方式。
+- "Skill `X`" / "loaded with the Skill tool" — 加载技能 X；在没有技能加载工具的适配器上，直接读取 `<skills-root>/X/SKILL.md`（技能根目录是包含此技能系列的目录；从调度上下文中的 `SKILL_DIR` 推导）。
+- `Read` / `Write` / `Edit` / `Bash` — 能力名称（读取文件/写入文件/原地编辑/运行 shell）；映射到你的适配器的工具。

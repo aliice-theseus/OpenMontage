@@ -1,13 +1,13 @@
 ---
 name: templates
-description: Template listing and variable replacement for HeyGen videos
+description: HeyGen 视频的模板列表和变量替换
 ---
 
-# Video Templates
+# 视频模板
 
-HeyGen templates allow you to create reusable video structures with variable placeholders, enabling personalized video generation at scale.
+HeyGen 模板允许你创建带有变量占位符的可复用视频结构，实现大规模个性化视频生成。
 
-## Listing Templates
+## 列出模板
 
 ### curl
 
@@ -76,7 +76,7 @@ def list_templates() -> list:
     return data["data"]["templates"]
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -113,7 +113,7 @@ def list_templates() -> list:
 }
 ```
 
-## Getting Template Details
+## 获取模板详情
 
 ### curl
 
@@ -141,19 +141,19 @@ async function getTemplate(templateId: string): Promise<Template> {
 }
 ```
 
-## Generating Video from Template
+## 从模板生成视频
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必需 | 描述 |
 |-------|------|:---:|-------------|
-| `variables` | object | ✓ | Key-value pairs matching template variables |
-| `test` | boolean | | Test mode (watermarked, no credits) |
-| `title` | string | | Video name for organization |
-| `callback_id` | string | | Custom ID for webhook tracking |
-| `callback_url` | string | | URL for completion notification |
+| `variables` | object | ✓ | 匹配模板变量的键值对 |
+| `test` | boolean | | 测试模式（带水印，不消耗积分） |
+| `title` | string | | 用于组织的视频名称 |
+| `callback_id` | string | | 用于 webhook 跟踪的自定义 ID |
+| `callback_url` | string | | 完成通知的 URL |
 
-**Note:** The `variables` object keys must match the template's defined variable names. Check template details to see which variables are defined.
+**注意：** `variables` 对象的键必须与模板定义的变量名称匹配。查看模板详情以了解定义了哪些变量。
 
 ### curl
 
@@ -175,7 +175,7 @@ curl -X POST "https://api.heygen.com/v2/template/{template_id}/generate" \
 
 ```typescript
 interface TemplateGenerateRequest {
-  variables: Record<string, string>;           // Required
+  variables: Record<string, string>;           // 必需
   test?: boolean;
   title?: string;
   callback_id?: string;
@@ -239,24 +239,24 @@ def generate_from_template(template_id: str, variables: dict, test: bool = False
     return data["data"]["video_id"]
 ```
 
-## Variable Types
+## 变量类型
 
-### Text Variables
+### 文本变量
 
-For dynamic text content:
+用于动态文本内容：
 
 ```typescript
 const variables = {
   customer_name: "John Smith",
   product_name: "SuperWidget Pro",
   price: "$99.99",
-  cta_text: "Order Now!",
+  cta_text: "立即订购！",
 };
 ```
 
-### Image Variables
+### 图片变量
 
-For dynamic images (backgrounds, product shots):
+用于动态图片（背景、产品照片）：
 
 ```typescript
 const variables = {
@@ -266,9 +266,9 @@ const variables = {
 };
 ```
 
-### Audio Variables
+### 音频变量
 
-For custom audio content:
+用于自定义音频内容：
 
 ```typescript
 const variables = {
@@ -277,9 +277,9 @@ const variables = {
 };
 ```
 
-## Batch Video Generation
+## 批量视频生成
 
-Generate multiple personalized videos from a template:
+从模板生成多个个性化视频：
 
 ```typescript
 interface PersonalizationData {
@@ -305,35 +305,35 @@ async function batchGenerateVideos(
     const videoId = await generateFromTemplate(templateId, variables);
     videoIds.push(videoId);
 
-    // Rate limiting: add delay between requests
+    // 速率限制：在请求之间添加延迟
     await new Promise((r) => setTimeout(r, 1000));
   }
 
   return videoIds;
 }
 
-// Usage
+// 使用示例
 const recipients = [
   {
     name: "John Smith",
     email: "john@example.com",
     company: "Acme Inc",
-    customMessage: "Thanks for your interest in our product!",
+    customMessage: "感谢您对我们产品的关注！",
   },
   {
     name: "Jane Doe",
     email: "jane@example.com",
     company: "Tech Corp",
-    customMessage: "We'd love to show you a demo!",
+    customMessage: "我们很乐意为您演示！",
   },
 ];
 
 const videoIds = await batchGenerateVideos("template_abc123", recipients);
 ```
 
-## Template Validation
+## 模板变量验证
 
-Validate variables before generating:
+在生成前验证变量：
 
 ```typescript
 function validateTemplateVariables(
@@ -345,27 +345,27 @@ function validateTemplateVariables(
   for (const templateVar of template.variables) {
     const value = variables[templateVar.name];
 
-    // Check if required variable is provided
+    // 检查是否提供了必需的变量
     if (!value) {
-      errors.push(`Missing required variable: ${templateVar.name}`);
+      errors.push(`缺少必需变量：${templateVar.name}`);
       continue;
     }
 
-    // Check text length limits
+    // 检查文本长度限制
     if (templateVar.type === "text" && templateVar.properties?.max_length) {
       if (value.length > templateVar.properties.max_length) {
         errors.push(
-          `Variable "${templateVar.name}" exceeds max length of ${templateVar.properties.max_length}`
+          `变量 "${templateVar.name}" 超过最大长度 ${templateVar.properties.max_length}`
         );
       }
     }
 
-    // Validate image URLs
+    // 验证图片 URL
     if (templateVar.type === "image") {
       try {
         new URL(value);
       } catch {
-        errors.push(`Variable "${templateVar.name}" is not a valid URL`);
+        errors.push(`变量 "${templateVar.name}" 不是有效的 URL`);
       }
     }
   }
@@ -377,57 +377,57 @@ function validateTemplateVariables(
 }
 ```
 
-## Complete Template Workflow
+## 完整模板工作流
 
 ```typescript
 async function createPersonalizedVideo(
   templateId: string,
   personalization: Record<string, string>
 ): Promise<string> {
-  // 1. Get template details
+  // 1. 获取模板详情
   const template = await getTemplate(templateId);
-  console.log(`Using template: ${template.name}`);
+  console.log(`使用模板：${template.name}`);
 
-  // 2. Validate variables
+  // 2. 验证变量
   const validation = validateTemplateVariables(template, personalization);
   if (!validation.valid) {
-    throw new Error(`Validation errors: ${validation.errors.join(", ")}`);
+    throw new Error(`验证错误：${validation.errors.join(", ")}`);
   }
 
-  // 3. Generate video
-  console.log("Generating video...");
+  // 3. 生成视频
+  console.log("正在生成视频...");
   const videoId = await generateFromTemplate(templateId, personalization);
-  console.log(`Video ID: ${videoId}`);
+  console.log(`视频 ID：${videoId}`);
 
-  // 4. Wait for completion
+  // 4. 等待完成
   const videoUrl = await waitForVideo(videoId);
-  console.log(`Video ready: ${videoUrl}`);
+  console.log(`视频就绪：${videoUrl}`);
 
   return videoUrl;
 }
 
-// Usage
+// 使用示例
 const videoUrl = await createPersonalizedVideo("template_abc123", {
   customer_name: "John Smith",
   product_name: "SuperWidget Pro",
-  offer_details: "Get 20% off your first order!",
+  offer_details: "首次订单享受 20% 折扣！",
 });
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Design for flexibility** - Create templates with generic placeholders
-2. **Set reasonable limits** - Define max lengths for text variables
-3. **Validate inputs** - Check variable values before generating
-4. **Use test mode** - Test with `test: true` to verify before production
-5. **Implement rate limiting** - Add delays for batch generation
-6. **Cache template data** - Reduce API calls by caching template details
-7. **Error handling** - Gracefully handle generation failures
+1. **设计灵活性** - 使用通用占位符创建模板
+2. **设置合理限制** - 为文本变量定义最大长度
+3. **验证输入** - 在生成前检查变量值
+4. **使用测试模式** - 在生产前使用 `test: true` 进行验证
+5. **实施速率限制** - 批量生成时添加延迟
+6. **缓存模板数据** - 通过缓存模板详情减少 API 调用
+7. **错误处理** - 优雅地处理生成失败
 
-## Use Cases
+## 使用场景
 
-- **Sales outreach** - Personalized prospect videos
-- **Customer onboarding** - Welcome videos with customer name
-- **Product updates** - Announcements with dynamic content
-- **Training** - Customized training modules
-- **Marketing campaigns** - Targeted promotional videos
+- **销售推广** - 个性化的潜在客户视频
+- **客户 onboarding** - 带客户姓名的欢迎视频
+- **产品更新** - 带有动态内容的公告
+- **培训** - 定制化的培训模块
+- **营销活动** - 针对性的促销视频

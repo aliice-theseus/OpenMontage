@@ -1,23 +1,23 @@
 ---
 name: cursor-click-ripple
-description: Animated mouse cursor moves to target, clicks with scale depression and expanding ripple rings.
+description: 动画鼠标光标移动到目标，以缩放下压点击并扩展涟漪环。
 metadata:
   tags: cursor, click, ripple, interaction, mouse, button
 ---
 
-# Cursor Click Ripple
+# 光标点击涟漪
 
-An animated cursor moves to a target element, performs a click with visual depression, and emits expanding ripple rings from the click point.
+一个动画光标移动到目标元素，执行带有视觉下压的点击，并从点击点发出扩展的涟漪环。
 
-## How It Works
+## 工作原理
 
-Three sequential phases driven by a single GSAP timeline:
+三个顺序阶段由单个 GSAP 时间线驱动：
 
-1. **Move**: eased cursor translation from entry point to the target element's center
-2. **Click**: scale depression on both cursor and target (yoyo: shrink then return)
-3. **Ripple**: expanding circles radiate outward from the click point with fade-out. 1–3 staggered rings amplify the click feedback
+1. **移动**：缓动光标平移从入口点到目标元素的中心
+2. **点击**：光标和目标上的缩放下压（yoyo：缩小然后返回）
+3. **涟漪**：扩展圆圈从点击点向外辐射并淡出。1–3 个错开环放大点击反馈
 
-Use a GSAP timeline because the phase ordering (move → settle → click → ripples) is exactly what timelines express cleanly.
+使用 GSAP 时间线，因为阶段排序（移动 → 稳定 → 点击 → 涟漪）正是时间线干净表达的。
 
 ## HTML
 
@@ -43,7 +43,7 @@ Use a GSAP timeline because the phase ordering (move → settle → click → ri
     </svg>
   </div>
 
-  <!-- Ripple rings — centered on click target, hidden until trigger -->
+  <!-- 涟漪环 — 以点击目标为中心，隐藏直到触发 -->
   <div class="ripple ripple-1"></div>
   <div class="ripple ripple-2"></div>
   <div class="ripple ripple-3"></div>
@@ -52,7 +52,7 @@ Use a GSAP timeline because the phase ordering (move → settle → click → ri
 
 ## CSS
 
-Position cursor at the entry point. Button sits at its final position. Ripples are at the click-target center with `scale: 0` and `opacity: 0` so they hold invisible until the timeline trigger:
+光标定位在入口点。按钮位于其最终位置。涟漪位于点击目标中心，`scale: 0` 和 `opacity: 0`，使它们保持不可见直到时间线触发：
 
 ```css
 .scene {
@@ -66,13 +66,13 @@ Position cursor at the entry point. Button sits at its final position. Ripples a
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  /* ...button styling (background, color, font from project tokens) */
+  /* ...按钮样式（背景、颜色、字体来自项目标记） */
 }
 
 .cursor {
   position: absolute;
   left: 10%;
-  top: 80%; /* entry corner */
+  top: 80%; /* 入口角 */
   pointer-events: none;
   z-index: 999;
 }
@@ -80,7 +80,7 @@ Position cursor at the entry point. Button sits at its final position. Ripples a
 .ripple {
   position: absolute;
   left: 50%;
-  top: 50%; /* click target center */
+  top: 50%; /* 点击目标中心 */
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -91,9 +91,9 @@ Position cursor at the entry point. Button sits at its final position. Ripples a
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
-Build a paused timeline. Register it on `window.__timelines` with the same key as `data-composition-id` on the scene root. All tuning values are named constants — see How to Choose Values below.
+构建一个暂停的时间线。在 `window.__timelines` 上以与场景根元素 `data-composition-id` 相同的键注册。所有调谐值都是命名常量 — 参见下方如何选择值。
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -101,11 +101,11 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // MOVE_DUR, MOVE_EASE, CLICK_AT, PRESS_DUR, CURSOR_PRESS_SCALE, TARGET_PRESS_SCALE,
-  // RIPPLE_AT, RIPPLE_DUR, RIPPLE_SCALE, RIPPLE_STAGGER, RIPPLE_EASE
-  // — all named; values per How to Choose Values.
+  // MOVE_DUR、MOVE_EASE、CLICK_AT、PRESS_DUR、CURSOR_PRESS_SCALE、TARGET_PRESS_SCALE、
+  // RIPPLE_AT、RIPPLE_DUR、RIPPLE_SCALE、RIPPLE_STAGGER、RIPPLE_EASE
+  // — 都是命名常量；值按如何选择值。
 
-  // Phase 1 — Move cursor to target center (eased, not linear)
+  // 阶段 1 — 将光标移动到目标中心（缓动，非线性）
   tl.to(
     ".cursor",
     {
@@ -117,7 +117,7 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
     0,
   );
 
-  // Phase 2 — Click: cursor + target depress together, then return
+  // 阶段 2 — 点击：光标 + 目标一起下压，然后返回
   tl.to(
     ".cursor",
     {
@@ -141,7 +141,7 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
     CLICK_AT,
   );
 
-  // Phase 3 — Ripple burst, N rings staggered from the click point
+  // 阶段 3 — 涟漪爆发，从点击点错开 N 个环
   tl.set([".ripple-1", ".ripple-2", ".ripple-3"], { opacity: 1 }, RIPPLE_AT);
   tl.to(
     [".ripple-1", ".ripple-2", ".ripple-3"],
@@ -160,103 +160,93 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **MOVE_DUR** — cursor travel time from entry to target, in seconds
-  - Range: 0.4–1.0 s
-  - Effects: short feels darting; long feels deliberate / "considered click"
-  - Constraints: must end before `CLICK_AT` — otherwise the click fires while the cursor is still moving and reads as a misclick
-  - Reference: ../../examples/cta-orbit-collapse.html uses 0.5 s
+- **MOVE_DUR** — 光标从入口到目标的移动时间（秒）
+  - 范围：0.4–1.0 秒
+  - 效果：短感觉快速移动；长感觉慎重/"经过考虑的点击"
+  - 约束：必须在 `CLICK_AT` 前结束 — 否则在光标仍在移动时触发点击，读作误点击
+  - 参考：../../examples/cta-orbit-collapse.html 使用 0.5 秒
+- **MOVE_EASE** — 移动补间的缓动族
+  - 离散选择。选项：
+    - `power2.inOut` — 对称、平静；适合"用户深思熟虑地移动光标"
+    - `back.out(<n>)` — 过冲着陆；适合点击目标是按钮且希望光标以微小可见后坐力"稳定到"其上。配合低过冲系数（~1.2–1.4）— 更高读作卡通化
+    - `power3.out` — 快速启动，柔和着陆；适合"果断"移动
+  - 参考：../../examples/cta-orbit-collapse.html 使用 `back.out(1.3)`
+- **CLICK_AT** — 点击触发的时间（秒）
+  - 范围：必须 ≥ `MOVE_DUR`（光标已稳定）；通常 `MOVE_DUR + 0.0–0.3 秒"决策暂停"`
+  - 效果：零暂停读作自动驾驶；>0.3 秒暂停读作犹豫
+  - 参考：../../examples/cta-orbit-collapse.html 在光标稳定后 0.2 秒点击
+- **PRESS_DUR** — 下压的半时长（yoyo 运行两次此值）
+  - 范围：0.06–0.12 秒
+  - 效果：短感觉干脆；长感觉糊软
+  - 约束：总按下 = `2 * PRESS_DUR`；必须在下个场景阶段需要光标/按钮回到正常缩放前完成
+  - 参考：../../examples/cta-orbit-collapse.html 使用 0.08 秒
+- **CURSOR_PRESS_SCALE / TARGET_PRESS_SCALE** — 每个在点击期间压缩的程度
+  - 范围：光标 0.80–0.90；目标 0.92–0.97
+  - 效果：更小数字 = 更强的"此点击算数"感觉；接近 1 的值读作轻柔点击
+  - 约束：光标压缩**比**目标更多 — 光标是行动者，目标是接受者
+  - 参考：../../examples/cta-orbit-collapse.html 使用光标 0.85 / 目标 0.95
+- **RIPPLE_AT** — 环开始扩展的时间（秒）
+  - 范围：`CLICK_AT + 0.0–0.08 秒`
+  - 效果：与按下同时感觉因果；轻微延迟感觉声学（"点击发生，然后波辐射"）
+  - 参考：../../examples/cta-orbit-collapse.html 在 `CLICK_AT` 精确开始时启动涟漪
+- **RIPPLE_DUR** — 每个环完全扩展并淡出的时间
+  - 范围：0.5–1.0 秒
+  - 效果：短环感觉锐利；长环感觉像柔和声纳
+  - 约束：必须在任何依赖环消失的阶段（例如屏幕擦拭）前完成
+  - 参考：../../examples/cta-orbit-collapse.html 使用 0.7 秒
+- **RIPPLE_SCALE** — 每个环在淡出前的最终缩放
+  - 范围：3–6
+  - 效果：3 保持环靠近点击位置；6 让它扫过周围区域
+  - 约束：如果环在达到不透明度 0 前会退出可见画面，降低缩放或缩短时长
+  - 参考：../../examples/cta-orbit-collapse.html 使用 5
+- **RIPPLE_STAGGER** — 连续环之间的延迟
+  - 范围：0.06–0.12 秒（或 0 用于单环；参见变体）
+  - 效果：低于 ~0.06 秒读作一个粗环；高于 ~0.12 秒读作独立事件
+  - 参考：../../examples/cta-orbit-collapse.html 使用单环（无错开）
+- **RIPPLE_EASE** — 扩展的缓动族
+  - 离散选择。选项：
+    - `power2.out` — 快速启动，柔和尾巴；标准的"砰"感觉
+    - `power3.out` — 甚至更锐利的攻击，更长的尾巴
+    - `expo.out` — 几乎瞬时扩展，长时间安静淡出；读作强、遥远的脉冲
+  - 参考：../../examples/cta-orbit-collapse.html 使用 `power2.out`
+- **TARGET_X / TARGET_Y** — 点击目标距光标 CSS 布局原点的像素偏移
+  - 这些是布局派生的，非创意旋钮 — 它们必须匹配实际点击目标的视觉重心。4px 的偏差读作没点到按钮
+  - 参考：../../examples/cta-orbit-collapse.html 以 `CENTER_X + 130, CENTER_Y + 15` 的白色按钮为目标
 
-- **MOVE_EASE** — easing family for the move tween
-  - Discrete choice. Options:
-    - `power2.inOut` — symmetric, calm; good for "the user thoughtfully moves the cursor"
-    - `back.out(<n>)` — overshoot landing; good when the click target is a button you want the cursor to "settle onto" with a tiny visible recoil. Pair with a low overshoot coefficient (~1.2–1.4) — higher reads as cartoonish
-    - `power3.out` — fast start, soft landing; good for a "decisive" move
-  - Reference: ../../examples/cta-orbit-collapse.html uses `back.out(1.3)`
+## 变体
 
-- **CLICK_AT** — time the click fires, in seconds
-  - Range: must be ≥ `MOVE_DUR` (cursor has settled); typically `MOVE_DUR + 0.0–0.3 s` of "decision pause"
-  - Effects: zero pause reads as autopilot; >0.3 s of pause reads as hesitation
-  - Reference: ../../examples/cta-orbit-collapse.html clicks 0.2 s after the cursor settles
+- **单环** — 保留一个 `.ripple` 元素，去掉错开；当场景其余部分繁忙时读作更优雅
+- **键控攻击-衰减** — 用 `keyframes` 块替换简单的扩展并淡出，该块在时长内从不透明度 0 → 峰值 → 0 渐变；给出更清晰的"能量辐射并消散"包络（在 ../../examples/cta-orbit-collapse.html 中使用）
+- **多环扩展脉冲** — 3 个环，0.08 秒错开，当点击是场景的高潮时刻时感觉更丰富
 
-- **PRESS_DUR** — half-duration of the depression (the yoyo runs twice this)
-  - Range: 0.06–0.12 s
-  - Effects: short feels crisp; long feels mushy
-  - Constraints: total press = `2 * PRESS_DUR`; must finish before the next scene phase needs the cursor / target back at normal scale
-  - Reference: ../../examples/cta-orbit-collapse.html uses 0.08 s
+## 关键原则
 
-- **CURSOR_PRESS_SCALE / TARGET_PRESS_SCALE** — how far each compresses during the click
-  - Range: cursor 0.80–0.90; target 0.92–0.97
-  - Effects: smaller numbers = stronger "this click counts" feel; values close to 1 read as a gentle tap
-  - Constraints: cursor compresses MORE than the target — the cursor is the actor, the target is the recipient
-  - Reference: ../../examples/cta-orbit-collapse.html uses cursor 0.85 / target 0.95
+- **移动然后点击**：仅在移动补间稳定后触发点击 — 运动中点击读作无意
+- **同步下压**：光标 + 目标在相同 `position` 时间下压，相同时长（并都 yoyo 返回）
+- **从点击点涟漪**：涟漪从精确的点击位置扩展（按钮的视觉中心），而非任何元素的边界框原点
+- **微妙缩放**：光标压缩比目标更多 — 参见 `CURSOR_PRESS_SCALE` / `TARGET_PRESS_SCALE`
+- **高 z-index 光标**：光标在整个序列中渲染在所有内容之上
 
-- **RIPPLE_AT** — when the rings start expanding, in seconds
-  - Range: `CLICK_AT + 0.0–0.08 s`
-  - Effects: simultaneous with the press feels causal; slight delay feels acoustic ("the click happens, then the wave radiates")
-  - Reference: ../../examples/cta-orbit-collapse.html starts the ripple at `CLICK_AT` exactly
+## 关键约束
 
-- **RIPPLE_DUR** — how long each ring takes to fully expand and fade
-  - Range: 0.5–1.0 s
-  - Effects: short rings feel sharp; long rings feel like a soft sonar
-  - Constraints: must complete before any phase that depends on the ring being gone (e.g. a screen wipe)
-  - Reference: ../../examples/cta-orbit-collapse.html uses 0.7 s
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`。永远不要调用 `tl.play()` — HyperFrames 确定性逐帧定位时间线
+- **注册键 = `data-composition-id`**：`window.__timelines["<id>"]` 必须精确匹配场景根元素上的 `data-composition-id`
+- **涟漪扩展上设置 `immediateRender: false`**：保持初始状态（`scale: 0`、`opacity: 0`）直到点击时刻，否则补间预渲染，环在 t=0 时以错误大小出现
+- **有限时长**：验证 `tl.duration()` 匹配场景的 `data-duration`
+- **光标 + 涟漪上设置 `pointer-events: none`**：它们是纯视觉的；永不阻塞底层交互性（对可悬停导出物重要）
+- **无 CSS 过渡/动画**：所有运动在 GSAP 时间线中，使定位保持确定性
 
-- **RIPPLE_SCALE** — final scale of each ring before it fades
-  - Range: 3–6
-  - Effects: 3 keeps the ring near the click site; 6 lets it sweep the surrounding area
-  - Constraints: if the ring would exit the visible frame before opacity reaches 0, lower the scale or shorten the duration
-  - Reference: ../../examples/cta-orbit-collapse.html uses 5
+## 组合
 
-- **RIPPLE_STAGGER** — delay between consecutive rings
-  - Range: 0.06–0.12 s (or 0 for a single ring; see Variations)
-  - Effects: below ~0.06 s reads as one thick ring; above ~0.12 s reads as separate events
-  - Reference: ../../examples/cta-orbit-collapse.html uses a single ring (no stagger)
+- [orbit-3d-entry.md](orbit-3d-entry.md) — 当点击是枢轴，将轨道元素向光标目标塌缩时
+- [center-outward-expansion.md](center-outward-expansion.md) — 点击可以是从点击点向外爆发的触发
+- [press-release-spring.md](press-release-spring.md) 用于目标按钮上更强的物理感
+- [scale-swap-transition.md](scale-swap-transition.md) 用于按钮点击后的状态变化（按钮变形为成功状态、下一个视图等）
 
-- **RIPPLE_EASE** — easing family for the expansion
-  - Discrete choice. Options:
-    - `power2.out` — fast start, soft tail; the standard "ping" feel
-    - `power3.out` — even sharper attack, longer tail
-    - `expo.out` — almost-instant expansion with a long quiet fade; reads as a strong, distant pulse
-  - Reference: ../../examples/cta-orbit-collapse.html uses `power2.out`
+## 与 HF 技能配对
 
-- **TARGET_X / TARGET_Y** — pixel offset of the click target from the cursor's CSS-laid origin
-  - These are layout-derived, not creative knobs — they must match the visual centroid of the actual click target. A 4 px miss reads as missing the button
-  - Reference: ../../examples/cta-orbit-collapse.html targets the white button at `CENTER_X + 130, CENTER_Y + 15`
-
-## Variations
-
-- **Single ring** — keep one `.ripple` element, drop the stagger; reads as more elegant when the rest of the scene is busy
-- **Keyframed attack-decay** — replace the simple expand-and-fade with a `keyframes` block that ramps opacity 0 → peak → 0 across the duration; gives a clearer "energy radiates and dissipates" envelope (used in ../../examples/cta-orbit-collapse.html)
-- **Multi-ring expanding pulse** — 3 rings with 0.08 s stagger feels richer when the click is the climactic moment of the scene
-
-## Key Principles
-
-- **Move before click**: trigger the click only after the move tween has settled — clicking mid-motion reads as unintentional
-- **Synchronized depression**: cursor + target depress at the same `position` time with the same duration (and both yoyo back)
-- **Ripple from click point**: ripples expand from the exact click location (the button's visual center), not from any element's bounding-box origin
-- **Subtle scale**: cursor compresses more than the target — see `CURSOR_PRESS_SCALE` / `TARGET_PRESS_SCALE`
-- **High z-index cursor**: cursor renders above all content for the entire sequence
-
-## Critical Constraints
-
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`. Never call `tl.play()` — HyperFrames seeks the timeline frame-by-frame deterministically
-- **Registry key = `data-composition-id`**: `window.__timelines["<id>"]` must match the `data-composition-id` on the scene root exactly
-- **`immediateRender: false` on the ripple expand**: holds the initial state (`scale: 0`, `opacity: 0`) until the click moment, otherwise the tween pre-renders and the rings appear at the wrong size at t=0
-- **Finite duration**: verify `tl.duration()` matches the scene's `data-duration`
-- **`pointer-events: none` on cursor + ripples**: they're purely visual; never block underlying interactivity (matters for hover-able exports)
-- **No CSS transitions / animations**: all motion lives in the GSAP timeline so seek stays deterministic
-
-## Combinations
-
-- [orbit-3d-entry.md](orbit-3d-entry.md) — when the click is the pivot that collapses orbiting elements toward the cursor's target
-- [center-outward-expansion.md](center-outward-expansion.md) — the click can be the trigger for an outward burst from the click point
-- [press-release-spring.md](press-release-spring.md) for stronger physical feel on the target button
-- [scale-swap-transition.md](scale-swap-transition.md) for the button's state change after click (button morphs into success state, next view, etc.)
-
-## Pairs with HF skills
-
-- `/hyperframes-animation` — timeline + tween API reference (eases, stagger, `immediateRender`, etc.)
-- `/hyperframes-core` — composition wiring (`data-*` attributes, scene structure, registration contract)
-- `/hyperframes-cli` — `hyperframes lint` to verify the registry key + duration match
+- `/hyperframes-animation` — 时间线 + 补间 API 参考（缓动、错开、`immediateRender` 等）
+- `/hyperframes-core` — 组合接线（`data-*` 属性、场景结构、注册约定）
+- `/hyperframes-cli` — `hyperframes lint` 验证注册键 + 时长匹配

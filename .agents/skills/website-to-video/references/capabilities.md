@@ -1,122 +1,122 @@
-# HyperFrames — Complete Capabilities Inventory
+# HyperFrames — 完整能力清单
 
-Everything possible in HyperFrames as of today's workspace, synthesized from direct source reads of all 7 packages, 16 skills, and the full registry.
+今天工作区中 HyperFrames 能实现的所有功能，综合了所有 7 个包、16 个技能和完整注册表的直接源码阅读。
 
-> **How to read this file.** Scan the **Table of Contents** below first. **Do NOT read this file linearly** — it is a 700+ line inventory; reading top-to-bottom every session wastes context. When the storyboard or a specific beat needs a particular capability (HTML-in-Canvas, shader transitions, audio-reactive, dynamic counters, etc.), jump straight to that section.
+> **如何阅读此文件。** 首先扫描下面的**目录**。**不要线性阅读此文件**——它是 700+ 行的清单；每次会话都从头到尾阅读浪费上下文。当故事板或特定节拍需要某种能力（HTML-in-Canvas、着色器过渡、音频响应、动态计数器等）时，直接跳到该章节。
 
-You are NOT limited to what was captured from the website. You can create shaders from scratch, search for and download registry blocks, build Three.js scenes, write custom WebGL effects, use any web API — anything a browser can render.
+你不局限于从网站捕获的内容。你可以从头创建着色器、搜索并下载注册表块、构建 Three.js 场景、编写自定义 WebGL 效果、使用任何 Web API——浏览器能渲染的任何内容。
 
-For implementation patterns (working code), see `techniques.md`. This file is the WHAT; techniques.md is the HOW.
+关于实现模式（工作代码），参见 `techniques.md`。此文件是 WHAT；techniques.md 是 HOW。
 
-## Essential Rules
+## 基本规则
 
-- **Deterministic:** No `Math.random()`, no `Date.now()`, no `requestAnimationFrame`, no `repeat: -1`. The render engine seeks to exact timestamps.
-- **Timeline contract:** `window.__timelines["composition-id"] = tl` must be set synchronously. The timeline length defines the composition duration.
-- **Sub-compositions:** External `.html` files loaded via `data-composition-src`. Auto-nested timelines, scoped CSS, scoped scripts.
-- **Linter:** 60+ rules. Run `npx hyperframes lint` before render. Catches missing timelines, overlapping clips, broken paths, GSAP errors.
+- **确定性：** 没有 `Math.random()`，没有 `Date.now()`，没有 `requestAnimationFrame`，没有 `repeat: -1`。渲染引擎在精确的时间戳上定位。
+- **时间线约定：** `window.__timelines["composition-id"] = tl` 必须同步设置。时间线长度定义作品时长。
+- **子作品：** 通过 `data-composition-src` 加载的外部 `.html` 文件。自动嵌套时间线、作用域 CSS、作用域脚本。
+- **检查器：** 60+ 条规则。在渲染前运行 `npx hyperframes lint`。捕获缺失时间线、重叠片段、路径损坏、GSAP 错误。
 
-## Table of Contents
+## 目录
 
-| #   | Section                                              | What it covers                                                                                                                                                                                                                  |
-| --- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Composition fundamentals**                         | Data attributes, timeline contract, resolution presets (1080p, 4K, portrait, square, custom)                                                                                                                                    |
-| 2   | **Animation engines (6 adapters)**                   | GSAP + 15 plugins, Anime.js v4, CSS @keyframes, WAAPI, Lottie (lottie-web + dotlottie), Three.js (hf-seek event)                                                                                                                |
-| 3   | **Shader transitions (14 WebGL)**                    | domain-warp, ridged-burn, whip-pan, sdf-iris, ripple-waves, gravitational-lens, cinematic-zoom, chromatic-split, swirl-vortex, thermal-distortion, flash-through-white, cross-warp-morph, light-leak, glitch — plus custom GLSL |
-| 4   | **CSS scene transitions (30+)**                      | Push/slide, scale/zoom, radial/clip, 3D flip, blur, dissolve, cover/blinds, light leak/burn, distortion/glitch, mechanical/shutter, grid dissolve, destruction/burn, VHS/gravity/morph — 6 timing presets                       |
-| 5   | **Visual effects + textures**                        | Text markers (highlight, circle, burst, scribble, sketchout), grain/noise, light leaks, film burn, vignette, glow, paper texture, shimmer sweep                                                                                 |
-| 6   | **Caption techniques**                               | Per-word karaoke, intensity tiers, 5 exit styles, 6 tone mappings, per-word styling triggers, 7 audio source formats, positioning helpers                                                                                       |
-| 7   | **Audio-reactive animation**                         | Bass→scale, mid→shape, treble→glow; any GSAP property; band extraction script; banned patterns                                                                                                                                  |
-| 8   | **HTML-in-canvas**                                   | Live DOM as GPU texture (drawElementImage), Three.js planes, WebGL shaders on HTML, 7 VFX blocks (iPhone/MacBook device, liquid, glass, magnetic, portal, shatter, text cursor)                                                 |
-| 9   | **Three.js / WebGL custom scenes**                   | Full 3D: AnimationMixer, custom GLSL, post-processing, GLTF models, lights, cameras, materials — all deterministic via hf-seek                                                                                                  |
-| 10  | **SVG / canvas / variable fonts**                    | SVG path drawing, Canvas 2D procedural art, CSS 3D card, per-word type, variable font axes, character typing, velocity-matched cuts, MotionPath                                                                                 |
-| 11  | **Media: video, audio, TTS**                         | Video compositing + frame injection, audio mixer (multi-track), Kokoro TTS (54 voices, 9 languages), Whisper/Groq/OpenAI transcription, background removal (u2net)                                                              |
-| 12  | **Registry (51 blocks + 4 components + 8 examples)** | Social overlays (8), showcases (5), data viz (2), logo branding (1), 3D/VFX (7), shader transitions (14), transition galleries (13), components (grain, shimmer, pixelate, texture-mask), 8 starter examples                    |
-| 13  | **CLI (25 commands)**                                | init, add, catalog, play, preview, publish, render (MP4/WebM/MOV/PNG, HDR, GPU, parallel), lint, validate, inspect, snapshot, capture, tts, transcribe, remove-background, doctor, and more                                     |
-| 14  | **Linter (60+ rules)**                               | Core, media, GSAP, captions, composition, adapters, textures, fonts — plus async URL checks                                                                                                                                     |
-| 15  | **Player web component**                             | `<hyperframes-player>` with seek/play/pause API, 11 events, media mirror, runtime auto-inject                                                                                                                                   |
-| 16  | **Engine + Producer**                                | MP4/WebM/MOV/PNG output, HDR (PQ/HLG), transparency (ProRes), GPU encoding (NVENC/VideoToolbox/VAAPI/QSV), parallel rendering, video frame injection                                                                            |
-| 17  | **Studio (in-browser NLE)**                          | Timeline editor, drag/resize clips, asset browser, render queue, lint modal, caption editor, element picker                                                                                                                     |
-| 18  | **Determinism guarantees**                           | No Math.random, no Date.now, no RAF, no repeat:-1, no callbacks, synchronous construction                                                                                                                                       |
-| 19  | **Variables / parameterization**                     | Typed runtime variables (string, color, number, boolean, enum), CLI override, strict validation                                                                                                                                 |
-| 20  | **Sub-compositions**                                 | External file or inline template, auto-nested timelines, scoped CSS, scoped scripts, variable inheritance                                                                                                                       |
-| 21  | **Global runtime APIs**                              | 25+ window globals for timelines, player, variables, adapters, hooks                                                                                                                                                            |
-| 22  | **Skills (16)**                                      | hyperframes, cli, media, registry, contrast, animation-map, website-to-video, remotion, gsap, animejs, css-animations, waapi, lottie, three, tailwind, contribute-catalog                                                       |
-| 23  | **References (15 docs)**                             | transitions, css-patterns, dynamic-techniques, motion-principles, typography, narration, captions, audio-reactive, transcript-guide, techniques, beat-direction, visual-styles, and more                                        |
-| 24  | **Documentation (27 pages)**                         | Guides + package docs covering rendering, HDR, html-in-canvas, performance, prompting, troubleshooting, etc.                                                                                                                    |
-
----
-
-## 1. Composition fundamentals
-
-### Data attributes recognized by the runtime
-
-- **Root composition:** `data-composition-id`, `data-start`, `data-duration`, `data-width`, `data-height`, `data-composition-src` (external sub-comp), `data-composition-duration`, `data-composition-variables` (JSON), `data-variable-values` (override)
-- **Every clip:** `id`, `data-start`, `data-duration`, `data-track-index`, `class="clip"`, optional `data-media-start`, `data-volume`, `data-playback-start`
-- **Sub-composition host:** `data-composition-id`, `data-composition-src` OR inline `<template id="${compId}-template">`
-- **Parser also reads:** `data-type` (composition|text), `data-end`, `data-keyframes` (JSON), `data-x|y|scale|opacity`, `data-color|font-size|font-weight|font-family|text-shadow|outline|highlight*`, `data-layer` (z-index, deprecated for timeline but used for audio mixer layers), `data-resolution`, `data-composition-width|height`
-
-### Timeline contract
-
-- `gsap.timeline({ paused: true })` registered on `window.__timelines["<composition-id>"]`
-- Master clock (TransportClock + WebAudioTransport) drives the timeline via `tl.totalTime(t, false)` or `tl.seek(t, false)`
-- Framework auto-nests sub-comp timelines
-- Duration sourced from `data-duration` on root, not from GSAP length
-- Synchronous timeline construction required (no async/await/setTimeout)
-- Looping handled by `<hyperframes-player>`, not GSAP `repeat: -1`
-
-### Resolution presets
-
-VALID_CANVAS_RESOLUTIONS: 1920×1080 default, 1080×1920 portrait, 1080×1080 square, 4K, 1440×2560, plus `normalizeResolutionFlag` for `--resolution` CLI flag.
+| # | 章节 | 内容 |
+| --- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 | **作品基础** | 数据属性、时间线约定、分辨率预设（1080p、4K、竖屏、方形、自定义） |
+| 2 | **动画引擎（6 个适配器）** | GSAP + 15 个插件、Anime.js v4、CSS @keyframes、WAAPI、Lottie（lottie-web + dotlottie）、Three.js（hf-seek 事件） |
+| 3 | **着色器过渡（14 个 WebGL）** | domain-warp、ridged-burn、whip-pan、sdf-iris、ripple-waves、gravitational-lens、cinematic-zoom、chromatic-split、swirl-vortex、thermal-distortion、flash-through-white、cross-warp-morph、light-leak、glitch——加上自定义 GLSL |
+| 4 | **CSS 场景过渡（30+）** | 推/滑动、缩放/放大、径向/剪辑、3D 翻转、模糊、溶解、覆盖/百叶窗、漏光/烧灼、扭曲/故障、机械/快门、网格溶解、破坏/燃烧、VHS/重力/变形——6 种时序预设 |
+| 5 | **视觉效果 + 纹理** | 文本标记（高亮、圆形、爆发、涂鸦、草图轮廓）、颗粒/噪点、漏光、胶片烧灼、暗角、光晕、纸张纹理、闪光扫光 |
+| 6 | **字幕技术** | 逐词卡拉 OK、强度层级、5 种退出风格、6 种语调映射、逐词样式触发器、7 种音频源格式、定位辅助 |
+| 7 | **音频响应动画** | 贝斯→缩放、中频→形状、高音→光晕；任何 GSAP 属性；频段提取脚本；禁止模式 |
+| 8 | **HTML-in-canvas** | 实时 DOM 作为 GPU 纹理（drawElementImage）、Three.js 平面、HTML 上的 WebGL 着色器、7 个 VFX 块（iPhone/MacBook 设备、液体、玻璃、磁性、传送门、粉碎、文本光标） |
+| 9 | **Three.js / WebGL 自定义场景** | 完整 3D：AnimationMixer、自定义 GLSL、后处理、GLTF 模型、灯光、相机、材质——所有通过 hf-seek 实现确定性 |
+| 10 | **SVG / canvas / 可变字体** | SVG 路径绘制、Canvas 2D 程序化艺术、CSS 3D 卡片、逐词输入、可变字体轴、字符打字、速度匹配切割、MotionPath |
+| 11 | **媒体：视频、音频、TTS** | 视频合成 + 帧注入、音频混音器（多轨）、Kokoro TTS（54 个语音、9 种语言）、Whisper/Groq/OpenAI 转录、背景去除（u2net） |
+| 12 | **注册表（51 个块 + 4 个组件 + 8 个示例）** | 社交叠加（8）、展示（5）、数据可视化（2）、Logo 品牌（1）、3D/VFX（7）、着色器过渡（14）、过渡画廊（13）、组件（颗粒、闪光、像素化、纹理遮罩）、8 个入门示例 |
+| 13 | **CLI（25 个命令）** | init、add、catalog、play、preview、publish、render（MP4/WebM/MOV/PNG、HDR、GPU、并行）、lint、validate、inspect、snapshot、capture、tts、transcribe、remove-background、doctor 等 |
+| 14 | **检查器（60+ 条规则）** | 核心、媒体、GSAP、字幕、作品、适配器、纹理、字体——加上异步 URL 检查 |
+| 15 | **播放器 Web 组件** | `<hyperframes-player>` 带 seek/play/pause API、11 个事件、媒体镜像、运行时自动注入 |
+| 16 | **引擎 + 生成器** | MP4/WebM/MOV/PNG 输出、HDR（PQ/HLG）、透明度（ProRes）、GPU 编码（NVENC/VideoToolbox/VAAPI/QSV）、并行渲染、视频帧注入 |
+| 17 | **Studio（浏览器内 NLE）** | 时间线编辑器、拖放/调整片段、资源浏览器、渲染队列、检查模态框、字幕编辑器、元素选择器 |
+| 18 | **确定性保证** | 没有 Math.random、没有 Date.now、没有 RAF、没有 repeat:-1、没有回调、同步构建 |
+| 19 | **变量 / 参数化** | 类型化运行时变量（string、color、number、boolean、enum）、CLI 覆盖、严格验证 |
+| 20 | **子作品** | 外部文件或内联模板、自动嵌套时间线、作用域 CSS、作用域脚本、变量继承 |
+| 21 | **全局运行时 API** | 25+ 个 window 全局对象，用于时间线、播放器、变量、适配器、钩子 |
+| 22 | **技能（16 个）** | hyperframes、cli、media、registry、contrast、animation-map、website-to-video、remotion、gsap、animejs、css-animations、waapi、lottie、three、tailwind、contribute-catalog |
+| 23 | **参考（15 个文档）** | transitions、css-patterns、dynamic-techniques、motion-principles、typography、narration、captions、audio-reactive、transcript-guide、techniques、beat-direction、visual-styles 等 |
+| 24 | **文档（27 页）** | 指南 + 包文档涵盖渲染、HDR、html-in-canvas、性能、提示、故障排除等 |
 
 ---
 
-## 2. Animation engines (6 deterministic frame adapters)
+## 1. 作品基础
 
-The runtime registers these adapters in order; each implements `discover()` / `seek({time})` / `pause` / `play?` / `revert`:
+### 运行时识别的数据属性
 
-| Adapter                            | What it drives                                                                | How to load                                                     | Notable                                                                                                   |
+- **根作品：** `data-composition-id`、`data-start`、`data-duration`、`data-width`、`data-height`、`data-composition-src`（外部子作品）、`data-composition-duration`、`data-composition-variables`（JSON）、`data-variable-values`（覆盖）
+- **每个片段：** `id`、`data-start`、`data-duration`、`data-track-index`、`class="clip"`、可选的 `data-media-start`、`data-volume`、`data-playback-start`
+- **子作品宿主：** `data-composition-id`、`data-composition-src` 或内联 `<template id="${compId}-template">`
+- **解析器也读取：** `data-type`（composition|text）、`data-end`、`data-keyframes`（JSON）、`data-x|y|scale|opacity`、`data-color|font-size|font-weight|font-family|text-shadow|outline|highlight*`、`data-layer`（z-index，已弃用，但用于音频混音器层）、`data-resolution`、`data-composition-width|height`
+
+### 时间线约定
+
+- `gsap.timeline({ paused: true })` 注册在 `window.__timelines["<composition-id>"]`
+- 主时钟（TransportClock + WebAudioTransport）通过 `tl.totalTime(t, false)` 或 `tl.seek(t, false)` 驱动时间线
+- 框架自动嵌套子作品时间线
+- 时长来自根上的 `data-duration`，而不是 GSAP 长度
+- 需要同步时间线构建（没有 async/await/setTimeout）
+- 循环由 `<hyperframes-player>` 处理，不是 GSAP `repeat: -1`
+
+### 分辨率预设
+
+VALID_CANVAS_RESOLUTIONS：1920×1080 默认、1080×1920 竖屏、1080×1080 方形、4K、1440×2560，加上 `normalizeResolutionFlag` 用于 `--resolution` CLI 标志。
+
+---
+
+## 2. 动画引擎（6 个确定性帧适配器）
+
+运行时按顺序注册这些适配器；每个实现 `discover()` / `seek({time})` / `pause` / `play?` / `revert`：
+
+| 适配器 | 驱动什么 | 如何加载 | 注意事项 |
 | ---------------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| GSAP (createGsapAdapter)           | The primary timeline + all tweens registered on `window.__timelines[<id>]`    | CDN `https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js` | Plugins via standard GSAP register; HyperFrames does NOT patch THREE.Clock (uses `__hfThreeTime` instead) |
-| Anime.js v4 (createAnimeJsAdapter) | Anime instances pushed to `window.__hfAnime`                                  | CDN `animejs@4.0.2/lib/anime.iife.min.js` or ESM                | Adapter multiplies composition seconds by 1000 for ms                                                     |
-| CSS animations (createCssAdapter)  | Any element with computed `animation-name`                                    | Declarative `@keyframes`                                        | Falls back to negative `animation-delay` when WAAPI unavailable                                           |
-| WAAPI (createWaapiAdapter)         | All Animation objects on document                                             | `element.animate()`                                             | Uses `document.getAnimations()`                                                                           |
-| Lottie (createLottieAdapter)       | `window.__hfLottie` array; supports lottie-web + dotlottie-web                | CDN `lottie.min.js` + `@lottiefiles/dotlottie-web`              | `goToAndStop(time*1000)` or `setCurrentRawFrameValue` / `seek(%)`                                         |
-| Three.js (createThreeAdapter)      | `window.__hfThreeTime` + dispatches `CustomEvent("hf-seek", {detail:{time}})` | ESM CDN `three@0.181.2/+esm`                                    | Composition's render loop listens to `hf-seek`; pattern: `mixer.setTime(time)`                            |
+| GSAP（createGsapAdapter） | 主时间线 + 注册在 `window.__timelines[<id>]` 上的所有动画 | CDN `https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js` | 插件通过标准 GSAP 注册；HyperFrames 不会修补 THREE.Clock（改用 `__hfThreeTime`） |
+| Anime.js v4（createAnimeJsAdapter） | 推送到 `window.__hfAnime` 的 Anime 实例 | CDN `animejs@4.0.2/lib/anime.iife.min.js` 或 ESM | 适配器将作品秒数乘以 1000 转换为毫秒 |
+| CSS 动画（createCssAdapter） | 任何具有计算后 `animation-name` 的元素 | 声明式 `@keyframes` | 当 WAAPI 不可用时回退到负 `animation-delay` |
+| WAAPI（createWaapiAdapter） | document 上的所有 Animation 对象 | `element.animate()` | 使用 `document.getAnimations()` |
+| Lottie（createLottieAdapter） | `window.__hfLottie` 数组；支持 lottie-web + dotlottie-web | CDN `lottie.min.js` + `@lottiefiles/dotlottie-web` | `goToAndStop(time*1000)` 或 `setCurrentRawFrameValue` / `seek(%)` |
+| Three.js（createThreeAdapter） | `window.__hfThreeTime` + 分派 `CustomEvent("hf-seek", {detail:{time}})` | ESM CDN `three@0.181.2/+esm` | 作品的渲染循环监听 `hf-seek`；模式：`mixer.setTime(time)` |
 
-### GSAP plugins (documented patterns)
+### GSAP 插件（有文档的模式）
 
-- **TextPlugin** — text mutation in `tl.call` (skills/gsap/references/effects.md)
-- **MotionPathPlugin** — curve-constrained tweens (skills/hyperframes/references/techniques.md)
-- **CustomEase** — bezier eases imported from Remotion-style timing
-- **ScrollTrigger / Flip / SplitText / Draggable / Inertia / Observer / ScrambleText / CustomWiggle / CustomBounce / ScrollSmoother / GSDevTools** — work natively if loaded and tweens are on the registered paused timeline, but no special HyperFrames adapter
-- Producer injects ScrollTrigger CDN automatically when needed (packages/producer/src/services/htmlCompiler.ts)
+- **TextPlugin**——`tl.call` 中的文本变异（skills/gsap/references/effects.md）
+- **MotionPathPlugin**——曲线约束动画（skills/hyperframes/references/techniques.md）
+- **CustomEase**——从 Remotion 风格时序导入的贝塞尔缓动
+- **ScrollTrigger / Flip / SplitText / Draggable / Inertia / Observer / ScrambleText / CustomWiggle / CustomBounce / ScrollSmoother / GSDevTools**——如果加载且动画在注册的暂停时间线上，则可原生工作，但没有特殊的 HyperFrames 适配器
+- 生成器在需要时自动注入 ScrollTrigger CDN（packages/producer/src/services/htmlCompiler.ts）
 
 ---
 
-## 3. Shader transitions — @hyperframes/shader-transitions
+## 3. 着色器过渡——@hyperframes/shader-transitions
 
-14 named WebGL fragment shaders. All share the same uniforms: `u_from`, `u_to`, `u_progress`, `u_resolution`, `u_accent`, `u_accent_dark`, `u_accent_bright`.
+14 个命名的 WebGL 片段着色器。所有着色器共享相同的 uniforms：`u_from`、`u_to`、`u_progress`、`u_resolution`、`u_accent`、`u_accent_dark`、`u_accent_bright`。
 
-### The 14 shaders
+### 14 个着色器
 
-| Name                | Visual                                                                                 | Notes                                                                                                                              |
+| 名称 | 视觉效果 | 说明 |
 | ------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| domain-warp         | Multi-octave FBM warps both scenes oppositely; organic dissolve edge with accent flash | Uses NQ noise bundle                                                                                                               |
-| ridged-burn         | Ridged multifractal mask reveals B; accent → bright → white burn ramp; sparks          | NQ                                                                                                                                 |
-| whip-pan            | 10-sample horizontal motion blur + lateral crossfade                                   | No noise                                                                                                                           |
-| sdf-iris            | Aspect-corrected circle SDF expansion + accent-tinted glow rings                       | —                                                                                                                                  |
-| ripple-waves        | Radial standing-wave UV displacement + tinted crossfade                                | —                                                                                                                                  |
-| gravitational-lens  | Pinch pull toward center + R/B chromatic separation                                    | —                                                                                                                                  |
-| cinematic-zoom      | 12 RGB-offset radial zoom blur samples (chromatic zoom streak)                         | —                                                                                                                                  |
-| chromatic-split     | R/B radial channel shift outward / inward; G fixed                                     | Distinct from CSS chromatic aberration                                                                                             |
-| swirl-vortex        | CCW swirl with FBM noise; reciprocal on incoming                                       | NQ                                                                                                                                 |
-| thermal-distortion  | Vertical sin + FBM horizontal displacement; warm haze                                  | NQ                                                                                                                                 |
-| flash-through-white | Fade through white midpoint — a visible white flash between scenes                     | No accent. Use only when the brand specifically calls for a white-flash beat boundary; this is NOT a neutral "default" transition. |
-| cross-warp-morph    | FBM vector field displaces both scenes; third FBM biases irregular wipe                | NQ                                                                                                                                 |
-| light-leak          | Fixed off-frame leak with exponential falloff + accent warmth + ridge flare            | Hard-coded leak anchor                                                                                                             |
-| glitch              | Line displacement + RGB lateral split + scan modulation + posterization + flicker      | Deterministic                                                                                                                      |
+| domain-warp | 多倍频 FBM 反向扭曲两个场景；有机溶解边缘带强调闪光 | 使用 NQ 噪点 |
+| ridged-burn | 脊状多重分形遮罩揭示 B；强调 → 亮 → 白色燃烧渐变；火花 | NQ |
+| whip-pan | 10 样本水平运动模糊 + 横向交叉淡入淡出 | 无噪点 |
+| sdf-iris | 矫正宽高比的圆形 SDF 扩展 + 强调色调光晕环 | — |
+| ripple-waves | 径向驻波 UV 位移 + 色调交叉淡入淡出 | — |
+| gravitational-lens | 向中心拉拽 + R/B 色差分离 | — |
+| cinematic-zoom | 12 RGB 偏移径向缩放模糊样本（色差缩放条纹） | — |
+| chromatic-split | R/B 径向通道向外/向内移位；G 固定 | 不同于 CSS 色差 |
+| swirl-vortex | 逆时针漩涡带 FBM 噪点；进入时反向 | NQ |
+| thermal-distortion | 垂直 sin + FBM 水平位移；暖雾 | NQ |
+| flash-through-white | 通过白色中点淡入淡出——场景之间可见的白色闪光 | 不使用强调色。仅当品牌特别要求白色闪光节拍边界时使用；这不是中性的「默认」过渡。 |
+| cross-warp-morph | FBM 向量场位移两个场景；第三个 FBM 偏置不规则擦除 | NQ |
+| light-leak | 固定的画外漏光带指数衰减 + 强调暖色调 + 脊状光晕 | 硬编码漏光锚点 |
+| glitch | 行位移 + RGB 横向分割 + 扫描调制 + 调色板化 + 闪烁 | 确定性 |
 
-### Public API
+### 公共 API
 
 ```js
 HyperShader.init({
@@ -130,193 +130,193 @@ HyperShader.init({
 });
 ```
 
-- Capability probe: `isHtmlInCanvasCaptureSupported()` (Chrome layoutSubtree/drawElementImage)
-- Tuning: `?__hf_shader_capture_scale=` (0.25–1), `?__hf_shader_loading=` (internal|player|none)
-- Cache: IndexedDB for PNG snapshots; max 2 textured transitions live at once
-- Fallback (`applyFallbackTransition`): smoothstep opacity tween when capture / texImage2D fails
-- Engine mode skips GL/capture when `window.__HF_VIRTUAL_TIME__` set (producer uses metadata)
+- 能力检测：`isHtmlInCanvasCaptureSupported()`（Chrome layoutSubtree/drawElementImage）
+- 调优：`?__hf_shader_capture_scale=`（0.25–1）、`?__hf_shader_loading=`（internal|player|none）
+- 缓存：PNG 快照的 IndexedDB；最多同时激活 2 个纹理过渡
+- 回退（`applyFallbackTransition`）：当 capture / texImage2D 失败时的 smoothstep 不透明度动画
+- 引擎模式在设置 `window.__HF_VIRTUAL_TIME__` 时跳过 GL/capture（生成器使用元数据）
 
-You can also **write custom GLSL shaders from scratch** — any fragment shader works with the standard uniforms.
+你也可以**从头编写自定义 GLSL 着色器**——任何片段着色器都可以使用标准 uniforms 工作。
 
 ---
 
-## 4. CSS scene transitions (30+ named patterns)
+## 4. CSS 场景过渡（30+ 个命名模式）
 
-Documented in skills/hyperframes/references/transitions/ across 14 category files. All GSAP-driven, none mixable with shader transitions in same composition.
+记录在 skills/hyperframes/references/transitions/ 下的 14 个分类文件中。全部由 GSAP 驱动，不能在同一作品中的着色器过渡混用。
 
-### By category
+### 按分类
 
-| Category                         | Patterns                                                                                         |
+| 分类 | 模式 |
 | -------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Push / slide (css-push.md)       | Push slide, vertical push, elastic push, squeeze                                                 |
-| Scale / zoom (css-scale.md)      | Zoom through, zoom out, scale-up swap                                                            |
-| Radial / clip (css-radial.md)    | Circle iris, diamond iris, diagonal split                                                        |
-| 3D (css-3d.md)                   | 3D card flip, hinge door                                                                         |
-| Blur (css-blur.md)               | Crossfade, blur crossfade, focus pull                                                            |
-| Dissolve (css-dissolve.md)       | Color dip (gap-to-black), staggered color blocks (2-block, 5-block)                              |
-| Cover (css-cover.md)             | Horizontal blinds, vertical blinds (variable strip counts: 6 / 12 / 20)                          |
-| Light (css-light.md)             | Light leak overlays, overexposure burn, film burn                                                |
-| Distortion (css-distortion.md)   | Glitch (CSS — RGB layer jitter), chromatic aberration, ripple                                    |
-| Mechanical (css-mechanical.md)   | Shutter (two-half), clock wipe (9-point rotating wedge)                                          |
-| Grid (css-grid.md)               | Grid dissolve (12 or 120 cells), grid pixelate wipe                                              |
-| Destruction (css-destruction.md) | Page burn (SVG clip-path + canvas char rim)                                                      |
-| Other (css-other.md)             | VHS tape (strip-based seeded jitter), gravity drop, morph circle, blur through, directional blur |
-| Rejected                         | Star iris, tilt-shift, lens flare (don't use — non-CSS-realistic)                                |
+| 推/滑动（css-push.md） | 推滑、垂直推、弹性推、挤压 |
+| 缩放/放大（css-scale.md） | 缩放穿透、缩放退出、缩放交换 |
+| 径向/剪辑（css-radial.md） | 圆形虹膜、菱形虹膜、对角线分割 |
+| 3D（css-3d.md） | 3D 卡片翻转、铰链门 |
+| 模糊（css-blur.md） | 交叉淡入淡出、模糊交叉淡入淡出、焦距拉远 |
+| 溶解（css-dissolve.md） | 颜色浸入（间隙到黑色）、交错颜色块（2 块、5 块） |
+| 覆盖（css-cover.md） | 水平百叶窗、垂直百叶窗（可变条数：6 / 12 / 20） |
+| 光效（css-light.md） | 漏光叠加、过曝烧灼、胶片烧灼 |
+| 扭曲（css-distortion.md） | 故障（CSS——RGB 层抖动）、色差、涟漪 |
+| 机械（css-mechanical.md） | 快门（两半）、时钟擦除（9 点旋转楔形） |
+| 网格（css-grid.md） | 网格溶解（12 或 120 个单元格）、网格像素化擦除 |
+| 破坏（css-destruction.md） | 页面烧灼（SVG clip-path + canvas 字符边缘） |
+| 其他（css-other.md） | VHS 磁带（基于条纹的种子抖动）、重力下落、变形圆、模糊穿透、定向模糊 |
+| 已拒绝 | 星形虹膜、移轴、镜头光晕（不要使用——非 CSS 现实） |
 
-### Timing presets
+### 时序预设
 
-| Preset   | duration | ease                   |
+| 预设 | duration | ease |
 | -------- | -------- | ---------------------- |
-| snappy   | 0.2s     | power4.inOut           |
-| smooth   | 0.4s     | power2.inOut           |
-| gentle   | 0.6s     | sine.inOut             |
-| dramatic | 0.5s     | power3.in → power3.out |
-| instant  | 0.15s    | expo.inOut             |
-| luxe     | 0.7s     | power1.inOut           |
+| snappy | 0.2s | power4.inOut |
+| smooth | 0.4s | power2.inOut |
+| gentle | 0.6s | sine.inOut |
+| dramatic | 0.5s | power3.in → power3.out |
+| instant | 0.15s | expo.inOut |
+| luxe | 0.7s | power1.inOut |
 
 ---
 
-## 5. Visual effects + textures
+## 5. 视觉效果 + 纹理
 
-### Marker/emphasis patterns (css-patterns.md)
+### 标记/强调模式（css-patterns.md）
 
-| Mode      | What it does                      | Implementation                            |
+| 模式 | 作用 | 实现 |
 | --------- | --------------------------------- | ----------------------------------------- |
-| highlight | Yellow bar wipes behind text      | CSS bar + GSAP scaleX 0→1                 |
-| circle    | Hand-drawn red ring around word   | CSS border ellipse + back.out scale       |
-| burst     | 12 radial spikes from word center | DOM line array, --len/--angle vars        |
-| scribble  | Wavy underline drawn over time    | SVG `<path>` quadratic + stroke-dash GSAP |
-| sketchout | Cross-hatch x-out over text       | Two 2px rotated lines                     |
+| highlight | 黄色条在文本后面擦除 | CSS 条 + GSAP scaleX 0→1 |
+| circle | 手绘红色环形围绕词语 | CSS 边框椭圆 + back.out 缩放 |
+| burst | 从词语中心发出 12 条径向射线 | DOM 线阵，--len/--angle 变量 |
+| scribble | 随时间绘制的波浪下划线 | SVG `<path>` 二次曲线 + stroke-dash GSAP |
+| sketchout | 在文本上的交叉阴影 x-out | 两条 2px 旋转线 |
 
-### Grain / noise
+### 颗粒/噪点
 
-- **grain-overlay** (registry component): SVG feTurbulence data-URL + CSS keyframe jitter, `steps(1)`, default opacity 0.15
-- **Layered radial-gradient grain** (preferred pattern): no SVG, no canvas-taint, fast everywhere
+- **grain-overlay**（注册表组件）：SVG feTurbulence data-URL + CSS 关键帧抖动、`steps(1)`、默认不透明度 0.15
+- **分层径向渐变颗粒**（首选模式）：无 SVG，无 canvas 污染，各处速度快
 
-### Light / film
+### 光效/胶片
 
-- Light leak transitions (CSS + shader variants)
-- Overexposure burn — `brightness()` ramp + flash overlay
-- Film burn — multi-layer amber/orange/red radials
-- Vignette — radial-gradient overlay
-- Paper texture (in registry/examples/warm-grain/)
+- 漏光过渡（CSS + 着色器变体）
+- 过曝烧灼——`brightness()` 渐变 + 闪光叠加
+- 胶片烧灼——多层琥珀/橙/红径向
+- 暗角——径向渐变叠加
+- 纸张纹理（在 registry/examples/warm-grain/ 中）
 
-### Glow
+### 光晕
 
-- Caption text glow: textShadow radius keyed to treble bands (always on active words only, never parents)
-- Radial glow backgrounds: CSS gradients / blurred blobs
+- 字幕文本光晕：textShadow 半径键控到高音频段（始终仅在活跃词上，从不父元素）
+- 径向光晕背景：CSS 渐变 / 模糊斑点
 
 ---
 
-## 6. Caption techniques
+## 6. 字幕技术
 
-### Animation styles
+### 动画风格
 
-- Baseline: per-word karaoke highlight (every energy level)
-- Intensity tiers: accent + glow + 15% scale (high energy) → 3% scale (low energy)
-- Exits by energy (dynamic-techniques.md): scatter, drop, collapse, fade+slide, fade
-- Tone mappings (captions.md): scale-pop `back.out(1.7)`, fade+slide `power3.out`, typewriter, bounce, `elastic.out`, word-by-word
+- 基线：逐词卡拉 OK 高亮（每个能量级别）
+- 强度层级：强调 + 光晕 + 15% 缩放（高能量）→ 3% 缩放（低能量）
+- 按能量退出（dynamic-techniques.md）：散射、下落、折叠、淡出+滑动、淡出
+- 语调映射（captions.md）：缩放弹出 `back.out(1.7)`、淡出+滑动 `power3.out`、打字机、弹跳、`elastic.out`、逐词
 
-### Per-word styling triggers
+### 逐词样式触发器
 
-- Brand/product names
-- ALL CAPS
-- Numbers / stats
-- Emotional keywords
-- CTAs
-- Marker highlight modes (5 listed above)
+- 品牌/产品名称
+- 全大写
+- 数字 / 统计
+- 情感关键词
+- CTA
+- 标记高亮模式（上面列出的 5 种）
 
-### Audio sources for caption timing
+### 字幕时序的音频源
 
-| Source                                     | Format   | Granularity       |
+| 源 | 格式 | 粒度 |
 | ------------------------------------------ | -------- | ----------------- |
-| hyperframes transcribe (local whisper.cpp) | JSON     | Word-level        |
-| OpenAI verbose_json                        | JSON     | Word-level        |
-| Groq verbose_json                          | JSON     | Word-level        |
-| Manually authored                          | JSON     | Word-level        |
-| SRT                                        | text     | Phrase-level only |
-| VTT                                        | text     | Phrase-level only |
-| hyperframes tts → transcribe chain         | wav→json | Word-level        |
+| hyperframes transcribe（本地 whisper.cpp） | JSON | 词语级 |
+| OpenAI verbose_json | JSON | 词语级 |
+| Groq verbose_json | JSON | 词语级 |
+| 手动编写 | JSON | 词语级 |
+| SRT | text | 仅短语级 |
+| VTT | text | 仅短语级 |
+| hyperframes tts → transcribe 链 | wav→json | 词语级 |
 
-### Positioning helpers
+### 定位辅助
 
-- Landscape: bottom 80–120px centered
-- Portrait: ~600–700px from bottom
-- `window.__hyperframes.fitTextFontSize(text, {maxWidth, fontFamily, fontWeight})` for dynamic sizing
+- 横屏：底部 80–120px 居中
+- 竖屏：距底部约 600–700px
+- `window.__hyperframes.fitTextFontSize(text, {maxWidth, fontFamily, fontWeight})` 用于动态大小调整
 
 ---
 
-## 7. Audio-reactive animation
+## 7. 音频响应动画
 
-### Data shape
+### 数据格式
 
 ```js
 window.AUDIO_DATA = {
   fps: 30,
   totalFrames: 900,
-  frames: [{ bands: [0.42, 0.18, ...] }]  // bands normalized 0–1 per band across track
+  frames: [{ bands: [0.42, 0.18, ...] }]  // 各频段在整轨上归一化 0–1
 };
 ```
 
-Index 0 = bass, higher = treble. Bands range 0–1, normalized across full track length.
+索引 0 = 贝斯，越高 = 高音。频段范围 0–1，在完整轨长上归一化。
 
-### Mappings documented
+### 有文档的映射
 
-| Band                  | Property                     |
+| 频段 | 属性 |
 | --------------------- | ---------------------------- |
-| Bass (bands[0–1])     | scale (pulse)                |
-| Mid (bands[4–8])      | borderRadius, width          |
-| Treble (bands[12–14]) | textShadow, boxShadow (glow) |
-| Overall amplitude     | opacity, y, backgroundColor  |
+| 贝斯（bands[0–1]） | 缩放（脉冲） |
+| 中频（bands[4–8]） | borderRadius、width |
+| 高音（bands[12–14]） | textShadow、boxShadow（光晕） |
+| 总振幅 | opacity、y、backgroundColor |
 
-Any GSAP-tweenable property is fair game — including clipPath, filter, SVG attrs, CSS variables.
+任何 GSAP 可动画属性都是公平的游戏——包括 clipPath、filter、SVG 属性、CSS 变量。
 
-### Extraction
+### 提取
 
 ```bash
 python3 .../extract-audio-data.py audio.mp3 --fps 30 --bands 8
 ```
 
-Pre-extracted only — no Web Audio at render time.
+仅预先提取——渲染时无 Web Audio。
 
-### Banned in audio-reactive
+### 音频响应中禁止的
 
-EQ bars, spectrum UI, generic waveforms, note clip-art, generic particles, rainbow cycling, white strobe on beats, abstract pulsing orbs.
+EQ 条、频谱 UI、通用波形、音符剪贴画、通用粒子、彩虹循环、节拍上的白色频闪、抽象脉冲球体。
 
 ---
 
 ## 8. HTML-in-canvas
 
-Documented in skills/hyperframes/references/html-in-canvas-patterns.md (504 lines).
+记录在 skills/hyperframes/references/html-in-canvas-patterns.md（504 行）。
 
-### Capability
+### 能力
 
-- Chrome's experimental `layoutSubtree` + `drawElementImage` rasterizes live DOM into canvas
-- Feature detection: `isHtmlInCanvasCaptureSupported()`
-- Used by shader-transitions for scene textures
-- Combined with Three.js: `CanvasTexture` + post-processing
+- Chrome 的实验性 `layoutSubtree` + `drawElementImage` 将实时 DOM 栅格化到 canvas
+- 特征检测：`isHtmlInCanvasCaptureSupported()`
+- 着色器过渡用于场景纹理
+- 结合 Three.js：`CanvasTexture` + 后处理
 
-### Available patterns
+### 可用模式
 
-- HTML on a Three.js plane (displacement, distortion, liquid sim)
-- HTML in shaders (texture sampling for VFX)
-- Recursive HTML-in-canvas-in-shader-in-HTML
+- Three.js 平面上的 HTML（位移、扭曲、液体模拟）
+- 着色器中的 HTML（VFX 的纹理采样）
+- 递归 HTML-in-canvas-in-shader-in-HTML
 
-### Experimental VFX blocks using this
+### 使用此功能的实验性 VFX 块
 
-- `vfx-iphone-device` (GLTF iPhone + MacBook, HTML screens)
-- `vfx-liquid-background` (liquid sim displaces HTML)
+- `vfx-iphone-device`（GLTF iPhone + MacBook、HTML 屏幕）
+- `vfx-liquid-background`（液体模拟位移 HTML）
 - `vfx-liquid-glass`
 - `vfx-magnetic`
 - `vfx-portal`
 - `vfx-shatter`
-- `vfx-text-cursor` (chromatic edges, canvas post)
+- `vfx-text-cursor`（色差边缘、canvas 后处理）
 
 ---
 
-## 9. Three.js / WebGL custom scenes
+## 9. Three.js / WebGL 自定义场景
 
-### Integration pattern
+### 集成模式
 
 ```js
 window.addEventListener("hf-seek", (e) => {
@@ -327,265 +327,265 @@ window.addEventListener("hf-seek", (e) => {
 });
 ```
 
-- Load: `import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.181.2/+esm"`
-- Deterministic: every frame must derive from `time`, never `requestAnimationFrame` / `Date.now()`
-- Includes: AnimationMixer, custom GLSL shaders, post-processing, GLTF models, lights, cameras, materials
+- 加载：`import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.181.2/+esm"`
+- 确定性：每一帧必须从 `time` 派生，永远不使用 `requestAnimationFrame` / `Date.now()`
+- 包括：AnimationMixer、自定义 GLSL 着色器、后处理、GLTF 模型、灯光、相机、材质
 
 ---
 
-## 10. SVG / canvas / variable fonts (other authored techniques)
+## 10. SVG / canvas / 可变字体（其他创作技术）
 
-(From skills/hyperframes/references/techniques.md)
+（来自 skills/hyperframes/references/techniques.md）
 
-| Technique                | Mechanism                                                                            |
+| 技术 | 机制 |
 | ------------------------ | ------------------------------------------------------------------------------------ |
-| SVG path drawing         | `strokeDasharray` + `getTotalLength()` + GSAP stroke offset                          |
-| Canvas 2D procedural art | Seeded hash function + `tl.to` proxy `{time}` onUpdate                               |
-| CSS 3D card              | GSAP `rotationY` + `perspective: 900`                                                |
-| Per-word kinetic type    | GSAP timings array, sliding decay                                                    |
-| Variable font axes       | Animate CSS vars → `font-variation-settings: "opsz" var(--opsz), "wght" var(--wght)` |
-| Character typing         | `tl.call` text mutation + `steps(1)` cursor blink                                    |
-| Velocity-matched cuts    | Match outgoing blur/translate velocity to incoming for seamless beats                |
-| MotionPathPlugin         | `gsap.registerPlugin(MotionPathPlugin)` + path string                                |
+| SVG 路径绘制 | `strokeDasharray` + `getTotalLength()` + GSAP stroke 偏移 |
+| Canvas 2D 程序化艺术 | 种子哈希函数 + `tl.to` 代理 `{time}` onUpdate |
+| CSS 3D 卡片 | GSAP `rotationY` + `perspective: 900` |
+| 逐词动态排版 | GSAP 时序数组、滑动衰减 |
+| 可变字体轴 | 动画化 CSS 变量 → `font-variation-settings: "opsz" var(--opsz), "wght" var(--wght)` |
+| 字符打字 | `tl.call` 文本变异 + `steps(1)` 光标闪烁 |
+| 速度匹配切割 | 匹配退出的模糊/平移速度到进入，实现无缝节拍 |
+| MotionPathPlugin | `gsap.registerPlugin(MotionPathPlugin)` + 路径字符串 |
 
 ---
 
-## 11. Media: video, audio, TTS
+## 11. 媒体：视频、音频、TTS
 
-### Video compositing
+### 视频合成
 
 - `<video muted playsinline data-start="..." data-duration="..." data-track-index="..." src="...">`
-- HyperFrames extracts frames at render via videoFrameInjector (avoids unreliable headless `<video>` playback)
-- Linter forbids `<video>` with audio at the same time — split into separate `<video muted>` + `<audio>`
-- Video frame extraction uses FFmpeg
-- HDR videos: PQ or HLG transfer detection + x265 with mastering metadata
+- HyperFrames 在渲染时通过 videoFrameInjector 提取帧（避免不可靠的无头 `<video>` 播放）
+- 检查器禁止 `<video>` 同时带有音频——拆分为单独的 `<video muted>` + `<audio>`
+- 视频帧提取使用 FFmpeg
+- HDR 视频：PQ 或 HLG 传输检测 + 带母版元数据的 x265
 
-### Audio mixer
+### 音频混音器
 
 - `<audio id="..." data-start="..." data-duration="..." data-volume="0.8" data-track-index="2" src="...">`
-- Multiple tracks mixed with `amix normalize=0` + per-track adelay + volume
-- Master audioGain from EngineConfig
-- Output: AAC 192kbps
+- 多轨混合使用 `amix normalize=0` + 每轨 adelay + 音量
+- 来自 EngineConfig 的主音频增益
+- 输出：AAC 192kbps
 
-### TTS (Kokoro-82M, local)
+### TTS（Kokoro-82M，本地）
 
-- 54 bundled voices with prefixes: `a` American EN, `b` British EN, `e` Spanish, `f` French, `h` Hindi, `i` Italian, `j` Japanese, `p` Brazilian Portuguese, `z` Mandarin
-- Default voice: `af_heart`
-- Speed: 0.1–3.0 (default 1.0)
-- Languages: en-us, en-gb, es, fr-fr, hi, it, pt-br, ja, zh (non-EN needs system espeak-ng)
-- Output: WAV; no pitch/volume CLI flags
-- No API key required
+- 54 个捆绑语音，带前缀：`a` 美式英语、`b` 英式英语、`e` 西班牙语、`f` 法语、`h` 印地语、`i` 意大利语、`j` 日语、`p` 巴西葡萄牙语、`z` 普通话
+- 默认语音：`af_heart`
+- 速度：0.1–3.0（默认 1.0）
+- 语言：en-us、en-gb、es、fr-fr、hi、it、pt-br、ja、zh（非英语需要系统 espeak-ng）
+- 输出：WAV；没有音高/音量 CLI 标志
+- 无需 API 密钥
 
-### Transcription
+### 转录
 
-- Whisper.cpp models: tiny, base, small, medium, large-v3, small.en, medium.en (default small)
-- Groq API: whisper-large-v3 with word granularities
-- OpenAI API: whisper-1 verbose_json
-- Imports: SRT, VTT, JSON formats
-- Quality gates: music-token detection, garbage cleaning, retry with medium.en
+- Whisper.cpp 模型：tiny、base、small、medium、large-v3、small.en、medium.en（默认 small）
+- Groq API：whisper-large-v3 带词语粒度
+- OpenAI API：whisper-1 verbose_json
+- 导入：SRT、VTT、JSON 格式
+- 质量门控：音乐标记检测、垃圾清理、medium.en 重试
 
-### Background removal
+### 背景去除
 
-- u2net ONNX models
-- Devices: auto / cpu / coreml / cuda
-- Quality presets: fast / balanced / best
-- Outputs: transparent WebM, ProRes MOV, PNG sequence
-- Optional dual output (foreground + extracted background)
-
----
-
-## 12. Registry — 51 blocks + 4 components + 8 examples
-
-### Blocks by category
-
-**Social overlays (8):** instagram-follow, tiktok-follow, yt-lower-third, x-post, reddit-post, spotify-card, macos-notification, blue-sweater-intro-video
-
-**Showcases (5):** app-showcase (3D phones), north-korea-locked-down (map + annotation), apple-money-count (counter + SFX), vpn-youtube-spot (app-store scroll), nyc-paris-flight (map + plane path)
-
-**Data viz (2):** data-chart (animated bar+line, NYT-style), flowchart + flowchart-vertical (decision tree with SVG connectors, typing correction)
-
-**Logo / branding (1):** logo-outro (build + glow + tagline + URL pill)
-
-**3D / experimental VFX (8):** ui-3d-reveal, vfx-iphone-device (GLTF), vfx-liquid-background, vfx-liquid-glass, vfx-magnetic, vfx-portal, vfx-shatter, vfx-text-cursor
-
-**Single shader transitions (14):** one block per named shader — domain-warp-dissolve, ridged-burn, whip-pan, sdf-iris, ripple-waves, gravitational-lens, cinematic-zoom, chromatic-radial-split, glitch, swirl-vortex, thermal-distortion, flash-through-white, cross-warp-morph, light-leak
-
-**Transition galleries (13 showcase pieces):** transitions-3d, transitions-blur, transitions-cover, transitions-destruction, transitions-dissolve, transitions-distortion, transitions-grid, transitions-light, transitions-mechanical, transitions-other, transitions-push, transitions-radial, transitions-scale
-
-### Components (4 reusable snippets)
-
-- **grain-overlay** — SVG feTurbulence + CSS keyframes
-- **shimmer-sweep** — Light sweep gradient mask on text
-- **grid-pixelate-wipe** — Grid squares stagger fade scene wipe
-- **texture-mask-text** — Luminance-masked letterforms with 66 mask PNGs (Masonry, Stone, Ground/Road, Wood, Metal, Organic/Soft texture categories)
-
-### Examples (8 starter projects)
-
-warm-grain, play-mode, swiss-grid, vignelli, decision-tree, kinetic-type, product-promo, nyt-graph
-
-Install: `npx hyperframes add <name>` for blocks/components, `hyperframes init <dir> --example <name>` for examples.
+- u2net ONNX 模型
+- 设备：auto / cpu / coreml / cuda
+- 质量预设：fast / balanced / best
+- 输出：透明 WebM、ProRes MOV、PNG 序列
+- 可选双输出（前景 + 提取的背景）
 
 ---
 
-## 13. CLI — 25 commands
+## 12. 注册表——51 个块 + 4 个组件 + 8 个示例
 
-| Command           | Purpose                                                                                                                                                                                                                                                                                                                  |
+### 块按分类
+
+**社交叠加（8）：** instagram-follow、tiktok-follow、yt-lower-third、x-post、reddit-post、spotify-card、macos-notification、blue-sweater-intro-video
+
+**展示（5）：** app-showcase（3D 手机）、north-korea-locked-down（地图 + 标注）、apple-money-count（计数器 + SFX）、vpn-youtube-spot（应用商店滚动）、nyc-paris-flight（地图 + 飞机路径）
+
+**数据可视化（2）：** data-chart（动画柱状+折线，NYT 风格）、flowchart + flowchart-vertical（决策树带 SVG 连接器、打字修正）
+
+**Logo / 品牌（1）：** logo-outro（构建 + 光晕 + 标语 + URL 药丸）
+
+**3D / 实验性 VFX（8）：** ui-3d-reveal、vfx-iphone-device（GLTF）、vfx-liquid-background、vfx-liquid-glass、vfx-magnetic、vfx-portal、vfx-shatter、vfx-text-cursor
+
+**单着色器过渡（14）：** 每个命名的着色器一个块——domain-warp-dissolve、ridged-burn、whip-pan、sdf-iris、ripple-waves、gravitational-lens、cinematic-zoom、chromatic-radial-split、glitch、swirl-vortex、thermal-distortion、flash-through-white、cross-warp-morph、light-leak
+
+**过渡画廊（13 个展示作品）：** transitions-3d、transitions-blur、transitions-cover、transitions-destruction、transitions-dissolve、transitions-distortion、transitions-grid、transitions-light、transitions-mechanical、transitions-other、transitions-push、transitions-radial、transitions-scale
+
+### 组件（4 个可重用代码片段）
+
+- **grain-overlay**——SVG feTurbulence + CSS 关键帧
+- **shimmer-sweep**——文本上的光扫渐变遮罩
+- **grid-pixelate-wipe**——网格方块交错淡出场景擦除
+- **texture-mask-text**——亮度遮罩字母形状，带 66 个遮罩 PNG（砖石、石头、地面/道路、木材、金属、有机/软纹理类别）
+
+### 示例（8 个入门项目）
+
+warm-grain、play-mode、swiss-grid、vignelli、decision-tree、kinetic-type、product-promo、nyt-graph
+
+安装：`npx hyperframes add <name>` 用于块/组件，`hyperframes init <dir> --example <name>` 用于示例。
+
+---
+
+## 13. CLI——25 个命令
+
+| 命令 | 用途 |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| init              | Scaffold project from template/example (interactive or --non-interactive)                                                                                                                                                                                                                                                |
-| add               | Install registry block / component                                                                                                                                                                                                                                                                                       |
-| catalog           | Browse registry blocks/components (--type, --tag, --json, --human-friendly picker)                                                                                                                                                                                                                                       |
-| play              | Lightweight browser player (default port 3003)                                                                                                                                                                                                                                                                           |
-| preview           | Studio dev server (port 3002; --force-new, --list, --kill-all)                                                                                                                                                                                                                                                           |
-| publish           | Zip + upload + return hyperframes.dev URL                                                                                                                                                                                                                                                                                |
-| render            | Render to MP4 / WebM / MOV / PNG sequence — flags: --fps 24/30/60, --quality draft/standard/high, --workers, --docker, --hdr/--sdr, --crf, --video-bitrate, --gpu, --browser-gpu auto/software/hardware, --max-concurrent-renders 1-10, --variables JSON, --variables-file PATH, --strict-variables, --resolution preset |
-| lint              | Static lint (--json, --verbose)                                                                                                                                                                                                                                                                                          |
-| validate          | Bundle + headless Chrome + console + contrast (--contrast default true, --timeout 3000)                                                                                                                                                                                                                                  |
-| inspect / layout  | Visual layout audit (overflow detection at N timestamps; --samples 9, --at, --tolerance 2, --max-issues 80)                                                                                                                                                                                                              |
-| info              | Print project metadata                                                                                                                                                                                                                                                                                                   |
-| compositions      | List compositions (root + sub-comps)                                                                                                                                                                                                                                                                                     |
-| benchmark         | 5 preset configs × N runs (--runs 3)                                                                                                                                                                                                                                                                                     |
-| browser           | Manage Chrome (ensure/path/clear)                                                                                                                                                                                                                                                                                        |
-| remove-background | u2net + FFmpeg → transparent video                                                                                                                                                                                                                                                                                       |
-| transcribe        | whisper.cpp or import SRT/VTT/JSON                                                                                                                                                                                                                                                                                       |
-| tts               | Kokoro-82M (--voice, --speed, --lang, --list)                                                                                                                                                                                                                                                                            |
-| docs              | Print bundled markdown topics (data-attributes, examples, rendering, gsap, troubleshooting, compositions)                                                                                                                                                                                                                |
-| doctor            | Environment checklist (Node, CPU, memory, disk, FFmpeg, FFprobe, Chrome, Docker)                                                                                                                                                                                                                                         |
-| upgrade           | npm update check + optional global install                                                                                                                                                                                                                                                                               |
-| skills            | Run `npx skills add heygen-com/hyperframes --all`                                                                                                                                                                                                                                                                        |
-| telemetry         | enable/disable/status                                                                                                                                                                                                                                                                                                    |
-| snapshot          | PNG screenshots at timeline timestamps                                                                                                                                                                                                                                                                                   |
-| capture           | Capture URL → site assets + screenshots + design tokens (uses Puppeteer + optional Gemini vision)                                                                                                                                                                                                                        |
+| init | 从模板/示例搭建项目（交互式或 --non-interactive） |
+| add | 安装注册表块/组件 |
+| catalog | 浏览注册表块/组件（--type、--tag、--json、--human-friendly 选择器） |
+| play | 轻量级浏览器播放器（默认端口 3003） |
+| preview | Studio 开发服务器（端口 3002；--force-new、--list、--kill-all） |
+| publish | 压缩 + 上传 + 返回 hyperframes.dev URL |
+| render | 渲染为 MP4 / WebM / MOV / PNG 序列——标志：--fps 24/30/60、--quality draft/standard/high、--workers、--docker、--hdr/--sdr、--crf、--video-bitrate、--gpu、--browser-gpu auto/software/hardware、--max-concurrent-renders 1-10、--variables JSON、--variables-file PATH、--strict-variables、--resolution preset |
+| lint | 静态检查（--json、--verbose） |
+| validate | 打包 + 无头 Chrome + 控制台 + 对比度（--contrast default true、--timeout 3000） |
+| inspect / layout | 视觉布局审计（在 N 个时间戳检测溢出；--samples 9、--at、--tolerance 2、--max-issues 80） |
+| info | 打印项目元数据 |
+| compositions | 列出作品（根 + 子作品） |
+| benchmark | 5 个预设配置 × N 次运行（--runs 3） |
+| browser | 管理 Chrome（ensure/path/clear） |
+| remove-background | u2net + FFmpeg → 透明视频 |
+| transcribe | whisper.cpp 或导入 SRT/VTT/JSON |
+| tts | Kokoro-82M（--voice、--speed、--lang、--list） |
+| docs | 打印捆绑的 markdown 主题（data-attributes、examples、rendering、gsap、troubleshooting、compositions） |
+| doctor | 环境清单（Node、CPU、内存、磁盘、FFmpeg、FFprobe、Chrome、Docker） |
+| upgrade | npm 更新检查 + 可选全局安装 |
+| skills | 运行 `npx skills add heygen-com/hyperframes --all` |
+| telemetry | enable/disable/status |
+| snapshot | 时间线时间戳的 PNG 截图 |
+| capture | 捕获 URL → 网站资源 + 截图 + 设计令牌（使用 Puppeteer + 可选 Gemini 视觉） |
 
-### Website capture (`hyperframes capture <url>`)
+### 网站捕获（`hyperframes capture <url>`）
 
-Detects these libraries on captured sites (for context labeling): GSAP / ScrollTrigger, Three.js, Lottie, Anime.js, PixiJS, Babylon.js, Rive, Matter.js, Lenis, Framer Motion, Tailwind CSS, WebGL (shader fingerprinting). Captured outputs feed the website-to-video skill workflow.
+检测捕获网站上的这些库（用于上下文标记）：GSAP / ScrollTrigger、Three.js、Lottie、Anime.js、PixiJS、Babylon.js、Rive、Matter.js、Lenis、Framer Motion、Tailwind CSS、WebGL（着色器指纹识别）。捕获的输出供给 website-to-video 技能工作流。
 
 ---
 
-## 14. Linter — 60+ rules
+## 14. 检查器——60+ 条规则
 
-Across 8 files in packages/core/src/lint/rules/:
+分布在 packages/core/src/lint/rules/ 的 8 个文件中：
 
-| Rule file   | Catches                                                                                                                                                                                                                                                            |
+| 规则文件 | 捕获 |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| core        | Missing composition-id, missing dimensions, missing timeline registry, registry mismatch, invalid script syntax, scoped-CSS issues, non-deterministic code                                                                                                         |
-| media       | Duplicate media id, video missing muted, video nested in timed element, placeholder URLs, base64 prohibited, missing src/start/id, imperative play()/pause()/seek()                                                                                                |
-| gsap        | Overlapping tweens, exit missing hard kill, GSAP animating .clip element, unscoped selectors, CSS transform conflict, missing GSAP script, infinite repeat (repeat: -1), repeat ceil overshoot, scene layer visibility kill, audio-reactive single-tween-per-group |
-| captions    | Caption exit missing kill, text overflow risk, transcript not inline, parse error, container position, scale mismatch, textShadow on parent container                                                                                                              |
-| composition | File too large, dense tracks, missing class="clip", deprecated data-layer/data-end, split attribute selectors, external script deps, RAF in composition, invalid variable JSON                                                                                     |
-| adapters    | Missing Lottie script, missing Three script                                                                                                                                                                                                                        |
-| textures    | Drop-shadow on text, class missing base, text missing mask, unknown texture class                                                                                                                                                                                  |
-| fonts       | Google Fonts import (use @font-face), font-family without @font-face                                                                                                                                                                                               |
+| core | 缺少 composition-id、缺少尺寸、缺少时间线注册、注册表不匹配、无效脚本语法、作用域 CSS 问题、非确定性代码 |
+| media | 重复的媒体 id、视频缺少 muted、视频嵌套在定时元素中、占位符 URL、禁止 base64、缺少 src/start/id、命令式 play()/pause()/seek() |
+| gsap | 重叠动画、退出缺少硬清除、GSAP 动画化 .clip 元素、无作用域选择器、CSS transform 冲突、缺少 GSAP 脚本、无限重复（repeat: -1）、重复 ceil 过冲、场景层可见性清除、音频响应每组的单一动画 |
+| captions | 字幕退出缺少清除、文本溢出风险、转录未内联、解析错误、容器位置、缩放不匹配、父容器上的 textShadow |
+| composition | 文件太大、密集轨道、缺少 class="clip"、已弃用的 data-layer/data-end、分割属性选择器、外部脚本依赖、作品中的 RAF、无效变量 JSON |
+| adapters | 缺少 Lottie 脚本、缺少 Three 脚本 |
+| textures | 文本上的阴影、缺少 base 的类、文本缺少遮罩、未知纹理类 |
+| fonts | Google Fonts 导入（使用 @font-face）、font-family 没有 @font-face |
 
-Plus async URL checks (`lintMediaUrls`, `lintScriptUrls` — HEAD probes).
+加上异步 URL 检查（`lintMediaUrls`、`lintScriptUrls`——HEAD 探测）。
 
-`validateCompositionGsap` also forbids: `Math.random`, `Date.now`, `new Date`, `setTimeout`, `setInterval`, `requestAnimationFrame`, `repeat: -1`.
+`validateCompositionGsap` 还禁止：`Math.random`、`Date.now`、`new Date`、`setTimeout`、`setInterval`、`requestAnimationFrame`、`repeat: -1`。
 
-**Note:** `onUpdate` callbacks, `tl.call()`, and GSAP event callbacks (`onComplete`, `onStart`, etc.) are NOT banned by the linter — they are required for canvas/WebGL rendering and character-by-character typing patterns. The linter only catches the determinism violations listed above.
-
----
-
-## 15. Player — `<hyperframes-player>` web component
-
-### Attributes
-
-`src`, `srcdoc`, `width`, `height`, `controls`, `muted`, `volume`, `poster`, `playback-rate`, `audio-src`, `shader-capture-scale`, `shader-loading` (internal|player|none), `loop`, `autoplay`, `speed-presets`
-
-### Public API
-
-`seek(t)` (synchronous when same-origin — uses `iframe.contentWindow.__player.seek` directly), `play()`, `pause()`, `currentTime`, `duration`, `paused`, `ready`, `playbackRate`, `iframeElement`
-
-### Events
-
-`ready`, `timeupdate`, `play`, `pause`, `ended`, `volumechange`, `ratechange`, `shadertransitionstate`, `playbackerror`, `error`, `audioownershipchange`
-
-### Media mirror
-
-Parent audio/video elements with `data-start` are proxied; `_mirrorParentMediaTime` corrects drift; `_audioOwner` promotes to parent if autoplay blocked.
-
-### Runtime auto-inject
-
-Loads `RUNTIME_CDN_URL` (`@hyperframes/core/dist/hyperframe.runtime.iife.js`) if missing `__hf`/`__player` but timelines exist.
+**注意：** `onUpdate` 回调、`tl.call()` 和 GSAP 事件回调（`onComplete`、`onStart` 等）**不**被检查器禁止——它们是 canvas/WebGL 渲染和逐字打字模式所必需的。检查器只捕获上面列出的确定性违规。
 
 ---
 
-## 16. Engine + Producer — rendering pipeline
+## 15. 播放器——`<hyperframes-player>` Web 组件
 
-### Output formats
+### 属性
 
-mp4, webm, mov, png-sequence — with HDR (PQ / HLG / SDR / auto-detect), transparency (ProRes MOV / WebM / PNG), or standard 8-bit SDR
+`src`、`srcdoc`、`width`、`height`、`controls`、`muted`、`volume`、`poster`、`playback-rate`、`audio-src`、`shader-capture-scale`、`shader-loading`（internal|player|none）、`loop`、`autoplay`、`speed-presets`
 
-### Encoding controls
+### 公共 API
 
-- `--fps`: 24 / 30 / 60
-- `--quality`: draft / standard / high
-- `--crf`: integer (mutually exclusive with `--video-bitrate`)
-- `--video-bitrate`: e.g. `8M`
-- `--gpu`: NVENC, VideoToolbox, VAAPI, QSV
-- `--browser-gpu`: auto / software / hardware
-- `--workers`: parallel render workers
-- `--max-concurrent-renders`: 1–10 (sets `PRODUCER_MAX_CONCURRENT_RENDERS`)
-- `--resolution`: preset (1080p, 4k, portrait, etc.)
-- `--docker`: render inside Dockerfile.test image (reproducibility)
-- `--hdr` / `--sdr`: force HDR or SDR pipeline
+`seek(t)`（同源时同步——直接使用 `iframe.contentWindow.__player.seek`）、`play()`、`pause()`、`currentTime`、`duration`、`paused`、`ready`、`playbackRate`、`iframeElement`
 
-### Engine subsystems
+### 事件
 
-- Frame capture: BeginFrame on Linux headless-shell (fast, no alpha) or `Page.captureScreenshot` (alpha + supersample)
-- Video frame injector: pre-extracts video to images, swaps `<video>` for `<img>` during capture (LRU cache by path + byte budget)
-- Audio mixer: FFmpeg-based; per-track delay, volume, master gain, AAC 192k output
-- Chunk encoder: H.264 / H.265 / VP9 / ProRes presets with optional GPU
-- Streaming encoder: `streamingEncodeMaxDurationSeconds` for long renders
-- HDR compositing: `rgba16float` WebGPU readback (headed Chrome), PQ OETF helpers
-- Layer compositor: groups DOM by z-order; splits HDR elements into separate layers
-- Alpha blit: matrix3d affine extraction, `blitRgba8OverRgb48le`, `blitRgb48leAffine`
-- Parallel coordinator: concurrency, coresPerWorker, minParallelFrames, largeRenderThreshold
-- Browser pool: optional with timeout configs
+`ready`、`timeupdate`、`play`、`pause`、`ended`、`volumechange`、`ratechange`、`shadertransitionstate`、`playbackerror`、`error`、`audioownershipchange`
 
-### Producer-only
+### 媒体镜像
 
-- `RenderConfig` with `hdrMode` (auto / force-hdr / force-sdr), `outputResolution` mapped to `deviceScaleFactor`
-- File server injects `HF_EARLY_STUB`, `HF_BRIDGE_SCRIPT`, virtual-time so `window.__hf` bridges `window.__player.renderSeek`
-- HDR-aware shader transition compositing via `window.__hf.transitions` metadata
+具有 `data-start` 的父级音频/视频元素被代理；`_mirrorParentMediaTime` 校正漂移；`_audioOwner` 在自动播放被阻止时提升到父级。
+
+### 运行时自动注入
+
+如果缺少 `__hf`/`__player` 但存在时间线，则加载 `RUNTIME_CDN_URL`（`@hyperframes/core/dist/hyperframe.runtime.iife.js`）。
 
 ---
 
-## 17. Studio — in-browser NLE
+## 16. 引擎 + 生成器——渲染管线
 
-Full editor in packages/studio/:
+### 输出格式
 
-- **NLELayout**: NLE preview + timeline + controls
-- **Timeline**: clip rendering, drag to move (`data-start`), resize (`data-duration`), `data-track-index` reassignment, asset drop, file drop
-- **PlayerControls**: scrub, play, pause, frame step (`stepFrameTime`), `STUDIO_PREVIEW_FPS`
-- **useTimelinePlayer**: resolves `__player` / `__timeline` / `__timelines`
-- **LeftSidebar**: compositions list, asset browser
-- **RenderQueue + useRenderQueue**: queue multiple renders
-- **LintModal**: in-app lint output
-- **MediaPreview + AudioWaveform**: waveform rendering
-- **CaptionOverlay, CaptionTimeline, CaptionPropertyPanel**: caption editor
-- **useCaptionSync**: word-level sync
-- **useElementPicker**: click-to-inspect picker mode
-- Built with Tailwind v3 (separate from Tailwind v4 browser runtime used by compositions).
+mp4、webm、mov、png-sequence——带 HDR（PQ / HLG / SDR / 自动检测）、透明度（ProRes MOV / WebM / PNG）或标准 8-bit SDR
+
+### 编码控制
+
+- `--fps`：24 / 30 / 60
+- `--quality`：draft / standard / high
+- `--crf`：整数（与 `--video-bitrate` 互斥）
+- `--video-bitrate`：例如 `8M`
+- `--gpu`：NVENC、VideoToolbox、VAAPI、QSV
+- `--browser-gpu`：auto / software / hardware
+- `--workers`：并行渲染工作进程
+- `--max-concurrent-renders`：1–10（设置 `PRODUCER_MAX_CONCURRENT_RENDERS`）
+- `--resolution`：预设（1080p、4k、竖屏等）
+- `--docker`：在 Dockerfile.test 镜像内渲染（可重现性）
+- `--hdr` / `--sdr`：强制 HDR 或 SDR 管线
+
+### 引擎子系统
+
+- 帧捕获：Linux headless-shell 上的 BeginFrame（快速，无 alpha）或 `Page.captureScreenshot`（alpha + 超采样）
+- 视频帧注入器：预先提取视频到图像，在捕获期间将 `<video>` 替换为 `<img>`（LRU 缓存，按路径 + 字节预算）
+- 音频混音器：基于 FFmpeg；每轨延迟、音量、主增益、AAC 192k 输出
+- 块编码器：H.264 / H.265 / VP9 / ProRes 预设，可选 GPU
+- 流式编码器：`streamingEncodeMaxDurationSeconds` 用于长渲染
+- HDR 合成：`rgba16float` WebGPU 回读（有头 Chrome）、PQ OETF 辅助
+- 图层合成器：按 z-order 分组 DOM；将 HDR 元素分割到单独的层
+- Alpha blit：matrix3d 仿射提取、`blitRgba8OverRgb48le`、`blitRgb48leAffine`
+- 并行协调器：并发、coresPerWorker、minParallelFrames、largeRenderThreshold
+- 浏览器池：可选，带超时配置
+
+### 仅生成器
+
+- `RenderConfig` 带 `hdrMode`（auto / force-hdr / force-sdr）、`outputResolution` 映射到 `deviceScaleFactor`
+- 文件服务器注入 `HF_EARLY_STUB`、`HF_BRIDGE_SCRIPT`、虚拟时间，使 `window.__hf` 桥接 `window.__player.renderSeek`
+- HDR 感知的着色器过渡合成，通过 `window.__hf.transitions` 元数据
 
 ---
 
-## 18. Determinism guarantees
+## 17. Studio——浏览器内 NLE
 
-- No `Math.random()` (use seeded PRNGs; mulberry32 is the pattern in skills)
-- No `Date.now()` / `new Date()`
-- No `setTimeout` / `setInterval` in timeline construction
-- No `requestAnimationFrame` (timeline-driven; engine seeks per frame)
-- No `repeat: -1` (calculate exact repeats: `Math.ceil(duration / cycleDuration) - 1`)
-- No `onComplete`/`onStart`/`onRepeat` callbacks (engine doesn't fire them). **Exception:** `onUpdate` and `tl.call()` ARE supported — they're required for canvas/WebGL rendering, character-by-character typing, and counter patterns. See §10 (Canvas 2D procedural art) for the documented pattern.
-- No `gsap.set` on clips from later scenes (use `tl.set(selector, vars, position)`)
-- Synchronous timeline construction (no async)
-- Master clock can clamp at composition end
+packages/studio/ 中的完整编辑器：
+
+- **NLELayout**：NLE 预览 + 时间线 + 控制
+- **Timeline**：片段渲染、拖拽移动（`data-start`）、调整大小（`data-duration`）、`data-track-index` 重新分配、资源拖放、文件拖放
+- **PlayerControls**：擦除、播放、暂停、帧步进（`stepFrameTime`）、`STUDIO_PREVIEW_FPS`
+- **useTimelinePlayer**：解析 `__player` / `__timeline` / `__timelines`
+- **LeftSidebar**：作品列表、资源浏览器
+- **RenderQueue + useRenderQueue**：排队多个渲染
+- **LintModal**：应用内检查输出
+- **MediaPreview + AudioWaveform**：波形渲染
+- **CaptionOverlay、CaptionTimeline、CaptionPropertyPanel**：字幕编辑器
+- **useCaptionSync**：词语级同步
+- **useElementPicker**：点击检查选择器模式
+- 使用 Tailwind v3 构建（与作品使用的 Tailwind v4 浏览器运行时分开）。
 
 ---
 
-## 19. Variables / parameterization
+## 18. 确定性保证
 
-Compositions support typed runtime variables:
+- 没有 `Math.random()`（使用种子 PRNG；mulberry32 是技能中的模式）
+- 没有 `Date.now()` / `new Date()`
+- 时间线构建中没有 `setTimeout` / `setInterval`
+- 没有 `requestAnimationFrame`（时间线驱动；引擎逐帧定位）
+- 没有 `repeat: -1`（计算精确重复次数：`Math.ceil(duration / cycleDuration) - 1`）
+- 没有 `onComplete`/`onStart`/`onRepeat` 回调（引擎不触发它们）。**例外：** `onUpdate` 和 `tl.call()` **被**支持——它们是 canvas/WebGL 渲染、逐字打字和计数器模式所必需的。参见 §10（Canvas 2D 程序化艺术）了解有文档的模式。
+- 没有对来自后续场景的片段使用 `gsap.set`（使用 `tl.set(selector, vars, position)`）
+- 同步时间线构建（没有 async）
+- 主时钟可以在作品结束时钳制
+
+---
+
+## 19. 变量 / 参数化
+
+作品支持类型化运行时变量：
 
 ```html
 <html
@@ -599,115 +599,37 @@ Compositions support typed runtime variables:
 ></html>
 ```
 
-Access via `window.__hyperframes.getVariables()`. Override at render time:
+通过 `window.__hyperframes.getVariables()` 访问。在渲染时覆盖：
 
 ```bash
 npx hyperframes render --variables '{"brand":"Linear","primary":"#5E6AD2"}'
 npx hyperframes render --variables-file vars.json
-npx hyperframes render --strict-variables  # error if unused / mismatched
+npx hyperframes render --strict-variables  # 如果存在未使用/不匹配的变量则报错
 ```
 
-`validateVariables()` checks values against declarations at the CLI/tooling boundary.
+`validateVariables()` 在 CLI/工具边界检查值是否符合声明。
 
 ---
 
-## 20. Sub-compositions
+## 20. 子作品
 
-Two loading mechanisms:
+两种加载机制：
 
-- **External file:** `data-composition-src="compositions/act-1.html"` — fetched at runtime
-- **Inline template:** `<template id="<id>-template">` — extracted by `loadInlineTemplateCompositions`
+- **外部文件：** `data-composition-src="compositions/act-1.html"`——在运行时获取
+- **内联模板：** `<template id="<id>-template">`——由 `loadInlineTemplateCompositions` 提取
 
-Each sub-comp:
+每个子作品：
 
-- Has its own `data-composition-id`
-- Has its own `window.__timelines[<id>]`
-- Auto-nested into the root timeline
-- Scoped CSS via `scopeCssToComposition` (`[data-composition-id="<id>"]` selector)
-- Wrapped scripts via `wrapScopedCompositionScript`
-- Reads `data-variable-values` merged with own defaults into `window.__hfVariablesByComp[<id>]`
-- External scripts load with `EXTERNAL_SCRIPT_LOAD_TIMEOUT_MS` timeout. Failed loads emit `external_composition_load_failed` / `external_composition_script_load_issue` diagnostics.
-
----
-
-## 21. Global runtime APIs (`window.*`)
-
-| Global                                | Purpose                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------- |
-| `__hyperframes`                       | `{ fitTextFontSize, getVariables }`                                     |
-| `__timelines`                         | `{ [compositionId]: GsapTimeline }`                                     |
-| `__player`                            | Internal player bridge: seek, play, pause, renderSeek, etc.             |
-| `__clipManifest`                      | Computed clip array (for Studio)                                        |
-| `__playerReady`                       | Resolved when player ready                                              |
-| `__renderReady`                       | Resolved when ready for render capture                                  |
-| `__HF_PARITY_MODE`                    | Engine parity flag                                                      |
-| `__HF_FPS`                            | Render FPS hint                                                         |
-| `__HF_MAX_DURATION_SEC`               | Engine clamp                                                            |
-| `__HF_VIRTUAL_TIME__`                 | Set by engine in render mode (shader-transitions switches paths)        |
-| `__hfThreeTime`                       | Current time for Three.js adapter                                       |
-| `__HF_PICKER_API`                     | Element picker hook for Studio                                          |
-| `__hfAnime`                           | Array of Anime.js instances                                             |
-| `__hfLottie`                          | Array of Lottie animations                                              |
-| `__hfVariables`                       | Resolved root variables                                                 |
-| `__hfVariablesByComp`                 | Per-composition variable map                                            |
-| `__hfRuntimeTeardown`                 | Cleanup function                                                        |
-| `__tailwindReady`                     | Tailwind browser build ready (gates capture)                            |
-| `__hf.transitions`                    | Shader transition metadata (read by producer for HDR-aware compositing) |
-| `__beforeTimeline`, `__afterTimeline` | Optional user hooks                                                     |
-| `__afterRender`, `__beforeRender`     | Optional user hooks                                                     |
-| `gsap`, `THREE`, `anime`, `lottie`    | Library globals                                                         |
-
-Control bridge actions: play, pause, seek, set-muted, set-playback-rate, enable-pick-mode, disable-pick-mode, set-volume, set-media-output-muted.
+- 有自己的 `data-composition-id`
+- 有自己的 `window.__timelines[<id>]`
+- 自动嵌套到根时间线
+- 通过 `scopeCssToComposition` 作用域 CSS（`[data-composition-id="<id>"]` 选择器）
+- 通过 `wrapScopedCompositionScript` 包装脚本
+- 从 `data-variable-values` 读取，与自己的默认值合并到 `window.__hfVariablesByComp[<id>]`
+- 外部脚本加载带 `EXTERNAL_SCRIPT_LOAD_TIMEOUT_MS` 超时。加载失败会发出 `external_composition_load_failed` / `external_composition_script_load_issue` 诊断
 
 ---
 
-## 22. Skills available — 16
+## 21. 全局运行时 API（`window.*`）
 
-| Skill                     | Purpose                                                                 |
-| ------------------------- | ----------------------------------------------------------------------- |
-| hyperframes               | Core framework skill (composition authoring)                            |
-| hyperframes-cli           | All CLI commands as an agent skill                                      |
-| hyperframes-media         | Media workflows (TTS, transcribe, captions integration)                 |
-| hyperframes-registry      | Installing blocks/components                                            |
-| hyperframes-contrast      | WCAG audit (scripts/contrast-report.mjs)                                |
-| hyperframes-animation-map | Per-tween bbox + flags report                                           |
-| website-to-video          | Capture → DESIGN.md → brief → storyboard+script → VO → build → validate |
-| remotion-to-hyperframes   | Migration patterns + API map + CustomEase                               |
-| gsap                      | GSAP API + plugins reference                                            |
-| animejs                   | Anime.js v4 patterns                                                    |
-| css-animations            | @keyframes patterns                                                     |
-| waapi                     | Web Animations API                                                      |
-| lottie                    | Lottie integration                                                      |
-| three                     | Three.js + deterministic seek                                           |
-| tailwind                  | Tailwind browser runtime v4                                             |
-| contribute-catalog        | Adding blocks to registry                                               |
-
----
-
-## 23. References inventory (skills/hyperframes/references/)
-
-16 reference docs covering:
-
-- text-effects.md — 24 named text animation effects (per-character, per-word, per-line, whole) — vocabulary reference for the separate `pixel-point/animate-text` skill (load it via `npx skills add pixel-point/animate-text` or `/animate-text`). Specs live in that upstream skill, not in this repo.
-- transitions.md + transitions/catalog.md + 14 category subfiles
-- css-patterns.md (marker patterns)
-- dynamic-techniques.md (caption animation)
-- motion-principles.md (easing as emotion, choreography)
-- typography.md (banned-font list, pairing rules, variable fonts)
-- narration.md (script + VO pacing)
-- captions.md (caption authoring contract)
-- audio-reactive.md (band mappings + extraction)
-- transcript-guide.md (whisper, Groq, OpenAI workflows)
-- techniques.md (the big technique catalog — SVG, canvas 2D, 3D, kinetic, lottie, variable fonts, MotionPath, audio-reactive)
-- beat-direction.md, design-picker.md, prompt-expansion.md, video-composition.md
-- visual-styles.md (8 named visual styles: Swiss Pulse, Velvet Standard, Deconstructed, Maximalist Type, Data Drift, Soft Signal, Folk Frequency, Shadow Cut — available via the `visual-style` skill)
-
----
-
-## 24. Documentation pages (docs/)
-
-27 mdx pages in docs/guides/ and docs/packages/:
-
-**Guides:** 4k-rendering, claude-design, common-mistakes, deploy, gsap-animation, hdr, html-in-canvas, hyperframes-vs-remotion, open-design, performance, prompting, remove-background, rendering, timeline-editing, troubleshooting, video-editor-cheatsheet, website-to-video, etc.
-
-**Packages:** cli.mdx, core.mdx, engine.mdx, player.mdx, producer.mdx, studio.mdx
+（文件太长，已截断）

@@ -1,128 +1,128 @@
 ---
 name: config
-description: Configuration system, manim.cfg, and settings
+description: 配置系统、manim.cfg 和设置
 metadata:
   tags: config, configuration, settings, manim.cfg, options
 ---
 
-# Configuration
+# 配置
 
-Configure Manim's behavior through files and code.
+通过文件和代码配置 Manim 的行为。
 
-## Configuration Hierarchy
+## 配置层级
 
-Manim reads configuration from (in order of precedence):
-1. Command-line arguments (highest priority)
-2. User's `manim.cfg` in current directory
-3. User's global config
-4. Default values (lowest priority)
+Manim 按以下优先级读取配置：
+1. 命令行参数（最高优先级）
+2. 当前目录下的用户 `manim.cfg`
+3. 用户的全局配置
+4. 默认值（最低优先级）
 
-## manim.cfg File
+## manim.cfg 文件
 
-Create a `manim.cfg` file in your project directory:
+在项目目录中创建 `manim.cfg` 文件：
 
 ```ini
 [CLI]
-# Preview after rendering
+# 渲染后预览
 preview = True
 
-# Default quality
+# 默认质量
 quality = medium_quality
 
-# Output format
+# 输出格式
 format = mp4
 
-# Frame rate
+# 帧率
 frame_rate = 30
 
 [output]
-# Custom output directory
+# 自定义输出目录
 media_dir = ./media
 
-# Save last frame as PNG
+# 保存最后一帧为 PNG
 save_last_frame = False
 
 [renderer]
-# Background color
+# 背景颜色
 background_color = BLACK
 
 [style]
-# Default font
+# 默认字体
 font = Arial
 ```
 
-## Common Configuration Options
+## 常用配置选项
 
-### CLI Section
+### CLI 部分
 
 ```ini
 [CLI]
-# Quality presets: low_quality, medium_quality, high_quality, production_quality, fourk_quality
+# 质量预设：low_quality, medium_quality, high_quality, production_quality, fourk_quality
 quality = medium_quality
 
-# Preview video after rendering
+# 渲染后预览视频
 preview = True
 
-# Frame rate
+# 帧率
 frame_rate = 30
 
-# Output format: mp4, gif, mov, webm, png
+# 输出格式：mp4, gif, mov, webm, png
 format = mp4
 
-# Transparent background
+# 透明背景
 transparent = False
 
-# Progress bar: display, leave, none
+# 进度条：display, leave, none
 progress_bar = display
 ```
 
-### Rendering Section
+### 渲染部分
 
 ```ini
 [renderer]
-# Background color (hex or color name)
+# 背景颜色（十六进制或颜色名称）
 background_color = #1e1e1e
 
-# Renderer type: cairo, opengl
+# 渲染器类型：cairo, opengl
 renderer = cairo
 ```
 
-### Resolution
+### 分辨率
 
 ```ini
 [CLI]
-# Frame dimensions
+# 帧尺寸
 pixel_width = 1920
 pixel_height = 1080
 ```
 
-## Programmatic Configuration
+## 程序化配置
 
-Access and modify config in your Python code:
+在 Python 代码中访问和修改配置：
 
 ```python
-# Access config values
-config.pixel_width  # e.g., 1920
-config.frame_rate  # e.g., 30
-config.background_color  # e.g., BLACK
+# 访问配置值
+config.pixel_width  # 例如 1920
+config.frame_rate  # 例如 30
+config.background_color  # 例如 BLACK
 
-# Modify config (before creating scenes)
+# 修改配置（创建场景之前）
 config.pixel_width = 1920
 config.pixel_height = 1080
 config.frame_rate = 60
 config.background_color = BLUE_E
 ```
 
-### In Scene
+### 在场景中
 
 ```python
 class MyScene(Scene):
     def construct(self):
-        # Access frame dimensions
+        # 访问帧尺寸
         width = config.frame_width
         height = config.frame_height
 
-        # Create rectangle matching frame size
+        # 创建匹配帧大小的矩形
         frame_rect = Rectangle(
             width=width,
             height=height,
@@ -131,95 +131,95 @@ class MyScene(Scene):
         self.add(frame_rect)
 ```
 
-## Background Color
+## 背景颜色
 
-### In Config File
+### 在配置文件中
 
 ```ini
 [renderer]
 background_color = BLACK
-# Or hex color
+# 或十六进制颜色
 background_color = #1a1a2e
 ```
 
-### In Code
+### 在代码中
 
 ```python
 class DarkBackground(Scene):
     def construct(self):
         self.camera.background_color = "#1a1a2e"
-        # ... rest of scene
+        # ... 场景其余部分
 ```
 
-## Output Directory Structure
+## 输出目录结构
 
-Default media directory structure:
+默认媒体目录结构：
 ```
 media/
 ├── videos/
 │   └── scene_file/
-│       ├── 480p15/       # Low quality
-│       ├── 720p30/       # Medium quality
-│       ├── 1080p60/      # High quality
-│       └── 2160p60/      # 4K quality
+│       ├── 480p15/       # 低质量
+│       ├── 720p30/       # 中等质量
+│       ├── 1080p60/      # 高质量
+│       └── 2160p60/      # 4K 质量
 ├── images/
 │   └── scene_file/
 │       └── SceneName.png
-└── Tex/                  # LaTeX cache
+└── Tex/                  # LaTeX 缓存
 ```
 
-### Custom Output Directory
+### 自定义输出目录
 
 ```ini
 [output]
 media_dir = ./output
 ```
 
-Or via CLI:
+或通过 CLI：
 ```bash
 manim --media_dir ./output file.py Scene
 ```
 
-## Tex Configuration
+## Tex 配置
 
-For LaTeX rendering:
+用于 LaTeX 渲染：
 
 ```ini
 [tex]
-# Custom preamble
+# 自定义导言区
 preamble = \usepackage{amsmath}\usepackage{amssymb}
 
-# Tex compiler
+# Tex 编译器
 tex_compiler = latex
 ```
 
-## Caching
+## 缓存
 
 ```ini
 [CLI]
-# Disable caching (useful for debugging)
+# 禁用缓存（调试用）
 disable_caching = True
 
-# Max cached files
+# 最大缓存文件数
 max_files_cached = 100
 ```
 
-## Viewing Current Config
+## 查看当前配置
 
 ```bash
-# Show all config values
+# 显示所有配置值
 manim cfg show
 
-# Show specific section
+# 显示指定部分
 manim cfg show CLI
 
-# Write current config to file
+# 将当前配置写入文件
 manim cfg write
 ```
 
-## Project-Specific Config
+## 项目特定配置
 
-Create `manim.cfg` in your project root:
+在项目根目录创建 `manim.cfg`：
 
 ```ini
 [CLI]
@@ -234,31 +234,31 @@ background_color = #0d1117
 media_dir = ./renders
 ```
 
-## Plugins
+## 插件
 
-Manim has an extensible plugin system:
+Manim 具有可扩展的插件系统：
 
 ```bash
-# List installed plugins
+# 列出已安装的插件
 manim plugins -l
 
-# Install a plugin
+# 安装插件
 pip install manim-pluginname
 ```
 
-Enable plugins in `manim.cfg`:
+在 `manim.cfg` 中启用插件：
 
 ```ini
 [CLI]
 plugins = manim-pluginname
-# For multiple plugins:
+# 多个插件：
 plugins = plugin1,plugin2
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use manim.cfg for project defaults** - Consistent settings across team
-2. **Keep quality low during development** - Faster iteration
-3. **Set background_color in config** - Not in every scene
-4. **Use custom media_dir** - Keep renders organized
-5. **Commit manim.cfg to version control** - Share settings with collaborators
+1. **使用 manim.cfg 设置项目默认值** —— 团队间一致的设置
+2. **开发时保持低质量** —— 更快的迭代速度
+3. **在配置中设置 background_color** —— 而不是在每个场景中设置
+4. **使用自定义 media_dir** —— 保持渲染文件有序
+5. **将 manim.cfg 提交到版本控制** —— 与协作者共享设置

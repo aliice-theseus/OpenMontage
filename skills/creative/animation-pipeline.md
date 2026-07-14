@@ -1,146 +1,136 @@
-# Animation & Motion Graphics Pipeline
+# 动画与动态图形制作流程
 
-> Sources: School of Motion curriculum, After Effects documentation, Remotion documentation,
-> HyperFrames documentation, Disney's 12 Principles of Animation (Frank Thomas & Ollie
-> Johnston), Motion Design School, The Animator's Survival Kit (Richard Williams)
+> 来源：School of Motion 课程、After Effects 文档、Remotion 文档、
+> HyperFrames 文档、迪士尼动画12原则（Frank Thomas & Ollie Johnston）、Motion Design School、动画师生存工具包（Richard Williams）
 
-## Runtime Choice — Remotion vs HyperFrames
+## 运行时选择 — Remotion vs HyperFrames
 
-Animation work in OpenMontage runs on one of two composition runtimes. Both
-are first-class; the choice is creative, not a fallback:
+OpenMontage 中的动画工作运行在两种组合运行时之一上。两者
+都是一等公民；选择是创作性的，而非回退：
 
-- **Remotion (React-based)** — when the scene is a React component, uses the
-  existing chart/text-card/comparison/kpi stack, or needs pixel-accurate
-  frame-level interpolation through `useCurrentFrame()` + `interpolate()`.
-  Default for data-heavy explainers.
-- **HyperFrames (HTML/GSAP)** — when the motion is expressed naturally as
-  CSS + GSAP timelines: kinetic typography, product promos, launch reels,
-  website/UI-driven compositions, registry-block-driven scenes. Default
-  when the brief is motion-graphics-led and the scene library in
-  `remotion-composer/` doesn't already cover the look.
+- **Remotion（基于 React）** — 当场景是 React 组件时、使用现有的图表/文字卡片/比较/KPI 堆栈、或需要通过 `useCurrentFrame()` + `interpolate()` 实现像素精确的帧级插值时。数据密集型讲解类的默认选择。
+- **HyperFrames（HTML/GSAP）** — 当运动自然地表达为 CSS + GSAP 时间线时：动态文字排版、产品宣传、发布影片、网站/UI 驱动构图、注册表块驱动场景。当简要说明以动态图形为主导且 `remotion-composer/` 中的场景库尚未覆盖所需外观时为默认选择。
 
-See `skills/core/hyperframes.md` and `skills/meta/animation-runtime-selector.md`
-for the full decision matrix. Whichever runtime is chosen at proposal must
-be locked in `edit_decisions.render_runtime` and preserved through compose.
+参见 `skills/core/hyperframes.md` 和 `skills/meta/animation-runtime-selector.md` 了解完整的决策矩阵。无论在提案中选择哪个运行时，都必须在 `edit_decisions.render_runtime` 中锁定并在整个合成过程中保留。
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-FRAME RATE:       30fps for web video | 24fps for cinematic feel | 60fps for UI/smooth motion
-EASE DEFAULT:     easeInOutCubic (0.65, 0, 0.35, 1) — never use linear
-TRANSITION:       0.5-1.0s between scenes
-ANTICIPATION:     2-3 frames before main action
-OVERSHOOT:        10-15% past target, settle back in 3-5 frames
-HOLD FRAMES:      6-12 frames (0.2-0.4s) on key poses
-COLOR:            Max 5 colors from playbook palette
-EXPORT:           H.264 CRF 18-20 for web, ProRes 422 for editing
+帧率：            网络视频30fps | 电影感24fps | UI/平滑运动60fps
+默认缓动：        easeInOutCubic (0.65, 0, 0.35, 1) — 绝不用线性
+转场：            场景间0.5-1.0秒
+预期动作：        主要动作前2-3帧
+过冲：            超出目标10-15%，在3-5帧内回弹
+保持帧：          关键姿势6-12帧（0.2-0.4秒）
+颜色：            剧本调色板最多5种颜色
+导出：            H.264 CRF 18-20 网络用，ProRes 422 剪辑用
 ```
 
-## Frame Rate Selection
+## 帧率选择
 
-| Style | FPS | When to Use |
-|-------|-----|-------------|
-| **Cinematic animation** | 24 | Film-like feel, character animation, organic motion |
-| **Web/explainer standard** | 30 | Default for YouTube/web video. OpenMontage default. |
-| **Smooth UI animation** | 60 | Software demos, UI transitions, scrolling |
-| **Stylized/limited** | 12-15 on 2s/3s | Deliberately choppy, artistic choice |
+| 风格 | FPS | 使用场景 |
+|------|-----|----------|
+| **电影动画** | 24 | 电影感、角色动画、有机运动 |
+| **网络/讲解标准** | 30 | YouTube/网络视频默认。OpenMontage 默认。 |
+| **平滑 UI 动画** | 60 | 软件演示、UI 过渡、滚动 |
+| **风格化/有限** | 12-15（2s/3s） | 刻意顿挫，艺术选择 |
 
-**OpenMontage default:** 30fps. Render Manim at 60fps and transcode to 30fps for smoother motion at delivery frame rate.
+**OpenMontage 默认：** 30fps。Manim 以60fps渲染并转码到30fps以在交付帧率下获得更平滑的运动。
 
-## Timing Principles (Applied to Motion Graphics)
+## 计时原则（应用于动态图形）
 
-### The 4 Most Important Principles
+### 最重要的4个原则
 
-| Principle | Application | Timing |
-|-----------|------------|--------|
-| **Ease In/Out** | Every movement starts slow, ends slow | Use cubic or quart easing, never linear |
-| **Anticipation** | Brief movement opposite to the main action | 2-3 frames (66-100ms at 30fps) |
-| **Overshoot** | Object passes target, bounces back | 10-15% past target, settle in 3-5 frames |
-| **Staging** | Only one thing moves at a time | Stagger animations by 3-6 frames |
+| 原则 | 应用 | 计时 |
+|------|------|------|
+| **缓入/缓出** | 每个运动缓慢开始，缓慢结束 | 使用三次或四次缓动，绝不线性 |
+| **预期动作** | 与主要动作相反的短暂运动 | 2-3帧（30fps下66-100ms） |
+| **过冲** | 物体超过目标，弹回 | 超出目标10-15%，在3-5帧内稳定 |
+| **分阶段** | 一次只有一件事移动 | 错开动画3-6帧 |
 
-### Easing Curves
+### 缓动曲线
 
-| Curve | Cubic Bezier | Use For |
-|-------|-------------|---------|
-| **easeOutCubic** | `(0.33, 1, 0.68, 1)` | Objects entering the scene |
-| **easeInCubic** | `(0.32, 0, 0.67, 0)` | Objects leaving the scene |
-| **easeInOutCubic** | `(0.65, 0, 0.35, 1)` | Position changes within scene |
-| **easeOutBack** | `(0.34, 1.56, 0.64, 1)` | Bouncy pop-in (playful) |
-| **easeOutElastic** | spring simulation | Attention-grabbing reveals |
-| **linear** | `(0, 0, 1, 1)` | **NEVER for motion** — only for opacity or color |
+| 曲线 | 三次贝塞尔 | 用途 |
+|------|-----------|------|
+| **easeOutCubic** | `(0.33, 1, 0.68, 1)` | 物体进入场景 |
+| **easeInCubic** | `(0.32, 0, 0.67, 0)` | 物体离开场景 |
+| **easeInOutCubic** | `(0.65, 0, 0.35, 1)` | 场景内的位置变化 |
+| **easeOutBack** | `(0.34, 1.56, 0.64, 1)` | 弹跳弹出（俏皮） |
+| **easeOutElastic** | 弹簧模拟 | 吸引注意力的揭示 |
+| **linear** | `(0, 0, 1, 1)` | **绝不要用于运动** — 仅用于不透明度或颜色 |
 
-### Hold Frames
+### 保持帧
 
-After a movement completes, **hold the pose** before the next animation:
+运动完成后，在下一次动画前**保持姿势**：
 
-| Context | Hold Duration |
-|---------|--------------|
-| Key information on screen | 1.0-2.0s (narration dependent) |
-| Between animation beats | 0.3-0.5s (8-15 frames at 30fps) |
-| After a reveal | 1.5-3.0s (let it register) |
-| Quick transition | 0.1-0.2s (3-6 frames) |
+| 上下文 | 保持时长 |
+|--------|---------|
+| 关键信息在屏幕上 | 1.0-2.0秒（取决于旁白） |
+| 动画节拍之间 | 0.3-0.5秒（30fps下8-15帧） |
+| 揭示后 | 1.5-3.0秒（让它被注意到） |
+| 快速过渡 | 0.1-0.2秒（3-6帧） |
 
-## Scene Transitions
+## 场景转场
 
-| Transition | Duration | When to Use |
-|-----------|----------|-------------|
-| **Hard cut** | Instant | Same topic, different angle/zoom |
-| **Crossfade** | 0.5-1.0s | Topic change, gentle shift |
-| **Wipe/slide** | 0.5-0.8s | Sequential steps, progression |
-| **Zoom in** | 0.8-1.2s | Diving deeper into detail |
-| **Zoom out** | 0.8-1.2s | Revealing bigger picture |
-| **Match cut** | Instant | Same shape/position, different content |
-| **Morph/transform** | 1.0-2.0s | Concept evolution, before/after |
+| 转场 | 时长 | 使用场景 |
+|------|------|----------|
+| **硬切** | 即时 | 同一主题，不同角度/缩放 |
+| **交叉淡入淡出** | 0.5-1.0秒 | 主题变化，温和转变 |
+| **擦除/滑动** | 0.5-0.8秒 | 连续步骤，进展 |
+| **放大** | 0.8-1.2秒 | 深入细节 |
+| **缩小** | 0.8-1.2秒 | 揭示更大画面 |
+| **匹配切** | 即时 | 相同形状/位置，不同内容 |
+| **变形/变换** | 1.0-2.0秒 | 概念演变，前后对比 |
 
-### Transition Rules
+### 转场规则
 
-1. **Consistent transitions** — pick 2-3 types and stick with them throughout the video
-2. **Transition = meaning** — a wipe means "next step," a zoom means "deeper detail"
-3. **Don't over-transition** — a hard cut is the most invisible and most professional transition
-4. **Audio leads visual** — start transition sound 10-20ms before the visual change
+1. **一致的转场** — 选择2-3种类型并在整个视频中坚持使用
+2. **转场 = 含义** — 擦除表示"下一步，"放大表示"更深入细节"
+3. **不要过度转场** — 硬切是最隐形和最专业的转场
+4. **音频领先视觉** — 在视觉变化前10-20ms开始转场声音
 
-## Composition for Motion Graphics
+## 动态图形构图
 
-### Layout
+### 布局
 
-- **Rule of thirds** — place focal elements on intersection points
-- **Visual hierarchy** — largest/brightest element = most important
-- **White space** — minimum 10% margin on all sides (within title-safe)
-- **Direction of motion** — left-to-right = forward/progress, right-to-left = reverse/back
+- **三分法则** — 将焦点元素放在交叉点上
+- **视觉层级** — 最大/最亮的元素 = 最重要
+- **留白** — 所有侧面至少10%边距（在标题安全区内）
+- **运动方向** — 左到右 = 前进/进展，右到左 = 后退/返回
 
-### Color
+### 颜色
 
-- **Max 5 colors** from the style playbook palette
-- **1 accent color** for emphasis — used sparingly
-- **Background** should be the least saturated color
-- **Contrast** between foreground elements and background: minimum 3:1
+- **最多5种颜色**，来自风格剧本调色板
+- **1种强调色** 用于强调 — 少用
+- **背景** 应是最不饱和的颜色
+- **前景元素与背景之间的对比度**：最小3:1
 
-### Stagger and Choreography
+### 错开与编排
 
-When multiple elements enter:
-- Stagger entry by **3-6 frames** (100-200ms) between elements
-- Enter from the same direction for grouped elements
-- Use `LaggedStart` (Manim) or staggered `delay` (Remotion) with `lag_ratio=0.1-0.2`
+当多个元素进入时：
+- 元素之间错开 **3-6帧**（100-200ms）
+- 分组元素从相同方向进入
+- 使用 `LaggedStart`（Manim）或错开的 `delay`（Remotion）搭配 `lag_ratio=0.1-0.2`
 
-## Export Settings
+## 导出设置
 
-| Target | Codec | Settings |
-|--------|-------|----------|
-| YouTube/web final | H.264 | CRF 18-20, `-pix_fmt yuv420p`, `-movflags +faststart` |
-| Editing intermediate | ProRes 422 | For further editing/compositing |
-| Transparent overlay | ProRes 4444 | When compositing over other footage |
-| GIF preview | GIF | 480px wide, 15fps, 256 colors |
+| 目标 | 编解码器 | 设置 |
+|------|---------|------|
+| YouTube/网络最终版 | H.264 | CRF 18-20, `-pix_fmt yuv420p`, `-movflags +faststart` |
+| 剪辑中间格式 | ProRes 422 | 用于进一步剪辑/合成 |
+| 透明叠加 | ProRes 4444 | 当叠加在其他素材上时 |
+| GIF 预览 | GIF | 480px宽，15fps，256色 |
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When building animation/motion graphics content:
+构建动画/动态图形内容时：
 
-1. **Render at 30fps** (OpenMontage default) — Manim at 60fps, transcode down
-2. **Never use linear easing** — default to `easeInOutCubic` for all motion
-3. **Stagger multi-element entrances** by 100-200ms — don't reveal everything at once
-4. **Hold key frames** for 1.0-2.0s after reveals (synced to narration)
-5. **Use 2-3 transition types** consistently — hard cut + crossfade covers most needs
-6. **Audio leads visual** — SFX starts 10-20ms before transition (see sound-design.md)
-7. **Max 5 palette colors** — enforce from the style playbook
-8. **Anticipation + overshoot** on important movements for polish
-9. **Export H.264 CRF 18-20** for final output via `video_compose`
+1. **以30fps渲染**（OpenMontage 默认）— Manim 以60fps渲染，转码降级
+2. **绝不用线性缓动** — 默认所有运动使用 `easeInOutCubic`
+3. **多元素进入错开100-200ms** — 不要一次揭示所有内容
+4. **揭示后保持关键帧1.0-2.0秒**（与旁白同步）
+5. **一致使用2-3种转场类型** — 硬切+交叉淡入淡出覆盖大多数需求
+6. **音频领先视觉** — 音效在转场前10-20ms开始（见 sound-design.md）
+7. **最多5种调色板颜色** — 从风格剧本强制执行
+8. **重要运动上的预期动作+过冲** 以获得精致感
+9. **通过 `video_compose` 导出 H.264 CRF 18-20** 作为最终输出

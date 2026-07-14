@@ -1,17 +1,17 @@
-# HTML-in-Canvas Patterns
+# HTML-in-Canvas 模式
 
-HyperFrames' most powerful visual capability. Capture ANY live HTML/CSS as a GPU texture, then render it through WebGL shaders, Three.js 3D scenes, or post-processing effects — at 60fps, pixel-perfect, with every CSS feature supported.
+HyperFrames 最强大的视觉能力。将**任何**实时 HTML/CSS 捕获为 GPU 纹理，然后通过 WebGL 着色器、Three.js 3D 场景或后处理特效进行渲染——以 60fps、像素完美、支持所有 CSS 特性的方式呈现。
 
-**Read this file when a beat deserves cinematic treatment beyond flat GSAP animations.** Use for 1-3 hero beats per video, not every beat. The rest can use standard GSAP — the contrast between flat beats and HTML-in-Canvas beats IS part of the visual storytelling.
+**当一个节拍值得超越平面 GSAP 动画的电影级处理时，请阅读此文件。** 每个视频仅用于 1-3 个主角色的节拍，而非所有节拍。其余部分可以使用标准 GSAP——平面节拍与 HTML-in-Canvas 节拍之间的对比本身就是视觉叙事的一部分。
 
 ---
 
-## Core Boilerplate (same in every HTML-in-Canvas composition)
+## 核心模板（每个 HTML-in-Canvas 组合中相同）
 
-Every HTML-in-Canvas effect shares this structure. Learn this once, adapt it for any effect.
+每个 HTML-in-Canvas 特效共享此结构。学习一次，适用于任何特效。
 
 ```html
-<!-- 1. Source HTML — your content goes inside a layoutsubtree canvas -->
+<!-- 1. 源 HTML —— 你的内容放在 layoutsubtree canvas 内部 -->
 <canvas
   id="hic-source"
   layoutsubtree
@@ -20,16 +20,16 @@ Every HTML-in-Canvas effect shares this structure. Learn this once, adapt it for
   style="position:absolute;inset:0;opacity:0;"
 >
   <div id="hic-content" style="width:1920px;height:1080px;">
-    <!-- YOUR HTML CONTENT HERE — text, images, cards, dashboards, anything -->
+    <!-- 你的 HTML 内容在这里 —— 文本、图像、卡片、仪表板等 -->
   </div>
 </canvas>
 
-<!-- 2. Render target — the visible canvas that shows the effect -->
+<!-- 2. 渲染目标 —— 显示特效的可见 canvas -->
 <canvas id="hic-output" width="1920" height="1080" style="position:absolute;inset:0;"></canvas>
 ```
 
 ```js
-// 3. Feature detection — always check, always provide fallback
+// 3. 特性检测 —— 始终检查，始终提供回退
 function isHiCSupported() {
   var tc = document.createElement("canvas");
   if (!("layoutSubtree" in tc)) return false;
@@ -39,7 +39,7 @@ function isHiCSupported() {
 }
 var apiOk = isHiCSupported();
 
-// 4. Capture function — call this every frame in onUpdate
+// 4. 捕获函数 —— 在 onUpdate 中每一帧调用
 var capCanvas = document.getElementById("hic-source");
 var capCtx = capCanvas.getContext("2d");
 function captureContent() {
@@ -48,38 +48,38 @@ function captureContent() {
   }
 }
 
-// 5. Drive from GSAP timeline — capture + render every frame
+// 5. 从 GSAP 时间线驱动 —— 每帧捕获 + 渲染
 tl.to(
   proxy,
   {
-    /* your animation properties */
+    /* 你的动画属性 */
     duration: BEAT_DURATION,
     ease: "sine.inOut",
     onUpdate: function () {
       captureContent();
-      // render your effect here (Three.js or WebGL2)
+      // 在这里渲染你的特效（Three.js 或 WebGL2）
     },
   },
   0,
 );
 ```
 
-**Fallback:** When `drawElementImage` is not available (preview without Chrome flag), draw a solid-color placeholder or use Canvas 2D text. The HyperFrames renderer auto-enables the flag — the effect WILL work in the final video. See the liquid-glass block for a complete fallback example.
+**回退方案：** 当 `drawElementImage` 不可用时（无 Chrome 标志的预览），绘制纯色占位符或使用 Canvas 2D 文本。HyperFrames 渲染器会自动启用该标志——特效**会**在最终视频中生效。参见液态玻璃块以获取完整的回退示例。
 
 ---
 
-## Effect Catalog
+## 特效目录
 
-### 1. 3D Rotation with Bloom (Three.js)
+### 1. 带辉光的 3D 旋转（Three.js）
 
-**What it looks like:** Content floats in 3D space, slowly rotating with cinematic glow around bright edges. Like a product screenshot displayed in a dark theater.
+**效果描述：** 内容悬浮在 3D 空间中，缓慢旋转，明亮边缘带有电影级辉光。如同在黑暗影院中展示产品截图。
 
-**When to use:** Hero product showcase, feature reveal, CTA with premium feel.
+**使用时机：** 主角产品展示、功能揭示、高级感 CTA。
 
-**Key Three.js components:** `PlaneGeometry` + `CanvasTexture` + `EffectComposer` + `UnrealBloomPass`
+**关键 Three.js 组件：** `PlaneGeometry` + `CanvasTexture` + `EffectComposer` + `UnrealBloomPass`
 
 ```js
-// After the boilerplate above, add:
+// 在上述模板之后，添加：
 var scene3d = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, 1920 / 1080, 0.1, 100);
 camera.position.set(0, 0, 4);
@@ -98,10 +98,10 @@ var mesh = new THREE.Mesh(
 );
 scene3d.add(mesh);
 
-// Post-processing: bloom for cinematic glow.
-// EffectComposer / RenderPass / UnrealBloomPass are ES-module named imports
-// (see the import block below) — they're NOT properties of THREE in modern
-// versions. Three.js r150+ removed the UMD `examples/js/` globals.
+// 后处理：辉光实现电影效果。
+// EffectComposer / RenderPass / UnrealBloomPass 是 ES 模块命名导入
+// （参见下面的导入块）——在 modern 版本中它们不是 THREE 的属性。
+// Three.js r150+ 移除了 UMD `examples/js/` 全局变量。
 var composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene3d, camera));
 composer.addPass(new UnrealBloomPass(new THREE.Vector2(1920, 1080), 0.3, 0.4, 0.85));
@@ -126,7 +126,7 @@ tl.to(
 );
 ```
 
-**Load Three.js and post-processing via ESM (use a `type="module"` script):**
+**通过 ESM 加载 Three.js 和后处理（使用 `type="module"` 脚本）：**
 
 ```html
 <script type="module">
@@ -135,30 +135,30 @@ tl.to(
   import { RenderPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/RenderPass.js";
   import { ShaderPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/ShaderPass.js";
   import { UnrealBloomPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/UnrealBloomPass.js";
-  // ... rest of composition code using these imports
+  // ... 使用这些导入的其余组合代码
 </script>
 ```
 
-The `examples/js/` path was removed in Three.js r152. Use `examples/jsm/` (ES modules) with `three@0.181.2` — the version used by the HyperFrames Three.js adapter.
+Three.js r152 中移除了 `examples/js/` 路径。使用 `three@0.181.2` 配合 `examples/jsm/`（ES 模块）——这是 HyperFrames Three.js 适配器使用的版本。
 
 ---
 
-### 2. Magnetic Cursor Distortion (Raw WebGL2)
+### 2. 磁性光标扭曲（原生 WebGL2）
 
-**What it looks like:** Content warps and bends toward a moving point, like a magnet pulling on pixels. Chromatic aberration splits RGB channels at the distortion site.
+**效果描述：** 内容向一个移动点弯曲和变形，如同磁铁吸引像素。色差在扭曲部位分裂 RGB 通道。
 
-**When to use:** Interactive feel, product demo with cursor, "look at THIS feature" moment.
+**使用时机：** 交互感、带光标的產品演示、"看这个功能"的瞬间。
 
-**Key technique:** Custom fragment shader with Gaussian warp + chromatic split. No Three.js needed — just raw WebGL2.
+**关键技术：** 带有高斯扭曲 + 色差分裂的自定义片段着色器。无需 Three.js——只需原生 WebGL2。
 
 ```js
-// WebGL2 setup
+// WebGL2 设置
 var gl = document.getElementById("hic-output").getContext("webgl2", {
   alpha: false,
   preserveDrawingBuffer: true,
 });
 
-// Vertex shader — full-screen quad
+// 顶点着色器 —— 全屏四边形
 var VS = `#version 300 es
 in vec2 a_pos;
 out vec2 v_uv;
@@ -167,14 +167,14 @@ void main() {
   gl_Position = vec4(a_pos, 0.0, 1.0);
 }`;
 
-// Fragment shader — magnetic warp + chromatic aberration
+// 片段着色器 —— 磁性扭曲 + 色差
 var FS = `#version 300 es
 precision highp float;
 in vec2 v_uv;
 out vec4 fragColor;
 uniform sampler2D u_tex;
-uniform vec2 u_cursor;   // cursor position (0-1)
-uniform float u_strength; // warp strength (0-1)
+uniform vec2 u_cursor;   // 光标位置 (0-1)
+uniform float u_strength; // 扭曲强度 (0-1)
 
 void main() {
   vec2 uv = v_uv;
@@ -183,7 +183,7 @@ void main() {
   float warp = u_strength * exp(-dist * dist * 8.0);
   vec2 warped = uv - delta * warp * 0.3;
 
-  // Chromatic aberration at distortion site
+  // 扭曲部位的色差
   float aberration = warp * 0.008;
   float r = texture(u_tex, warped + vec2(aberration, 0.0)).r;
   float g = texture(u_tex, warped).g;
@@ -191,10 +191,10 @@ void main() {
   fragColor = vec4(r, g, b, 1.0);
 }`;
 
-// Compile, link, setup quad geometry, upload texture...
-// (See registry/blocks/vfx-magnetic/vfx-magnetic.html for complete implementation)
+// 编译、链接、设置四边形几何体、上传纹理...
+// （参见 registry/blocks/vfx-magnetic/vfx-magnetic.html 获取完整实现）
 
-// Drive cursor position from GSAP
+// 从 GSAP 驱动光标位置
 var proxy = { cx: 0.2, cy: 0.5, strength: 0.0 };
 tl.to(
   proxy,
@@ -206,7 +206,7 @@ tl.to(
     ease: "power2.inOut",
     onUpdate: function () {
       captureContent();
-      // Upload texture, set uniforms, draw
+      // 上传纹理，设置 uniforms，绘制
       gl.uniform2f(cursorLoc, proxy.cx, proxy.cy);
       gl.uniform1f(strengthLoc, proxy.strength);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -218,19 +218,19 @@ tl.to(
 
 ---
 
-### 3. Shatter / Fragment Explosion (Three.js)
+### 3. 破碎 / 碎片爆炸（Three.js）
 
-**What it looks like:** Content breaks into geometric fragments that fly apart, revealing what's behind.
+**效果描述：** 内容碎裂成几何碎片飞散开来，露出背后的内容。
 
-**When to use:** Dramatic transition, "breaking free" moment, tension release.
+**使用时机：** 戏剧性过渡、"挣脱"时刻、紧张释放。
 
-**Key technique:** Subdivide the source texture into triangle mesh fragments using BufferGeometry, then animate each fragment's position/rotation with GSAP.
+**关键技术：** 使用 BufferGeometry 将源纹理细分为三角网格碎片，然后使用 GSAP 动画化每个碎片的位置/旋转。
 
-Study `registry/blocks/vfx-shatter/vfx-shatter.html` for the complete 1156-line implementation. The core idea:
+研究 `registry/blocks/vfx-shatter/vfx-shatter.html` 以获取完整的 1156 行实现。核心思想：
 
 ```js
-// 1. Capture content to texture (same boilerplate)
-// Seeded PRNG for determinism — Math.random() is banned
+// 1. 将内容捕获到纹理（相同模板）
+// 用于确定性的种子化 PRNG —— Math.random() 被禁用
 function mulberry32(seed) {
   return function () {
     seed |= 0;
@@ -242,7 +242,7 @@ function mulberry32(seed) {
 }
 var rng = mulberry32(42);
 
-// 2. Create N triangle fragments from the texture
+// 2. 从纹理创建 N 个三角形碎片
 var fragments = [];
 for (var i = 0; i < NUM_FRAGMENTS; i++) {
   var geom = new THREE.BufferGeometry();
@@ -251,7 +251,7 @@ for (var i = 0; i < NUM_FRAGMENTS; i++) {
   fragments.push({ mesh: mesh, targetPos: randomExplosionVector(rng), delay: rng() * 0.5 });
 }
 
-// 3. Animate: first hold still, then EXPLODE
+// 3. 动画：先保持静止，然后爆炸
 tl.to({}, { duration: holdTime }, 0);
 fragments.forEach(function (frag) {
   tl.to(
@@ -275,25 +275,25 @@ fragments.forEach(function (frag) {
 
 ---
 
-### 4. Liquid / Fluid Surface (Three.js)
+### 4. 液体 / 流体表面（Three.js）
 
-**What it looks like:** Content floats above a rippling liquid surface with real-time wave dynamics. Or content IS the surface, undulating like water.
+**效果描述：** 内容漂浮在波纹流动的液体表面上，具有实时波动动力学。或者内容本身就是表面，像水一样起伏。
 
-**When to use:** Organic/premium feel, ambient background, "living" product showcase.
+**使用时机：** 有机/高级感、环境背景、"有生命"的产品展示。
 
-**Key technique:** Subdivided PlaneGeometry with vertex displacement driven by noise functions in a vertex shader.
+**关键技术：** 细分 PlaneGeometry，在顶点着色器中通过噪声函数驱动顶点位移。
 
-Study `registry/blocks/vfx-liquid-background/vfx-liquid-background.html` for the 1244-line implementation. Core idea:
+研究 `registry/blocks/vfx-liquid-background/vfx-liquid-background.html` 以获取 1244 行的实现。核心思想：
 
 ```js
-// Custom vertex shader with wave displacement
+// 自定义顶点着色器，带波动偏移
 var vertexShader = `
   varying vec2 vUv;
   uniform float u_time;
   void main() {
     vUv = uv;
     vec3 pos = position;
-    // Sine wave displacement
+    // 正弦波位移
     pos.z += sin(pos.x * 3.0 + u_time * 2.0) * 0.15;
     pos.z += cos(pos.y * 2.5 + u_time * 1.5) * 0.1;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -301,7 +301,7 @@ var vertexShader = `
 `;
 
 var mesh = new THREE.Mesh(
-  new THREE.PlaneGeometry(4, 3, 64, 64), // heavily subdivided for smooth waves
+  new THREE.PlaneGeometry(4, 3, 64, 64), // 高度细分以实现平滑波动
   new THREE.ShaderMaterial({
     vertexShader: vertexShader,
     fragmentShader: `varying vec2 vUv; uniform sampler2D u_tex;
@@ -316,41 +316,41 @@ var mesh = new THREE.Mesh(
 
 ---
 
-### 5. Portal / Dimensional Reveal (Three.js)
+### 5. 传送门 / 维度揭示（Three.js）
 
-**What it looks like:** A glowing circular portal opens and content emerges through it from another dimension.
+**效果描述：** 一个发光的圆形传送门打开，内容从另一个维度通过它出现。
 
-**When to use:** Product reveal, "entering the app" moment, hero feature introduction.
+**使用时机：** 产品亮相、"进入应用"时刻、主角功能引入。
 
-Study `registry/blocks/vfx-portal/vfx-portal.html` for the complete 863-line implementation.
-
----
-
-## When to Use HTML-in-Canvas vs Standard GSAP
-
-| Scenario                         | Use                                  | Why                                  |
-| -------------------------------- | ------------------------------------ | ------------------------------------ |
-| Hero product screenshot showcase | HTML-in-Canvas (3D rotation + bloom) | Makes flat UI feel cinematic         |
-| Feature list / stats             | Standard GSAP                        | Content-focused, doesn't need 3D     |
-| CTA / brand reveal               | HTML-in-Canvas (portal or magnetic)  | Makes the moment memorable           |
-| Social proof / logos             | Standard GSAP                        | Orderly cascade, trust is steady     |
-| Transition between acts          | HTML-in-Canvas (shatter)             | Dramatic act break                   |
-| Background atmosphere            | HTML-in-Canvas (liquid surface)      | Premium ambient feel                 |
-| Quick feature cards              | Standard GSAP                        | Speed matters, 3D would slow it down |
+研究 `registry/blocks/vfx-portal/vfx-portal.html` 以获取完整的 863 行实现。
 
 ---
 
-## More Effects You Can Build
+## 何时使用 HTML-in-Canvas vs 标准 GSAP
 
-These aren't in the VFX blocks — build them yourself from the core boilerplate + a custom fragment shader. Each effect is a single GLSL function applied to the captured texture.
+| 场景                           | 使用方式                            | 原因                                   |
+| ------------------------------ | ----------------------------------- | -------------------------------------- |
+| 主角产品截图展示               | HTML-in-Canvas（3D 旋转 + 辉光）    | 让平面 UI 具有电影感                   |
+| 功能列表 / 统计数据            | 标准 GSAP                           | 内容导向，不需要 3D                    |
+| CTA / 品牌揭示                 | HTML-in-Canvas（传送门或磁性扭曲）  | 让瞬间令人印象深刻                     |
+| 社交证明 / Logo                | 标准 GSAP                           | 有序级联，信任感稳定                    |
+| 幕间过渡                       | HTML-in-Canvas（破碎）              | 戏剧性的幕间切换                       |
+| 背景氛围                       | HTML-in-Canvas（液体表面）          | 高级环境感                             |
+| 快速功能卡片                   | 标准 GSAP                           | 速度优先，3D 会拖慢                    |
 
-### 6. Noise Dissolve
+---
 
-Content dissolves into noise particles, revealing what's behind. Great for transitions.
+## 更多你可构建的特效
+
+这些不在 VFX 块中——从核心模板 + 自定义片段着色器自行构建。每个特效是对捕获纹理应用单一 GLSL 函数。
+
+### 6. 噪声溶解
+
+内容溶解为噪点粒子，露出背后的内容。非常适合过渡。
 
 ```glsl
-// Fragment shader — noise-based dissolve
-uniform float u_progress; // 0.0 = fully visible, 1.0 = fully dissolved
+// 片段着色器 —— 基于噪声的溶解
+uniform float u_progress; // 0.0 = 完全可见，1.0 = 完全溶解
 uniform sampler2D u_tex;
 
 float hash(vec2 p) {
@@ -362,18 +362,18 @@ void main() {
   float noise = hash(uv * 50.0);
   float threshold = u_progress;
   if (noise < threshold) {
-    // Edge glow at the dissolve boundary
+    // 溶解边界的边缘辉光
     float edge = smoothstep(threshold - 0.05, threshold, noise);
-    fragColor = vec4(1.0, 0.6, 0.2, 1.0) * (1.0 - edge); // orange edge glow
+    fragColor = vec4(1.0, 0.6, 0.2, 1.0) * (1.0 - edge); // 橙色边缘辉光
   } else {
     fragColor = texture(u_tex, uv);
   }
 }
 ```
 
-### 7. Holographic / Iridescent
+### 7. 全息 / 彩虹色
 
-Content gets a rainbow-shifting holographic sheen that moves with time. Premium, futuristic feel.
+内容带有随时间移动的彩虹色全息光泽。未来感、高级感。
 
 ```glsl
 uniform float u_time;
@@ -381,21 +381,21 @@ uniform sampler2D u_tex;
 
 void main() {
   vec4 color = texture(u_tex, v_uv);
-  // Iridescent color shift based on position + time
+  // 基于位置 + 时间的彩虹色调偏移
   float angle = v_uv.x * 6.28 + v_uv.y * 3.14 + u_time * 0.5;
   vec3 holo = vec3(
     sin(angle) * 0.5 + 0.5,
     sin(angle + 2.094) * 0.5 + 0.5,
     sin(angle + 4.189) * 0.5 + 0.5
   );
-  // Blend holographic over content (subtle overlay)
+  // 将全息效果混合到内容上（微妙的叠加）
   fragColor = vec4(mix(color.rgb, holo, 0.15 + 0.1 * sin(u_time)), color.a);
 }
 ```
 
-### 8. Scan Lines + CRT
+### 8. 扫描线 + CRT
 
-Retro CRT monitor look — scan lines, slight curvature, phosphor glow. Great for "code" or "terminal" beats.
+复古 CRT 显示器外观——扫描线、轻微曲率、荧光粉辉光。适合"代码"或"终端"节拍。
 
 ```glsl
 uniform sampler2D u_tex;
@@ -403,36 +403,36 @@ uniform float u_time;
 
 void main() {
   vec2 uv = v_uv;
-  // Barrel distortion (CRT curvature)
+  // 桶形畸变（CRT 曲率）
   vec2 centered = uv - 0.5;
   float dist = dot(centered, centered);
   uv = uv + centered * dist * 0.15;
 
   vec4 color = texture(u_tex, uv);
-  // Scan lines
+  // 扫描线
   float scanline = sin(uv.y * 800.0) * 0.04;
   color.rgb -= scanline;
-  // Slight RGB offset (phosphor)
+  // 轻微 RGB 偏移（荧光粉）
   color.r = texture(u_tex, uv + vec2(0.001, 0.0)).r;
   color.b = texture(u_tex, uv - vec2(0.001, 0.0)).b;
-  // Vignette
+  // 暗角
   float vignette = 1.0 - dist * 2.0;
   fragColor = vec4(color.rgb * vignette, 1.0);
 }
 ```
 
-### 9. Frosted Glass Blur
+### 9. 磨砂玻璃模糊
 
-Content behind frosted glass — visible but softened, with subtle light refraction. Good for "behind the scenes" or "coming soon" moments.
+磨砂玻璃背后的内容——可见但柔和，带有微妙的光折射。适合"幕后"或"即将推出"时刻。
 
 ```glsl
 uniform sampler2D u_tex;
-uniform float u_blur; // 0.0 = clear, 1.0 = full frost
+uniform float u_blur; // 0.0 = 清晰，1.0 = 完全磨砂
 
 void main() {
   vec2 uv = v_uv;
   vec4 color = vec4(0.0);
-  // Box blur with offset
+  // 带偏移的方框模糊
   float radius = u_blur * 0.015;
   for (float x = -2.0; x <= 2.0; x += 1.0) {
     for (float y = -2.0; y <= 2.0; y += 1.0) {
@@ -440,16 +440,16 @@ void main() {
     }
   }
   color /= 25.0;
-  // Add frost noise texture
+  // 添加磨砂噪声纹理
   float frost = fract(sin(dot(uv * 200.0, vec2(12.9898, 78.233))) * 43758.5453);
   color.rgb += frost * 0.03 * u_blur;
   fragColor = color;
 }
 ```
 
-### 10. Pixel Sort / Glitch Art
+### 10. 像素排序 / 故障艺术
 
-Pixels rearrange themselves in vertical or horizontal strips — digital art aesthetic. Great for tech/creative brands.
+像素在垂直或水平条中重新排列——数字艺术美学。适合科技/创意品牌。
 
 ```glsl
 uniform sampler2D u_tex;
@@ -457,11 +457,11 @@ uniform float u_intensity; // 0-1
 
 void main() {
   vec2 uv = v_uv;
-  // Random horizontal displacement per row
+  // 每行的随机水平位移
   float row = floor(uv.y * 80.0);
   float noise = fract(sin(row * 127.1) * 43758.5);
   float displace = step(0.7, noise) * u_intensity * 0.1;
-  // Shift UV with RGB split
+  // 带 RGB 分裂的 UV 偏移
   float r = texture(u_tex, uv + vec2(displace, 0.0)).r;
   float g = texture(u_tex, uv).g;
   float b = texture(u_tex, uv - vec2(displace * 0.5, 0.0)).b;
@@ -471,37 +471,37 @@ void main() {
 
 ---
 
-## Creating ANY Custom Effect
+## 创建**任何**自定义特效
 
-The fragment shaders above are templates. The pattern is always:
+上述片段着色器是模板。模式始终是：
 
-1. **Capture your HTML content** with `drawElementImage` (the boilerplate at the top)
-2. **Upload the captured canvas as a WebGL texture**
-3. **Write a fragment shader** that reads from the texture and outputs modified colors
-4. **Drive shader uniforms from GSAP** via `onUpdate`
+1. 使用 `drawElementImage` **捕获你的 HTML 内容**（顶部的模板）
+2. **将捕获的 canvas 上传为 WebGL 纹理**
+3. **编写一个片段着色器**，从纹理读取并输出修改后的颜色
+4. **通过 `onUpdate` 从 GSAP 驱动着色器 uniforms**
 
-Any GLSL effect from ShaderToy, The Book of Shaders, CodePen, or anywhere else can be adapted:
+任何来自 ShaderToy、The Book of Shaders、CodePen 或任何地方的 GLSL 特效都可以适配：
 
-1. Find an effect you like (search "GLSL [effect name]" or browse shadertoy.com)
-2. Copy the fragment shader
-3. Replace `iResolution` with `vec2(1920.0, 1080.0)`, `iTime` with your `u_time` uniform
-4. Add `uniform sampler2D u_tex;` for the captured content texture
-5. Wire the uniforms to GSAP proxy values
+1. 找到你喜欢的特效（搜索 "GLSL [特效名称]" 或浏览 shadertoy.com）
+2. 复制片段着色器
+3. 将 `iResolution` 替换为 `vec2(1920.0, 1080.0)`，将 `iTime` 替换为你的 `u_time` uniform
+4. 为捕获的内容纹理添加 `uniform sampler2D u_tex;`
+5. 将 uniforms 连接到 GSAP proxy 值
 
-**Geometry ideas beyond flat planes:**
+**超越平面几何体的创意：**
 
-- `SphereGeometry` — content mapped onto a globe (world map, global reach)
-- `CylinderGeometry` — content on a rotating cylinder (carousel/scroll feel)
-- `TorusGeometry` — content wrapped around a ring (infinity, cycle)
-- `BoxGeometry` — content on a 3D box (product packaging, dice)
-- GLTF models — content mapped as screen texture on phone, laptop, monitor (see `vfx-iphone-device`)
+- `SphereGeometry` — 内容映射到球体上（世界地图、全球覆盖）
+- `CylinderGeometry` — 内容在旋转圆柱体上（轮播/滚动感）
+- `TorusGeometry` — 内容环绕在环上（无限、循环）
+- `BoxGeometry` — 内容在 3D 盒子上（产品包装、骰子）
+- GLTF 模型 — 内容作为屏幕纹理映射到手机、笔记本电脑、显示器上（参见 `vfx-iphone-device`）
 
-**Post-processing stacking** (Three.js EffectComposer):
+**后处理堆叠**（Three.js EffectComposer）：
 
-- Bloom + film grain = cinematic
-- Bloom + chromatic aberration = lens effect
-- Depth of field + vignette = focused attention
-- Film grain + scan lines = retro
-- Multiple passes stack — add as many as you want
+- 辉光 + 胶片颗粒 = 电影感
+- 辉光 + 色差 = 镜头效果
+- 景深 + 暗角 = 聚焦注意力
+- 胶片颗粒 + 扫描线 = 复古
+- 多个通道叠加——你想要的任意数目
 
-**You are not limited to the effects listed here.** If you can imagine a visual treatment, you can build it. The HTML-in-Canvas API gives you the source material (any HTML rendered as a texture), and WebGL/Three.js gives you unlimited creative control over how that material is presented.
+**你不限于这里列出的特效。** 如果你能想象一种视觉处理方式，你就能构建它。HTML-in-Canvas API 为你提供素材（任何 HTML 渲染为纹理），WebGL/Three.js 为你提供对该素材呈现方式的无限创作控制。

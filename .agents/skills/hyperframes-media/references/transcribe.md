@@ -1,46 +1,46 @@
-# Transcription
+# 转录
 
-Create normalized word-level timestamps. **Always specify `--model` explicitly** — the CLI default is `small.en`, which silently translates non-English audio into English.
+创建归一化的词语级时间戳。**始终显式指定 `--model`**——CLI 默认是 `small.en`，它会静默将非英语音频翻译为英语。
 
 ```bash
-npx hyperframes transcribe audio.mp3  --model small.en             # known English
-npx hyperframes transcribe video.mp4  --model small --language es  # known Spanish
-npx hyperframes transcribe audio.mp3  --model small                # unknown language (auto-detect)
-npx hyperframes transcribe subtitles.srt                           # import existing
+npx hyperframes transcribe audio.mp3  --model small.en             # 已知为英语
+npx hyperframes transcribe video.mp4  --model small --language es  # 已知为西班牙语
+npx hyperframes transcribe audio.mp3  --model small                # 未知语言（自动检测）
+npx hyperframes transcribe subtitles.srt                           # 导入现有字幕
 npx hyperframes transcribe subtitles.vtt
 npx hyperframes transcribe openai-response.json
 ```
 
-## Language Rule (Non-Negotiable)
+## 语言规则（不可协商）
 
-`.en` models (`tiny.en` / `base.en` / `small.en` / `medium.en`) **translate** non-English audio into English. This silently destroys the original language.
+`.en` 模型（`tiny.en` / `base.en` / `small.en` / `medium.en`）会将非英语音频**翻译**为英语。这会静默破坏原始语言。
 
-1. **Known English** → `--model small.en` (or `medium.en` for music / noisy audio)
-2. **Known non-English** → `--model small --language <iso-code>` (no `.en` suffix)
-3. **Unknown language** → `--model small` (whisper auto-detects)
+1. **已知为英语** → `--model small.en`（或音乐/嘈杂音频使用 `medium.en`）
+2. **已知为非英语** → `--model small --language <iso-code>`（不带 `.en` 后缀）
+3. **未知语言** → `--model small`（whisper 自动检测）
 
-**CLI default is `small.en`** — do not rely on it; always pass `--model` to make the choice explicit. `--language` also filters out non-target-language segments from mixed-language audio.
+**CLI 默认是 `small.en`**——不要依赖它；始终传递 `--model` 以明确选择。`--language` 还会从混合语言音频中过滤掉非目标语言片段。
 
-## Model Sizes
+## 模型大小
 
-| Model      | Size   | Speed    | When                                  |
+| 模型 | 大小 | 速度 | 使用场景 |
 | ---------- | ------ | -------- | ------------------------------------- |
-| `tiny`     | 75 MB  | Fastest  | Quick previews, smoke tests           |
-| `base`     | 142 MB | Fast     | Short clips, clear audio              |
-| `small`    | 466 MB | Moderate | Default for most multilingual content |
-| `medium`   | 1.5 GB | Slow     | Music with vocals, noisy audio        |
-| `large-v3` | 3.1 GB | Slowest  | Production quality                    |
+| `tiny` | 75 MB | 最快 | 快速预览、冒烟测试 |
+| `base` | 142 MB | 快 | 短片、清晰的音频 |
+| `small` | 466 MB | 中等 | 大多数多语言内容的默认选择 |
+| `medium` | 1.5 GB | 慢 | 带人声的音乐、嘈杂音频 |
+| `large-v3` | 3.1 GB | 最慢 | 生产质量 |
 
-### Picking a model by content type
+### 按内容类型选择模型
 
-1. Speech over silence / light background → `small.en`
-2. Speech over music, or music with vocals → start with `medium.en`
-3. Produced music track (vocals + full instrumentation) → start with `medium.en`; expect to need manual lyrics or an external API ([`captions/transcript-handling.md`](captions/transcript-handling.md) → "Using External Transcription APIs")
-4. Multilingual → `medium` or `large-v3` (no `.en` suffix), pair with `--language`
+1. 静音/轻背景上的语音 → `small.en`
+2. 音乐上的语音，或带人声的音乐 → 从 `medium.en` 开始
+3. 制作好的音乐曲目（人声 + 完整伴奏）→ 从 `medium.en` 开始；可能需要手动歌词或外部 API（[`captions/transcript-handling.md`](captions/transcript-handling.md) →「使用外部转录 API」）
+4. 多语言 → `medium` 或 `large-v3`（不带 `.en` 后缀），配合 `--language`
 
-## Output Shape
+## 输出格式
 
-Compositions consume a flat array of word objects. The `id` (`w0`, `w1`, …) is added during normalization for stable references in caption overrides; optional for backwards compatibility.
+作品消费一个扁平的词语对象数组。`id`（`w0`、`w1`……）在归一化过程中添加，用于字幕覆盖的稳定引用；向后兼容时可省略。
 
 ```json
 [
@@ -49,4 +49,4 @@ Compositions consume a flat array of word objects. The `id` (`w0`, `w1`, …) is
 ]
 ```
 
-For mandatory caption-quality checks, retry rules, and the OpenAI/Groq Whisper API import path, see `captions/transcript-handling.md`.
+关于强制性的字幕质量检查、重试规则以及 OpenAI/Groq Whisper API 导入路径，请参见 `captions/transcript-handling.md`。

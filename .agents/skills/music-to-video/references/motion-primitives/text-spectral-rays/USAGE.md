@@ -1,42 +1,23 @@
-# Using `text-spectral-rays` — it OWNS its wordmark
+# 使用 `text-spectral-rays`——它拥有自己的字标
 
-`text-spectral-rays` is a **self-contained WebGL hero-text renderer**. From ONE rasterized
-glyph mask it draws **both** the solid wordmark **and** the spectral rays that emanate from
-it. Letters and rays share the same mask, so they are always perfectly registered.
+`text-spectral-rays` 是一个**自包含的 WebGL 英雄文本渲染器**。从一个栅格化的字形遮罩，它绘制**同时**实心字标**和**从其发出的光谱射线。字母和射线共享同一遮罩，因此它们始终完美对齐。
 
-## The one trap: never give the word a second source
+## 一个陷阱：永远不要给词第二个来源
 
-The ghost / doubled-wordmark artifact comes from splitting the word across two sources:
+重影/双字标伪影源于将词拆分到两个来源：
 
-- ❌ **Wrong** — use the shader as a "rays-only background" and draw the visible letters
-  with a **separate DOM element** (or stack a second text move like `content_swap` /
-  `chromatic_pressure` on the same word). The DOM font (e.g. Inter) and the shader's raster
-  font (Arial Black / Impact fallback) differ in width, shape, and position, so the ray
-  edges never line up with the DOM letters → a misregistered ghost. **Deleting the shader's
-  letter terms does NOT fix it** — the ray mask itself is still the second, misaligned copy
-  of the word.
+- ❌ **错误**——将着色器用作「仅射线背景」并用**单独的 DOM 元素**绘制可见字母（或在同一词上堆叠第二个文本动效如 `content_swap` / `chromatic_pressure`）。DOM 字体（例如 Inter）和着色器的栅格字体（Arial Black / Impact 备选）在宽度、形状和位置上不同，因此射线边缘永远不会与 DOM 字母对齐 → 一个错位的重影。**删除着色器的字母项并不能修复它**——射线遮罩本身仍然是该词的第二个未对齐副本。
 
-- ✅ **Right** — let the shader render the wordmark. There is exactly ONE source, so a
-  ghost is structurally impossible.
+- ✅ **正确**——让着色器渲染字标。恰好有一个源，因此重影在结构上不可能。
 
-## Integrate in one pass
+## 一次集成
 
-1. **It IS the wordmark.** Hide any DOM logo for that word (keep it only as an invisible
-   layout spacer if a tagline/CTA below depends on its box). Never stack a discrete text
-   move on the same word.
-2. **One timeline.** Merge its `progress` / `effectMix` state tweens onto the group's master
-   timeline and repaint via `tl.eventCallback("onUpdate", render)` — no second timeline, no
-   `requestAnimationFrame`.
-3. **Align the cursor to the word.** `mouse.y` must equal the mask's vertical center. If you
-   move the rasterized word off frame-center (e.g. up, to leave room for a tagline), shift
-   the cursor's `y` by the same amount — otherwise the rays cast at the wrong angle.
-4. **Local raster only.** Rasterize the word with a bundled / system font (no CDN font);
-   upload the mask + colour canvases as textures.
-5. **Entrance.** Slam the whole canvas (autoAlpha + a scale punch, `transform-origin` on the
-   word's optical center) on the hit; let `effectMix` bloom the rays just after. The solid
-   letters are present the instant the canvas reveals.
+1. **它就是字标。** 隐藏该词的任何 DOM Logo（如果下方的标语/CTA 依赖于其框，则仅将其保留为不可见布局占位符）。永远不要在同一个词上堆叠单独的文本动效。
+2. **一条时间线。** 将其 `progress` / `effectMix` 状态动画合并到组的主时间线上，并通过 `tl.eventCallback("onUpdate", render)` 重新绘制——没有第二条时间线，没有 `requestAnimationFrame`。
+3. **将光标对齐到词。** `mouse.y` 必须等于遮罩的垂直中心。如果你将栅格化的词从画面中心移开（例如上移，为标语留出空间），将光标的 `y` 移动相同的量——否则射线会以错误的角度投射。
+4. **仅本地栅格化。** 使用捆绑/系统字体（无 CDN 字体）栅格化该词；将遮罩 + 颜色画布作为纹理上传。
+5. **入口。** 在命中时猛击整个画布（autoAlpha + 缩放重击，`transform-origin` 在词的光学中心）；让 `effectMix` 稍后绽放射线。实心字母在画布揭示的瞬间就存在。
 
-## Pairs with
+## 搭配
 
-A background bed (`bg-flow-field`) or **separate** supporting elements (tagline, CTA, rule)
-— never a second treatment of its own word.
+背景床（`bg-flow-field`）或**独立**的支持元素（标语、CTA、标尺）——永远不要再次处理其自身的词。

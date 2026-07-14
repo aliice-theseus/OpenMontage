@@ -1,171 +1,171 @@
 ---
 name: beautiful-mermaid
-description: Render Mermaid diagrams as SVG and PNG using the Beautiful Mermaid library. Use when the user asks to render a Mermaid diagram.
+description: 使用 Beautiful Mermaid 库将 Mermaid 图表渲染为 SVG 和 PNG。当用户要求渲染 Mermaid 图表时使用。
 ---
 
-# Beautiful Mermaid Diagram Rendering
+# Beautiful Mermaid 图表渲染
 
-Render Mermaid diagrams as SVG and PNG images using the Beautiful Mermaid library.
+使用 Beautiful Mermaid 库将 Mermaid 图表渲染为 SVG 和 PNG 图片。
 
-## Dependencies
+## 依赖
 
-This skill requires the `agent-browser` skill for PNG rendering. Load it before proceeding with PNG capture.
+此技能需要 `agent-browser` 技能进行 PNG 渲染。在进行 PNG 截图前，先加载该技能。
 
-## Supported Diagram Types
+## 支持的图表类型
 
-- **Flowchart** - Process flows, decision trees, CI/CD pipelines
-- **Sequence** - API calls, OAuth flows, database transactions
-- **State** - State machines, connection lifecycles
-- **Class** - UML class diagrams, design patterns
-- **Entity-Relationship** - Database schemas, data models
+- **流程图** - 流程处理、决策树、CI/CD 管道
+- **时序图** - API 调用、OAuth 流程、数据库事务
+- **状态图** - 状态机、连接生命周期
+- **类图** - UML 类图、设计模式
+- **实体关系图** - 数据库模式、数据模型
 
-## Available Themes
+## 可用主题
 
-Default, Dracula, Solarized, Zinc Dark, Tokyo Night, Tokyo Night Storm, Tokyo Night Light, Catppuccin Latte, Nord, Nord Light, GitHub Dark, GitHub Light, One Dark.
+Default、Dracula、Solarized、Zinc Dark、Tokyo Night、Tokyo Night Storm、Tokyo Night Light、Catppuccin Latte、Nord、Nord Light、GitHub Dark、GitHub Light、One Dark。
 
-If no theme is specified, use `default`.
+如果未指定主题，使用 `default`。
 
-## Common Syntax Patterns
+## 常见语法模式
 
-### Flowchart Edge Labels
+### 流程图边标签
 
-Use pipe syntax for edge labels:
+使用管道语法表示边标签：
 
 ```mermaid
 A -->|label| B
 A ---|label| B
 ```
 
-Avoid space-dash syntax which can cause incomplete renders:
+避免使用空格-破折号语法，可能导致渲染不完整：
 
 ```mermaid
-A -- label --> B   # May cause issues
+A -- label --> B   # 可能导致问题
 ```
 
-### Node Labels with Special Characters
+### 含特殊字符的节点标签
 
-Wrap labels containing special characters in quotes:
+将包含特殊字符的标签用引号包裹：
 
 ```mermaid
 A["Label with (parens)"]
 B["Label with / slash"]
 ```
 
-## Workflow
+## 工作流程
 
-### Step 1: Generate or Validate Mermaid Code
+### 步骤 1：生成或验证 Mermaid 代码
 
-If the user provides a description rather than code, generate valid Mermaid syntax. Consult `references/mermaid-syntax.md` for full syntax details.
+如果用户提供的是描述而非代码，生成有效的 Mermaid 语法。查阅 `references/mermaid-syntax.md` 获取完整语法详情。
 
-### Step 2: Render SVG
+### 步骤 2：渲染 SVG
 
-Run the rendering script to produce an SVG file:
+运行渲染脚本生成 SVG 文件：
 
 ```bash
 bun run scripts/render.ts --code "graph TD; A-->B" --output diagram --theme default
 ```
 
-Or from a file:
+或从文件渲染：
 
 ```bash
 bun run scripts/render.ts --input diagram.mmd --output diagram --theme tokyo-night
 ```
 
-Alternative runtimes:
+替代运行时：
 ```bash
 npx tsx scripts/render.ts --code "..." --output diagram
 deno run --allow-read --allow-write --allow-net scripts/render.ts --code "..." --output diagram
 ```
 
-This produces `<output>.svg` in the current working directory.
+这将在当前工作目录生成 `<output>.svg`。
 
-### Step 3: Create HTML Wrapper
+### 步骤 3：创建 HTML 包装器
 
-Run the HTML wrapper script to prepare for screenshot:
+运行 HTML 包装器脚本准备截图：
 
 ```bash
 bun run scripts/create-html.ts --svg diagram.svg --output diagram.html
 ```
 
-This creates a minimal HTML file that displays the SVG with proper padding and background.
+这将创建一个展示 SVG 并带有适当内边距和背景的最小 HTML 文件。
 
-### Step 4: Capture High-Resolution PNG with agent-browser
+### 步骤 4：使用 agent-browser 捕获高分辨率 PNG
 
-Use the agent-browser CLI to capture a high-quality screenshot. Refer to the `agent-browser` skill for full CLI documentation.
+使用 agent-browser CLI 捕获高质量截图。有关完整 CLI 文档，请参阅 `agent-browser` 技能。
 
 ```bash
-# Set 4K viewport for high-resolution capture
+# 设置 4K 视口以进行高分辨率捕获
 agent-browser set viewport 3840 2160
 
-# Open the HTML wrapper
+# 打开 HTML 包装器
 agent-browser open "file://$(pwd)/diagram.html"
 
-# Wait for render to complete
+# 等待渲染完成
 agent-browser wait 1000
 
-# Capture full-page screenshot
+# 捕获整页截图
 agent-browser screenshot --full diagram.png
 
-# Close browser
+# 关闭浏览器
 agent-browser close
 ```
 
-For even higher resolution on complex diagrams, increase the viewport further or use the `--padding` option when creating the HTML wrapper to give the diagram more space.
+对于复杂图表需要更高分辨率，可进一步增加视口或在创建 HTML 包装器时使用 `--padding` 选项为图表提供更多空间。
 
-### Step 5: Clean Up Intermediary Files
+### 步骤 5：清理中间文件
 
-After rendering, remove all intermediary files. Only the final `.svg` and `.png` should remain.
+渲染完成后，删除所有中间文件。仅保留最终的 `.svg` 和 `.png`。
 
-Files to clean up:
-- The HTML wrapper file (e.g., `diagram.html`)
-- Any temporary `.mmd` files created to hold diagram code
-- Any other files created during the rendering process
+需要清理的文件：
+- HTML 包装器文件（如 `diagram.html`）
+- 任何用于保存图表代码的临时 `.mmd` 文件
+- 渲染过程中创建的任何其他文件
 
 ```bash
 rm diagram.html
 ```
 
-If a temporary `.mmd` file was created, remove it as well.
+如果创建了临时 `.mmd` 文件，也要删除它。
 
-## Output
+## 输出
 
-Both outputs are always produced:
-- **SVG**: Vector format, infinitely scalable, small file size
-- **PNG**: High-resolution raster, captured at 4K (3840×2160) viewport with minimum 1200px diagram width
+始终生成两种输出：
+- **SVG**：矢量格式，可无限缩放，文件大小小
+- **PNG**：高分辨率光栅图，在 4K（3840×2160）视口下捕获，图表宽度至少 1200px
 
-Files are saved to the current working directory unless the user explicitly specifies a different path.
+除非用户明确指定不同路径，否则文件保存到当前工作目录。
 
-## Theme Selection Guide
+## 主题选择指南
 
-| Theme | Background | Best For |
+| 主题 | 背景 | 最佳用途 |
 |-------|------------|----------|
-| default | Light grey | General use |
-| dracula | Dark purple | Dark mode preference |
-| tokyo-night | Dark blue | Modern dark aesthetic |
-| tokyo-night-storm | Darker blue | Higher contrast |
-| nord | Dark arctic | Muted, calm visuals |
-| nord-light | Light arctic | Light mode with soft tones |
-| github-dark | GitHub dark | Matches GitHub UI |
-| github-light | GitHub light | Matches GitHub UI |
-| catppuccin-latte | Warm light | Soft pastel aesthetic |
-| solarized | Tan/cream | Solarized colour scheme |
-| one-dark | Atom dark | Atom editor aesthetic |
-| zinc-dark | Neutral dark | Minimal, no colour bias |
+| default | 浅灰色 | 通用 |
+| dracula | 深紫色 | 深色模式偏好 |
+| tokyo-night | 深蓝色 | 现代深色美学 |
+| tokyo-night-storm | 深蓝色 | 更高对比度 |
+| nord | 深北极色 | 柔和、平静的视觉效果 |
+| nord-light | 浅北极色 | 柔和色调的浅色模式 |
+| github-dark | GitHub 深色 | 匹配 GitHub UI |
+| github-light | GitHub 浅色 | 匹配 GitHub UI |
+| catppuccin-latte | 暖浅色 | 柔和粉彩美学 |
+| solarized | 棕褐色 | Solarized 配色方案 |
+| one-dark | Atom 深色 | Atom 编辑器美学 |
+| zinc-dark | 中性深色 | 极简，无颜色倾向 |
 
-## Troubleshooting
+## 故障排除
 
-### Theme not applied
+### 主题未应用
 
-Check the render script output for the `bg` and `fg` values, or inspect the SVG's opening tag for `--bg` and `--fg` CSS custom properties.
+检查渲染脚本输出中的 `bg` 和 `fg` 值，或检查 SVG 开头标签中是否有 `--bg` 和 `--fg` CSS 自定义属性。
 
-### Diagram appears cut off or incomplete
+### 图表显示截断或不完整
 
-- Check edge label syntax — use `-->|label|` pipe notation, not `-- label -->`
-- Verify all node IDs are unique
-- Check for unclosed brackets in node labels
+- 检查边标签语法 — 使用 `-->|label|` 管道符号，而非 `-- label -->`
+- 验证所有节点 ID 是否唯一
+- 检查节点标签中是否有未闭合的括号
 
-### Render produces empty or malformed SVG
+### 渲染输出空或损坏的 SVG
 
-- Validate Mermaid syntax at https://mermaid.live before rendering
-- Check for special characters that need escaping (wrap in quotes)
-- Ensure flowchart direction is specified (`graph TD`, `graph LR`, etc.)
+- 渲染前在 https://mermaid.live 验证 Mermaid 语法
+- 检查需要转义的特殊字符（用引号包裹）
+- 确保指定了流程图方向（`graph TD`、`graph LR` 等）

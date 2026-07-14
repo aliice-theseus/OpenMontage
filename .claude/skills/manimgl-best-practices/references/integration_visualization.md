@@ -1,30 +1,30 @@
-# Integration Visualization - Reference Guide
+# 积分可视化 - 参考指南
 
-**Example file**: `examples/integration_visualization.py`
+**示例文件**：`examples/integration_visualization.py`
 
-## User Query Scenarios
+## 用户查询场景
 
-This example addresses queries like:
-- "Show the area under a curve"
-- "Visualize Riemann sums converging to integral"
-- "Animate definite integral accumulation"
-- "Show integral of e^(-x) equals 1"
+本示例解决如下查询：
+- "展示曲线下的面积"
+- "可视化黎曼和收敛到积分"
+- "动画化定积分累加"
+- "展示 e^(-x) 的积分等于 1"
 
-## Scene Thinking Process (3b1b Style)
+## 场景思考过程（3b1b 风格）
 
-### 1. Core Concept
-**Definite Integral**: The integral ∫f(x)dx represents accumulated area under curve f(x). Riemann sums with shrinking rectangles converge to the true integral.
+### 1. 核心概念
+**定积分**：积分 ∫f(x)dx 表示曲线 f(x) 下的累积面积。矩形不断缩小的黎曼和收敛到真实的积分值。
 
-### 2. Technical Implementation
+### 2. 技术实现
 
-#### Animated Area Fill (Using Polygon)
+#### 动画化面积填充（使用 Polygon）
 ```python
 def get_area_polygon():
     t = t_tracker.get_value()
     xs = np.linspace(0, t, 50)
-    # Points along curve
+    # 沿曲线的点
     points = [axes.c2p(x, f(x)) for x in xs]
-    # Close the polygon along x-axis
+    # 沿 x 轴闭合多边形
     points.append(axes.c2p(t, 0))
     points.append(axes.c2p(0, 0))
     poly = Polygon(*points)
@@ -35,9 +35,9 @@ def get_area_polygon():
 area = always_redraw(get_area_polygon)
 ```
 
-**Key insight**: ManimGL doesn't have `axes.get_area()`, so build polygons manually from curve points.
+**关键理解**：ManimGL 没有 `axes.get_area()`，所以需要从曲线点手动构建多边形。
 
-#### Riemann Sum Rectangles
+#### 黎曼和矩形
 ```python
 for i in range(n):
     x = start + i * dx
@@ -49,24 +49,24 @@ for i in range(n):
     rect.move_to(axes.c2p(x + dx/2, height/2))
 ```
 
-### 3. Scene Variants
+### 3. 场景变体
 
-| Scene | Purpose |
+| 场景 | 用途 |
 |-------|---------|
-| `AreaUnderCurve` | Basic accumulating area animation |
-| `RiemannSums` | Rectangles converging (n=4,8,16,32) |
-| `ExponentialDecay` | ∫e^(-x)dx = 1 with live area counter |
+| `AreaUnderCurve` | 基本累积面积动画 |
+| `RiemannSums` | 矩形收敛（n=4,8,16,32） |
+| `ExponentialDecay` | ∫e^(-x)dx = 1 带实时面积计数 |
 
-## Key Patterns
+## 关键模式
 
-### Pattern: Live Value Display
+### 模式：实时数值显示
 ```python
 value_label = Tex(r"\text{Area} \approx 0.00")
 value_num = value_label.make_number_changeable("0.00")
 value_num.add_updater(lambda m: m.set_value(computed_area))
 ```
 
-### Pattern: Progressive Rectangle Refinement
+### 模式：渐进式矩形细化
 ```python
 for n in [4, 8, 16, 32]:
     new_rects = create_rectangles(n)
@@ -74,7 +74,7 @@ for n in [4, 8, 16, 32]:
     current_rects = new_rects
 ```
 
-## Run Commands
+## 运行命令
 
 ```bash
 manimgl integration_visualization.py AreaUnderCurve -w

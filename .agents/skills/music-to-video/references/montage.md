@@ -1,58 +1,32 @@
-# Asset treatments — weaving user media onto the beat spine
+# 资源处理方式——将用户媒体编织到节拍脊柱上
 
-When the user supplies images/videos, a group can be an **asset treatment** instead of a
-typographic template/free-compose. Assets are an **additive ingredient on the same beat
-spine** — never a separate pipeline. Typography/templates stay the floor: if no asset fits a
-group, fall back to a template/free group (a complete video needs zero assets).
+当用户提供图片/视频时，一个组可以是**资源处理方式**，而不是排版模板/自由组合。资源是**同一节拍脊柱上的附加配料**——永远不是单独的流水线。排版/模板保持为底线：如果没有资源适合组，回退到模板/自由组（完整视频不需要资源）。
 
-The planner (Step 3) picks the treatment and the clips + anchors (WHAT); the frame-worker
-realizes it inside the frame file (HOW). **Obey the frame's `pacing`.**
+规划者（步骤 3）选择处理方式以及片段 + 锚点（WHAT）；frame-worker 在帧文件中实现它（HOW）。**遵循帧的 `pacing`。**
 
-## The three treatments
+## 三种处理方式
 
-### `beat_cut` — one clip per anchor (only on a `beat_cut` frame)
+### `beat_cut`——每个锚点一个片段（仅在 `beat_cut` 帧上）
 
-The asset-driven analogue of a per-onset typographic group: cut to a new clip on each anchor
-(the frame's beats/onsets from the audiomap). Each clip is a `class="clip"` element
-(`<img>` for a photo, **muted** `<video>` for a motion clip) placed at its anchor with
-`data-start`/`data-duration`/`data-track-index` per the core clip contract. Between clips,
-crossfade the outgoing content to `opacity:0` ending **at** the next anchor, then immediately
-**hard-kill** with a `tl.set(..., {opacity:0}, anchor)` — this pair is required (the
-`gsap_exit_missing_hard_kill` lint rule; non-linear seeking otherwise bleeds stale frames).
-Cut on the **strong** anchors; land a hero clip on a `key_moment`/downbeat.
+资源驱动的每次起始排版组模拟：在每个锚点（来自音频映射的帧节拍/起始点）切到新片段。每个片段是一个 `class="clip"` 元素（照片用 `<img>`，动效片段用**静音** `<video>`），根据核心片段合约在其锚点处使用 `data-start`/`data-duration`/`data-track-index` 放置。在片段之间，将退出内容的 `opacity` 交叉淡入淡出到 0 **在**下一个锚点结束，然后立即用 `tl.set(..., {opacity:0}, anchor)` **硬清除**——这对是必需的（`gsap_exit_missing_hard_kill` lint 规则；否则非线性定位会泄漏过时帧）。在**强**锚点上切；在 `key_moment`/强拍上落地一个英雄片段。
 
-### `ken_burns` — slow push on one clip (fits a `phrase_flow` frame)
+### `ken_burns`——一个片段上的慢推（适合 `phrase_flow` 帧）
 
-For calm frames: one clip held over the span with a slow scale/translate push (e.g. scale
-1.0→1.08 + a small drift) eased across the whole `span_sec` — paced by the frame, not by
-beats. No hard cuts. Crossfade in/out at the frame edges. This is the right asset treatment
-when the beat grid is unreliable (calm music).
+用于平静帧：一个片段在跨度上保持，带缓慢的缩放/平移推（例如 scale 1.0→1.08 + 小漂移），以 `"none"` 缓动跨整个 `span_sec` 定速——按帧定速，而不是按节拍。无硬切。在帧边缘交叉淡入淡出进入/退出。当节拍网格不可靠（平静音乐）时，这是正确的资源处理方式。
 
-### `bg_under_text` — clip dimmed behind a template/free group
+### `bg_under_text`——在模板/自由组后面调暗的片段
 
-A full-bleed clip dimmed ~30–50% as the background of a group whose foreground is a template
-or free-compose typographic treatment. The text rides on the same anchors; the clip is the
-bed. Use when the user wants their footage present but the message must stay readable.
+一个全出血片段调暗约 30–50% 作为组的背景，其前景是模板或自由组合排版处理方式。文本骑在相同的锚点上；片段是床。当用户希望他们的画面存在但消息必须保持可读时使用。
 
-## Rules
+## 规则
 
-- **`pacing` decides the treatment**: `beat_cut` only on a `beat_cut` frame; on a
-  `phrase_flow` frame use `ken_burns` or a slow crossfade — **never** per-onset hard cuts on
-  the (unreliable) calm grid.
-- **Clips are muted; the root owns audio.** Mount each `<video class="clip">` **muted**, as a
-  direct child of the frame root (never nested in another timed element, or the renderer
-  freezes it). The BGM is the only audio in v1.
-- **Crossfades animate `opacity`/`autoAlpha`**, never `visibility`/`display` on a `.clip`
-  (the framework owns clip visibility — that trips `gsap_animates_clip_element`).
-- **Backgrounds dim ~30–50%** so any foreground text stays legible.
-- Anchors are **track seconds from `audiomap.json`**; the worker subtracts the frame start
-  to get frame-local time.
-- Local staged assets only (`assets/` via `stage-assets.mjs`); never remote URLs.
+- **`pacing` 决定处理方式**：`beat_cut` 仅在 `beat_cut` 帧上；在 `phrase_flow` 帧上使用 `ken_burns` 或慢交叉淡入淡出——**永远不要**在（不可靠的）平静网格上使用每次起始硬切。
+- **片段是静音的；根拥有音频。** 挂载每个 `<video class="clip">` **静音**，作为帧根的直接子元素（永远不要嵌套在另一个定时元素中，否则渲染器会冻结它）。BGM 是 v1 中唯一的音频。
+- **交叉淡入淡出动画化 `opacity`/`autoAlpha`**，永远不要动画化 `.clip` 上的 `visibility`/`display`（框架拥有片段可见性——那会触发 `gsap_animates_clip_element`）。
+- **背景调暗约 30–50%**，以便任何前景文本保持可读。
+- 锚点是来自 `audiomap.json` 的**曲目秒数**；worker 减去帧开始以得到帧本地时间。
+- 仅本地暂存资源（通过 `stage-assets.mjs` 的 `assets/`）；永远不要远程 URL。
 
-## Deferred hook (not v1)
+## 延迟钩子（非 v1）
 
-A clip that should play **its own sound** (interview cut, lyric clip) needs a sibling
-`<audio>` mounted at the **root** by the assembler, with the BGM ducked under it (timeline
-volume automation: `tl.to("#el-bgm",{volume:0.15,…},clipStart)` … `tl.to(…,{volume:0.9,…},
-clipEnd)`). The frame-worker mounts no audio. Keep clips muted in v1; wire clip-audio +
-ducking only when the user asks.
+应该播放**自身声音**的片段（采访剪辑、歌词片段）需要一个由组装器在**根**上挂载的兄弟 `<audio>`，BGM 在其下方闪避（时间线音量自动化：`tl.to("#el-bgm",{volume:0.15,…},clipStart)` … `tl.to(…,{volume:0.9,…},clipEnd)`）。frame-worker 不挂载音频。在 v1 中保持片段静音；仅当用户要求时连接片段音频 + 闪避。

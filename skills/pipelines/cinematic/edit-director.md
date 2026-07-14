@@ -1,56 +1,56 @@
-# Edit Director - Cinematic Pipeline
+# 剪辑导演 - 电影化流水线
 
-## When To Use
+## 适用场景
 
-This stage turns the beat map into a paced cinematic timeline. Rhythm and restraint matter more than effect count.
+此阶段将节拍图转化为有节奏的电影化时间线。节奏和克制比特效数量更重要。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/edit_decisions.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["assets"]["asset_manifest"]`, `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]` | Assets, hero frames, beat map |
-| Playbook | Active style playbook | Typography and transition consistency |
+| 模式 | `schemas/artifacts/edit_decisions.schema.json` | 制品验证 |
+| 前置产物 | `state.artifacts["assets"]["asset_manifest"]`, `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]` | 素材、英雄帧、节拍图 |
+| 手册 | 当前风格手册 | 排版和转场一致性 |
 
-## Process
+## 流程
 
-### 1. Cut By Emotion First
+### 1. 首先按情感剪辑
 
-Cuts should follow:
+剪辑应遵循：
 
-- emotional emphasis,
-- reveal timing,
-- musical turns,
-- visual contrast.
+- 情感重点，
+- 揭示时机，
+- 音乐转折，
+- 视觉对比。
 
-Do not optimize only for information density.
+不要只为信息密度而优化。
 
-### 2. Protect Strong Moments
+### 2. 保护强力时刻
 
-If a look, line, or gesture is doing the work, let it live. Do not over-cover it with extra inserts.
+如果一个目光、一句台词或一个手势正在发挥作用，给它留出空间。不要用多余的插片镜头覆盖它。
 
-### 3. Use Sound To Push The Edit
+### 3. 用声音推动剪辑
 
-Ambience, impacts, dropouts, and music changes should help create momentum between scenes.
+环境音、冲击音、静音和音乐变化应帮助在场景之间营造动感。
 
-### 4. Use Metadata For Timing Logic
+### 4. 用元数据记录时机逻辑
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `beat_timing`
 - `audio_turns`
 - `title_card_windows`
 - `reframe_notes`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the emotional arc is intact,
-- reveals land clearly,
-- title cards are sparse and timed with intent,
-- strong moments are not buried under coverage.
+- 情感弧线完整保留，
+- 揭示部分清晰落地，
+- 标题卡片精简且时机有意图，
+- 强力时刻不被覆盖性镜头埋没。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Overcutting emotional material.
-- Using speed ramps or flashy transitions by default.
-- Letting title cards replace editorial clarity.
+- 对情感素材过度剪辑。
+- 默认使用变速或花哨转场。
+- 让标题卡片取代剪辑的清晰度。

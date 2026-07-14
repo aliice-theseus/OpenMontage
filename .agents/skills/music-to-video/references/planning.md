@@ -1,104 +1,73 @@
-# Planning (Step 3) — pick the brand, fill every frame
+# 规划（步骤 3）——选择品牌，填充每帧
 
-At Step 3 **you (the orchestrator)** turn the Step-2 skeleton into a complete, approved
-`STORYBOARD.md`. You edit the **same file** in place: pick the brand spine, then for each
-frame decide its **groups**, give each group a treatment, bind real beat anchors, and write
-the copy.
+在步骤 3 **你（编排器）**将步骤 2 的骨架变成完整的、已批准的 `STORYBOARD.md`。你原地编辑**同一个文件**：选择品牌脊柱，然后为每帧决定其**组**，为每个组分配处理方式，绑定真实节拍锚点，编写文案。
 
-Your mantra: **music is the spine; a template is a head start, not a cage; typography is the
-floor and assets are an optional ingredient on the same beat grid.**
+你的口头禅：**音乐是脊柱；模板是起点，不是牢笼；排版是底线，资源是同一节拍网格上的可选配料。**
 
-**You own WHAT, not HOW.** You name the template / primitives, the content, the brand, the
-anchor seconds, and the intent. The frame-worker (Step 4) decides HOW — micro-timing,
-realization, intra-frame cuts. **Never write millisecond tweens into the storyboard.**
+**你拥有 WHAT，不拥有 HOW。** 你命名模板/原语、内容、品牌、锚点秒数和意图。frame-worker（步骤 4）决定 HOW——微时序、实现、帧内剪切。**永远不要将毫秒级动画写入故事板。**
 
-## Inputs
+## 输入
 
-- The Step-2 skeleton already in `STORYBOARD.md` — frames with `span_sec` + `pacing` + `mood` + `feel`.
-- `audiomap.json` — timing truth; read the real anchor seconds inside each frame's span.
-- [`template-catalog.md`](template-catalog.md) — the template selection menu.
-- [`motion-primitive-catalog.md`](motion-primitive-catalog.md) — the free-compose menu (L0 recipes).
-- [`montage.md`](montage.md) — asset treatments (only if the user supplied images/videos).
-- User brief / supplied copy — topic, mood, exact words to keep.
+- 已在 `STORYBOARD.md` 中的步骤 2 骨架——帧带 `span_sec` + `pacing` + `mood` + `feel`。
+- `audiomap.json`——时序真相；读取每帧跨度内的真实锚点秒数。
+- [`template-catalog.md`](template-catalog.md)——模板选择菜单。
+- [`motion-primitive-catalog.md`](motion-primitive-catalog.md)——自由组合菜单（L0 配方）。
+- [`montage.md`](montage.md)——资源处理方式（仅当用户提供了图片/视频时）。
+- 用户简报/提供的文案——主题、情绪、要保留的确切词语。
 
-## Step A — pick the brand spine (one preset, unmodified)
+## 步骤 A——选择品牌脊柱（一个预设，未经修改）
 
-The whole video shares one type family + palette. Pick **one ready-made preset** from
-`../hyperframes-creative/frame-presets/` using the preset table in
-`../hyperframes-creative/references/design-spec.md` — choose by the track's mood + the brief,
-and **only its fonts + colors matter** (templates own composition + motion; the preset only
-sets the look). Copy it in **unmodified**:
+整个视频共享一个字体家族 + 调色板。从 `../hyperframes-creative/frame-presets/` 中使用 `../hyperframes-creative/references/design-spec.md` 中的预设表选择一个**现成预设**——按曲目情绪 + 简报选择，并**只有其字体 + 颜色重要**（模板拥有作品 + 动效；预设只设置外观）。**未经修改**地复制：
 
 ```bash
 cp ../hyperframes-creative/frame-presets/<preset>/FRAME.md "$PROJECT_DIR/frame.md"
 ```
 
-Then fill the storyboard frontmatter `style` from it: the `font` from its `typography:` and a
-≤4–6 swatch `palette` from its `colors:`. **Quote the hex / family verbatim — never invent or
-round.** Every group's palette params draw from this one palette; that unity is what makes
-different templates read as one piece.
+然后从中填充故事板前置元数据 `style`：`font` 来自其 `typography:` 和 ≤4–6 色板 `palette` 来自其 `colors:`。**逐字引用十六进制/家族——永远不要发明或四舍五入。** 每个组的调色板参数从这个调色板中提取；这种统一性使不同模板读起来像一体的。
 
-## Step B — per frame, decide its groups
+## 步骤 B——每帧，决定其组
 
-A frame is usually **one group** (one template or one free composition spanning the frame).
-Subdivide into 2+ groups **only when a single treatment can't cover the frame** — e.g. a busy
-opener plus a closing lockup. When you split, cut at a **real audiomap anchor** inside the
-frame's span (a `key_moment` / `phrase` edge / onset-cluster gap), **never inside a `rolls[]`
-run**, and keep every group **≥ ~1 bar**. Density does **not** force more groups — a dense
-frame is usually ONE group whose template absorbs the density internally (a meta-template like
-`poster-tile-mosaic`). **Group count tracks distinct treatments, not beats.**
+一帧通常是**一个组**（一个模板或一个自由组合跨越整个帧）。**仅当单一处理方式不能覆盖帧时才细分为 2+ 组**——例如一个繁忙的开场加上一个结尾词组。当你拆分时，在帧跨度内的一个**真实音频锚点**处切割（一个 `key_moment` / `phrase` 边沿 / 起始集群间隙），**永远不在 `rolls[]` 运行内部**，并保持每个组**≥ 约 1 小节**。密度并**不**强制更多组——密集帧通常是一个组，其模板内部吸收了密度（元模板如 `poster-tile-mosaic`）。**组计数跟踪不同的处理方式，而不是节拍。**
 
-## Step C — per group, pick a treatment (exactly one of three)
+## 步骤 C——每个组，选择处理方式（三种之一）
 
-### A. Match a template
+### A. 匹配模板
 
-Read [`template-catalog.md`](template-catalog.md). Match the group's `feel` + `mood` + `pacing`
-to a template's **Reach for it when**; take the closest fit. Then bind it:
+阅读 [`template-catalog.md`](template-catalog.md)。将组的 `feel` + `mood` + `pacing` 与模板的**适合时机**匹配；取最接近的匹配。然后绑定它：
 
-- Fill `params` (keys from the catalog entry) — your copy into text slots, palette from the brand spine, `duration` = the group's span length.
-- Fill `role_bindings` with this group's **real anchor seconds** read from `audiomap.json` over its span (not example times).
-- If the template's natural stop and the group's span end disagree, snap to the nearest anchor.
+- 填充 `params`（来自目录条目的键）——你的文案放入文本槽，调色板来自品牌脊柱，`duration` = 组的跨度长度。
+- 用此组从其跨度上 `audiomap.json` 中读取的**真实锚点秒数**（不是示例时间）填充 `role_bindings`。
+- 如果模板的自然停止和组的跨度结束不一致，对齐到最近的锚点。
 
-### B. Free-compose (no template fits)
+### B. 自由组合（没有模板匹配）
 
-Write a `free_design` — one visual thesis from [`motion-primitive-catalog.md`](motion-primitive-catalog.md)
-(a dominant system + the named L0 primitives + a density topology) + `anchors` (the real
-beat / onset seconds the moves ride). Free-compose is a **first-class** choice, written as
-carefully as a matched group — never a failure.
+写一个 `free_design`——来自 [`motion-primitive-catalog.md`](motion-primitive-catalog.md) 的一个视觉主题（一个主导系统 + 命名的 L0 原语 + 密度拓扑）+ `anchors`（动作依托的真实节拍/起始秒数）。自由组合是一个**一等**选择，写得像匹配组一样仔细——永远不是失败。
 
-### C. Asset treatment (only when the user supplied assets and they fit)
+### C. 资源处理方式（仅当用户提供了资源且它们适合时）
 
-Make it an `asset` group ([`montage.md`](montage.md)). **Obey `pacing`:** on a `beat_cut`
-frame use `beat_cut` (one clip per anchor) or `bg_under_text`; on a `phrase_flow` frame use
-`ken_burns` or a slow crossfade — **never** per-onset hard cuts. Assets are additive: if none
-fits a group, fall back to template / free (typography is the floor — a complete video needs
-no assets).
+使其成为一个 `asset` 组（[`montage.md`](montage.md)）。**遵循 `pacing`：** 在 `beat_cut` 帧上使用 `beat_cut`（每个锚点一个片段）或 `bg_under_text`；在 `phrase_flow` 帧上使用 `ken_burns` 或慢交叉淡入淡出——**永远不要**每次起始硬切。资源是附加的：如果没有适合组，回退到模板/自由（排版是底线——完整视频不需要资源）。
 
-## Copy (you own the words)
+## 文案（你拥有词语）
 
-- Keep exact user words; else invent with taste, on the brief's mood.
-- **Message vs texture:** a readable word holds ≥1 beat (headline 3–8, sentence 4–10), stable + focal; a word held <1 beat is texture (strobe / grid / ticks). Never force a message onto a sub-beat — demote it to texture.
-- Place copy into the template's text params, onto a free group's anchors, or as an asset group's `overlay_copy`. Declare the anchor + accumulate / stagger intent; leave micro-timing to the worker.
-- A closing logo / CTA lands on the final hit / hard stop and holds through trailing silence.
+- 保留用户的确切词语；否则有品味地创造，符合简报情绪。
+- **信息 vs 纹理：** 一个可读的词保持 ≥1 节拍（标题 3–8、句子 4–10），稳定 + 聚焦；一个保持 <1 节拍的词是纹理（频闪/网格/滴答）。永远不要将信息强加给子节拍——将其降级为纹理。
+- 将文案放入模板的文本参数、自由组的锚点上，或作为资源组的 `overlay_copy`。声明锚点 + 累积/交错意图；将微时序留给 worker。
+- 结尾 Logo / CTA 在最终命中/硬停止上落地并通过拖尾静默保持。
 
-## Transitions (you do not emit them)
+## 过渡（你不发出它们）
 
-Everything is a **0ms hard cut** for now. **frame → frame** is owned by the assembler
-(back-to-back files); adjacent `span_sec` already imply the cut. **group → group inside a
-frame** is owned by the worker on its frame timeline; you only set each group's `span_sec`.
+现在一切都是 **0ms 硬切**。**帧 → 帧**由组装器拥有（背靠背文件）；相邻的 `span_sec` 已经暗含了切。**帧内组 → 组**由 worker 在其帧时间线上拥有；你只设置每个组的 `span_sec`。
 
-## Write + validate
+## 编写 + 验证
 
-Complete `STORYBOARD.md` ([`storyboard-format.md`](storyboard-format.md)), then run
-`node scripts/validate-plan.mjs` and fix every `✗`. Show the user a frame-by-frame summary and
-iterate until approved.
+完成 `STORYBOARD.md`（[`storyboard-format.md`](storyboard-format.md)），然后运行 `node scripts/validate-plan.mjs` 并修复每个 `✗`。向用户显示逐帧摘要并迭代直到批准。
 
-## Self-check
+## 自我检查
 
-- `frame.md` is a verbatim copy of one preset; frontmatter `style.font` / `style.palette` are drawn from it (exact values).
-- Every frame became ≥1 group; groups tile the frame span in order; no group < ~1 bar; no group boundary inside a `rolls[]` run.
-- Each group is exactly one of template / free_design / asset.
-- Template `params` keys match the catalog entry; `role_bindings` / `anchors` use real audiomap seconds.
-- Asset treatments obey `pacing` (no `beat_cut` on a `phrase_flow` frame).
-- Every group's palette draws from the one brand palette.
-- `duration_s == audiomap.audio.duration_sec`; `validate-plan.mjs` passes.
+- `frame.md` 是一个预设的逐字副本；前置元数据 `style.font` / `style.palette` 从中提取（精确值）。
+- 每帧变成了 ≥1 组；组按顺序平铺帧跨度；没有组 < 约 1 小节；没有组边界在 `rolls[]` 运行内部。
+- 每个组正好是 template / free_design / asset 之一。
+- 模板 `params` 键匹配目录条目；`role_bindings` / `anchors` 使用真实的 audiomap 秒数。
+- 资源处理方式遵循 `pacing`（`phrase_flow` 帧上没有 `beat_cut`）。
+- 每个组的调色板从一个品牌调色板中提取。
+- `duration_s == audiomap.audio.duration_sec`；`validate-plan.mjs` 通过。

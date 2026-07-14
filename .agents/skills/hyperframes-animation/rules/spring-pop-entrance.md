@@ -1,33 +1,33 @@
 ---
 name: spring-pop-entrance
-description: The canonical entrance pop — an element (or staggered group) arrives by scaling 0 → 1 on a smooth long-tail settle (power3 default); bouncy overshoot is a rare, explicitly-playful exception. fromTo so it's correct at t=0 under seek.
+description: 规范的入场弹出 — 元素（或错开组）通过从 0→1 缩放到达，以平滑长尾稳定（默认 power3）；弹跳过冲是罕见的、明确俏皮的例外。使用 fromTo 使其在 seek 下 t=0 时正确。
 metadata:
   tags: spring, entrance, pop, scale, power3, settle, stagger, reveal, arrival
 ---
 
-# Spring-Pop Entrance
+# 弹簧弹出入场
 
-> **Smooth beats bouncy.** Per the motion doctrine (`references/motion-language.md`), this entrance **defaults to a smooth long-tail settle — `power3.out` (or `expo.out` for a faster arrival)** that decelerates cleanly into the resting size with **no overshoot**. Bouncy `back.out` overshoot is the **#1 instant turn-off** in agent-made videos and is almost never executed well; it is demoted here to a **rare, explicitly-playful exception** (a consumer / fun brand), never the default. When unsure, settle smoothly.
+> **平滑优于弹跳。** 根据动效原则（`references/motion-language.md`），此入场**默认为平滑长尾稳定 — `power3.out`（或 `expo.out` 用于更快的到达）**，干净减速到静止尺寸，**无过冲**。弹跳的 `back.out` 过冲是代理制作视频中的**第一号即时反感因素**，几乎从未被很好地执行；它在此降级为**罕见的、明确俏皮的例外**（面向消费者/趣味品牌），绝非常规。不确定时，选择平滑稳定。
 
-THE entrance primitive: an element (or a staggered group of them) arrives on screen by springing from nothing — `scale: 0 → 1`, optionally with a small `y` rise — riding a **smooth long-tail ease (`power3.out` default)** so it grows confidently into its resting size and settles without bouncing. This is **arrival**, not reaction.
+入场原语：一个元素（或它们的错开组）通过从无到有弹簧到达屏幕上 — `scale: 0 → 1`，可选带小 `y` 上升 — 使用**平滑长尾缓动（默认 `power3.out`）**，使其自信地增长到休息尺寸并稳定不弹跳。这是**到达**，而非反应。
 
-Explicitly distinct from [press-release-spring.md](press-release-spring.md): that rule is a click/press → release feedback chain (a press phase, then a spring recovery to `1.0`). This one has **no press phase** — there is no prior resting state, the element did not exist on screen, it springs into being. Many blueprints used to borrow `press-release-spring` to fake an entrance; reach for this instead.
+与 [press-release-spring.md](press-release-spring.md) 明确区分：该规则是点击/按下 → 释放反馈链（一个按下阶段，然后弹簧恢复到 `1.0`）。此规则**没有按下阶段** — 没有先前的休息状态，元素在屏幕上不存在，它弹簧进入存在。许多蓝图过去借用 `press-release-spring` 来伪造入场；改用此规则。
 
-## How It Works
+## 工作原理
 
-A single `fromTo` carries the whole arrival:
+一个单一的 `fromTo` 承载整个到达：
 
-1. **From-state**: `{ scale: 0, opacity: 0 }` — the element is collapsed to a point and invisible. Stated explicitly in the `from` object so a seek to `t=0` lands the element in this exact state (never rely on a CSS-hidden start — see Critical Constraints).
-2. **To-state (default)**: `{ scale: 1, opacity: 1, ease: "power3.out" }` — a long-tail decel that grows the element into its resting size and **settles smoothly, no overshoot**. Use `expo.out` instead for a punchier, faster-front arrival (still no bounce). This smooth settle is the house style; the bouncy `back.out` variant is the rare playful exception (see Variations).
+1. **起点状态**：`{ scale: 0, opacity: 0 }` — 元素塌缩为一个点且不可见。在 `from` 对象中显式陈述，使 seek 到 `t=0` 时将元素定位到这个确切状态（永远不要依赖 CSS 隐藏的起始状态 — 参见关键约束）。
+2. **终点状态（默认）**：`{ scale: 1, opacity: 1, ease: "power3.out" }` — 长尾减速，将元素生长到其休息尺寸并**平滑稳定，无过冲**。使用 `expo.out` 以获得更有力、更快前端的到达（仍无弹跳）。这个平滑稳定是风格标准；弹跳的 `back.out` 变体是罕见的俏皮例外（参见变体）。
 
-For a **group**, the same `fromTo` runs per element with a **deterministic, index-derived stagger** (`i * STAGGER`), and the total entry window is **capped** (`ITEM_COUNT × STAGGER ≤ ~0.5s`) so the group reads as one arriving beat, not a slow arpeggio.
+对于**组**，每个元素运行相同的 `fromTo`，带有**确定性的、索引派生的错开**（`i * STAGGER`），总进入窗口**有上限**（`ITEM_COUNT × STAGGER ≤ ~0.5 秒`），使组读作一个到达节拍，而非缓慢的琶音。
 
-A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of the pop — optional garnish; the `scale` grow on a smooth ease is the load-bearing motion. (A `rotation` settle belongs only to the playful overshoot variant below.)
+一个小 `y` 上升（`y: 24 → 0`）在弹出之上叠加微妙的"提升到位"效果 — 可选装饰；平滑缓动上的 `scale` 生长是承载运动。（`rotation` 稳定仅属于下方俏皮过冲变体。）
 
 ## HTML
 
 ```html
-<!-- Single hero pop -->
+<!-- 单主角弹出 -->
 <div
   class="scene"
   data-composition-id="pop-scene"
@@ -38,7 +38,7 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
   <div class="pop-hero" id="hero">{heroLabel}</div>
 </div>
 
-<!-- Staggered group: nodes / cards / icons / pills / callouts -->
+<!-- 错开组：节点/卡片/图标/胶囊/标注 -->
 <div
   class="scene"
   data-composition-id="pop-group-scene"
@@ -79,7 +79,7 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
   font-weight: 900;
   font-size: HERO_FONT_SIZE;
   color: {heroTextColor};
-  /* Pop scales around the center — see Critical Constraints */
+  /* 弹出围绕中心缩放 — 参见关键约束 */
   transform-origin: 50% 50%;
   will-change: transform;
 }
@@ -105,7 +105,7 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -113,9 +113,9 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // --- Single hero pop (default: smooth long-tail settle, no overshoot) ---
-  // fromTo states the collapsed start explicitly so the hero is correct at t=0
-  // under seek. power3.out grows scale into 1.0 and decelerates smoothly.
+  // --- 单主角弹出（默认：平滑长尾稳定，无过冲）---
+  // fromTo 显式陈述塌缩起点，使主角在 seek 下 t=0 时正确。
+  // power3.out 将缩放生长到 1.0 并平滑减速。
   tl.fromTo(
     "#hero",
     { scale: 0, opacity: 0 },
@@ -123,14 +123,14 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
       scale: 1,
       opacity: 1,
       duration: POP_DUR,
-      ease: "power3.out", // smooth beats bouncy; expo.out for a punchier front
+      ease: "power3.out", // 平滑优于弹跳；expo.out 用于更有力的前端
     },
     ENTRY_AT,
   );
 
-  // --- Staggered group pop ---
-  // Deterministic, index-derived stagger (no Math.random). The cap keeps the
-  // whole group inside one arriving beat: ITEM_COUNT * STAGGER <= ~0.5s.
+  // --- 错开组弹出 ---
+  // 确定性的、索引派生的错开（无 Math.random）。上限保持整个组
+  // 在一个到达节拍内：ITEM_COUNT * STAGGER <= ~0.5s。
   const items = gsap.utils.toArray(".pop-item");
   items.forEach((el, i) => {
     tl.fromTo(
@@ -151,22 +151,22 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
 </script>
 ```
 
-## Variations
+## 变体
 
-### Calm settle (refined / enterprise / "premium calm") — default
+### 平静稳定（精致/企业/"高级平静"）— 默认
 
-`power3.out`, no rotation, drop the `y` rise or keep it tiny (~12px). Reads as a confident, weighted settle — right for a hero wordmark or a single product shot landing. The safe default for premium / enterprise brands.
+`power3.out`，无旋转，去掉 `y` 上升或保持极小（~12px）。读作自信、有重量的稳定 — 适合主角 wordmark 或单个产品镜头着陆。高级/企业品牌的默认安全选择。
 
-### Firm settle (default product reveal) — default
+### 坚定稳定（默认产品揭示）— 默认
 
-The everyday entrance. `power3.out` (or `expo.out` for a punchier front), optional `Y_RISE` ~24px. Clear, deliberate arrival that decelerates clean — the safe default for cards, icons, and callouts. **No overshoot.**
+日常入场。`power3.out`（或 `expo.out` 用于更有力的前端），可选 `Y_RISE` ~24px。清晰、有意的到达，干净减速 — 卡片、图标和标注的默认安全选择。**无过冲。**
 
-### Bouncy pop (RARE — explicitly-playful only)
+### 弹跳弹出（罕见 — 仅明确俏皮时）
 
-The exception, not the default. **Only** for a deliberately playful register (a consumer / fun brand, a toy-like icon set) where a bounce is clearly the intent — never for product / enterprise / serious launch tone. Bouncy is the #1 turn-off and the agent rarely lands it, so reach for this knowingly and sparingly. Swap `power3.out` for `back.out(OVERSHOOT)` and (optionally) add a `rotation` settle so each element looks hand-placed:
+例外，非常规。**仅**用于有意俏皮的基调（面向消费者/趣味品牌、玩具式图标集），其中弹跳明显是意图 — 绝不要用于产品/企业/严肃发布语调。弹跳是第一号反感因素，代理很少做得好，因此有意识且克制地使用。将 `power3.out` 替换为 `back.out(OVERSHOOT)` 并（可选）添加 `rotation` 稳定，使每个元素看起来像手工放置：
 
 ```js
-// Playful exception only — default to power3.out (see above).
+// 仅俏皮例外 — 默认为 power3.out（见上方）。
 tl.fromTo(
   el,
   { scale: 0, opacity: 0, rotation: ROT_FROM },
@@ -175,99 +175,99 @@ tl.fromTo(
 );
 ```
 
-Keep `OVERSHOOT` modest even here (≤ ~2) — past that it reads as a cartoon wobble, not an arrival.
+即使在此也保持 `OVERSHOOT` 适度（≤ ~2）— 超过此值会读作卡通晃动，而非到达。
 
-### Origin-anchored pop (callout springs from a pointer / source)
+### 原点锚定弹出（标注从指针/源弹出）
 
-When a callout should appear to grow out of a specific point (e.g. a station marker or pointer tip), set `transform-origin` to that point instead of center, so the `scale: 0 → 1` reads as "emerging from the source" rather than "inflating in place."
+当标注应看起来从特定点生长出来时（例如站点标记或指针尖端），将 `transform-origin` 设置到该点而非中心，使 `scale: 0 → 1` 读作"从源涌现"而非"在原地膨胀。"
 
 ```css
 .callout {
-  transform-origin: 0% 100%; /* bottom-left = pointer tip; match to the anchor */
+  transform-origin: 0% 100%; /* 左下角 = 指针尖端；匹配锚点 */
 }
 ```
 
-### Pop into a held slot — then hold (jitter at most)
+### 弹出到保持槽位 — 然后保持（最多抖动）
 
-When a popped element then **holds** an ongoing slot (a constellation node, a persistent badge), do **not** bake an idle loop into this entrance — it must stay finite. Land the pop and let it hold still; if the held frame genuinely needs life, hand off to [sine-wave-loop.md](sine-wave-loop.md) for **subtle jitter** (low amplitude) on a separate, later tween — not a breathing loop. Prefer revealing the next element on its VO cue over keeping this one animating.
+当弹出的元素然后**保持**一个持续槽位（星群节点、持久徽章）时，**不要**将此入场烘焙为空闲循环 — 它必须保持有限。让弹出着陆并保持静止；如果保持的画面确实需要生命力，在单独的、较晚的补间上移交给 [sine-wave-loop.md](sine-wave-loop.md) 用于**微妙抖动**（低振幅）— 而非呼吸循环。优先在 VO 提示上揭示下一个元素，而非让此元素持续动画。
 
-## How to Choose Values
+## 如何选择值
 
-- **EASE** — the settle curve (the load-bearing decision)
-  - Default: **`power3.out`** — a smooth long-tail settle, no overshoot; the house style for product / enterprise / serious tone. Use `expo.out` for a punchier, faster-front arrival (still smooth).
-  - Playful exception only: `back.out(OVERSHOOT)` — see the Bouncy pop variation; reach for it only when a bounce is clearly the brand intent.
+- **缓动** — 稳定曲线（承载决策）
+  - 默认：**`power3.out`** — 平滑长尾稳定，无过冲；产品/企业/严肃语调的风格标准。使用 `expo.out` 获得更有力、更快前端的到达（仍平滑）。
+  - 仅俏皮例外：`back.out(OVERSHOOT)` — 参见弹跳弹出变体；仅当弹跳明显是品牌意图时才使用。
 
-- **OVERSHOOT** — `back.out(OVERSHOOT)` overshoot strength — **only used in the rare bouncy variant**; the smooth default has no overshoot dial
-  - Range (playful only): ~1.3 (barely) → ~2.0 (clearly bouncy)
-  - Constraints: keep ≤ ~2 — past that the overshoot exceeds the element's bounds and reads as a cartoon wobble, not an arrival. If you're not in the explicitly-playful case, don't use this — use `power3.out`.
+- **OVERSHOOT** — `back.out(OVERSHOOT)` 过冲强度 — **仅在罕见的俏皮变体中使用**；平滑默认没有过冲调节
+  - 范围（仅俏皮）：~1.3（几乎不可见）→ ~2.0（明显弹跳）
+  - 约束：保持 ≤ ~2 — 超过此值过冲超出元素边界，读作卡通晃动，而非到达。如果你不在明确俏皮的情况中，不要使用此值 — 使用 `power3.out`。
 
-- **POP_DUR** — duration of each element's `scale: 0 → 1` tween
-  - Range: 0.4 – 0.7 s
-  - Effects: shorter = tight snap; longer = a looser, more floating pop
-  - Constraints: the main subject must be visible by **`t ≤ 0.5s`** — keep `ENTRY_AT + POP_DUR`'s readable midpoint early; don't let the hero finish arriving after the half-second mark
+- **POP_DUR** — 每个元素的 `scale: 0 → 1` 补间时长
+  - 范围：0.4 – 0.7 秒
+  - 效果：更短 = 紧密快照；更长 = 更松散、更漂浮的弹出
+  - 约束：主要主体必须在 **`t ≤ 0.5 秒`** 时可见 — 使 `ENTRY_AT + POP_DUR` 的可读中点提前；不要让主角在半秒标记后完成到达
 
-- **STAGGER** — gap between successive items' start times (group only)
-  - Range: 0.04 – 0.08 s
-  - Effects: < 0.04 reads as a simultaneous chord; > 0.08 feels lazy / arpeggiated
-  - Constraints: **`ITEM_COUNT × STAGGER ≤ ~0.5s`** (the cap) — beyond that the group stops reading as one beat. Cap the per-item stagger for large groups: `STAGGER = min(0.06, 0.5 / ITEM_COUNT)`
+- **STAGGER** — 连续项目开始时间之间的间隔（仅组）
+  - 范围：0.04 – 0.08 秒
+  - 效果：< 0.04 读作同时和弦；> 0.08 感觉懒散/琶音
+  - 约束：**`ITEM_COUNT × STAGGER ≤ ~0.5 秒`**（上限）— 超过此值组停止读作一个节拍。大型组的每项错开上限：`STAGGER = min(0.06, 0.5 / ITEM_COUNT)`
 
-- **ITEM_COUNT** — number of elements in a group pop
-  - Range: 3 – 9
-  - Effects: 3 = sparse; 9 = full grid. More than ~9 forces `STAGGER` so small the stagger vanishes — switch to a wipe/sweep reveal instead
+- **ITEM_COUNT** — 组弹出中的元素数
+  - 范围：3 – 9
+  - 效果：3 = 稀疏；9 = 完整网格。超过 ~9 迫使 `STAGGER` 如此之小，错开消失 — 改为使用擦拭/扫过揭示
 
-- **Y_RISE** — optional upward offset the element lifts from (`y: Y_RISE → 0`)
-  - Range: 0 (pure pop) – 32 px
-  - Effects: adds a subtle "lifts into place"; keep small so the `scale` pop stays dominant
-  - Constraints: 0 for the calm-settle variant; never large enough to read as a slide-up (that's a different primitive)
+- **Y_RISE** — 元素提升的可选向上偏移（`y: Y_RISE → 0`）
+  - 范围：0（纯弹出）– 32 px
+  - 效果：添加微妙的"提升到位"效果；保持小量使 `scale` 弹出保持主导
+  - 约束：平静稳定变体为 0；永远不要大到读作上滑（那是不同的原语）
 
-- **ROT_FROM** — optional starting rotation, **playful (bouncy) variant only** (`rotation: ROT_FROM → 0`)
-  - Range: −10° – +10°
-  - Effects: a small tilt that resolves makes the element look hand-placed
-  - Constraints: derive sign/size deterministically from index if you want alternating tilt (e.g. `i % 2 ? 6 : -6`) — never `Math.random`
+- **ROT_FROM** — 可选的起始旋转，**仅俏皮（弹跳）变体**（`rotation: ROT_FROM → 0`）
+  - 范围：-10° – +10°
+  - 效果：一个解析的小倾斜使元素看起来像手工放置
+  - 约束：如果你想要交替倾斜，从索引确定性派生符号/大小（例如 `i % 2 ? 6 : -6`）— 绝不要 `Math.random`
 
-- **ENTRY_AT / GROUP_ENTRY_AT** — timeline offset before the (group's) pop begins
-  - Range: 0 – 0.4 s
-  - Effects: > 0 gives a beat of quiet before the arrival; keep small so the subject still lands by `t ≤ 0.5s`
+- **ENTRY_AT / GROUP_ENTRY_AT** — （组的）弹出开始前的时间线偏移
+  - 范围：0 – 0.4 秒
+  - 效果：> 0 在到达前给一个安静节拍；保持小量使主体仍在 `t ≤ 0.5s` 着陆
 
-### Geometry & tokens
+### 几何与标记
 
-- **{heroSize} / {itemSize}** — footprints. A hero entrance should occupy a clearly readable share of the frame; group items size down so the grid fits with `GRID_GAP` breathing room.
-- **HERO_RADIUS / ITEM_RADIUS** — `height × 0.15` (sharp) → `height / 2` (pill).
-- **{heroBg} / {itemBg} / {\*TextColor}** — surface + label tokens; inherit from the composition palette.
+- **{heroSize} / {itemSize}** — 占地面积。主角入场应占据清晰可读的画面份额；组项目缩小使网格适应 `GRID_GAP` 呼吸空间。
+- **HERO_RADIUS / ITEM_RADIUS** — `height × 0.15`（锋利）→ `height / 2`（胶囊）。
+- **{heroBg} / {itemBg} / {\*TextColor}** — 表面 + 标签标记；从组合调色板继承。
 
-## Key Principles
+## 关键原则
 
-- **Smooth beats bouncy** — default to `power3.out` (or `expo.out`): a long-tail settle into `scale: 1`, no overshoot. Bouncy `back.out` is the rare, explicitly-playful exception (the #1 turn-off, and the agent rarely lands it). When unsure, settle smoothly.
-- **fromTo, always** — the collapsed `{ scale: 0, opacity: 0 }` start is stated in the `from` object so a seek to `t=0` lands it exactly there. An entrance built on a CSS-hidden start (e.g. `opacity:0` in CSS + a `.to()`) flickers under HF seek — the element renders visible before the tween claims it.
-- **Easing carries the motion, not keyframes** — let the ease produce the settle for free. Don't hand-key a `scale: 1.1` mid-state; that double-bounces and fights the curve. (And in the playful variant, the overshoot is a byproduct of `back.out`, not a hand-keyed bounce.)
-- **The grow is the motion** — `scale` is load-bearing; the `y` rise (and, in the playful variant, the `rotation` settle) is garnish layered on top. If you drop everything but the `scale` grow, it should still read as a clean entrance.
-- **Cap the stagger window** — a group must arrive inside ~0.5s total or it stops reading as one beat and starts reading as a slow list reveal. Derive the stagger from `ITEM_COUNT` so it self-caps.
-- **Deterministic per index** — all stagger and any rotation/tilt variation comes from the loop index, never `Math.random` — the renderer must produce the identical frame on every seek.
-- **Visible early** — the main subject must be on screen by `t ≤ 0.5s`. A hero that finishes arriving at `t=1s` wastes the opening beat.
-- **Don't bake an idle loop here** — this entrance is finite. If the element then holds a slot, hand off to `sine-wave-loop` on a later tween; an infinite `repeat`/`yoyo` here breaks seek.
+- **平滑优于弹跳** — 默认为 `power3.out`（或 `expo.out`）：长尾稳定到 `scale: 1`，无过冲。弹跳的 `back.out` 是罕见的、明确俏皮的例外（第一号反感因素，且代理很少做得好）。不确定时，平滑稳定。
+- **始终使用 fromTo** — 塌缩的 `{ scale: 0, opacity: 0 }` 起点在 `from` 对象中陈述，使 seek 到 `t=0` 时精确地定位到那里。基于 CSS 隐藏起点（例如 CSS 中的 `opacity:0` + `.to()`）的入会在 HF 定位下闪烁 — 元素在补间声明它之前就已渲染可见。
+- **缓动承载运动，而非关键帧** — 让缓动免费产生稳定。不要手动设置 `scale: 1.1` 中间状态；那会双重弹跳并与曲线冲突。（在俏皮变体中，过冲是 `back.out` 的副产品，而非手动键控的弹跳。）
+- **生长就是运动** — `scale` 是承重的；`y` 上升（以及在俏皮变体中，`rotation` 稳定）是叠加在顶部的装饰。如果除了 `scale` 生长你放弃一切，它仍应读作一个干净的入场。
+- **限制错开窗口** — 组必须在总 ~0.5 秒内到达，否则它不再读作一个节拍，而是读作一个慢列表揭示。从 `ITEM_COUNT` 派生错开，使其自上限。
+- **按索引确定性** — 所有错开和任何旋转/倾斜变化来自循环索引，永远不是 `Math.random` — 渲染器必须在每次 seek 时产生相同的帧。
+- **尽早可见** — 主要主体必须在 `t ≤ 0.5 秒` 时在屏幕上。在 `t=1s` 才完成到达的主角浪费了开场节拍。
+- **不要在此烘焙空闲循环** — 此入场是有限的。如果元素然后保持一个槽位，在较晚的补间上移交给 `sine-wave-loop`；此处的无限 `repeat`/`yoyo` 会破坏定位。
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **Entrances use `fromTo`** — explicit `{ scale: 0, opacity: 0 }` from-state; never rely on a CSS-hidden starting state
-- **No CSS `transition`** on popped elements — those interpolate independently of HF seek and cause flicker
-- **No `repeat` / `yoyo` / infinite tweens** — this is a finite arrival; idle motion is a separate `sine-wave-loop` tween
-- **No `Math.random` / `Date.now`** — stagger and tilt are index-derived and deterministic
-- **GSAP transform aliases only**: `x`, `y`, `scale`, `rotation`. Never tween `width` / `height` / `left` / `top`
-- **`transform-origin: 50% 50%`** for an in-place pop (default); set it to the source point only for the origin-anchored variation
-- **Default ease `power3.out`** (smooth, no overshoot); `back.out(OVERSHOOT)` only in the explicitly-playful variant, and there keep **`OVERSHOOT ≤ ~2`** — beyond that it reads as a cartoon wobble, not an arrival
-- **`ITEM_COUNT × STAGGER ≤ ~0.5s`** — the group must land inside one beat
-- **`will-change: transform`** on popped elements, especially groups — many simultaneous spring tweens benefit from compositor hints
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **入场使用 `fromTo`** — 显式 `{ scale: 0, opacity: 0 }` 起点状态；永远不要依赖 CSS 隐藏的起始状态
+- **弹跳元素上无 CSS `transition`** — 那些会独立于 HF 定位插值并导致闪烁
+- **无 `repeat` / `yoyo` / 无限补间** — 这是一个有限到达；空闲运动是单独的 `sine-wave-loop` 补间
+- **无 `Math.random` / `Date.now`** — 错开和倾斜是索引派生的、确定性的
+- **仅使用 GSAP 变换别名**：`x`、`y`、`scale`、`rotation`。永远不要补间 `width` / `height` / `left` / `top`
+- **`transform-origin: 50% 50%`** 用于原位弹出（默认）；仅原点锚定变体将其设置为源点
+- **默认缓动 `power3.out`**（平滑，无过冲）；仅在明确俏皮变体中使用 `back.out(OVERSHOOT)`，且保持 **`OVERSHOOT ≤ ~2`** — 超过此值读作卡通晃动，而非到达
+- **`ITEM_COUNT × STAGGER ≤ ~0.5 秒`** — 组必须在一个节拍内着陆
+- **弹出元素上设置 `will-change: transform`**，尤其是组 — 许多同时弹簧补间受益于合成器提示
 
-## Combinations
+## 组合
 
-- [sine-wave-loop.md](sine-wave-loop.md) — at most **subtle jitter** on a held node/badge AFTER its pop lands (don't bake any loop into the entrance; and prefer a VO-timed reveal over ambient motion — see that rule's caution)
-- [center-outward-expansion.md](center-outward-expansion.md) — elements pop in as they radiate from center to their slots
-- [press-release-spring.md](press-release-spring.md) — the reaction counterpart: once popped in, a button can take a press→release; this rule supplies the arrival, that one the click feedback
+- [sine-wave-loop.md](sine-wave-loop.md) — 在弹出着陆后，保持的节点/徽章上最多**微妙抖动**（不要将任何循环烘焙到入场中；且优先选择 VO 定时的揭示而非环境运动 — 参见该规则的警告）
+- [center-outward-expansion.md](center-outward-expansion.md) — 元素在从中心辐射到其槽位时弹出
+- [press-release-spring.md](press-release-spring.md) — 反应的对应物：一旦弹出，按钮可以接受按下→释放；此规则提供到达，那条规则提供点击反馈
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — `power3.out` settle (smooth default), `fromTo` entrances, deterministic stagger
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — `power3.out` 稳定（平滑默认）、`fromTo` 入场、确定性错开
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

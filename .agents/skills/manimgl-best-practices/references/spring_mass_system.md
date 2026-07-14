@@ -1,51 +1,51 @@
-# Spring-Mass System - Reference Guide
+# 弹簧-质量系统 - 参考指南
 
-**Example file**: `examples/spring_mass_system.py`
+**示例文件：** `examples/spring_mass_system.py`
 
-## User Query Scenarios
+## 用户查询场景
 
-This example addresses queries like:
-- "Create a spring animation with oscillation"
-- "Show damped harmonic motion"
-- "Visualize physics simulation with a mass on a spring"
-- "Animate a spring-mass system with real-time graph"
-- "Compare different damping coefficients"
+此示例可回答如下问题：
+- "创建带振荡的弹簧动画"
+- "展示阻尼简谐运动"
+- "可视化弹簧上的质量物理仿真"
+- "制作带实时图表的弹簧-质量系统动画"
+- "比较不同阻尼系数"
 
-## Scene Thinking Process (3b1b Style)
+## 场景思考过程（3b1b风格）
 
-### 1. Identify the Core Concept
-**Damped Harmonic Motion**: A mass attached to a spring oscillates, with amplitude decreasing over time due to friction/damping. The equation is: `x'' = -kx - μv`
+### 1. 确定核心概念
+**阻尼简谐运动**：连接在弹簧上的质量块振荡，振幅因摩擦力/阻尼而随时间减小。方程为：`x'' = -kx - μv`
 
-### 2. Visual Design Decisions
+### 2. 视觉设计决策
 
-**Why a parametric helix for the spring?**
-- Looks realistic with 3D coils
-- Stretches naturally when mass moves
-- Uses `ParametricCurve` for smooth rendering
+**为什么用参数螺旋线做弹簧？**
+- 3D线圈效果更真实
+- 质量块运动时自然伸缩
+- 使用`ParametricCurve`实现平滑渲染
 
-**Why track position on a number line?**
-- Gives quantitative feedback
-- Shows exact displacement values
-- Easy to understand motion direction
+**为什么在数轴上追踪位置？**
+- 提供定量反馈
+- 显示精确的位移值
+- 易于理解运动方向
 
-### 3. Technical Implementation
+### 3. 技术实现
 
-#### Creating a Self-Contained Physics Component
+#### 创建自包含的物理组件
 ```python
 class SpringMassSystem(VGroup):
     def __init__(self, x0=0, v0=0, k=3, mu=0.1, ...):
-        # Store physics state
+        # 存储物理状态
         self.k = k
         self.mu = mu
         self.velocity = v0
 
-        # Add physics updater
+        # 添加物理updater
         self.add_updater(lambda m, dt: m.time_step(dt))
 ```
 
-**Key insight**: Encapsulate physics + visuals in one VGroup subclass. This makes it reusable and keeps animation code clean.
+**关键洞察**：将物理+视觉封装在一个VGroup子类中。这使其可复用并保持动画代码整洁。
 
-#### Physics Integration (Euler Method)
+#### 物理积分（欧拉方法）
 ```python
 def time_step(self, delta_t, dt_size=0.01):
     state = [self.get_x(), self.velocity]
@@ -56,7 +56,7 @@ def time_step(self, delta_t, dt_size=0.01):
         state[1] += acceleration * true_dt
 ```
 
-#### Dynamic Velocity/Force Vectors
+#### 动态速度/力向量
 ```python
 def get_velocity_vector(self, scale_factor=0.5, color=GREEN):
     vector = Vector(RIGHT, fill_color=color)
@@ -67,17 +67,17 @@ def get_velocity_vector(self, scale_factor=0.5, color=GREEN):
     return vector
 ```
 
-### 4. Scene Variants
+### 4. 场景变体
 
-| Scene | Purpose |
+| 场景 | 用途 |
 |-------|---------|
-| `SpringMassDemo` | Basic oscillation with velocity/force vectors |
-| `SpringWithGraph` | Real-time x(t) graph using TracedPath |
-| `MultipleSprings` | Compare different damping values |
+| `SpringMassDemo` | 带速度/力向量的基本振荡 |
+| `SpringWithGraph` | 使用TracedPath的实时x(t)图 |
+| `MultipleSprings` | 比较不同阻尼值 |
 
-## Key Patterns Demonstrated
+## 演示的关键模式
 
-### Pattern: Pausable Physics
+### 模式：可暂停物理
 ```python
 def pause(self):
     self._is_running = False
@@ -86,7 +86,7 @@ def unpause(self):
     self._is_running = True
 ```
 
-### Pattern: TracedPath for Graphs
+### 模式：用于图表的TracedPath
 ```python
 tracking_point = Point()
 tracking_point.add_updater(lambda p: p.move_to(
@@ -95,15 +95,15 @@ tracking_point.add_updater(lambda p: p.move_to(
 position_graph = TracedPath(tracking_point.get_center, stroke_color=BLUE)
 ```
 
-## Run Commands
+## 运行命令
 
 ```bash
-# Basic demo
+# 基本演示
 manimgl spring_mass_system.py SpringMassDemo -w
 
-# With real-time graph
+# 带实时图表
 manimgl spring_mass_system.py SpringWithGraph -w
 
-# Compare damping
+# 比较阻尼
 manimgl spring_mass_system.py MultipleSprings -w
 ```

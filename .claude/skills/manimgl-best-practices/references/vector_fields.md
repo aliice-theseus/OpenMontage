@@ -1,42 +1,42 @@
-# Vector Fields - Reference Guide
+# 向量场 - 参考指南
 
-**Example file**: `examples/vector_fields.py`
+**示例文件**：`examples/vector_fields.py`
 
-## User Query Scenarios
+## 用户查询场景
 
-This example addresses queries like:
-- "Create a vector field visualization"
-- "Show particles flowing through a field"
-- "Visualize electric field from charges"
-- "Animate gradient descent"
-- "Show fluid flow"
+本示例解决如下查询：
+- "创建向量场可视化"
+- "展示粒子流经场"
+- "可视化电荷产生的电场"
+- "动画化梯度下降"
+- "展示流体流动"
 
-## Scene Thinking Process (3b1b Style)
+## 场景思考过程（3b1b 风格）
 
-### 1. Core Concept
-**Vector Fields**: At each point in space, there's a vector showing direction and magnitude. Particles follow the field, revealing flow patterns.
+### 1. 核心概念
+**向量场**：在空间中的每个点，都有一个向量显示方向和大小。粒子沿场运动，揭示流动模式。
 
-### 2. Technical Implementation
+### 2. 技术实现
 
-#### Manual Arrow Field (Portable Approach)
+#### 手动箭头场（可移植方法）
 ```python
 arrows = VGroup()
 for x in np.arange(-3.5, 4, 0.7):
     for y in np.arange(-2.5, 3, 0.7):
-        vx, vy = -y * 0.15, x * 0.15  # Rotation field
+        vx, vy = -y * 0.15, x * 0.15  # 旋转场
         arrow = Arrow(
             start=[x, y, 0],
             end=[x + vx, y + vy, 0],
             buff=0,
             stroke_width=2,
         )
-        # Color by magnitude
+        # 按大小着色
         mag = np.sqrt(vx**2 + vy**2)
         arrow.set_color(interpolate_color(BLUE, YELLOW, mag / 0.5))
         arrows.add(arrow)
 ```
 
-#### Particle Following Field
+#### 粒子跟随场
 ```python
 def follow_field(mob, dt):
     x, y = mob.get_center()[:2]
@@ -47,52 +47,52 @@ dot.add_updater(follow_field)
 trail = TracedPath(dot.get_center, stroke_color=RED)
 ```
 
-#### Electric Dipole Field
+#### 电偶极子场
 ```python
 def E_field(pos):
     r1, r2 = pos - q1_pos, pos - q2_pos
     d1, d2 = np.linalg.norm(r1), np.linalg.norm(r2)
-    E1 = r1 / d1**3   # From + charge
-    E2 = -r2 / d2**3  # From - charge
+    E1 = r1 / d1**3   # 来自 + 电荷
+    E2 = -r2 / d2**3  # 来自 - 电荷
     return E1 + E2
 ```
 
-### 3. Scene Variants
+### 3. 场景变体
 
-| Scene | Purpose |
+| 场景 | 用途 |
 |-------|---------|
-| `SimpleVectorField` | Rotation field with particle |
-| `GradientFieldDemo` | Scalar field + gradient arrows |
-| `ParticleFlow` | Multiple particles in vortex |
-| `ElectricDipole` | Field from +/- charges |
+| `SimpleVectorField` | 带粒子的旋转场 |
+| `GradientFieldDemo` | 标量场 + 梯度箭头 |
+| `ParticleFlow` | 涡旋中的多个粒子 |
+| `ElectricDipole` | 来自 +/- 电荷的场 |
 
-## Key Patterns
+## 关键模式
 
-### Pattern: Color by Magnitude
+### 模式：按大小着色
 ```python
 mag = np.linalg.norm([vx, vy])
 color = interpolate_color(BLUE, YELLOW, min(mag * scale, 1))
 arrow.set_color(color)
 ```
 
-### Pattern: LaggedStartMap for Many Arrows
+### 模式：对大量箭头使用 LaggedStartMap
 ```python
 self.play(LaggedStartMap(GrowArrow, arrows, lag_ratio=0.02, run_time=2))
 ```
 
-### Pattern: Closure for Updaters in Loops
+### 模式：循环中更新器的闭包
 ```python
 for i in range(n):
     dot = Dot(...)
-    def make_updater():  # Closure captures current state
+    def make_updater():  # 闭包捕获当前状态
         def update(mob, dt):
-            # use mob, not dot
+            # 使用 mob，而不是 dot
             ...
         return update
     dot.add_updater(make_updater())
 ```
 
-## Run Commands
+## 运行命令
 
 ```bash
 manimgl vector_fields.py SimpleVectorField -w

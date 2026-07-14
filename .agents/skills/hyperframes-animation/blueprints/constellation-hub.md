@@ -1,44 +1,44 @@
-# constellation-hub — Constellation / Hub + Satellites
+# constellation-hub — 星群 / 中心 + 卫星
 
-**intent**: Labeled/iconned nodes spring into a ring/cluster around a center, then the shot resolves on the core — either by pushing the camera INTO the center (depth-of-field collapsing onto it) or by holding a hub mark while the satellites ORBIT it; the "everything connects to / sits around one center" beat.
+**意图**：标记的/带图标的节点弹簧进入围绕中心的环/群，然后镜头解析在核心上 — 要么通过将摄像机**推进**到中心（景深塌缩到其上），要么通过保持中心标记同时卫星**轨道运行**它；"一切连接/围绕一个中心"的节拍。
 
-**roles served**
+**服务角色**
 
-- Hook (from `hook-cluster-push-in`): a constellation of tool/app nodes springs into a wide ring, then a sustained camera push-in with depth-of-field resolves on the inner core — "it connects everything / one hub for all your tools."
-- Social_Proof (from `social-proof-orbit-ecosystem`): the product brand mark lands as the center hub and partner logos spring onto a ring and revolve around it — "plugs into / sits at the center of your stack."
-- CTA (from `cta-orbit-collapse`): the ring resolves by COLLAPSE rather than a push-in — category icons drift around an empty central CTA, a cursor click implodes the orbit toward the click point, and the product demo springs OUT of that collapse as the answer (scope → choice → consequence → product).
-- Social_Proof (from `proof-logo-chain`): a persistent center logo accrues proofs — its wordmark decodes, a claim ticker swaps, the logo glides to center, then avatars cascade into orbit with drawn connectors while partner logos scroll the bottom strip; four claims read as one statement.
+- Hook（来自 `hook-cluster-push-in`）：一个工具/应用节点的星群弹簧进入宽环，然后持续摄像机推进带景深解析到内部核心 — "它连接一切/一个工具中心用于你所有工具。"
+- Social_Proof（来自 `social-proof-orbit-ecosystem`）：产品品牌标记作为中心着陆，合作伙伴 logo 弹簧到环上并围绕它旋转 — "插入/位于你技术栈的中心。"
+- CTA（来自 `cta-orbit-collapse`）：环通过**塌缩**而非推进解析 — 类别图标围绕空的中央 CTA 漂移，光标点击向点击点内爆轨道，产品演示从该塌缩中弹簧弹出作为答案（范围 → 选择 → 后果 → 产品）。
+- Social_Proof（来自 `proof-logo-chain`）：一个持久中心 logo 累积证明 — 其 wordmark 解码，声明滚动条交换，logo 滑向中心，然后头像级联进入轨道带绘制连接器，底部条上合作伙伴 logo 滚动；四个声明读作一个陈述。
 
-**duration**: 5–8s (Hook 5–6s · Social_Proof 5–8s · CTA orbit-collapse ~6s)
+**时长**：5–8 秒（Hook 5–6 秒 · Social_Proof 5–8 秒 · CTA orbit-collapse ~6 秒）
 
-**shot structure**
+**镜头结构**
 
-Consolidated template — nodes ring a center, then one of two finishers resolves on the core.
+统一模板 — 节点环绕中心，然后两个完成者之一解析在核心上。
 
-- Scene 1 (0.0–~1.5s): `[bg]` (dark/space field, optionally slow-drifting diffused gradient blobs). `[primary nodes]` (circles carrying `[icon]` + label) SPRING-POP in (scale 0→1, ~1.15 elastic overshoot, staggered) arranged in a wide ring/cluster around an empty or marked center `[hub]`.
-- Scene 2 (~0.7–2.5s, overlapping): smaller `[secondary nodes]` (platform / partner-logo chips) pop in staggered with the same elastic spring, filling the gaps; optional thin `[accent]` connector lines / orbit ring draw from hub→nodes. Camera holds.
-- Scene 3 (~2.5–Xs, the resolve): see finisher variant below; lands and HOLDS on the magnified / orbited center to the end.
+- 场景 1（0.0–~1.5 秒）：`[bg]`（暗色/空间场，可选缓慢漂移扩散渐变斑点）。`[primary nodes]`（圆圈携带 `[icon]` + 标签）**弹簧弹出**（缩放 0→1，~1.15 弹性过冲，错开）排列在围绕一个空或标记的中心 `[hub]` 的宽环/群中。
+- 场景 2（~0.7–2.5 秒，重叠）：较小的 `[secondary nodes]`（平台/合作伙伴 logo 芯片）以相同弹性弹簧错开弹出，填补间隙；可选细 `[accent]` 连接线/轨道环从中心→节点绘制。摄像机保持。
+- 场景 3（~2.5–Xs，解析）：见下方完成者变体；在放大/轨道运行的中心上着陆并**保持**到结束。
 
-- Variant — Hook (push-in finisher): from Scene 3, a continuous smooth CAMERA PUSH-IN toward the center inner cluster — inner nodes scale up and stay sharp while outer nodes are pushed toward the edges and progressively BLUR (depth-of-field), background scales up smoothly; holds magnified on the core.
-- Variant — Social_Proof (orbit finisher): the center `[brand mark]` snaps in via a quick 3D rotate that decelerates and settles; a thin `[accent]` orbit ring draws around it; `[N partner badges]` spring onto the ring (staggered overshoot) and revolve CLOCKWISE while staying upright, under a continuous slow camera ZOOM-OUT (ecosystem reveal).
-- Variant — Social_Proof (optional type-push-through opener, prepended before Scene 1): centered `[headline]` types/slides in with a huge transparent-fill OUTLINE copy of the same words behind it; the outline text scales up exponentially toward camera (high-speed dolly / push-through), breaches the frame, then HARD-CUTS to the hub bg of Scene 1.
+- 变体 — Hook（推进完成者）：从场景 3，一个连续平滑摄像机**推进进入**朝中心内部群 — 内部节点放大并保持清晰，而外部节点被推向边缘并逐渐**模糊**（景深），背景平滑放大；在核心上保持放大。
+- 变体 — Social_Proof（轨道完成者）：中心 `[brand mark]` 通过快速 3D 旋转快照进入，减速并稳定；一个细 `[accent]` 轨道环围绕它绘制；`[N partner badges]` 弹簧到环上（错开过冲）并**顺时针**旋转同时保持直立，在连续慢速摄像机**拉远-ZOOM**（生态系统揭示）下。
+- 变体 — Social_Proof（可选字体推进穿过开场，在场景 1 前追加）：居中 `[headline]` 输入/滑入，其后方有巨大的透明填充**轮廓**副本的相同词语；轮廓文本向摄像机指数放大（高速推拉/推进穿过），突破画面，然后**硬切**到场景 1 的中心 bg。
 
-**motion vocabulary**: staggered elastic spring-pop node entrances (~1.15 overshoot); slow gradient-blob drift; connector-line / orbit-ring draw-on; 3D snap-rotate-settle on the hub mark; continuous camera push-in (inner sharp, outer depth-of-field blur, bg scale-up); clockwise orbital revolve of upright badges; continuous slow camera zoom-out (ecosystem reveal); optional outline-text push-through dolly entry.
+**动词语汇**：错开弹性弹簧弹出节点入场（~1.15 过冲）；缓慢渐变斑点漂移；连接线/轨道环绘制；中心标记上的 3D 快照旋转稳定；连续摄像机推进进入（内部清晰，外部景深模糊，背景放大）；直立徽章的顺时针轨道旋转；连续慢速摄像机拉远-zoom（生态系统揭示）；可选轮廓文本推进穿过推拉入场。
 
-**rule mapping** (motion verb → `rules/<id>.md`)
+**规则映射**（动作动词 → `rules/<id>.md`）
 
-- staggered spring-pop node entrances → `spring-pop-entrance` (elastic overshoot) + `gsap-effects` (stagger recipe); 3D-flip-in flavor → `orbit-3d-entry`
-- ring / cluster layout of nodes around a center → `avatar-cloud-network` (nodes on an elliptical ring + SVG lines to a center)
-- icons on the nodes → `svg-icon-enrichment`
-- connector lines hub→node → `svg-path-draw`
-- orbit-ring draw-on → `svg-path-draw`
-- slow gradient-blob drift → `sine-wave-loop` (idle looped drift)
-- 3D snap-rotate-settle on hub mark → `orbit-3d-entry` (3D-flip entry); technique CSS-3D
-- clockwise orbital revolve of upright badges → `orbit-3d-entry` (continuous elliptical orbit); technique MotionPath
-- camera push-in toward center → `multi-phase-camera` (PUSH-in) + `coordinate-target-zoom` (target the core)
-- background scale-up during push-in → `multi-phase-camera`
-- continuous slow zoom-out (ecosystem reveal) → `multi-phase-camera` (pull-back) / `coordinate-target-zoom`
-- outline-text push-through dolly opener (Social_Proof) → `3d-text-depth-layers` (outline copy behind) + `multi-phase-camera` (push-through)
-- depth-of-field blur on outer nodes during push-in → `depth-of-field-blur` (progressive DOF/focus-falloff blur on the off-center outer nodes while the inner core stays sharp)
+- 错开弹簧弹出节点入场 → `spring-pop-entrance`（弹性过冲）+ `gsap-effects`（错开配方）；3D 翻转入场风格 → `orbit-3d-entry`
+- 围绕中心的节点环/群布局 → `avatar-cloud-network`（椭圆环上的节点 + 到中心的 SVG 线）
+- 节点上的图标 → `svg-icon-enrichment`
+- 中心→节点的连接线 → `svg-path-draw`
+- 轨道环绘制 → `svg-path-draw`
+- 缓慢渐变斑点漂移 → `sine-wave-loop`（空闲循环漂移）
+- 中心标记上的 3D 快照旋转稳定 → `orbit-3d-entry`（3D 翻转入场）；技术 CSS-3D
+- 直立徽章的顺时针轨道旋转 → `orbit-3d-entry`（连续椭圆轨道）；技术 MotionPath
+- 摄像机推进进入中心 → `multi-phase-camera`（PUSH 进入）+ `coordinate-target-zoom`（目标核心）
+- 推进期间的背景放大 → `multi-phase-camera`
+- 连续慢速拉远-zoom（生态系统揭示）→ `multi-phase-camera`（拉回）/ `coordinate-target-zoom`
+- 轮廓文本推进穿过推拉开场（Social_Proof）→ `3d-text-depth-layers`（背后的轮廓副本）+ `multi-phase-camera`（推进穿过）
+- 推进期间外部节点上的景深模糊 → `depth-of-field-blur`（推进期间偏离中心外部节点上的渐进景深/焦点衰减模糊，内部核心保持清晰）
 
-**camera modifier**: push-in-with-DOF (Hook) — `multi-phase-camera` PUSH-in targeted via `coordinate-target-zoom` onto the core; the focus-falloff blur half of it is backed by `depth-of-field-blur`. Orbit finisher (Social_Proof) — slow continuous zoom-out via `multi-phase-camera` (pull-back) while satellites revolve.
+**摄像机修饰**：推进带景深（Hook）— `multi-phase-camera` PUSH 进入通过 `coordinate-target-zoom` 瞄准核心；焦点衰减模糊的一半由 `depth-of-field-blur` 支持。轨道完成者（Social_Proof）— 通过 `multi-phase-camera`（拉回）的慢速连续拉远-zoom，同时卫星旋转。

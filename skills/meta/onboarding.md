@@ -1,18 +1,18 @@
-# Onboarding — Meta Skill
+# 新用户引导 — 元技能
 
-## When to Use
+## 何时使用
 
-On the **very first interaction** with a user in a new session when the user has not yet specified a concrete production request — or when their request is vague ("make me a video", "what can you do?", "help me create something").
+在**与新用户的第一次交互**中，当用户尚未提出具体的制作请求时——或者当他们的请求很模糊时（"帮我做个视频"、"你能做什么？"、"帮我创作点什么"）。
 
-Skip this skill when the user arrives with a specific, actionable request like "Make a 60-second explainer about black holes." In that case, go directly to Rule Zero (identify pipeline → preflight → execute). The user already knows what they want.
+当用户带着具体、可操作的需求到来时，跳过本技能，例如"帮我做一个关于黑洞的 60 秒解说视频"。在这种情况下，直接进入规则零（识别流水线 → 预检 → 执行）。用户已经知道他们想要什么。
 
-**This skill transforms the agent from a passive executor into a creative partner.** Most users don't know what's possible. Your job is to show them — fast, clearly, and with copy-paste prompts they can try right now.
+**本技能将 agent 从被动的执行者转变为创意的合作伙伴。** 大多数用户不知道什么是可能的。你的工作是向他们展示——快速、清晰，并提供他们可以立即复制使用的提示。
 
-## Protocol
+## 协议
 
-### Step 1: Run Preflight Discovery
+### 第 1 步：运行预检发现
 
-Before saying anything creative, know what you're working with:
+在说任何创意内容之前，先了解你拥有什么：
 
 ```bash
 python -c "
@@ -28,166 +28,156 @@ print(json.dumps(menu, indent=2))
 "
 ```
 
-Parse the output into three buckets:
+将输出解析为三个类别：
 
-1. **Available** — tools with `status: AVAILABLE`
-2. **Quick unlocks** — tools with `status: UNAVAILABLE` whose `install_instructions` reference an env var (1-minute fixes)
-3. **Hardware unlocks** — tools requiring GPU or local model downloads
+1. **可用** — 状态为 `AVAILABLE` 的工具
+2. **快速解锁** — 状态为 `UNAVAILABLE` 但其 `install_instructions` 引用环境变量的工具（1 分钟修复）
+3. **硬件解锁** — 需要 GPU 或本地模型下载的工具
 
-### Step 2: Determine the User's Setup Tier
+### 第 2 步：确定用户的设置等级
 
-Based on discovery, classify the setup:
+基于发现结果，对设置进行分类：
 
-| Tier | What's Available | Best Pipelines |
+| 等级 | 可用内容 | 最佳流水线 |
 |------|-----------------|----------------|
-| **Zero-key** | Piper TTS + Pexels/Pixabay stock (if keys added) + Remotion and/or HyperFrames + FFmpeg | Animated Explainer (stock visuals + free narration) |
-| **Starter** | One configured image generation provider + free TTS + Remotion and/or HyperFrames | Animated Explainer, Animation (AI-generated visuals) |
-| **Standard** | Image gen + TTS + music gen | Animated Explainer, Animation, Screen Demo, Hybrid |
-| **Full** | Video gen + image gen + premium TTS + music | All pipelines including Cinematic, Avatar, Talking Head |
-| **Full + GPU** | Cloud APIs + local video gen models | All pipelines with free local fallbacks |
+| **零密钥** | Piper TTS + Pexels/Pixabay 素材库（如果添加密钥）+ Remotion 和/或 HyperFrames + FFmpeg | 动画解说（素材库视觉 + 免费旁白） |
+| **入门** | 一个已配置的图像生成提供商 + 免费 TTS + Remotion 和/或 HyperFrames | 动画解说、动画（AI 生成视觉） |
+| **标准** | 图像生成 + TTS + 音乐生成 | 动画解说、动画、屏幕演示、混合 |
+| **完整** | 视频生成 + 图像生成 + 高级 TTS + 音乐 | 所有流水线，包括电影、虚拟形象、人物访谈 |
+| **完整 + GPU** | 云 API + 本地视频生成模型 | 所有流水线，附带免费本地回退 |
 
-**Composition runtimes** — both are first-class and surface as distinct
-entries in the provider menu. Report each one's availability separately:
+**合成运行时** — 两者都是一等公民，在提供商菜单中作为独立条目显示。分别报告每个的可用性：
 
-- **Remotion** requires Node.js + `npx` + `remotion-composer/` + `node_modules`.
-  Best for React-based scene components (text cards, stat cards, charts),
-  word-level captions, and the `TalkingHead` avatar composition.
-- **HyperFrames** requires Node.js ≥ 22 + `npx` + FFmpeg. Consumed via
-  `npx @hyperframes/cli` (no monorepo checkout required). Best for
-  HTML/CSS/GSAP motion graphics — kinetic typography, product promos,
-  launch reels, website-to-video workflows, registry blocks.
+- **Remotion** 需要 Node.js + `npx` + `remotion-composer/` + `node_modules`。
+  最适合基于 React 的场景组件（文字卡片、数据卡片、图表）、
+  逐词字幕和 TalkingHead 虚拟形象合成。
+- **HyperFrames** 需要 Node.js ≥ 22 + `npx` + FFmpeg。通过
+  `npx @hyperframes/cli` 使用（无需 monorepo 检出）。最适合
+  HTML/CSS/GSAP 动态图形——动态排版、产品推广、
+  发布短片、网站转视频工作流、注册表块。
 
-Name BOTH runtimes explicitly in the "Ready to go" summary when both are
-available — not "Remotion" alone. A fresh-session agent that doesn't
-mention HyperFrames by name will fail to present it at proposal time;
-naming it here sets the expectation that the agent is runtime-agnostic.
+当两者都可用时，在"就绪"摘要中**明确**提及**两个**运行时——而不仅仅是"Remotion"。一个全新会话的 agent 如果没有按名称提及 HyperFrames，将未能在提案时呈现它；在此处命名它设定了 agent 与运行时无关的期望。
 
-If only one is available, note it in the summary and mention what the
-other would unlock. If neither is available, tell the user their options
-are FFmpeg-only (simple concat/trim) and what's needed to unlock HTML/React
-composition.
+如果只有一个可用，在摘要中注明并提及另一个可以解锁什么。如果两者都不可用，告诉用户他们的选项仅为 FFmpeg（简单拼接/裁剪），以及解锁 HTML/React 合成需要什么。
 
-**Do NOT pick a runtime during onboarding.** Runtime selection happens at
-the proposal stage, after the agent understands the brief. During
-onboarding you're reporting capabilities, not making production decisions.
-See `AGENT_GUIDE.md` → "Present Both Composition Runtimes (HARD RULE)".
+**在引导期间不要选择运行时。** 运行时选择发生在提案阶段，在 agent 理解需求简报之后。在引导期间你是在报告能力，而不是做出制作决策。参见 `AGENT_GUIDE.md` → "Present Both Composition Runtimes (HARD RULE)"。
 
-### Step 3: Greet and Orient
+### 第 3 步：问候和引导
 
-Present a **short, friendly capability summary**. Do NOT dump the raw provider menu. Instead, translate it into plain language.
+呈现**简短、友好的能力摘要**。不要转储原始提供商菜单。而是将其转化为通俗易懂的语言。
 
-**Template (adapt to actual discovery results):**
+**模板（根据实际发现结果调整）：**
 
 ---
 
-**Welcome to OpenMontage!** I'm your video production agent. Here's what I can do with your current setup:
+**欢迎使用 OpenMontage！** 我是你的视频制作 agent。以下是我用你当前设置可以做到的事情：
 
-**Ready to go:**
-- [List 2-4 key capabilities in plain language, e.g., "Generate narration with free offline TTS (Piper)", "Create animated videos with spring transitions, captions, and charts (Remotion)", "Stock footage and images from Pexels"]
+**就绪可用：**
+- [列出 2-4 项关键能力，用通俗语言描述，例如，"使用免费离线 TTS (Piper) 生成旁白"，"创建带弹簧过渡、字幕和图表的动画视频 (Remotion)"，"来自 Pexels 的素材库视频和图片"]
 
-**Available pipelines:** [List the pipelines that work with their setup, with one-line descriptions]
+**可用流水线：** [列出与其设置兼容的流水线，附带一行描述]
 
-**Quick upgrades:** [If applicable — summarize the best 1-2 unlocks from `provider_menu()` based on the user's missing capabilities and actual install instructions. Do not hardcode `FAL_KEY` or any provider as the default suggestion.]
+**快速升级：** [如适用——根据用户缺失的能力和实际的安装指引，总结 `provider_menu()` 中最好的 1-2 个解锁项。不要硬编码 `FAL_KEY` 或任何提供商为默认建议。]
 
 ---
 
-**Rules for this presentation:**
-- Lead with what WORKS, not what's missing. The user should feel empowered, not inadequate.
-- Keep it to 8-12 lines max. Don't overwhelm.
-- Mention at most 2 quick-unlock suggestions. Don't nag about every missing key.
-- Read actual `install_instructions` from the registry — do not hardcode provider names or key names.
+**此呈现的规则：**
+- 以**能工作的**内容开头，而不是缺失的内容。用户应感到有力量，而不是不足。
+- 保持最多 8-12 行。不要让人感到压力。
+- 最多提 2 个快速解锁建议。不要对每个缺失的密钥都唠叨。
+- 从注册表中读取实际的 `install_instructions`——不要硬编码提供商名称或密钥名称。
 
-### Step 4: Offer Starter Prompts
+### 第 4 步：提供入门提示
 
-Based on the user's tier, present **3 ready-to-use prompts** they can copy right now. These should be prompts that will work well with their specific setup and produce impressive results.
+根据用户的等级，呈现**3 个立即可用的提示**供他们复制使用。这些提示应与其特定设置良好配合并产生令人印象深刻的结果。
 
-**Zero-key prompts:**
+**零密钥提示：**
 
-> **Try this now:** "Make a 45-second animated explainer about why the sky is blue"
+> **现在试试这个：** "制作一个关于天空为什么是蓝色的 45 秒动画解说视频"
 >
-> This will research the topic, write a script, find stock visuals, generate narration with Piper, and compose an animated video with transitions and captions — all free.
+> 这将研究主题、编写脚本、查找素材库视觉、用 Piper 生成旁白，并合成一个带过渡和字幕的动画视频——全部免费。
 
-> **Also try:** "I have a screen recording of a dashboard workflow — make it a polished product demo with captions and a voiceover" *(Screen Demo pipeline)*
+> **还可尝试：** "我有一个仪表板工作流程的屏幕录制——把它做成一个带字幕和配音的精美产品演示" *(屏幕演示流水线)*
 
-> **Or:** "Turn this interview recording into 3 short clips for TikTok and YouTube Shorts" *(Clip Factory pipeline)*
+> **或者：** "把这个采访录音变成 3 个用于 TikTok 和 YouTube Shorts 的短视频片段" *(Clip Factory 流水线)*
 
-**Starter-tier prompts (image gen available):**
+**入门级提示（图像生成可用）：**
 
-> **Try this:** "Create an animated explainer about how CRISPR gene editing works, with AI-generated visuals"
+> **试试这个：** "创建一个关于 CRISPR 基因编辑如何工作的动画解说视频，使用 AI 生成的视觉"
 >
-> I'll use your configured image generator to create custom visuals for each scene — much more visually striking than stock.
+> 我将使用你配置的图像生成器为每个场景创建自定义视觉——比素材库视觉引人注目得多。
 
-> **Also try:** "Make a short documentary-style video about urban beekeeping — keep it grounded and textural, not flashy" *(Hybrid pipeline — source + generated support)*
+> **还可尝试：** "制作一个关于城市养蜂的短纪录片风格视频——保持朴实和质感，不要炫目" *(混合流水线——素材 + 生成支持)*
 
-> **Or:** "Create a classroom-ready video teaching photosynthesis to 8th graders — simple, clear, and engaging" *(Explainer pipeline — teacher mode)*
+> **或者：** "创建一个面向 8 年级学生的光合作用教学视频——简单、清晰、有趣" *(解说流水线——教师模式)*
 
-**Full-tier prompts (video gen available):**
+**完整级提示（视频生成可用）：**
 
-> **Try this:** "Create a cinematic 30-second trailer for a sci-fi concept: humanity receives a warning from 1000 years in the future"
+> **试试这个：** "为科幻概念创建一个电影级 30 秒预告片：人类收到来自 1000 年后的警告"
 >
-> I'll generate actual motion video clips, compose a soundtrack, and deliver a finished cinematic trailer. *(Cinematic pipeline)*
+> 我将生成实际的动态视频片段、创作配乐，并交付一个完成的电影预告片。*(电影流水线)*
 
-> **Also try:** "Make a 60-second avatar spokesperson video announcing a company rebrand" *(Avatar Spokesperson pipeline)*
+> **还可尝试：** "制作一个 60 秒虚拟形象发言人视频，宣布公司品牌重塑" *(虚拟形象发言人流水线)*
 
-> **Or:** "I recorded a founder update on my webcam — make it feel polished, confident, and premium without looking fake" *(Talking Head pipeline)*
+> **或者：** "我用摄像头录制了一个创始人更新——让它感觉精致、自信、高级但又不显得假" *(人物访谈流水线)*
 
-**Reference-based prompts (all tiers):**
+**基于参考的提示（所有等级）：**
 
-> **Have a video you love?** Paste a YouTube link and say "make me something like this"
-> — I'll analyze the style, pacing, and structure, then propose 2-3 creative variants
-> you can choose from. Works with YouTube, Shorts, Instagram Reels, and TikTok.
-> All analysis runs locally and free — no API keys needed.
+> **有你喜欢的视频吗？** 粘贴 YouTube 链接并说"帮我做一个像这样的"
+> — 我将分析风格、节奏和结构，然后提出 2-3 个创意变体
+> 供你选择。适用于 YouTube、Shorts、Instagram Reels 和 TikTok。
+> 所有分析在本地免费运行——无需 API 密钥。
 
-> **Got your own footage?** Drop in a video file and say "I want to make a video using
-> this footage" — I'll transcribe it, detect scenes, and propose an edit plan.
+> **有自己的素材吗？** 放入一个视频文件并说"我想用这个素材做一个视频"
+> — 我将转录它、检测场景并提出编辑方案。
 
-**Rules for prompt suggestions:**
-- Present exactly 3 prompts.
-- The first prompt should be the most impressive thing their setup can produce.
-- Each prompt should target a different pipeline or style.
-- Include a brief note explaining what makes this prompt a good fit for their setup.
-- Use blockquote formatting so prompts are visually distinct and easy to copy.
-- Always include the reference-based prompts above — they work at every tier.
+**提示建议规则：**
+- 准确呈现 3 个提示。
+- 第一个提示应是其设置能产生的最令人印象深刻的内容。
+- 每个提示应针对不同的流水线或风格。
+- 包含简短说明，解释为什么这个提示适合他们的设置。
+- 使用引用块格式，使提示视觉上清晰且易于复制。
+- 始终包含上述基于参考的提示——它们适用于所有等级。
 
-### Step 5: Explain the Workflow (Briefly)
+### 第 5 步：简要解释工作流
 
-After prompts, give a 2-3 sentence summary of what happens when they start:
+在提示之后，用 2-3 句话总结当他们开始后会发生什么：
 
-"When you give me a prompt, I'll first research the topic with live web searches, then present you with concept options and cost estimates. You pick your favorite, and I'll produce the video stage by stage — asking for your approval at each creative decision. The final video lands in `projects/<name>/renders/`."
+"当你给我一个提示时，我会先用实时网络搜索研究主题，然后向你呈现概念选项和成本估算。你选择最喜欢的一个，我会逐阶段制作视频——在每个创意决策时征求你的批准。最终视频会放在 `projects/<name>/renders/` 中。"
 
-Do NOT explain the full architecture, three-layer knowledge system, or pipeline internals here. That's for the curious — point them to `AGENT_GUIDE.md` if they want to go deeper.
+不要在此解释完整的架构、三层知识系统或流水线内部细节。那是给好奇者的——如果他们想深入了解，指向 `AGENT_GUIDE.md`。
 
-### Step 6: Handle Follow-Up Questions
+### 第 6 步：处理后续问题
 
-Common questions and how to respond:
+常见问题及如何回应：
 
-**"What does it cost?"**
-- Zero-key path: $0
-- With one paid image/video provider configured: typically $0.30–$1.50 per video depending on asset count
-- Full setup: $1–$3 for most videos
-- Always: "I'll show you exact cost estimates before spending anything."
+**"需要多少费用？"**
+- 零密钥路径：$0
+- 配置了一个付费图像/视频提供商：通常每个视频 $0.30–$1.50，取决于资产数量
+- 完整设置：大多数视频 $1–$3
+- 始终："在花费任何费用之前，我会向你展示精确的成本估算。"
 
-**"Can you make [specific type]?"**
-- Match to a pipeline. If it fits, say which pipeline and what tools you'd use.
-- If it doesn't fit any pipeline, be honest — suggest the closest match and explain what would be different.
+**"你能做 [特定类型] 吗？"**
+- 匹配到流水线。如果适合，说明哪个流水线以及你会使用哪些工具。
+- 如果不适合任何流水线，诚实说明——建议最接近的匹配并解释什么会不同。
 
-**"How long does it take?"**
-- Explainer (zero-key): 5-15 minutes
-- Explainer (with image gen): 10-20 minutes
-- Cinematic (with video gen): 20-40 minutes
-- "Most of the time is asset generation. The research and scripting stages are fast."
+**"需要多长时间？"**
+- 解说（零密钥）：5-15 分钟
+- 解说（带图像生成）：10-20 分钟
+- 电影级（带视频生成）：20-40 分钟
+- "大部分时间是资产生成。研究和脚本阶段很快。"
 
-**"I just want to test it quickly"**
-- Suggest the shortest zero-key prompt: "Try: 'Make a 30-second explainer about why leaves change color.' It'll use free tools and finish in about 5 minutes."
+**"我只是想快速测试一下"**
+- 建议最短的零密钥提示："试试：'制作一个关于树叶为什么变色的 30 秒解说视频。'它将使用免费工具并在大约 5 分钟内完成。"
 
-**"Show me what you can do"**
-- Point to the demo video in the README, then offer the starter prompts from Step 4.
+**"给我看看你能做什么"**
+- 指向 README 中的演示视频，然后提供第 4 步的入门提示。
 
-## Anti-Patterns
+## 反模式
 
-- **Don't dump the raw JSON** from `support_envelope()` or `provider_menu()` on the user. Translate it into plain language.
-- **Don't list every tool.** Group by capability ("I can generate images with FLUX" not "I have flux_image, google_imagen, openai_image, recraft_image...").
-- **Don't explain the architecture** unless asked. "Agent-first, instruction-driven" is interesting to developers, but the user came to make a video, not study the codebase.
-- **Don't apologize for missing capabilities.** Frame as "here's what you have" and optionally "here's a quick upgrade." Never "unfortunately you don't have..."
-- **Don't skip straight to production** if the user seems uncertain or exploratory. Take 30 seconds to orient them — it saves 10 minutes of confusion later.
-- **Don't suggest prompts that require tools the user doesn't have.** Every prompt must be achievable with their current setup. Mark any that need specific keys clearly.
+- **不要将原始 JSON** 从 `support_envelope()` 或 `provider_menu()` 倾倒给用户。将其转化为通俗语言。
+- **不要列出每个工具。** 按能力分组（"我可以用 FLUX 生成图像"，而不是"我有 flux_image、google_imagen、openai_image、recraft_image..."）。
+- **不要解释架构**，除非被问到。"Agent 优先、指令驱动"对开发者来说有趣，但用户来是做视频的，不是研究代码库的。
+- **不要为缺失的能力道歉。** 以"这是你拥有的"来表述，可选的加上"这是快速升级"。永远不要说"不幸的是你没有..."。
+- **如果用户似乎不确定或探索中，不要直接跳转到制作。** 花 30 秒引导他们——这可以节省之后 10 分钟的混乱。
+- **不要建议需要用户没有的工具的提示。** 每个提示必须可用其当前设置实现。任何需要特定密钥的都要清楚标记。

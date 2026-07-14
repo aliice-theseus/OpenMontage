@@ -1,41 +1,34 @@
-# Tier 1 — title-card-fade
+# 第 1 层 — title-card-fade
 
-## What it tests
+## 测试内容
 
-The simplest non-trivial Remotion → HyperFrames translation. A single text
-element fades in over the first 0.5 s, holds for 2.0 s, and fades out over
-the last 0.5 s. No audio, no media, no custom components.
+最简单的非平凡 Remotion → HyperFrames 翻译。单个文本元素在前 0.5 秒淡入，保持 2.0 秒，然后在最后 0.5 秒淡出。没有音频、媒体或自定义组件。
 
-If a translation can't pass T1, it's broken on table-stakes basics:
-`AbsoluteFill`, `useCurrentFrame`, `interpolate` with multi-segment input,
-and the timing offset between Remotion's frame-based driver and HF's
-paused-GSAP driver.
+如果翻译不能通过 T1，则它在最基本的核心能力上就存在问题：`AbsoluteFill`、`useCurrentFrame`、带多段输入的 `interpolate`，以及 Remotion 基于帧的驱动器和 HF 暂停 GSAP 驱动器之间的时间偏移。
 
-## Translation walk-through
+## 翻译演练
 
-| Remotion                                                      | HyperFrames                                                                                             |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `<AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>`       | `<body style="background: #0a0a0a">` + a positioned root div                                            |
-| `useCurrentFrame()`                                           | dropped — HF seeks the timeline                                                                         |
-| `interpolate(frame, [0, 15, 75, 90], [0, 1, 1, 0])` at fps=30 | `gsap.timeline({ paused: true })` with three `.to()` calls at offsets 0s/0.5s/2.5s, each `ease: "none"` |
-| `<div style={{ opacity }}>HELLO</div>`                        | static markup; opacity is animated by the timeline                                                      |
+| Remotion                                                      | HyperFrames                                                                                              |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `<AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>`       | `<body style="background: #0a0a0a">` + 一个定位的根 div                                                  |
+| `useCurrentFrame()`                                           | 丢弃 — HF 定位时间线                                                                                     |
+| `interpolate(frame, [0, 15, 75, 90], [0, 1, 1, 0])` 在 fps=30 | `gsap.timeline({ paused: true })`，在偏移 0s/0.5s/2.5s 处有三个 `.to()` 调用，每个 `ease: "none"`       |
+| `<div style={{ opacity }}>HELLO</div>`                        | 静态标记；透明度由时间线动画控制                                                                         |
 
-The Remotion→HF time conversion is `time = frame / fps`. So
-`[0, 15, 75, 90]` at 30 fps becomes `[0, 0.5, 2.5, 3.0]` seconds.
+Remotion→HF 的时间转换是 `time = frame / fps`。因此在 30 fps 时 `[0, 15, 75, 90]` 变为 `[0, 0.5, 2.5, 3.0]` 秒。
 
-## How to render and evaluate
+## 如何渲染和评估
 
 ```bash
-# Render Remotion baseline
+# 渲染 Remotion 基线
 cd remotion-src && npm install && npm run render
-# Renders to remotion-src/out/baseline.mp4
+# 渲染到 remotion-src/out/baseline.mp4
 
-# Render HyperFrames translation
+# 渲染 HyperFrames 翻译
 cd ../hf-src && npx hyperframes render --output ../hf.mp4
 
-# Compare with the eval harness (from skill scripts/)
+# 使用评估框架进行比较（来自技能 scripts/）
 ../../../scripts/render_diff.sh ./remotion-src/out/baseline.mp4 ./hf.mp4 ./diff
 ```
 
-`expected.json` documents the SSIM threshold (0.95) for this fixture; the
-calibrated mean against Remotion @ 4.0 with PNG/BT.709 output is 0.974.
+`expected.json` 记录了此测试用例的 SSIM 阈值（0.95）；针对 Remotion @ 4.0 使用 PNG/BT.709 输出校准的平均值为 0.974。

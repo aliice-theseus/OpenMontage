@@ -1,33 +1,33 @@
-# Compose Director — Talking Head Pipeline
+# 合成导演 —  Talking Head 流水线
 
-## When to Use
+## 使用时机
 
-You have edit decisions and an asset manifest. Your job is to render the final talking-head video: apply the enhancement chain, burn subtitles, mix audio, and encode to the target profile.
+你已获得编辑决策和资产清单。你的任务是渲染最终的 talking-head 视频：应用增强链、烧录字幕、混音音频，并按照目标配置文件编码。
 
-## Runtime Routing (HARD CONSTRAINT — Remotion or FFmpeg only)
+## 运行时路由（硬性约束——仅限 Remotion 或 FFmpeg）
 
-Phase 1 deferred from HyperFrames. `edit_decisions.render_runtime` must be `"remotion"` (preferred — uses the `TalkingHead` composition + `remotion_caption_burn`) or `"ffmpeg"` (for source-footage concat with no composition).
+Phase 1 从 HyperFrames 推迟。`edit_decisions.render_runtime` 必须是 `"remotion"`（推荐——使用 `TalkingHead` 合成 + `remotion_caption_burn`）或 `"ffmpeg"`（用于仅拼接源素材，无合成）。
 
-- If `edit_decisions.render_runtime == "hyperframes"`, stop. Re-open the idea stage and surface the constraint. Silent rewrite is a governance violation.
-- Per AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)": the pipeline's constraint doesn't skip the conversation. Present the constraint to the user so they know HyperFrames exists but isn't viable here. Record a `render_runtime_selection` decision with hyperframes `rejected_because: "TalkingHead + caption parity deferred on talking-head"`.
-- Pass `proposal_packet`/`brief` to `video_compose.execute()` for runtime-swap detection.
+- 如果 `edit_decisions.render_runtime == "hyperframes"`，停止。重新打开 idea 阶段并展示约束条件。静默重写是治理违规。
+- 根据 AGENT_GUIDE.md → "展示两种合成运行时（硬性规则）"：流水线的约束不能跳过对话。向用户展示该约束，让他们知道 HyperFrames 存在但在此不可行。记录一个 `render_runtime_selection` 决策，其中 hyperframes 为 `rejected_because: "TalkingHead + 字幕对等在 talking-head 上推迟"`。
+- 将 `proposal_packet`/`brief` 传递给 `video_compose.execute()` 用于运行时交换检测。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/render_report.schema.json` | Artifact validation |
-| Prior artifacts | Edit decisions, Asset manifest | Render inputs |
-| Tools | `video_compose`, `audio_mixer` | Rendering |
-| Media profiles | `lib/media_profiles.py` | Output format |
+| 模式 | `schemas/artifacts/render_report.schema.json` | 产物校验 |
+| 前置产物 | 编辑决策、资产清单 | 渲染输入 |
+| 工具 | `video_compose`、`audio_mixer` | 渲染 |
+| 媒体配置文件 | `lib/media_profiles.py` | 输出格式 |
 
-## Process
+## 流程
 
-### Step 0: Pre-flight Checks
+### 步骤 0: 飞行前检查
 
-Before rendering anything, validate the inputs and catch issues that are expensive to fix later.
+在渲染任何内容之前，先验证输入并捕获后续修复代价高昂的问题。
 
-1. **Silence detection** -- Run `silence_cutter` in mark mode:
+1. **静默检测** — 以 mark 模式运行 `silence_cutter`：
    ```
    silence_cutter.execute({
        "input_path": "<raw_footage>",
@@ -36,111 +36,111 @@ Before rendering anything, validate the inputs and catch issues that are expensi
        "min_silence_duration": 0.5
    })
    ```
-   - Report all gaps > 0.5s with timestamps.
-   - If total silence > 5s, **recommend cutting before proceeding**. Long silences waste render time and produce dead spots in the final video.
+   - 报告所有超过 0.5 秒的间隔及其时间戳。
+   - 如果总静默时间 > 5 秒，**建议在继续前进行剪辑**。长时间的静默浪费渲染时间并在最终视频中产生死点。
 
-2. **ASR confidence check** -- Scan word-level transcript for low-confidence words:
-   - Flag any word with probability < 0.7.
-   - List flagged words with timestamps so the user can verify correct transcription.
-   - Common misrecognitions to watch for: proper nouns, brand names, domain jargon.
+2. **ASR 置信度检查** — 扫描字级转录中置信度低的词：
+   - 标记任何概率 < 0.7 的词。
+   - 列出标记的词及其时间戳，以便用户验证转录是否正确。
+   - 需要注意的常见误识别：专有名词、品牌名称、领域行话。
 
-3. **Auto-build corrections dictionary** from common ASR error patterns:
+3. **自动构建校正词典**，基于常见的 ASR 错误模式：
    ```python
    corrections = {
-       # Indian finance context
+       # 印度金融上下文
        "DMI": "EMI",
        "AMI": "EMI",
-       # Common brand misspellings
+       # 常见品牌拼写错误
        "open montage": "OpenMontage",
        "remotion": "Remotion",
-       # Numbers that got split by ASR
+       # ASR 拆分了的数字
        "4 -5": "4-5",
        "10 -15": "10-15",
    }
    ```
-   Extend this dict with domain-specific corrections based on the video topic. Present the corrections to the user for review before applying.
+   根据视频主题扩展此词典，添加领域特定的校正。在应用前将校正内容呈现给用户审核。
 
-4. **Green screen flag** -- Check if scene-director Step 0 flagged green/blue screen footage. If yes, note that Step 3c (Green Screen Composite) will be needed.
+4. **绿幕标记** — 检查场景导演步骤 0 是否标记了绿幕/蓝幕素材。如果是，记下步骤 3c（绿幕合成）将会需要。
 
-### Step 1: Run Enhancement Chain
+### 步骤 1: 运行增强链
 
-Apply video enhancements in this exact order. **Attempt every step** if the tool is available — do not skip steps without a reason.
+严格按照此顺序应用视频增强。**如果工具可用，尝试每一步骤**——不要无故跳过。
 
-1. **Face enhancement** — apply `talking_head_standard` preset
-2. **Eye enhancement** — under-eye dark circle removal + eye brightening
-3. **Color grading** — apply a profile
-4. **Audio enhancement** — noise reduction, normalization
+1. **面部增强** — 应用 `talking_head_standard` 预设
+2. **眼睛增强** — 去除黑眼圈 + 提亮眼睛
+3. **色彩分级** — 应用配置文件
+4. **音频增强** — 降噪、归一化
 
-**Eye enhancement** — always attempt this after face_enhance. It makes a visible difference on webcam/phone footage:
+**眼睛增强** — 始终在 face_enhance 之后尝试此操作。在网络摄像头/手机素材上效果明显：
 ```
 eye_enhance.execute({
     "input_path": "<face_enhanced_video>",
     "output_path": "<project>/assets/video/eye_enhanced.mp4",
     "operations": ["dark_circles", "brighten_eyes"],
-    "dark_circle_intensity": 0.4,       # 0-1, subtle is better
+    "dark_circle_intensity": 0.4,       # 0-1，微妙更好
     "eye_brighten_intensity": 0.3,
 })
 ```
-**Important:** Keep intensities low (0.2-0.5). Over-processing makes eyes look unnatural. If the tool fails (e.g. MediaPipe not installed), log the fallback and continue with the face_enhanced video.
+**重要：** 保持强度较低（0.2-0.5）。过度处理会使眼睛看起来不自然。如果工具失败（例如未安装 MediaPipe），记录回退并继续使用 face_enhanced 视频。
 
-### Step 1b: Speed Adjustment (if requested)
+### 步骤 1b: 速度调整（如果要求）
 
-If the user wants the video sped up or slowed down, use `video_trimmer`:
+如果用户希望视频加速或减速，使用 `video_trimmer`：
 ```
 video_trimmer.execute({
     "operation": "speed",
     "input_path": "<enhanced_video>",
     "output_path": "<project>/assets/video/speed_adjusted.mp4",
-    "speed_factor": 1.25    # 0.5x (slow), 1.25x, 1.5x, 2x (fast)
+    "speed_factor": 1.25    # 0.5x（慢速），1.25x，1.5x，2x（快速）
 })
 ```
 
-Common speed factors:
-| Factor | Use Case |
+常见速度系数：
+| 系数 | 使用场景 |
 |--------|----------|
-| `0.5` | Slow-mo for dramatic effect |
-| `1.0` | Normal (no change) |
-| `1.25` | Slightly faster — tighter pacing without sounding unnatural |
-| `1.5` | Noticeably faster — good for recaps or condensed content |
-| `2.0` | Double speed — time-lapse effect |
+| `0.5` | 慢动作，用于戏剧效果 |
+| `1.0` | 正常（无变化） |
+| `1.25` | 稍微快一点——节奏更紧凑，听起来不会不自然 |
+| `1.5` | 明显更快——适合回顾或浓缩内容 |
+| `2.0` | 双倍速度——延时效果 |
 
-Apply speed AFTER enhancements, BEFORE reframing.
+在增强之后、重新构图之前应用速度调整。
 
-### Step 2: Auto-Reframe (if target platform requires it)
+### 步骤 2: 自动重新构图（如果目标平台要求）
 
-If the target platform requires a different aspect ratio (e.g. Instagram Reels = 9:16), use `auto_reframe`:
+如果目标平台需要不同的宽高比（例如 Instagram Reels = 9:16），使用 `auto_reframe`：
 
 ```
 auto_reframe.execute({
     "input_path": "<enhanced_video>",
     "output_path": "<project>/renders/reframed.mp4",
-    "target_aspect": "portrait",       # 9:16 for Reels/TikTok/Shorts
-    "smoothing_window": 15,            # smooth camera pan
-    "face_padding": 0.4,              # 40% padding around face
+    "target_aspect": "portrait",       # 9:16 用于 Reels/TikTok/Shorts
+    "smoothing_window": 15,            # 平滑摄像机平移
+    "face_padding": 0.4,              # 面部周围 40% 边距
 })
 ```
 
-**Aspect ratio presets:**
-| Preset | Ratio | Platform |
+**宽高比预设：**
+| 预设 | 比例 | 平台 |
 |--------|-------|----------|
-| `portrait` | 9:16 | Instagram Reels, TikTok, YouTube Shorts |
-| `square` | 1:1 | Instagram Feed |
-| `landscape` | 16:9 | YouTube, LinkedIn |
-| `vertical_4_5` | 4:5 | Instagram portrait post |
+| `portrait` | 9:16 | Instagram Reels、TikTok、YouTube Shorts |
+| `square` | 1:1 | Instagram 信息流 |
+| `landscape` | 16:9 | YouTube、LinkedIn |
+| `vertical_4_5` | 4:5 | Instagram 竖版帖子 |
 
-The tool automatically runs face detection and keeps the speaker centered. If MediaPipe is not installed, falls back to center-crop.
+该工具自动运行人脸检测并保持演讲者居中。如果未安装 MediaPipe，则回退到中心裁剪。
 
-**Important:** Run auto_reframe AFTER face_enhance and color_grade but BEFORE burning subtitles. Subtitles need to be positioned for the final aspect ratio.
+**重要：** 在 face_enhance 和 color_grade 之后，但在烧录字幕之前运行 auto_reframe。字幕需要针对最终宽高比定位。
 
-### Step 2b: Build ASR Corrections Dictionary
+### 步骤 2b: 构建 ASR 校正词典
 
-Before burning captions, scan the transcript for likely ASR misrecognitions. Common issues:
-- Product/brand names: "cloud" → "Claude", "co-pilot" → "Copilot", "remotion" → "Remotion"
-- Technical terms: "pythonic" misheard as "pathonic", "API" as "a pie"
-- Speaker's name or company name
-- Domain-specific jargon
+在烧录字幕之前，扫描转录中可能出现的 ASR 误识别。常见问题：
+- 产品/品牌名称："cloud" → "Claude"、"co-pilot" → "Copilot"、"remotion" → "Remotion"
+- 技术术语："pythonic" 被误听为 "pathonic"、"API" 被误听为 "a pie"
+- 演讲者姓名或公司名称
+- 领域特定行话
 
-Build a corrections dict:
+构建校正词典：
 ```python
 corrections = {
     "cloud": "Claude",
@@ -149,17 +149,17 @@ corrections = {
 }
 ```
 
-Pass this dict to both `subtitle_gen` (if generating SRT) and `remotion_caption_burn` (if using Remotion captions). Even if you find zero corrections needed, explicitly pass an empty dict `{}` to confirm you checked.
+将此字典传递给 `subtitle_gen`（如果生成 SRT）和 `remotion_caption_burn`（如果使用 Remotion 字幕）。即使你发现不需要任何校正，也明确传递一个空字典 `{}` 以确认你已检查过。
 
-### Step 3: Burn Subtitles
+### 步骤 3: 烧录字幕
 
-**ALWAYS use Remotion TikTok-style captions** (word-by-word highlighting). This is the default and preferred method. Do NOT fall back to FFmpeg ASS subtitles unless Remotion is completely unavailable.
+**始终使用 Remotion TikTok 风格的字幕**（逐词高亮）。这是默认和首选方法。除非 Remotion 完全不可用，否则不要回退到 FFmpeg ASS 字幕。
 
-**Remotion caption requirements:**
-- **Auto-detect video dimensions** -- do NOT hardcode width/height. Use `visual_qa` probe or ffprobe to get actual dimensions, then pass them to the render.
-- **Set `--frames` based on actual video duration** -- calculate from probe: `frames = duration_seconds * fps`. Never use a hardcoded frame count.
-- Word-by-word highlighting with active word color (`highlight_color`).
-- Captions positioned at the bottom of frame, away from the face.
+**Remotion 字幕要求：**
+- **自动检测视频尺寸** — 不要硬编码宽度/高度。使用 `visual_qa` 探针或 ffprobe 获取实际尺寸，然后传递给渲染。
+- **根据实际视频时长设置 `--frames`** — 从探针计算：`frames = duration_seconds * fps`。永远不要使用硬编码的帧数。
+- 逐词高亮，使用活跃词颜色（`highlight_color`）。
+- 字幕位于画面底部，远离面部。
 
 ```
 remotion_caption_burn.execute({
@@ -173,28 +173,28 @@ remotion_caption_burn.execute({
 })
 ```
 
-**Fallback ONLY if Remotion is completely unavailable:** Use `video_compose` with `burn_subtitles` operation. This is a degraded experience -- warn the user that word-by-word highlighting won't be available.
+**仅在 Remotion 完全不可用时的回退方案：** 使用 `video_compose` 配合 `burn_subtitles` 操作。这是一种降级体验——警告用户逐词高亮功能不可用。
 
-**CRITICAL: Caption positioning for 9:16 vertical video (FFmpeg fallback only).**
-Captions MUST be in the lower 20% of the frame. On a 1920-high frame, that means `MarginV=160` or higher. The default FFmpeg subtitle position is center -- this WILL occlude the face. You MUST override it.
+**关键：9:16 竖版视频的字幕定位（仅 FFmpeg 回退）。**
+字幕必须在画面的底部 20% 区域内。在 1920 高的画面上，这意味着 `MarginV=160` 或更高。FFmpeg 默认的字幕位置是居中——这**会**遮挡面部。你**必须**覆盖它。
 
-FFmpeg subtitle style string for vertical talking-head:
+竖版 talking-head 的 FFmpeg 字幕样式字符串：
 ```
 "FontName=Arial,FontSize=22,Bold=1,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2,Shadow=0,MarginV=160,Alignment=2"
 ```
 
-**Never** use the default subtitle position. **Never** position subtitles in the center or upper half of the frame. If you see captions on the face during visual QA, the video must be re-rendered with corrected positioning.
+**永远不要**使用默认的字幕位置。**永远不要**将字幕定位在画面中央或上半部分。如果在视觉 QA 期间看到字幕出现在面部上，则视频必须使用校正后的定位重新渲染。
 
-### Step 3b: Burn Overlay Graphics (if scene plan includes overlays)
+### 步骤 3b: 烧录叠加图形（如果场景计划包含叠加层）
 
-If the scene plan includes overlay scenes (text_cards, stat_cards, charts, comparisons, callouts), pass them to `remotion_caption_burn` alongside captions. **Both captions and overlays render in a single Remotion pass** — no separate FFmpeg compositing needed.
+如果场景计划包含叠加场景（文字卡片、统计卡片、图表、比较、标注），将它们与字幕一起传递给 `remotion_caption_burn`。**字幕和叠加层在同一个 Remotion 过程中渲染**——无需单独的 FFmpeg 合成。
 
-**How it works:** The TalkingHead Remotion composition renders three layers:
-1. **Video** (bottom) — the talking-head footage
-2. **Overlays** (middle) — positioned charts, stats, callouts with fade in/out
-3. **Captions** (top) — word-by-word highlighting, always visible
+**工作原理：** TalkingHead Remotion 合成渲染三个图层：
+1. **视频**（底部）— talking-head 素材
+2. **叠加层**（中间）— 定位的图表、统计数据、标注，带淡入/淡出
+3. **字幕**（顶部）— 逐词高亮，始终可见
 
-**Combine Step 3 and 3b into one `remotion_caption_burn` call:**
+**将步骤 3 和 3b 合并为一次 `remotion_caption_burn` 调用：**
 ```
 remotion_caption_burn.execute({
     "input_path": "<reframed_or_enhanced_video>",
@@ -208,7 +208,7 @@ remotion_caption_burn.execute({
         {
             "id": "term-agentic-ai",
             "type": "callout",
-            "text": "Agentic AI: software that acts autonomously toward goals",
+            "text": "Agentic AI：自主朝着目标行动的软件",
             "callout_type": "info",
             "in_seconds": 22.0,
             "out_seconds": 26.0,
@@ -220,7 +220,7 @@ remotion_caption_burn.execute({
             "id": "stat-market-size",
             "type": "stat_card",
             "stat": "$4.8B",
-            "subtitle": "Global AI Agent Market (2026)",
+            "subtitle": "全球 AI Agent 市场（2026）",
             "in_seconds": 35.0,
             "out_seconds": 39.0,
             "position": "upper_third",
@@ -235,7 +235,7 @@ remotion_caption_burn.execute({
                 {"label": "2025", "value": 3.5},
                 {"label": "2026", "value": 4.8}
             ],
-            "title": "AI Agent Market ($B)",
+            "title": "AI Agent 市场（$B）",
             "in_seconds": 40.0,
             "out_seconds": 45.0,
             "position": "lower_third",
@@ -245,38 +245,38 @@ remotion_caption_burn.execute({
 })
 ```
 
-**Overlay position options:**
-- `lower_third` → bottom area, above captions (default — safest for most overlays)
-- `upper_third` → top area (good for stats while speaker is center/lower)
-- `left_panel` → left 45% of frame (side-by-side with speaker)
-- `right_panel` → right 45% of frame
-- `full_overlay` → full frame with dark backdrop (use sparingly, 1-2s max)
+**叠加位置选项：**
+- `lower_third` → 底部区域，字幕上方（默认——对大多数叠加层最安全）
+- `upper_third` → 顶部区域（适合演讲者居中/靠下时显示统计数据）
+- `left_panel` → 画面左侧 45%（与演讲者并排）
+- `right_panel` → 画面右侧 45%
+- `full_overlay` → 全屏带暗色背景（谨慎使用，最多 1-2 秒）
 
-**Overlay type → required props** (same as asset-director mapping):
+**叠加类型 → 必需属性**（与 asset-director 映射相同）：
 
-| Type | Required Props |
+| 类型 | 必需属性 |
 |------|---------------|
 | `text_card` | `text` |
-| `stat_card` | `stat`, `subtitle` (optional) |
-| `callout` | `text`, `callout_type` (info/warning/tip/quote) |
-| `comparison` | `leftLabel`, `rightLabel`, `leftValue`, `rightValue` |
-| `bar_chart` | `chartData` (array of `{label, value}`) |
-| `line_chart` | `chartSeries` (array of `{name, data: number[]}`) |
-| `pie_chart` | `chartData` (array of `{label, value}`) |
-| `kpi_grid` | `chartData` (array of `{label, value}`) |
-| `hero_title` | `text`, `subtitle` (optional) |
-| `section_title` | `text`, `subtitle` (optional) |
-| `stat_reveal` | `text` (the stat), `subtitle` (label) |
+| `stat_card` | `stat`、`subtitle`（可选） |
+| `callout` | `text`、`callout_type`（info/warning/tip/quote） |
+| `comparison` | `leftLabel`、`rightLabel`、`leftValue`、`rightValue` |
+| `bar_chart` | `chartData`（`{label, value}` 数组） |
+| `line_chart` | `chartSeries`（`{name, data: number[]}` 数组） |
+| `pie_chart` | `chartData`（`{label, value}` 数组） |
+| `kpi_grid` | `chartData`（`{label, value}` 数组） |
+| `hero_title` | `text`、`subtitle`（可选） |
+| `section_title` | `text`、`subtitle`（可选） |
+| `stat_reveal` | `text`（统计数据）、`subtitle`（标签） |
 
-**Important:** After speed adjustment, recalculate overlay timestamps: `adjusted_time = original_time / speed_factor`.
+**重要：** 速度调整后，重新计算叠加时间戳：`adjusted_time = original_time / speed_factor`。
 
-**Fallback (no Remotion):** If Remotion is unavailable, `remotion_caption_burn` falls back to FFmpeg for captions only. Overlays are NOT rendered in FFmpeg fallback mode — warn the user that overlays require Remotion.
+**回退（无 Remotion）：** 如果 Remotion 不可用，`remotion_caption_burn` 会回退到仅使用 FFmpeg 处理字幕。叠加层在 FFmpeg 回退模式下**不会**渲染——警告用户叠加层需要 Remotion。
 
-### Step 3c: Green Screen Composite (if green screen footage)
+### 步骤 3c: 绿幕合成（如果是绿幕素材）
 
-If the footage has a green/blue screen (detected in scene-director Step 0), follow this pipeline:
+如果素材有绿幕/蓝幕（在场景导演步骤 0 中检测到），按照以下流程操作：
 
-1. **Run `green_screen_processor` tool** to remove the green/blue screen:
+1. **运行 `green_screen_processor` 工具** 去除绿幕/蓝幕：
    ```
    green_screen_processor.execute({
        "input_path": "<enhanced_video>",
@@ -284,17 +284,17 @@ If the footage has a green/blue screen (detected in scene-director Step 0), foll
        "method": "auto"
    })
    ```
-   The `auto` method detects whether the background is green or blue and applies the appropriate chroma key.
+   `auto` 方法检测背景是绿色还是蓝色，并应用适当的色度键。
 
-2. **Render Remotion animated background** using the Explainer composition:
+2. **使用 Remotion 渲染动画背景**（通过讲解类合成）：
    ```
-   # Render an AnimatedBackground clip (gradient mesh, floating orbs, subtle grid)
-   # Use the Explainer composition — NOT a flat #0F172A solid color
+   # 渲染一个 AnimatedBackground 片段（渐变网格、浮动球体、细微网格）
+   # 使用讲解类合成——而不是纯色 #0F172A
    npx remotion render src/index.ts Explainer --props='{"duration":VIDEO_DURATION}' --output=<project>/assets/video/animated_bg.mp4
    ```
-   The AnimatedBackground provides a professional gradient mesh with floating orbs and a subtle grid pattern. This is far superior to a flat solid color.
+   AnimatedBackground 提供带有浮动球体和细微网格图案的专业渐变网格。这远优于纯色。
 
-3. **Run `green_screen_composite` tool** to layer the speaker onto the animated background:
+3. **运行 `green_screen_composite` 工具** 将演讲者叠加到动画背景上：
    ```
    green_screen_composite.execute({
        "foreground_path": "<greenscreen_removed_video>",
@@ -303,9 +303,9 @@ If the footage has a green/blue screen (detected in scene-director Step 0), foll
        "layout": "news_anchor"
    })
    ```
-   Default layout is `news_anchor` (speaker center-bottom, background fills frame). Adjust layout based on speaker position detected in Step 0.
+   默认布局为 `news_anchor`（演讲者居中底部，背景填满画面）。根据步骤 0 检测到的演讲者位置调整布局。
 
-4. **Burn captions via Remotion TalkingHead composition** (NOT FFmpeg ASS subtitles):
+4. **通过 Remotion TalkingHead 合成烧录字幕**（不是 FFmpeg ASS 字幕）：
    ```
    remotion_caption_burn.execute({
        "input_path": "<composited_video>",
@@ -319,7 +319,7 @@ If the footage has a green/blue screen (detected in scene-director Step 0), foll
    })
    ```
 
-5. **Mix background music** (ducked at 15% volume under speech):
+5. **混入背景音乐**（语音时闪避至 15% 音量）：
    ```
    audio_mixer.execute({
        "operation": "duck",
@@ -330,44 +330,44 @@ If the footage has a green/blue screen (detected in scene-director Step 0), foll
    })
    ```
 
-6. **Final encode** to target platform specs (see Step 6 below).
+6. **最终编码**为目标平台规格（见下方步骤 6）。
 
-### Step 3d: Build Showcase Cards (if multi-clip reel)
+### 步骤 3d: 构建展示卡片（如果是多片段合集）
 
-If the output is a reel with showcase clips, use `showcase_card` for each:
+如果输出是带展示片段的合集，为每个片段使用 `showcase_card`：
 ```
 showcase_card.execute({
     "input_path": "<showcase_video>",
     "output_path": "<project>/assets/video/sc_<name>.mp4",
-    "title": "VIDEO TITLE",
-    "subtitle": "Description | Style | Cost: $0.15",
+    "title": "视频标题",
+    "subtitle": "描述 | 风格 | 成本：$0.15",
     "background_color": "0x0A0F1A",
 })
 ```
-This creates letterboxed 9:16 cards with typography.
+这会创建带排版文字的 9:16 信箱格式卡片。
 
-### Step 4: Assemble Multi-Clip (if applicable)
+### 步骤 4: 组装多片段（如适用）
 
-If the output has multiple segments (e.g. talking head + showcase clips), use `video_stitch`:
+如果输出有多个段落（例如 talking-head + 展示片段），使用 `video_stitch`：
 ```
 video_stitch.execute({
     "operation": "stitch",
     "clips": ["intro.mp4", "showcase1.mp4", ..., "outro.mp4"],
     "output_path": "<project>/renders/assembled.mp4",
-    "transition": "crossfade",         # or "fade" for fade-through-black
+    "transition": "crossfade",         # 或 "fade" 用于通过黑色淡入淡出
     "transition_duration": 0.5,
 })
 ```
-**Transition guidance:**
-- `crossfade` (fade): smooth blend between talking head and showcase
-- `fade` (fade-through-black): brief dip to black between showcase clips
-- Mix transition types: use `crossfade` for talk→showcase, `fade` between showcases
+**过渡指导：**
+- `crossfade`（交叉淡入淡出）：在 talking-head 和展示之间平滑融合
+- `fade`（通过黑色淡入淡出）：在展示片段之间短暂变黑
+- 混合过渡类型：talk→showcase 使用 `crossfade`，展示之间使用 `fade`
 
-### Step 5: Mix Audio
+### 步骤 5: 混音音频
 
-Use `audio_mixer` to layer background music:
+使用 `audio_mixer` 叠加背景音乐：
 
-**For multi-clip reels** — use `segmented_music` to play music only during talking head sections:
+**对于多片段合集** — 使用 `segmented_music` 仅在 talking-head 段落播放音乐：
 ```
 audio_mixer.execute({
     "operation": "segmented_music",
@@ -375,36 +375,36 @@ audio_mixer.execute({
     "music_path": "<bg_music>",
     "music_volume": 0.20,
     "segments": [
-        {"start": 0, "end": 17.0},       # intro speech
-        {"start": 167.0, "end": 175.0}    # outro speech
+        {"start": 0, "end": 17.0},       # 开场讲话
+        {"start": 167.0, "end": 175.0}    # 结尾讲话
     ],
     "fade_duration": 0.5,
     "output_path": "<project>/renders/final.mp4",
 })
 ```
 
-**For single talking-head videos** — use `duck` or `full_mix`:
-- Layer original audio with background music
-- Apply ducking if music is present
-- Normalize final levels
+**对于单一 talking-head 视频** — 使用 `duck` 或 `full_mix`：
+- 将原始音频与背景音乐叠加
+- 如果有音乐则应用闪避
+- 归一化最终电平
 
-### Step 6: Final Encode — MANDATORY
+### 步骤 6: 最终编码——必须执行
 
-**Do not skip this step.** Without a final encode, the output will be oversized and may not play correctly on the target platform.
+**不要跳过此步骤。** 没有最终编码，输出会过大，且可能无法在目标平台上正常播放。
 
-Use `video_compose` with `encode` operation:
-- Apply target media profile (youtube_landscape, tiktok, instagram_reels, etc.)
-- Two-pass encoding for quality
+使用 `video_compose` 配合 `encode` 操作：
+- 应用目标媒体配置文件（youtube_landscape、tiktok、instagram_reels 等）
+- 双遍编码以保证质量
 
-**Target file sizes:**
-| Platform | Max Duration | Target Size |
+**目标文件大小：**
+| 平台 | 最大时长 | 目标大小 |
 |----------|-------------|-------------|
-| Instagram Reels | 90s | < 50 MB |
-| TikTok | 10 min | < 100 MB |
-| YouTube Shorts | 60s | < 40 MB |
-| YouTube | unlimited | < 25 MB/min |
+| Instagram Reels | 90 秒 | < 50 MB |
+| TikTok | 10 分钟 | < 100 MB |
+| YouTube Shorts | 60 秒 | < 40 MB |
+| YouTube | 不限 | < 25 MB/分钟 |
 
-If the output exceeds the target, re-encode with a lower bitrate. A 66-second Instagram Reel at 76 MB is unacceptable — it should be under 30 MB.
+如果输出超过目标，以较低比特率重新编码。一个 66 秒、76 MB 的 Instagram Reels 是不可接受的——它应该低于 30 MB。
 
 ```
 video_compose.execute({
@@ -417,9 +417,9 @@ video_compose.execute({
 })
 ```
 
-### Step 7: Visual QA
+### 步骤 7: 视觉 QA
 
-Use `visual_qa` to verify the output before declaring success:
+在宣布成功之前使用 `visual_qa` 验证输出：
 ```
 visual_qa.execute({
     "operation": "review",
@@ -427,13 +427,13 @@ visual_qa.execute({
     "timestamps": [3.0, 10.0, 25.0, 50.0, 100.0, 170.0],
 })
 ```
-Then **read each extracted frame** to verify:
-- Captions are visible and positioned at the bottom (not on the face)
-- Face enhancement is applied (skin looks smooth, not over-processed)
-- Transitions are clean (no artifacts at transition points)
-- Showcase cards have readable typography
+然后**读取每张提取的帧**进行验证：
+- 字幕可见并位于底部（不在面部上）
+- 面部增强已应用（皮肤看起来光滑，不过度处理）
+- 过渡干净（过渡点无伪影）
+- 展示卡片具有可读的排版
 
-Also run probe validation:
+同时运行探针验证：
 ```
 visual_qa.execute({
     "operation": "probe",
@@ -446,7 +446,7 @@ visual_qa.execute({
 })
 ```
 
-And check audio levels:
+并检查音频电平：
 ```
 visual_qa.execute({
     "operation": "audio_levels",
@@ -454,24 +454,24 @@ visual_qa.execute({
     "timestamps": [5.0, 50.0, 170.0],
 })
 ```
-Verify: speech sections have higher volume than showcase sections (confirms music placement).
+验证：讲话段落的音量高于展示段落（确认音乐放置正确）。
 
-### Step 8: Build Render Report
+### 步骤 8: 构建渲染报告
 
-Document output: path, format, resolution, duration, file size, QA results.
+记录输出：路径、格式、分辨率、时长、文件大小、QA 结果。
 
-### Step 9: Self-Evaluate
+### 步骤 9: 自我评估
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Playability** | Does the video play without errors? |
-| **Quality** | Are enhancements applied correctly? |
-| **Framing** | If reframed — is the face centered? No important content cropped? |
-| **Audio** | Is speech clear with balanced levels? Music only during intended segments? |
-| **Subtitles** | Are captions visible at the bottom? Not occluding the face? Word highlighting working? |
-| **Transitions** | Are transitions clean? Correct type (crossfade vs fadeblack)? |
-| **Showcase** | Are showcase cards properly letterboxed with readable typography? |
+| **可播放性** | 视频是否能无错误播放？ |
+| **质量** | 增强效果是否正确应用？ |
+| **构图** | 如果重新构了图——面部居中吗？没有重要内容被裁剪？ |
+| **音频** | 语音清晰、电平平衡吗？音乐仅在预期段落播放？ |
+| **字幕** | 字幕在底部可见吗？不遮挡面部？逐词高亮正常工作？ |
+| **过渡** | 过渡干净吗？类型正确（crossfade vs fadeblack）？ |
+| **展示** | 展示卡片是否正确信箱格式处理、排版可读？ |
 
-### Step 10: Submit
+### 步骤 10: 提交
 
-Validate the render_report against the schema and persist via checkpoint.
+根据模式校验渲染报告，并通过检查点持久化。

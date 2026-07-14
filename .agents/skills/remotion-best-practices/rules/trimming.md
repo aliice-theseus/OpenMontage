@@ -1,15 +1,15 @@
 ---
 name: trimming
-description: Trimming patterns for Remotion - cut the beginning or end of animations
+description: Remotion 的裁剪模式 - 裁剪动画的开头或结尾
 metadata:
   tags: sequence, trim, clip, cut, offset
 ---
 
-Use `<Sequence>` with a negative `from` value to trim the start of an animation.
+使用带有负值 `from` 的 `<Sequence>` 来裁剪动画的开头部分。
 
-## Trim the Beginning
+## 裁剪开头
 
-A negative `from` value shifts time backwards, making the animation start partway through:
+负值的 `from` 会将时间向后推移，使动画从中间部分开始：
 
 ```tsx
 import { Sequence, useVideoConfig } from "remotion";
@@ -21,12 +21,12 @@ const fps = useVideoConfig();
 </Sequence>;
 ```
 
-The animation appears 15 frames into its progress - the first 15 frames are trimmed off.
-Inside `<MyAnimation>`, `useCurrentFrame()` starts at 15 instead of 0.
+动画从其进度的第 15 帧开始显示——前 15 帧被裁剪掉了。
+在 `<MyAnimation>` 内部，`useCurrentFrame()` 从 15 开始，而不是 0。
 
-## Trim the End
+## 裁剪结尾
 
-Use `durationInFrames` to unmount content after a specified duration:
+使用 `durationInFrames` 在指定时长后卸载内容：
 
 ```tsx
 <Sequence durationInFrames={1.5 * fps}>
@@ -34,11 +34,11 @@ Use `durationInFrames` to unmount content after a specified duration:
 </Sequence>
 ```
 
-The animation plays for 45 frames, then the component unmounts.
+动画播放 45 帧，然后组件卸载。
 
-## Trim and Delay
+## 裁剪并延迟
 
-Nest sequences to both trim the beginning and delay when it appears:
+嵌套序列以同时裁剪开头并延迟其出现时间：
 
 ```tsx
 <Sequence from={30}>
@@ -48,4 +48,4 @@ Nest sequences to both trim the beginning and delay when it appears:
 </Sequence>
 ```
 
-The inner sequence trims 15 frames from the start, and the outer sequence delays the result by 30 frames.
+内部序列从开头裁剪 15 帧，外部序列将结果延迟 30 帧。

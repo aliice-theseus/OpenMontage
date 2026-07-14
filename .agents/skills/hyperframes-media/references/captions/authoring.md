@@ -1,10 +1,10 @@
-# Captions
+# 字幕
 
-Before authoring: confirm the transcript came from the right Whisper model. CLI default `small.en` silently translates non-English audio — see [`../transcribe.md`](../transcribe.md) → "Language Rule" and [`transcript-handling.md`](transcript-handling.md) for the mandatory quality check.
+在创作之前：确认转录来自正确的 Whisper 模型。CLI 默认的 `small.en` 会静默翻译非英语音频——参见 [`../transcribe.md`](../transcribe.md) →「语言规则」和 [`transcript-handling.md`](transcript-handling.md) 了解强制性质量检查。
 
-Analyze spoken content to determine caption style. If user specifies a style, use that. Otherwise, detect tone from the transcript.
+分析口语内容以确定字幕风格。如果用户指定了风格，使用该风格。否则，从转录中检测语调。
 
-## Transcript Source
+## 转录来源
 
 ```json
 [
@@ -13,60 +13,60 @@ Analyze spoken content to determine caption style. If user specifies a style, us
 ]
 ```
 
-`id` (`w0`, `w1`, …) is the stable reference for per-word overrides and is added by `hyperframes transcribe`. It's optional for backwards compatibility with hand-authored transcripts. See [`../transcribe.md`](../transcribe.md) → "Output Shape" for how this is produced, and [`transcript-handling.md`](transcript-handling.md) for cleanup before consumption.
+`id`（`w0`、`w1`……）是逐词覆盖的稳定引用，由 `hyperframes transcribe` 添加。对于手动编写的转录，向后兼容时可省略。参见 [`../transcribe.md`](../transcribe.md) →「输出格式」了解如何生成，以及 [`transcript-handling.md`](transcript-handling.md) 了解消费前的清理。
 
-## Style Detection (When No Style Specified)
+## 风格检测（未指定风格时）
 
-Read the full transcript before choosing. Four dimensions:
+在做出选择之前阅读完整的转录。四个维度：
 
-**1. Visual feel** — corporate→clean; energetic→bold; storytelling→elegant; technical→precise; social→playful.
+**1. 视觉感受**——企业→简洁；充满活力→粗体；叙事→优雅；技术→精确；社交→俏皮。
 
-**2. Color palette** — dark+bright for energy; muted for professional; high contrast for clarity; one accent color.
+**2. 调色板**——深色+明亮用于活力；柔和用于专业；高对比用于清晰；一种强调色。
 
-**3. Font mood** — heavy/condensed for impact; clean sans for modern; rounded for friendly; serif for elegance.
+**3. 字体情绪**——粗体/窄体用于冲击力；简洁无衬线用于现代；圆润用于友好；衬线用于优雅。
 
-**4. Animation character** — scale-pop for punchy; gentle fade for calm; word-by-word for emphasis; typewriter for technical.
+**4. 动画特性**——缩放弹出用于有力；柔和淡出用于平静；逐词用于强调；打字机用于技术。
 
-## Per-Word Styling
+## 逐词样式
 
-Scan for words deserving distinct treatment:
+扫描需要特殊处理的词语：
 
-- **Brand/product names** — larger size, unique color
-- **ALL CAPS** — scale boost, flash, accent color
-- **Numbers/statistics** — bold weight, accent color
-- **Emotional keywords** — exaggerated animation (overshoot, bounce)
-- **Call-to-action** — highlight, underline, color pop
-- **Marker highlight** — for beyond-color emphasis (highlight sweep, circle, burst, scribble, sketchout), see `hyperframes-animation/rules/css-marker-patterns.md`.
+- **品牌/产品名称**——更大的字号，独特的颜色
+- **全大写**——缩放提升，闪烁，强调色
+- **数字/统计数据**——粗体，强调色
+- **情感关键词**——夸张动画（过冲、弹跳）
+- **行动号召**——高亮、下划线、颜色弹出
+- **标记高亮**——对于超越颜色的强调（高亮扫光、圆形、爆发、涂鸦、草图轮廓），参见 `hyperframes-animation/rules/css-marker-patterns.md`
 
-## Script-to-Style Mapping
+## 脚本到样式的映射
 
-| Tone         | Font mood                | Animation                          | Color                       | Size    |
+| 语调 | 字体情绪 | 动画 | 颜色 | 字号 |
 | ------------ | ------------------------ | ---------------------------------- | --------------------------- | ------- |
-| Hype/launch  | Heavy condensed, 800-900 | Scale-pop, back.out(1.7), 0.1-0.2s | Bright on dark              | 72-96px |
-| Corporate    | Clean sans, 600-700      | Fade+slide, power3.out, 0.3s       | White/neutral, muted accent | 56-72px |
-| Tutorial     | Mono/clean sans, 500-600 | Typewriter/fade, 0.4-0.5s          | High contrast, minimal      | 48-64px |
-| Storytelling | Serif/elegant, 400-500   | Slow fade, power2.out, 0.5-0.6s    | Warm muted tones            | 44-56px |
-| Social       | Rounded sans, 700-800    | Bounce, elastic.out, word-by-word  | Playful, colored pills      | 56-80px |
+| 炒作/发布 | 粗体窄体，800-900 | 缩放弹出，back.out(1.7)，0.1-0.2s | 亮色背景上的亮色 | 72-96px |
+| 企业 | 简洁无衬线，600-700 | 淡出+滑动，power3.out，0.3s | 白色/中性，柔和强调 | 56-72px |
+| 教程 | 等宽/简洁无衬线，500-600 | 打字机/淡出，0.4-0.5s | 高对比，最小化 | 48-64px |
+| 叙事 | 衬线/优雅，400-500 | 慢淡出，power2.out，0.5-0.6s | 暖柔和的色调 | 44-56px |
+| 社交 | 圆润无衬线，700-800 | 弹跳，elastic.out，逐词 | 俏皮，彩色药丸 | 56-80px |
 
-## Word Grouping
+## 词语分组
 
-- **High energy:** 2-3 words. Quick turnover.
-- **Conversational:** 3-5 words. Natural phrases.
-- **Measured/calm:** 4-6 words. Longer groups.
+- **高能量：** 2-3 个词。快速更替。
+- **对话式：** 3-5 个词。自然短语。
+- **有节制的/平静：** 4-6 个词。较长的组。
 
-Break on sentence boundaries, 150ms+ pauses, or max word count.
+在句子边界、150ms+ 停顿或最大词数处断开。
 
-## Positioning
+## 定位
 
-- **Landscape (1920x1080):** Bottom 80-120px, centered
-- **Portrait (1080x1920):** Lower middle ~600-700px from bottom, centered
-- Never cover the subject's face
-- `position: absolute` — never relative
-- One caption group visible at a time
+- **横屏（1920x1080）：** 底部 80-120px，居中
+- **竖屏（1080x1920）：** 中下部，距底部约 600-700px，居中
+- 永远不要遮挡主体的面部
+- `position: absolute`——永远不要 relative
+- 一次只显示一个字幕组
 
-## Text Overflow Prevention
+## 文本溢出预防
 
-Use `window.__hyperframes.fitTextFontSize()`:
+使用 `window.__hyperframes.fitTextFontSize()`：
 
 ```js
 var result = window.__hyperframes.fitTextFontSize(group.text.toUpperCase(), {
@@ -77,24 +77,23 @@ var result = window.__hyperframes.fitTextFontSize(group.text.toUpperCase(), {
 el.style.fontSize = result.fontSize + "px";
 ```
 
-Options: `maxWidth` (1600 landscape, 900 portrait), `baseFontSize` (78), `minFontSize` (42), `fontWeight`, `fontFamily`, `step` (2).
+选项：`maxWidth`（横屏 1600，竖屏 900）、`baseFontSize`（78）、`minFontSize`（42）、`fontWeight`、`fontFamily`、`step`（2）。
 
-CSS safety nets: `max-width` on container, `overflow: visible` (**not** `hidden` — hidden clips scaled emphasis words and glow effects), `position: absolute`, explicit `height`. When per-word styling uses `scale > 1.0`, compute `maxWidth = safeWidth / maxScale` to leave headroom.
+CSS 安全网：容器上的 `max-width`、`overflow: visible`（**不是** `hidden`——hidden 会裁剪缩放的强调词和光晕效果）、`position: absolute`、显式 `height`。当逐词样式使用 `scale > 1.0` 时，计算 `maxWidth = safeWidth / maxScale` 以留出余量。
 
-**Container pattern:** Full-width absolute container, centered. Do **not** use `left: 50%; transform: translateX(-50%)` — causes clipping at composition edges.
+**容器模式：** 全宽绝对定位容器，居中。**不要**使用 `left: 50%; transform: translateX(-50%)`——会导致作品边缘裁剪。
 
-## Caption Exit Guarantee
+## 字幕退出保证
 
-Every group **must** have a hard kill after exit animation:
+每个组在退出动画后**必须**有一个硬性清除：
 
 ```js
 tl.to(groupEl, { opacity: 0, scale: 0.95, duration: 0.12, ease: "power2.in" }, group.end - 0.12);
-// `tl.set` is an instant flip, not a tween — safe to set `visibility` here (core's "no animating
-// visibility" rule applies to tweens, which can't smoothly interpolate non-numeric values anyway).
+// `tl.set` 是即时翻转，不是动画——在此设置 `visibility` 是安全的（核心的「不动画 visibility」规则适用于动画，因为动画无法平滑插值非数值属性）。
 tl.set(groupEl, { opacity: 0, visibility: "hidden" }, group.end);
 ```
 
-Self-lint after building timeline — place **before** `window.__timelines[id] = tl` so it runs at composition init:
+构建时间线后进行自我检查——放在 `window.__timelines[id] = tl` **之前**，使其在作品初始化时运行：
 
 ```js
 GROUPS.forEach(function (group, gi) {
@@ -104,56 +103,56 @@ GROUPS.forEach(function (group, gi) {
   var computed = window.getComputedStyle(el);
   if (computed.opacity !== "0" && computed.visibility !== "hidden") {
     console.warn(
-      "[caption-lint] group " + gi + " still visible at t=" + (group.end + 0.01).toFixed(2) + "s",
+      "[caption-lint] 组 " + gi + " 在 t=" + (group.end + 0.01).toFixed(2) + "s 时仍可见",
     );
   }
 });
 tl.seek(0);
 ```
 
-## Pre-Built Caption Components
+## 预构建的字幕组件
 
-Before building caption styles from scratch, check the registry — 15 ready-to-use caption components cover the most common styles. Install with `npx hyperframes add <name>` and wire as a sub-composition via `data-composition-src` (see `hyperframes-registry`).
+在从头构建字幕样式之前，先检查注册表——15 个即用型字幕组件涵盖了最常见的样式。使用 `npx hyperframes add <name>` 安装，并通过 `data-composition-src` 作为子作品接入（参见 `hyperframes-registry`）。
 
 ```bash
-npx hyperframes catalog --tag caption-style   # list all caption components
-npx hyperframes add caption-highlight         # install a specific one
+npx hyperframes catalog --tag caption-style   # 列出所有字幕组件
+npx hyperframes add caption-highlight         # 安装特定的组件
 ```
 
-| Style                     | Component                    | Best for                     |
+| 风格 | 组件 | 最适合 |
 | ------------------------- | ---------------------------- | ---------------------------- |
-| TikTok-style highlight    | `caption-highlight`          | Social, high-energy          |
-| Karaoke pill              | `caption-pill-karaoke`       | Music, lyric videos          |
-| Cinematic editorial       | `caption-editorial-emphasis` | Documentary, storytelling    |
-| Glitch / cyber            | `caption-glitch-rgb`         | Tech, gaming                 |
-| Full-screen slam          | `caption-kinetic-slam`       | Hype, announcements          |
-| Neon glow                 | `caption-neon-glow`          | Night, club, neon aesthetics |
-| Neon accent (multi-color) | `caption-neon-accent`        | Colorful, playful            |
-| Wipe reveal               | `caption-clip-wipe`          | Clean, modern                |
-| Gradient fill             | `caption-gradient-fill`      | Vibrant, eye-catching        |
-| Matrix decode             | `caption-matrix-decode`      | Sci-fi, tech reveals         |
-| Emoji pop                 | `caption-emoji-pop`          | Social, casual               |
-| Parallax layers           | `caption-parallax-layers`    | Depth, cinematic             |
-| Particle burst            | `caption-particle-burst`     | Celebration, impact keywords |
-| Lava texture              | `caption-texture`            | Bold, dramatic               |
-| Weight shift              | `caption-weight-shift`       | Elegant, typographic         |
+| TikTok 风格高亮 | `caption-highlight` | 社交、高能量 |
+| 卡拉 OK 药丸 | `caption-pill-karaoke` | 音乐、歌词视频 |
+| 电影编辑风 | `caption-editorial-emphasis` | 纪录片、叙事 |
+| 故障/赛博 | `caption-glitch-rgb` | 科技、游戏 |
+| 全屏猛击 | `caption-kinetic-slam` | 炒作、公告 |
+| 霓虹光晕 | `caption-neon-glow` | 夜晚、俱乐部、霓虹美学 |
+| 霓虹强调（多色） | `caption-neon-accent` | 多彩、俏皮 |
+| 擦除揭示 | `caption-clip-wipe` | 简洁、现代 |
+| 渐变填充 | `caption-gradient-fill` | 充满活力、引人注目 |
+| 矩阵解码 | `caption-matrix-decode` | 科幻、科技揭示 |
+| Emoji 弹出 | `caption-emoji-pop` | 社交、休闲 |
+| 视差图层 | `caption-parallax-layers` | 深度、电影感 |
+| 粒子爆发 | `caption-particle-burst` | 庆祝、冲击关键词 |
+| 熔岩纹理 | `caption-texture` | 粗体、戏剧性 |
+| 重量偏移 | `caption-weight-shift` | 优雅、字体艺术 |
 
-Related: `caption-blend-difference` (tagged `text` / `blend-mode`, not `caption-style`, so it won't appear under the filter above) auto-inverts text against any background via `mix-blend-mode: difference` — useful when the background is busy or unpredictable.
+相关：`caption-blend-difference`（标记为 `text` / `blend-mode`，不是 `caption-style`，因此不会出现在上面的过滤结果中）通过 `mix-blend-mode: difference` 自动使文本在任何背景上反转——当背景繁忙或不可预测时很有用。
 
-Browse all with previews: [hyperframes.heygen.com/catalog](https://hyperframes.heygen.com/catalog)
+浏览所有带预览的组件：[hyperframes.heygen.com/catalog](https://hyperframes.heygen.com/catalog)
 
-Caption components ship with transparent backgrounds — they're pure overlays. If the underlying video is bright or busy, add a contrast layer (e.g. a semi-transparent dark div) in the host composition beneath the caption sub-composition, not inside the component itself.
+字幕组件自带透明背景——它们是纯叠加层。如果底层视频很亮或很忙，在宿主作品中字幕子作品下方添加对比层（例如半透明深色 div），不要在组件内部添加。
 
-## Further References
+## 进一步参考
 
-- [`motion.md`](motion.md) — karaoke, marker effects, audio-reactive modulation, scatter exits.
-- [`transcript-handling.md`](transcript-handling.md) — input formats, quality checks, cleaning, external API fallback.
-- `hyperframes-animation/rules/css-marker-patterns.md` — marker highlighting (deterministic, fully seekable).
+- [`motion.md`](motion.md)——卡拉 OK、标记效果、音频响应调制、散射退出。
+- [`transcript-handling.md`](transcript-handling.md)——输入格式、质量检查、清理、外部 API 备选。
+- `hyperframes-animation/rules/css-marker-patterns.md`——标记高亮（确定性、完全可搜索）。
 
-## Constraints
+## 约束
 
-- Deterministic. No `Math.random()`, no `Date.now()`.
-- Sync to transcript timestamps.
-- One group visible at a time.
-- Every group must have a hard `tl.set` kill at `group.end`.
-- Fonts: the compiler auto-embeds only its **built-in mapped set** (Inter, Roboto, Montserrat, …) — for those, just declare `font-family` in CSS. Any **other** font (a brand/custom font like `TT Norms Pro`, or a non-Latin CJK/Devanagari family) is **not** auto-supplied: it needs an `@font-face` pointing at a real `.woff2` shipped with the project, or the text silently falls back to a generic font in the render. Don't assume a `font-family` you can see locally will render — the render machine is a clean headless Chrome with no installed fonts.
+- 确定性。没有 `Math.random()`，没有 `Date.now()`。
+- 同步到转录时间戳。
+- 一次只显示一个组。
+- 每个组必须在 `group.end` 有硬性 `tl.set` 清除。
+- 字体：编译器仅自动嵌入其**内置映射集**（Inter、Roboto、Montserrat……）——对于这些字体，只需在 CSS 中声明 `font-family`。任何**其他**字体（品牌/自定义字体如 `TT Norms Pro`，或非拉丁 CJK/梵文系列）都**不会**自动提供：它需要 `@font-face` 指向项目中实际存在的 `.woff2` 文件，否则文本会在渲染中静默回退到通用字体。不要假设你本地能看到的 `font-family` 就能渲染——渲染机器是一个干净的无头 Chrome，没有安装任何字体。

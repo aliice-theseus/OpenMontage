@@ -1,15 +1,14 @@
 ---
-title: Use Compound Components
+title: 使用复合组件
 impact: HIGH
-impactDescription: enables flexible composition without prop drilling
+impactDescription: 无需属性逐层传递即可实现灵活组合
 tags: composition, compound-components, architecture
 ---
 
-## Use Compound Components
+## 使用复合组件
 
-Structure complex components as compound components with a shared context. Each
-subcomponent accesses shared state via context, not props. Consumers compose the
-pieces they need.
+将复杂组件构建为具有共享上下文的复合组件。每个子组件通过上下文而非 props
+访问共享状态。消费者组合他们需要的部分。
 
 **Incorrect (monolithic component with render props):**
 

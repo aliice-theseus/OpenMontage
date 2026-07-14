@@ -1,12 +1,12 @@
-# SFX Credits
+# SFX 致谢
 
-All sound effects in this directory are sourced from [Pixabay](https://pixabay.com/sound-effects/) and used under the [Pixabay Content License](https://pixabay.com/service/license-summary/).
+此目录中的所有音效均来自 [Pixabay](https://pixabay.com/sound-effects/)，并按照 [Pixabay 内容许可](https://pixabay.com/service/license-summary/) 使用。
 
-The Pixabay license allows free use for commercial and non-commercial purposes without attribution, but attribution is appreciated and given here for transparency.
+Pixabay 许可允许免费用于商业和非商业目的，无需署名，但为了透明起见，我们在此表示感谢并提供归属信息。
 
-## Files
+## 文件列表
 
-The following `.mp3` files are bundled with this skill:
+以下 `.mp3` 文件与此技能捆绑：
 
 - `chime.mp3`
 - `click.mp3` / `click-soft.mp3`
@@ -22,14 +22,14 @@ The following `.mp3` files are bundled with this skill:
 - `typing.mp3`
 - `whoosh.mp3` / `whoosh-short.mp3` / `whoosh-cinematic.mp3`
 
-See `manifest.json` for per-file metadata (duration, energy character, recommended use).
+参见 `manifest.json` 获取每个文件的元数据（时长、能量特性、推荐用途）。
 
-## License
+## 许可
 
-All files are distributed under the [Pixabay Content License](https://pixabay.com/service/license-summary/), which permits:
+所有文件均根据 [Pixabay 内容许可](https://pixabay.com/service/license-summary/) 分发，该许可允许：
 
-- Commercial and non-commercial use
-- Modification and remixing
-- Redistribution as part of derivative works (such as videos rendered with HyperFrames)
+- 商业和非商业使用
+- 修改和混音
+- 作为衍生作品（例如使用 HyperFrames 渲染的视频）的一部分重新分发
 
-without any attribution requirement.
+无需任何署名要求。

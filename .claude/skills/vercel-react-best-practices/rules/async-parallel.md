@@ -1,15 +1,15 @@
 ---
-title: Promise.all() for Independent Operations
+title: 对独立操作使用 Promise.all()
 impact: CRITICAL
-impactDescription: 2-10× improvement
+impactDescription: 提升 2-10 倍
 tags: async, parallelization, promises, waterfalls
 ---
 
-## Promise.all() for Independent Operations
+## 对独立操作使用 Promise.all()
 
-When async operations have no interdependencies, execute them concurrently using `Promise.all()`.
+当异步操作之间没有相互依赖时，使用 `Promise.all()` 并行执行它们。
 
-**Incorrect (sequential execution, 3 round trips):**
+**错误做法（串行执行，3 次往返）：**
 
 ```typescript
 const user = await fetchUser()
@@ -17,7 +17,7 @@ const posts = await fetchPosts()
 const comments = await fetchComments()
 ```
 
-**Correct (parallel execution, 1 round trip):**
+**正确做法（并行执行，1 次往返）：**
 
 ```typescript
 const [user, posts, comments] = await Promise.all([

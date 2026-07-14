@@ -1,54 +1,54 @@
 ---
 name: maps
-description: Make map animations with Mapbox
+description: 使用 Mapbox 制作地图动画
 metadata:
   tags: map, map animation, mapbox
 ---
 
-Maps can be added to a Remotion video with Mapbox.  
-The [Mapbox documentation](https://docs.mapbox.com/mapbox-gl-js/api/) has the API reference.
+可以使用 Mapbox 将地图添加到 Remotion 视频中。  
+[Mapbox 文档](https://docs.mapbox.com/mapbox-gl-js/api/) 提供了 API 参考。
 
-## Prerequisites
+## 前置条件
 
-Mapbox and `@turf/turf` need to be installed.
+需要安装 Mapbox 和 `@turf/turf`。
 
-Search the project for lockfiles and run the correct command depending on the package manager:
+搜索项目中的锁定文件，根据包管理器运行相应命令：
 
-If `package-lock.json` is found, use the following command:
+如果找到 `package-lock.json`，请使用以下命令：
 
 ```bash
 npm i mapbox-gl @turf/turf @types/mapbox-gl
 ```
 
-If `bun.lock` is found, use the following command:
+如果找到 `bun.lock`，请使用以下命令：
 
 ```bash
 bun i mapbox-gl @turf/turf @types/mapbox-gl
 ```
 
-If `yarn.lock` is found, use the following command:
+如果找到 `yarn.lock`，请使用以下命令：
 
 ```bash
 yarn add mapbox-gl @turf/turf @types/mapbox-gl
 ```
 
-If `pnpm-lock.yaml` is found, use the following command:
+如果找到 `pnpm-lock.yaml`，请使用以下命令：
 
 ```bash
 pnpm i mapbox-gl @turf/turf @types/mapbox-gl
 ```
 
-The user needs to create a free Mapbox account and create an access token by visiting https://console.mapbox.com/account/access-tokens/.
+用户需要创建一个免费的 Mapbox 账户，并访问 https://console.mapbox.com/account/access-tokens/ 创建访问令牌。
 
-The mapbox token needs to be added to the `.env` file:
+Mapbox 令牌需要添加到 `.env` 文件中：
 
 ```txt title=".env"
 REMOTION_MAPBOX_TOKEN==pk.your-mapbox-access-token
 ```
 
-## Adding a map
+## 添加地图
 
-Here is a basic example of a map in Remotion.
+以下是在 Remotion 中使用地图的基本示例。
 
 ```tsx
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -72,7 +72,7 @@ export const MyComposition = () => {
   const { delayRender, continueRender } = useDelayRender();
 
   const { width, height } = useVideoConfig();
-  const [handle] = useState(() => delayRender("Loading map..."));
+  const [handle] = useState(() => delayRender("加载地图..."));
   const [map, setMap] = useState<Map | null>(null);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const MyComposition = () => {
     });
 
     _map.on("style.load", () => {
-      // Hide all features from the Mapbox Standard style
+      // 隐藏 Mapbox Standard 样式的所有要素
       const hideFeatures = [
         "showRoadsAndTransit",
         "showRoads",
@@ -155,27 +155,27 @@ export const MyComposition = () => {
 };
 ```
 
-The following is important in Remotion:
+以下是在 Remotion 中的重要注意事项：
 
-- Animations must be driven by `useCurrentFrame()` and animations that Mapbox brings itself should be disabled. For example, the `fadeDuration` prop should be set to `0`, `interactive` should be set to `false`, etc.
-- Loading the map should be delayed using `useDelayRender()` and the map should be set to `null` until it is loaded.
-- The element containing the ref MUST have an explicit width and height and `position: "absolute"`.
-- Do not add a `_map.remove();` cleanup function.
+- 动画必须由 `useCurrentFrame()` 驱动，应禁用 Mapbox 自带的动画。例如，`fadeDuration` 属性应设置为 `0`，`interactive` 应设置为 `false` 等。
+- 应使用 `useDelayRender()` 延迟加载地图，地图加载完成前应设置为 `null`。
+- 包含 ref 的元素必须具有显式的宽度和高度以及 `position: "absolute"`。
+- 不要添加 `_map.remove();` 清理函数。
 
-## Drawing lines
+## 绘制线条
 
-Unless I request it, do not add a glow effect to the lines.
-Unless I request it, do not add additional points to the lines.
+除非我要求，否则不要为线条添加发光效果。
+除非我要求，否则不要为线条添加额外的点。
 
-## Map style
+## 地图样式
 
-By default, use the `mapbox://styles/mapbox/standard` style.  
-Hide the labels from the base map style.
+默认使用 `mapbox://styles/mapbox/standard` 样式。  
+隐藏基础地图样式中的标签。
 
-Unless I request otherwise, remove all features from the Mapbox Standard style.
+除非我另有要求，否则移除 Mapbox Standard 样式的所有要素。
 
 ```tsx
-// Hide all features from the Mapbox Standard style
+// 隐藏 Mapbox Standard 样式的所有要素
 const hideFeatures = [
   "showRoadsAndTransit",
   "showRoads",
@@ -204,11 +204,11 @@ _map.setConfigProperty("basemap", "colorRoads", "transparent");
 _map.setConfigProperty("basemap", "colorTrunks", "transparent");
 ```
 
-## Animating the camera
+## 动画化相机
 
-You can animate the camera along the line by adding a `useEffect` hook that updates the camera position based on the current frame.
+可以通过添加 `useEffect` 钩子来使相机沿线条移动，该钩子根据当前帧更新相机位置。
 
-Unless I ask for it, do not jump between camera angles.
+除非我要求，否则不要在相机角度之间跳转。
 
 ```tsx
 import * as turf from "@turf/turf";
@@ -229,7 +229,7 @@ useEffect(() => {
   if (!map) {
     return;
   }
-  const handle = delayRender("Moving point...");
+  const handle = delayRender("移动点...");
 
   const routeDistance = turf.length(turf.lineString(lineCoordinates));
 
@@ -261,20 +261,20 @@ useEffect(() => {
 }, [lineCoordinates, fps, frame, handle, map]);
 ```
 
-Notes:
+注意：
 
-IMPORTANT: Keep the camera by default so north is up.
-IMPORTANT: For multi-step animations, set all properties at all stages (zoom, position, line progress) to prevent jumps. Override initial values.
+重要：默认保持相机朝北向上。
+重要：对于多步骤动画，在所有阶段设置所有属性（缩放、位置、线条进度）以防止跳变。覆盖初始值。
 
-- The progress is clamped to a minimum value to avoid the line being empty, which can lead to turf errors
-- See [Timing](./timing.md) for more options for timing.
-- Consider the dimensions of the composition and make the lines thick enough and the label font size large enough to be legible for when the composition is scaled down.
+- 进度被限制在最小值，以避免线条为空导致 turf 错误
+- 有关时间控制选项，请参阅[时间控制](./timing.md)
+- 考虑合成的尺寸，使线条足够粗，标签字体足够大，以便在合成缩小时仍然清晰可读
 
-## Animating lines
+## 线条动画
 
-### Straight lines (linear interpolation)
+### 直线（线性插值）
 
-To animate a line that appears straight on the map, use linear interpolation between coordinates. Do NOT use turf's `lineSliceAlong` or `along` functions, as they use geodesic (great circle) calculations which appear curved on a Mercator projection.
+要在地图上显示直线，请在坐标之间使用线性插值。不要使用 turf 的 `lineSliceAlong` 或 `along` 函数，因为它们使用的是测地线（大圆）计算，在墨卡托投影上会显示为曲线。
 
 ```tsx
 const frame = useCurrentFrame();
@@ -283,7 +283,7 @@ const { durationInFrames } = useVideoConfig();
 useEffect(() => {
   if (!map) return;
 
-  const animationHandle = delayRender("Animating line...");
+  const animationHandle = delayRender("动画化线条...");
 
   const progress = interpolate(frame, [0, durationInFrames - 1], [0, 1], {
     extrapolateLeft: "clamp",
@@ -291,7 +291,7 @@ useEffect(() => {
     easing: Easing.inOut(Easing.cubic),
   });
 
-  // Linear interpolation for a straight line on the map
+  // 地图上直线的线性插值
   const start = lineCoordinates[0];
   const end = lineCoordinates[1];
   const currentLng = start[0] + (end[0] - start[0]) * progress;
@@ -315,9 +315,9 @@ useEffect(() => {
 }, [frame, map, durationInFrames]);
 ```
 
-### Curved lines (geodesic/great circle)
+### 曲线（测地线/大圆）
 
-To animate a line that follows the geodesic (great circle) path between two points, use turf's `lineSliceAlong`. This is useful for showing flight paths or the actual shortest distance on Earth.
+要动画化两点之间的测地线（大圆）路径，请使用 turf 的 `lineSliceAlong`。这适用于显示飞行路径或地球上的实际最短距离。
 
 ```tsx
 import * as turf from "@turf/turf";
@@ -334,9 +334,9 @@ if (source) {
 }
 ```
 
-## Markers
+## 标记
 
-Add labels, and markers where appropriate.
+在适当的位置添加标签和标记。
 
 ```tsx
 _map.addSource("markers", {
@@ -346,7 +346,7 @@ _map.addSource("markers", {
     features: [
       {
         type: "Feature",
-        properties: { name: "Point 1" },
+        properties: { name: "点 1" },
         geometry: { type: "Point", coordinates: [-118.2437, 34.0522] },
       },
     ],
@@ -384,18 +384,18 @@ _map.addLayer({
 });
 ```
 
-Make sure they are big enough. Check the composition dimensions and scale the labels accordingly.
-For a composition size of 1920x1080, the label font size should be at least 40px.
+确保它们足够大。检查合成尺寸并相应缩放标签。
+对于 1920x1080 的合成尺寸，标签字体大小应至少为 40px。
 
-IMPORTANT: Keep the `text-offset` small enough so it is close to the marker. Consider the marker circle radius. For a circle radius of 40, this is a good offset:
+重要：保持 `text-offset` 足够小，使其靠近标记。考虑标记圆的半径。对于半径为 40 的圆，这是一个合适的偏移量：
 
 ```tsx
 "text-offset": [0, 0.5],
 ```
 
-## 3D buildings
+## 3D 建筑
 
-To enable 3D buildings, use the following code:
+要启用 3D 建筑，请使用以下代码：
 
 ```tsx
 _map.setConfigProperty("basemap", "show3dObjects", true);
@@ -403,9 +403,9 @@ _map.setConfigProperty("basemap", "show3dLandmarks", true);
 _map.setConfigProperty("basemap", "show3dBuildings", true);
 ```
 
-## Rendering
+## 渲染
 
-When rendering a map animation, make sure to render with the following flags:
+在渲染地图动画时，请确保使用以下标志进行渲染：
 
 ```
 npx remotion render --gl=angle --concurrency=1

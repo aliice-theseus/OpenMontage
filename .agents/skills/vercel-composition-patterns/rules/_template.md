@@ -1,24 +1,24 @@
 ---
-title: Rule Title Here
+title: 在此处填写规则标题
 impact: MEDIUM
-impactDescription: brief description of impact
+impactDescription: 影响简要描述
 tags: composition, components
 ---
 
-## Rule Title Here
+## 在此处填写规则标题
 
-Brief explanation of the rule and why it matters.
+规则的简要说明以及为什么它很重要。
 
-**Incorrect:**
-
-```tsx
-// Bad code example
-```
-
-**Correct:**
+**错误示例：**
 
 ```tsx
-// Good code example
+// 错误代码示例
 ```
 
-Reference: [Link](https://example.com)
+**正确示例：**
+
+```tsx
+// 正确代码示例
+```
+
+参考：[链接](https://example.com)

@@ -1,75 +1,73 @@
-# Motion-primitive catalog — the free-compose menu
+# 动效原语目录——自由组合菜单
 
-The atomic layer: one anchor → one micro-move. When no template fits a group, free-compose by
-naming primitives from here. Scan **anchor** + **best span** + **what it does**, then pick the
-smallest set that carries the group.
+原子层：一个锚点 → 一个微动效。当没有模板适合组时，通过从这里命名原语自由组合。扫描**锚点** + **最佳跨度** + **作用**，然后选择承载组的最小集合。
 
-## Timing & latency (applies to every primitive)
+## 时序与延迟（适用于每个原语）
 
-- **Hard hits are 0ms.** Cuts, palette flips, content swaps, freezes are `tl.set(...)` with no duration — the percussion _is_ the motion. Easing a hit kills it.
-- **Lead the anchor.** A move that must _land_ on a beat (a wipe covering the frame, a count-up locking, two blocks colliding) starts **~40–190ms early** so it completes ON the anchor. Reactive entrances (something appearing _because_ of the hit) fire 0–45ms after.
-- **Eased entrances: 300–500ms** (scale punch, slides, camera pushes). **Macro builds: 800–2000ms** spanning a whole roll / silence.
-- **Per-bar caps:** one accumulating element per hit (not a burst); a camera move at most once per phrase, never per beat; a dense flip/strobe system runs ≤2–3s.
-- **Tension-builds lock.** A count-up / sequential build / morph must _resolve on_ a downbeat or hard_stop, never trail off mid-bar.
-- **Best span means active motion.** The catalog's span guidance is not a license to stretch one primitive over a whole frame. If a free-composed group runs longer than the listed span, add a hold / bed / next primitive, or split the frame into another group at the next musical anchor.
+- **硬命中是 0ms。** 剪切、调色板翻转、内容交换、冻结是 `tl.set(...)` 没有时长——敲击_就是_动效。缓和一个命中会杀死它。
+- **领先于锚点。** 必须在节拍上_落地_的动效（覆盖画面的擦除、锁定计数、两个块碰撞）开始**约 40–190ms 提前**以便在锚点_上_完成。反应式入口（因为命中而出现的东西）在 0–45ms 后触发。
+- **缓动入口：300–500ms**（缩放重击、滑动、相机推近）。**宏观构建：800–2000ms** 跨越整个滚动段/静默。
+- **每小节上限：** 每次命中一个累积元素（不是爆发）；每个乐句最多一次相机运动，从不是每节拍；密集翻转/频闪系统运行 ≤2–3s。
+- **紧张构建锁定。** 计数 / 顺序构建 / 变形必须在强拍或 hard_stop _上解决_，从不在小节中间消散。
+- **最佳跨度意味着活跃动效。** 目录的跨度指导不是将原语拉伸到整个帧的许可证。如果自由组合组运行时间长于列出的跨度，添加保持 / 床 / 下一个原语，或在下一个音乐锚点将帧拆分为另一个组。
 
-## Catalog
+## 目录
 
-| id                    | anchor                           | best span         | what it does                                                              |
+| id | 锚点 | 最佳跨度 | 作用 |
 | --------------------- | -------------------------------- | ----------------- | ------------------------------------------------------------------------- |
-| `hypercut-whip`       | beat / hard_stop                 | 0.18-0.45s        | fast whip-pan hard cut between frames                                     |
-| `kinetic-letter-in`   | downbeat / phrase                | 0.4-1.2s          | per-letter kinetic entrance                                               |
-| `braam-punch`         | drop / surge                     | 0.2-0.9s active   | big impact: scale + weight slam                                           |
-| `chromatic-split`     | snare / glitch / surge           | 0.1-0.6s          | RGB channel split / glitch on a word                                      |
-| `mask-reveal`         | section_start / downbeat         | 0.5-1.2s          | clip-path mask wipe reveal                                                |
-| `screen-shake`        | drop / crash / kick              | 0.1-0.5s          | camera / screen shake jitter                                              |
-| `binary-decrypt`      | roll / build                     | 0.8-2.5s          | scramble→decode text (binary → word)                                      |
-| `dolly-zoom`          | phrase / build                   | 1.2-2.5s          | vertigo dolly-zoom (scale vs perspective)                                 |
-| `iris-open`           | section_start / reveal           | 0.6-1.2s          | circular iris-open reveal                                                 |
-| `electric-arc`        | accent / glitch                  | 0.1-0.6s          | electric arc / lightning accent                                           |
-| `neon-flicker`        | hold / texture                   | 0.5-2.5s          | neon-sign flicker                                                         |
-| `chrome-sweep`        | downbeat / reveal                | 0.6-1.4s          | metallic specular sweep across text                                       |
-| `slot-machine-reveal` | roll → downbeat                  | 0.8-2.0s          | slot-machine spin-to-land character reveal                                |
-| `liquid-morph`        | phrase / transition              | 1.0-2.5s          | liquid / blob morph                                                       |
-| `gooey-metaball`      | build / drop                     | 1.5-3.0s          | gooey metaball merge field                                                |
-| `3d-card-flip`        | downbeat / swap                  | 0.8-1.6s          | 3D card flip (rotateY)                                                    |
-| `crash-zoom-in`       | drop / surge                     | 0.2-0.8s          | violent crash zoom-in                                                     |
-| `spotlight-sweep`     | reveal / hold                    | 0.8-2.0s          | spotlight / gradient sweep over text                                      |
-| `outline-to-fill`     | downbeat / reveal                | 0.8-1.8s          | stroke outline → solid fill                                               |
-| `counting-punch`      | roll → downbeat                  | 1.0-2.5s          | number count-up that punches & locks                                      |
-| `particle-burst`      | drop / crash                     | 0.2-1.2s          | particle explosion burst                                                  |
-| `radial-burst-lines`  | drop / surge                     | 0.2-0.8s          | radial speed-lines burst                                                  |
-| `pixel-dissolve`      | transition / hard_stop           | 0.5-1.5s          | pixelated dissolve                                                        |
-| `datamosh-smear`      | glitch / transition              | 0.4-1.2s          | datamosh / motion smear                                                   |
-| `text-wave-distort`   | hold / texture                   | 1.0-2.5s          | wavy text distortion                                                      |
-| `bg-flow-field`       | energy / whole span (bed)        | 4-12s bed         | generative curl-noise background bed; compose any foreground move over it |
-| `blur-resolve`        | stop / final hold                | 0.7-2.0s          | blur-in to crisp focus, then blur-out on the cut                          |
-| `chromatic-pressure`  | snare / glitch                   | 0.1-0.5s          | RGB split / digital tension on a transient                                |
-| `color-grid-shuffle`  | onset                            | 0ms hits; ≤2s run | grid of cells recolored by a deterministic index per onset                |
-| `content-swap`        | beat                             | 0ms hits; ≤3s run | 0ms swap of stacked nodes: the workhorse percussive move                  |
-| `directional-fill`    | beat / reveal                    | 0.3-1.0s each     | directional wipe-fill (scaleX) sweeping across bars                       |
-| `flash-cut`           | drop / crash                     | 0-0.6s            | full-frame flash masking a word / color state change                      |
-| `freeze-hold`         | hard_stop                        | 0ms in; 0.5-2s    | freeze the moving system and hold it                                      |
-| `hard-cut`            | beat / hard_stop                 | 0ms in; 0.3-2s    | sample-accurate color-block + word cut                                    |
-| `mosaic-pack`         | beat / build                     | 1.5-3.5s          | scattered tiles fly in and pack into a grid                               |
-| `negative-space-hold` | silence / hard_stop / final hold | 1-6s hold         | kill busy layers, hold one readable mark in empty space                   |
-| `overlay-pop`         | accent                           | 0.2-0.6s in       | badge / lower-third overlay pops in over a base                           |
-| `palette-flip`        | section change                   | 0ms flip; 0.5-4s  | same layout re-skins via 0ms palette-variable flips                       |
-| `staggered-exit`      | phrase / transition              | 0.4-1.2s          | ordered cascade-out clearing the frame                                    |
-| `staggered-reveal`    | build                            | 0.8-2.5s          | ordered cascade-in of a stack / list                                      |
-| `system-replace`      | drop / regime change             | 0ms cut           | hard-cut the entire visual system, then boot the new one                  |
-| `text-spectral-rays`  | phrase / sweep (hero text)       | 2.5-5s            | volumetric light-rays cast by a wordmark toward a sweeping light cursor   |
-| `tile-mosaic`         | build / reveal                   | 1.5-3.5s          | grid of tiles revealed in a diagonal sweep, assembling a poster           |
-| `typewriter-reveal`   | roll / build                     | 1.0-3.0s          | character / word type-on with caret                                       |
-| `value-counter`       | roll → downbeat                  | 1.0-2.5s          | count-up that locks on a downbeat / hard_stop                             |
-| `word-grid-burst`     | onsets → downbeat                | 1.8-3.2s          | grid of words revealed per onset, refocus one on a downbeat               |
+| `hypercut-whip` | 节拍 / hard_stop | 0.18-0.45s | 帧之间的快速甩镜硬切 |
+| `kinetic-letter-in` | 强拍 / 乐句 | 0.4-1.2s | 逐字母动能入口 |
+| `braam-punch` | 下降 / 激增 | 0.2-0.9s 活跃 | 大冲击：缩放 + 重量猛击 |
+| `chromatic-split` | 军鼓 / 故障 / 激增 | 0.1-0.6s | 词上的 RGB 通道分割/故障 |
+| `mask-reveal` | 部分开始 / 强拍 | 0.5-1.2s | clip-path 遮罩擦除揭示 |
+| `screen-shake` | 下降 / 撞击 / 底鼓 | 0.1-0.5s | 相机/屏幕震动抖动 |
+| `binary-decrypt` | 滚动段 / 构建 | 0.8-2.5s | 乱码→解码文本（二进制 → 词） |
+| `dolly-zoom` | 乐句 / 构建 | 1.2-2.5s | 眩晕推近-缩放（缩放 vs 透视） |
+| `iris-open` | 部分开始 / 揭示 | 0.6-1.2s | 圆形虹膜打开揭示 |
+| `electric-arc` | 强调 / 故障 | 0.1-0.6s | 电弧/闪电强调 |
+| `neon-flicker` | 保持 / 纹理 | 0.5-2.5s | 霓虹灯闪烁 |
+| `chrome-sweep` | 强拍 / 揭示 | 0.6-1.4s | 文本上的金属性镜面扫光 |
+| `slot-machine-reveal` | 滚动段 → 强拍 | 0.8-2.0s | 老虎机旋转到位的字符揭示 |
+| `liquid-morph` | 乐句 / 过渡 | 1.0-2.5s | 液体/斑点变形 |
+| `gooey-metaball` | 构建 / 下降 | 1.5-3.0s | 粘性元球合并场 |
+| `3d-card-flip` | 强拍 / 交换 | 0.8-1.6s | 3D 卡片翻转（rotateY） |
+| `crash-zoom-in` | 下降 / 激增 | 0.2-0.8s | 暴力撞击缩放进入 |
+| `spotlight-sweep` | 揭示 / 保持 | 0.8-2.0s | 文本上的聚光灯/渐变扫光 |
+| `outline-to-fill` | 强拍 / 揭示 | 0.8-1.8s | 描边轮廓 → 实心填充 |
+| `counting-punch` | 滚动段 → 强拍 | 1.0-2.5s | 重击并锁定的数字计数 |
+| `particle-burst` | 下降 / 撞击 | 0.2-1.2s | 粒子爆炸爆发 |
+| `radial-burst-lines` | 下降 / 激增 | 0.2-0.8s | 径向速度线爆发 |
+| `pixel-dissolve` | 过渡 / hard_stop | 0.5-1.5s | 像素化解体 |
+| `datamosh-smear` | 故障 / 过渡 | 0.4-1.2s | 数据损坏/动效涂抹 |
+| `text-wave-distort` | 保持 / 纹理 | 1.0-2.5s | 波浪文本扭曲 |
+| `bg-flow-field` | 能量 / 整个跨度（床） | 4-12s 床 | 生成性卷曲噪声背景床；在上面自由构成任何前景动效 |
+| `blur-resolve` | 停止 / 最终保持 | 0.7-2.0s | 模糊进入清晰焦点，然后在切上模糊退出 |
+| `chromatic-pressure` | 军鼓 / 故障 | 0.1-0.5s | RGB 分割/瞬态上的数字紧张 |
+| `color-grid-shuffle` | 起始 | 0ms 命中；≤2s 运行 | 每起始由确定性索引重新着色的网格单元格 |
+| `content-swap` | 节拍 | 0ms 命中；≤3s 运行 | 0ms 交换堆叠节点：工作的敲击动效 |
+| `directional-fill` | 节拍 / 揭示 | 0.3-1.0s 每个 | 方向性擦除填充（scaleX）扫过条 |
+| `flash-cut` | 下降 / 撞击 | 0-0.6s | 全帧闪光遮罩词/颜色状态变化 |
+| `freeze-hold` | hard_stop | 0ms 进入；0.5-2s | 冻结移动系统并保持它 |
+| `hard-cut` | 节拍 / hard_stop | 0ms 进入；0.3-2s | 采样精确的色块 + 词剪切 |
+| `mosaic-pack` | 节拍 / 构建 | 1.5-3.5s | 散落瓦片飞入并打包成网格 |
+| `negative-space-hold` | 静默 / hard_stop / 最终保持 | 1-6s 保持 | 杀死繁忙层，在空空间中保持一个可读标记 |
+| `overlay-pop` | 强调 | 0.2-0.6s 进入 | 徽章/下方三分之一叠加在基础上弹出 |
+| `palette-flip` | 部分变化 | 0ms 翻转；0.5-4s | 相同布局通过 0ms 调色板变量翻转重新换肤 |
+| `staggered-exit` | 乐句 / 过渡 | 0.4-1.2s | 顺序层叠退出清除画面 |
+| `staggered-reveal` | 构建 | 0.8-2.5s | 堆栈/列表的顺序层叠进入 |
+| `system-replace` | 下降 / 状态变化 | 0ms 切 | 硬切整个视觉系统，然后启动新系统 |
+| `text-spectral-rays` | 乐句 / 扫光（英雄文本） | 2.5-5s | 字标向前摇光标的体积光射线 |
+| `tile-mosaic` | 构建 / 揭示 | 1.5-3.5s | 对角线扫光中揭示的瓦片网格，组装海报 |
+| `typewriter-reveal` | 滚动段 / 构建 | 1.0-3.0s | 字符/词打字带光标 |
+| `value-counter` | 滚动段 → 强拍 | 1.0-2.5s | 在强拍/hard_stop 上锁定的计数 |
+| `word-grid-burst` | 起始 → 强拍 | 1.8-3.2s | 每起始揭示的词网格，在强拍上重新聚焦一个 |
 
-## How to combine
+## 如何组合
 
-- One dominant system per group; layer at most one texture primitive over one structural primitive.
-- Structure on strong beats (cuts, camera, `system-replace` → downbeat / phrase / section_start); texture on weak / syncopated hits (`content-swap`, typewriter letters, chromatic accents).
-- A roll is an accumulation container — build during it, hard-cut to a clean layout on the downbeat that ends it.
-- `drop` ≠ `downbeat`: a downbeat is a cut within the regime; a drop is a regime change (`system-replace`, total clear, element-count jump).
-- Let silence remove density (`negative-space-hold`).
-- Background beds are a layer, not a move: one bed at a time, under foreground primitives.
-- `text-spectral-rays` is the hero wordmark treatment; do not stack another visible copy of the same word on top.
+- 每组一个主导系统；最多将一个纹理原语叠加在一个结构原语上。
+- 强节拍上的结构（剪切、相机、`system-replace` → 强拍/乐句/部分开始）；弱/切分音上的纹理（`content-swap`、打字机字母、色差强调）。
+- 滚动段是累积容器——在其中构建，在结束它的强拍上硬切到干净布局。
+- `drop` ≠ `downbeat`：强拍是体制内的剪切；下降是体制变化（`system-replace`、完全清除、元素计数跳跃）。
+- 让静默移除密度（`negative-space-hold`）。
+- 背景床是一个层，不是一个动效：一次一个床，在前景原语下方。
+- `text-spectral-rays` 是英雄字标处理；不要在其上堆叠同一词的另一个可见副本。

@@ -1,42 +1,42 @@
-# Composition Patterns
+# 合成模式
 
-How to architect a project — when to inline everything in one HTML, when to split into sub-compositions, what the `index.html` orchestrator looks like at scale, and the common sub-composition archetypes seen in real projects. Pair with `minimal-composition.md` (single-file shape) and `sub-compositions.md` (mechanics of a sub-comp file).
+如何架构一个项目 — 何时将所有内容内联到一个 HTML 中，何时拆分为子合成，`index.html` 协调器在规模下是什么样子，以及实际项目中常见的子合成原型。与 `minimal-composition.md`（单文件形状）和 `sub-compositions.md`（子合成文件的机制）配合使用。
 
-## Two Architectures
+## 两种架构
 
-|                       | Monolithic (single file)                                | Modular (sub-compositions)                                                           |
-| --------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Project layout        | `index.html` only                                       | `index.html` + `compositions/<scene>.html` per scene                                 |
-| Where scenes live     | Inline `<section class="clip">` siblings under the root | Each scene is a separate file wrapped in `<template>`                                |
-| Timeline registration | One timeline keyed at the root's `data-composition-id`  | Root timeline (often near-empty) + one timeline per sub-comp, each keyed by its `id` |
-| Routing entry         | `references/minimal-composition.md`                     | `references/sub-compositions.md`                                                     |
+|                    | 整体式（单文件）                                          | 模块化（子合成）                                                                    |
+| ----------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 项目布局           | 仅 `index.html`                                          | `index.html` + 每个场景一个 `compositions/<scene>.html`                           |
+| 场景位置           | 根下内联 `<section class="clip">` 同级元素                | 每个场景是包装在 `<template>` 中的单独文件                                         |
+| 时间线注册         | 一个以根 `data-composition-id` 为键的时间线               | 根时间线（通常近乎为空）+ 每个子合成一个时间线，每个以其 `id` 为键                   |
+| 路由入口           | `references/minimal-composition.md`                     | `references/sub-compositions.md`                                                  |
 
-Both architectures use the same runtime contract — `data-*` attributes + `window.__timelines[id]`. The choice is structural, not behavioral.
+两种架构使用相同的运行时契约 — `data-*` 属性 + `window.__timelines[id]`。选择是结构性的，而非行为性的。
 
-### Pick monolithic when
+### 何时选择整体式
 
-- The whole video is one continuous scene with no hard cuts.
-- Scenes share heavy state (one canvas/WebGL context spanning the whole video, a single SVG that morphs across all beats).
-- Total scope is small (~200–400 lines of markup + script).
-- No scene is reused across projects.
+- 整个视频是一个连续场景，没有硬切。
+- 场景共享重型状态（一个 Canvas/WebGL 上下文贯穿整个视频，一个 SVG 跨所有节拍变形）。
+- 总体范围较小（约 200–400 行 HTML + 脚本）。
+- 没有场景在项目间复用。
 
-### Pick modular when
+### 何时选择模块化
 
-- The video has clear scene cuts — each scene is its own segment of the timeline.
-- Some scenes are large (>100 lines of markup or significant scripted animation).
-- A scene is reusable (kinetic intro, end-card logo lockup, a transition).
-- The video has a continuous audio track over multiple visual segments. Keep audio at the root, visual segments as sub-comps.
-- You want to author/iterate on scenes in isolation (preview a single sub-comp file directly).
+- 视频有明显场景切换——每个场景是时间线的独立段落。
+- 某些场景较大（超过 100 行 HTML 或大量脚本动画）。
+- 场景可复用（动感开场、片尾标志组合、转场）。
+- 视频有跨多个视觉段落的连续音轨。音频保持在根层级，视觉段落作为子合成。
+- 希望隔离创作/迭代场景（直接预览单个子合成文件）。
 
-### Refactor between them
+### 两者间的重构
 
-Conversion is mechanical and reversible. To lift a monolithic scene into a sub-comp: wrap the scene's markup + scoped CSS + its slice of the parent timeline into a `<template>`, save as `compositions/<scene>.html`, replace the inline content in `index.html` with a slot `<div data-composition-src="compositions/<scene>.html">`, and have the sub-comp register its own timeline at `window.__timelines["<scene>"]`. The parent timeline shrinks accordingly.
+转换是机械且可逆的。将整体式场景提升为子合成：将场景的标记 + 作用域 CSS + 父时间线片段包裹到一个 `<template>` 中，保存为 `compositions/<scene>.html`，将 `index.html` 中的内联内容替换为一个插槽 `<div data-composition-src="compositions/<scene>.html">`，并在 `window.__timelines["<scene>"]` 注册子合成自己的时间线。父时间线相应缩小。
 
-If a monolithic project is approaching three or more scene cuts, prefer modularizing _before_ adding the next scene. Mixed projects where some scenes are inline and siblings are in `compositions/` are the hardest to maintain.
+如果整体式项目接近三个或更多场景切换，建议在添加下一个场景**之前**进行模块化。混合项目（部分场景内联、同级在 `compositions/` 中）最难维护。
 
-## Modular Orchestrator Pattern
+## 模块化编排模式
 
-When using sub-compositions, `index.html` should be **thin**. Its job is to declare slots, lay them out in time, mount the audio track, and register a (usually empty) root timeline. All scene animation lives inside the sub-comps.
+使用子合成时，`index.html` 应该**很薄**。它的工作是声明插槽、在时间上布局、挂载音轨，并注册一个（通常为空的）根时间线。所有场景动画位于子合成内部。
 
 ```html
 <!doctype html>
@@ -117,24 +117,24 @@ When using sub-compositions, `index.html` should be **thin**. Its job is to decl
 </html>
 ```
 
-Key properties of this layout:
+此布局的关键属性：
 
-- **Visual scenes on the same `data-track-index`** (e.g. `1`). Sequential — they cannot overlap on the same track. For a cross-fade between two scenes, put one on a higher track and overlap their times by the fade duration.
-- **Audio on a separate, higher track index** (e.g. `10`). Keeps the linter's overlap rules clear of any visual collisions.
-- **Root timeline is near-empty.** All animation lives in the sub-comps. A root-level fade-to-black at the very end is fine; do not stage a parallel animation track from the root.
-- **Host slot ids** use `el-<name>` or `<scene-id>`. The slot's `data-composition-id` must still equal the sub-comp's internal id (see `sub-compositions.md`).
+- **同一 `data-track-index` 上的视觉场景**（例如 `1`）。顺序排列——它们在同一轨道上不能重叠。如需两个场景间的交叉淡入淡出，将一个放在更高轨道上，以淡入淡出时长重叠它们的时间。
+- **音频在独立、更高的轨道索引上**（例如 `10`）。保持检查器的重叠规则远离任何视觉冲突。
+- **根时间线近乎为空。** 所有动画位于子合成中。最后在根层级淡出到黑色是可以的；不要在根层级设置并行动画轨道。
+- **宿主插槽 ID** 使用 `el-<name>` 或 `<scene-id>`。插槽的 `data-composition-id` 必须仍等于子合成的内部 ID（参见 `sub-compositions.md`）。
 
-## Sub-Composition Archetypes
+## 子合成原型
 
-### A. Content scene (default)
+### A. 内容场景（默认）
 
-The sub-comp contains the scene's full DOM, scoped CSS, and timeline. This is the standard pattern in `sub-compositions.md` — most scenes are this.
+子合成包含场景的完整 DOM、作用域 CSS 和时间线。这是 `sub-compositions.md` 中的标准模式——大多数场景属于此类。
 
-### B. Host media + main-timeline driver (REQUIRED for any `<video>`/`<audio>`)
+### B. 宿主媒体 + 主时间线驱动（任何 `<video>`/`<audio>` 必需）
 
-Media playback only works when the `<video>`/`<audio>` is a **direct child of the host root** — never inside a sub-comp `<template>` (it would render blank/black). This is not optional or "for media that spans scenes"; it applies to every clip, including a scene-specific one. The scene's sub-comp keeps the frame/shell; the media is a host sibling positioned over it.
+媒体播放仅在 `<video>`/`<audio>` 是**宿主根的直接子元素**时有效——绝不能在子合成 `<template>` 内部（会渲染为空白/黑色）。这不是可选的，也不仅限于"跨场景的媒体"；它适用于每个片段，包括场景特定的片段。场景的子合成保留框架/外壳；媒体是位于其上方的宿主同级元素。
 
-A sub-comp timeline **cannot** drive host elements (a global selector or `document.querySelector` does not resolve across the boundary). So author the media's per-scene motion (scale/opacity/morph/tilt/breathing) on the **main timeline** in `index.html`, at **global time** = scene-local time + the scene slot's `data-start`.
+子合成时间线**不能**驱动宿主元素（全局选择器或 `document.querySelector` 无法跨越边界解析）。因此，在 `index.html` 的**主时间线**上以**全局时间**（= 场景本地时间 + 场景插槽的 `data-start`）编写媒体的每场景动效（缩放/透明度/变形/倾斜/呼吸）。
 
 ```html
 <!-- index.html (host) -->
@@ -191,15 +191,15 @@ A sub-comp timeline **cannot** drive host elements (a global selector or `docume
 </template>
 ```
 
-Caveats:
+注意事项：
 
-- The host media must be a direct root child and exist in the DOM (static in `index.html`) — it always is.
-- Clip lifecycle owns the media element's visibility across its `[data-start, data-start+data-duration]` window. The main-timeline opacity/scale tweens compose with it fine; for an opacity reveal/crossfade prefer a host **wrapper** so you are not fighting the lifecycle on the media element itself.
-- Two media elements sharing the same `src` + `data-start` trigger `duplicate_media_discovery_risk` (benign — both still render).
+- 宿主媒体必须是根的直接子元素，并存在于 DOM 中（在 `index.html` 中静态声明）——它始终如此。
+- 片段生命周期管理媒体元素在其 `[data-start, data-start+data-duration]` 窗口内的可见性。主时间线的不透明度/缩放补间与其配合良好；对于不透明度揭示/交叉淡入淡出，建议使用宿主**包装器**，以避免与媒体元素本身的生命周期冲突。
+- 两个共享相同 `src` + `data-start` 的媒体元素会触发 `duplicate_media_discovery_risk`（良性——两者仍可渲染）。
 
-### C. Multi-scene merge
+### C. 多场景合并
 
-When several beat-level scenes share continuous state — a chat thread that grows, a persistent headline word that carries across the cut, a single canvas with internal phase changes — collapse them into one sub-comp and use **internal phase divs** rather than multiple sub-comp slots.
+当多个节拍级场景共享连续状态时——增长的聊天线程、跨切换携带的持久标题词、具有内部阶段变化的单个 Canvas——将它们合并到一个子合成中，使用**内部阶段 div** 而不是多个子合成插槽。
 
 ```html
 <!-- compositions/act2-merged.html -->
@@ -228,36 +228,36 @@ When several beat-level scenes share continuous state — a chat thread that gro
 </template>
 ```
 
-Reach for this over multiple sequential slots when scenes share DOM, share a canvas, or need to cross-fade with persistent elements (a headline that survives the cut between phases). Each phase is just a div inside the same sub-comp — the parent timeline never has to know about the internal phase boundaries.
+在场景共享 DOM、共享 Canvas 或需要带有持久元素（跨阶段切换保留的标题）的交叉淡入淡出时，优先使用此模式而非多个顺序插槽。每个阶段只是同一子合成内的一个 div——父时间线无需了解内部阶段的边界。
 
-### D. Audio at root, reactive visual inside
+### D. 音频在根层级，响应式视觉在内部
 
-Audio always lives at the host (`index.html`) as a root-level `<audio>` so playback survives scene cuts. A sub-comp that visualizes audio should read a **pre-baked** frequency curve at init, then sample the baked curve from its timeline — the visual must still be a deterministic function of `tl.time()`, not of `audio.currentTime`. See `determinism-rules.md` and `hyperframes-creative` for the authoring pattern.
+音频始终位于宿主（`index.html`），作为根级 `<audio>`，因此播放能在场景切换中持续。可视化音频的子合成应在初始化时读取**预烘焙**的频率曲线，然后从其时间线中采样烘焙曲线——视觉仍然必须是 `tl.time()` 的确定性函数，而不是 `audio.currentTime`。参见 `determinism-rules.md` 和 `hyperframes-creative` 了解创作模式。
 
-## Naming Conventions
+## 命名约定
 
-| Thing                               | Convention                                  | Example                                    |
+| 内容                               | 约定                                      | 示例                                    |
 | ----------------------------------- | ------------------------------------------- | ------------------------------------------ |
-| Sub-comp file                       | `compositions/<scene-id>.html`              | `compositions/act0-intro-bell.html`        |
-| Sub-comp `<template>` id (optional) | `<scene-id>-template`                       | `<template id="act0-intro-bell-template">` |
-| Sub-comp root `data-composition-id` | `<scene-id>` (must match host slot)         | `data-composition-id="act0-intro-bell"`    |
-| Timeline registry key               | matches `data-composition-id`               | `window.__timelines["act0-intro-bell"]`    |
-| Host slot `id`                      | `el-<short>` or `<scene-id>`                | `id="el-intro"`, `id="act0"`               |
-| Element ids inside a sub-comp       | prefix with the scene id                    | `#act0-bell`, `#b1-tape`                   |
-| Audio at root                       | `data-track-index` well above visual tracks | `10` while visuals use `1`                 |
+| 子合成文件                       | `compositions/<scene-id>.html`              | `compositions/act0-intro-bell.html`        |
+| 子合成 `<template>` id（可选） | `<scene-id>-template`                       | `<template id="act0-intro-bell-template">` |
+| 子合成根 `data-composition-id` | `<scene-id>`（必须匹配宿主插槽）         | `data-composition-id="act0-intro-bell"`    |
+| 时间线注册键               | 匹配 `data-composition-id`               | `window.__timelines["act0-intro-bell"]`    |
+| 宿主插槽 `id`                      | `el-<short>` 或 `<scene-id>`                | `id="el-intro"`、`id="act0"`               |
+| 子合成内部元素 ID       | 使用场景 ID 作为前缀                    | `#act0-bell`、`#b1-tape`                   |
+| 根层级音频                       | `data-track-index` 远高于视觉轨道 | `10`，视觉轨道使用 `1`                 |
 
-The `-template` suffix on `<template>` is conventional but not required — the runtime extracts contents from whichever `<template>` is in `<body>`, regardless of id. The prefix on inner element ids is the only safeguard against id collisions when multiple sub-comps are mounted into the same host page at once.
+`<template>` 上的 `-template` 后缀是约定而非强制——运行时会从 `<body>` 中的任意 `<template>` 提取内容，无论 ID 如何。内部元素 ID 的前缀是当多个子合成同时挂载到同一宿主页面时防止 ID 冲突的唯一保障。
 
-## Editing Existing Projects
+## 编辑现有项目
 
-Before adding or modifying scenes, identify which architecture is in use:
+在添加或修改场景之前，识别当前使用的架构：
 
 ```bash
 ls compositions/ 2>/dev/null && echo "modular" || echo "monolithic"
 ```
 
-- In a **monolithic** project, add new scenes as inline `<section class="clip">` elements with a non-overlapping `data-start` and a sensible `data-track-index`, and extend the existing single timeline.
-- In a **modular** project, match the pattern: add a new file under `compositions/`, add a slot in `index.html`, keep the root timeline thin. Do **not** start inlining new scenes into `index.html` when sibling scenes are sub-comps — the inconsistency is the worst of both worlds.
-- If a monolithic project needs a third or fourth scene cut, lift each scene into a sub-comp before adding more. The conversion is mechanical (see "Refactor between them" above).
+- 在**整体式**项目中，将新场景添加为内联 `<section class="clip">` 元素，使用不重叠的 `data-start` 和合理的 `data-track-index`，并扩展现有的单条时间线。
+- 在**模块化**项目中，匹配模式：在 `compositions/` 下添加新文件，在 `index.html` 中添加插槽，保持根时间线精简。**不要**在同级场景是子合成时将新场景内联到 `index.html` 中——这种不一致性是最糟糕的两种世界结合。
+- 如果整体式项目需要第三或第四个场景切换，在添加更多场景之前将每个场景提升为子合成。转换是机械性的（参见上面的"两者间的重构"）。
 
-When picking the slot's `data-start`/`data-duration`, prefer continuing the existing sequencing convention (adjoining starts, deliberate overlaps for cross-fades). Don't introduce a new track index unless you actually need parallel visual layers — most sequential-scene projects use exactly one visual track.
+选择插槽的 `data-start`/`data-duration` 时，建议延续现有的时序约定（相邻起始、有意重叠用于交叉淡入淡出）。除非确实需要并行的视觉图层，否则不要引入新的轨道索引——大多数顺序场景项目正好使用一个视觉轨道。

@@ -1,36 +1,36 @@
-# Styling in ManimGL
+# ManimGL 样式
 
-ManimGL provides comprehensive styling options for mobjects including fill, stroke, opacity, and special effects.
+ManimGL 为 mobject 提供全面的样式选项，包括填充、描边、不透明度和特殊效果。
 
-## Fill Properties
+## 填充属性
 
-### Basic Fill
+### 基本填充
 
 ```python
 from manimlib import *
 
-# Set fill at creation
+# 创建时设置填充
 circle = Circle(fill_color=BLUE, fill_opacity=0.7)
 
-# Set fill after creation
+# 创建后设置填充
 square = Square()
 square.set_fill(RED, opacity=0.5)
 ```
 
-### Fill Examples
+### 填充示例
 
 ```python
 class FillExample(Scene):
     def construct(self):
-        # Solid fill
+        # 实心填充
         solid = Circle(radius=1)
         solid.set_fill(BLUE, opacity=1.0)
 
-        # Transparent fill
+        # 透明填充
         transparent = Circle(radius=1)
         transparent.set_fill(GREEN, opacity=0.3)
 
-        # No fill (just outline)
+        # 无填充（仅轮廓）
         outline = Circle(radius=1)
         outline.set_fill(opacity=0)
         outline.set_stroke(YELLOW, width=4)
@@ -39,23 +39,23 @@ class FillExample(Scene):
         self.add(solid, transparent, outline)
 ```
 
-## Stroke Properties
+## 描边属性
 
-### Basic Stroke
+### 基本描边
 
 ```python
-# Set stroke at creation
+# 创建时设置描边
 line = Line(stroke_color=WHITE, stroke_width=4)
 
-# Set stroke after creation
+# 创建后设置描边
 circle = Circle()
 circle.set_stroke(BLUE, width=3, opacity=0.8)
 ```
 
-### Stroke Width
+### 描边宽度
 
 ```python
-# Different stroke widths
+# 不同描边宽度
 thin = Circle().set_stroke(width=1)
 medium = Circle().set_stroke(width=4)
 thick = Circle().set_stroke(width=10)
@@ -63,33 +63,33 @@ thick = Circle().set_stroke(width=10)
 VGroup(thin, medium, thick).arrange(RIGHT, buff=0.5)
 ```
 
-### Stroke Behind Fill
+### 描边在填充后方
 
 ```python
-# Draw stroke behind fill (useful for borders)
+# 在填充后方绘制描边（用于边框效果）
 shape = Circle(fill_color=BLUE, fill_opacity=0.8)
 shape.set_stroke(WHITE, width=6, opacity=1, background=True)
 ```
 
-## Backstroke
+## 背景描边（Backstroke）
 
-The `backstroke` feature adds an outline behind text or shapes for better visibility.
+`backstroke` 功能在文本或形状后方添加轮廓以提高可见性。
 
 ```python
-# Text with backstroke (black outline)
+# 带背景描边的文本（黑色轮廓）
 text = Text("Readable Text", font_size=60)
 text.set_backstroke(BLACK, width=5)
 
-# Works great over complex backgrounds
+# 在复杂背景上效果很好
 text.set_backstroke(BLACK, width=8, opacity=1.0)
 ```
 
-### Backstroke Example
+### 背景描边示例
 
 ```python
 class BackstrokeExample(Scene):
     def construct(self):
-        # Create complex background
+        # 创建复杂背景
         background = VGroup(*[
             Circle(radius=2 * np.random.random(), color=random_color())
             for _ in range(20)
@@ -97,77 +97,77 @@ class BackstrokeExample(Scene):
         background.set_opacity(0.3)
         self.add(background)
 
-        # Text with backstroke stands out
+        # 带背景描边的文本更加突出
         text = Text("Clear and Readable", font_size=72, color=WHITE)
         text.set_backstroke(BLACK, width=10)
         self.add(text)
 ```
 
-## Opacity Control
+## 不透明度控制
 
-### Fill Opacity
+### 填充不透明度
 
 ```python
-# Control fill transparency
+# 控制填充透明度
 circle = Circle()
 circle.set_fill_opacity(0.5)
 
-# Animate opacity
+# 动画化不透明度
 self.play(circle.animate.set_fill_opacity(1.0))
 ```
 
-### Stroke Opacity
+### 描边不透明度
 
 ```python
-# Control stroke transparency
+# 控制描边透明度
 square = Square()
 square.set_stroke_opacity(0.7)
 ```
 
-### Overall Opacity
+### 整体不透明度
 
 ```python
-# Set both fill and stroke opacity
+# 同时设置填充和描边不透明度
 mobject = Circle()
-mobject.set_opacity(0.5)  # Affects both fill and stroke
+mobject.set_opacity(0.5)  # 同时影响填充和描边
 ```
 
-## Gloss (3D)
+## 光泽（3D）
 
-### Adding Gloss to 3D Objects
+### 为 3D 对象添加光泽
 
 ```python
-# Make objects glossy/shiny
+# 使对象有光泽/闪亮
 sphere = Sphere(radius=2, color=BLUE)
-sphere.set_gloss(0.8)  # 0 (matte) to 1 (very glossy)
+sphere.set_gloss(0.8)  # 0（亚光）到 1（非常光泽）
 
-# Get gloss value
+# 获取光泽值
 gloss_value = sphere.get_gloss()
 ```
 
-## Shadow (3D)
+## 阴影（3D）
 
-### Adding Shadows
+### 添加阴影
 
 ```python
-# Add shadow to 3D objects
+# 为 3D 对象添加阴影
 cube = Cube(color=RED)
-cube.set_shadow(0.6)  # 0 (no shadow) to 1 (strong shadow)
+cube.set_shadow(0.6)  # 0（无阴影）到 1（强阴影）
 
-# Get shadow value
+# 获取阴影值
 shadow_value = cube.get_shadow()
 ```
 
-## Combined Styling
+## 组合样式
 
-### Complete Styling Control
+### 完整的样式控制
 
 ```python
 class CompleteStyling(Scene):
     def construct(self):
         shape = Circle(radius=2)
 
-        # Set all properties
+        # 设置所有属性
         shape.set_fill(BLUE, opacity=0.7)
         shape.set_stroke(WHITE, width=4, opacity=1.0)
         shape.set_backstroke(BLACK, width=6)
@@ -175,48 +175,48 @@ class CompleteStyling(Scene):
         self.add(shape)
 ```
 
-## Style Matching
+## 样式匹配
 
-### Match Style from Another Mobject
+### 从另一个 Mobject 匹配样式
 
 ```python
-# Create styled source
+# 创建样式源
 source = Circle()
 source.set_fill(BLUE, opacity=0.7)
 source.set_stroke(WHITE, width=3)
 
-# Match style
+# 匹配样式
 target = Square()
-target.match_style(source)  # Copies all styling
+target.match_style(source)  # 复制所有样式
 
-# Match specific properties
+# 匹配特定属性
 target2 = Triangle()
-target2.match_fill(source)   # Copy fill only
-target2.match_stroke(source) # Copy stroke only
-target2.match_color(source)  # Copy color only
+target2.match_fill(source)   # 仅复制填充
+target2.match_stroke(source) # 仅复制描边
+target2.match_color(source)  # 仅复制颜色
 ```
 
-## Gradients and Color Transitions
+## 渐变和颜色过渡
 
-### Gradient Fills
+### 渐变填充
 
 ```python
-# Gradient across submobjects
+# 跨子对象的渐变
 text = Text("Gradient")
 text.set_submobject_colors_by_gradient(BLUE, GREEN, YELLOW)
 
-# For shapes with submobjects
+# 用于带子对象的形状
 squares = VGroup(*[Square() for _ in range(10)])
 squares.arrange(RIGHT)
 squares.set_submobject_colors_by_gradient(RED, PURPLE)
 ```
 
-## Visual Effects
+## 视觉效果
 
-### Glow Effect
+### 发光效果
 
 ```python
-# Create glow effect with multiple strokes
+# 使用多层描边创建发光效果
 def add_glow(mobject, color=YELLOW, radius=0.5):
     glow_layers = VGroup(*[
         mobject.copy().set_stroke(
@@ -228,12 +228,12 @@ def add_glow(mobject, color=YELLOW, radius=0.5):
     ])
     return VGroup(glow_layers, mobject)
 
-# Usage
+# 用法
 circle = Circle(color=BLUE)
 glowing_circle = add_glow(circle)
 ```
 
-### Neon Effect
+### 霓虹效果
 
 ```python
 def neon_style(mobject, color=BLUE):
@@ -242,16 +242,16 @@ def neon_style(mobject, color=BLUE):
     mobject.set_backstroke(color, width=10, opacity=0.5)
     return mobject
 
-# Usage
+# 用法
 neon_text = neon_style(Text("NEON", font_size=90), BLUE)
 ```
 
-## Style Presets
+## 样式预设
 
-### Creating Reusable Styles
+### 创建可复用样式
 
 ```python
-# Define style functions
+# 定义样式函数
 def outline_style(mobject):
     mobject.set_fill(opacity=0)
     mobject.set_stroke(WHITE, width=3)
@@ -268,15 +268,15 @@ def glass_style(mobject, color=BLUE):
     mobject.set_gloss(0.9)
     return mobject
 
-# Usage
+# 用法
 circle1 = outline_style(Circle())
 circle2 = solid_style(Circle(), RED)
 circle3 = glass_style(Circle(), GREEN)
 ```
 
-## Animating Styles
+## 动画化样式
 
-### Style Transitions
+### 样式过渡
 
 ```python
 class StyleAnimation(Scene):
@@ -288,14 +288,14 @@ class StyleAnimation(Scene):
         self.add(square)
         self.wait()
 
-        # Animate style changes
+        # 动画化样式变化
         self.play(
             square.animate.set_fill(BLUE, opacity=0.7),
             square.animate.set_stroke(WHITE, width=5)
         )
         self.wait()
 
-        # Change colors
+        # 改变颜色
         self.play(
             square.animate.set_fill(RED, opacity=0.9),
             square.animate.set_stroke(YELLOW, width=3)
@@ -303,40 +303,40 @@ class StyleAnimation(Scene):
         self.wait()
 ```
 
-## Full Styling Example
+## 完整样式示例
 
 ```python
 class ComprehensiveStyleExample(Scene):
     def construct(self):
-        # Different styling approaches
+        # 不同样式方法
         shapes = VGroup()
 
-        # Filled shape
+        # 填充形状
         filled = Circle(radius=0.8)
         filled.set_fill(BLUE, opacity=0.8)
         filled.set_stroke(width=0)
         shapes.add(filled)
 
-        # Outlined shape
+        # 轮廓形状
         outlined = Circle(radius=0.8)
         outlined.set_fill(opacity=0)
         outlined.set_stroke(WHITE, width=4)
         shapes.add(outlined)
 
-        # Transparent with border
+        # 透明带边框
         transparent = Circle(radius=0.8)
         transparent.set_fill(GREEN, opacity=0.3)
         transparent.set_stroke(GREEN, width=3)
         shapes.add(transparent)
 
-        # With backstroke
+        # 带背景描边
         backstroke = Circle(radius=0.8)
         backstroke.set_fill(YELLOW, opacity=0.6)
         backstroke.set_stroke(WHITE, width=2)
         backstroke.set_backstroke(BLACK, width=5)
         shapes.add(backstroke)
 
-        # Gradient (multiple submobjects)
+        # 渐变（多个子对象）
         gradient_circles = VGroup(*[
             Circle(radius=0.15).shift(i * 0.3 * RIGHT)
             for i in range(-2, 3)
@@ -344,7 +344,7 @@ class ComprehensiveStyleExample(Scene):
         gradient_circles.set_submobject_colors_by_gradient(RED, YELLOW)
         shapes.add(gradient_circles)
 
-        # Arrange and display
+        # 排列并显示
         shapes.arrange(RIGHT, buff=1)
         self.play(LaggedStart(*[
             FadeIn(shape)
@@ -352,7 +352,7 @@ class ComprehensiveStyleExample(Scene):
         ], lag_ratio=0.2))
         self.wait()
 
-        # Animate style transitions
+        # 动画化样式过渡
         self.play(
             filled.animate.set_opacity(0.3),
             outlined.animate.set_stroke(YELLOW, width=8),
@@ -361,33 +361,33 @@ class ComprehensiveStyleExample(Scene):
         self.wait()
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Opacity for layering**: Use transparency to show overlapping elements
-2. **Backstroke for readability**: Add backstroke to text over complex backgrounds
-3. **Consistent stroke width**: Maintain visual hierarchy with consistent widths
-4. **Fill vs stroke**: Use fill for areas, stroke for borders
-5. **Gloss for realism**: Add gloss to 3D objects for more realistic appearance
-6. **Match style for consistency**: Use style matching for consistent appearance
-7. **Gradients for flow**: Use gradients to show transitions or relationships
+1. **用透明度进行分层**：使用透明显示重叠元素
+2. **用背景描边提高可读性**：在复杂背景上为文本添加背景描边
+3. **一致的描边宽度**：使用一致的宽度维护视觉层级
+4. **填充 vs 描边**：用填充表示区域，用描边表示边框
+5. **用光泽增加真实感**：为 3D 对象添加光泽使其更逼真
+6. **用样式匹配保持一致性**：使用样式匹配实现一致的外观
+7. **用渐变表示流动**：使用渐变显示过渡或关系
 
-## Common Patterns
+## 常见模式
 
-### Outline style for emphasis
+### 轮廓样式用于强调
 
 ```python
 def emphasize(mobject):
     return mobject.set_stroke(YELLOW, width=8, opacity=1.0)
 ```
 
-### Transparent overlay
+### 透明覆盖层
 
 ```python
 def overlay(mobject, color=BLUE):
     return mobject.set_fill(color, opacity=0.2)
 ```
 
-### Clean UI style
+### 简洁 UI 样式
 
 ```python
 def ui_style(mobject):
@@ -396,7 +396,7 @@ def ui_style(mobject):
     return mobject
 ```
 
-### Highlighted text
+### 高亮文本
 
 ```python
 text = Text("Important", font_size=60)

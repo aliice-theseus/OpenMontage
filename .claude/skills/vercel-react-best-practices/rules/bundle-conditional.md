@@ -1,15 +1,15 @@
 ---
-title: Conditional Module Loading
+title: 条件性模块加载
 impact: HIGH
-impactDescription: loads large data only when needed
+impactDescription: 仅在需要时加载大数据
 tags: bundle, conditional-loading, lazy-loading
 ---
 
-## Conditional Module Loading
+## 条件性模块加载
 
-Load large data or modules only when a feature is activated.
+仅在功能激活时加载大数据或模块。
 
-**Example (lazy-load animation frames):**
+**示例（懒加载动画帧）：**
 
 ```tsx
 function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {
@@ -28,4 +28,4 @@ function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled
 }
 ```
 
-The `typeof window !== 'undefined'` check prevents bundling this module for SSR, optimizing server bundle size and build speed.
+`typeof window !== 'undefined'` 检查可防止将此模块打包到 SSR 中，优化服务端包大小和构建速度。

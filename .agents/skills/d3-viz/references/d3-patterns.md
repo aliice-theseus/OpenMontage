@@ -1,10 +1,10 @@
-# D3.js Visualisation Patterns
+# D3.js 可视化模式
 
-This reference provides detailed code patterns for common d3.js visualisation types.
+此参考提供了常见 d3.js 可视化类型的详细代码模式。
 
-## Hierarchical visualisations
+## 层次可视化
 
-### Tree diagram
+### 树图
 
 ```javascript
 useEffect(() => {
@@ -24,7 +24,7 @@ useEffect(() => {
   const g = svg.append("g")
     .attr("transform", "translate(100,50)");
   
-  // Links
+  // 链接
   g.selectAll("path")
     .data(root.links())
     .join("path")
@@ -35,7 +35,7 @@ useEffect(() => {
     .attr("stroke", "#555")
     .attr("stroke-width", 2);
   
-  // Nodes
+  // 节点
   const node = g.selectAll("g")
     .data(root.descendants())
     .join("g")
@@ -55,7 +55,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Treemap
+### 矩形树图
 
 ```javascript
 useEffect(() => {
@@ -100,7 +100,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Sunburst diagram
+### 旭日图
 
 ```javascript
 useEffect(() => {
@@ -144,12 +144,12 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Chord diagram
+### 弦图
 
 ```javascript
 function drawChordDiagram(data) {
-  // data format: array of objects with source, target, and value
-  // Example: [{ source: 'A', target: 'B', value: 10 }, ...]
+  // data 格式：包含 source、target 和 value 的对象数组
+  // 示例：[{ source: 'A', target: 'B', value: 10 }, ...]
 
   if (!data || data.length === 0) return;
 
@@ -161,7 +161,7 @@ function drawChordDiagram(data) {
   const innerRadius = Math.min(width, height) * 0.3;
   const outerRadius = innerRadius + 30;
 
-  // Create matrix from data
+  // 从数据创建矩阵
   const nodes = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
   const matrix = Array.from({ length: nodes.length }, () => Array(nodes.length).fill(0));
 
@@ -172,7 +172,7 @@ function drawChordDiagram(data) {
     matrix[j][i] += d.value;
   });
 
-  // Create chord layout
+  // 创建弦布局
   const chord = d3.chord()
     .padAngle(0.05)
     .sortSubgroups(d3.descending);
@@ -193,7 +193,7 @@ function drawChordDiagram(data) {
 
   const chords = chord(matrix);
 
-  // Draw ribbons
+  // 绘制带
   g.append("g")
     .attr("fill-opacity", 0.67)
     .selectAll("path")
@@ -203,7 +203,7 @@ function drawChordDiagram(data) {
     .attr("fill", d => colourScale(nodes[d.source.index]))
     .attr("stroke", d => d3.rgb(colourScale(nodes[d.source.index])).darker());
 
-  // Draw groups (arcs)
+  // 绘制组（弧）
   const group = g.append("g")
     .selectAll("g")
     .data(chords.groups)
@@ -214,7 +214,7 @@ function drawChordDiagram(data) {
     .attr("fill", d => colourScale(nodes[d.index]))
     .attr("stroke", d => d3.rgb(colourScale(nodes[d.index])).darker());
 
-  // Add labels
+  // 添加标签
   group.append("text")
     .each(d => { d.angle = (d.startAngle + d.endAngle) / 2; })
     .attr("dy", "0.31em")
@@ -224,7 +224,7 @@ function drawChordDiagram(data) {
     .style("font-size", "12px");
 }
 
-// Data format example:
+// 数据格式示例：
 // const data = [
 //   { source: 'Category A', target: 'Category B', value: 100 },
 //   { source: 'Category A', target: 'Category C', value: 50 },
@@ -233,14 +233,14 @@ function drawChordDiagram(data) {
 // drawChordDiagram(data);
 ```
 
-## Advanced chart types
+## 高级图表类型
 
-### Heatmap
+### 热图
 
 ```javascript
 function drawHeatmap(data) {
-  // data format: array of objects with row, column, and value
-  // Example: [{ row: 'A', column: 'X', value: 10 }, ...]
+  // data 格式：包含 row、column 和 value 的对象数组
+  // 示例：[{ row: 'A', column: 'X', value: 10 }, ...]
 
   if (!data || data.length === 0) return;
 
@@ -253,14 +253,14 @@ function drawHeatmap(data) {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
-  // Get unique rows and columns
+  // 获取唯一的行和列
   const rows = Array.from(new Set(data.map(d => d.row)));
   const columns = Array.from(new Set(data.map(d => d.column)));
 
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Create scales
+  // 创建比例尺
   const xScale = d3.scaleBand()
     .domain(columns)
     .range([0, innerWidth])
@@ -271,11 +271,11 @@ function drawHeatmap(data) {
     .range([0, innerHeight])
     .padding(0.01);
 
-  // Colour scale for values (sequential from light to dark red)
+  // 值的颜色比例尺（从浅到深红色的序列）
   const colourScale = d3.scaleSequential(d3.interpolateYlOrRd)
     .domain([0, d3.max(data, d => d.value)]);
 
-  // Draw rectangles
+  // 绘制矩形
   g.selectAll("rect")
     .data(data)
     .join("rect")
@@ -285,7 +285,7 @@ function drawHeatmap(data) {
     .attr("height", yScale.bandwidth())
     .attr("fill", d => colourScale(d.value));
 
-  // Add x-axis labels
+  // 添加 x 轴标签
   svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .selectAll("text")
@@ -297,7 +297,7 @@ function drawHeatmap(data) {
     .text(d => d)
     .style("font-size", "12px");
 
-  // Add y-axis labels
+  // 添加 y 轴标签
   svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .selectAll("text")
@@ -310,7 +310,7 @@ function drawHeatmap(data) {
     .text(d => d)
     .style("font-size", "12px");
 
-  // Add colour legend
+  // 添加颜色图例
   const legendWidth = 20;
   const legendHeight = 200;
   const legend = svg.append("g")
@@ -322,7 +322,7 @@ function drawHeatmap(data) {
 
   const legendAxis = d3.axisRight(legendScale).ticks(5);
 
-  // Draw colour gradient in legend
+  // 在图例中绘制颜色渐变
   for (let i = 0; i < legendHeight; i++) {
     legend.append("rect")
       .attr("y", i)
@@ -336,7 +336,7 @@ function drawHeatmap(data) {
     .call(legendAxis);
 }
 
-// Data format example:
+// 数据格式示例：
 // const data = [
 //   { row: 'Monday', column: 'Morning', value: 42 },
 //   { row: 'Monday', column: 'Afternoon', value: 78 },
@@ -346,7 +346,7 @@ function drawHeatmap(data) {
 // drawHeatmap(data);
 ```
 
-### Area chart with gradient
+### 带渐变面积图
 
 ```javascript
 useEffect(() => {
@@ -361,7 +361,7 @@ useEffect(() => {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   
-  // Define gradient
+  // 定义渐变
   const defs = svg.append("defs");
   const gradient = defs.append("linearGradient")
     .attr("id", "areaGradient")
@@ -424,7 +424,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Stacked bar chart
+### 堆叠条形图
 
 ```javascript
 useEffect(() => {
@@ -478,7 +478,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Grouped bar chart
+### 分组条形图
 
 ```javascript
 useEffect(() => {
@@ -538,7 +538,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Bubble chart
+### 气泡图
 
 ```javascript
 useEffect(() => {
@@ -591,9 +591,9 @@ useEffect(() => {
 }, [data]);
 ```
 
-## Geographic visualisations
+## 地理可视化
 
-### Basic map with points
+### 带点的基本地图
 
 ```javascript
 useEffect(() => {
@@ -610,7 +610,7 @@ useEffect(() => {
   
   const pathGenerator = d3.geoPath().projection(projection);
   
-  // Draw map
+  // 绘制地图
   svg.selectAll("path")
     .data(geoData.features)
     .join("path")
@@ -619,7 +619,7 @@ useEffect(() => {
     .attr("stroke", "#999")
     .attr("stroke-width", 0.5);
   
-  // Draw points
+  // 绘制点
   svg.selectAll("circle")
     .data(pointData)
     .join("circle")
@@ -632,7 +632,7 @@ useEffect(() => {
 }, [geoData, pointData]);
 ```
 
-### Choropleth map
+### 分区统计图
 
 ```javascript
 useEffect(() => {
@@ -649,10 +649,10 @@ useEffect(() => {
   
   const pathGenerator = d3.geoPath().projection(projection);
   
-  // Create value lookup
+  // 创建值查找表
   const valueLookup = new Map(valueData.map(d => [d.id, d.value]));
   
-  // Colour scale
+  // 颜色比例尺
   const colourScale = d3.scaleSequential(d3.interpolateBlues)
     .domain([0, d3.max(valueData, d => d.value)]);
   
@@ -670,9 +670,9 @@ useEffect(() => {
 }, [geoData, valueData]);
 ```
 
-## Advanced interactions
+## 高级交互
 
-### Brush and zoom
+### 刷选和缩放
 
 ```javascript
 useEffect(() => {
@@ -706,7 +706,7 @@ useEffect(() => {
     .attr("r", 5)
     .attr("fill", "steelblue");
   
-  // Add brush
+  // 添加刷选
   const brush = d3.brush()
     .extent([[0, 0], [innerWidth, innerHeight]])
     .on("start brush", (event) => {
@@ -730,7 +730,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Linked brushing between charts
+### 图表间联动刷选
 
 ```javascript
 function LinkedCharts({ data }) {
@@ -739,29 +739,29 @@ function LinkedCharts({ data }) {
   const svg2Ref = useRef();
   
   useEffect(() => {
-    // Chart 1: Scatter plot
+    // 图表 1：散点图
     const svg1 = d3.select(svg1Ref.current);
     svg1.selectAll("*").remove();
     
-    // ... create first chart ...
+    // ... 创建第一个图表 ...
     
     const circles1 = svg1.selectAll("circle")
       .data(data)
       .join("circle")
       .attr("fill", d => selectedPoints.has(d.id) ? "orange" : "steelblue");
     
-    // Chart 2: Bar chart
+    // 图表 2：条形图
     const svg2 = d3.select(svg2Ref.current);
     svg2.selectAll("*").remove();
     
-    // ... create second chart ...
+    // ... 创建第二个图表 ...
     
     const bars = svg2.selectAll("rect")
       .data(data)
       .join("rect")
       .attr("fill", d => selectedPoints.has(d.id) ? "orange" : "steelblue");
     
-    // Add brush to first chart
+    // 为第一个图表添加刷选
     const brush = d3.brush()
       .on("start brush end", (event) => {
         if (!event.selection) {
@@ -796,9 +796,9 @@ function LinkedCharts({ data }) {
 }
 ```
 
-## Animation patterns
+## 动画模式
 
-### Enter, update, exit with transitions
+### 带过渡的进入、更新、退出
 
 ```javascript
 useEffect(() => {
@@ -807,16 +807,16 @@ useEffect(() => {
   const svg = d3.select(svgRef.current);
   
   const circles = svg.selectAll("circle")
-    .data(data, d => d.id); // Key function for object constancy
+    .data(data, d => d.id); // 对象恒定性的键函数
   
-  // EXIT: Remove old elements
+  // 退出：移除旧元素
   circles.exit()
     .transition()
     .duration(500)
     .attr("r", 0)
     .remove();
   
-  // UPDATE: Modify existing elements
+  // 更新：修改现有元素
   circles
     .transition()
     .duration(500)
@@ -824,7 +824,7 @@ useEffect(() => {
     .attr("cy", d => yScale(d.y))
     .attr("fill", "steelblue");
   
-  // ENTER: Add new elements
+  // 进入：添加新元素
   circles.enter()
     .append("circle")
     .attr("cx", d => xScale(d.x))
@@ -838,7 +838,7 @@ useEffect(() => {
 }, [data]);
 ```
 
-### Path morphing
+### 路径变形
 
 ```javascript
 useEffect(() => {
@@ -853,7 +853,7 @@ useEffect(() => {
   
   const path = svg.select("path");
   
-  // Morph from data1 to data2
+  // 从 data1 变形到 data2
   path
     .datum(data1)
     .attr("d", line)

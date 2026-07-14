@@ -1,153 +1,138 @@
-# Scene Transitions
+# 场景过渡
 
-A transition tells the viewer how two scenes relate. A crossfade says "this continues." A push slide says "next point." A blur crossfade says "drift with me." Choose transitions that match what the content is doing emotionally, not just technically.
+过渡告诉观看者两个场景之间的关系。交叉淡入淡出说"这继续。"推动滑动说"下一点。"模糊交叉淡入淡出说"与我一起漂移。"选择与内容情感匹配的过渡，而非仅技术匹配。
 
-## Contents
+## 内容
 
-- Animation rules for multi-scene compositions
-- Energy and mood transition selection
-- Narrative position
-- Blur intensity
-- Presets
-- Implementation
-- CSS vs shader guidance
-- Shader-compatible CSS rules
-- Visual pattern warnings
+- 多场景组合的动画规则
+- 能量和情绪过渡选择
+- 叙事位置
+- 模糊强度
+- 预设
+- 实现
+- CSS vs 着色器指南
+- 着色器兼容的 CSS 规则
+- 视觉模式警告
 
-## Animation Rules for Multi-Scene Compositions
+## 多场景组合的动画规则
 
-These are non-negotiable for every multi-scene composition:
+这些对每个多场景组合都是不可协商的：
 
-1. **Every composition uses transitions.** No exceptions. Scenes without transitions feel like jump cuts.
-2. **Every scene uses entrance animations.** Elements animate IN — opacity, position, scale, etc. No scene should pop fully-formed onto screen. Use `gsap.fromTo()` (not `gsap.from()`) so the start state is explicit: `from()` animates _to_ current CSS, so pairing it with CSS `opacity: 0` is a 0→0 noop and the element never appears (see `/hyperframes-core` → sub-compositions).
-3. **Exit animations are BANNED** except on the final scene. Do NOT use `gsap.to()` to animate elements out before a transition fires. The transition IS the exit. Outgoing scene content must be fully visible when the transition starts — the transition handles the visual handoff.
-4. **Final scene exception:** The last scene MAY fade elements out (e.g., fade to black at the end of the composition). This is the only scene where exit animations are allowed.
+1. **每个组合使用过渡。** 无例外。没有过渡的场景感觉像跳切。
+2. **每个场景使用入场动画。** 元素动画**进入** — 不透明度、位置、缩放等。无场景应完全成形弹出到屏幕上。使用 `gsap.fromTo()`（而非 `gsap.from()`）使起始状态显式：`from()` 动画到当前 CSS，因此与 CSS `opacity: 0` 配对是 0→0 的无操作，元素从不出现（参见 `/hyperframes-core` → 子组合）。
+3. **退出动画被禁止**，除了最终场景。不要在过渡触发前使用 `gsap.to()` 将元素动画退出。过渡就是退出。退出场景内容必须在过渡开始时完全可见 — 过渡处理视觉交接。
+4. **最终场景例外：** 最后一个场景**可以**将元素淡出（例如，在组合结束时淡出到黑色）。这是唯一允许退出动画的场景。
 
 ```js
-// ❌ BANNED — fading the outgoing scene out, then the next scene just runs its entrance.
-//    This is a jump cut with a dip, not a transition.
+// ❌ 禁止 — 将退出场景淡出，然后下一个场景只运行其入场。
+//    这是一个带下垂的跳切，而非过渡。
 tl.to("#s1", { opacity: 0, duration: 0.4 }, 4.0);
 tl.from("#s2 .headline", { y: 40, opacity: 0 }, 4.4);
 
-// ✅ CORRECT — outgoing and incoming animate AT THE SAME TIME T; the motion IS the handoff.
+// ✅ 正确 — 退出和进入在相同时间 T 动画；运动就是交接。
 const T = 4.0;
 tl.to("#s1", { yPercent: -100, filter: "blur(8px)", duration: 0.5, ease: "power3.in" }, T);
 tl.fromTo("#s2", { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: "power3.out" }, T);
 ```
 
-> **You are NOT done after this file.** This overview gives you _which_ transition and _when_. Before writing any transition you MUST open **`catalog.md`** in this directory for the GSAP code and the hard rule every transition follows — _position new scene → animate outgoing → swap → animate incoming → clean up overlays_ — plus the per-category `css-*.md` files for specifics. Authoring transitions from this overview alone is how you end up shipping the ❌ pattern above.
+> **读完此文件后你还没有完成。** 此概览告诉你**哪个**过渡和**何时**。在编写任何过渡之前，你**必须**打开此目录中的 **`catalog.md`** 获取 GSAP 代码和每个过渡遵循的硬规则 — _定位新场景 → 动画退出 → 交换 → 动画进入 → 清理叠加_ — 加上每个类别的 `css-*.md` 文件获取细节。仅从此概览编写过渡是导致你交付上面 ❌ 模式的方式。
 
-## Energy → Primary Transition
+## 能量 → 主要过渡
 
-| Energy                                   | CSS Primary                  | Shader Primary                       | Accent                         | Duration  | Easing                 |
-| ---------------------------------------- | ---------------------------- | ------------------------------------ | ------------------------------ | --------- | ---------------------- |
-| **Calm** (wellness, brand story, luxury) | Blur crossfade, focus pull   | Cross-warp morph, thermal distortion | Light leak, circle iris        | 0.5-0.8s  | `sine.inOut`, `power1` |
-| **Medium** (corporate, SaaS, explainer)  | Push slide, staggered blocks | Whip pan, cinematic zoom             | Squeeze, vertical push         | 0.3-0.5s  | `power2`, `power3`     |
-| **High** (promos, sports, music, launch) | Zoom through, overexposure   | Ridged burn, glitch, chromatic split | Staggered blocks, gravity drop | 0.15-0.3s | `power4`, `expo`       |
+| 能量                                     | CSS 主要                      | 着色器主要                           | 重音                           | 时长      | 缓动                   |
+| ---------------------------------------- | ----------------------------- | ------------------------------------ | ------------------------------ | --------- | ---------------------- |
+| **平静**（健康、品牌故事、奢华）         | 模糊交叉淡入淡出、焦距拉动    | 交叉扭曲变形、热失真                 | 漏光、圆形虹膜                 | 0.5-0.8s  | `sine.inOut`, `power1` |
+| **中等**（企业、SaaS、解说）             | 推动滑动、错开块              | 甩切、电影缩放                       | 挤压、垂直推动                 | 0.3-0.5s  | `power2`, `power3`     |
+| **高能**（促销、体育、音乐、发布）       | 缩放穿过、过曝光               | 脊状烧灼、故障、色差分离             | 错开块、重力掉落               | 0.15-0.3s | `power4`, `expo`       |
 
-Pick ONE primary (60-70% of scene changes) + 1-2 accents. Never use a different transition for every scene.
+选择一个主要（场景变化的 60-70%）+ 1-2 个重音。绝不为每个场景使用不同的过渡。
 
-## Mood → Transition Type
+## 情绪 → 过渡类型
 
-Think about what the transition _communicates_, not just what it looks like.
+考虑过渡**传达**什么，而非它看起来像什么。
 
-| Mood                     | Transitions                                                                                                                          | Why it works                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| **Warm / inviting**      | Light leak, blur crossfade, focus pull, film burn · **Shader:** thermal distortion, light leak, cross-warp morph                     | Soft edges, warm color washes. Nothing sharp or mechanical.                                 |
-| **Cold / clinical**      | Squeeze, zoom out, blinds, shutter, grid dissolve · **Shader:** gravitational lens                                                   | Content transforms mechanically — compressed, shrunk, sliced, gridded.                      |
-| **Editorial / magazine** | Push slide, vertical push, diagonal split, shutter · **Shader:** whip pan                                                            | Like turning a page or slicing a layout. Clean directional movement.                        |
-| **Tech / futuristic**    | Grid dissolve, staggered blocks, blinds, chromatic aberration · **Shader:** glitch, chromatic split                                  | Grid dissolve is the core "data" transition. Shader glitch adds posterization + scan lines. |
-| **Tense / edgy**         | Glitch, VHS, chromatic aberration, ripple · **Shader:** ridged burn, glitch, domain warp                                             | Instability, distortion, digital breakdown. Ridged burn adds sharp lightning-crack edges.   |
-| **Playful / fun**        | Elastic push, 3D flip, circle iris, morph circle, clock wipe · **Shader:** ripple waves, swirl vortex                                | Overshoot, bounce, rotation, expansion. Swirl vortex adds organic spiral distortion.        |
-| **Dramatic / cinematic** | Zoom through, zoom out, gravity drop, overexposure, color dip to black · **Shader:** cinematic zoom, gravitational lens, domain warp | Scale, weight, light extremes. Shader transitions add per-pixel depth.                      |
-| **Premium / luxury**     | Focus pull, blur crossfade, color dip to black · **Shader:** cross-warp morph, thermal distortion                                    | Restraint. Cross-warp morph flows both scenes into each other organically.                  |
-| **Retro / analog**       | Film burn, light leak, VHS, clock wipe · **Shader:** light leak                                                                      | Organic imperfection. Warm color bleeds, scan line displacement.                            |
+| 情绪               | 过渡                                                                                                                                    | 为什么有效                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **温暖/邀请**      | 漏光、模糊交叉淡入淡出、焦距拉动、胶片灼烧 · **着色器：** 热失真、漏光、交叉扭曲变形                                                    | 柔和边缘、暖色冲洗。无尖锐或机械的东西。                                                           |
+| **冷漠/临床**      | 挤压、缩小、百叶窗、快门、网格溶解 · **着色器：** 引力透镜                                                                              | 内容机械变换 — 压缩、缩小、切片、网格化。                                                          |
+| **编辑/杂志**      | 推动滑动、垂直推动、对角分割、快门 · **着色器：** 甩切                                                                                  | 像翻页或切片布局。干净的方向运动。                                                                 |
+| **科技/未来**      | 网格溶解、错开块、百叶窗、色差 · **着色器：** 故障、色差分离                                                                            | 网格溶解是核心"数据"过渡。着色器故障添加后处理 + 扫描线。                                          |
+| **紧张/前卫**      | 故障、VHS、色差、涟漪 · **着色器：** 脊状烧灼、故障、域扭曲                                                                            | 不稳定性、扭曲、数字崩溃。脊状烧灼添加尖锐闪电裂纹边缘。                                           |
+| **俏皮/有趣**      | 弹性推动、3D 翻转、圆形虹膜、变形圆、时钟擦拭 · **着色器：** 涟漪波、漩涡涡旋                                                           | 过冲、弹跳、旋转、扩展。漩涡涡旋添加有机螺旋扭曲。                                                 |
+| **戏剧性/电影感**  | 缩放穿过、缩小、重力掉落、过曝光、浸入黑色 · **着色器：** 电影缩放、引力透镜、域扭曲                                                    | 缩放、重量、光极端。着色器过渡添加逐像素深度。                                                     |
+| **高级/奢华**      | 焦距拉动、模糊交叉淡入淡出、浸入黑色 · **着色器：** 交叉扭曲变形、热失真                                                               | 克制。交叉扭曲变形有机地将两个场景互相融合。                                                       |
+| **复古/模拟**      | 胶片灼烧、漏光、VHS、时钟擦拭 · **着色器：** 漏光                                                                                      | 有机不完美。暖色渗色、扫描线位移。                                                                 |
 
-## Narrative Position
+## 叙事位置
 
-| Position                   | Use                                                                        | Why                                                   |
-| -------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------- |
-| **Opening**                | Your most distinctive transition. Match the mood. 0.4-0.6s                 | Sets the visual language for the entire piece.        |
-| **Between related points** | Your primary transition. Consistent. 0.3s                                  | Don't distract — the content is continuing.           |
-| **Topic change**           | Something different from your primary. Staggered blocks, shutter, squeeze. | Signals "new section" — the viewer's brain resets.    |
-| **Climax / hero reveal**   | Your boldest accent. Fastest or most dramatic.                             | This is the payoff — spend your best transition here. |
-| **Wind-down**              | Return to gentle. Blur crossfade, crossfade. 0.5-0.7s                      | Let the viewer exhale after the climax.               |
-| **Outro**                  | Slowest, simplest. Crossfade, color dip to black. 0.6-1.0s                 | Closure. Don't introduce new energy at the end.       |
+| 位置                   | 使用                                                                      | 为什么                                                   |
+| ---------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------- |
+| **开场**               | 你最具特色的过渡。匹配情绪。0.4-0.6s                                      | 设定整个作品的视觉语言。                                 |
+| **相关点之间**         | 你的主要过渡。一致。0.3s                                                  | 不要分散注意力 — 内容在继续。                            |
+| **主题变化**           | 与主要不同的过渡。错开块、快门、挤压。                                    | 信号"新部分" — 观看者大脑重置。                          |
+| **高潮/主角揭示**      | 你最粗体的重音。最快或最戏剧性。                                          | 这就是回报 — 在这里花费你最好的过渡。                    |
+| **收尾**               | 回归温和。模糊交叉淡入淡出、交叉淡入淡出。0.5-0.7s                        | 让观看者在高潮后呼气。                                   |
+| **结尾**               | 最慢、最简单。交叉淡入淡出、浸入黑色。0.6-1.0s                            | 闭合。不要在结尾引入新能量。                             |
 
-## Blur Intensity by Energy
+## 按能量的模糊强度
 
-| Energy     | Blur    | Duration | Hold at peak |
-| ---------- | ------- | -------- | ------------ |
-| **Calm**   | 20-30px | 0.8-1.2s | 0.3-0.5s     |
-| **Medium** | 8-15px  | 0.4-0.6s | 0.1-0.2s     |
-| **High**   | 3-6px   | 0.2-0.3s | 0s           |
+| 能量     | 模糊    | 时长    | 峰值保持 |
+| -------- | ------- | ------- | -------- |
+| **平静** | 20-30px | 0.8-1.2s | 0.3-0.5s |
+| **中等** | 8-15px  | 0.4-0.6s | 0.1-0.2s |
+| **高能** | 3-6px   | 0.2-0.3s | 0s       |
 
-## Presets
+## 预设
 
-| Preset     | Duration | Easing            |
-| ---------- | -------- | ----------------- |
-| `snappy`   | 0.2s     | `power4.inOut`    |
-| `smooth`   | 0.4s     | `power2.inOut`    |
-| `gentle`   | 0.6s     | `sine.inOut`      |
-| `dramatic` | 0.5s     | `power3.in` → out |
-| `instant`  | 0.15s    | `expo.inOut`      |
-| `luxe`     | 0.7s     | `power1.inOut`    |
+| 预设       | 时长   | 缓动            |
+| ---------- | ------ | --------------- |
+| `snappy`   | 0.2s   | `power4.inOut`  |
+| `smooth`   | 0.4s   | `power2.inOut`  |
+| `gentle`   | 0.6s   | `sine.inOut`    |
+| `dramatic` | 0.5s   | `power3.in→out` |
+| `instant`  | 0.15s  | `expo.inOut`    |
+| `luxe`     | 0.7s   | `power1.inOut`  |
 
-## Implementation
+## 实现
 
-Read `catalog.md` in this directory for GSAP code and hard rules for every transition type, and the `css-*.md` files for per-category implementation details.
+读取此目录中的 `catalog.md` 获取 GSAP 代码和每个过渡类型的硬规则，以及 `css-*.md` 文件获取按类别的实现细节。
 
-| Category    | CSS                                                            | Shader (WebGL)                                                            |
+| 类别        | CSS                                                            | 着色器（WebGL）                                                           |
 | ----------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Push/slide  | Push slide, vertical push, elastic push, squeeze               | Whip pan                                                                  |
-| Scale/zoom  | Zoom through, zoom out, gravity drop, 3D flip                  | Cinematic zoom, gravitational lens                                        |
-| Reveal/mask | Circle iris, diamond iris, diagonal split, clock wipe, shutter | SDF iris                                                                  |
-| Dissolve    | Crossfade, blur crossfade, focus pull, color dip               | Cross-warp morph, domain warp                                             |
-| Cover       | Staggered blocks, horizontal blinds, vertical blinds           | —                                                                         |
-| Light       | Light leak, overexposure burn, film burn                       | Light leak (shader), thermal distortion                                   |
-| Distortion  | Glitch, chromatic aberration, ripple, VHS tape                 | Glitch (shader), chromatic split, ridged burn, ripple waves, swirl vortex |
-| Pattern     | Grid dissolve, morph circle                                    | —                                                                         |
+| 推动/滑动   | 推动滑动、垂直推动、弹性推动、挤压                             | 甩切                                                                      |
+| 缩放/缩放   | 缩放穿过、缩小、重力掉落、3D 翻转                              | 电影缩放、引力透镜                                                         |
+| 揭示/遮罩   | 圆形虹膜、菱形虹膜、对角分割、时钟擦拭、快门                    | SDF 虹膜                                                                  |
+| 溶解       | 交叉淡入淡出、模糊交叉淡入淡出、焦距拉动、浸入                  | 交叉扭曲变形、域扭曲                                                       |
+| 覆盖       | 错开块、水平百叶窗、垂直百叶窗                                 | —                                                                         |
+| 光         | 漏光、过曝光灼烧、胶片灼烧                                     | 漏光（着色器）、热失真                                                     |
+| 扭曲       | 故障、色差、涟漪、VHS 磁带                                     | 故障（着色器）、色差分离、脊状烧灼、涟漪波、漩涡涡旋                       |
+| 图案       | 网格溶解、变形圆                                                | —                                                                         |
 
-## Transitions That Don't Work in CSS
+## 在 CSS 中不起作用的过渡
 
-Avoid: star iris, tilt-shift, lens flare, hinge/door. See catalog.md for why.
+避免：星形虹膜、移轴、镜头光晕、铰链/门。参见 catalog.md 了解原因。
 
-## CSS vs Shader
+## CSS vs 着色器
 
-CSS transitions animate scene containers with opacity, transforms, clip-path, and filters. Shader transitions composite both scene textures per-pixel on a WebGL canvas — they can warp, dissolve, and morph in ways CSS cannot.
+CSS 过渡使用不透明度、变换、clip-path 和滤镜动画化场景容器。着色器过渡在 WebGL canvas 上逐像素合成两个场景纹理 — 它们可以以 CSS 不能的方式扭曲、溶解和变形。
 
-**Both are first-class options.** Shaders are provided by the `@hyperframes/shader-transitions` package — import from the package instead of writing raw GLSL. CSS transitions are simpler to set up. Choose based on the effect you want, not based on which is easier.
+**两者都是一等选项。** 着色器由 `@hyperframes/shader-transitions` 包提供 — 从包导入而非编写原始 GLSL。CSS 过渡设置更简单。基于你想要的效应选择，而非基于哪个更容易。
 
-**Mixing is supported.** You can have some transitions use WebGL shaders and others use a CSS crossfade in the same composition. Omit the `shader` field on any `TransitionConfig` entry to get a smooth opacity crossfade instead of a WebGL effect:
+**支持混合。** 你可以在同一组合中让一些过渡使用 WebGL 着色器，另一些使用 CSS 交叉淡入淡出。在任何 `TransitionConfig` 条目上省略 `shader` 字段即可获得平滑不透明度交叉淡入淡出而非 WebGL 效果。
 
-```js
-var tl = HyperShader.init({
-  bgColor: "#000",
-  accentColor: "#6366f1",
-  scenes: ["s1", "s2", "s3", "s4"],
-  transitions: [
-    { time: 4.0, shader: "sdf-iris", duration: 0.7 }, // WebGL shader
-    { time: 8.5, duration: 0.8 }, // no shader → CSS crossfade
-    { time: 13.0, shader: "domain-warp", duration: 0.6 }, // WebGL shader
-  ],
-});
-```
+## 着色器兼容的 CSS 规则
 
-HyperShader manages all scene visibility regardless of transition type. Let it create the timeline (don't pass `timeline:` into `init()`) and add your beat animations to the returned `tl` after the call.
+着色器过渡通过 html2canvas 将 DOM 场景捕获到 WebGL 纹理。Canvas 2D 渲染管线不完全匹配 CSS。遵循这些规则以避免过渡边界的可见伪影：
 
-## Shader-Compatible CSS Rules
+1. **渐变中无 `transparent` 关键字。** Canvas 将 `transparent` 插值为 `rgba(0,0,0,0)`（零 alpha 的黑色），创建暗色边缘。始终使用目标颜色的零 alpha：`rgba(200,117,51,0)` 而非 `transparent`。
+2. **薄于 4px 的元素上无渐变背景。** Canvas 无法匹配 1-2px 元素上的 CSS 渐变渲染。在细重音线上使用纯 `background-color`。
+3. **捕获期间可见的元素上无 CSS 变量（`var()`）。** html2canvas 不可靠地解析自定义属性。在内联样式中使用字面颜色值。
+4. **用 `data-no-capture` 标记不可捕获的装饰元素。** 捕获函数跳过这些。它们存在于实时 DOM 但不存在于着色器纹理中。用于无法遵循以上规则的元素。
+5. **渐变不透明度不低于 0.15。** 低于 10% 不透明度的渐变元素在 canvas 和 CSS 中渲染不同。增加到 0.15+ 或使用等效亮度的纯色。
+6. **每个 `.scene` div 必须有显式 `background-color`，并将相同颜色作为 `bgColor` 传入 `init()` 配置。** 包通过 html2canvas 捕获场景元素。`.scene` 上的 CSS `background-color` 和 `bgColor` 配置都必须匹配。没有两者，纹理渲染为黑色。
 
-Shader transitions capture DOM scenes to WebGL textures via html2canvas. The canvas 2D rendering pipeline doesn't match CSS exactly. Follow these rules to avoid visible artifacts at transition boundaries:
+这些规则仅适用于着色器过渡组合。纯 CSS 组合无限制。
 
-1. **No `transparent` keyword in gradients.** Canvas interpolates `transparent` as `rgba(0,0,0,0)` (black at zero alpha), creating dark fringes. Always use the target color at zero alpha: `rgba(200,117,51,0)` not `transparent`.
-2. **No gradient backgrounds on elements thinner than 4px.** Canvas can't match CSS gradient rendering on 1-2px elements. Use solid `background-color` on thin accent lines.
-3. **No CSS variables (`var()`) on elements visible during capture.** html2canvas doesn't reliably resolve custom properties. Use literal color values in inline styles.
-4. **Mark uncapturable decorative elements with `data-no-capture`.** The capture function skips these. They're present on the live DOM but absent from the shader texture. Use for elements that can't follow the rules above.
-5. **No gradient opacity below 0.15.** Gradient elements below 10% opacity render differently in canvas vs CSS. Increase to 0.15+ or use a solid color at equivalent brightness.
-6. **Every `.scene` div must have explicit `background-color`, AND pass the same color as `bgColor` in the `init()` config.** The package captures scene elements via html2canvas. Both the CSS `background-color` on `.scene` and the `bgColor` config must match. Without either, the texture renders as black.
+## 视觉模式警告
 
-These rules only apply to shader transition compositions. CSS-only compositions have no restrictions.
-
-## Visual Pattern Warning
-
-Avoid transitions that create visible repeating geometric patterns — grids of tiles, hexagonal cells, uniform dot arrays, evenly-spaced blob circles. These look cheap and artificial regardless of the math behind them. Organic noise (FBM, domain warping) is good because it's irregular. Geometric repetition is bad because the eye instantly sees the grid.
+避免创建可见重复几何图案的过渡 — 瓷砖网格、六边形单元格、均匀点阵、均匀间隔的斑点圆圈。这些看起来廉价和人工，无论其背后的数学如何。有机噪声（FBM、域扭曲）是好的，因为它不规则。几何重复是坏的，因为眼睛立即看到网格。

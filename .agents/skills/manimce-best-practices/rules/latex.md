@@ -1,65 +1,65 @@
 ---
 name: latex
-description: MathTex, Tex, LaTeX rendering and equation styling in Manim
+description: Manim 中的 MathTex、Tex、LaTeX 渲染和方程样式
 metadata:
   tags: latex, mathtex, tex, equation, formula, math
 ---
 
-# LaTeX in Manim
+# Manim 中的 LaTeX
 
-Manim uses LaTeX to render mathematical expressions and formatted text.
+Manim 使用 LaTeX 渲染数学表达式和格式化文本。
 
 ## MathTex vs Tex
 
-- **MathTex**: Automatically wraps content in math mode (`align*` environment)
-- **Tex**: Raw LaTeX - you control the mode
+- **MathTex**：自动将内容包裹在数学模式中（`align*` 环境）
+- **Tex**：原始 LaTeX——由您控制模式
 
 ```python
 from manim import *
 
 class LaTeXComparison(Scene):
     def construct(self):
-        # MathTex - auto math mode
+        # MathTex - 自动数学模式
         math = MathTex(r"E = mc^2")
 
-        # Tex - need explicit math delimiters
+        # Tex - 需要显式数学定界符
         tex = Tex(r"$E = mc^2$")
 
-        # Both render the same
+        # 两者渲染结果相同
         VGroup(math, tex).arrange(DOWN)
         self.add(math, tex)
 ```
 
-## Basic MathTex
+## 基本 MathTex
 
 ```python
 class MathTexExample(Scene):
     def construct(self):
-        # Simple equation
+        # 简单方程
         eq1 = MathTex(r"x^2 + y^2 = z^2")
 
-        # Fractions
+        # 分数
         eq2 = MathTex(r"\frac{a}{b}")
 
-        # Square roots
+        # 平方根
         eq3 = MathTex(r"\sqrt{2}")
 
-        # Greek letters
+        # 希腊字母
         eq4 = MathTex(r"\alpha + \beta = \gamma")
 
-        # Integrals
+        # 积分
         eq5 = MathTex(r"\int_0^\infty e^{-x} dx")
 
-        # Summations
+        # 求和
         eq6 = MathTex(r"\sum_{n=1}^{\infty} \frac{1}{n^2}")
 
         equations = VGroup(eq1, eq2, eq3, eq4, eq5, eq6).arrange_in_grid(2, 3)
         self.add(equations)
 ```
 
-## Coloring Parts of Equations
+## 方程部分着色
 
-### Using set_color_by_tex
+### 使用 set_color_by_tex
 
 ```python
 class ColoredEquation(Scene):
@@ -71,9 +71,9 @@ class ColoredEquation(Scene):
         self.add(eq)
 ```
 
-### Using substrings_to_isolate
+### 使用 substrings_to_isolate
 
-For precise coloring, isolate substrings first:
+为精确保留着色，先隔离子字符串：
 
 ```python
 class IsolatedColoring(Scene):
@@ -86,18 +86,18 @@ class IsolatedColoring(Scene):
         self.add(eq)
 ```
 
-### Using index_labels for debugging
+### 使用 index_labels 进行调试
 
 ```python
 class DebugLabels(Scene):
     def construct(self):
         eq = MathTex(r"\frac{a}{b}")
-        # Add index labels to see which index is which part
+        # 添加索引标签以查看哪部分是哪个索引
         self.add(index_labels(eq[0]))
         self.add(eq)
 ```
 
-### Direct indexing
+### 直接索引
 
 ```python
 eq = MathTex(r"a + b = c")
@@ -106,9 +106,9 @@ eq[0][2].set_color(BLUE)  # 'b'
 eq[0][4].set_color(GREEN) # 'c'
 ```
 
-## Multi-part Equations
+## 多部分方程
 
-Split equations into parts for individual control:
+将方程拆分为多个部分以便单独控制：
 
 ```python
 class MultiPartEquation(Scene):
@@ -122,17 +122,17 @@ class MultiPartEquation(Scene):
         self.play(Write(eq))
 ```
 
-## Text with Math (Tex)
+## 文本与数学混合（Tex）
 
 ```python
 class MixedContent(Scene):
     def construct(self):
-        # Mix text and math
+        # 混合文本和数学
         tex = Tex(r"The area is $A = \pi r^2$")
         self.play(Write(tex))
 ```
 
-## Custom LaTeX Packages
+## 自定义 LaTeX 宏包
 
 ```python
 class CustomPackage(Scene):
@@ -147,7 +147,7 @@ class CustomPackage(Scene):
         self.add(eq)
 ```
 
-## Equation Alignment
+## 方程对齐
 
 ```python
 class AlignedEquations(Scene):
@@ -160,43 +160,43 @@ class AlignedEquations(Scene):
         self.add(eqs)
 ```
 
-## Common LaTeX Symbols
+## 常用 LaTeX 符号
 
 ```python
-# Greek letters
+# 希腊字母
 MathTex(r"\alpha \beta \gamma \delta \epsilon")
 MathTex(r"\Gamma \Delta \Theta \Lambda \Pi")
 
-# Operators
+# 运算符
 MathTex(r"\times \div \pm \mp \cdot")
 
-# Relations
+# 关系符
 MathTex(r"\leq \geq \neq \approx \equiv")
 
-# Arrows
+# 箭头
 MathTex(r"\rightarrow \leftarrow \Rightarrow \Leftrightarrow")
 
-# Sets
+# 集合
 MathTex(r"\in \notin \subset \supset \cup \cap")
 
-# Calculus
+# 微积分
 MathTex(r"\int \iint \oint \partial \nabla")
 ```
 
-## Font Size
+## 字体大小
 
 ```python
-# Using font_size parameter
+# 使用 font_size 参数
 eq = MathTex(r"E = mc^2", font_size=72)
 
-# Using scale
+# 使用 scale
 eq = MathTex(r"E = mc^2").scale(2)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use raw strings** - Always use `r"..."` for LaTeX
-2. **Use MathTex for pure math** - Simpler than adding `$...$`
-3. **Use Tex for mixed content** - When combining text and math
-4. **Split for animation control** - Separate parts you'll animate differently
-5. **Use substrings_to_isolate** - For reliable coloring of repeated elements
+1. **使用原始字符串** - 始终使用 `r"..."` 表示 LaTeX
+2. **纯数学使用 MathTex** - 比添加 `$...$` 更简单
+3. **混合内容使用 Tex** - 当组合文本和数学时
+4. **拆分以便动画控制** - 将要单独动画化的部分分开
+5. **使用 substrings_to_isolate** - 可靠地为重复元素着色

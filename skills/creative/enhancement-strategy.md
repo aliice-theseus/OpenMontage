@@ -1,111 +1,109 @@
-# Enhancement Strategy Skill
+# 增强策略技能
 
-## When to Use
+## 何时使用
 
-Apply this skill when deciding how to enhance talking-head footage: which
-face/color/audio presets to use, what overlays to add, and how to balance
-enhancement visibility with naturalness.
+在决定如何增强说话人头像素材时应用此技能：使用哪些面部/色彩/音频预设、添加哪些叠加，以及如何平衡增强可见性与自然度。
 
-## Enhancement Tools
+## 增强工具
 
-| Tool | What It Does | Recommended Preset |
-|------|-------------|-------------------|
-| `face_enhance` | Skin smoothing, sharpening, tone correction | `talking_head_standard` |
-| `color_grade` | Cinematic color look with intensity control | `cinematic_warm` at 0.85 |
-| `audio_enhance` | Loudness normalization, noise reduction, EQ | `clean_speech` |
-| `code_snippet` | Render code as styled overlay image | `monokai` theme |
-| `diagram_gen` | Generate box/flow diagrams as overlay images | `dark` theme |
-| `image_selector` | AI-generated illustrations (requires API key) | — |
+| 工具 | 功能 | 推荐预设 |
+|------|------|----------|
+| `face_enhance` | 皮肤平滑、锐化、色调校正 | `talking_head_standard` |
+| `color_grade` | 电影感色彩查找，带强度控制 | `cinematic_warm` 强度0.85 |
+| `audio_enhance` | 响度标准化、降噪、EQ | `clean_speech` |
+| `code_snippet` | 将代码渲染为样式化叠加图像 | `monokai` 主题 |
+| `diagram_gen` | 生成方框/流程图作为叠加图像 | `dark` 主题 |
+| `image_selector` | AI生成插图（需要 API 密钥） | — |
 
-## Enhancement Chain
+## 增强链
 
-Apply in this order — each step is optional and gracefully skipped on failure:
+按此顺序应用 — 每步可选，失败时优雅跳过：
 
 ```
-raw footage
-  → subtitle burn (video_compose)
-  → face enhance (face_enhance)
-  → color grade (color_grade)
-  → audio enhance (audio_enhance)
-  → final encode (video_compose)
+原始素材
+  → 字幕烧录（video_compose）
+  → 面部增强（face_enhance）
+  → 调色（color_grade）
+  → 音频增强（audio_enhance）
+  → 最终编码（video_compose）
 ```
 
-### Face Enhancement Presets
+### 面部增强预设
 
-| Preset | When to Use |
-|--------|-------------|
-| `talking_head_standard` | Default for any talking head — smoothing + sharpening + warm |
-| `soft_skin` | Webcam footage with visible pores — gentle smoothing |
-| `sharpen` | Soft/blurry camera — adds edge definition |
-| `brighten` | Dark/underlit footage — lifts shadows and midtones |
-| `denoise` | Grainy footage (low light, high ISO) — temporal noise reduction |
+| 预设 | 使用场景 |
+|------|----------|
+| `talking_head_standard` | 任何说话人头像的默认值 — 平滑 + 锐化 + 暖色调 |
+| `soft_skin` | 毛孔可见的网络摄像头素材 — 温和平滑 |
+| `sharpen` | 柔和/模糊相机 — 增加边缘清晰度 |
+| `brighten` | 黑暗/欠曝素材 — 提亮阴影和中间调 |
+| `denoise` | 颗粒感素材（低光、高ISO）— 时域降噪 |
 
-### Color Grade Profiles
+### 调色配置
 
-| Profile | Look | Intensity |
-|---------|------|-----------|
-| `cinematic_warm` | Warm highlights, lifted shadows, slight saturation | 0.85 |
-| `cinematic_cool` | Teal shadows, orange highlights | 0.7 |
-| `bright_clean` | Vivid, lifted, YouTube-style | 0.8 |
-| `moody_dark` | Crushed blacks, desaturated — dramatic | 0.6 |
-| `neutral` | Minimal correction — just normalizes levels | 1.0 |
+| 配置 | 外观 | 强度 |
+|------|------|------|
+| `cinematic_warm` | 暖色高光、提亮阴影、略微饱和 | 0.85 |
+| `cinematic_cool` | 青色阴影、橙色高光 | 0.7 |
+| `bright_clean` | 鲜艳、提亮、YouTube 风格 | 0.8 |
+| `moody_dark` | 压暗黑色、低饱和 — 戏剧性 | 0.6 |
+| `neutral` | 最小校正 — 仅标准化电平 | 1.0 |
 
-### Audio Enhancement Presets
+### 音频增强预设
 
-| Preset | When to Use | Target |
-|--------|-------------|--------|
-| `clean_speech` | Default talking head — full processing chain | -16 LUFS |
-| `voice_clarity` | Speaker sounds muddy — boosts 3kHz/5kHz presence | -16 LUFS |
-| `podcast` | Interview/podcast — heavier compression | -16 LUFS |
-| `noise_reduce` | Noisy environment — aggressive FFT denoising | -16 LUFS |
-| `normalize_only` | Clean source that just needs loudness matching | -16 LUFS |
+| 预设 | 使用场景 | 目标 |
+|------|----------|------|
+| `clean_speech` | 默认说话人头像 — 完整处理链 | -16 LUFS |
+| `voice_clarity` | 说话者听起来浑浊 — 提升3kHz/5kHz存在感 | -16 LUFS |
+| `podcast` | 采访/播客 — 较重压缩 | -16 LUFS |
+| `noise_reduce` | 嘈杂环境 — 激进 FFT 降噪 | -16 LUFS |
+| `normalize_only` | 仅需响度匹配的干净源 | -16 LUFS |
 
-## Overlay Enhancement Types
+## 叠加增强类型
 
-| Type | When to Use | Tool | Placement |
-|------|-------------|------|-----------|
-| **Text overlay** | Key terms, statistics, quotes | video_compose overlay | Upper or lower third |
-| **Code snippet** | Technical content, API examples | code_snippet → overlay | Side of frame or full-screen |
-| **Diagram** | Explaining a concept visually | diagram_gen → overlay | Side of frame or full-screen |
-| **Lower third** | Speaker name, topic label | video_compose overlay | Bottom 20% of frame |
+| 类型 | 使用场景 | 工具 | 放置 |
+|------|----------|------|------|
+| **文字叠加** | 关键术语、统计数据、引用 | video_compose overlay | 上三分之一或下三分之一 |
+| **代码片段** | 技术内容、API 示例 | code_snippet → overlay | 画面一侧或全屏 |
+| **图表** | 视觉解释概念 | diagram_gen → overlay | 画面一侧或全屏 |
+| **下方标题** | 说话者姓名、话题标签 | video_compose overlay | 画面底部20% |
 
-## Overlay Density Guidelines
+## 叠加密度指南
 
-### Short-form (< 60 seconds)
-- High density: overlay every 3-5 seconds
-- Quick visual changes, bold text
-- Subtitles **mandatory** (most viewers watch muted)
+### 短视频（< 60秒）
+- 高密度：每3-5秒叠加一次
+- 快速视觉变化，粗体文字
+- **强制**字幕（大多数观众静音观看）
 
-### Medium-form (1-10 minutes)
-- Moderate density: overlay every 10-20 seconds
-- Let the speaker carry sections without visual competition
+### 中视频（1-10分钟）
+- 中等密度：每10-20秒叠加一次
+- 让说话者在不需视觉竞争的情况下承载段落
 
-### Long-form (> 10 minutes)
-- Low density: overlay every 30-60 seconds
-- Only enhance when the content benefits (key points, complex topics)
+### 长视频（> 10分钟）
+- 低密度：每30-60秒叠加一次
+- 仅在内容受益时增强（关键点、复杂主题）
 
-## Placement Rules
+## 放置规则
 
-1. **Never cover the speaker's face** — eyes, nose, mouth must remain visible
-2. **Subtitles go in the bottom 20%** — margin_v: 50 for vertical, 40 for horizontal
-3. **Consistent positioning** — once you place overlays on the left, keep them there
-4. **Text overlays: 2-5 seconds on screen** — long enough to read, short enough to not feel stuck
+1. **绝不要覆盖说话者的面部** — 眼睛、鼻子、嘴巴必须保持可见
+2. **字幕在底部20%** — 竖屏 margin_v: 50，横屏 40
+3. **一致定位** — 一旦将叠加放在左侧，保持在那里
+4. **文字叠加：屏幕上2-5秒** — 长到足以阅读，短到不觉得卡住
 
-## Deciding What to Enhance
+## 决定增强什么
 
-For each section of the script, ask:
+对于脚本的每个段落，问：
 
-1. Is the speaker explaining something visual? → Add a diagram (`diagram_gen`)
-2. Is there a key statistic or quote? → Add a text overlay
-3. Is there code or technical content? → Add a code screenshot (`code_snippet`)
-4. Has the speaker been on camera > 30 seconds straight? → Consider B-roll or overlay
-5. Is this the intro or conclusion? → Bold text overlay with the key message
+1. 说话者是否在解释视觉内容？→ 添加图表（`diagram_gen`）
+2. 是否有关键数据或引用？→ 添加文字叠加
+3. 是否有代码或技术内容？→ 添加代码截图（`code_snippet`）
+4. 说话者是否已在镜头前连续超过30秒？→ 考虑 B-roll 或叠加
+5. 这是开场还是结尾？→ 粗体文字叠加配合关键信息
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] Face enhancement looks natural — not over-smoothed or orange
-- [ ] Color grade is visible but subtle — skin tones look healthy
-- [ ] Audio is normalized to target LUFS — consistent volume throughout
-- [ ] Subtitles are readable on mobile, positioned below the face
-- [ ] Overlays add value (not just decoration)
-- [ ] Enhancement density matches content length and platform
+- [ ] 面部增强看起来自然 — 不过度平滑或橙色
+- [ ] 调色可见但微妙 — 肤色看起来健康
+- [ ] 音频标准化到目标 LUFS — 全程音量一致
+- [ ] 字幕在移动端可读，位于面部下方
+- [ ] 叠加增加价值（而非仅装饰）
+- [ ] 增强密度匹配内容时长和平台

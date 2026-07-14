@@ -1,40 +1,37 @@
-# Rig Plan Director - Character Animation Pipeline
+# 骨架计划导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Produce `rig_plan` and `pose_library` from `character_design`.
+根据 `character_design` 产出 `rig_plan` 和 `pose_library`。
 
-## Process
+## 流程
 
-1. Convert each character into rig parts:
-   - body,
-   - head,
-   - eyes/pupils,
-   - brows,
-   - mouth shapes,
-   - limbs/wings,
-   - tail/accessories,
-   - props.
-2. Define pivots for every moving part.
-3. Define layer order.
-4. Define constraints so limbs do not rotate into impossible positions.
-5. Define named poses for the approved scenes.
-6. Define action cycles only when reused at least twice or central to the story.
+1. 将每个角色转换为骨架部件：
+   - 身体，
+   - 头部，
+   - 眼睛/瞳孔，
+   - 眉毛，
+   - 嘴型，
+   - 四肢/翅膀，
+   - 尾巴/配饰，
+   - 道具。
+2. 为每个活动部件定义枢轴。
+3. 定义图层顺序。
+4. 定义约束条件，确保肢体不会旋转到不可能的位置。
+5. 为已批准的场景定义命名的姿态。
+6. 仅当动作循环至少复用两次或对故事至关重要时才定义。
 
-## Runtime Pattern
+## 运行时模式
 
-Character differences are data. The renderer should not need one-off code for a
-mouse versus a bird. A bird may have `wing_left`; a mouse may have `tail`, but
-both feed the same pose interpolation and timeline compiler.
+角色差异即数据。渲染器不应为老鼠和鸟类编写一次性代码。鸟类可能有 `wing_left`；老鼠可能有 `tail`，但两者都使用相同的姿态插值和时间线编译器。
 
-## Quality Checks
+## 质量检查
 
-- Every moving part has a pivot.
-- Every required action has poses or a procedural strategy.
-- Every pose names the changed parts.
-- Risky actions are called out, not hidden.
+- 每个活动部件都有枢轴。
+- 每个所需动作都有对应的姿态或程序化策略。
+- 每个姿态都列出了发生变化的部件。
+- 有风险的动作需要明确指出，而非隐藏。
 
-## Tool Use
+## 工具使用
 
-Use `svg_rig_builder` to draft rig data and `pose_library_builder` to draft the
-initial pose library. The agent may revise their output before checkpointing.
+使用 `svg_rig_builder` 起草骨架数据，使用 `pose_library_builder` 起草初始姿态库。代理可以在提交检查点之前修改其输出。

@@ -1,15 +1,15 @@
 ---
 name: captions
-description: Auto-generated captions and subtitle options for HeyGen videos
+description: HeyGen 视频的自动生成字幕和副标题选项
 ---
 
-# Video Captions
+# 视频字幕
 
-HeyGen can automatically generate captions (subtitles) for your videos, improving accessibility and engagement.
+HeyGen 可以自动为你的视频生成字幕，提高可访问性和参与度。
 
-## Enabling Captions
+## 启用字幕
 
-Captions can be enabled when generating a video:
+生成视频时可以启用字幕：
 
 ```typescript
 const videoConfig = {
@@ -27,19 +27,19 @@ const videoConfig = {
       },
     },
   ],
-  // Caption settings (availability varies by plan)
+  // 字幕设置（可用性因套餐而异）
   caption: true,
 };
 ```
 
-## Caption Configuration Options
+## 字幕配置选项
 
 ```typescript
 interface CaptionConfig {
-  // Enable/disable captions
+  // 启用/禁用字幕
   enabled: boolean;
 
-  // Caption style
+  // 字幕样式
   style?: {
     font_family?: string;
     font_size?: number;
@@ -48,23 +48,23 @@ interface CaptionConfig {
     position?: "top" | "bottom";
   };
 
-  // Language for caption generation
+  // 字幕生成语言
   language?: string;
 }
 ```
 
-## Caption Styles
+## 字幕样式
 
-### Basic Captions
+### 基本字幕
 
 ```typescript
 const config = {
   video_inputs: [...],
-  caption: true, // Enable with default styling
+  caption: true, // 启用默认样式
 };
 ```
 
-### Styled Captions
+### 带样式的字幕
 
 ```typescript
 const config = {
@@ -82,12 +82,12 @@ const config = {
 };
 ```
 
-## Multi-Language Captions
+## 多语言字幕
 
-For videos in different languages, captions are generated based on the voice language:
+对于不同语言的视频，字幕根据语音语言生成：
 
 ```typescript
-// Spanish video with Spanish captions
+// 西班牙语视频带西班牙语字幕
 const spanishConfig = {
   video_inputs: [
     {
@@ -107,11 +107,11 @@ const spanishConfig = {
 };
 ```
 
-## Working with SRT Files
+## 使用 SRT 文件
 
-### SRT File Format
+### SRT 文件格式
 
-Standard SRT format:
+标准 SRT 格式：
 
 ```srt
 1
@@ -127,24 +127,24 @@ automatic captions generated.
 They sync with the audio.
 ```
 
-### Using Custom SRT
+### 使用自定义 SRT
 
-For video translation, you can provide your own SRT:
+对于视频翻译，你可以提供自己的 SRT：
 
 ```typescript
 const translationConfig = {
   input_video_id: "original_video_id",
   output_languages: ["es-ES", "fr-FR"],
-  srt_key: "path/to/custom.srt", // Custom SRT file
-  srt_role: "input", // "input" or "output"
+  srt_key: "path/to/custom.srt", // 自定义 SRT 文件
+  srt_role: "input", // "input" 或 "output"
 };
 ```
 
-## Caption Positioning
+## 字幕定位
 
-### Bottom (Default)
+### 底部（默认）
 
-Standard position for most videos:
+大多数视频的标准位置：
 
 ```typescript
 caption: {
@@ -155,9 +155,9 @@ caption: {
 }
 ```
 
-### Top
+### 顶部
 
-For videos where bottom space is occupied:
+当底部空间被占用时：
 
 ```typescript
 caption: {
@@ -168,15 +168,15 @@ caption: {
 }
 ```
 
-## Accessibility Best Practices
+## 可访问性最佳实践
 
-1. **Always enable captions** - Improves accessibility for deaf/hard-of-hearing viewers
-2. **Use high contrast** - White text on dark background or vice versa
-3. **Readable font size** - At least 24px for standard video, larger for mobile
-4. **Don't cover important content** - Position captions away from key visual elements
-5. **Sync timing** - Ensure captions match audio timing accurately
+1. **始终启用字幕** - 提高对听障观众的友好度
+2. **使用高对比度** - 白色文字配深色背景，或反之
+3. **可读的字体大小** - 标准视频至少 24px，移动端更大
+4. **不要遮挡重要内容** - 将字幕放置在远离关键视觉元素的位置
+5. **同步时间** - 确保字幕与音频时间准确匹配
 
-## Caption Helper Functions
+## 字幕辅助函数
 
 ```typescript
 interface CaptionStyle {
@@ -226,52 +226,52 @@ function createCaptionConfig(preset: keyof typeof captionPresets) {
 }
 ```
 
-## Social Media Caption Considerations
+## 社交媒体字幕注意事项
 
 ### TikTok / Instagram Reels
 
-- Position captions in center or upper portion
-- Avoid bottom 20% (covered by UI elements)
-- Use larger font sizes for mobile viewing
+- 将字幕置于中央或上半部分
+- 避免底部 20%（被 UI 元素遮挡）
+- 移动端观看使用更大的字体
 
 ```typescript
 const socialCaptions = {
   enabled: true,
   style: {
     font_size: 42,
-    position: "top", // Avoid bottom UI elements
+    position: "top", // 避免底部 UI 元素
   },
 };
 ```
 
 ### YouTube
 
-- Standard bottom captions work well
-- YouTube also supports closed captions upload
+- 标准底部字幕效果良好
+- YouTube 也支持上传隐藏式字幕
 
 ### LinkedIn
 
-- Captions highly recommended (many watch without sound)
-- Professional styling preferred
+- 强烈推荐使用字幕（许多人静音观看）
+- 倾向于专业样式
 
-## Limitations
+## 限制
 
-- Caption styles may be limited depending on your subscription tier
-- Some advanced caption features may require the web interface
-- Multi-speaker caption detection may have limited availability
-- Caption accuracy depends on audio quality and speech clarity
+- 字幕样式可能因订阅等级而受限
+- 一些高级字幕功能可能需要 Web 界面
+- 多人说话的字幕检测可能有限
+- 字幕准确度取决于音频质量和语音清晰度
 
-## Integration with Video Translation
+## 与视频翻译集成
 
-When using video translation, captions are automatically handled:
+使用视频翻译时，字幕会自动处理：
 
 ```typescript
-// Video translation includes caption generation
+// 视频翻译包括字幕生成
 const translationConfig = {
   input_video_id: "original_video_id",
   output_languages: ["es-ES"],
-  // Captions generated in target language
+  // 字幕以目标语言生成
 };
 ```
 
-See [video-translation.md](video-translation.md) for more details.
+参见 [video-translation.md](video-translation.md) 了解更多详情。

@@ -1,100 +1,99 @@
-# Asset Director - Hybrid Pipeline
+# 素材导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-This stage prepares the support kit around the anchor edit: subtitles, diagrams, generated inserts, narration, music, and reusable overlay systems.
+此阶段围绕锚定剪辑准备支持工具包：字幕、图表、生成插片、旁白、音乐和可复用的叠加层系统。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/asset_manifest.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Support needs and variant plan |
-| Tools | `subtitle_gen`, `tts_selector`, `image_selector`, `video_selector`, `diagram_gen`, `code_snippet`, `music_gen`, `audio_enhance` — selectors auto-discover all available providers from the registry | Optional support asset production |
-| Playbook | Active style playbook | Consistency rules |
+| Schema | `schemas/artifacts/asset_manifest.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 支持需求和变体计划 |
+| 工具 | `subtitle_gen`, `tts_selector`, `image_selector`, `video_selector`, `diagram_gen`, `code_snippet`, `music_gen`, `audio_enhance` — 选择器自动发现注册表中的所有可用提供商 | 可选的支援素材生产 |
+| Playbook | 当前样式 playbook | 一致性规则 |
 
-## Process
+## 流程
 
-### 1. Build Shared Support Assets First
+### 1. 先构建共享支持素材
 
-Start with reusable systems:
+从可复用系统开始：
 
-- subtitle treatment,
-- lower-third or label system,
-- stat-card system,
-- CTA container,
-- diagram style.
+- 字幕处理方案，
+- 下三分之一或标签系统，
+- 数据卡片系统，
+- CTA 容器，
+- 图表样式。
 
-### 1b. Sample Preview (Prevents Wasted Spend)
+### 1b. 样本预览（防止浪费预算）
 
-Before batch-generating support assets, produce one sample of each expensive generated type and show the user:
+在批量生成支持素材之前，对每种昂贵的生成类型制作一个样本并展示给用户：
 
-1. **TTS sample** (if narration is needed): Generate one section. Confirm voice and tone before batching.
-2. **Image/video sample** (if generating inserts): Generate one representative visual. Confirm style fits the source footage before batching.
+1. **TTS 样本**（如果需要旁白）：生成一个段落。在批量处理之前确认声音和语调。
+2. **图像/视频样本**（如果需要生成插片）：生成一个代表性视觉内容。在批量处理之前确认风格与源素材匹配。
 
-If rejected, adjust parameters and retry (max 3 iterations). Do not batch until approved.
+如果被拒绝，调整参数并重试（最多 3 次迭代）。在获得批准之前不要批量处理。
 
-### 2. Generate Only The Support Assets You Need
+### 2. 仅生成你需要的支持素材
 
-Support assets should fill identified needs from the script and scene plan, not speculative possibilities.
+支持素材应填补剧本和场景计划中已识别的需求，而非投机性的可能性。
 
-### 3. Preserve Anchor Truth
+### 3. 保留锚定真值
 
-Keep the metadata clear about which assets are:
+保持元数据清晰，说明哪些素材是：
 
-- source-derived,
-- provided,
-- recorded,
-- generated.
+- 源素材衍生，
+- 提供的，
+- 录制的，
+- 生成的。
 
-### 4. Use Metadata For The Support Map
+### 4. 使用元数据构建支持素材映射
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `shared_support_assets`
 - `scene_asset_index`
 - `source_vs_generated_map`
 - `variant_assets`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- support assets map to real narrative needs,
-- reusable kits are present,
-- source and generated assets are clearly separated,
-- every referenced file exists.
+- 支持素材映射到真实的叙事需求，
+- 可复用工件集已就位，
+- 源素材和生成素材清晰分离，
+- 每个引用的文件都存在。
 
-### Mid-Production Fact Verification
+### 中期制作事实核查
 
-If you encounter uncertainty during asset generation:
-- Use `web_search` to verify visual accuracy of subjects (e.g. what does this building actually look like?)
-- Use `web_search` to find reference images before generating illustrations
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在素材生成过程中遇到不确定的情况：
+- 使用 `web_search` 验证主体的视觉准确性（例如，这座建筑实际上长什么样？）
+- 使用 `web_search` 在生成插图之前查找参考图像
+- 在决策日志中记录核查信息：`category="visual_accuracy_check"`
 
-Visual accuracy matters. If the script mentions a specific place, person, or object,
-verify what it actually looks like before generating images. Don't rely on
-the AI model's training data — it may be wrong or outdated.
+视觉准确性很重要。如果剧本提到了特定的地点、人物或物体，在生成图像之前验证其真实外观。不要依赖 AI 模型的训练数据——它可能错误或过时。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Overbuilding support assets before the anchor cut is proven.
-- Losing track of which assets are generated versus supplied.
-- Creating inconsistent overlay systems across one project.
+- 在锚定剪辑被验证之前过度建设支持素材。
+- 忘记哪些素材是生成的，哪些是提供的。
+- 在单个项目中创建不一致的叠加层系统。
 
 
-## When You Do Not Know How
+## 当你不知道如何做时
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+如果你遇到不确定的生成技术、提供商行为或提示词模式：
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+1. **搜索网络**获取当前最佳实践——模型和 API 经常变化，代理的训练数据可能已过时
+2. **检查 `.agents/skills/`** 中现有的三级知识（提供商特定的提示词指南、API 模式）
+3. **如果两者都无帮助**，在 `projects/<project-name>/skills/<name>.md` 编写项目范围的技能文档，记录你学到的东西
+4. **引用源 URL** 到技能文档中，使知识可追溯
+5. **记录到决策日志**：`category: "capability_extension"`, `subject: "learned technique: <name>"`
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
+以下领域尤其重要：
+- **视频生成提示词**——模型对特定词汇的反应会随版本变化
+- **图像模型参数**——FLUX、DALL-E、Imagen 的最优设置各不相同且不断演进
+- **音频提供商特性**——语音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式**——随着框架发展，新的合成技术不断涌现
 
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时的知识。有疑问时，先搜索。
+

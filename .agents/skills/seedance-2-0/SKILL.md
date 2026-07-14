@@ -1,7 +1,7 @@
 ---
 name: seedance-2-0
 description: |
-  Generate cinematic clips with ByteDance Seedance 2.0 — the preferred premium video model in OpenMontage when a paid gateway is configured. Use when: (1) producing trailers, teasers, hype edits, or premium cinematic clips, (2) needing native synchronized audio (speech, SFX, ambience) in a single pass, (3) needing multi-shot cuts inside one generation, (4) needing director-level camera control, (5) needing lip-sync from quoted dialogue in the prompt, (6) needing reference-conditioned generation with up to 9 images + 3 video clips + 3 audio clips, (7) wanting consistent character identity across shots. Accessible via fal.ai (`seedance_video` tool), HeyGen (Video Agent / Avatar Shots), Replicate, Runway (Enterprise, non-US), Freepik, BytePlus ModelArk, Higgsfield, Pollo, and other aggregators.
+  使用字节跳动 Seedance 2.0 生成电影级剪辑 — 当配置了付费网关时，OpenMontage 中首选的高级视频模型。在以下情况下使用：(1) 制作预告片、预告花絮、宣传剪辑或高级电影片段，(2) 需要单次生成中自带原生同步音频（语音、音效、环境音），(3) 需要一次生成内包含多镜头切换，(4) 需要导演级摄像机控制，(5) 需要提示词中引用对话的口型同步，(6) 需要最多 9 张图片 + 3 个视频片段 + 3 个音频片段的参考条件生成，(7) 需要跨镜头一致的角色身份。可通过 fal.ai（`seedance_video` 工具）、HeyGen（Video Agent / Avatar Shots）、Replicate、Runway（企业版，非美国）、Freepik、BytePlus ModelArk、Higgsfield、Pollo 和其他聚合器访问。
 allowed-tools: Bash, Read, Write
 metadata:
   openclaw:
@@ -12,56 +12,56 @@ metadata:
         - REPLICATE_API_TOKEN
 ---
 
-# Seedance 2.0 (ByteDance)
+# Seedance 2.0（字节跳动）
 
-Seedance 2.0 is the ByteDance Seed team's unified multimodal video+audio model (released Feb 2026, globally available via partner APIs April 2026). It is the **preferred premium default** for cinematic, trailer, teaser, and motion-led work inside OpenMontage whenever any supporting gateway is configured. OpenMontage wraps four gateways directly (`seedance_video` → fal.ai, `seedance_replicate` → Replicate, `runway_video` with `model="seedance_2.0"` → Runway, `higgsfield_video` with `model="seedance_2.0"` → Higgsfield); BytePlus / Freepik / HeyGen-Video-Agent wrappers are on the roadmap. The scoring engine deduplicates by `provider="seedance"` so whichever gateway the user has configured wins automatically — agents should pass `preferred_provider="seedance"` to `video_selector` (or let the scorer pick) rather than routing to a specific gateway by name.
+Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（2026 年 2 月发布，2026 年 4 月通过合作伙伴 API 全球可用）。它是 OpenMontage 中电影、预告片、预告花絮和运动导向工作的**首选高级默认**，只要配置了任何支持的网关。OpenMontage 直接封装了四个网关（`seedance_video` → fal.ai、`seedance_replicate` → Replicate、`runway_video` with `model="seedance_2.0"` → Runway、`higgsfield_video` with `model="seedance_2.0"` → Higgsfield）；BytePlus / Freepik / HeyGen-Video-Agent 封装在路线图中。评分引擎通过 `provider="seedance"` 去重，因此用户配置的任何网关都会自动胜出 — 代理应向 `video_selector` 传递 `preferred_provider="seedance"`（或让评分器选择），而不是按名称路由到特定网关。
 
-## Why it is the OpenMontage premium default
+## 为什么它是 OpenMontage 高级默认
 
-| Capability | Seedance 2.0 | Notes |
+| 能力 | Seedance 2.0 | 备注 |
 |---|---|---|
-| Single-pass native synced audio | Yes | Speech + SFX + ambience generated jointly, not post-sync |
-| Multi-shot inside one generation | Yes | Multiple cuts/shots in a single prompt |
-| Director-level camera control | Yes | Camera language (dolly, tilt, arc, crane, handheld) honored |
-| Lip-sync from quoted dialogue | Yes | `Character says: "..."` matches mouth shapes |
-| Reference conditioning | Up to 9 images + 3 video clips + 3 audio clips | 12-asset multimodal |
-| Character identity consistency | Yes | Face/subject stable across shots |
-| Max shot duration | 15 s | auto / 4–15 s |
-| Resolution ceiling | 1080p on some endpoints (720p default on fal.ai) | Provider-dependent |
-| Elo (Artificial Analysis) | 1269 (#1 as of Feb 2026) | Beat Veo 3, Sora 2, Runway Gen-4.5 |
+| 单通道原生同步音频 | 是 | 语音 + 音效 + 环境音联合生成，非后期同步 |
+| 一次生成内多镜头 | 是 | 单个提示词中的多个切/镜头 |
+| 导演级摄像机控制 | 是 | 遵循镜头语言（dolly、tilt、arc、crane、handheld） |
+| 引用对话的口型同步 | 是 | `Character says: "..."` 匹配嘴型 |
+| 参考条件 | 最多 9 张图片 + 3 个视频片段 + 3 个音频片段 | 12 资产多模态 |
+| 角色身份一致性 | 是 | 面部/主体跨镜头稳定 |
+| 最大镜头时长 | 15 秒 | auto / 4–15 秒 |
+| 分辨率上限 | 某些端点支持 1080p（fal.ai 默认 720p） | 取决于提供商 |
+| Elo（Artificial Analysis） | 1269（截至 2026 年 2 月 #1） | 超越 Veo 3、Sora 2、Runway Gen-4.5 |
 
-Switch away only for a specific reason: strict budget (use the `fast` variant or LTX), user-preferred provider (VEO/Sora/Kling), or a stylistic fit that favors another model.
+仅在以下原因时切换：预算严格（使用 `fast` 变体或 LTX）、用户偏好的提供商（VEO/Sora/Kling）、或风格适配更倾向于其他模型。
 
-## Provider surfaces
+## 提供商界面
 
-| Surface | Env | OpenMontage tool | Status | Notes |
+| 界面 | 环境变量 | OpenMontage 工具 | 状态 | 备注 |
 |---|---|---|---|---|
-| **fal.ai** (primary) | `FAL_KEY` | `seedance_video` | ✅ wrapped | Model IDs below. Supports T2V, I2V, reference-to-video; `standard` and `fast` variants. Default in OpenMontage. |
-| **Replicate** | `REPLICATE_API_TOKEN` | `seedance_replicate` | ✅ wrapped | `bytedance/seedance-2.0` + `bytedance/seedance-2.0-fast`. Standard Replicate prediction API. |
-| **Runway** | `RUNWAY_API_KEY` | `runway_video` (model: `seedance_2.0`) | ✅ wrapped | Third-party Seedance 2.0 model inside Runway. **Unlimited/Enterprise plans, non-US only**. Selected via `model` param. |
-| **Higgsfield** | `HIGGSFIELD_API_KEY` + `_SECRET` | `higgsfield_video` (model: `seedance_2.0`) | ✅ wrapped | Seedance 2.0 is the default model on this tool. Emphasis on character identity + long-form chaining. |
-| **HeyGen** | `HEYGEN_API_KEY` | `heygen_video` (1.x only) + TODO | ⚠️ 1.x only | The `seedance_pro` / `seedance_lite` workflow provider strings on HeyGen map to Seedance 1.x. 2.0 access flows through Video Agent / Avatar Shots endpoints — a separate `seedance_heygen` tool is on the roadmap. |
-| **BytePlus ModelArk / Volcengine** | BytePlus token | not wrapped | 🔜 roadmap | Direct from ByteDance. Pro ~$0.15 / 5 s, Lite ~$0.010/s. Token-based. |
-| **Freepik** | Freepik token | not wrapped | 🔜 roadmap | `POST /v1/ai/image-to-video/seedance-pro-1080p` for 1080p I2V |
-| **Pollo / PiAPI / Atlas Cloud / AIMLAPI** | various | not wrapped | 🔜 roadmap | Aggregators resell fal.ai or ByteDance endpoints |
+| **fal.ai**（主要） | `FAL_KEY` | `seedance_video` | ✅ 已封装 | 以下模型 ID。支持 T2V、I2V、参考转视频；`standard` 和 `fast` 变体。OpenMontage 中的默认。 |
+| **Replicate** | `REPLICATE_API_TOKEN` | `seedance_replicate` | ✅ 已封装 | `bytedance/seedance-2.0` + `bytedance/seedance-2.0-fast`。标准 Replicate 预测 API。 |
+| **Runway** | `RUNWAY_API_KEY` | `runway_video` (model: `seedance_2.0`) | ✅ 已封装 | Runway 内的第三方 Seedance 2.0 模型。**无限/企业计划，仅限非美国地区**。通过 `model` 参数选择。 |
+| **Higgsfield** | `HIGGSFIELD_API_KEY` + `_SECRET` | `higgsfield_video` (model: `seedance_2.0`) | ✅ 已封装 | 此工具上 Seedance 2.0 是默认模型。强调角色身份 + 长格式链式生成。 |
+| **HeyGen** | `HEYGEN_API_KEY` | `heygen_video`（仅 1.x）+ TODO | ⚠️ 仅 1.x | HeyGen 上的 `seedance_pro` / `seedance_lite` 工作流提供商字符串映射到 Seedance 1.x。2.0 访问通过 Video Agent / Avatar Shots 端点 — 一个单独的 `seedance_heygen` 工具在路线图中。 |
+| **BytePlus ModelArk / 火山引擎** | BytePlus 令牌 | 未封装 | 🔜 路线图 | 字节跳动直连。Pro 约 $0.15 / 5 秒，Lite 约 $0.010/秒。基于令牌。 |
+| **Freepik** | Freepik 令牌 | 未封装 | 🔜 路线图 | `POST /v1/ai/image-to-video/seedance-pro-1080p` 用于 1080p I2V |
+| **Pollo / PiAPI / Atlas Cloud / AIMLAPI** | 各不不同 | 未封装 | 🔜 路线图 | 聚合器转售 fal.ai 或字节跳动端点 |
 
-### fal.ai model IDs (used by `seedance_video`)
+### fal.ai 模型 ID（由 `seedance_video` 使用）
 
 ```
 bytedance/seedance-2.0/text-to-video
 bytedance/seedance-2.0/image-to-video
-bytedance/seedance-2.0/reference-to-video        # 9 img + 3 vid + 3 audio
+bytedance/seedance-2.0/reference-to-video        # 9 图 + 3 视频 + 3 音频
 bytedance/seedance-2.0/fast/text-to-video
 bytedance/seedance-2.0/fast/image-to-video
 bytedance/seedance-2.0/fast/reference-to-video
 ```
 
-Pricing (fal.ai, 720p): standard $0.3034 / s (T2V), $0.3024 / s (I2V). Fast $0.2419 / s across endpoints.
-The `fast` variant trades some camera/motion fidelity for latency and cost — do **not** route slow-mo, multi-shot, or dolly-heavy prompts to `fast` on the first try.
+定价（fal.ai，720p）：标准 $0.3034 / 秒（T2V），$0.3024 / 秒（I2V）。快速各端点 $0.2419 / 秒。
+`fast` 变体以部分镜头/运动保真度为代价换取延迟和成本 — **不要**将慢动作、多镜头或推拉密集提示首次尝试路由到 `fast`。
 
-## Calling Seedance 2.0 inside OpenMontage
+## 在 OpenMontage 中调用 Seedance 2.0
 
-Always go through `video_selector` with `preferred_provider="seedance"` (or let the scoring engine pick it):
+始终通过 `video_selector` 使用 `preferred_provider="seedance"`（或让评分引擎选择）：
 
 ```python
 from tools.tool_registry import registry
@@ -70,7 +70,7 @@ selector = registry.get("video_selector")
 result = selector.execute({
     "prompt": PROMPT,
     "preferred_provider": "seedance",
-    "operation": "text_to_video",       # or image_to_video / reference_to_video
+    "operation": "text_to_video",       # 或 image_to_video / reference_to_video
     "aspect_ratio": "21:9",             # 21:9 / 16:9 / 9:16 / 4:3 / 1:1 / 3:4
     "duration": "10",                   # auto / 4..15
     "resolution": "720p",               # 480p / 720p
@@ -78,91 +78,91 @@ result = selector.execute({
 })
 ```
 
-Direct call to the provider tool (only when you must bypass the selector):
+仅在必须绕过选择器时直接调用提供商工具：
 
 ```python
 seedance = registry.get("seedance_video")
 seedance.execute({
     "prompt": PROMPT,
-    "model_variant": "standard",   # "standard" or "fast"
+    "model_variant": "standard",   # "standard" 或 "fast"
     "operation": "text_to_video",
     "aspect_ratio": "21:9",
     "duration": "10",
     "resolution": "720p",
     "generate_audio": True,
-    "seed": 12345,                 # optional, for reproducible variations
+    "seed": 12345,                 # 可选，用于可重现的变体
     "output_path": "...",
 })
 ```
 
-## Prompt structure — The Higgsfield Methodology (canonical as of 2026)
+## 提示词结构 — Higgsfield 方法论（截至 2026 年的规范）
 
-**CRITICAL: Open every prompt with a shot-structure declaration.** Seedance rewards prompts that declare format upfront before any creative description. This is the single biggest quality lever.
+**关键：每个提示以镜头结构声明开头。** Seedance 奖励在创造性描述之前声明格式的提示。这是最大的质量杠杆。
 
-### Opener templates (copy one verbatim, then extend)
+### 开头模板（复制一个逐字使用，然后扩展）
 
-**For action/combat/multi-shot (highest-performing format):**
+**对于动作/战斗/多镜头（效果最好的格式）：**
 ```
 Montage, multi-shot Hollywood action, don't use one camera angle or single cut, cinematic lighting, photorealistic, 35mm film quality, ARRI ALEXA aesthetic, heavy film grain, sharp but imperfect focus, motion blur on fast actions, halation on highlights, soft highlight rolloff, wide-angle lens with strong distortion, subtle chromatic aberration near frame edges, no 3D, no cartoon, no VFX aesthetic.
 ```
 
-**For single-POV continuous shots (orbs, walkthrough):**
+**对于单 POV 连续镜头（球体视角、漫游）：**
 ```
 Single continuous shot, first-person POV perspective, the camera IS [his/her] eyes, hyper-chaotic handheld motion, completely unstabilized, violent raw human movement, constant micro-jitters, aggressive head swings, abrupt jerks, frequent over-rotation, no smoothness at all, no cuts, no zoom, 35mm film, photorealistic.
 ```
 
-**For locked-POV reaction scenes:**
+**对于锁定 POV 反应场景：**
 ```
 One continuous shot, POV [setting] perspective, no cuts, no zoom, natural head movement, photorealistic, 35mm film grain.
 ```
 
-### Body structure (after the opener)
+### 主体结构（开头之后）
 
-1. **Environment/location** — sensory detail (wet asphalt, sodium lamps, neon bleed, rain particulates, volumetric haze)
-2. **Character block** — with reference tags and identity-lock language (see Reference-to-video below)
-3. **Enemy/secondary character block** — same detail level
-4. **Beat-by-beat choreography** with TEMPORAL MARKERS: `0–3s: …  3–6s: …  6–10s: …`
-5. **VFX inline in brackets:** `[VFX: branching white-blue electric arcs pulsing along forearms, sparks jumping between fingers]`
-6. **Slow-motion markers:** write `RAMPS TO SLOW MOTION` before the impact beat, `SNAPS BACK TO REAL TIME` on resume
-7. **Sound design block:** either `no music, only raw SFX` or explicit SFX sequence. Music language stays textural.
+1. **环境/位置** — 感官细节（湿沥青、钠灯、霓虹渗色、雨水微粒、体积雾）
+2. **角色块** — 带参考标签和身份锁定语言（见下方参考转视频）
+3. **敌人/次要角色块** — 相同细节级别
+4. **逐拍编排** 带时间标记：`0–3s: … 3–6s: … 6–10s: …`
+5. **VFX 在括号内联：** `[VFX: branching white-blue electric arcs pulsing along forearms, sparks jumping between fingers]`
+6. **慢动作标记：** 在冲击节拍前写 `RAMPS TO SLOW MOTION`，在恢复时写 `SNAPS BACK TO REAL TIME`
+7. **声音设计块：** 要么 `no music, only raw SFX`，要么显式 SFX 序列。音乐语言保持质感。
 
-### Combat vocabulary (proven to hit)
+### 战斗词汇（已验证有效）
 
-- `snaps forward`, `lunges`, `sprints`, `weaves`, `chambers`, `drives`, `pivots`, `redirects`, `ducks`, `slips`
-- `explodes outward`, `devastating`, `raw force`, `kinetic`, `overload`, `compresses`, `erupts`, `fractures`, `ripples`
-- Avoid soft verbs: `attacks`, `hits`, `fights` — these read generic and Seedance underdelivers on them
+- `snaps forward`、 `lunges`、 `sprints`、 `weaves`、 `chambers`、 `drives`、 `pivots`、 `redirects`、 `ducks`、 `slips`
+- `explodes outward`、 `devastating`、 `raw force`、 `kinetic`、 `overload`、 `compresses`、 `erupts`、 `fractures`、 `ripples`
+- 避免软动词：`attacks`、`hits`、`fights` — 这些读起来太通用，Seedance 在此表现不佳
 
-### Camera behavior — state what it IS and ISN'T doing
+### 摄像机行为 — 说明它正在和没有做什么
 
-Seedance misfires when camera intent is ambiguous. Always explicitly negate what you don't want:
-- `no cuts` (for continuous POV)
-- `no zoom` (prevents unnatural perspective punch-ins)
-- `no stabilization` (when you want chaotic handheld)
+当摄像机意图不明确时，Seedance 会出错。始终显式否定你不想要的：
+- `no cuts`（用于连续 POV）
+- `no zoom`（防止不自然的透视推入）
+- `no stabilization`（当你想要混乱的手持效果时）
 - `no smoothness at all`
-- `no 3D, no cartoon, no VFX aesthetic` — counter-intuitive but forces photoreal skin/texture/lighting even when the scene has heavy VFX elements
+- `no 3D, no cartoon, no VFX aesthetic` — 反直觉，但强制照片级皮肤/纹理/光照，即使场景有大量 VFX 元素
 
-### Realism enforcement phrase
+### 真实感强化短语
 
-When the brief has VFX but you want photoreal skin/textures (not plastic Marvel-cartoon look), include:
+当需求有 VFX 但你想要照片级皮肤/纹理（非塑料漫威卡通效果）时，包含：
 ```
 no 3D, no cartoon, no VFX aesthetic — photorealistic textures, real skin pores, authentic fabric detail, grounded in reality
 ```
 
-### Format priority (Higgsfield empirical ordering)
+### 格式优先级（Higgsfield 经验排序）
 
-| Format | Best for | Pattern |
+| 格式 | 最适合 | 模式 |
 |---|---|---|
-| **Transformation** | calm → threat → transformation → aftermath | 6 numbered shots × 2.5s each @ 15s total |
-| **Orbs** | single continuous POV | 1 shot × 15s, hyper-chaotic handheld |
-| **Fights** | combat choreography | Beat-by-beat, clear power mismatch, RAMPS/SNAPS |
-| **POV** | locked reaction | Continuous, "no cuts no zoom" mantra |
-| **Animation** | stylized 3D | `@image` keyframe + timed segments |
+| **变形** | 平静 → 威胁 → 变形 → 后果 | 6 个编号镜头 × 每镜头 2.5 秒 @ 共 15 秒 |
+| **球体视角** | 单一连续 POV | 1 镜头 × 15 秒，极度混乱手持 |
+| **战斗** | 战斗编排 | 逐拍，明确力量差距，RAMPS/SNAPS |
+| **POV** | 锁定反应 | 连续，"no cuts no zoom" 咒语 |
+| **动画** | 风格化 3D | `@image` 关键帧 + 定时段 |
 
-The **2.5-second-per-shot rhythm** appears optimal for multi-shot generations.
+**每镜头 2.5 秒节奏** 在多镜头生成中似乎是最优的。
 
-## Legacy 8-part template (use only for single simple shots, not action)
+## 遗留 8 部分模板（仅用于简单单镜头，非动作）
 
-Seedance 2.0 is unusually literal about camera language, multi-shot cuts, and quoted dialogue. Use this 8-part template:
+Seedance 2.0 对镜头语言、多镜头切换和引用对话异常字面。使用此 8 部分模板：
 
 ```
 [Shot / framing] + [Camera movement] +
@@ -172,9 +172,9 @@ Seedance 2.0 is unusually literal about camera language, multi-shot cuts, and qu
 [Style / grade / era] + [Audio — ambient, diegetic, music, dialogue]
 ```
 
-### Multi-shot inside one generation
+### 一次生成内的多镜头
 
-Seedance honors explicit shot lists inside a prompt. Format each shot:
+Seedance 接受提示中的显式镜头列表。格式化每个镜头：
 
 ```
 Shot 1 (wide establishing, slow aerial push-in): ...
@@ -182,9 +182,9 @@ Shot 2 (medium close-up, handheld): ...
 Shot 3 (extreme close-up, rack focus): ...
 ```
 
-Keep subject description consistent across shots for identity stability.
+保持主题描述跨镜头一致以实现身份稳定。
 
-### Lip-sync from quoted dialogue
+### 引用对话的口型同步
 
 ```
 Aang stands on the cliff edge, staff raised, wind in his cloak.
@@ -192,18 +192,18 @@ Aang says: "I won't run anymore."
 Sokka, half a step behind, replies: "Then we fight."
 ```
 
-Use `Character says: "..."` / `Character replies: "..."` exactly — mouth shapes key off quoted strings. Keep each line under ~6 words; longer lines risk drift on fast clips.
+准确使用 `Character says: "..."` / `Character replies: "..."` — 嘴型以引用字符串为关键。每行保持在约 6 个词以下；较长的行在快速片段中可能漂移。
 
-### Audio cues that work
+### 有效的音频提示
 
-Ambient: `distant thunder rolling over mountains`, `wind through reeds`, `crackling campfire`
-Diegetic: `boots crunching snow`, `staff planting on stone`, `wingbeats overhead`
-Music direction (light touch only): `low orchestral swell building`, `taiko drums entering on Shot 3`
-Do **not** request complex multi-instrument scores — keep music language textural.
+环境音：`distant thunder rolling over mountains`、`wind through reeds`、`crackling campfire`
+叙事内音效：`boots crunching snow`、`staff planting on stone`、`wingbeats overhead`
+音乐方向（轻触）：`low orchestral swell building`、`taiko drums entering on Shot 3`
+**不要**请求复杂的多乐器配乐 — 保持音乐语言质感。
 
-### Reference-to-video
+### 参考转视频
 
-When you have character / product / wardrobe references, use the reference-to-video endpoint. Seedance 2.0 honors an explicit bracket tagging syntax:
+当你有人物/产品/服装参考时，使用参考转视频端点。Seedance 2.0 接受显式的括号标签语法：
 
 ```
 [reference_image: hero_portrait.png]
@@ -215,79 +215,79 @@ Shot 2 (medium close-up): hero turns toward camera, staff in hand.
 Shot 3 (extreme close-up, rack focus): hero's eyes open, wind whipping.
 ```
 
-**Identity-anchor phrases that measurably reduce face drift** (stack them — redundancy helps):
+**可测量减少面部漂移的身份锚定短语**（堆叠它们 — 冗余有帮助）：
 - `the same character`
 - `consistent across different scenes / all shots`
 - `maintain exact appearance from reference image`
 - `no deformation, no drift, no face morph`
 - `Do not alter clothing category or primary color`
 
-**Single-reference workflow (common in practice):** When you only have one photo:
-- Use a clear, front-facing portrait with neutral lighting and minimal motion blur; avoid occluded faces (e.g., phones, sunglasses, heavy shadow).
-- Reuse the SAME reference image across all shots — do not generate new refs per shot.
-- Put all shots in ONE prompt under a single `[identity_lock]` block so the model treats them as a coherent sequence.
-- If wardrobe is changing by design (e.g., civilian → costume), describe the costume verbatim on every shot it appears and add `Do not alter clothing category or primary color` to lock it once generated.
+**单参考工作流（实践中常见）：** 当你只有一张照片时：
+- 使用清晰、正面的肖像，光线中性，最小运动模糊；避免遮挡的面部（如手机、太阳镜、重度阴影）
+- 在所有镜头中复用**同一张**参考图片 — 不要为每个镜头生成新参考
+- 将所有镜头放在一个提示中的单个 `[identity_lock]` 块下，使模型将其视为连贯序列
+- 如果服装按设计改变（例如便装 → 戏服），在其出现的每个镜头上逐字描述戏服，并添加 `Do not alter clothing category or primary color` 以在生成后锁定
 
-**Anti-drift fallback:** If face morphs across frames on first render, drop to a shorter duration (5-6s instead of 10s), tighten the identity-lock language, and if you have multiple reference images, cull to the 3 most consistent ones rather than flooding with 9.
+**抗漂移回退：** 如果面部在首次渲染时跨帧变形，降到更短的时长（5-6 秒而非 10 秒），收紧身份锁定语言，如果你有多张参考图片，减少到最一致的 3 张而非用 9 张泛滥。
 
-## Parameter guidance
+## 参数指导
 
-| Parameter | Guidance |
+| 参数 | 指导 |
 |---|---|
-| `duration` | `5`–`8` for hero shots, `10`–`12` for full scenes with multi-shot cuts, `4` for quick inserts. `auto` when unsure. |
-| `aspect_ratio` | `21:9` for cinematic trailers, `16:9` for broadcast / YouTube, `9:16` for Reels/Shorts/TikTok |
-| `resolution` | `720p` default. Drop to `480p` for cost-capped batch previews, not for finals |
-| `generate_audio` | Keep **on** unless you have a specific reason to mute — Seedance's moat is synced audio. Strip audio downstream in compose if needed. |
-| `model_variant` | `standard` for hero/cinematic shots; `fast` only for b-roll, previews, or when latency is the hard constraint |
-| `seed` | Set a seed before iterating variants of a chosen shot — everything else held constant |
+| `duration` | 主角镜头用 `5`–`8`，带多镜头切换的全场景用 `10`–`12`，快速插入用 `4`。不确定时用 `auto`。 |
+| `aspect_ratio` | 电影预告片用 `21:9`，广播/YouTube 用 `16:9`，Reels/Shorts/TikTok 用 `9:16` |
+| `resolution` | `720p` 默认。降级到 `480p` 用于成本上限的批量预览，最终渲染不用 |
+| `generate_audio` | 保持**开启**，除非你有关闭音频的特定原因 — Seedance 的护城河是同步音频。如有需要可在合成中下游剥离音频。 |
+| `model_variant` | 主要/电影镜头用 `standard`；仅 B-roll、预览或延迟是硬约束时用 `fast` |
+| `seed` | 在迭代所选镜头的变体前设置种子 — 其他所有参数保持不变 |
 
-## What to avoid
+## 应避免的事项
 
-| Don't | Why |
+| 不要 | 原因 |
 |---|---|
-| Cram four-plus simultaneous character actions into one shot | Motion coherence breaks; split into multi-shot |
-| Request readable text / logos inside the clip | Text rendering is unreliable — handle text in Remotion overlay |
-| Mix conflicting lighting ("bright noon" + "neon night") | Model picks one and ignores the other |
-| Write dialogue longer than ~6 words on fast-cut shots | Lip-sync drift |
-| Use `fast` variant for slow-mo, multi-shot, or complex camera moves | Routinely misses on first try — route to `standard` |
-| Generate music through Seedance audio | Texture-only is fine; for real scoring use `music` / `pixabay_music` / `elevenlabs` and mix in compose |
-| Bypass `video_selector` without a reason | Loses cost/availability/fallback handling and scoring context |
+| 在一个镜头中塞入四个以上同时发生的角色动作 | 运动连贯性断裂；拆分为多镜头 |
+| 要求片段内包含可读文字/标志 | 文字渲染不可靠 — 在 Remotion 覆盖层中处理文字 |
+| 混合冲突的光照（"bright noon" + "neon night"） | 模型选择一个并忽略另一个 |
+| 在快速剪辑镜头上写超过约 6 词的对话 | 口型同步漂移 |
+| 对慢动作、多镜头或复杂相机移动使用 `fast` 变体 | 首次尝试通常会失败 — 路由到 `standard` |
+| 通过 Seedance 音频生成音乐 | 仅质感没问题；真正的配乐使用 `music` / `pixabay_music` / `elevenlabs` 并在合成中混合 |
+| 无理由绕过 `video_selector` | 丧失成本/可用性/回退处理和评分上下文 |
 
-## Iteration strategy
+## 迭代策略
 
-1. **Block out shape** with a single `duration=5` `fast` T2V pass at the intended framing. Confirm the composition works.
-2. **Lock the seed** once the composition reads.
-3. **Upgrade to `standard`** with the same seed, tighten camera and lighting language.
-4. **Extend and add shots** — move to multi-shot or longer duration only after a single-shot version is clean.
-5. **Keep a per-clip README** with prompt + seed + variant for every shot that makes the cut, so the compose stage can re-render consistent retakes.
+1. **勾勒形状** — 用单个 `duration=5` `fast` T2V 传递以目标构图进行。确认构图可行。
+2. **锁定种子** — 在构图可读后锁定种子。
+3. **升级到 `standard`** — 使用相同种子，收紧镜头和光照语言。
+4. **扩展并添加镜头** — 仅在单镜头版本干净后，才转向多镜头或更长时长。
+5. **保留每个片段的 README** — 为每个通过的镜头保存提示 + 种子 + 变体，以便合成阶段可以重新渲染一致的重拍。
 
-## Integration notes for OpenMontage pipelines
+## OpenMontage 管线的集成说明
 
-- **Cinematic pipeline:** Seedance 2.0 is the default video model. Use 21:9 for hero, multi-shot for montage beats, reference-to-video when the brief has a visual bible.
-- **Animated explainer:** Use Seedance 2.0 for the establishing / mood clips only; most shots should stay in Remotion. Don't replace Remotion motion graphics with Seedance — different tool, different job.
-- **Screen demo / podcast / clip factory:** Seedance is not the right default — these are footage-led. Only use for stylized cold-opens.
-- **Cost discipline:** `standard` at 10 s ≈ $3.03 per clip. Budget accordingly in the proposal stage. `fast` at 5 s ≈ $1.21 for previews.
+- **电影管线：** Seedance 2.0 是默认视频模型。主角用 21:9，蒙太奇节拍用多镜头，当需求有视觉圣经时用参考转视频。
+- **动画解说：** 仅将 Seedance 2.0 用于建立/氛围镜头；大多镜头应保留在 Remotion 中。不要用 Seedance 替换 Remotion 动态图形 — 不同的工具，不同的工作。
+- **屏幕演示 / 播客 / 剪辑工厂：** Seedance 不是正确的默认 — 这些以素材为导向。仅用于风格化的开场。
+- **成本纪律：** `standard` 在 10 秒时约 $3.03/片段。在提案阶段据此预算。`fast` 在 5 秒时约 $1.21 用于预览。
 
-## Verification checklist for every Seedance shot
+## 每个 Seedance 镜头的验证清单
 
-- [ ] Motion reads coherently at the chosen shot length
-- [ ] Audio is actually synced (check dialogue + foot/impact hits)
-- [ ] Character identity matches reference / prior shots
-- [ ] Camera direction matches the prompt (no auto-dolly when you asked for static)
-- [ ] No readable text the model tried to render
-- [ ] Grade matches the approved style playbook
-- [ ] Output duration matches what you requested (some endpoints round)
+- [ ] 在所选镜头长度下运动连贯可读
+- [ ] 音频实际同步（检查对话 + 脚步/冲击节拍）
+- [ ] 角色身份匹配参考/先前镜头
+- [ ] 镜头方向匹配提示词（当你要求静态时没有自动推拉）
+- [ ] 没有模型试图渲染的可读文字
+- [ ] 色调匹配已批准的风格手册
+- [ ] 输出时长匹配请求值（某些端点会取整）
 
-## Sources
+## 参考资料
 
-- fal.ai Seedance 2.0: https://fal.ai/seedance-2.0
-- fal.ai how-to-use: https://fal.ai/learn/tools/how-to-use-seedance-2-0
-- Replicate bytedance collection: https://replicate.com/bytedance
-- HeyGen Seedance 2.0: https://www.heygen.com/blog/introducing-seedance-2-and-heygen
-- Runway Seedance: https://runwayml.com/product/seedance
-- BytePlus Dreamina Seedance 2.0: https://www.byteplus.com/en/product/seedance
-- Freepik Seedance 2.0: https://www.freepik.com/seedance-2
-- Higgsfield Seedance 2.0: https://higgsfield.ai/seedance/2.0
-- Pollo Seedance 2.0: https://pollo.ai/m/seedance/seedance-2-0
-- ByteDance Seed official: https://seed.bytedance.com/en/seedance2_0
-- Seedance 2.0 Wikipedia: https://en.wikipedia.org/wiki/Seedance_2.0
+- fal.ai Seedance 2.0：https://fal.ai/seedance-2.0
+- fal.ai 使用指南：https://fal.ai/learn/tools/how-to-use-seedance-2-0
+- Replicate bytedance 集合：https://replicate.com/bytedance
+- HeyGen Seedance 2.0：https://www.heygen.com/blog/introducing-seedance-2-and-heygen
+- Runway Seedance：https://runwayml.com/product/seedance
+- BytePlus Dreamina Seedance 2.0：https://www.byteplus.com/en/product/seedance
+- Freepik Seedance 2.0：https://www.freepik.com/seedance-2
+- Higgsfield Seedance 2.0：https://higgsfield.ai/seedance/2.0
+- Pollo Seedance 2.0：https://pollo.ai/m/seedance/seedance-2-0
+- 字节跳动 Seed 官方：https://seed.bytedance.com/en/seedance2_0
+- Seedance 2.0 Wikipedia：https://en.wikipedia.org/wiki/Seedance_2.0

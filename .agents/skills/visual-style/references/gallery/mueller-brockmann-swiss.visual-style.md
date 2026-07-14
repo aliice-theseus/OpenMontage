@@ -1,103 +1,103 @@
 ---
-name: "Josef Müller-Brockmann Swiss International Style"
+name: "Josef Müller-Brockmann 瑞士国际风格"
 version: "1.0"
 tags:
-  - iconic design
-  - sleek minimal
+  - 标志性设计
+  - 极简风格
 author: "Bin"
 source_url: ""
 created: "2026-03-12"
 
 style_prompt_short: >
-  Grid-locked Swiss precision. Black and white base with electric blue
-  accent. Helvetica only. Data visualizations as hero elements. Every
-  frame snaps to a mathematical grid. Geometric, systematic, exact.
+  网格锁定的瑞士精度。黑白基调配电光蓝
+  强调色。仅 Helvetica。数据可视化作为主角元素。
+  每一帧都对齐到数学网格。几何、系统、精确。
 
 style_prompt_full: >
-  Josef Müller-Brockmann Swiss International Style. Grid-locked layouts
-  with mathematical precision. Black and white base with ONE accent color
-  (electric blue #0066FF). Strong diagonal compositions. Helvetica
-  typography only. Data visualizations are the hero — animated charts,
-  counters, grids. Every frame snaps to a grid. Transitions are horizontal
-  grid wipes. No organic shapes. No gradients. No stock photography.
-  Everything is geometric, systematic, precise.
+  Josef Müller-Brockmann 瑞士国际风格。网格锁定的布局
+  具有数学精度。黑白基调配一种强调色
+  （电光蓝 #0066FF）。强烈的对角线构图。仅 Helvetica
+  排版。数据可视化是主角 — 动画图表、
+  计数器、网格。每一帧都对齐网格。过渡是水平
+  网格擦拭。无有机形状。无渐变。无图库摄影。
+  一切都是几何的、系统的、精确的。
 
 colors:
   primary:
-    - name: "Pure Black"
+    - name: "纯黑"
       hex: "#000000"
-      role: "dominant ground, text, structural elements"
-    - name: "Pure White"
+      role: "主导底色、文字、结构元素"
+    - name: "纯白"
       hex: "#FFFFFF"
-      role: "background fields, negative space"
+      role: "背景区域、留白空间"
   accent:
-    - name: "Electric Blue"
+    - name: "电光蓝"
       hex: "#0066FF"
-      role: "the ONE accent — data highlights, key emphasis"
+      role: "唯一强调色 — 数据高亮、关键强调"
   neutral:
-    - name: "Grid Gray"
+    - name: "网格灰"
       hex: "#CCCCCC"
-      role: "grid lines, secondary structure"
-    - name: "Dark Gray"
+      role: "网格线、次要结构"
+    - name: "深灰"
       hex: "#333333"
-      role: "supporting text, secondary labels"
+      role: "辅助文字、次要标签"
 
 typography:
   display:
     family: "Helvetica"
     weight: "bold"
-    style: "uppercase or sentence case, tight tracking"
+    style: "大写或句首大写，紧凑字距"
   body:
     family: "Helvetica"
     weight: "regular"
-    style: "flush left, ragged right, generous leading"
+    style: "左对齐，右侧参差，宽松行距"
   caption:
     family: "Helvetica"
     weight: "light"
-    style: "small, uppercase, wide tracking"
+    style: "小号，大写，宽字距"
   rules:
-    - "Helvetica ONLY — no other typeface"
-    - "Type sizes follow a mathematical scale"
-    - "Always flush left — never centered"
-    - "Weight contrast does the hierarchy"
+    - "仅 Helvetica — 无其他字体"
+    - "字号遵循数学比例"
+    - "始终左对齐 — 绝不居中"
+    - "字重对比决定层级"
 
 layout:
-  grid: "Strict modular grid — 12 columns"
-  alignment: "Flush left, grid-snapped"
+  grid: "严格的模块化网格 — 12 列"
+  alignment: "左对齐，对齐到网格"
   aspect_ratio: "16:9"
   notes:
-    - "Every element locked to the grid"
-    - "Strong diagonal compositions within orthogonal grid"
-    - "Data visualizations are the hero elements"
+    - "每个元素锁定到网格"
+    - "在正交网格内的大胆对角线构图"
+    - "数据可视化是主角元素"
 
 motion:
   transitions:
-    - "horizontal grid wipes"
-    - "elements snapping to grid positions"
-    - "clean hard cuts"
+    - "水平网格擦拭"
+    - "元素对齐到网格位置"
+    - "干净硬切"
   animation_style: >
-    Geometric precision. Elements snap to grid positions. Charts animate
-    systematically. Counters tick mechanically. Nothing bounces.
-  pacing: "Measured, confident, unhurried"
+    几何精度。元素对齐到网格位置。图表系统化地
+    动画。计数器机械地跳动。没有什么会弹跳。
+  pacing: "沉稳、自信、不慌不忙"
 
 mood:
   keywords:
-    - "precise"
-    - "systematic"
-    - "authoritative"
-    - "geometric"
-  era: "1950s–1970s (timeless)"
-  cultural_reference: "Müller-Brockmann, Grid Systems in Graphic Design, Zurich School"
+    - "精确"
+    - "系统化"
+    - "权威"
+    - "几何"
+  era: "1950–1970 年代（永恒）"
+  cultural_reference: "Müller-Brockmann，《平面设计中的网格系统》，苏黎世学派"
   avoid:
-    - "organic or curved shapes"
-    - "gradients"
-    - "stock photography"
-    - "more than one accent color"
-    - "centered text"
-    - "decorative elements"
-    - "handwritten or serif typefaces"
-    - "drop shadows or glows"
-    - "rounded corners"
+    - "有机或曲线形状"
+    - "渐变"
+    - "图库摄影"
+    - "超过一种强调色"
+    - "居中文字"
+    - "装饰元素"
+    - "手写或衬线字体"
+    - "投影或辉光"
+    - "圆角"
 
 assets:
   reference_images: []
@@ -113,26 +113,26 @@ x_heygen:
 
 ## Design Principles
 
-Typography and the grid are the only design elements needed.
-Mathematical relationships create visual harmony.
-Restraint is the ultimate sophistication.
-The grid is not a limitation — it is liberation through structure.
+排版和网格是唯一需要的设计元素。
+数学关系创造视觉和谐。
+克制是终极的优雅。
+网格不是限制 — 它是通过结构获得的解放。
 
 ## Connectors
 
 ### HeyGen Video Agent
-Use `style_prompt_full` verbatim. Specify: No avatar, no b-roll — pure motion graphics.
-Hard cuts between scenes. Data visualizations should animate systematically.
+逐字使用 `style_prompt_full`。指定：无虚拟角色，无 B 卷 — 纯动态图形。
+场景之间硬切。数据可视化应系统化地动画。
 
 ### HTML Slides
-CSS variables: `--color-bg: #000`, `--color-text: #FFF`, `--color-accent: #0066FF`.
-All text flush left. 12-column grid. Helvetica or system sans-serif fallback.
+CSS 变量：`--color-bg: #000`、`--color-text: #FFF`、`--color-accent: #0066FF`。
+所有文字左对齐。12 列网格。Helvetica 或系统无衬线后备字体。
 
 ### paper.design
-Set up 12-column grid. Background black, text white. Single accent color.
-Every element should snap to grid intersections.
+设置 12 列网格。背景黑色，文字白色。单一强调色。
+每个元素应对齐到网格交叉点。
 
 ### Figma
-Color styles: `brand/black`, `brand/white`, `accent/electric-blue`, `neutral/grid-gray`.
-Text styles: `heading/display` (Helvetica Bold), `body/default` (Helvetica Regular).
-Layout grid: 12 columns, strict alignment.
+颜色样式：`brand/black`、`brand/white`、`accent/electric-blue`、`neutral/grid-gray`。
+文本样式：`heading/display`（Helvetica Bold）、`body/default`（Helvetica Regular）。
+布局网格：12 列，严格对齐。

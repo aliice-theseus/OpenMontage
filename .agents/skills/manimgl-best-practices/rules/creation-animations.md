@@ -1,12 +1,12 @@
-# Creation Animations in ManimGL
+# ManimGL 中的创建动画
 
-Creation animations bring mobjects into existence. ManimGL provides several animation classes for different creation effects.
+创建动画使 mobject 出现在场景中。ManimGL 提供了多种动画类用于不同的创建效果。
 
 ## ShowCreation
 
-**Note**: ManimGL uses `ShowCreation`, not `Create` (which is used in ManimCE).
+**注意**：ManimGL 使用 `ShowCreation`，而不是 `Create`（ManimCE 中使用）。
 
-### Basic Usage
+### 基本用法
 
 ```python
 from manimlib import *
@@ -15,50 +15,50 @@ class CreationExample(Scene):
     def construct(self):
         circle = Circle()
 
-        # ShowCreation draws the object
+        # ShowCreation 绘制对象
         self.play(ShowCreation(circle))
         self.wait()
 ```
 
-### Different Mobjects
+### 不同的 Mobjects
 
 ```python
-# Works with any VMobject
+# 适用于任何 VMobject
 self.play(ShowCreation(Circle()))
 self.play(ShowCreation(Square()))
 self.play(ShowCreation(Line(LEFT, RIGHT)))
 self.play(ShowCreation(Text("Hello")))
 ```
 
-### Reverse Creation
+### 反向创建
 
 ```python
-# Uncreate (reverse of ShowCreation)
+# Uncreate（ShowCreation 的反向）
 circle = Circle()
 self.add(circle)
-self.play(ShowCreation(circle, reverse=True))  # Uncreates
+self.play(ShowCreation(circle, reverse=True))  # 取消创建
 ```
 
 ## Write
 
-The `Write` animation is specifically for text and LaTeX.
+`Write` 动画专门用于文本和 LaTeX。
 
-### Writing Text
+### 书写文本
 
 ```python
-# Write text letter by letter
+# 逐字母书写文本
 text = Text("Hello World", font_size=60)
 self.play(Write(text))
 
-# Write LaTeX
+# 书写 LaTeX
 formula = Tex(R"\int_0^1 x^2 dx = \frac{1}{3}")
 self.play(Write(formula))
 ```
 
-### Write Speed
+### 书写速度
 
 ```python
-# Control writing speed with run_time
+# 用 run_time 控制书写速度
 text = Text("Fast", font_size=72)
 self.play(Write(text), run_time=0.5)
 
@@ -68,43 +68,43 @@ self.play(Write(text2), run_time=3)
 
 ## FadeIn
 
-Fade objects into view.
+将对象淡入视野。
 
-### Basic FadeIn
+### 基本 FadeIn
 
 ```python
 circle = Circle()
 self.play(FadeIn(circle))
 ```
 
-### FadeIn with Shift
+### 带位移的 FadeIn
 
 ```python
-# Fade in while shifting
+# 移动的同时淡入
 text = Text("Appearing", font_size=60)
 self.play(FadeIn(text, shift=UP))
 
-# From different directions
+# 从不同方向
 self.play(FadeIn(circle, shift=DOWN))
 self.play(FadeIn(square, shift=LEFT))
 self.play(FadeIn(triangle, shift=RIGHT))
 ```
 
-### FadeIn with Scale
+### 带缩放的 FadeIn
 
 ```python
-# Fade in while scaling
+# 缩放的同时淡入
 circle = Circle()
-self.play(FadeIn(circle, scale=0.5))  # Starts at half size
+self.play(FadeIn(circle, scale=0.5))  # 从一半大小开始
 
-# Shrink while fading in
+# 淡入时缩小
 square = Square()
-self.play(FadeIn(square, scale=2))  # Starts at double size
+self.play(FadeIn(square, scale=2))  # 从两倍大小开始
 ```
 
 ## DrawBorderThenFill
 
-Draws the border first, then fills the shape.
+先绘制边框，然后填充形状。
 
 ```python
 class DrawBorderExample(Scene):
@@ -119,32 +119,32 @@ class DrawBorderExample(Scene):
 
 ## GrowFromCenter
 
-Grows object from its center.
+从中心向外生长对象。
 
 ```python
 circle = Circle()
 self.play(GrowFromCenter(circle))
 
-# Control growth speed
+# 控制生长速度
 square = Square()
 self.play(GrowFromCenter(square), run_time=2)
 ```
 
 ## GrowFromEdge
 
-Grows object from a specific edge.
+从指定边缘生长对象。
 
 ```python
 square = Square()
 
-# Grow from different edges
+# 从不同边缘生长
 self.play(GrowFromEdge(square, DOWN))
-# or: UP, DOWN, LEFT, RIGHT
+# 或：UP、DOWN、LEFT、RIGHT
 ```
 
 ## GrowFromPoint
 
-Grows object from a specific point.
+从指定点生长对象。
 
 ```python
 circle = Circle()
@@ -155,16 +155,16 @@ self.play(GrowFromPoint(circle, point))
 
 ## SpinInFromNothing
 
-Spins object into view while growing.
+旋转进入视野的同时生长。
 
 ```python
 star = Star()
 self.play(SpinInFromNothing(star))
 ```
 
-## AnimationGroup for Multiple Creations
+## 多个创建的 AnimationGroup
 
-### Simultaneous Creation
+### 同时创建
 
 ```python
 class MultipleCreations(Scene):
@@ -175,15 +175,15 @@ class MultipleCreations(Scene):
             Triangle().shift(RIGHT * 2)
         )
 
-        # Create all simultaneously
+        # 同时创建所有
         self.play(*[ShowCreation(shape) for shape in shapes])
         self.wait()
 ```
 
-### Sequential Creation
+### 顺序创建
 
 ```python
-# One after another
+# 一个接一个
 for shape in shapes:
     self.play(ShowCreation(shape))
     self.wait(0.2)
@@ -191,7 +191,7 @@ for shape in shapes:
 
 ## LaggedStart
 
-Creates objects with a staggered delay.
+以交错延迟创建对象。
 
 ```python
 class LaggedCreation(Scene):
@@ -201,15 +201,15 @@ class LaggedCreation(Scene):
             for i in range(-3, 4)
         ])
 
-        # Staggered creation
+        # 交错创建
         self.play(LaggedStart(
             *[ShowCreation(circle) for circle in circles],
-            lag_ratio=0.2  # Delay between each
+            lag_ratio=0.2  # 每个之间的延迟
         ))
         self.wait()
 ```
 
-## Comparison: Creation Animations
+## 对比：创建动画
 
 ```python
 class CreationComparison(Scene):
@@ -222,47 +222,47 @@ class CreationComparison(Scene):
         ]
 
         for name, AnimClass in methods:
-            # Create label
+            # 创建标签
             label = Text(name, font_size=30)
             label.to_edge(UP)
 
-            # Create shape
+            # 创建形状
             square = Square()
             square.set_fill(BLUE, opacity=0.7)
             square.set_stroke(WHITE, width=3)
 
-            # Show animation
+            # 展示动画
             self.play(Write(label))
             self.play(AnimClass(square))
             self.wait()
             self.play(FadeOut(VGroup(label, square)))
 ```
 
-## Advanced Creation Patterns
+## 高级创建模式
 
-### Partial Creation
+### 部分创建
 
 ```python
-# Show only part of the creation
+# 只展示创建的一部分
 line = Line(LEFT * 3, RIGHT * 3)
 self.play(
     ShowCreation(line),
-    rate_func=lambda t: smooth(t * 0.5)  # Only 50% created
+    rate_func=lambda t: smooth(t * 0.5)  # 只创建50%
 )
 ```
 
-### Reversed Rate Function
+### 反转速率函数
 
 ```python
-# Create backwards
+# 反向创建
 circle = Circle()
 self.play(
     ShowCreation(circle),
-    rate_func=lambda t: 1 - smooth(t)  # Reverse
+    rate_func=lambda t: 1 - smooth(t)  # 反向
 )
 ```
 
-### Creation with Color Change
+### 带颜色变化的创建
 
 ```python
 class ColoredCreation(Scene):
@@ -274,9 +274,9 @@ class ColoredCreation(Scene):
         self.wait()
 ```
 
-## Writing Mathematical Content
+## 书写数学内容
 
-### Writing Equations
+### 书写方程
 
 ```python
 class WriteEquation(Scene):
@@ -287,14 +287,14 @@ class WriteEquation(Scene):
         self.play(Write(equation))
         self.wait()
 
-        # Color parts
+        # 着色各部分
         equation.set_color_by_tex("E", BLUE)
         equation.set_color_by_tex("m", GREEN)
         equation.set_color_by_tex("c", YELLOW)
         self.wait()
 ```
 
-### Writing Multi-line Content
+### 书写多行内容
 
 ```python
 class MultiLineWrite(Scene):
@@ -306,24 +306,24 @@ class MultiLineWrite(Scene):
         )
         lines.arrange(DOWN, buff=0.5)
 
-        # Write line by line
+        # 逐行书写
         for line in lines:
             self.play(Write(line))
             self.wait(0.5)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **ShowCreation for shapes**: Use for geometric objects and paths
-2. **Write for text**: Use for Text and Tex objects
-3. **FadeIn for groups**: Good for bringing in multiple objects
-4. **LaggedStart for sequences**: Creates visual rhythm
-5. **Consistent timing**: Keep run_time similar for related objects
-6. **Match animation to content**: Use appropriate animation for the context
+1. **形状用 ShowCreation**：用于几何对象和路径
+2. **文本用 Write**：用于 Text 和 Tex 对象
+3. **组用 FadeIn**：适合引入多个对象
+4. **序列用 LaggedStart**：创建视觉节奏
+5. **一致的时间控制**：相关对象保持相似的 run_time
+6. **动画匹配内容**：根据上下文使用合适的动画
 
-## Common Patterns
+## 常见模式
 
-### Create and highlight
+### 创建并高亮
 
 ```python
 shape = Circle()
@@ -332,7 +332,7 @@ self.play(shape.animate.set_color(YELLOW))
 self.play(shape.animate.scale(1.5))
 ```
 
-### Sequential text appearance
+### 顺序文本出现
 
 ```python
 title = Text("Title", font_size=72)
@@ -343,7 +343,7 @@ self.wait(0.3)
 self.play(FadeIn(subtitle, shift=UP))
 ```
 
-### Grid creation
+### 网格创建
 
 ```python
 grid = VGroup(*[
@@ -358,18 +358,18 @@ self.play(LaggedStart(
 ))
 ```
 
-## Full Example
+## 完整示例
 
 ```python
 class ComprehensiveCreation(Scene):
     def construct(self):
-        # Title
+        # 标题
         title = Text("Creation Animations", font_size=60)
         title.to_edge(UP)
         self.play(Write(title))
         self.wait()
 
-        # Create shapes with different animations
+        # 使用不同动画创建形状
         circle = Circle(radius=1, color=BLUE)
         circle.shift(LEFT * 3)
 
@@ -379,7 +379,7 @@ class ComprehensiveCreation(Scene):
         triangle = Triangle(color=YELLOW)
         triangle.shift(RIGHT * 3)
 
-        # Staggered creation
+        # 交错创建
         self.play(
             ShowCreation(circle),
             FadeIn(square, scale=0.5),
@@ -388,12 +388,12 @@ class ComprehensiveCreation(Scene):
         )
         self.wait()
 
-        # Add formula
+        # 添加公式
         formula = Tex(R"\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}")
         formula.next_to(title, DOWN, buff=1)
         self.play(Write(formula))
         self.wait(2)
 
-        # Clear scene
+        # 清除场景
         self.play(FadeOut(VGroup(title, circle, square, triangle, formula)))
 ```

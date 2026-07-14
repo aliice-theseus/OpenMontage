@@ -1,15 +1,15 @@
 ---
-title: Hoist Static JSX Elements
+title: 提升静态 JSX 元素
 impact: LOW
-impactDescription: avoids re-creation
+impactDescription: 避免重复创建
 tags: rendering, jsx, static, optimization
 ---
 
-## Hoist Static JSX Elements
+## 提升静态 JSX 元素
 
-Extract static JSX outside components to avoid re-creation.
+将静态 JSX 提取到组件外部以避免重复创建。
 
-**Incorrect (recreates element every render):**
+**不正确（每次渲染都重新创建元素）：**
 
 ```tsx
 function LoadingSkeleton() {
@@ -25,7 +25,7 @@ function Container() {
 }
 ```
 
-**Correct (reuses same element):**
+**正确（重用相同元素）：**
 
 ```tsx
 const loadingSkeleton = (
@@ -41,6 +41,6 @@ function Container() {
 }
 ```
 
-This is especially helpful for large and static SVG nodes, which can be expensive to recreate on every render.
+这对于大型和静态 SVG 节点特别有帮助，它们在每次渲染时重新创建的成本很高。
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler automatically hoists static JSX elements and optimizes component re-renders, making manual hoisting unnecessary.
+**注意：** 如果你的项目启用了 [React Compiler](https://react.dev/learn/react-compiler)，编译器会自动提升静态 JSX 元素并优化组件重渲染，使手动提升变得不必要。

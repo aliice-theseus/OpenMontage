@@ -1,22 +1,22 @@
 ---
 name: multi-phase-camera
-description: Sequential camera zoom with 2-3 distinct phases (pull-back / focus / push) plus continuous micro-drift for organic cinematic feel.
+description: 顺序摄像机缩放，带 2-3 个不同阶段（拉回/聚焦/推进）加连续微漂移，营造有机电影感。
 metadata:
   tags: camera, zoom, phase, drift, scale, cinematic
 ---
 
-# Multi-Phase Camera
+# 多阶段摄像机
 
-A camera wrapper around the entire scene that progresses through discrete zoom phases at scripted triggers. Continuous sine-driven micro-drift overlays so the camera never feels static between phases. Distinct from a single linear zoom — multi-phase creates "cinematic pacing" (anticipation → reveal → settle).
+一个围绕整个场景的摄像机包裹容器，在脚本化触发时间推进通过离散的缩放阶段。连续的、正弦驱动的微漂移叠加，使摄像机在阶段之间从不会感觉静态。与单一线性缩放不同 — 多阶段创造"电影节奏"（预期 → 揭示 → 稳定）。
 
-## How It Works
+## 工作原理
 
-The camera is a single wrapping `<div>` whose `transform: scale() translate(x, y)` is driven by:
+摄像机是一个单一的包裹 `<div>`，其 `transform: scale() translate(x, y)` 由以下驱动：
 
-1. **Phase scale** — a stepwise scale value that advances through phases at trigger times (e.g. `PHASE_1_SCALE` at t=0 → `PHASE_2_SCALE` at PHASE_2_AT → `PHASE_3_SCALE` at PHASE_3_AT)
-2. **Drift offset** — a continuous sine-based `translateX` / `translateY` (small amplitude, slow frequency) ADDED to the phase transform
+1. **阶段缩放** — 一个分步缩放值，在触发时间通过阶段推进（例如 `t=0` 时 `PHASE_1_SCALE` → `PHASE_2_AT` 时 `PHASE_2_SCALE` → `PHASE_3_AT` 时 `PHASE_3_SCALE`）
+2. **漂移偏移** — 一个连续的、基于正弦的 `translateX` / `translateY`（小振幅、慢频率）**添加**到阶段变换
 
-Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
+两者都在 GSAP 时间线内运行，使 HF 确定性逐帧定位。
 
 ## HTML
 
@@ -87,7 +87,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -97,13 +97,13 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
 
   const camera = document.getElementById("camera");
 
-  // Three-phase scale plan: pullback → focus → push
+  // 三阶段缩放计划：拉回 → 聚焦 → 推进
   const phase = { scale: PHASE_1_SCALE };
 
-  // Phase 1 — start pulled back
-  // (no tween needed for the initial value; set via the phase object)
+  // 阶段 1 — 以拉远开始
+  //（初始值不需要补间；通过 phase 对象设置）
 
-  // Phase 2 — settle to neutral focus
+  // 阶段 2 — 稳定到中性聚焦
   tl.to(
     phase,
     {
@@ -114,7 +114,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
     PHASE_2_AT,
   );
 
-  // Phase 3 — slow push-in for the climax
+  // 阶段 3 — 为高潮缓慢推进
   tl.to(
     phase,
     {
@@ -125,7 +125,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
     PHASE_3_AT,
   );
 
-  // Drift driver — continuous sine motion overlaid on the phase scale
+  // 漂移驱动器 — 叠加在阶段缩放上的连续正弦运动
   const drift = { p: 0 };
 
   tl.to(
@@ -143,7 +143,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
     0,
   );
 
-  // Content reveals (entry beats inside the camera frame)
+  // 内容揭示（摄像机画面内的入场节拍）
   tl.from(".hero", { opacity: 0, y: 32, scale: 0.96, duration: 0.9, ease: "power3.out" }, HERO_AT);
   tl.from(".tagline", { opacity: 0, y: 16, duration: 0.7, ease: "power3.out" }, TAGLINE_AT);
   tl.from(".cta", { opacity: 0, y: 8, duration: 0.7, ease: "power3.out" }, CTA_AT);
@@ -152,62 +152,54 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **PHASE_1_SCALE / PHASE_2_SCALE / PHASE_3_SCALE** — three-step zoom values
-  - Range: PHASE_1 0.88–0.96; PHASE_2 0.98–1.02; PHASE_3 1.04–1.15
-  - Effects: tighter spread = subtler camera; wider = more cinematic
-  - Constraints: at PHASE_1_SCALE < 1, `.scene` MUST have `overflow: hidden` or the inner content's edges leak outside the frame
+- **PHASE_1_SCALE / PHASE_2_SCALE / PHASE_3_SCALE** — 三步缩放值
+  - 范围：PHASE_1 0.88–0.96；PHASE_2 0.98–1.02；PHASE_3 1.04–1.15
+  - 效果：更紧的分布 = 更微妙的摄像机；更宽 = 更电影感
+  - 约束：在 PHASE_1_SCALE < 1 时，`.scene` **必须**有 `overflow: hidden`，否则内部内容的边缘会漏出画面
+- **PHASE_2_AT / PHASE_2_DUR** — 聚焦阶段开始时间及其时长
+  - 范围：PHASE_2_AT 0.3–1.0 秒；PHASE_2_DUR 1.0–1.8 秒
+  - 效果：更长的 DUR = 更慢的稳定，更电影感
+- **PHASE_3_AT / PHASE_3_DUR** — 推进阶段开始时间及其时长
+  - 范围：PHASE_3_AT 2.0–4.0 秒；PHASE_3_DUR 1.0–2.0 秒
+  - 约束：PHASE_3_AT 必须 ≥ PHASE_2_AT + PHASE_2_DUR（否则聚焦被抢占）
+- **PHASE_2_EASE / PHASE_3_EASE** — 每次过渡的缓动
+  - 离散选择：`power2.out`、`power3.out`、`power2.inOut`
+  - 选择：电影感；摄像机上的弹簧/回弹缓动感觉不舒服。每个后续阶段应比前一个暗示更多稳定（更长时长或更多的出缓动）
+- **TOTAL_DURATION** — 组合的总运行时间（匹配 `data-duration`）
+  - 参考：漂移补间必须跨越整个组合
+- **DRIFT_CYCLES** — 在 TOTAL_DURATION 内的正弦周期数
+  - 范围：1–3
+  - 效果：1 = 一次缓慢呼吸；3 = 明显更忙
+  - 约束：高值读作机械晃动而非有机漂移
+- **DRIFT_AMP_X / DRIFT_AMP_Y** — 峰值漂移偏移（px）
+  - 范围：DRIFT_AMP_X 2–8 px；DRIFT_AMP_Y 1–4 px
+  - 效果：每帧不可察觉，随时间可见。如果漂移是离散晃动，那就太多了
+- **DRIFT_FREQ_RATIO** — Y 轴正弦频率的乘数
+  - 范围：1.2–1.5
+  - 效果：1.0 = 完美对角线（读作机械）；~1.3 = 有机 Lissajous
+- **HERO_AT / TAGLINE_AT / CTA_AT** — 内容揭示节拍
+  - 约束：HERO_AT 应在 PHASE_1 通过 PHASE_2 稳定**后**着陆（否则主角感觉像在摄像机仍在拉回时飞走）
 
-- **PHASE_2_AT / PHASE_2_DUR** — when the focus phase starts and how long it takes
-  - Range: PHASE_2_AT 0.3–1.0 s; PHASE_2_DUR 1.0–1.8 s
-  - Effects: longer DUR = slower settle, more cinematic
+## 阶段模式
 
-- **PHASE_3_AT / PHASE_3_DUR** — when the push phase starts and how long it takes
-  - Range: PHASE_3_AT 2.0–4.0 s; PHASE_3_DUR 1.0–2.0 s
-  - Constraints: PHASE_3_AT must be ≥ PHASE_2_AT + PHASE_2_DUR (otherwise focus is preempted)
+| 模式               | 缩放序列（阶段 1 → 2 → 3） | 感受                           | 何时使用                   |
+| ------------------ | ------------------------- | ------------------------------ | -------------------------- |
+| **聚焦进入**       | 拉回 → 中性 → 轻微推进    | 接近 → 稳定 → 轻微推进         | 默认产品揭示               |
+| **戏剧性揭示**     | 推进 → 中性 → 拉回        | 宽 → 聚焦 → 稳定拉回           | 带呼吸空间的主角镜头       |
+| **稳定推进**       | 中性 → 轻微推进 → 更多推进 | 渐进的向前动量                 | 连续叙事推进               |
+| **书挡拉出**       | 中性 → 强推进 → 中性      | 稳定 → 推进 → 释放             | CTA 强调然后释放           |
 
-- **PHASE_2_EASE / PHASE_3_EASE** — ease per transition
-  - Discrete choice: `power2.out`, `power3.out`, `power2.inOut`
-  - Selection: cinematic feel; spring/back easing on a camera feels uncomfortable. Each later phase should imply more settling than the previous (longer dur OR more out-easing).
+## 变体
 
-- **TOTAL_DURATION** — composition's total runtime (matches `data-duration`)
-  - Reference: the drift tween must span the whole composition
+### 按内容节拍（而非时间）触发阶段
 
-- **DRIFT_CYCLES** — number of sine cycles across TOTAL_DURATION
-  - Range: 1–3
-  - Effects: 1 = one slow breath; 3 = noticeably busier
-  - Constraints: high values read as mechanical wobble rather than organic drift
+如果组合有关节拍（例如一个入场完成，然后轨道开始），将摄像机补间开始时间与内容补间结束时间对齐，而非使用固定的时钟值。
 
-- **DRIFT_AMP_X / DRIFT_AMP_Y** — peak drift offset in pixels
-  - Range: DRIFT_AMP_X 2–8 px; DRIFT_AMP_Y 1–4 px
-  - Effects: per-frame imperceptible, visible over time. If drift is a discrete shake, it's too much.
+### 摄像机抖动（恐慌/冲击）
 
-- **DRIFT_FREQ_RATIO** — multiplier on the Y-axis sine frequency
-  - Range: 1.2–1.5
-  - Effects: 1.0 = perfect diagonal (reads mechanical); ~1.3 = organic Lissajous
-
-- **HERO_AT / TAGLINE_AT / CTA_AT** — content reveal beats
-  - Constraints: HERO_AT should land AFTER PHASE_1 settles via PHASE_2 (otherwise the hero feels like it's flying away while camera is still pulling back)
-
-## Phase Patterns
-
-| Pattern             | Scale Sequence (Phase 1 → 2 → 3)  | Feel                            | When to use                   |
-| ------------------- | --------------------------------- | ------------------------------- | ----------------------------- |
-| **Focus-in**        | back → neutral → slight push      | Approach → settle → slight push | Default product reveal        |
-| **Dramatic reveal** | push → neutral → pull             | Wide → focus → settle back      | Hero shot with breathing room |
-| **Steady push**     | neutral → slight push → more push | Gradual forward momentum        | Continuous narrative push     |
-| **Bookend pull**    | neutral → strong push → neutral   | Settle → push → release         | CTA emphasis then release     |
-
-## Variations
-
-### Phase trigger by content beat (not time)
-
-If the composition has content phases (e.g. an entry completes, then orbit starts), align the camera tween start time with the content tween's end time rather than using a fixed clock value.
-
-### Camera shake (panic / impact)
-
-For a brief shake instead of drift, replace the drift tween with a higher-amplitude, higher-frequency one over a short window:
+对于短暂抖动而非漂移，用一个短窗口内更高振幅、更高频率的补间替换漂移补间：
 
 ```js
 tl.to(
@@ -226,9 +218,9 @@ tl.to(
 );
 ```
 
-### Targeted zoom into off-center element
+### 针对偏离中心元素的目标缩放
 
-If the climax should zoom into a non-centered element, combine scale with counter-translation. Compute the offset so the target ends at viewport center after scale:
+如果高潮应放大到一个非中心元素，将缩放与反向平移组合。计算偏移，使目标在缩放后落在视口中心：
 
 ```js
 const target = document.querySelector(".cta");
@@ -236,38 +228,38 @@ const tRect = target.getBoundingClientRect();
 const viewportCenter = { x: STAGE_W / 2, y: STAGE_H / 2 };
 const offsetX = (viewportCenter.x - (tRect.left + tRect.width / 2)) / phase.scale;
 const offsetY = (viewportCenter.y - (tRect.top + tRect.height / 2)) / phase.scale;
-// then in onUpdate: translate(offsetX + dx, offsetY + dy)
+// 然后在 onUpdate 中：translate(offsetX + dx, offsetY + dy)
 ```
 
-## Key Principles
+## 关键原则
 
-- **Drift is imperceptible per-frame, visible over time** — if drift reads as discrete shake, the amplitude is too high
-- **Drift X and Y at slightly different frequencies** — `DRIFT_FREQ_RATIO ≈ 1.3` prevents perfect-diagonal motion, which reads as mechanical
-- **Phase springs softer than UI springs** — `power2.inOut` or `power3.out` for cinematic feel; spring/back easing on a camera feels uncomfortable
-- **Each later phase settles "deeper"** — phase 2 ease should imply more settling than phase 1 (longer duration OR more out-easing). Wakes up → settles → settles deeper
-- **Camera wraps EVERYTHING in the scene** — applying camera per-element creates parallax bugs and breaks "this is one viewpoint"
-- **❗ overflow: hidden on .scene** — phases that pull back (`scale < 1`) reveal edges of the inner content. Without `overflow: hidden`, those edges leak outside the stage frame and HF renders them as visible content
-- **❗ Hero reveal starts AFTER initial pullback ease lands** — if the camera is still pulling back when the headline fades in, the headline feels like it's flying away
+- **漂移每帧不可察觉，随时间可见** — 如果漂移读作离散晃动，振幅太高
+- **漂移 X 和 Y 使用略有不同的频率** — `DRIFT_FREQ_RATIO ≈ 1.3` 防止完美对角线运动，那读作机械
+- **阶段弹簧比 UI 弹簧更柔和** — `power2.inOut` 或 `power3.out` 用于电影感；摄像机上的弹簧/回弹缓动感觉不舒服
+- **每个后续阶段稳定"更深"** — 阶段 2 缓动应比阶段 1 暗示更多稳定（更长时长或更多的出缓动）。唤醒 → 稳定 → 稳定更深
+- **摄像机包裹场景中的**所有**内容** — 逐元素应用摄像机会产生视差错误并破坏"这是一个视点"
+- **❗ 场景上设置 `overflow: hidden`** — 拉回阶段（`scale < 1`）揭示内部内容的边缘。没有 `overflow: hidden`，这些边缘会漏出舞台画面，HF 将其渲染为可见内容
+- **❗ 主角揭示在初始拉回缓动着陆后开始** — 如果标题淡入时摄像机仍在拉回，标题感觉像在飞走
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **No CSS `transition` on `.camera`** — competes with the GSAP transform
-- **`transform-origin: 50% 50%`** on camera — off-center origin creates unpredictable phase-to-phase drift
-- **`will-change: transform`** on `.camera` — the camera transform updates every frame
-- **`overflow: hidden` on `.scene`** — required when any phase scale < 1
-- **Scene background on `.scene`, not `.camera`** — if background is on camera, scaling/translating it reveals the outer void
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **`.camera` 上无 CSS `transition`** — 与 GSAP 变换竞争
+- **摄像机上的 `transform-origin: 50% 50%`** — 偏离中心的原点创建不可预测的阶段间漂移
+- **`.camera` 上设置 `will-change: transform`** — 摄像机变换每帧更新
+- **`.scene` 上设置 `overflow: hidden`** — 当任何阶段缩放 < 1 时必需
+- **场景背景在 `.scene` 上，不在 `.camera` 上** — 如果背景在摄像机上，缩放/平移它会揭示外部的虚空
 
-## Combinations
+## 组合
 
-- [orbit-3d-entry.md](orbit-3d-entry.md) — orbit motion inside a slowly drifting camera
-- [counting-dynamic-scale.md](counting-dynamic-scale.md) — climax phase push synced to counter peak
-- [3d-text-depth-layers.md](3d-text-depth-layers.md) — depth-stacked hero with cinematic camera moves
-- [sine-wave-loop.md](sine-wave-loop.md) — element idle inside the camera (compound motion)
+- [orbit-3d-entry.md](orbit-3d-entry.md) — 缓慢漂移摄像机内的轨道运动
+- [counting-dynamic-scale.md](counting-dynamic-scale.md) — 与计数器峰值同步的高潮阶段推进
+- [3d-text-depth-layers.md](3d-text-depth-layers.md) — 带电影级摄像机移动的深度堆叠主角
+- [sine-wave-loop.md](sine-wave-loop.md) — 摄像机内元素空闲（复合运动）
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — multi-phase tween + drift onUpdate
-- `/hyperframes-core` — composition wiring, scene wrapper
+- `/hyperframes-animation` — 多阶段补间 + 漂移 onUpdate
+- `/hyperframes-core` — 组合接线，场景包裹
 - `/hyperframes-cli` — `hyperframes lint`

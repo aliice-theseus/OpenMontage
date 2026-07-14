@@ -1,15 +1,15 @@
 ---
-title: Split Combined Hook Computations
+title: 拆分合并的 Hook 计算
 impact: MEDIUM
-impactDescription: avoids recomputing independent steps
+impactDescription: 避免重新计算独立步骤
 tags: rerender, useMemo, useEffect, dependencies, optimization
 ---
 
-## Split Combined Hook Computations
+## 拆分合并的 Hook 计算
 
-When a hook contains multiple independent tasks with different dependencies, split them into separate hooks. A combined hook reruns all tasks when any dependency changes, even if some tasks don't use the changed value.
+当 hook 包含多个具有不同依赖的独立任务时，将它们拆分为单独的 hook。合并的 hook 在任何依赖变化时都会重新运行所有任务，即使某些任务不使用变化的值。
 
-**Incorrect (changing `sortOrder` recomputes filtering):**
+**错误做法（更改 `sortOrder` 会重新计算过滤）：**
 
 ```tsx
 const sortedProducts = useMemo(() => {
@@ -21,7 +21,7 @@ const sortedProducts = useMemo(() => {
 }, [products, category, sortOrder])
 ```
 
-**Correct (filtering only recomputes when products or category change):**
+**正确做法（过滤仅在 products 或 category 变化时重新计算）：**
 
 ```tsx
 const filteredProducts = useMemo(
@@ -38,18 +38,18 @@ const sortedProducts = useMemo(
 )
 ```
 
-This pattern also applies to `useEffect` when combining unrelated side effects:
+此模式也适用于组合了不相关副作用时的 `useEffect`：
 
-**Incorrect (both effects run when either dependency changes):**
+**错误做法（任一依赖变化时两个 effect 都运行）：**
 
 ```tsx
 useEffect(() => {
   analytics.trackPageView(pathname)
-  document.title = `${pageTitle} | My App`
+  document.title = `${pageTitle} | 我的应用`
 }, [pathname, pageTitle])
 ```
 
-**Correct (effects run independently):**
+**正确做法（effect 独立运行）：**
 
 ```tsx
 useEffect(() => {
@@ -57,8 +57,8 @@ useEffect(() => {
 }, [pathname])
 
 useEffect(() => {
-  document.title = `${pageTitle} | My App`
+  document.title = `${pageTitle} | 我的应用`
 }, [pageTitle])
 ```
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, it automatically optimizes dependency tracking and may handle some of these cases for you.
+**注意：** 如果你的项目启用了 [React Compiler](https://react.dev/learn/react-compiler)，它会自动优化依赖追踪，并可能为你处理其中一些情况。

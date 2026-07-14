@@ -1,149 +1,147 @@
-# React Best Practices
+# React 最佳实践
 
-**Version 1.0.0**  
-Vercel Engineering  
-January 2026
+**版本 1.0.0**  
+Vercel 工程团队  
+2026 年 1 月
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring React and Next.js codebases. Humans  
-> may also find it useful, but guidance here is optimized for automation  
-> and consistency by AI-assisted workflows.
+> **注：**  
+> 本文档主要为代理和 LLM 在维护、生成或重构 React 和 Next.js 代码库时提供参考。  
+> 人类也可能发现它有用，但这里的指南针对 AI 辅助工作流的自动化和一致性进行了优化。
 
 ---
 
-## Abstract
+## 摘要
 
-Comprehensive performance optimization guide for React and Next.js applications, designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (eliminating waterfalls, reducing bundle size) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
-
----
-
-## Table of Contents
-
-1. [Eliminating Waterfalls](#1-eliminating-waterfalls) — **CRITICAL**
-   - 1.1 [Defer Await Until Needed](#11-defer-await-until-needed)
-   - 1.2 [Dependency-Based Parallelization](#12-dependency-based-parallelization)
-   - 1.3 [Prevent Waterfall Chains in API Routes](#13-prevent-waterfall-chains-in-api-routes)
-   - 1.4 [Promise.all() for Independent Operations](#14-promiseall-for-independent-operations)
-   - 1.5 [Strategic Suspense Boundaries](#15-strategic-suspense-boundaries)
-2. [Bundle Size Optimization](#2-bundle-size-optimization) — **CRITICAL**
-   - 2.1 [Avoid Barrel File Imports](#21-avoid-barrel-file-imports)
-   - 2.2 [Conditional Module Loading](#22-conditional-module-loading)
-   - 2.3 [Defer Non-Critical Third-Party Libraries](#23-defer-non-critical-third-party-libraries)
-   - 2.4 [Dynamic Imports for Heavy Components](#24-dynamic-imports-for-heavy-components)
-   - 2.5 [Preload Based on User Intent](#25-preload-based-on-user-intent)
-3. [Server-Side Performance](#3-server-side-performance) — **HIGH**
-   - 3.1 [Authenticate Server Actions Like API Routes](#31-authenticate-server-actions-like-api-routes)
-   - 3.2 [Avoid Duplicate Serialization in RSC Props](#32-avoid-duplicate-serialization-in-rsc-props)
-   - 3.3 [Cross-Request LRU Caching](#33-cross-request-lru-caching)
-   - 3.4 [Hoist Static I/O to Module Level](#34-hoist-static-io-to-module-level)
-   - 3.5 [Minimize Serialization at RSC Boundaries](#35-minimize-serialization-at-rsc-boundaries)
-   - 3.6 [Parallel Data Fetching with Component Composition](#36-parallel-data-fetching-with-component-composition)
-   - 3.7 [Parallel Nested Data Fetching](#37-parallel-nested-data-fetching)
-   - 3.8 [Per-Request Deduplication with React.cache()](#38-per-request-deduplication-with-reactcache)
-   - 3.9 [Use after() for Non-Blocking Operations](#39-use-after-for-non-blocking-operations)
-4. [Client-Side Data Fetching](#4-client-side-data-fetching) — **MEDIUM-HIGH**
-   - 4.1 [Deduplicate Global Event Listeners](#41-deduplicate-global-event-listeners)
-   - 4.2 [Use Passive Event Listeners for Scrolling Performance](#42-use-passive-event-listeners-for-scrolling-performance)
-   - 4.3 [Use SWR for Automatic Deduplication](#43-use-swr-for-automatic-deduplication)
-   - 4.4 [Version and Minimize localStorage Data](#44-version-and-minimize-localstorage-data)
-5. [Re-render Optimization](#5-re-render-optimization) — **MEDIUM**
-   - 5.1 [Calculate Derived State During Rendering](#51-calculate-derived-state-during-rendering)
-   - 5.2 [Defer State Reads to Usage Point](#52-defer-state-reads-to-usage-point)
-   - 5.3 [Do not wrap a simple expression with a primitive result type in useMemo](#53-do-not-wrap-a-simple-expression-with-a-primitive-result-type-in-usememo)
-   - 5.4 [Don't Define Components Inside Components](#54-dont-define-components-inside-components)
-   - 5.5 [Extract Default Non-primitive Parameter Value from Memoized Component to Constant](#55-extract-default-non-primitive-parameter-value-from-memoized-component-to-constant)
-   - 5.6 [Extract to Memoized Components](#56-extract-to-memoized-components)
-   - 5.7 [Narrow Effect Dependencies](#57-narrow-effect-dependencies)
-   - 5.8 [Put Interaction Logic in Event Handlers](#58-put-interaction-logic-in-event-handlers)
-   - 5.9 [Split Combined Hook Computations](#59-split-combined-hook-computations)
-   - 5.10 [Subscribe to Derived State](#510-subscribe-to-derived-state)
-   - 5.11 [Use Functional setState Updates](#511-use-functional-setstate-updates)
-   - 5.12 [Use Lazy State Initialization](#512-use-lazy-state-initialization)
-   - 5.13 [Use Transitions for Non-Urgent Updates](#513-use-transitions-for-non-urgent-updates)
-   - 5.14 [Use useDeferredValue for Expensive Derived Renders](#514-use-usedeferredvalue-for-expensive-derived-renders)
-   - 5.15 [Use useRef for Transient Values](#515-use-useref-for-transient-values)
-6. [Rendering Performance](#6-rendering-performance) — **MEDIUM**
-   - 6.1 [Animate SVG Wrapper Instead of SVG Element](#61-animate-svg-wrapper-instead-of-svg-element)
-   - 6.2 [CSS content-visibility for Long Lists](#62-css-content-visibility-for-long-lists)
-   - 6.3 [Hoist Static JSX Elements](#63-hoist-static-jsx-elements)
-   - 6.4 [Optimize SVG Precision](#64-optimize-svg-precision)
-   - 6.5 [Prevent Hydration Mismatch Without Flickering](#65-prevent-hydration-mismatch-without-flickering)
-   - 6.6 [Suppress Expected Hydration Mismatches](#66-suppress-expected-hydration-mismatches)
-   - 6.7 [Use Activity Component for Show/Hide](#67-use-activity-component-for-showhide)
-   - 6.8 [Use defer or async on Script Tags](#68-use-defer-or-async-on-script-tags)
-   - 6.9 [Use Explicit Conditional Rendering](#69-use-explicit-conditional-rendering)
-   - 6.10 [Use React DOM Resource Hints](#610-use-react-dom-resource-hints)
-   - 6.11 [Use useTransition Over Manual Loading States](#611-use-usetransition-over-manual-loading-states)
-7. [JavaScript Performance](#7-javascript-performance) — **LOW-MEDIUM**
-   - 7.1 [Avoid Layout Thrashing](#71-avoid-layout-thrashing)
-   - 7.2 [Build Index Maps for Repeated Lookups](#72-build-index-maps-for-repeated-lookups)
-   - 7.3 [Cache Property Access in Loops](#73-cache-property-access-in-loops)
-   - 7.4 [Cache Repeated Function Calls](#74-cache-repeated-function-calls)
-   - 7.5 [Cache Storage API Calls](#75-cache-storage-api-calls)
-   - 7.6 [Combine Multiple Array Iterations](#76-combine-multiple-array-iterations)
-   - 7.7 [Defer Non-Critical Work with requestIdleCallback](#77-defer-non-critical-work-with-requestidlecallback)
-   - 7.8 [Early Length Check for Array Comparisons](#78-early-length-check-for-array-comparisons)
-   - 7.9 [Early Return from Functions](#79-early-return-from-functions)
-   - 7.10 [Hoist RegExp Creation](#710-hoist-regexp-creation)
-   - 7.11 [Use flatMap to Map and Filter in One Pass](#711-use-flatmap-to-map-and-filter-in-one-pass)
-   - 7.12 [Use Loop for Min/Max Instead of Sort](#712-use-loop-for-minmax-instead-of-sort)
-   - 7.13 [Use Set/Map for O(1) Lookups](#713-use-setmap-for-o1-lookups)
-   - 7.14 [Use toSorted() Instead of sort() for Immutability](#714-use-tosorted-instead-of-sort-for-immutability)
-8. [Advanced Patterns](#8-advanced-patterns) — **LOW**
-   - 8.1 [Initialize App Once, Not Per Mount](#81-initialize-app-once-not-per-mount)
-   - 8.2 [Store Event Handlers in Refs](#82-store-event-handlers-in-refs)
-   - 8.3 [useEffectEvent for Stable Callback Refs](#83-useeffectevent-for-stable-callback-refs)
+为 React 和 Next.js 应用提供的综合性能优化指南，专为 AI 代理和 LLM 设计。包含跨 8 个类别的 40+ 条规则，按影响程度从严重（消除瀑布请求、减少包大小）到增量改进（高级模式）排序。每条规则包括详细解释、比较错误与正确实现的真实示例，以及指导自动化重构和代码生成的具体影响指标。
 
 ---
 
-## 1. Eliminating Waterfalls
+## 目录
 
-**Impact: CRITICAL**
+1. [消除瀑布请求](#1-消除瀑布请求) — **严重**
+   - 1.1 [延迟 await 直到需要时](#11-延迟-await-直到需要时)
+   - 1.2 [基于依赖的并行化](#12-基于依赖的并行化)
+   - 1.3 [防止 API 路由中的瀑布链](#13-防止-api-路由中的瀑布链)
+   - 1.4 [对独立操作使用 Promise.all()](#14-对独立操作使用-promiseall)
+   - 1.5 [战略性 Suspense 边界](#15-战略性-suspense-边界)
+2. [包大小优化](#2-包大小优化) — **严重**
+   - 2.1 [避免 Barrel 文件导入](#21-避免-barrel-文件导入)
+   - 2.2 [条件性模块加载](#22-条件性模块加载)
+   - 2.3 [延迟非关键的第三方库](#23-延迟非关键的第三方库)
+   - 2.4 [对重型组件使用动态导入](#24-对重型组件使用动态导入)
+   - 2.5 [基于用户意图预加载](#25-基于用户意图预加载)
+3. [服务端性能](#3-服务端性能) — **高**
+   - 3.1 [像 API 路由一样认证 Server Actions](#31-像-api-路由一样认证-server-actions)
+   - 3.2 [避免 RSC Props 中的重复序列化](#32-避免-rsc-props-中的重复序列化)
+   - 3.3 [跨请求 LRU 缓存](#33-跨请求-lru-缓存)
+   - 3.4 [将静态 I/O 提升到模块级别](#34-将静态-io-提升到模块级别)
+   - 3.5 [最小化 RSC 边界处的序列化](#35-最小化-rsc-边界处的序列化)
+   - 3.6 [通过组件组合实现并行数据获取](#36-通过组件组合实现并行数据获取)
+   - 3.7 [并行嵌套数据获取](#37-并行嵌套数据获取)
+   - 3.8 [使用 React.cache() 进行请求内去重](#38-使用-reactcache-进行请求内去重)
+   - 3.9 [使用 after() 进行非阻塞操作](#39-使用-after-进行非阻塞操作)
+4. [客户端数据获取](#4-客户端数据获取) — **中-高**
+   - 4.1 [去重全局事件监听器](#41-去重全局事件监听器)
+   - 4.2 [使用 Passive 事件监听器提升滚动性能](#42-使用-passive-事件监听器提升滚动性能)
+   - 4.3 [使用 SWR 进行自动去重](#43-使用-swr-进行自动去重)
+   - 4.4 [版本化和最小化 localStorage 数据](#44-版本化和最小化-localstorage-数据)
+5. [重渲染优化](#5-重渲染优化) — **中**
+   - 5.1 [在渲染期间计算派生状态](#51-在渲染期间计算派生状态)
+   - 5.2 [延迟状态读取到使用点](#52-延迟状态读取到使用点)
+   - 5.3 [不要将结果类型为原始类型的简单表达式包裹在 useMemo 中](#53-不要将结果类型为原始类型的简单表达式包裹在-usememo-中)
+   - 5.4 [不要在组件内部定义组件](#54-不要在组件内部定义组件)
+   - 5.5 [将记忆化组件的默认非原始参数值提取为常量](#55-将记忆化组件的默认非原始参数值提取为常量)
+   - 5.6 [提取到记忆化组件](#56-提取到记忆化组件)
+   - 5.7 [缩小 Effect 依赖范围](#57-缩小-effect-依赖范围)
+   - 5.8 [将交互逻辑放在事件处理函数中](#58-将交互逻辑放在事件处理函数中)
+   - 5.9 [拆分合并的 Hook 计算](#59-拆分合并的-hook-计算)
+   - 5.10 [订阅派生状态](#510-订阅派生状态)
+   - 5.11 [使用函数式 setState 更新](#511-使用函数式-setstate-更新)
+   - 5.12 [使用懒状态初始化](#512-使用懒状态初始化)
+   - 5.13 [对非紧急更新使用 Transition](#513-对非紧急更新使用-transition)
+   - 5.14 [对昂贵的派生渲染使用 useDeferredValue](#514-对昂贵的派生渲染使用-usedeferredvalue)
+   - 5.15 [对瞬态值使用 useRef](#515-对瞬态值使用-useref)
+6. [渲染性能](#6-渲染性能) — **中**
+   - 6.1 [动画作用于 SVG 包装器而非 SVG 元素](#61-动画作用于-svg-包装器而非-svg-元素)
+   - 6.2 [对长列表使用 CSS content-visibility](#62-对长列表使用-css-content-visibility)
+   - 6.3 [提升静态 JSX 元素](#63-提升静态-jsx-元素)
+   - 6.4 [优化 SVG 精度](#64-优化-svg-精度)
+   - 6.5 [防止无闪烁的 hydration 不匹配](#65-防止无闪烁的-hydration-不匹配)
+   - 6.6 [抑制预期的 hydration 不匹配](#66-抑制预期的-hydration-不匹配)
+   - 6.7 [使用 Activity 组件进行显示/隐藏](#67-使用-activity-组件进行显示隐藏)
+   - 6.8 [在 Script 标签上使用 defer 或 async](#68-在-script-标签上使用-defer-或-async)
+   - 6.9 [使用显式条件渲染](#69-使用显式条件渲染)
+   - 6.10 [使用 React DOM 资源提示](#610-使用-react-dom-资源提示)
+   - 6.11 [优先使用 useTransition 而非手动加载状态](#611-优先使用-usetransition-而非手动加载状态)
+7. [JavaScript 性能](#7-javascript-性能) — **低-中**
+   - 7.1 [避免布局抖动](#71-避免布局抖动)
+   - 7.2 [为重复查找构建索引映射](#72-为重复查找构建索引映射)
+   - 7.3 [在循环中缓存属性访问](#73-在循环中缓存属性访问)
+   - 7.4 [缓存重复的函数调用](#74-缓存重复的函数调用)
+   - 7.5 [缓存存储 API 调用](#75-缓存存储-api-调用)
+   - 7.6 [合并多次数组迭代](#76-合并多次数组迭代)
+   - 7.7 [使用 requestIdleCallback 延迟非关键工作](#77-使用-requestidlecallback-延迟非关键工作)
+   - 7.8 [数组比较时先检查长度](#78-数组比较时先检查长度)
+   - 7.9 [从函数中提前返回](#79-从函数中提前返回)
+   - 7.10 [提升 RegExp 创建](#710-提升-regexp-创建)
+   - 7.11 [使用 flatMap 一次完成映射和过滤](#711-使用-flatmap-一次完成映射和过滤)
+   - 7.12 [使用循环而非排序求最小/最大值](#712-使用循环而非排序求最小最大值)
+   - 7.13 [使用 Set/Map 进行 O(1) 查找](#713-使用-setmap-进行-o1-查找)
+   - 7.14 [使用 toSorted() 而非 sort() 保持不可变性](#714-使用-tosorted-而非-sort-保持不可变性)
+8. [高级模式](#8-高级模式) — **低**
+   - 8.1 [每次应用加载仅初始化一次，而非每次挂载](#81-每次应用加载仅初始化一次而非每次挂载)
+   - 8.2 [将事件处理函数存储在 Refs 中](#82-将事件处理函数存储在-refs-中)
+   - 8.3 [使用 useEffectEvent 实现稳定的回调引用](#83-使用-useeffectevent-实现稳定的回调引用)
 
-Waterfalls are the #1 performance killer. Each sequential await adds full network latency. Eliminating them yields the largest gains.
+---
 
-### 1.1 Defer Await Until Needed
+## 1. 消除瀑布请求
 
-**Impact: HIGH (avoids blocking unused code paths)**
+**影响：严重**
 
-Move `await` operations into the branches where they're actually used to avoid blocking code paths that don't need them.
+瀑布请求是性能的头号杀手。每次顺序 await 都会增加完整的网络延迟。消除它们能带来最大的收益。
 
-**Incorrect: blocks both branches**
+### 1.1 延迟 await 直到需要时
+
+**影响：高（避免阻塞未使用的代码路径）**
+
+将 `await` 操作移到实际使用的分支中，以避免阻塞不需要它们的代码路径。
+
+**错误做法：阻塞了两个分支**
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId)
   
   if (skipProcessing) {
-    // Returns immediately but still waited for userData
+    // 立即返回，但仍然等待了 userData
     return { skipped: true }
   }
   
-  // Only this branch uses userData
+  // 只有这个分支使用 userData
   return processUserData(userData)
 }
 ```
 
-**Correct: only blocks when needed**
+**正确做法：仅在需要时阻塞**
 
 ```typescript
 async function handleRequest(userId: string, skipProcessing: boolean) {
   if (skipProcessing) {
-    // Returns immediately without waiting
+    // 立即返回，无需等待
     return { skipped: true }
   }
   
-  // Fetch only when needed
+  // 仅在需要时获取
   const userData = await fetchUserData(userId)
   return processUserData(userData)
 }
 ```
 
-**Another example: early return optimization**
+**另一个示例：提前返回优化**
 
 ```typescript
-// Incorrect: always fetches permissions
+// 错误做法：总是获取权限
 async function updateResource(resourceId: string, userId: string) {
   const permissions = await fetchPermissions(userId)
   const resource = await getResource(resourceId)
@@ -159,7 +157,7 @@ async function updateResource(resourceId: string, userId: string) {
   return await updateResourceData(resource, permissions)
 }
 
-// Correct: fetches only when needed
+// 正确做法：仅在需要时获取
 async function updateResource(resourceId: string, userId: string) {
   const resource = await getResource(resourceId)
   
@@ -177,15 +175,15 @@ async function updateResource(resourceId: string, userId: string) {
 }
 ```
 
-This optimization is especially valuable when the skipped branch is frequently taken, or when the deferred operation is expensive.
+当跳过的分支经常被命中，或者延迟的操作很昂贵时，此优化尤其有价值。
 
-### 1.2 Dependency-Based Parallelization
+### 1.2 基于依赖的并行化
 
-**Impact: CRITICAL (2-10× improvement)**
+**影响：严重（提升 2-10 倍）**
 
-For operations with partial dependencies, use `better-all` to maximize parallelism. It automatically starts each task at the earliest possible moment.
+对于存在部分依赖的操作，使用 `better-all` 最大化并行度。它会自动在最早可能的时间启动每个任务。
 
-**Incorrect: profile waits for config unnecessarily**
+**错误做法：profile 不必要地等待 config**
 
 ```typescript
 const [user, config] = await Promise.all([
@@ -195,7 +193,7 @@ const [user, config] = await Promise.all([
 const profile = await fetchProfile(user.id)
 ```
 
-**Correct: config and profile run in parallel**
+**正确做法：config 和 profile 并行运行**
 
 ```typescript
 import { all } from 'better-all'
@@ -209,7 +207,7 @@ const { user, config, profile } = await all({
 })
 ```
 
-**Alternative without extra dependencies:**
+**无需额外依赖的替代方案：**
 
 ```typescript
 const userPromise = fetchUser()
@@ -222,17 +220,17 @@ const [user, config, profile] = await Promise.all([
 ])
 ```
 
-We can also create all the promises first, and do `Promise.all()` at the end.
+我们也可以先创建所有 promise，最后再 `Promise.all()`。
 
 Reference: [https://github.com/shuding/better-all](https://github.com/shuding/better-all)
 
-### 1.3 Prevent Waterfall Chains in API Routes
+### 1.3 防止 API 路由中的瀑布链
 
-**Impact: CRITICAL (2-10× improvement)**
+**影响：严重（提升 2-10 倍）**
 
-In API routes and Server Actions, start independent operations immediately, even if you don't await them yet.
+在 API 路由和 Server Actions 中，立即启动独立操作，即使你还没有 await 它们。
 
-**Incorrect: config waits for auth, data waits for both**
+**错误做法：config 等待 auth，data 等待两者**
 
 ```typescript
 export async function GET(request: Request) {
@@ -243,7 +241,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct: auth and config start immediately**
+**正确做法：auth 和 config 立即启动**
 
 ```typescript
 export async function GET(request: Request) {
@@ -258,15 +256,15 @@ export async function GET(request: Request) {
 }
 ```
 
-For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).
+对于具有更复杂依赖链的操作，使用 `better-all` 自动最大化并行度（参见基于依赖的并行化）。
 
-### 1.4 Promise.all() for Independent Operations
+### 1.4 对独立操作使用 Promise.all()
 
-**Impact: CRITICAL (2-10× improvement)**
+**影响：严重（提升 2-10 倍）**
 
-When async operations have no interdependencies, execute them concurrently using `Promise.all()`.
+当异步操作之间没有相互依赖时，使用 `Promise.all()` 并行执行它们。
 
-**Incorrect: sequential execution, 3 round trips**
+**错误做法：串行执行，3 次往返**
 
 ```typescript
 const user = await fetchUser()
@@ -274,7 +272,7 @@ const posts = await fetchPosts()
 const comments = await fetchComments()
 ```
 
-**Correct: parallel execution, 1 round trip**
+**正确做法：并行执行，1 次往返**
 
 ```typescript
 const [user, posts, comments] = await Promise.all([
@@ -284,17 +282,17 @@ const [user, posts, comments] = await Promise.all([
 ])
 ```
 
-### 1.5 Strategic Suspense Boundaries
+### 1.5 战略性 Suspense 边界
 
-**Impact: HIGH (faster initial paint)**
+**影响：高（加快首次绘制）**
 
-Instead of awaiting data in async components before returning JSX, use Suspense boundaries to show the wrapper UI faster while data loads.
+在异步组件返回 JSX 之前，不要等待数据，而是使用 Suspense 边界在数据加载时更快地显示包装 UI。
 
-**Incorrect: wrapper blocked by data fetching**
+**错误做法：包装层被数据获取阻塞**
 
 ```tsx
 async function Page() {
-  const data = await fetchData() // Blocks entire page
+  const data = await fetchData() // 阻塞整个页面
   
   return (
     <div>
@@ -309,9 +307,9 @@ async function Page() {
 }
 ```
 
-The entire layout waits for data even though only the middle section needs it.
+整个布局都在等待数据，即使只有中间部分需要它。
 
-**Correct: wrapper shows immediately, data streams in**
+**正确做法：包装层立即显示，数据流式传入**
 
 ```tsx
 function Page() {
@@ -330,18 +328,18 @@ function Page() {
 }
 
 async function DataDisplay() {
-  const data = await fetchData() // Only blocks this component
+  const data = await fetchData() // 仅阻塞此组件
   return <div>{data.content}</div>
 }
 ```
 
-Sidebar, Header, and Footer render immediately. Only DataDisplay waits for data.
+Sidebar、Header 和 Footer 立即渲染。只有 DataDisplay 等待数据。
 
-**Alternative: share promise across components**
+**替代方案：跨组件共享 promise**
 
 ```tsx
 function Page() {
-  // Start fetch immediately, but don't await
+  // 立即开始获取，但不 await
   const dataPromise = fetchData()
   
   return (
@@ -358,47 +356,44 @@ function Page() {
 }
 
 function DataDisplay({ dataPromise }: { dataPromise: Promise<Data> }) {
-  const data = use(dataPromise) // Unwraps the promise
+  const data = use(dataPromise) // 解包 promise
   return <div>{data.content}</div>
 }
 
 function DataSummary({ dataPromise }: { dataPromise: Promise<Data> }) {
-  const data = use(dataPromise) // Reuses the same promise
+  const data = use(dataPromise) // 复用同一个 promise
   return <div>{data.summary}</div>
 }
 ```
 
-Both components share the same promise, so only one fetch occurs. Layout renders immediately while both components wait together.
+两个组件共享同一个 promise，所以只发生一次获取。布局立即渲染，两个组件一起等待。
 
-**When NOT to use this pattern:**
+**何时不使用此模式：**
 
-- Critical data needed for layout decisions (affects positioning)
+- 布局决策需要的关键数据（影响定位）
+- 首屏之上对 SEO 关键的内容
+- 小而快的查询，suspense 开销不值得
+- 当你想避免布局偏移（加载 → 内容跳动）
 
-- SEO-critical content above the fold
-
-- Small, fast queries where suspense overhead isn't worth it
-
-- When you want to avoid layout shift (loading → content jump)
-
-**Trade-off:** Faster initial paint vs potential layout shift. Choose based on your UX priorities.
+**权衡：** 更快的初始绘制 vs 潜在的布局偏移。根据你的 UX 优先级进行选择。
 
 ---
 
-## 2. Bundle Size Optimization
+## 2. 包大小优化
 
-**Impact: CRITICAL**
+**影响：严重**
 
-Reducing initial bundle size improves Time to Interactive and Largest Contentful Paint.
+减少初始包大小可改善交互时间和最大内容绘制（LCP）。
 
-### 2.1 Avoid Barrel File Imports
+### 2.1 避免 Barrel 文件导入
 
-**Impact: CRITICAL (200-800ms import cost, slow builds)**
+**影响：严重（200-800ms 导入成本，构建缓慢）**
 
-Import directly from source files instead of barrel files to avoid loading thousands of unused modules. **Barrel files** are entry points that re-export multiple modules (e.g., `index.js` that does `export * from './module'`).
+直接从源文件导入，而不是通过 barrel 文件，以避免加载数千个未使用的模块。**Barrel 文件**是重新导出多个模块的入口点（例如，执行 `export * from './module'` 的 `index.js`）。
 
-Popular icon and component libraries can have **up to 10,000 re-exports** in their entry file. For many React packages, **it takes 200-800ms just to import them**, affecting both development speed and production cold starts.
+流行的图标和组件库在其入口文件中可能**有多达 10,000 个重新导出**。对于许多 React 包，**仅导入就需要 200-800ms**，影响开发速度和生产环境的冷启动。
 
-**Why tree-shaking doesn't help:** When a library is marked as external (not bundled), the bundler can't optimize it. If you bundle it to enable tree-shaking, builds become substantially slower analyzing the entire module graph.
+**为什么 tree-shaking 没有帮助：** 当库被标记为外部依赖（未打包）时，打包工具无法优化它。如果将其打包以启用 tree-shaking，构建会因分析整个模块图而显著变慢。
 
 **Incorrect: imports entire library**
 
@@ -3491,7 +3486,7 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
 
 ---
 
-## References
+## 参考
 
 1. [https://react.dev](https://react.dev)
 2. [https://nextjs.org](https://nextjs.org)

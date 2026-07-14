@@ -1,241 +1,241 @@
 ---
 name: multi-reference-editing
-description: Using multiple reference images for complex compositions
+description: 使用多个参考图像进行复杂构图
 ---
 
-# Multi-Reference Image Editing
+# 多参考图像编辑
 
-Guide to using multiple reference images for character consistency, style transfer, and complex compositions.
+使用多个参考图像实现角色一致性、风格迁移和复杂构图的指南。
 
-## Overview
+## 概述
 
-FLUX.2 models support multiple reference images for advanced editing:
+FLUX.2 模型支持多个参考图像进行高级编辑：
 
-- **FLUX.2 [klein]**: Up to 4 reference images - fast editing
-- **FLUX.2 [pro]**: Up to 8 via API - balanced quality/speed
-- **FLUX.2 [max]**: Up to 8 via API, 10 in playground - highest quality
-- **FLUX.2 [flex]**: Up to 8 via API - best for typography
+- **FLUX.2 [klein]**：最多 4 张参考图像 - 快速编辑
+- **FLUX.2 [pro]**：通过 API 最多 8 张 - 平衡质量/速度
+- **FLUX.2 [max]**：通过 API 最多 8 张，playground 中 10 张 - 最高质量
+- **FLUX.2 [flex]**：通过 API 最多 8 张 - 最适合排版
 
-> **Note:** FLUX.2 models are recommended over FLUX.1 Kontext Max for better results.
+> **注意：** 推荐使用 FLUX.2 模型而非 FLUX.1 Kontext Max，以获得更好的结果。
 
-## Providing Images
+## 提供图像
 
-**Preferred: Use URLs directly** - simpler and more convenient than base64.
+**推荐：直接使用 URL** - 比 base64 更简单、更方便。
 
-Pass image URLs directly to `input_image`, `input_image_2`, etc.:
+直接将图像 URL 传递给 `input_image`、`input_image_2` 等：
 
 ```json
 {
-  "prompt": "Person from image 1 wearing outfit from image 2",
+  "prompt": "图 1 中的人穿着图 2 中的服装",
   "input_image": "https://example.com/person.jpg",
   "input_image_2": "https://example.com/outfit.jpg"
 }
 ```
 
-The API fetches URLs automatically. Both URL and base64 work, but URLs are recommended when available.
+API 会自动获取 URL。URL 和 base64 都可用，但推荐使用 URL。
 
-## Reference Methods
+## 参考方法
 
-### Natural Language Description
+### 自然语言描述
 
-Describe relationships between images naturally:
-
-```
-The person from image 1 is sitting at the cafe table from image 2,
-wearing the outfit from image 3, with the warm lighting style of image 4
-```
-
-### Explicit Indexing
-
-Reference images by number for precision:
+自然地描述图像间的关系：
 
 ```
-Replace the background of image 1 with the landscape from image 2,
-maintaining the subject's exact position and lighting
+图 1 中的人坐在图 2 的咖啡馆桌旁，
+穿着图 3 的服装，具有图 4 的温暖光照风格
 ```
 
-```
-Combine the face from image 1 with the hairstyle from image 2
-on the body pose from image 3
-```
+### 显式索引
 
-## Use Cases
-
-### Character Consistency
-
-Maintain the same character across multiple scenes:
+通过编号精确引用图像：
 
 ```
-Input: Reference image of character
-Prompt: The character from image 1 walking through a busy Tokyo street
-at night, neon lights reflecting on wet pavement
-```
-
-For sequential consistency:
-
-```
-The same person from image 1, now seated at a desk in a modern office,
-same clothing and hairstyle, different environment
-```
-
-### Style Transfer
-
-Apply the style of one image to another:
-
-```
-Transform image 1 into the artistic style of image 2,
-maintaining the original composition and subject
+将图 1 的背景替换为图 2 的风景，
+保持主体的确切位置和光照
 ```
 
 ```
-Apply the color grading and mood from image 2 to the scene in image 1
+将图 1 的脸部与图 2 的发型结合
+放在图 3 的身体姿势上
 ```
 
-### Pose Guidance
+## 使用场景
 
-Use a reference for body positioning:
+### 角色一致性
 
-```
-The person from image 1 in the exact pose shown in image 2,
-placed in the environment from image 3
-```
-
-### Object Composition
-
-Combine elements from multiple images:
+跨多个场景保持相同的角色：
 
 ```
-Place the product from image 1 on the table setting from image 2,
-using the lighting style from image 3
+输入：角色的参考图像
+提示：图 1 中的角色走在繁忙的东京街道上
+夜晚，霓虹灯在湿漉漉的路面上反射
 ```
 
-### Background Replacement
+为了实现连续一致性：
 
 ```
-Keep the subject from image 1 exactly as shown, replace the background
-with the beach scene from image 2, match the lighting naturally
+图 1 中的同一个人，现在坐在现代办公室的办公桌前，
+相同的服装和发型，不同的环境
 ```
 
-## Multi-Character Scenes
+### 风格迁移
 
-### Two Characters
-
-```
-Image 1 (person A) and image 2 (person B) having a conversation
-at a coffee shop table, person A on the left gesturing, person B
-on the right listening intently
-```
-
-### Group Composition
+将一张图像的风格应用到另一张：
 
 ```
-The three people from images 1, 2, and 3 standing together for a
-group photo, arranged left to right in that order, friendly poses,
-outdoor park setting
+将图 1 转换为图 2 的艺术风格，
+保持原始构图和主体
 ```
 
-## Attribute Mixing
-
-### Selective Attribute Transfer
-
 ```
-The face and expression from image 1, the hairstyle from image 2,
-wearing the outfit from image 3, in the pose from image 4
+将图 2 的色彩分级和情绪应用到图 1 的场景中
 ```
 
-### Partial Transfer
+### 姿势引导
+
+使用参考图像进行身体定位：
 
 ```
-Apply only the color palette from image 2 to image 1,
-keeping all other aspects (style, composition, lighting) unchanged
+图 1 中的人以图 2 中展示的精确姿势，
+放置在图 3 的环境中
 ```
 
-## Collage Method
+### 物体构图
 
-Use a collage input for layout guidance:
-
-```
-Arrange the scene using the layout shown in the collage input:
-- Person from image 1 in the left position
-- Object from image 2 in the center position
-- Background element from image 3 filling the right side
-```
-
-## Best Practices
-
-### 1. Clear Image Roles
-
-Specify what each reference provides:
+组合多张图像的元素：
 
 ```
-Image 1: face/identity reference
-Image 2: pose/body reference
-Image 3: style/aesthetic reference
-Image 4: environment/background reference
+将图 1 的产品放在图 2 的餐桌布置上，
+使用图 3 的光照风格
 ```
 
-### 2. Quality References
-
-- Use high-quality, clear reference images
-- Ensure good lighting in references
-- Avoid heavily processed or filtered images
-
-### 3. Consistent Lighting
-
-When combining elements:
+### 背景替换
 
 ```
-...ensure the lighting direction matches across all elements,
-with main light source from the upper left
+保持图 1 的主体完全不变，将背景替换为
+图 2 的海滩场景，自然地匹配光照
 ```
 
-### 4. Resolution Awareness
+## 多角色场景
 
-For [pro] API with 9MP total limit:
-
-- At 1MP output: up to 8 reference images comfortably
-- Calculate: input images + output = total MP
-
-### 5. Explicit Relationships
-
-Don't assume - specify exactly how elements relate:
+### 双角色
 
 ```
-Vague: The person and the background together
-Better: The person from image 1 standing in the foreground,
-the beach from image 2 visible behind them at a distance
+图 1（人物 A）和图 2（人物 B）在咖啡厅桌旁交谈，
+人物 A 在左侧做手势，人物 B
+在右侧专注倾听
 ```
 
-## Complex Composition Example
+### 群组构图
 
 ```
-Create a scene combining:
-- The woman from image 1 (keep exact face, expression, hair)
-- Wearing the vintage dress from image 2 (exact pattern and cut)
-- In the pose from image 3 (seated position, arm placement)
-- Set in the library from image 4 (bookshelves, furniture)
-- Using the warm lighting style from image 5 (golden hour quality)
-
-Position her in the center of frame, medium shot, looking slightly
-to the right with a thoughtful expression.
+图 1、2 和 3 中的三个人站在一起拍摄
+合影，按从左到右的顺序排列，友好的姿势，
+户外公园场景
 ```
 
-## Troubleshooting
+## 属性混合
 
-### Elements Not Transferring
+### 选择性属性迁移
 
-- Be more specific about which element from which image
-- Use explicit indexing ("from image 1")
-- Reduce the number of references and complexity
+```
+图 1 的脸部和表情，图 2 的发型，
+穿着图 3 的服装，摆着图 4 的姿势
+```
 
-### Inconsistent Blending
+### 部分迁移
 
-- Specify lighting consistency
-- Describe how elements should interact
-- Use style references to unify the composition
+```
+仅将图 2 的调色板应用到图 1，
+保持所有其他方面（风格、构图、光照）不变
+```
 
-### Identity Drift
+## 拼贴方法
 
-- Emphasize key identifying features
-- Use phrases like "maintaining exact likeness"
-- Provide multiple angles of the same subject if available
+使用拼贴输入进行布局引导：
+
+```
+使用拼贴输入中显示的布局来排列场景：
+- 图 1 中的人在左侧位置
+- 图 2 中的物体在中心位置
+- 图 3 中的背景元素填充右侧
+```
+
+## 最佳实践
+
+### 1. 清晰的图像角色
+
+指定每个参考图像提供的内容：
+
+```
+图 1：脸部/身份参考
+图 2：姿势/身体参考
+图 3：风格/美学参考
+图 4：环境/背景参考
+```
+
+### 2. 高质量参考
+
+- 使用高质量、清晰的参考图像
+- 确保参考图像中的光照良好
+- 避免重度处理或滤镜过的图像
+
+### 3. 一致的光照
+
+组合元素时：
+
+```
+...确保所有元素的光照方向匹配，
+主光源来自左上方
+```
+
+### 4. 分辨率意识
+
+对于总限制为 9MP 的 [pro] API：
+
+- 在 1MP 输出时：可舒适使用最多 8 张参考图像
+- 计算：输入图像 + 输出 = 总 MP
+
+### 5. 明确的关系
+
+不要假设——明确指定元素之间的关系：
+
+```
+模糊：那人和背景在一起
+更好：图 1 中的人站在前景，
+图 2 中的海滩在远处可见
+```
+
+## 复杂构图示例
+
+```
+创建一个场景，组合：
+- 图 1 中的女性（保持确切的脸部、表情、头发）
+- 穿着图 2 中的复古连衣裙（确切的图案和剪裁）
+- 采用图 3 中的姿势（坐姿、手臂位置）
+- 设置在图 4 的图书馆中（书架、家具）
+- 使用图 5 的温暖光照风格（黄金时刻效果）
+
+将她置于画面中央，中景，微微
+向右看，带着若有所思的表情。
+```
+
+## 故障排除
+
+### 元素未迁移
+
+- 更具体地说明哪个元素来自哪张图像
+- 使用显式索引（"来自图 1"）
+- 减少参考图像数量和复杂度
+
+### 融合不一致
+
+- 指定光照一致性
+- 描述元素应如何交互
+- 使用风格参考来统一构图
+
+### 身份漂移
+
+- 强调关键识别特征
+- 使用"保持精确相似度"等短语
+- 如有条件，提供同一主体的多个角度

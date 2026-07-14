@@ -1,13 +1,13 @@
 ---
 name: text-overlays
-description: Adding text overlays with fonts and positioning to HeyGen videos
+description: 为 HeyGen 视频添加带字体和位置控制的文字覆盖层
 ---
 
-# Text Overlays
+# 文字覆盖层
 
-Add text overlays to your HeyGen videos for titles, captions, lower thirds, and other on-screen text elements.
+向 HeyGen 视频添加文字覆盖层，用于标题、字幕、下方三分一标题和其他屏幕文字元素。
 
-## Basic Text Overlay
+## 基本文字覆盖层
 
 ```typescript
 const videoConfig = {
@@ -29,57 +29,57 @@ const videoConfig = {
       },
     },
   ],
-  // Text overlay configuration (if supported in your API tier)
-  // Note: Availability varies by plan
+  // 文字覆盖层配置（如果您的 API 层级支持）
+  // 注意：可用性因计划而异
 };
 ```
 
-## Text Overlay Configuration
+## 文字覆盖层配置
 
-Text overlays typically support these properties:
+文字覆盖层通常支持以下属性：
 
 ```typescript
 interface TextOverlay {
   text: string;
-  x: number;          // X position (pixels or percentage)
-  y: number;          // Y position (pixels or percentage)
-  width?: number;     // Text box width
-  height?: number;    // Text box height
+  x: number;          // X 位置（像素或百分比）
+  y: number;          // Y 位置（像素或百分比）
+  width?: number;     // 文本框宽度
+  height?: number;    // 文本框高度
   font_family?: string;
   font_size?: number;
   font_color?: string;
   background_color?: string;
   text_align?: "left" | "center" | "right";
   duration?: {
-    start: number;    // Start time in seconds
-    end: number;      // End time in seconds
+    start: number;    // 开始时间（秒）
+    end: number;      // 结束时间（秒）
   };
 }
 ```
 
-## Positioning Text
+## 定位文字
 
-### Coordinate System
+### 坐标系
 
-- **Origin**: Top-left corner (0, 0)
-- **X-axis**: Increases to the right
-- **Y-axis**: Increases downward
-- **Units**: Typically pixels or percentage of video dimensions
+- **原点**：左上角 (0, 0)
+- **X 轴**：向右增加
+- **Y 轴**：向下增加
+- **单位**：通常为像素或视频尺寸的百分比
 
-### Common Positions
+### 常见位置
 
-For a 1920x1080 video:
+对于 1920x1080 的视频：
 
-| Position | X | Y | Description |
+| 位置 | X | Y | 描述 |
 |----------|---|---|-------------|
-| Top-left | 50 | 50 | Upper left corner |
-| Top-center | 960 | 50 | Top center |
-| Top-right | 1870 | 50 | Upper right corner |
-| Center | 960 | 540 | Dead center |
-| Bottom-left | 50 | 1030 | Lower third left |
-| Bottom-center | 960 | 1030 | Lower third center |
+| 左上 | 50 | 50 | 左上角 |
+| 顶部居中 | 960 | 50 | 顶部中央 |
+| 右上 | 1870 | 50 | 右上角 |
+| 居中 | 960 | 540 | 正中央 |
+| 左下 | 50 | 1030 | 下方三分之一左侧 |
+| 底部居中 | 960 | 1030 | 下方三分之一居中 |
 
-### Position Helper Function
+### 位置辅助函数
 
 ```typescript
 interface Position {
@@ -107,9 +107,9 @@ function getTextPosition(
 }
 ```
 
-## Font Styling
+## 字体样式
 
-### Available Font Properties
+### 可用字体属性
 
 ```typescript
 const textStyle = {
@@ -122,20 +122,20 @@ const textStyle = {
 };
 ```
 
-### Common Font Families
+### 常见字体族
 
-| Font | Style | Use Case |
+| 字体 | 风格 | 使用场景 |
 |------|-------|----------|
-| Arial | Sans-serif | Clean, universal |
-| Helvetica | Sans-serif | Modern, professional |
-| Times New Roman | Serif | Traditional, formal |
-| Georgia | Serif | Elegant, readable |
-| Roboto | Sans-serif | Modern, digital |
-| Open Sans | Sans-serif | Friendly, accessible |
+| Arial | 无衬线 | 干净，通用 |
+| Helvetica | 无衬线 | 现代，专业 |
+| Times New Roman | 衬线 | 传统，正式 |
+| Georgia | 衬线 | 优雅，易读 |
+| Roboto | 无衬线 | 现代，数字 |
+| Open Sans | 无衬线 | 友好，可访问 |
 
-## Common Text Overlay Patterns
+## 常见文字覆盖层模式
 
-### Title Card
+### 标题卡
 
 ```typescript
 const titleOverlay = {
@@ -153,7 +153,7 @@ const titleOverlay = {
 };
 ```
 
-### Lower Third (Name/Title)
+### 下方三分之一（名称/标题）
 
 ```typescript
 const lowerThirdOverlay = {
@@ -172,7 +172,7 @@ const lowerThirdOverlay = {
 };
 ```
 
-### Call to Action
+### 行动号召
 
 ```typescript
 const ctaOverlay = {
@@ -190,7 +190,7 @@ const ctaOverlay = {
 };
 ```
 
-## Creating Text Overlay Templates
+## 创建文字覆盖层模板
 
 ```typescript
 interface TextOverlayTemplate {
@@ -261,12 +261,12 @@ function createTextOverlay(
 }
 ```
 
-## Timing Text Overlays
+## 定时文字覆盖层
 
-Coordinate text appearance with your script:
+将文字出现时间与脚本协调：
 
 ```typescript
-// Script with timing markers
+// 带时间标记的脚本
 const script = `
 Hello and welcome. [0:00 - 0:03]
 Let me show you our features. [0:03 - 0:08]
@@ -274,7 +274,7 @@ First, we have analytics. [0:08 - 0:15]
 Get started today! [0:15 - 0:20]
 `;
 
-// Matching text overlays
+// 匹配的文字覆盖层
 const overlays = [
   {
     text: "Welcome",
@@ -299,18 +299,18 @@ const overlays = [
 ];
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Readability** - Use sufficient contrast between text and background
-2. **Size** - Ensure text is large enough to read on mobile devices
-3. **Duration** - Give viewers enough time to read (rule of thumb: 3 seconds minimum)
-4. **Positioning** - Don't overlap with the avatar's face
-5. **Consistency** - Use consistent fonts and styles throughout
-6. **Accessibility** - Consider color-blind friendly palettes
+1. **可读性** — 使用文字和背景之间的足够对比度
+2. **大小** — 确保文字足够大，在移动设备上可读
+3. **持续时间** — 给观众足够时间阅读（经验法则：最少 3 秒）
+4. **定位** — 不要与虚拟角色的脸部重叠
+5. **一致性** — 在整个视频中使用一致的字体和风格
+6. **可访问性** — 考虑色盲友好的调色板
 
-## Limitations
+## 限制
 
-- Text overlay support varies by subscription tier
-- Some advanced styling options may not be available via API
-- Complex animations may require post-production tools
-- For auto-generated captions, see [captions.md](captions.md)
+- 文字覆盖层支持因订阅层级而异
+- 某些高级样式选项可能无法通过 API 使用
+- 复杂动画可能需要后期制作工具
+- 对于自动生成的字幕，参见 [captions.md](captions.md)

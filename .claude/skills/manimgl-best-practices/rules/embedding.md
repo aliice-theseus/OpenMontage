@@ -1,10 +1,10 @@
-# Interactive Embedding in ManimGL
+# ManimGL 中的交互式嵌入
 
-ManimGL's `self.embed()` feature drops you into an interactive IPython shell during scene execution, making debugging and experimentation incredibly powerful.
+ManimGL 的 `self.embed()` 功能在场景执行期间让你进入交互式 IPython shell，使得调试和实验变得非常强大。
 
-## Basic Usage
+## 基本用法
 
-### Adding embed() to Your Scene
+### 在场景中添加 embed()
 
 ```python
 from manimlib import *
@@ -14,55 +14,55 @@ class MyScene(Scene):
         circle = Circle()
         self.play(ShowCreation(circle))
 
-        # Drop into interactive shell here
+        # 在此处进入交互式 shell
         self.embed()
 
-        # Code continues after you exit the shell
+        # 退出 shell 后继续执行代码
         self.play(circle.animate.shift(RIGHT))
         self.wait()
 ```
 
-### Running with Embed
+### 运行带 Embed 的场景
 
 ```bash
-# Run scene - will pause at embed() point
+# 运行场景 - 将在 embed() 处暂停
 manimgl scene.py MyScene
 ```
 
-## Interactive Commands
+## 交互式命令
 
-### Available in Shell
+### Shell 中可用的功能
 
-When `self.embed()` opens the IPython shell, you have access to:
+当 `self.embed()` 打开 IPython shell 时，你可以使用：
 
 ```python
-# Scene methods (abbreviated - no 'self.' needed)
-play(animation)              # Play animation
-add(mobject)                 # Add mobject to scene
-remove(mobject)              # Remove mobject
-wait(duration)               # Wait for duration
-clear()                      # Clear scene
+# 场景方法（缩写形式 - 无需 'self.'）
+play(animation)              # 播放动画
+add(mobject)                 # 添加 mobject 到场景
+remove(mobject)              # 移除 mobject
+wait(duration)               # 等待指定时长
+clear()                      # 清空场景
 
-# Camera/frame control
-frame                        # Access camera frame
+# 相机/框架控制
+frame                        # 访问相机框架
 play(frame.animate.shift(RIGHT))
 
-# All local variables from construct()
-circle, square, text, etc.   # Your mobjects
+# construct() 中的所有局部变量
+circle, square, text, etc.   # 你的 mobject 对象
 
-# Interactive camera
-touch()                      # Enter touch mode (press 'q' to exit)
-                            # Press 'd' + mouse to rotate
-                            # Press 'z' + scroll to zoom
-                            # Press 'r' to reset
+# 交互式相机
+touch()                      # 进入触摸模式（按 'q' 退出）
+                             # 按 'd' + 鼠标旋转
+                             # 按 'z' + 滚轮缩放
+                             # 按 'r' 重置
 
-# Exit shell and continue
-exit()                       # Continue scene execution
+# 退出 shell 并继续
+exit()                       # 继续场景执行
 ```
 
-## Practical Examples
+## 实用示例
 
-### Debugging Animation
+### 调试动画
 
 ```python
 class DebugScene(Scene):
@@ -71,19 +71,19 @@ class DebugScene(Scene):
         square = Square()
         self.add(circle, square)
 
-        # Problem with this animation?
+        # 这个动画有问题？
         self.play(circle.animate.move_to(square))
 
-        # Debug it interactively
+        # 交互式调试
         self.embed()
 
-        # In the shell:
+        # 在 shell 中：
         # >>> play(circle.animate.set_color(RED))
         # >>> circle.get_center()
         # >>> square.get_center()
 ```
 
-### Experimenting with Positioning
+### 实验定位
 
 ```python
 class PositioningExperiment(Scene):
@@ -92,17 +92,17 @@ class PositioningExperiment(Scene):
             Circle(radius=0.5) for _ in range(5)
         ])
 
-        # Try different arrangements interactively
+        # 交互式尝试不同排列
         self.add(shapes)
         self.embed()
 
-        # In the shell, try:
+        # 在 shell 中尝试：
         # >>> play(shapes.animate.arrange(RIGHT, buff=1))
         # >>> play(shapes.animate.arrange(DOWN, buff=0.5))
         # >>> play(shapes.animate.arrange_in_grid(rows=2))
 ```
 
-### Color and Style Exploration
+### 颜色和样式探索
 
 ```python
 class StyleExploration(Scene):
@@ -111,35 +111,35 @@ class StyleExploration(Scene):
         self.add(text)
         self.embed()
 
-        # In the shell:
+        # 在 shell 中：
         # >>> play(text.animate.set_color(BLUE))
         # >>> text.set_backstroke(BLACK, width=10)
         # >>> play(text.animate.scale(2))
 ```
 
-## Advanced embed() Usage
+## 高级 embed() 用法
 
-### Multiple Embed Points
+### 多个嵌入点
 
 ```python
 class MultipleEmbeds(Scene):
     def construct(self):
-        # First checkpoint
+        # 第一个检查点
         circle = Circle()
         self.play(ShowCreation(circle))
-        self.embed()  # First pause
+        self.embed()  # 第一次暂停
 
-        # Second checkpoint
+        # 第二个检查点
         square = Square()
         self.play(ShowCreation(square))
-        self.embed()  # Second pause
+        self.embed()  # 第二次暂停
 
-        # Third checkpoint
+        # 第三个检查点
         self.play(FadeOut(VGroup(circle, square)))
-        self.embed()  # Third pause
+        self.embed()  # 第三次暂停
 ```
 
-### Conditional Embedding
+### 条件嵌入
 
 ```python
 class ConditionalEmbed(Scene):
@@ -150,46 +150,46 @@ class ConditionalEmbed(Scene):
         self.play(ShowCreation(circle))
 
         if DEBUG:
-            self.embed()  # Only embed in debug mode
+            self.embed()  # 仅在调试模式下嵌入
 
         self.play(circle.animate.shift(RIGHT))
 ```
 
-## Using with -se Flag
+## 使用 -se 标志
 
-### Skip and Embed
+### 跳过并嵌入
 
-The `-se` flag skips to a specific line and embeds:
+`-se` 标志跳转到特定行并嵌入：
 
 ```python
 class LargeScene(Scene):
     def construct(self):
-        # Line 5
+        # 第 5 行
         circle = Circle()
         self.play(ShowCreation(circle))
 
-        # Line 10
+        # 第 10 行
         square = Square()
         self.play(ShowCreation(square))
 
-        # Line 15
+        # 第 15 行
         text = Text("Hello")
         self.play(Write(text))
 
-        # Line 20
+        # 第 20 行
         self.play(FadeOut(VGroup(circle, square, text)))
 ```
 
 ```bash
-# Skip directly to line 15 and embed
+# 直接跳转到第 15 行并嵌入
 manimgl scene.py LargeScene -se 15
 ```
 
 ## checkpoint_paste()
 
-### Interactive Code Execution
+### 交互式代码执行
 
-`checkpoint_paste()` runs code from your clipboard:
+`checkpoint_paste()` 从剪贴板运行代码：
 
 ```python
 class CheckpointScene(Scene):
@@ -200,29 +200,29 @@ class CheckpointScene(Scene):
 ```
 
 ```bash
-# Run the scene
+# 运行场景
 manimgl scene.py CheckpointScene
 ```
 
-In the shell:
+在 shell 中：
 
 ```python
-# Copy this code to clipboard first:
+# 首先将此代码复制到剪贴板：
 """
 square = Square()
 play(ShowCreation(square))
 play(square.animate.next_to(circle, RIGHT))
 """
 
-# Then in the shell:
->>> checkpoint_paste()              # Runs with animations
->>> checkpoint_paste(skip=True)     # Runs instantly
->>> checkpoint_paste(record=True)   # Records while running
+# 然后在 shell 中：
+>>> checkpoint_paste()              # 带动画运行
+>>> checkpoint_paste(skip=True)     # 立即运行
+>>> checkpoint_paste(record=True)   # 运行时录制
 ```
 
-## Saving and Restoring State
+## 保存和恢复状态
 
-### save_state() and restore()
+### save_state() 和 restore()
 
 ```python
 class StateManagement(Scene):
@@ -231,22 +231,22 @@ class StateManagement(Scene):
         square = Square()
         self.add(circle, square)
 
-        # Save current state
+        # 保存当前状态
         self.save_state()
 
-        # Make changes
+        # 进行更改
         self.play(circle.animate.shift(RIGHT * 3))
         self.play(square.animate.shift(LEFT * 3))
 
         self.embed()
 
-        # In the shell:
-        # >>> restore()  # Revert to saved state
+        # 在 shell 中：
+        # >>> restore()  # 恢复到保存的状态
 ```
 
-## Interactive 3D Exploration
+## 交互式 3D 探索
 
-### touch() Mode
+### touch() 模式
 
 ```python
 class Interactive3D(Scene):
@@ -254,24 +254,24 @@ class Interactive3D(Scene):
         frame = self.camera.frame
         frame.reorient(20, 70)
 
-        # Create 3D object
+        # 创建 3D 对象
         sphere = Sphere(radius=2, color=BLUE)
         self.add(sphere)
 
         self.embed()
 
-        # In the shell:
+        # 在 shell 中：
         # >>> touch()
-        # Now you can:
-        # - Press 'd' and move mouse to rotate
-        # - Press 'z' and scroll to zoom
-        # - Press 'r' to reset camera
-        # - Press 'q' to exit touch mode
+        # 现在你可以：
+        # - 按 'd' 并移动鼠标旋转
+        # - 按 'z' 并滚动缩放
+        # - 按 'r' 重置相机
+        # - 按 'q' 退出触摸模式
 ```
 
-## Debugging Patterns
+## 调试模式
 
-### Inspect Mobject Properties
+### 检查 Mobject 属性
 
 ```python
 class InspectProperties(Scene):
@@ -281,7 +281,7 @@ class InspectProperties(Scene):
         self.add(circle)
         self.embed()
 
-        # In the shell:
+        # 在 shell 中：
         # >>> circle.get_center()
         # >>> circle.get_color()
         # >>> circle.get_width()
@@ -289,7 +289,7 @@ class InspectProperties(Scene):
         # >>> circle.get_all_points()
 ```
 
-### Test Animation Timing
+### 测试动画时间
 
 ```python
 class TimingTest(Scene):
@@ -298,20 +298,20 @@ class TimingTest(Scene):
         self.add(circle)
         self.embed()
 
-        # In the shell, test different timings:
+        # 在 shell 中测试不同时间：
         # >>> play(circle.animate.shift(RIGHT), run_time=0.5)
         # >>> play(circle.animate.shift(LEFT), run_time=2)
         # >>> play(circle.animate.shift(UP), run_time=1, rate_func=smooth)
 ```
 
-### Build Complex Scenes Iteratively
+### 迭代构建复杂场景
 
 ```python
 class IterativeBuilding(Scene):
     def construct(self):
         self.embed()
 
-        # Build entire scene in the shell:
+        # 在 shell 中构建整个场景：
         # >>> title = Text("My Animation")
         # >>> title.to_edge(UP)
         # >>> add(title)
@@ -325,104 +325,104 @@ class IterativeBuilding(Scene):
         # >>> play(Write(formula))
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use for debugging**: Add `self.embed()` when animations don't work as expected
-2. **Experiment freely**: Try different approaches in the shell before adding to code
-3. **save_state() before experimenting**: Easy to revert if something goes wrong
-4. **Use -se for large scenes**: Jump to problem area instead of watching entire animation
-5. **checkpoint_paste() for iteration**: Quickly test code snippets
-6. **touch() for 3D**: Essential for finding the right camera angle
-7. **Remove embed() for final render**: Don't forget to remove debugging embeds
+1. **用于调试**：当动画不如预期时添加 `self.embed()`
+2. **自由实验**：在 shell 中尝试不同方法后再添加到代码
+3. **实验前 save_state()**：出错时容易恢复
+4. **大型场景使用 -se**：直接跳到问题区域，无需观看整个动画
+5. **迭代使用 checkpoint_paste()**：快速测试代码片段
+6. **3D 使用 touch()**：对找到合适的相机角度至关重要
+7. **最终渲染前移除 embed()**：不要忘记移除调试用的嵌入点
 
-## Common Patterns
+## 常见模式
 
-### Quick experiment pattern
+### 快速实验模式
 
 ```python
-# Add at problem point
+# 在问题点添加
 self.embed()
 
-# In shell, test fix
-play(mobject.animate.scale(2))  # Test different values
+# 在 shell 中测试修复
+play(mobject.animate.scale(2))  # 测试不同值
 
-# If it works, add to code
+# 如果有效，添加到代码中
 # exit()
 ```
 
-### Interactive development pattern
+### 交互式开发模式
 
 ```python
-# Start with minimal setup
+# 从最小设置开始
 class Scene(Scene):
     def construct(self):
         self.embed()
 
-# Build everything in the shell
-# Copy successful commands back to code
+# 在 shell 中构建所有内容
+# 将成功的命令复制回代码
 ```
 
-### 3D camera setup pattern
+### 3D 相机设置模式
 
 ```python
-# Get to 3D scene
+# 进入 3D 场景
 frame.reorient(20, 70)
 add(sphere)
 self.embed()
 
-# Find perfect angle
-touch()  # Rotate with mouse
-# Press 'q' when done
-# Check frame.get_theta(), frame.get_phi()
-# Add those values to code
+# 找到完美角度
+touch()  # 用鼠标旋转
+# 完成后按 'q'
+# 检查 frame.get_theta(), frame.get_phi()
+# 将这些值添加到代码中
 ```
 
-## Troubleshooting
+## 故障排除
 
-### embed() Not Working
+### embed() 不工作
 
-- Ensure you're running with `manimgl` command
-- Check that IPython is installed
-- Verify no syntax errors before embed() point
+- 确保使用 `manimgl` 命令运行
+- 检查 IPython 是否已安装
+- 确认 embed() 点之前没有语法错误
 
-### Can't Access Variables
+### 无法访问变量
 
-- Variables must be defined before `self.embed()`
-- Use `locals()` or `globals()` to inspect available variables
+- 变量必须在 `self.embed()` 之前定义
+- 使用 `locals()` 或 `globals()` 检查可用变量
 
-### Shell Exits Immediately
+### Shell 立即退出
 
-- Don't call `exit()` unless you want to continue
-- Press Ctrl+D to exit and continue
-- Use `quit()` or `exit()` to close shell
+- 不要调用 `exit()`，除非你想继续
+- 按 Ctrl+D 退出并继续
+- 使用 `quit()` 或 `exit()` 关闭 shell
 
-## Example: Full Interactive Development
+## 示例：完整的交互式开发
 
 ```python
 class InteractiveDevelopment(Scene):
     def construct(self):
-        # Start with embed
+        # 先嵌入
         self.embed()
 
-        # In the shell, build everything:
+        # 在 shell 中构建所有内容：
         """
-        # Create title
+        # 创建标题
         title = Text("Interactive Development", font_size=60)
         title.to_edge(UP)
         play(Write(title))
 
-        # Create content
+        # 创建内容
         circle = Circle(radius=1.5, color=BLUE)
         circle.set_fill(BLUE, opacity=0.5)
         circle.set_stroke(WHITE, width=3)
         play(ShowCreation(circle))
 
-        # Add label
+        # 添加标签
         label = Text("Circle", font_size=36)
         label.next_to(circle, DOWN)
         play(FadeIn(label, shift=UP))
 
-        # Animate
+        # 动画
         play(
             circle.animate.shift(RIGHT * 2),
             label.animate.shift(RIGHT * 2)
@@ -430,9 +430,9 @@ class InteractiveDevelopment(Scene):
 
         wait(2)
 
-        # When happy, copy all this code to your construct method
+        # 满意后，复制所有这些代码到你的 construct 方法中
         exit()
         """
 ```
 
-This makes ManimGL incredibly powerful for rapid prototyping and debugging!
+这使得 ManimGL 在快速原型设计和调试方面非常强大！

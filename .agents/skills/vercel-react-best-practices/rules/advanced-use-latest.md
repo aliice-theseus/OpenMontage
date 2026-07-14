@@ -1,15 +1,15 @@
 ---
-title: useEffectEvent for Stable Callback Refs
+title: useEffectEvent 用于稳定回调引用
 impact: LOW
-impactDescription: prevents effect re-runs
+impactDescription: 防止 effect 重复执行
 tags: advanced, hooks, useEffectEvent, refs, optimization
 ---
 
-## useEffectEvent for Stable Callback Refs
+## useEffectEvent 用于稳定回调引用
 
-Access latest values in callbacks without adding them to dependency arrays. Prevents effect re-runs while avoiding stale closures.
+在回调中访问最新值，而不必将它们添加到依赖数组中。防止 effect 重复执行，同时避免过期闭包。
 
-**Incorrect (effect re-runs on every callback change):**
+**不正确（每次回调更改时 effect 都重新执行）：**
 
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
@@ -22,7 +22,7 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
 }
 ```
 
-**Correct (using React's useEffectEvent):**
+**正确（使用 React 的 useEffectEvent）：**
 
 ```tsx
 import { useEffectEvent } from 'react';

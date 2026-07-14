@@ -1,60 +1,61 @@
-# Compose Director - Hybrid Pipeline
+# 合成导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-Render the hybrid project so source media, support graphics, and audio all remain coherent across outputs.
+渲染混合项目，使源素材、支持图形和音频在所有输出中保持连贯。
 
-## Runtime Routing (MANDATORY first step)
+## 运行时路由（必选的第一步）
 
-Read `edit_decisions.render_runtime`. Hybrid work typically sticks with Remotion because source footage + React support overlays compose cleanly in one pass:
+读取 `edit_decisions.render_runtime`。混合工作通常使用 Remotion，因为源素材 + React 支持叠加层可以在一次渲染中干净地合成：
 
-- **`render_runtime="remotion"`** — default. Source footage via `<OffthreadVideo>`, support graphics as React components, one render.
-- **`render_runtime="hyperframes"`** — pick only when the support layer is HTML/GSAP-native (e.g., animated text callouts, registry blocks). Source footage is still possible via `<video class="clip">` but lose some of the Remotion component stack. See `skills/core/hyperframes.md`.
-- **`render_runtime="ffmpeg"`** — rare on this pipeline; implies no generated support layer.
+- **`render_runtime="remotion"`** — 默认。源素材通过 `<OffthreadVideo>`，支持图形作为 React 组件，一次渲染完成。
+- **`render_runtime="hyperframes"`** — 仅当支持层为 HTML/GSAP 原生内容（例如动态文本标注、注册块）时选择。源素材仍可通过 `<video class="clip">` 方式使用，但会失去部分 Remotion 组件栈的能力。详见 `skills/core/hyperframes.md`。
+- **`render_runtime="ffmpeg"`** — 在此流水线中很少使用；表示无生成支持层。
 
-Silent runtime swap is a CRITICAL governance violation. Escalate blockers per AGENT_GUIDE.md before substituting.
+静默切换运行时是 CRITICAL 级别的治理违规。在替换之前，请按照 AGENT_GUIDE.md 上报阻塞问题。
 
-**Pass `proposal_packet` to `video_compose.execute()`** so the tool's in-tool swap-detection check runs against the proposal directly instead of being `skipped`.
+**将 `proposal_packet` 传递给 `video_compose.execute()`**，以便工具内部的运行时切换检测直接针对提案进行检查，而非被 `skipped`。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/render_report.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["edit"]["edit_decisions"]`, `state.artifacts["assets"]["asset_manifest"]` | Edit logic and support assets |
-| Tools | `video_compose`, `audio_mixer`, `video_stitch`, `video_trimmer`, `color_grade`, `audio_enhance` | Final assembly and polish |
-| Playbook | Active style playbook | Output consistency |
+| Schema | `schemas/artifacts/render_report.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["edit"]["edit_decisions"]`, `state.artifacts["assets"]["asset_manifest"]` | 剪辑逻辑和支持素材 |
+| 工具 | `video_compose`, `audio_mixer`, `video_stitch`, `video_trimmer`, `color_grade`, `audio_enhance` | 最终组装和润色 |
+| Playbook | 当前样式 playbook | 输出一致性 |
 
-## Process
+## 流程
 
-### 1. Verify Source And Support Balance
+### 1. 验证源素材与支持素材的平衡
 
-The final render should still look like a source-led video with support, not a collage of unrelated systems.
+最终渲染应看起来仍像是一个带支持素材的源主导视频，而不是不相关系统的拼贴。
 
-### 2. Check Variant Integrity
+### 2. 检查变体完整性
 
-For each output variant, verify:
+对于每个输出变体，验证：
 
-- crop safety,
-- text safety,
-- subtitle legibility,
-- audio consistency.
+- 裁切安全性，
+- 文本安全性，
+- 字幕可读性，
+- 音频一致性。
 
-### 3. Keep Audio Coherent
+### 3. 保持音频连贯
 
-Source dialogue, narration, music, and effects should feel like one mix, not separate layers fighting for space.
+源对话、旁白、音乐和音效应感觉像一个混音，而非互相争抢空间的独立层。
 
-### 4. Use Render Metadata
+### 4. 使用渲染元数据
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `variant_outputs`
 - `balance_checks`
 - `subtitle_checks`
 - `audio_notes`
 
-## Common Pitfalls
+## 常见陷阱
 
-- Good master cut, broken platform variants.
-- Support graphics clipping in vertical exports.
-- Audio loudness shifting between source and generated sections.
+- 主剪版本良好，平台变体却出问题。
+- 支持图形在竖屏导出中被裁剪。
+- 源素材与生成部分的音频响度不一致。
+

@@ -1,8 +1,8 @@
-# Client-Side Real-Time Streaming
+# 客户端实时流式传输
 
-Stream audio from the browser directly to ElevenLabs for real-time transcription.
+将音频从浏览器直接传输到 ElevenLabs 进行实时转录。
 
-## Installation
+## 安装
 
 ```bash
 # React
@@ -12,11 +12,11 @@ npm install @elevenlabs/react @elevenlabs/elevenlabs-js
 npm install @elevenlabs/client @elevenlabs/elevenlabs-js
 ```
 
-> **Warning:** Always use the `@elevenlabs/*` namespace for client-side packages.
+> **警告：** 客户端包始终使用 `@elevenlabs/*` 命名空间。
 
-## Token Generation
+## 令牌生成
 
-Client-side streaming requires a single-use token to protect your API key. Generate tokens on your backend:
+客户端流式传输需要使用一次性令牌来保护您的 API 密钥。在后端生成令牌：
 
 ```typescript
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
@@ -31,9 +31,9 @@ app.get("/scribe-token", yourAuthMiddleware, async (req, res) => {
 });
 ```
 
-**Note:** Single-use tokens expire after 15 minutes.
+**注意：** 一次性令牌在 15 分钟后过期。
 
-## React Implementation
+## React 实现
 
 ```typescript
 import { useScribe, CommitStrategy } from "@elevenlabs/react";
@@ -43,13 +43,13 @@ function TranscriptionComponent() {
 
   const scribe = useScribe({
     modelId: "scribe_v2_realtime",
-    commitStrategy: CommitStrategy.VAD, // Auto-commit on silence for mic input
+    commitStrategy: CommitStrategy.VAD, // 麦克风输入时静音自动提交
     onPartialTranscript: (data) => {
-      // Show live feedback as user speaks
-      console.log("Partial:", data.text);
+      // 用户说话时显示实时反馈
+      console.log("部分：", data.text);
     },
     onCommittedTranscript: (data) => {
-      // Final transcript for this segment
+      // 此片段的最终转录
       setTranscript((prev) => prev + data.text);
     },
   });
@@ -74,38 +74,38 @@ function TranscriptionComponent() {
 
   return (
     <div>
-      <div>Status: {scribe.status}</div>
-      <button onClick={startRecording}>Start</button>
-      <button onClick={stopRecording}>Stop</button>
+      <div>状态：{scribe.status}</div>
+      <button onClick={startRecording}>开始</button>
+      <button onClick={stopRecording}>停止</button>
       <p>{transcript}</p>
     </div>
   );
 }
 ```
 
-> **Important:** The default commit strategy is `CommitStrategy.MANUAL`, which requires you to call `scribe.commit()` explicitly. For microphone input, always set `CommitStrategy.VAD` so the server auto-commits when silence is detected. Without this, committed transcripts will never fire and the connection may drop.
+> **重要：** 默认提交策略是 `CommitStrategy.MANUAL`，需要您显式调用 `scribe.commit()`。对于麦克风输入，始终设置 `CommitStrategy.VAD`，这样服务器在检测到静音时会自动提交。否则，已提交的转录永远不会触发，连接可能会断开。
 
-### `scribe.status` Values
+### `scribe.status` 值
 
-| Status | Meaning |
+| 状态 | 含义 |
 |--------|---------|
-| `"disconnected"` | No active connection |
-| `"connecting"` | Connection is being established |
-| `"connected"` | Connected and ready to receive audio |
-| `"transcribing"` | Actively processing speech (transitions from `"connected"` when audio is detected or VAD commits) |
-| `"error"` | An error occurred |
+| `"disconnected"` | 无活动连接 |
+| `"connecting"` | 正在建立连接 |
+| `"connected"` | 已连接，准备接收音频 |
+| `"transcribing"` | 正在处理语音（检测到音频或 VAD 提交时从 `"connected"` 转换） |
+| `"error"` | 发生错误 |
 
-> **Important:** When checking if the session is active, always check for both `"connected"` and `"transcribing"`. The status transitions to `"transcribing"` during speech processing, so checking only `"connected"` will cause UI elements (buttons, waveforms, indicators) to incorrectly reset mid-session.
+> **重要：** 检查会话是否活跃时，始终检查 `"connected"` 和 `"transcribing"` 两种状态。语音处理期间状态会转换为 `"transcribing"`，因此仅检查 `"connected"` 会导致 UI 元素（按钮、波形、指示器）在会话中间错误重置。
 
 ```typescript
-// Correct - handles both active states
+// 正确——处理两种活跃状态
 const isListening = scribe.status === "connected" || scribe.status === "transcribing";
 
-// Wrong - will flicker/reset when VAD commits
+// 错误——VAD 提交时会闪烁/重置
 const isListening = scribe.status === "connected";
 ```
 
-## JavaScript Implementation
+## JavaScript 实现
 
 ```typescript
 import { Scribe, RealtimeEvents } from "@elevenlabs/client";
@@ -126,15 +126,15 @@ async function startTranscription() {
   });
 
   connection.on(RealtimeEvents.OPEN, () => {
-    console.log("Connected");
+    console.log("已连接");
   });
 
   connection.on(RealtimeEvents.PARTIAL_TRANSCRIPT, (data) => {
-    console.log("Partial:", data.text);
+    console.log("部分：", data.text);
   });
 
   connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT, (data) => {
-    console.log("Committed:", data.text);
+    console.log("已提交：", data.text);
   });
 
   connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT_WITH_TIMESTAMPS, (data) => {
@@ -144,20 +144,20 @@ async function startTranscription() {
   });
 
   connection.on(RealtimeEvents.ERROR, (error) => {
-    console.error("Error:", error);
+    console.error("错误：", error);
   });
 
   connection.on(RealtimeEvents.CLOSE, () => {
-    console.log("Disconnected");
+    console.log("已断开连接");
   });
 
   return connection;
 }
 ```
 
-## Manual Audio Chunking
+## 手动音频分块
 
-For file uploads or custom audio sources, encode to PCM-16 and send in chunks:
+对于文件上传或自定义音频源，编码为 PCM-16 并按块发送：
 
 ```typescript
 const chunkSize = 4096;
@@ -169,24 +169,24 @@ for (let offset = 0; offset < pcmData.length; offset += chunkSize) {
 
   scribe.sendAudio(base64);
 
-  // Simulate real-time streaming
+  // 模拟实时流式传输
   await new Promise((resolve) => setTimeout(resolve, 50));
 }
 
-// Finalize transcription
+// 完成转录
 scribe.commit();
 ```
 
-## Microphone Options
+## 麦克风选项
 
-| Option | Description |
+| 选项 | 描述 |
 |--------|-------------|
-| `echoCancellation` | Remove echo from speakers |
-| `noiseSuppression` | Filter background noise |
-| `autoGainControl` | Normalize volume levels |
+| `echoCancellation` | 消除扬声器回声 |
+| `noiseSuppression` | 过滤背景噪音 |
+| `autoGainControl` | 标准化音量级别 |
 
-## Security
+## 安全
 
-- Never expose your API key to the client
-- Always generate single-use tokens on your backend
-- Use authentication middleware to protect token endpoints
+- 切勿将 API 密钥暴露给客户端
+- 始终在后端生成一次性令牌
+- 使用认证中间件保护令牌端点

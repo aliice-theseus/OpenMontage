@@ -1,39 +1,39 @@
-# Edit Director — Explainer Pipeline
+# 剪辑导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the Editor for a generated explainer video. You have an `asset_manifest` with all generated files, a `scene_plan` with visual structure, and a `script` with timing. Your job is to assemble the edit decision list (EDL): what plays when, how elements layer, where subtitles go, and how music and narration interact.
+你是生成式解说视频的剪辑师。你有一个包含所有生成文件的 `asset_manifest`、一个带有视觉结构的 `scene_plan`、以及一个带有时间安排的 `script`。你的工作是组装编辑决策列表（EDL）：何时播放什么、元素如何分层、字幕去哪里、音乐和旁白如何交互。
 
-This is where raw assets become a coherent video. Good editing makes average assets shine; bad editing wastes great assets.
+这是原始资产变成连贯视频的地方。好的剪辑能让平庸的资产发光；差的剪辑会浪费出色的资产。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/edit_decisions.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["assets"]["asset_manifest"]`, `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]` | Assets, visual plan, timing |
-| Playbook | Active style playbook | Transitions, pacing rules, overlay styles |
+| 模式 | `schemas/artifacts/edit_decisions.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["assets"]["asset_manifest"]`、`state.artifacts["scene_plan"]["scene_plan"]`、`state.artifacts["script"]["script"]` | 资产、视觉计划、时序 |
+| 剧本 | 活动风格剧本 | 过渡、节奏规则、叠加样式 |
 
-## Process
+## 流程
 
-### Step 1: Map Assets to Timeline
+### 步骤 1：将资产映射到时间线
 
-For each scene in the scene plan:
-1. Find the matching assets from the asset manifest (by `scene_id`)
-2. Find the matching narration audio (by script section)
-3. Note the scene's timing (`start_seconds`, `end_seconds`)
+对于场景计划中的每个场景：
+1. 从资产清单中找到匹配的资产（按 `scene_id`）
+2. 找到匹配的旁白音频（按脚本章节）
+3. 注意场景的时序（`start_seconds`、`end_seconds`）
 
-Build a timeline map:
+构建时间线映射：
 ```
-0s-10s: scene-1 (talking_head) | narration-s1 | img-intro.png
-10s-18s: scene-2 (diagram) | narration-s2 | diagram-flow.svg
-18s-22s: scene-3 (text_card) | narration-s3 | [text overlay]
+0s-10s：场景-1（talking_head）| 旁白-s1 | img-intro.png
+10s-18s：场景-2（diagram）| 旁白-s2 | diagram-flow.svg
+18s-22s：场景-3（text_card）| 旁白-s3 | [文字叠加]
 ...
 ```
 
-### Step 2: Define Cuts
+### 步骤 2：定义剪辑
 
-Each cut defines what visual is shown and when:
+每个剪辑定义显示什么视觉以及何时显示：
 
 ```json
 {
@@ -53,14 +53,14 @@ Each cut defines what visual is shown and when:
 }
 ```
 
-**Layering rules:**
-- `primary` — main visual (one at a time)
-- `overlay` — text cards, stat cards, key terms (on top of primary)
-- `background` — solid color or texture behind everything
+**分层规则：**
+- `primary` — 主要视觉（一次一个）
+- `overlay` — 文字卡片、统计卡片、关键术语（在主视觉之上）
+- `background` — 所有内容后面的纯色或纹理
 
-### Step 3: Configure Subtitles
+### 步骤 3：配置字幕
 
-Subtitles are mandatory for all explainer content:
+所有解说内容必须包含字幕：
 
 ```json
 {
@@ -77,11 +77,11 @@ Subtitles are mandatory for all explainer content:
 }
 ```
 
-**Subtitle timing**: Derive from narration audio timestamps. Each word should highlight as it's spoken (word-by-word style) or display in phrase chunks (phrase style).
+**字幕计时**：从旁白音频时间戳推导。每个词应在被说出时高亮（逐词风格）或以短语块显示（短语风格）。
 
-Use the playbook's typography for font choices.
+使用剧本的排版字体选择。
 
-### Step 4: Configure Audio Layers
+### 步骤 4：配置音频层
 
 ```json
 {
@@ -110,61 +110,61 @@ Use the playbook's typography for font choices.
 }
 ```
 
-**Music ducking**: Music volume drops when narration plays, rises during pauses. Use playbook's `audio.ducking_threshold_db`.
+**音乐闪避**：旁白播放时音乐音量降低，停顿期间升高。使用剧本的 `audio.ducking_threshold_db`。
 
-### Step 5: Apply Pacing Rules
+### 步骤 5：应用节奏规则
 
-Check the playbook's `motion.pacing_rules`:
-- No cut shorter than `min_scene_hold_seconds`
-- No cut longer than `max_scene_hold_seconds`
-- Text cards hold for `text_card_hold_seconds`
-- Transitions use `transition_duration_seconds`
+检查剧本的 `motion.pacing_rules`：
+- 没有剪辑短于 `min_scene_hold_seconds`
+- 没有剪辑长于 `max_scene_hold_seconds`
+- 文字卡片保持 `text_card_hold_seconds`
+- 过渡使用 `transition_duration_seconds`
 
-Adjust cut timing if any violates these rules.
+如果有任何违反这些规则的情况，调整剪辑计时。
 
-### Step 6: Verify Edit Completeness
+### 步骤 6：验证剪辑完整性
 
-**Timeline coverage:**
-- [ ] Cuts span full video duration (no black frames)
-- [ ] No overlapping primary cuts
-- [ ] Every scene in scene_plan has at least one corresponding cut
+**时间线覆盖：**
+- [ ] 剪辑覆盖完整视频时长（无黑帧）
+- [ ] 没有重叠的主要剪辑
+- [ ] scene_plan 中的每个场景至少有一个对应的剪辑
 
-**Asset references:**
-- [ ] Every cut's `source` references a valid asset_id from the manifest
-- [ ] Every narration segment references a valid audio asset
-- [ ] Music asset exists
+**资产引用：**
+- [ ] 每个剪辑的 `source` 引用清单中的有效 asset_id
+- [ ] 每个旁白段落引用有效的音频资产
+- [ ] 音乐资产存在
 
-**Audio sync:**
-- [ ] Narration segments are ordered and non-overlapping
-- [ ] Narration timing aligns with corresponding visual cuts
-- [ ] Music ducking is configured
+**音频同步：**
+- [ ] 旁白段落有序且不重叠
+- [ ] 旁白计时与对应的视觉剪辑对齐
+- [ ] 音乐闪避已配置
 
-**Subtitles:**
-- [ ] Subtitles enabled
-- [ ] Subtitle style uses playbook-compatible fonts and colors
+**字幕：**
+- [ ] 字幕已启用
+- [ ] 字幕样式使用与剧本兼容的字体和颜色
 
-### Step 7: Self-Evaluate
+### 步骤 7：自我评估
 
-Score (1-5):
+评分（1-5）：
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Continuity** | Does every second of the video have a visual? |
-| **Pacing** | Do cuts follow the playbook's timing rules? |
-| **Audio-visual sync** | Does what you see match what you hear at every moment? |
-| **Subtitle quality** | Are subtitles readable and correctly timed? |
-| **Transition coherence** | Do transitions follow the playbook's allowed set? |
+| **连续性** | 视频的每一秒都有视觉吗？ |
+| **节奏** | 剪辑是否遵循剧本的计时规则？ |
+| **音视频同步** | 每个时刻你看到的和听到的是否匹配？ |
+| **字幕质量** | 字幕是否可读且计时正确？ |
+| **过渡连贯性** | 过渡是否遵循剧本的允许集合？ |
 
-If any dimension scores below 3, revise.
+如果任何维度得分低于 3，修订。
 
-### Step 8: Submit
+### 步骤 8：提交
 
-Validate the edit_decisions artifact against the schema and persist via checkpoint.
+对照模式验证 edit_decisions 工件并通过检查点持久化。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Forgetting gaps**: If scene-1 ends at 10s and scene-2 starts at 10.5s, there's a 0.5s black frame. Check for gaps.
-- **Audio drift**: Narration audio may be slightly longer/shorter than planned. Adjust visual cuts to match actual narration durations, not planned durations.
-- **No ducking**: Music playing at full volume under narration makes the video unwatchable. Always configure ducking.
-- **Same transition everywhere**: Varying transitions creates rhythm. Use the playbook's allowed set, but don't use the same one for every cut.
-- **Subtitle font mismatch**: Subtitles should use the playbook's body font, not a random default.
+- **忘记空白**：如果场景-1 在 10 秒结束而场景-2 在 10.5 秒开始，就有 0.5 秒的黑帧。检查空白。
+- **音频漂移**：旁白音频可能比计划稍长/稍短。调整视觉剪辑以匹配实际旁白时长，而不是计划时长。
+- **没有闪避**：旁白下音乐满音量播放使视频无法观看。始终配置闪避。
+- **到处相同的过渡**：变化过渡创造节奏。使用剧本的允许集合，但不要对每个剪辑使用相同的过渡。
+- **字幕字体不匹配**：字幕应使用剧本的正文字体，而不是随机的默认字体。

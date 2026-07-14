@@ -1,91 +1,84 @@
 ---
 name: vercel-composition-patterns
 description:
-  React composition patterns that scale. Use when refactoring components with
-  boolean prop proliferation, building flexible component libraries, or
-  designing reusable APIs. Triggers on tasks involving compound components,
-  render props, context providers, or component architecture. Includes React 19
-  API changes.
+  可扩展的 React 组合模式。在重构存在布尔属性泛滥的组件、
+  构建灵活的组件库或设计可复用的 API 时使用。触发的任务涉及复合组件、
+  渲染属性、Context Provider 或组件架构。包含 React 19
+  API 变化。
 license: MIT
 metadata:
   author: vercel
   version: '1.0.0'
 ---
 
-# React Composition Patterns
+# React 组合模式
 
-Composition patterns for building flexible, maintainable React components. Avoid
-boolean prop proliferation by using compound components, lifting state, and
-composing internals. These patterns make codebases easier for both humans and AI
-agents to work with as they scale.
+用于构建灵活、可维护的 React 组件的组合模式。避免
+布尔属性泛滥，使用复合组件、状态提升和
+内部组合。这些模式使代码库在扩展时对人和 AI
+代理都更易于协作。
 
-> **Extended reference:** [`AGENTS.md`](AGENTS.md) in this directory is the long-form upstream guide (vendored from Vercel). It is supplementary reference material scoped to this skill only — `SKILL.md` is the loadable entry point and the authority. It does not override or extend the repository-root `AGENTS.md` / `AGENT_GUIDE.md`.
+> **扩展参考：** 本目录中的 [`AGENTS.md`](AGENTS.md) 是完整版上游指南（来自 Vercel）。它是本技能范围内的补充参考材料——`SKILL.md` 是可加载的入口点和权威文件。它不会覆盖或扩展仓库根目录的 `AGENTS.md` / `AGENT_GUIDE.md`。
 
-## When to Apply
+## 何时应用
 
-Reference these guidelines when:
+在以下场景参考这些指南：
 
-- Refactoring components with many boolean props
-- Building reusable component libraries
-- Designing flexible component APIs
-- Reviewing component architecture
-- Working with compound components or context providers
+- 重构具有大量布尔属性的组件
+- 构建可复用的组件库
+- 设计灵活的组件 API
+- 审查组件架构
+- 使用复合组件或 Context Provider
 
-## Rule Categories by Priority
+## 按优先级的规则类别
 
-| Priority | Category                | Impact | Prefix          |
+| 优先级 | 类别                | 影响   | 前缀          |
 | -------- | ----------------------- | ------ | --------------- |
-| 1        | Component Architecture  | HIGH   | `architecture-` |
-| 2        | State Management        | MEDIUM | `state-`        |
-| 3        | Implementation Patterns | MEDIUM | `patterns-`     |
-| 4        | React 19 APIs           | MEDIUM | `react19-`      |
+| 1        | 组件架构  | 高   | `architecture-` |
+| 2        | 状态管理        | 中 | `state-`        |
+| 3        | 实现模式 | 中 | `patterns-`     |
+| 4        | React 19 API           | 中 | `react19-`      |
 
-## Quick Reference
+## 快速参考
 
-### 1. Component Architecture (HIGH)
+### 1. 组件架构（高）
 
-- `architecture-avoid-boolean-props` - Don't add boolean props to customize
-  behavior; use composition
-- `architecture-compound-components` - Structure complex components with shared
-  context
+- `architecture-avoid-boolean-props` - 不要添加布尔属性来自定义行为；使用组合
+- `architecture-compound-components` - 使用共享 context 构建复杂组件
 
-### 2. State Management (MEDIUM)
+### 2. 状态管理（中）
 
-- `state-decouple-implementation` - Provider is the only place that knows how
-  state is managed
-- `state-context-interface` - Define generic interface with state, actions, meta
-  for dependency injection
-- `state-lift-state` - Move state into provider components for sibling access
+- `state-decouple-implementation` - Provider 是唯一知道状态管理方式的地方
+- `state-context-interface` - 使用 state、actions、meta 定义通用接口以实现依赖注入
+- `state-lift-state` - 将状态移入 Provider 组件以实现兄弟组件访问
 
-### 3. Implementation Patterns (MEDIUM)
+### 3. 实现模式（中）
 
-- `patterns-explicit-variants` - Create explicit variant components instead of
-  boolean modes
-- `patterns-children-over-render-props` - Use children for composition instead
-  of renderX props
+- `patterns-explicit-variants` - 创建显式的变体组件而非布尔模式
+- `patterns-children-over-render-props` - 使用 children 进行组合而非 renderX 属性
 
-### 4. React 19 APIs (MEDIUM)
+### 4. React 19 API（中）
 
-> **⚠️ React 19+ only.** Skip this section if using React 18 or earlier.
+> **⚠️ 仅 React 19+。** 如果使用 React 18 或更早版本，请跳过本节。
 
-- `react19-no-forwardref` - Don't use `forwardRef`; use `use()` instead of `useContext()`
+- `react19-no-forwardref` - 不要使用 `forwardRef`；使用 `use()` 替代 `useContext()`
 
-## How to Use
+## 如何使用
 
-Read individual rule files for detailed explanations and code examples:
+阅读各规则文件以获取详细说明和代码示例：
 
 ```
 rules/architecture-avoid-boolean-props.md
 rules/state-context-interface.md
 ```
 
-Each rule file contains:
+每个规则文件包含：
 
-- Brief explanation of why it matters
-- Incorrect code example with explanation
-- Correct code example with explanation
-- Additional context and references
+- 简洁的重要性说明
+- 带解释的错误代码示例
+- 带解释的正确代码示例
+- 额外的上下文和参考
 
-## Full Compiled Document
+## 完整编译文档
 
-For the complete guide with all rules expanded: `AGENTS.md`
+查看包含所有规则展开的完整指南：`AGENTS.md`

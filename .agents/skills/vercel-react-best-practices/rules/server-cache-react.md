@@ -1,15 +1,15 @@
 ---
-title: Per-Request Deduplication with React.cache()
+title: 使用 React.cache() 进行单请求去重
 impact: MEDIUM
-impactDescription: deduplicates within request
+impactDescription: 在请求内去重
 tags: server, cache, react-cache, deduplication
 ---
 
-## Per-Request Deduplication with React.cache()
+## 使用 React.cache() 进行单请求去重
 
-Use `React.cache()` for server-side request deduplication. Authentication and database queries benefit most.
+使用 `React.cache()` 进行服务端请求去重。身份验证和数据库查询受益最大。
 
-**Usage:**
+**用法：**
 
 ```typescript
 import { cache } from 'react'
@@ -23,54 +23,54 @@ export const getCurrentUser = cache(async () => {
 })
 ```
 
-Within a single request, multiple calls to `getCurrentUser()` execute the query only once.
+在单个请求中，多次调用 `getCurrentUser()` 只执行一次查询。
 
-**Avoid inline objects as arguments:**
+**避免使用内联对象作为参数：**
 
-`React.cache()` uses shallow equality (`Object.is`) to determine cache hits. Inline objects create new references each call, preventing cache hits.
+`React.cache()` 使用浅相等（`Object.is`）来判断缓存命中。内联对象每次调用都会创建新的引用，阻止缓存命中。
 
-**Incorrect (always cache miss):**
+**不正确（总是缓存未命中）：**
 
 ```typescript
 const getUser = cache(async (params: { uid: number }) => {
   return await db.user.findUnique({ where: { id: params.uid } })
 })
 
-// Each call creates new object, never hits cache
+// 每次调用创建新对象，从未命中缓存
 getUser({ uid: 1 })
-getUser({ uid: 1 })  // Cache miss, runs query again
+getUser({ uid: 1 })  // 缓存未命中，再次执行查询
 ```
 
-**Correct (cache hit):**
+**正确（缓存命中）：**
 
 ```typescript
 const getUser = cache(async (uid: number) => {
   return await db.user.findUnique({ where: { id: uid } })
 })
 
-// Primitive args use value equality
+// 原始类型参数使用值相等
 getUser(1)
-getUser(1)  // Cache hit, returns cached result
+getUser(1)  // 缓存命中，返回缓存结果
 ```
 
-If you must pass objects, pass the same reference:
+如果必须传递对象，请传递相同的引用：
 
 ```typescript
 const params = { uid: 1 }
-getUser(params)  // Query runs
-getUser(params)  // Cache hit (same reference)
+getUser(params)  // 查询执行
+getUser(params)  // 缓存命中（相同引用）
 ```
 
-**Next.js-Specific Note:**
+**Next.js 特别说明：**
 
-In Next.js, the `fetch` API is automatically extended with request memoization. Requests with the same URL and options are automatically deduplicated within a single request, so you don't need `React.cache()` for `fetch` calls. However, `React.cache()` is still essential for other async tasks:
+在 Next.js 中，`fetch` API 自动扩展了请求记忆化。相同 URL 和选项的请求在单个请求内自动去重，所以你不需要为 `fetch` 调用使用 `React.cache()`。但是，`React.cache()` 对其他异步任务仍然至关重要：
 
-- Database queries (Prisma, Drizzle, etc.)
-- Heavy computations
-- Authentication checks
-- File system operations
-- Any non-fetch async work
+- 数据库查询（Prisma、Drizzle 等）
+- 重型计算
+- 身份验证检查
+- 文件系统操作
+- 任何非 fetch 的异步工作
 
-Use `React.cache()` to deduplicate these operations across your component tree.
+使用 `React.cache()` 在组件树中跨组件去重这些操作。
 
-Reference: [React.cache documentation](https://react.dev/reference/react/cache)
+参考：[React.cache 文档](https://react.dev/reference/react/cache)

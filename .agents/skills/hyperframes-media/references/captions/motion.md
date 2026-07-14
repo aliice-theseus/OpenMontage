@@ -1,38 +1,38 @@
-# Dynamic Caption Techniques
+# 动态字幕技术
 
-You are here because SKILL.md told you to read this file before writing animation code. Pick your technique combination from the table below based on the energy level you detected from the transcript, then implement using standard GSAP patterns.
+你来到这里是因为 SKILL.md 告诉你在编写动画代码之前先阅读此文件。根据你从转录中检测到的能量水平，从下表中选择你的技术组合，然后使用标准 GSAP 模式实现。
 
-## Technique Selection by Energy
+## 按能量选择技术
 
-| Energy level | Highlight                             | Exit                | Cycle pattern                             |
+| 能量级别 | 高亮 | 退出 | 循环模式 |
 | ------------ | ------------------------------------- | ------------------- | ----------------------------------------- |
-| High         | Karaoke with accent glow + scale pop  | Scatter or drop     | Alternate highlight styles every 2 groups |
-| Medium-high  | Karaoke with color pop                | Scatter or collapse | Alternate every 3 groups                  |
-| Medium       | Karaoke (subtle, white only)          | Fade + slide        | Alternate every 3 groups                  |
-| Medium-low   | Karaoke (minimal scale change)        | Fade                | Single style, vary ease per group         |
-| Low          | Karaoke (warm tones, slow transition) | Collapse            | Alternate every 4 groups                  |
+| 高 | 卡拉 OK 带强调光晕 + 缩放弹出 | 散射或下落 | 每 2 组交替高亮样式 |
+| 中高 | 卡拉 OK 带颜色弹出 | 散射或折叠 | 每 3 组交替 |
+| 中 | 卡拉 OK（微妙，仅白色） | 淡出 + 滑动 | 每 3 组交替 |
+| 中低 | 卡拉 OK（最小缩放变化） | 淡出 | 单一风格，每组变化缓动方式 |
+| 低 | 卡拉 OK（暖色调，慢过渡） | 折叠 | 每 4 组交替 |
 
-**All energy levels use karaoke highlight as the baseline.** The difference is intensity — high energy gets accent color + glow + 15% scale pop on active words, low energy gets a gentle white shift with 3% scale.
+**所有能量级别都以卡拉 OK 高亮为基础。** 区别在于强度——高能量在活跃词语上使用强调色 + 光晕 + 15% 缩放弹出，低能量使用温和的白色偏移和 3% 缩放。
 
-**Emphasis words always break the pattern.** When a word is flagged as emphasis (emotional keyword, ALL CAPS, brand name), give it a stronger animation than surrounding words (larger scale, accent color, overshoot ease). This creates contrast.
+**强调词总是打破模式。** 当一个词被标记为强调（情感关键词、全大写、品牌名），给它一个比周围词语更强的动画（更大的缩放、强调色、过冲缓动）。这创造了对比。
 
-**Marker highlight modes add a visual layer on top of karaoke.** For emphasis words that need more than color/scale, add a marker-style effect: highlight sweep, circle, burst, scribble, or sketchout. See `hyperframes-animation/rules/css-marker-patterns.md` for implementation details. Match mode to energy: burst for hype, circle for key terms, highlight for standard, scribble for subtle.
+**标记高亮模式在卡拉 OK 之上添加视觉层。** 对于需要超越颜色/缩放的强调词，添加标记风格效果：高亮扫光、圆形、爆发、涂鸦或草图轮廓。参见 `hyperframes-animation/rules/css-marker-patterns.md` 了解实现细节。模式与能量匹配：爆发用于 hype，圆形用于关键术语，高亮用于标准，涂鸦用于微妙。
 
-## Audio-Reactive Captions (Mandatory for Music)
+## 音频响应字幕（音乐时强制性）
 
-**If the source audio is music (vocals over instrumentation, beats, any musical content), you MUST extract audio data and add audio-reactive animations.** This is not optional — music without audio reactivity looks disconnected. Even low-energy ballads get subtle bass pulse and treble glow.
+**如果源音频是音乐（带伴奏的人声、节拍、任何音乐内容），你必须提取音频数据并添加音频响应动画。** 这不是可选的——没有音频响应的音乐看起来脱节。即使是低能量的抒情歌曲也能得到微妙的贝斯脉冲和高音光晕。
 
-No special wiring is needed. The group loop already iterates over every caption group to build entrance, karaoke, and exit tweens. At that point, read the audio data for each group's time range and use it to modulate the group's animation intensity with regular GSAP tweens.
+不需要特殊的连接。组循环已经遍历每个字幕组来构建入场、卡拉 OK 和退出动画。此时，读取每组时间范围的音频数据，并用常规 GSAP 动画来调节组的动画强度。
 
 ```js
-// Load audio data inline (same pattern as TRANSCRIPT)
+// 内联加载音频数据（与 TRANSCRIPT 相同模式）
 var AUDIO = JSON.parse(audioDataJson); // { fps, totalFrames, frames: [{ bands: [...] }] }
 
 GROUPS.forEach(function (group, gi) {
   var groupEl = document.getElementById("cg-" + gi);
   if (!groupEl) return;
 
-  // Read peak energy for this group's time range
+  // 读取此组时间范围的峰值能量
   var startFrame = Math.floor(group.start * AUDIO.fps);
   var endFrame = Math.min(Math.floor(group.end * AUDIO.fps), AUDIO.totalFrames - 1);
   var peakBass = 0;
@@ -44,7 +44,7 @@ GROUPS.forEach(function (group, gi) {
     peakTreble = Math.max(peakTreble, frame.bands[6] || 0, frame.bands[7] || 0);
   }
 
-  // Modulate entrance — louder groups enter bigger and glowier
+  // 调节入场——更响亮的组进入时更大、更有光晕
   tl.to(
     groupEl,
     {
@@ -57,31 +57,31 @@ GROUPS.forEach(function (group, gi) {
     group.start,
   );
 
-  // Reset at exit so audio-driven values don't persist
+  // 在退出时重置，使音频驱动的值不会持续
   tl.set(groupEl, { scale: 1, textShadow: "none" }, group.end - 0.15);
 });
 ```
 
-This shapes the animation at build time, not playback time — no per-frame callbacks, no `tl.call()` loops, no async fetch timing issues. Loud groups come in with more weight and glow; quiet groups come in soft. The audio data modulates _how much_, the content determines _what_.
+这是在构建时塑造动画，而不是播放时——没有逐帧回调，没有 `tl.call()` 循环，没有异步获取时序问题。响亮的组进入时更有重量和光晕；安静的组柔和进入。音频数据调节的是**程度**，内容决定的是**内容**。
 
-Keep audio reactivity subtle — 3-6% scale variation and soft glow. Heavy pulsing makes text unreadable.
+保持音频响应微妙——3-6% 的缩放变化和柔和的光晕。重脉冲会使文本不可读。
 
-To generate the audio data file:
+要生成音频数据文件：
 
 ```bash
 python3 skills/hyperframes-creative/scripts/extract-audio-data.py audio.mp3 --fps 30 --bands 8 -o audio-data.json
 ```
 
-## Combining Techniques
+## 组合技术
 
-Don't use the same highlight animation on every group — cycle through styles using the group index. Don't combine multiple competing animations on the same word at the same timestamp. Vary techniques across groups to match the content's pace changes.
+不要在每组上使用相同的高亮动画——使用组索引在样式之间循环。不要在同一时间戳的同一个词上组合多个相互冲突的动画。根据内容节奏变化跨组的技术。
 
-**Marker highlight effects** layer well with karaoke — use karaoke for the word-by-word reveal, then add a marker effect on emphasis words only. For example: karaoke highlights each word in white, but brand names get a yellow highlight sweep and stats get a red circle. Cycle marker modes across groups for visual variety.
+**标记高亮效果**与卡拉 OK 搭配良好——使用卡拉 OK 逐词揭示，然后只在强调词上添加标记效果。例如：卡拉 OK 以白色高亮每个词，但品牌名获得黄色高亮扫光，统计数字获得红色圆圈。跨组循环标记模式以获得视觉多样性。
 
-## Runtime Tools
+## 运行时工具
 
-Caption motion uses standard HyperFrames runtime APIs. Use the canonical sources:
+字幕动画使用标准的 HyperFrames 运行时 API。使用规范来源：
 
-- **GSAP timeline + tween syntax** — `hyperframes-animation/adapters/gsap.md` (eases, position parameter, performance)
-- **`window.__hyperframes.fitTextFontSize` / `pretext`** — `hyperframes-core/references/determinism-rules.md` → Layout Contract (overflow prevention, per-frame text measurement)
-- **Audio data extraction** — generate via `python3 skills/hyperframes-creative/scripts/extract-audio-data.py audio.mp3 --fps 30 --bands 8 -o audio-data.json`, then load inline as shown in "Audio-Reactive Captions" above
+- **GSAP 时间线 + 动画语法**——`hyperframes-animation/adapters/gsap.md`（缓动、位置参数、性能）
+- **`window.__hyperframes.fitTextFontSize` / `pretext`**——`hyperframes-core/references/determinism-rules.md` → 布局约定（溢出预防、逐帧文本测量）
+- **音频数据提取**——通过 `python3 skills/hyperframes-creative/scripts/extract-audio-data.py audio.mp3 --fps 30 --bands 8 -o audio-data.json` 生成，然后如上面的「音频响应字幕」所示内联加载

@@ -1,44 +1,44 @@
 ---
 name: animations
-description: Animation classes, playing animations, and animation timing in Manim
+description: Manim 中的动画类、播放动画和动画时间控制
 metadata:
   tags: animation, play, run_time, rate_func, animate
 ---
 
-# Animations in Manim
+# Manim 中的动画
 
-Animations interpolate mobjects between states over time. They are played using `self.play()`.
+动画使 mobject 在状态之间随时间插值。使用 `self.play()` 播放。
 
-## The .animate Syntax
+## .animate 语法
 
-The most common way to animate is using the `.animate` property:
+最常见的动画方式是使用 `.animate` 属性：
 
 ```python
-# Move a square to the right
+# 将正方形向右移动
 self.play(square.animate.shift(RIGHT))
 
-# Scale up
+# 放大
 self.play(circle.animate.scale(2))
 
-# Change color
+# 改变颜色
 self.play(text.animate.set_color(RED))
 
-# Chain multiple changes
+# 链式多个更改
 self.play(square.animate.shift(RIGHT).rotate(PI/4).set_color(BLUE))
 ```
 
-## Animation Parameters
+## 动画参数
 
 ### run_time
-Controls animation duration in seconds (default: 1).
+控制动画的持续时间（秒），默认为1。
 
 ```python
-self.play(Create(circle), run_time=2)  # 2 second animation
-self.play(Create(circle), run_time=0.5)  # Half second
+self.play(Create(circle), run_time=2)  # 2秒动画
+self.play(Create(circle), run_time=0.5)  # 半秒
 ```
 
 ### rate_func
-Controls the animation's timing curve (easing).
+控制动画的时间曲线（缓动）。
 
 ```python
 from manim import smooth, linear, there_and_back
@@ -48,12 +48,12 @@ self.play(square.animate.shift(RIGHT), rate_func=linear)
 self.play(square.animate.shift(RIGHT), rate_func=there_and_back)
 ```
 
-## Playing Multiple Animations
+## 播放多个动画
 
-### Simultaneously
+### 同时播放
 
 ```python
-# All play at the same time
+# 所有同时播放
 self.play(
     Create(circle),
     FadeIn(square),
@@ -61,15 +61,15 @@ self.play(
 )
 ```
 
-### Sequentially
+### 顺序播放
 
 ```python
-# One after another
+# 一个接一个
 self.play(Create(circle))
 self.play(FadeIn(square))
 self.play(Write(text))
 
-# Or use Succession
+# 或使用 Succession
 self.play(Succession(
     Create(circle),
     FadeIn(square),
@@ -77,52 +77,52 @@ self.play(Succession(
 ))
 ```
 
-## Common Animation Classes
+## 常用动画类
 
-### Creation Animations
+### 创建动画
 ```python
-Create(mobject)           # Draw the mobject progressively
-Write(text)               # Write text/equations
-FadeIn(mobject)           # Fade in from transparent
-DrawBorderThenFill(mob)   # Draw outline, then fill
-GrowFromCenter(mobject)   # Grow from center point
+Create(mobject)           # 逐步绘制 mobject
+Write(text)               # 书写文本/方程
+FadeIn(mobject)           # 从透明淡入
+DrawBorderThenFill(mob)   # 先绘制轮廓，然后填充
+GrowFromCenter(mobject)   # 从中心点生长
 ```
 
-### Removal Animations
+### 移除动画
 ```python
-FadeOut(mobject)          # Fade to transparent
-Uncreate(mobject)         # Reverse of Create
-ShrinkToCenter(mobject)   # Shrink to center and disappear
+FadeOut(mobject)          # 淡出到透明
+Uncreate(mobject)         # Create 的反向
+ShrinkToCenter(mobject)   # 收缩到中心并消失
 ```
 
-### Transform Animations
+### 变换动画
 ```python
-Transform(mob1, mob2)              # Morph mob1 into mob2
-ReplacementTransform(mob1, mob2)   # Replace mob1 with mob2
-TransformFromCopy(mob1, mob2)      # Keep mob1, create mob2
+Transform(mob1, mob2)              # 将 mob1 变形为 mob2
+ReplacementTransform(mob1, mob2)   # 用 mob2 替换 mob1
+TransformFromCopy(mob1, mob2)      # 保留 mob1，创建 mob2
 ```
 
-### Movement Animations
+### 移动动画
 ```python
-MoveToTarget(mobject)     # Move to preset target
-Rotate(mobject, angle)    # Rotate by angle
-Circumscribe(mobject)     # Draw attention with circle
+MoveToTarget(mobject)     # 移动到预设目标
+Rotate(mobject, angle)    # 按角度旋转
+Circumscribe(mobject)     # 用圆圈吸引注意力
 ```
 
-## Animation vs Instant Changes
+## 动画 vs 即时更改
 
 ```python
-# Animated change (visible transition)
+# 动画变化（可见过渡）
 self.play(circle.animate.set_color(RED))
 
-# Instant change (no animation)
+# 即时变化（无动画）
 circle.set_color(RED)
 self.add(circle)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use .animate for simple transformations** - Cleaner than explicit Animation classes
-2. **Keep run_time reasonable** - 0.5-2 seconds for most animations
-3. **Use rate_func for polish** - `smooth` is usually better than `linear`
-4. **Group related animations** - Play simultaneously when conceptually related
+1. **简单变换使用 .animate** - 比显式动画类更简洁
+2. **保持 run_time 合理** - 大多数动画0.5-2秒
+3. **使用 rate_func 提升精致度** - `smooth` 通常优于 `linear`
+4. **分组相关动画** - 概念相关的动画同时播放

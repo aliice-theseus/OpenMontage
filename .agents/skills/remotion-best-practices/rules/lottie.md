@@ -1,32 +1,32 @@
 ---
 name: lottie
-description: Embedding Lottie animations in Remotion.
+description: 在 Remotion 中嵌入 Lottie 动画
 metadata:
   category: Animation
 ---
 
-# Using Lottie Animations in Remotion
+# 在 Remotion 中使用 Lottie 动画
 
-## Prerequisites
+## 前置条件
 
-First, the @remotion/lottie package needs to be installed.  
-If it is not, use the following command:
+首先，需要安装 @remotion/lottie 包。  
+如果尚未安装，请使用以下命令：
 
 ```bash
-npx remotion add @remotion/lottie # If project uses npm
-bunx remotion add @remotion/lottie # If project uses bun
-yarn remotion add @remotion/lottie # If project uses yarn
-pnpm exec remotion add @remotion/lottie # If project uses pnpm
+npx remotion add @remotion/lottie # 如果项目使用 npm
+bunx remotion add @remotion/lottie # 如果项目使用 bun
+yarn remotion add @remotion/lottie # 如果项目使用 yarn
+pnpm exec remotion add @remotion/lottie # 如果项目使用 pnpm
 ```
 
-## Displaying a Lottie file
+## 显示 Lottie 文件
 
-To import a Lottie animation:
+要导入 Lottie 动画：
 
-- Fetch the Lottie asset
-- Wrap the loading process in `delayRender()` and `continueRender()`
-- Save the animation data in a state
-- Render the Lottie animation using the `Lottie` component from the `@remotion/lottie` package
+- 获取 Lottie 资源
+- 将加载过程包裹在 `delayRender()` 和 `continueRender()` 中
+- 将动画数据保存在状态中
+- 使用 `@remotion/lottie` 包的 `Lottie` 组件渲染 Lottie 动画
 
 ```tsx
 import { Lottie, LottieAnimationData } from "@remotion/lottie";
@@ -34,7 +34,7 @@ import { useEffect, useState } from "react";
 import { cancelRender, continueRender, delayRender } from "remotion";
 
 export const MyAnimation = () => {
-  const [handle] = useState(() => delayRender("Loading Lottie animation"));
+  const [handle] = useState(() => delayRender("正在加载 Lottie 动画"));
 
   const [animationData, setAnimationData] =
     useState<LottieAnimationData | null>(null);
@@ -59,9 +59,9 @@ export const MyAnimation = () => {
 };
 ```
 
-## Styling and animating
+## 样式和动画
 
-Lottie supports the `style` prop to allow styles and animations:
+Lottie 支持 `style` 属性来应用样式和动画：
 
 ```tsx
 return (

@@ -3,11 +3,11 @@ name: voices
 description: Listing voices, locales, speed/pitch configuration for HeyGen
 ---
 
-# HeyGen Voices
+# HeyGen 语音
 
-HeyGen provides a wide variety of AI voices for different languages, accents, and styles. Voices convert your text script into natural-sounding speech.
+HeyGen 提供了广泛的 AI 语音选择，适用于不同的语言、口音和风格。语音将您的文本脚本转换为自然的声音。
 
-## Listing Available Voices
+## 列出可用语音
 
 ### curl
 
@@ -70,7 +70,7 @@ def list_voices() -> list:
     return data["data"]["voices"]
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -100,9 +100,9 @@ def list_voices() -> list:
 }
 ```
 
-## Supported Languages
+## 支持的语言
 
-HeyGen supports many languages including:
+HeyGen 支持多种语言，包括：
 
 | Language | Code | Notes |
 |----------|------|-------|
@@ -121,9 +121,9 @@ HeyGen supports many languages including:
 | Polish | pl-PL | Standard Polish |
 | Arabic | ar-SA | Saudi Arabic |
 
-## Using Voices in Video Generation
+## 在视频生成中使用语音
 
-### Basic Voice Usage
+### 基本语音用法
 
 ```typescript
 const videoConfig = {
@@ -144,7 +144,7 @@ const videoConfig = {
 };
 ```
 
-### Voice with Speed Adjustment
+### 调整语速
 
 ```typescript
 const videoConfig = {
@@ -166,7 +166,7 @@ const videoConfig = {
 };
 ```
 
-### Voice with Pitch Adjustment
+### 调整音调
 
 ```typescript
 const videoConfig = {
@@ -188,31 +188,31 @@ const videoConfig = {
 };
 ```
 
-## Adding Pauses with Break Tags
+## 使用 Break 标签添加暂停
 
-HeyGen supports SSML-style `<break>` tags to add pauses in scripts.
+HeyGen 支持 SSML 风格的 `<break>` 标签，用于在脚本中添加暂停。
 
-### Break Tag Format
+### Break 标签格式
 
 ```
 <break time="Xs"/>
 ```
 
-Where `X` is the duration in seconds (e.g., `1s`, `1.5s`, `0.5s`).
+其中 `X` 是以秒为单位的时长（例如 `1s`、`1.5s`、`0.5s`）。
 
-### Requirements
+### 要求
 
-| Rule | Example |
+| 规则 | 示例 |
 |------|---------|
-| Use seconds with "s" suffix | `<break time="1.5s"/>` ✓ |
-| Must have space before tag | `word <break time="1s"/>` ✓ |
-| Must have space after tag | `<break time="1s"/> word` ✓ |
-| Self-closing tag | `<break time="1s"/>` ✓ |
+| 使用秒并带 "s" 后缀 | `<break time="1.5s"/>` ✓ |
+| 标签前必须有空格 | `word <break time="1s"/>` ✓ |
+| 标签后必须有空格 | `<break time="1s"/> word` ✓ |
+| 自闭合标签 | `<break time="1s"/>` ✓ |
 
-**Incorrect:** `word<break time="1s"/>word` (no spaces)
-**Correct:** `word <break time="1s"/> word`
+**错误：** `word<break time="1s"/>word`（无空格）
+**正确：** `word <break time="1s"/> word`
 
-### Examples
+### 示例
 
 ```typescript
 // Single pause
@@ -228,7 +228,7 @@ const script3 = "<break time=\"0.5s\"/> Welcome to our presentation.";
 const script4 = "And the winner is... <break time=\"2s\"/> You!";
 ```
 
-### Full Example
+### 完整示例
 
 ```typescript
 const scriptWithPauses = `
@@ -256,9 +256,9 @@ const videoConfig = {
 };
 ```
 
-### Consecutive Breaks
+### 连续暂停
 
-Multiple consecutive break tags are automatically combined:
+多个连续的 break 标签会自动合并：
 
 ```typescript
 // These two breaks:
@@ -267,16 +267,16 @@ Multiple consecutive break tags are automatically combined:
 // Are treated as a single 1.5s pause
 ```
 
-### Best Practices
+### 最佳实践
 
-1. **Use for emphasis** - Add pauses before important points
-2. **Keep pauses reasonable** - 0.5s to 2s is typical; longer feels unnatural
-3. **Match natural speech** - Add pauses where a human would breathe or pause
-4. **Test the output** - Listen to generated audio to verify timing feels right
+1. **用于强调** - 在重要点之前添加暂停
+2. **保持暂停合理** - 0.5s 到 2s 是典型的；更长会感觉不自然
+3. **匹配自然语音** - 在人类会呼吸或停顿的地方添加暂停
+4. **测试输出** - 收听生成的音频以验证时间节奏
 
-## Using Custom Audio Instead of TTS
+## 使用自定义音频代替 TTS
 
-Instead of text-to-speech, you can provide your own audio:
+除了文本转语音，您还可以提供自己的音频：
 
 ```typescript
 const videoConfig = {
@@ -296,9 +296,9 @@ const videoConfig = {
 };
 ```
 
-## Filtering Voices
+## 筛选语音
 
-### By Language
+### 按语言
 
 ```typescript
 function filterByLanguage(voices: Voice[], language: string): Voice[] {
@@ -311,7 +311,7 @@ const englishVoices = filterByLanguage(voices, "english");
 const spanishVoices = filterByLanguage(voices, "spanish");
 ```
 
-### By Gender
+### 按性别
 
 ```typescript
 function filterByGender(voices: Voice[], gender: "male" | "female"): Voice[] {
@@ -321,7 +321,7 @@ function filterByGender(voices: Voice[], gender: "male" | "female"): Voice[] {
 const femaleVoices = filterByGender(voices, "female");
 ```
 
-### By Features
+### 按特性
 
 ```typescript
 function filterByFeatures(
@@ -342,7 +342,7 @@ function filterByFeatures(
 const expressiveVoices = filterByFeatures(voices, { emotionSupport: true });
 ```
 
-## Voice Selection Helper
+## 语音选择辅助
 
 ```typescript
 interface VoiceSelectionCriteria {
@@ -382,9 +382,9 @@ const voice = await findVoice({
 });
 ```
 
-## Multi-Language Videos
+## 多语言视频
 
-Create videos with different languages per scene:
+为每个场景创建不同语言的视频：
 
 ```typescript
 const multiLanguageConfig = {
@@ -417,11 +417,11 @@ const multiLanguageConfig = {
 };
 ```
 
-## Matching Voice to Avatar
+## 匹配语音与虚拟形象
 
-### Recommended: Use Avatar's Default Voice
+### 推荐：使用虚拟形象的默认语音
 
-Many avatars have a `default_voice_id` that's pre-matched. **This is the best approach.**
+许多虚拟形象都有预先匹配的 `default_voice_id`。**这是最佳方法。**
 
 ```typescript
 // Using v2 API to get avatar with default voice
@@ -448,11 +448,11 @@ if (avatar) {
 }
 ```
 
-See [avatars.md](avatars.md) for complete examples.
+完整的示例请参见 [avatars.md](avatars.md)。
 
-### Fallback: Match Gender Manually
+### 回退方案：手动匹配性别
 
-If avatar has no default voice, match genders manually:
+如果虚拟形象没有默认语音，手动匹配性别：
 
 ```typescript
 interface AvatarVoicePair {
@@ -494,12 +494,12 @@ async function findMatchingAvatarAndVoice(
 }
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Match voice gender to avatar** - Always pair male voices with male avatars, female with female
-2. **Match voice to content** - Use professional voices for business content
-3. **Test voice previews** - Listen to preview audio before selecting
-4. **Consider locale** - Match voice accent to target audience
-5. **Use natural pacing** - Adjust speed for clarity, typically 0.9-1.1x
-6. **Add pauses** - Use SSML breaks for more natural speech flow
-7. **Validate availability** - Always verify voice_id exists before using
+1. **匹配语音性别与虚拟形象** - 始终将男性语音与男性虚拟形象配对，女性与女性配对
+2. **语音与内容匹配** - 为商务内容使用专业语音
+3. **测试语音预览** - 在选择前收听预览音频
+4. **考虑语言区域** - 将语音口音与目标受众匹配
+5. **使用自然节奏** - 调整语速以保证清晰度，通常 0.9-1.1x
+6. **添加暂停** - 使用 SSML breaks 使语音流更自然
+7. **验证可用性** - 在使用前始终确认 voice_id 存在

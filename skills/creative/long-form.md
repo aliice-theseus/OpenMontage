@@ -1,239 +1,239 @@
-# Long-Form Video Pipeline (10+ Minutes)
+# 长视频制作流程（10分钟以上）
 
-> Sources: YouTube Creator Academy, VidIQ analytics research, Think Media production guides,
-> Paddy Galloway retention analytics, Retention Rabbit 2025 Benchmark Report, AIR Media-Tech
-> retention editing guide, Epidemic Sound mixing guide, Sweetwater YouTube mastering
+> 来源：YouTube Creator Academy、VidIQ 分析研究、Think Media 制作指南、
+> Paddy Galloway 留存分析、Retention Rabbit 2025 基准报告、AIR Media-Tech
+> 留存剪辑指南、Epidemic Sound 混音指南、Sweetwater YouTube 母带
 
-## Quick Reference Card
-
-```
-DURATION:         8-15 min (sweet spot for most topics)
-HOOK:             Complete by 0:30 — survive the 30-second cliff
-PATTERN INTERRUPT: Every 45-90 seconds
-RETENTION TARGET:  40-60% average view duration
-CHAPTER LENGTH:    2-4 minutes per chapter
-NARRATION:        150-160 WPM
-MUSIC BED:        Continuous, ducked 18-20 dB below speech
-TARGET LUFS:      -14 LUFS integrated
-END SCREEN:       Last 20 seconds (YouTube end screen cards)
-```
-
-## Retention Benchmarks (2025-2026 Data)
-
-| Video Duration | Good Retention | Excellent Retention |
-|---------------|---------------|-------------------|
-| 1-3 min | 60%+ | 75%+ |
-| 3-5 min | 50%+ | 65%+ |
-| 5-10 min | 45%+ | 60%+ |
-| **10-20 min** | **40%+** | **55%+** |
-| 20-60 min | 35%+ | 50%+ |
-
-- Platform average: **23.7%** across all YouTube videos
-- Only **16.8%** of videos exceed 50% retention
-- Only **16%** of viewers reach the final 10 seconds
-- **Improving retention by 10 percentage points** correlates with 25%+ increase in impressions
-
-### AI-Generated Content Warning
-
-- AI-generated video shows **70% lower retention** vs human-fronted content
-- AI narration triggers **35% viewer drop-off** within the first 45 seconds vs human narration
-- **Implication for OpenMontage:** Prioritize natural-sounding TTS (ElevenLabs over Piper), and avoid detectable AI visual artifacts. The processing chain in `sound-design.md` is essential.
-
-## Retention Curve Management
-
-### The Critical Points
-
-| Timestamp | What Happens | How to Survive |
-|-----------|-------------|----------------|
-| 0:00-0:03 | Thumbnail-to-video match | First frame must match thumbnail promise |
-| 0:00-0:30 | **55%+ leave in first 60s** | Hook + tension must be complete by 0:30. Must retain 70%+ here. |
-| 2:00-3:00 | **Retention valley** — initial curiosity spent | Deliver first major payoff BEFORE 2:00, pattern interrupt at 1:45 |
-| 55-65% mark | **Secondary exodus** in long-form | Re-engage with burst sequence + open loop resolution |
-| Last 20s | End screen opportunity | CTA + end screen cards |
-
-### Survival Tactics for the 2-3 Minute Valley
-
-1. **Open loops in first 60 seconds** — raise a question early, hold the answer until later
-2. **First major payoff before 2:00** — the hook's promise must have a down-payment
-3. **Pattern interrupt at 1:45-2:00** — camera angle shift, B-roll burst, music change
-4. **"Burst sequence" at the valley** — 5-10 quick cuts lasting 10-15 seconds, then return to calm
-5. **Foreshadowing cue** — "But the really surprising part is coming up in a minute"
-
-### Pattern Interrupts
-
-Deploy **major interrupts** every **60-90 seconds** and **minor interrupts** every **20-30 seconds**:
-
-| Technique | Type | When to Use |
-|-----------|------|-------------|
-| B-roll cut | Minor | Every 30-60s of talking head |
-| Visual style change | Major | New section, new concept |
-| On-screen text/graphic | Minor | Key stat, definition, emphasis |
-| Music energy shift | Major | Section transitions |
-| Direct address | Minor | "Now here's what's interesting..." |
-| Burst sequence (5-10 rapid cuts) | Major | Every 2-3 minutes |
-| Sound effect | Minor | Transition whoosh, pop for text |
-
-**Impact:** Videos using pattern interrupts in the first 5 seconds achieve **23% higher average retention**.
-
-### Re-Engagement Hooks
-
-Place a **re-hook** at the 2-minute mark and every 3-4 minutes after:
+## 快速参考卡
 
 ```
-"But that's not even the interesting part..."
-"Now here's where it gets weird..."
-"Most people stop here, but if you keep watching..."
-"This next part changes everything..."
+时长：            8-15分钟（大多数话题的甜蜜点）
+钩子：            在0:30前完成 — 挺过30秒悬崖
+模式打断：        每45-90秒
+留存目标：        40-60%平均观看时长
+章节长度：        每章2-4分钟
+旁白：            150-160词/分钟
+音乐背景：        连续，比语音闪避18-20 dB
+目标 LUFS：      -14 LUFS 综合
+结束画面：        最后20秒（YouTube 结束画面卡片）
 ```
 
-These verbal signposts give viewers a reason to stay through the next segment.
+## 留存基准（2025-2026数据）
 
-## Content Structure
+| 视频时长 | 良好留存 | 优秀留存 |
+|----------|---------|---------|
+| 1-3分钟 | 60%+ | 75%+ |
+| 3-5分钟 | 50%+ | 65%+ |
+| 5-10分钟 | 45%+ | 60%+ |
+| **10-20分钟** | **40%+** | **55%+** |
+| 20-60分钟 | 35%+ | 50%+ |
 
-### Chapter Template
+- 平台平均值：所有 YouTube 视频的 **23.7%**
+- 只有 **16.8%** 的视频超过50%留存
+- 只有 **16%** 的观众到达最后10秒
+- **留存率提高10个百分点** 与印象数增加25%+相关
 
-```
-[INTRO]        0:00 - 0:30    Hook + stakes + preview
-[CHAPTER 1]    0:30 - 3:00    Foundation concept
-[RE-HOOK]      3:00 - 3:15    Curiosity gap for next section
-[CHAPTER 2]    3:15 - 6:00    Complication / deeper layer
-[PALETTE CLEANSER]  6:00 - 6:15    Visual break, humor, or "let that sink in"
-[CHAPTER 3]    6:15 - 9:00    Key insight / "aha" moment
-[PROOF]        9:00 - 10:30   Demonstration / example
-[CONCLUSION]   10:30 - 11:30  Implications + reframe
-[OUTRO]        11:30 - 12:00  CTA + end screen
-```
+### AI 生成内容警告
 
-### Chapter Length Rules
+- AI 生成视频的留存比真人出镜内容**低70%**
+- AI 旁白在前45秒内导致 **35%的观众流失**，相比真人旁白
+- **对 OpenMontage 的启示：** 优先使用自然听感的 TTS（ElevenLabs 优于 Piper），避免可检测的 AI 视觉伪影。`sound-design.md` 中的处理链至关重要。
 
-| Chapter Content | Ideal Length | Notes |
-|----------------|-------------|-------|
-| Simple concept | 2-3 minutes | One idea, one visual set |
-| Complex concept | 3-4 minutes | Multi-step, needs examples |
-| Demonstration | 2-3 minutes | Show, don't just tell |
-| Story / narrative | 3-5 minutes | Needs setup + payoff |
+## 留存曲线管理
 
-**Max 5-6 chapters** for a 10-15 minute video. More chapters = too fragmented.
+### 关键节点
 
-### YouTube Chapters (Timestamps)
+| 时间戳 | 发生了什么 | 如何应对 |
+|--------|-----------|----------|
+| 0:00-0:03 | 缩略图到视频匹配 | 第一帧必须匹配缩略图承诺 |
+| 0:00-0:30 | **55%+在前60秒离开** | 钩子+张力必须在0:30前完成。在此处保持70%+留存。 |
+| 2:00-3:00 | **留存低谷** — 初始好奇心耗尽 | 在2:00前交付第一个主要回报，在1:45处模式打断 |
+| 55-65%标记 | **长视频的二次流失** | 用爆发序列+开放循环解决重新吸引 |
+| 最后20秒 | 结束画面机会 | 行动号召+结束画面卡片 |
 
-Add chapter markers in the description:
-```
-0:00 Introduction
-0:30 Why This Matters
-3:15 The Key Mechanism
-6:15 The Breakthrough
-9:00 Real-World Example
-10:30 What This Means For You
-```
+### 应对2-3分钟低谷的生存策略
 
-Chapters improve navigation and can boost retention by letting viewers skip to relevant sections.
+1. **前60秒内的开放循环** — 提前提出问题，稍后给出答案
+2. **第一个主要回报在2:00前** — 钩子的承诺必须有首付
+3. **在1:45-2:00处模式打断** — 相机角度变化、B-roll 爆发、音乐变化
+4. **低谷处的"爆发序列"** — 5-10个快速剪切，持续10-15秒，然后恢复平静
+5. **伏笔提示** — "但真正令人惊讶的部分在一分钟后"
 
-## Audio Consistency
+### 模式打断
 
-### Music Bed Management
+每 **60-90秒** 部署**主要打断**，每 **20-30秒** 部署**次要打断**：
 
-| Rule | Value |
-|------|-------|
-| Music presence | Continuous throughout (no silent gaps) |
-| Ducking during speech | -18 to -20 dB below narration |
-| Music transitions | 2-3 second crossfade between sections |
-| Energy matching | Shift music energy at chapter boundaries |
-| BPM consistency | Stay within ±10 BPM across the video |
+| 技巧 | 类型 | 使用场景 |
+|------|------|----------|
+| B-roll 剪切 | 次要 | 每30-60秒的说话人头像 |
+| 视觉风格变化 | 主要 | 新章节、新概念 |
+| 屏幕文字/图形 | 次要 | 关键数据、定义、强调 |
+| 音乐能量变化 | 主要 | 章节过渡 |
+| 直接对话 | 次要 | "现在有趣的是……" |
+| 爆发序列（5-10个快速剪切） | 主要 | 每2-3分钟 |
+| 音效 | 次要 | 过渡嗖声、文字弹出 |
 
-### LUFS Over Long Duration
+**影响：** 前5秒使用模式打断的视频实现**平均留存高出23%**。
 
-- Target: **-14 LUFS integrated** (YouTube standard)
-- Dynamic range: **6-12 dB** for speech-heavy content
-- Check LUFS per chapter — variation between chapters should be < 2 LUFS
-- Use a limiter at **-1.5 dBTP** on the final mix
+### 重新吸引钩子
 
-### Narration Pacing
-
-| Section | WPM | Energy |
-|---------|-----|--------|
-| Hook | 160-170 | High energy, urgent |
-| Explanation | 150-160 | Steady, clear |
-| Key insight | 140-150 | Slower, deliberate |
-| Silence after reveal | 0 WPM (1-3s pause) | Let it land |
-| Conclusion | 155-165 | Energized, resolved |
-
-## Visual Pacing
-
-### Cut Frequency by Video Phase
-
-| Phase | Timing | Cut Interval | Notes |
-|-------|--------|-------------|-------|
-| Hook | 0:00-0:30 | Every 3-5s | Rapid changes signal momentum |
-| Early body | 0:30-3:00 | Every 10-15s | High energy, frequent B-roll |
-| Mid body | 3:00-7:00 | Every 15-25s | Stabilize; fewer cuts, more contextual B-roll |
-| Late body | 8:00+ | 15-25s calm + burst sequences | Alternate calm with 5-10 quick-cut bursts every 2-3 min |
-
-### B-Roll Strategy
-
-- **Individual B-roll clip length:** 5-8 seconds
-- **B-roll as percentage of total video:** 35-50% for educational content
-- **Watch time impact:** Strategic B-roll at 35-50% increases watch time by **15-25%**
-- **Shot absorption time:** Viewers need ~3 seconds; beyond 5 seconds without change, attention fades
-
-### The "Something Must Happen" Rule
-
-| Rule | Value |
-|------|-------|
-| Visual/audio change | Every 3-5 seconds |
-| Substantive frame change | Every 20-30 seconds |
-| Max without any change | 15 seconds (expect drop-off beyond this) |
-
-## End Screen & Cards
-
-### End Screen (Last 20 Seconds)
-
-- YouTube allows end screen elements in the **last 5-20 seconds**
-- Include: subscribe button, next video recommendation, playlist link
-- **Do NOT put critical content in the last 20 seconds** — it gets covered
-- Verbal CTA: "If you found this helpful, check out this next video on..."
-
-### Info Cards
-
-- Place at moments when a related topic is mentioned
-- Max 1 card per 2 minutes — too many feels spammy
-- Best placement: when you reference a concept covered in another video
-
-## Applying to OpenMontage
-
-When building long-form content:
-
-1. **Structure with chapters** — 2-4 minutes each, max 5-6 chapters
-2. **Complete the hook by 0:30** — follow the storytelling.md Explainer Arc template
-3. **Re-hook at 2:00-3:00** — this is the retention valley
-4. **Pattern interrupt every 45-90 seconds** — B-roll, text overlay, visual change
-5. **Continuous music bed** — use `music_gen` for full-length track, duck 18-20 dB
-6. **Narrate at 150-160 WPM** — slower than short-form, clearer for learning
-7. **Check LUFS per chapter** — should be consistent (< 2 LUFS variation)
-8. **Reserve last 20 seconds** for end screen — no essential content there
-9. **Add chapter timestamps** — include in publish stage metadata
-10. **Target 40-60% average view duration** — if retention drops below 30% at any point, that section needs a pattern interrupt
-
-## Timing Cheat Sheet (12-Minute Video)
+在2分钟标记处及之后每3-4分钟放置一个**重新钩子**：
 
 ```
-0:00-0:03   Visual hook (most compelling shot)
-0:03-0:08   Verbal hook (promise/question)
-0:08-0:15   Stakes ("here's why this matters")
-0:15-0:30   Value preview + open loop planted
-0:30-0:35   Branded intro (5 sec max)
-0:35-1:45   Body segment 1 (high energy, cuts every 10-15s)
-1:45-2:00   Pattern interrupt to bridge retention valley
-2:00-3:00   First major payoff delivered
-3:00-3:05   Chapter 2 mini-hook + bridging sentence
-3:00-5:30   Body segment 2 (stabilized pacing, 15-25s cuts)
-~5:00       Mid-roll CTA (subscribe ask, after earning value)
-5:30-8:00   Body segment 3 (B-roll heavy, callbacks)
-7:00-7:15   Burst sequence (5-10 quick cuts to re-engage)
-8:00-10:00  Body segment 4 (mix calm + energy bursts)
-9:30        Open loop resolution / major callback payoff
-10:00-11:20 Final segment + main reveal
-11:00       Card placement (last 20% of video)
-11:20-11:40 Outro: tease next content, do NOT say goodbye
-11:40-12:00 End screen (last 20 seconds), 1-2 elements
+"但这甚至不是有趣的部分……"
+"现在这里变得奇怪了……"
+"大多数人在这里停止，但如果你继续看……"
+"下一部分改变了一切……"
+```
+
+这些口头路标给观众一个理由在下一段落中留下。
+
+## 内容结构
+
+### 章节模板
+
+```
+[开场]        0:00 - 0:30    钩子 + 利害 + 预览
+[第1章]       0:30 - 3:00    基础概念
+[重新钩子]     3:00 - 3:15    下一章节的好奇心缺口
+[第2章]       3:15 - 6:00    深化/更复杂层面
+[调色板清洁]   6:00 - 6:15    视觉休息、幽默或"让这沉淀一下"
+[第3章]       6:15 - 9:00    关键洞察/"啊哈"时刻
+[证明]        9:00 - 10:30   演示/示例
+[结论]        10:30 - 11:30  含义 + 重构
+[结尾]        11:30 - 12:00  行动号召 + 结束画面
+```
+
+### 章节长度规则
+
+| 章节内容 | 理想长度 | 说明 |
+|----------|---------|------|
+| 简单概念 | 2-3分钟 | 一个想法，一套视觉 |
+| 复杂概念 | 3-4分钟 | 多步骤，需要示例 |
+| 演示 | 2-3分钟 | 展示，而非仅讲述 |
+| 故事/叙事 | 3-5分钟 | 需要设定+回报 |
+
+**10-15分钟视频最多5-6个章节。** 更多章节 = 过于碎片化。
+
+### YouTube 章节（时间戳）
+
+在描述中添加章节标记：
+```
+0:00 介绍
+0:30 为什么这很重要
+3:15 关键机制
+6:15 突破
+9:00 真实世界示例
+10:30 这对你意味着什么
+```
+
+章节改善导航，可以通过让观众跳到相关段落来提高留存。
+
+## 音频一致性
+
+### 音乐背景管理
+
+| 规则 | 值 |
+|------|-----|
+| 音乐存在 | 全程持续（无静默间隙） |
+| 说话时闪避 | 比旁白低 -18 至 -20 dB |
+| 音乐过渡 | 段落间2-3秒交叉淡入淡出 |
+| 能量匹配 | 在章节边界改变音乐能量 |
+| BPM 一致性 | 在整个视频中保持在 ±10 BPM 内 |
+
+### 长时间 LUFS
+
+- 目标：**-14 LUFS 综合**（YouTube 标准）
+- 动态范围：语音密集内容 **6-12 dB**
+- 每章检查 LUFS — 章节间变化应 < 2 LUFS
+- 在最终混音上使用限制器在 **-1.5 dBTP**
+
+### 旁白节奏
+
+| 段落 | 词/分钟 | 能量 |
+|------|---------|------|
+| 钩子 | 160-170 | 高能量，紧迫 |
+| 解释 | 150-160 | 稳定，清晰 |
+| 关键洞察 | 140-150 | 较慢，刻意 |
+| 揭示后静默 | 0（1-3秒停顿） | 让它落地 |
+| 结论 | 155-165 | 充满活力，决断 |
+
+## 视觉节奏
+
+### 按视频阶段的剪切频率
+
+| 阶段 | 时间 | 剪切间隔 | 说明 |
+|------|------|----------|------|
+| 钩子 | 0:00-0:30 | 每3-5秒 | 快速变化标志动量 |
+| 早期主体 | 0:30-3:00 | 每10-15秒 | 高能量，频繁 B-roll |
+| 中期主体 | 3:00-7:00 | 每15-25秒 | 稳定；较少剪切，更多上下文 B-roll |
+| 后期主体 | 8:00+ | 15-25秒平静 + 爆发序列 | 平静与5-10快速剪切爆发交替，每2-3分钟 |
+
+### B-roll 策略
+
+- **单个 B-roll 片段长度：** 5-8秒
+- **B-roll 占视频总时长比例：** 教育内容35-50%
+- **观看时间影响：** 35-50%的战略性 B-roll 可将观看时间增加 **15-25%**
+- **镜头吸收时间：** 观众需要约3秒；超过5秒无变化，注意力消退
+
+### "必须有事情发生"规则
+
+| 规则 | 值 |
+|------|-----|
+| 视觉/音频变化 | 每3-5秒 |
+| 实质性的画面变化 | 每20-30秒 |
+| 无任何变化的最大值 | 15秒（超过此值预计流失） |
+
+## 结束画面与卡片
+
+### 结束画面（最后20秒）
+
+- YouTube 允许在**最后5-20秒**内放置结束画面元素
+- 包括：订阅按钮、下一个视频推荐、播放列表链接
+- **不要在最后20秒放置关键内容** — 它会被覆盖
+- 口头行动号召："如果你觉得这有帮助，请查看下一个视频……"
+
+### 信息卡片
+
+- 在提及相关主题的时刻放置
+- 每2分钟最多1张卡片 — 太多显得像垃圾邮件
+- 最佳放置：当你引用另一个视频中涵盖的概念时
+
+## 应用于 OpenMontage
+
+构建长视频内容时：
+
+1. **按章节组织** — 每章2-4分钟，最多5-6章
+2. **在0:30前完成钩子** — 遵循 storytelling.md 的讲解弧线模板
+3. **在2:00-3:00处重新钩子** — 这是留存低谷
+4. **每45-90秒模式打断** — B-roll、文字叠加、视觉变化
+5. **连续音乐背景** — 使用 `music_gen` 生成全长轨道，闪避18-20 dB
+6. **以150-160词/分钟旁白** — 比短视频慢，为学习更清晰
+7. **每章检查 LUFS** — 应保持一致（< 2 LUFS 变化）
+8. **保留最后20秒**用于结束画面 — 那里不放必要内容
+9. **添加章节时间戳** — 包含在发布阶段元数据中
+10. **目标40-60%平均观看时长** — 如果任何点的留存低于30%，该段落需要模式打断
+
+## 计时速查表（12分钟视频）
+
+```
+0:00-0:03   视觉钩子（最有说服力的镜头）
+0:03-0:08   口头钩子（承诺/问题）
+0:08-0:15   利害关系（"这是为什么这很重要"）
+0:15-0:30   价值预览 + 开放循环植入
+0:30-0:35   品牌开场（最多5秒）
+0:35-1:45   主体段落1（高能量，每10-15秒剪切）
+1:45-2:00   模式打断以桥接留存低谷
+2:00-3:00   第一个主要回报交付
+3:00-3:05   第2章迷你钩子 + 桥接句
+3:00-5:30   主体段落2（稳定节奏，15-25秒剪切）
+~5:00       中段行动号召（提供价值后请求订阅）
+5:30-8:00   主体段落3（B-roll 密集，回调）
+7:00-7:15   爆发序列（5-10个快速剪切以重新吸引）
+8:00-10:00  主体段落4（混合平静+能量爆发）
+9:30       开放循环解析 / 主要回调回报
+10:00-11:20 最后段落 + 主要揭示
+11:00       卡片放置（视频最后20%）
+11:20-11:40 结尾：暗示下个内容，不要说再见
+11:40-12:00 结束画面（最后20秒），1-2个元素
 ```

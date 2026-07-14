@@ -3,37 +3,37 @@ name: webhook-integration
 description: Setting up webhooks for production BFL API integration
 ---
 
-# Webhook Integration
+# Webhook 集成
 
-For production workloads, use webhooks instead of polling to receive generation results.
+对于生产工作负载，请使用 webhook 而非轮询来接收生成结果。
 
-## Benefits Over Polling
+## 相比轮询的优势
 
-- **Reduced API calls** - No repeated polling requests
-- **Immediate notification** - Know exactly when generation completes
-- **Better resource efficiency** - No wasted compute on polling
-- **Scalable architecture** - Event-driven design
+- **减少 API 调用** - 无需重复轮询请求
+- **即时通知** - 确切知道生成何时完成
+- **更好的资源效率** - 不会在轮询上浪费计算资源
+- **可扩展架构** - 事件驱动设计
 
-## Setup
+## 设置
 
-### Request with Webhook
+### 带 Webhook 的请求
 
-Include `webhook_url` and optionally `webhook_secret` in your request:
+在请求中包含 `webhook_url` 和可选的 `webhook_secret`：
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   -H "x-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "prompt": "A beautiful sunset over mountains",
+    "prompt": "美丽的山间日落",
     "webhook_url": "https://your-server.com/api/bfl-webhook",
     "webhook_secret": "your-secret-key-here"
   }'
 ```
 
-### Webhook Payload
+### Webhook 载荷
 
-When generation completes, BFL sends a POST request to your webhook URL:
+生成完成时，BFL 向您的 webhook URL 发送 POST 请求：
 
 ```json
 {
@@ -48,36 +48,36 @@ When generation completes, BFL sends a POST request to your webhook URL:
 }
 ```
 
-For failures:
+失败时的载荷：
 
 ```json
 {
   "id": "gen_abc123xyz",
   "status": "Error",
   "error": "content_policy_violation",
-  "message": "The prompt violated content policy",
+  "message": "提示词违反内容政策",
   "timestamp": "2025-01-15T10:30:00Z"
 }
 ```
 
-## Security
+## 安全
 
-### Signature Verification
+### 签名验证
 
-When `webhook_secret` is provided, BFL signs the payload with HMAC-SHA256:
+当提供 `webhook_secret` 时，BFL 使用 HMAC-SHA256 对载荷进行签名：
 
 ```
-X-BFL-Signature: sha256=<hex-encoded-signature>
+X-BFL-Signature: sha256=<十六进制编码的签名>
 ```
 
-### Verification Implementation
+### 验证实现
 
 ```python
 import hmac
 import hashlib
 
 def verify_webhook_signature(payload, signature, secret):
-    """Verify the webhook came from BFL."""
+    """验证 webhook 是否来自 BFL。"""
     if not signature or not signature.startswith('sha256='):
         return False
 
@@ -87,12 +87,12 @@ def verify_webhook_signature(payload, signature, secret):
         hashlib.sha256
     ).hexdigest()
 
-    provided_signature = signature[7:]  # Remove 'sha256=' prefix
+    provided_signature = signature[7:]  # 移除 'sha256=' 前缀
 
     return hmac.compare_digest(expected_signature, provided_signature)
 ```
 
-### Flask Handler with Verification
+### 带验证的 Flask 处理器
 
 ```python
 from flask import Flask, request, jsonify
@@ -105,10 +105,10 @@ WEBHOOK_SECRET = "your-secret-key-here"
 
 @app.route('/api/bfl-webhook', methods=['POST'])
 def handle_webhook():
-    # Verify signature
+    # 验证签名
     signature = request.headers.get('X-BFL-Signature')
     if not verify_webhook_signature(request.data, signature, WEBHOOK_SECRET):
-        return jsonify({'error': 'Invalid signature'}), 401
+        return jsonify({'error': '签名无效'}), 401
 
     data = request.json
 
@@ -123,33 +123,33 @@ def handle_completion(data):
     generation_id = data['id']
     result_url = data['result']['sample']
 
-    # Download image immediately (URL expires in 10 min)
+    # 立即下载图像（URL 在 10 分钟内过期）
     image_data = requests.get(result_url).content
 
-    # Store to your storage
+    # 存储到您的存储系统
     store_image(generation_id, image_data)
 
-    # Update your database
+    # 更新数据库
     update_generation_status(generation_id, 'completed')
 
-    # Notify your application/users
+    # 通知您的应用/用户
     notify_completion(generation_id)
 
 def handle_failure(data):
     generation_id = data['id']
-    error = data.get('error', 'unknown')
+    error = data.get('error', '未知')
 
-    # Log the failure
+    # 记录失败
     log_generation_failure(generation_id, error)
 
-    # Update your database
+    # 更新数据库
     update_generation_status(generation_id, 'failed', error)
 
-    # Maybe retry or notify
+    # 可能重试或通知
     handle_generation_error(generation_id, error)
 ```
 
-### Express.js Handler
+### Express.js 处理器
 
 ```javascript
 const express = require('express');
@@ -183,18 +183,18 @@ app.post('/api/bfl-webhook', async (req, res) => {
   const signature = req.headers['x-bfl-signature'];
 
   if (!verifySignature(req.body, signature, WEBHOOK_SECRET)) {
-    return res.status(401).json({ error: 'Invalid signature' });
+    return res.status(401).json({ error: '签名无效' });
   }
 
   const data = JSON.parse(req.body);
 
   if (data.status === 'Ready') {
-    // Download image (URL expires in 10 min)
+    // 下载图像（URL 在 10 分钟内过期）
     const imageResponse = await axios.get(data.result.sample, {
       responseType: 'arraybuffer'
     });
 
-    // Store the image
+    // 存储图像
     await storeImage(data.id, imageResponse.data);
   }
 
@@ -202,33 +202,33 @@ app.post('/api/bfl-webhook', async (req, res) => {
 });
 ```
 
-## Requirements
+## 要求
 
-### HTTPS Required
+### 需要 HTTPS
 
-Webhook URLs **must use HTTPS** in production. BFL will not send webhooks to HTTP endpoints.
+生产环境中 Webhook URL **必须使用 HTTPS**。BFL 不会向 HTTP 端点发送 webhook。
 
-### Response Requirements
+### 响应要求
 
-- Respond with 2xx status code to acknowledge receipt
-- Respond within 30 seconds
-- Keep handler fast - offload heavy processing
+- 返回 2xx 状态码以确认收到
+- 在 30 秒内响应
+- 保持处理器快速 - 将繁重处理任务卸载
 
-### Retry Policy
+### 重试策略
 
-BFL retries failed webhook deliveries:
+BFL 会重试失败的 webhook 投递：
 
-| Attempt | Delay |
+| 尝试 | 延迟 |
 |---------|-------|
-| 1st retry | 1 second |
-| 2nd retry | 5 seconds |
-| 3rd retry | 30 seconds |
+| 第 1 次重试 | 1 秒 |
+| 第 2 次重试 | 5 秒 |
+| 第 3 次重试 | 30 秒 |
 
-After 3 failed attempts, the webhook is abandoned. Fall back to polling if critical.
+3 次失败后，webhook 被放弃。如果至关重要，请回退到轮询。
 
-## Idempotency
+## 幂等性
 
-Handle duplicate webhook deliveries:
+处理重复的 webhook 投递：
 
 ```python
 from functools import lru_cache
@@ -237,17 +237,17 @@ import redis
 redis_client = redis.Redis()
 
 def is_duplicate_webhook(generation_id):
-    """Check if we've already processed this webhook."""
+    """检查是否已处理过此 webhook。"""
     key = f"webhook:processed:{generation_id}"
 
-    # Try to set with NX (only if not exists)
-    was_set = redis_client.set(key, "1", nx=True, ex=3600)  # 1 hour TTL
+    # 尝试使用 NX 设置（仅当不存在时）
+    was_set = redis_client.set(key, "1", nx=True, ex=3600)  # 1 小时 TTL
 
-    return not was_set  # If we couldn't set it, it's a duplicate
+    return not was_set  # 如果无法设置，则为重复
 
 @app.route('/api/bfl-webhook', methods=['POST'])
 def handle_webhook():
-    # ... signature verification ...
+    # ... 签名验证 ...
 
     data = request.json
     generation_id = data['id']
@@ -255,12 +255,12 @@ def handle_webhook():
     if is_duplicate_webhook(generation_id):
         return jsonify({'status': 'already_processed'}), 200
 
-    # Process webhook...
+    # 处理 webhook...
 ```
 
-## Hybrid Approach
+## 混合方案
 
-Combine webhooks with polling fallback:
+将 webhook 与轮询回退结合使用：
 
 ```python
 class HybridClient:
@@ -268,19 +268,19 @@ class HybridClient:
         self.api_key = api_key
         self.webhook_url = webhook_url
         self.webhook_secret = webhook_secret
-        self.pending = {}  # Track pending generations
+        self.pending = {}  # 跟踪待处理的生成
 
     def generate(self, prompt, timeout=300):
-        """Generate with webhook, fall back to polling."""
+        """使用 webhook 生成，回退到轮询。"""
         response = self._submit(prompt)
         generation_id = response['id']
         polling_url = response['polling_url']
 
-        # Wait for webhook (with timeout)
+        # 等待 webhook（带超时）
         result = self._wait_for_webhook(generation_id, timeout=timeout)
 
         if result is None:
-            # Webhook didn't arrive, fall back to polling
+            # Webhook 未到达，回退到轮询
             result = self._poll(polling_url, timeout=60)
 
         return result
@@ -297,15 +297,15 @@ class HybridClient:
         ).json()
 
     def receive_webhook(self, data):
-        """Called by webhook handler."""
+        """由 webhook 处理器调用。"""
         generation_id = data['id']
         if generation_id in self.pending:
             self.pending[generation_id].set_result(data)
 ```
 
-## Monitoring
+## 监控
 
-Track webhook health:
+跟踪 webhook 健康状态：
 
 ```python
 import time

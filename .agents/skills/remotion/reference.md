@@ -1,12 +1,12 @@
-# Remotion API Reference
+# Remotion API 参考
 
-## Core Hooks
+## 核心 Hooks
 
 ### useCurrentFrame()
 ```tsx
 const frame = useCurrentFrame();
 ```
-Returns current frame (0-indexed). Inside `<Sequence>`, returns relative frame.
+返回当前帧（从 0 开始）。在 `<Sequence>` 内部，返回相对帧。
 
 ### useVideoConfig()
 ```tsx
@@ -28,18 +28,18 @@ interpolate(
 ): number
 ```
 
-**Examples:**
+**示例：**
 ```tsx
-// Basic interpolation
+// 基本插值
 interpolate(15, [0, 30], [0, 100]); // 50
 
-// With clamping
+// 带钳制
 interpolate(50, [0, 30], [0, 1], { extrapolateRight: 'clamp' }); // 1
 
-// Multiple keyframes
+// 多关键帧
 interpolate(frame, [0, 20, 40, 60], [0, 1, 1, 0]);
 
-// With easing
+// 带缓动
 interpolate(frame, [0, 30], [0, 100], { easing: Easing.bezier(0.42, 0, 0.58, 1) });
 ```
 
@@ -50,13 +50,13 @@ spring({
   frame: number,
   fps: number,
   config?: {
-    damping?: number,      // Default: 10
-    mass?: number,         // Default: 1  
-    stiffness?: number,    // Default: 100
+    damping?: number,      // 默认：10
+    mass?: number,         // 默认：1  
+    stiffness?: number,    // 默认：100
     overshootClamping?: boolean
   },
-  from?: number,           // Default: 0
-  to?: number,             // Default: 1
+  from?: number,           // 默认：0
+  to?: number,             // 默认：1
   durationInFrames?: number,
   durationRestThreshold?: number,
   delay?: number,
@@ -64,19 +64,19 @@ spring({
 }): number
 ```
 
-**Config presets:**
-- High bounce: `{ damping: 5, stiffness: 200 }`
-- No bounce: `{ damping: 20, stiffness: 100, overshootClamping: true }`
-- Slow: `{ damping: 20, mass: 2 }`
+**配置预设：**
+- 高弹跳：`{ damping: 5, stiffness: 200 }`
+- 无弹跳：`{ damping: 20, stiffness: 100, overshootClamping: true }`
+- 慢速：`{ damping: 20, mass: 2 }`
 
 ## measureSpring()
 
-Get the duration of a spring animation:
+获取弹簧动画的持续时间：
 ```tsx
 import { measureSpring } from 'remotion';
 
 const duration = measureSpring({ fps: 30, config: { damping: 10 } });
-// Returns number of frames until spring settles
+// 返回弹簧稳定前的帧数
 ```
 
 ## interpolateColors()
@@ -85,7 +85,7 @@ const duration = measureSpring({ fps: 30, config: { damping: 10 } });
 interpolateColors(
   input: number,
   inputRange: number[],
-  outputRange: string[],  // Hex, rgb(), rgba(), hsl()
+  outputRange: string[],  // Hex、rgb()、rgba()、hsl()
   options?: { extrapolateLeft?, extrapolateRight? }
 ): string
 ```
@@ -95,38 +95,38 @@ interpolateColors(
 ```tsx
 import { Easing } from 'remotion';
 
-// Basic
+// 基本
 Easing.linear
 Easing.ease
 Easing.quad
 Easing.cubic
 
-// In/Out/InOut variants
+// In/Out/InOut 变体
 Easing.in(Easing.quad)
 Easing.out(Easing.cubic)
 Easing.inOut(Easing.ease)
 
-// Cubic bezier
+// 三次贝塞尔
 Easing.bezier(x1, y1, x2, y2)
 
-// Other
+// 其他
 Easing.circle
-Easing.back(s?)      // Overshoot
+Easing.back(s?)      // 过冲
 Easing.elastic(bounciness?)
 Easing.bounce
 Easing.sin
 Easing.exp
-Easing.poly(n)       // Power of n
+Easing.poly(n)       // n 次方
 ```
 
-## Components
+## 组件
 
 ### Composition
 ```tsx
 <Composition
   id="MyVideo"
   component={MyComponent}
-  // OR lazyComponent={() => import('./MyComponent')}
+  // 或 lazyComponent={() => import('./MyComponent')}
   durationInFrames={150}
   fps={30}
   width={1920}
@@ -142,9 +142,9 @@ Easing.poly(n)       // Power of n
 ### Sequence
 ```tsx
 <Sequence
-  from={30}                    // Start frame
-  durationInFrames={60}        // Optional duration
-  name="Intro"                 // Label in Studio timeline
+  from={30}                    // 起始帧
+  durationInFrames={60}        // 可选时长
+  name="Intro"                 // Studio 时间线中的标签
   layout="none"                // "none" | "absolute-fill"
 >
   <Child />
@@ -155,10 +155,10 @@ Easing.poly(n)       // Power of n
 ```tsx
 <Series>
   <Series.Sequence durationInFrames={30} offset={-5}>
-    <A />  {/* Frames 0-29 */}
+    <A />  {/* 帧 0-29 */}
   </Series.Sequence>
   <Series.Sequence durationInFrames={60}>
-    <B />  {/* Frames 25-84 (offset caused overlap) */}
+    <B />  {/* 帧 25-84（偏移导致重叠） */}
   </Series.Sequence>
 </Series>
 ```
@@ -167,7 +167,7 @@ Easing.poly(n)       // Power of n
 ```tsx
 <Loop
   durationInFrames={30}
-  times={3}                    // Or Infinity
+  times={3}                    // 或 Infinity
   layout="none"
 >
   <Animation />
@@ -177,42 +177,42 @@ Easing.poly(n)       // Power of n
 ### AbsoluteFill
 ```tsx
 <AbsoluteFill style={{ backgroundColor: '#000' }}>
-  {/* Position: absolute, full width/height */}
+  {/* 位置：绝对，全宽/高 */}
 </AbsoluteFill>
 ```
 
-### Media Components
+### 媒体组件
 
-**Img** (waits for load):
+**Img**（等待加载）：
 ```tsx
 <Img src={staticFile('photo.jpg')} style={{ width: '100%' }} />
 ```
 
-**Video/Html5Video:**
+**Video/Html5Video：**
 ```tsx
 <Video
   src={staticFile('clip.mp4')}
-  volume={0.5}                 // 0-1, or callback: (f) => f / 100
+  volume={0.5}                 // 0-1，或回调：(f) => f / 100
   playbackRate={1.5}
   muted={false}
   loop={false}
-  startFrom={30}               // Skip first 30 frames of source
-  endAt={120}                  // Stop at frame 120 of source
+  startFrom={30}               // 跳过源的前 30 帧
+  endAt={120}                  // 在源的第 120 帧停止
   acceptableTimeShiftInSeconds={0.2}
 />
 ```
 
-**OffthreadVideo** (better performance):
+**OffthreadVideo**（更好性能）：
 ```tsx
 <OffthreadVideo
   src={staticFile('clip.mp4')}
   volume={0.5}
-  transparent={false}          // For videos with alpha
-  toneMapped={true}           // HDR tone mapping
+  transparent={false}          // 用于带 alpha 的视频
+  toneMapped={true}           // HDR 色调映射
 />
 ```
 
-**Audio:**
+**Audio：**
 ```tsx
 <Audio
   src={staticFile('music.mp3')}
@@ -223,57 +223,57 @@ Easing.poly(n)       // Power of n
 />
 ```
 
-**AnimatedImage** (GIF/APNG):
+**AnimatedImage**（GIF/APNG）：
 ```tsx
 <AnimatedImage src={staticFile('animation.gif')} />
 ```
 
-## Async Handling
+## 异步处理
 
 ```tsx
 import { delayRender, continueRender, cancelRender } from 'remotion';
 
-// Block render
+// 阻塞渲染
 const handle = delayRender('Loading data...');
 
-// Unblock when ready
+// 就绪时解除阻塞
 continueRender(handle);
 
-// Cancel on error
+// 出错时取消
 cancelRender(new Error('Failed to load'));
 ```
 
-**With timeout:**
+**带超时：**
 ```tsx
 const handle = delayRender('Loading...', { timeoutInMilliseconds: 30000 });
 ```
 
-## Static Files & Prefetching
+## 静态文件与预取
 
 ```tsx
 import { staticFile, prefetch, getStaticFiles } from 'remotion';
 
-// Reference file in public/
+// 引用 public/ 中的文件
 const url = staticFile('video.mp4');
 
-// Prefetch for faster playback
+// 预取以实现更快播放
 const { free, waitUntilDone } = prefetch(url);
 await waitUntilDone();
-// Later: free() to release memory
+// 稍后：free() 以释放内存
 
-// List all static files
+// 列出所有静态文件
 const files = getStaticFiles();  // ['video.mp4', 'image.png', ...]
 ```
 
-## Input Props
+## 输入属性
 
 ```tsx
 import { getInputProps } from 'remotion';
 
-const props = getInputProps();  // Data passed via --props CLI flag
+const props = getInputProps();  // 通过 --props CLI 标志传递的数据
 ```
 
-## Environment Detection
+## 环境检测
 
 ```tsx
 import { getRemotionEnvironment } from 'remotion';
@@ -284,13 +284,13 @@ const env = getRemotionEnvironment();
 
 ## random()
 
-Deterministic random for consistent renders:
+确定性随机数，用于一致渲染：
 ```tsx
 import { random } from 'remotion';
 
-const value = random('my-seed');      // 0-1, same every render
+const value = random('my-seed');      // 0-1，每次渲染相同
 const value2 = random('seed', 0, 100); // 0-100
-const value3 = random(null);           // Different each render
+const value3 = random(null);           // 每次渲染不同
 ```
 
 ## @remotion/renderer API
@@ -306,20 +306,20 @@ import {
   stitchFramesToVideo
 } from '@remotion/renderer';
 
-// Bundle project
+// 打包项目
 const bundleLocation = await bundle({
   entryPoint: './src/index.ts',
   webpackOverride: (config) => config,
 });
 
-// Get composition
+// 获取组合
 const composition = await selectComposition({
   serveUrl: bundleLocation,
   id: 'MyComp',
   inputProps: {},
 });
 
-// Render video
+// 渲染视频
 await renderMedia({
   composition,
   serveUrl: bundleLocation,
@@ -327,18 +327,18 @@ await renderMedia({
   outputLocation: 'out.mp4',
   inputProps: {},
   onProgress: ({ progress }) => console.log(`${progress * 100}%`),
-  imageFormat: 'jpeg',        // jpeg or png
+  imageFormat: 'jpeg',        // jpeg 或 png
   jpegQuality: 80,
   scale: 1,
-  frameRange: [0, 59],        // Optional: specific frames
+  frameRange: [0, 59],        // 可选：特定帧
   muted: false,
   audioBitrate: '128k',
   videoBitrate: '5M',
-  crf: 18,                    // Quality (lower = better, bigger)
+  crf: 18,                    // 质量（越低越好、越大）
   concurrency: 4,
 });
 
-// Render still image
+// 渲染静态图像
 await renderStill({
   composition,
   serveUrl: bundleLocation,
@@ -360,21 +360,21 @@ import {
   downloadMedia,
 } from '@remotion/lambda';
 
-// Deploy function
+// 部署函数
 const { functionName } = await deployFunction({
   region: 'us-east-1',
   timeoutInSeconds: 120,
   memorySizeInMb: 2048,
 });
 
-// Deploy site
+// 部署站点
 const { serveUrl } = await deploySite({
   entryPoint: './src/index.ts',
   region: 'us-east-1',
   siteName: 'my-video',
 });
 
-// Render
+// 渲染
 const { renderId, bucketName } = await renderMediaOnLambda({
   region: 'us-east-1',
   functionName,
@@ -385,7 +385,7 @@ const { renderId, bucketName } = await renderMediaOnLambda({
   framesPerLambda: 20,
 });
 
-// Check progress
+// 检查进度
 const progress = await getRenderProgress({
   renderId,
   bucketName,
@@ -393,7 +393,7 @@ const progress = await getRenderProgress({
   functionName,
 });
 
-// Download when done
+// 完成时下载
 if (progress.done) {
   await downloadMedia({
     bucketName,
@@ -414,7 +414,7 @@ const playerRef = useRef<PlayerRef>(null);
 <Player
   ref={playerRef}
   component={MyComp}
-  // OR lazyComponent={() => import('./MyComp')}
+  // 或 lazyComponent={() => import('./MyComp')}
   durationInFrames={150}
   fps={30}
   compositionWidth={1920}
@@ -438,7 +438,7 @@ const playerRef = useRef<PlayerRef>(null);
   moveToBeginningWhenEnded={true}
 />
 
-// Imperative API
+// 命令式 API
 playerRef.current?.play();
 playerRef.current?.pause();
 playerRef.current?.toggle();
@@ -454,7 +454,7 @@ playerRef.current?.requestFullscreen();
 playerRef.current?.exitFullscreen();
 playerRef.current?.isFullscreen();
 
-// Events
+// 事件
 <Player
   onPlay={() => {}}
   onPause={() => {}}
@@ -468,7 +468,7 @@ playerRef.current?.isFullscreen();
 
 ## calculateMetadata
 
-Dynamic composition properties:
+动态组合属性：
 ```tsx
 export const calculateMetadata: CalculateMetadataFunction<Props> = async ({ 
   props, 
@@ -490,7 +490,7 @@ export const calculateMetadata: CalculateMetadataFunction<Props> = async ({
   id="Dynamic"
   component={MyComp}
   calculateMetadata={calculateMetadata}
-  // Base values (can be overridden by calculateMetadata)
+  // 基础值（可被 calculateMetadata 覆盖）
   durationInFrames={1}
   fps={30}
   width={1920}

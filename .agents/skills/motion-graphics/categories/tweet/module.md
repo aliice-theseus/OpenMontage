@@ -1,16 +1,16 @@
-# tweet — category module (search-driven)
+# tweet — 类别模块（搜索驱动）
 
-**Search a tweet → animate the tweet card.** Grounded in a real post (RWA). ~4–8s.
+**搜索推文 → 动画化推文卡片。** 基于真实帖子（RWA）。约4–8秒。
 
-## Source (Step 2)
+## 素材来源（第2步）
 
-RWA `search_tweets` (specific query, or a given tweet URL/id) → tweet: author, handle, avatar, text, timestamp, metrics (likes/reposts). `asset_needs`: `{ kind: tweet, query|source, treatment: none }`. Freeze the avatar + any embedded media.
+RWA `search_tweets`（具体查询，或给定的推文 URL/ID）→ 推文：作者、用户名、头像、文字、时间戳、指标（点赞/转发）。`asset_needs`：`{ kind: tweet, query|source, treatment: none }`。冻结头像 + 任何嵌入的媒体。
 
-## Vocabulary / leans on
+## 词汇表 / 依赖
 
-- Block: registry **`x-post`** (animated X/Twitter post card overlay with engagement metrics) — reuse it directly.
-- Primitives: card slide/scale-in · text type-on / line reveal · avatar pop · metrics **count-up** · optional emphasis on a keyword.
+- 块：注册表 **`x-post`**（动画 X/Twitter 帖子卡片带互动指标）— 直接复用。
+- 原语：卡片滑入/缩放入 · 文字打字效果/逐行揭示 · 头像弹出 · 指标**计数** · 关键词可选强调。
 
-## Build (reuse-first)
+## 构建（优先复用）
 
-`npx hyperframes add x-post` → fill author / handle / avatar / text / metrics from the resolved tweet; animate the card in, type-on the text (or line-by-line reveal), count-up the metrics. Frozen project-local avatar/media (never a remote URL). `export: alpha-overlay` if it's meant to sit over other footage.
+`npx hyperframes add x-post` → 从已解析的推文填入作者/用户名/头像/文字/指标；动画卡片入场，逐字打出文字（或逐行揭示），计数指标向上滚动。冻结的项目本地头像/媒体（绝不使用远程 URL）。如果需要叠加在其他素材上，使用 `export: alpha-overlay`。

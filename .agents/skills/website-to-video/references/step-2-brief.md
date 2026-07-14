@@ -1,178 +1,178 @@
-# Step 2: Strategy & Messaging
+# 步骤 2：策略与信息传达
 
-**First, scan the Table of Contents in [capabilities.md](capabilities.md)** — the 24-row TOC tells you everything HyperFrames can do. You need this to tell users what's possible. Deep-dive specific sections only if a beat needs them.
+**首先，扫描 [capabilities.md](capabilities.md) 中的目录**——24 行的 TOC 告诉你 HyperFrames 能做的一切。你需要这个来告诉用户什么是可能的。仅当节拍需要时才深入具体章节。
 
-You've captured the site and you now understand the brand — what the product does, who it's for, what voice it speaks in, what mood it lives in. Before any creative decisions, **align with the user on the story this video must tell.** Captured assets exist as a brand toolkit you'll reach for late in Step 3; they are not what the conversation in this step is about.
+你已经捕获了网站，现在你理解了品牌——产品做什么、为谁服务、用什么声音说话、处于什么情绪。在任何创意决策之前，**与用户对齐这个视频需要讲述的故事。** 捕获的资源作为品牌工具箱存在，你在步骤 3 后期才会用到；它们不是此步骤中对话的内容。
 
-**Parse the user's prompt first.** Read what they already told you — video type, style, specific requests, duration. Only ask about things they DIDN'T specify. If they said "product demo, show me the kanban board and chat, moderate pace" — that's most of the brief already. Don't ask "what type of video?" when they literally said "product demo."
+**首先解析用户的提示。** 阅读他们已经告诉你的内容——视频类型、风格、特定请求、时长。只询问他们**没有**指定的内容。如果他们说了「产品演示、展示看板面板和聊天、中等节奏」——大部分简报已经完成了。不要问「什么类型的视频？」当他们明确说了「产品演示」。
 
-Skip questions the user already answered. Ask only what's missing. If the prompt is detailed enough to build from, confirm the direction in one message and move to Step 3. The goal is to fill gaps, not interrogate.
-
----
-
-## What to Ask
-
-Before asking the user anything, ground yourself in the brand: skim `DESIGN.md` (just written in Step 1) for colors / fonts / voice; read `capture/extracted/asset-descriptions.md` for what visual assets exist; skim `capture/extracted/visible-text.txt` for what the site says about itself. Don't summarize all of it back to the user — that's noise; they captured the site, they know what's there. Use it to draft a tight one-paragraph framing of the brand and proceed to the questions.
-
-Engage the user with the questions below. Use your agent's question/answer UI if available (multi-choice with custom option). If not, ask conversationally.
-
-### Question 1: What's this video for?
-
-Present options based on what makes sense for the captured site:
-
-**Example (Not a required options)**
-
-- **Social ad** (15–20s) — Instagram, TikTok, LinkedIn. Fast, punchy, hook in first 2s.
-- **Product demo** (30–60s) — Walk through key features. Narrated, professional.
-- **Launch teaser** (15–25s) — Build hype for a new feature or product. Dramatic reveal.
-- **Brand reel** (20–45s) — Showcase the brand identity. Visual-forward, minimal narration.
-- **Feature announcement** (15–30s) — Highlight a specific feature or update.
-- Or describe something else.
-
-This determines duration, beat count, narration density, and overall energy.
-
-### Question 2: What style/vibe?
-
-Ask the user to describe what they want — or react to concrete framings that describe motion and energy, not aesthetic presets.
-
-Do NOT present a labeled menu of styles with pre-filled descriptions ("Cinematic = dark + glow + Apple keynote energy"). Those descriptions become the brief even when they don't match the brand. "Cinematic" for a wellness brand should look completely different from "cinematic" for a security tool — but a label with a baked-in description collapses that distinction.
-
-Instead, ask them approachable open-ended questions:
-
-> "A few questions to get the direction right:
->
-> - **Pace:** Should the video move slowly and let moments breathe, or be fast and punchy? Or somewhere in between?
-> - **Mood:** What atmosphere matches how you want viewers to feel — dark and dramatic, clean and light, energetic and vibrant, or something else?
-> - **Narration:** Should a voice guide viewers through the video, or let the visuals carry it?
-> - **Anything specific?** Any moments, techniques, or references you're drawn to? Or say 'surprise me' and I'll work from what I found in the capture."
-
-Their answers modify the brand-derived baseline you built in Step 1. When the user's words conflict with the brand, don't blindly override — let the brand and their direction converge. If the conflict is sharp (user says "dark cinematic" for a brand whose entire identity is white-and-pastel light), surface it and ask before resolving.
-
-### Question 3: What's the ONE thing this video must communicate?
-
-This is the strategy question. Every effective marketing video has a single core message — the one idea that has to land. Every beat serves that idea, or it doesn't belong. Get the user to articulate this BEFORE talking about visuals, assets, or specific scenes.
-
-Frame it like this:
-
-> "From your site, here's the brand frame I'm working from:
->
-> - **What the product does:** [one sentence from the site summary — not features, the actual job]
-> - **Audience:** [who it's for, derived from copy and visual tone]
-> - **Brand voice:** [confident / playful / clinical / urgent / premium — what tone the brand speaks in]
->
-> Before we plan visuals, two questions to anchor the story:
->
-> 1. **What's the ONE thing this video must communicate?** If a viewer remembers only one sentence after watching, what should it be? (the value prop, a launch announcement, a specific feature claim, a brand feeling, a problem-solution pair, etc.)
-> 2. **What's the narrative shape?** Possible arcs: _Problem → Solution_ (most demos), _Reveal_ (launches, teasers), _Demonstration_ (feature showcase, walkthroughs), _Vibe piece_ (brand reels — feeling over information), _Comparison_ (vs. competitor / before-after). Pick or describe your own.
->
-> Either give me your own answers, or say 'surprise me' and I'll make the call based on the brand and what you said in Question 1 ([video type])."
-
-Once those answers exist, **then** sketch the composed-beat directions — but ground each one in the message and arc, not in the asset list:
-
-> "Given [the message] and [the arc], here's how I'd shape it:
->
-> - [Compose-first sketch grounded in the answer to Q1, e.g., "Open with the problem stated as kinetic typography — 'You waste 4 hours a week on context switches.' Cut to a composed kanban board where cards animate from chaos into organization. Close on the brand mark + tagline."]
-> - [Alternative sketch with a different arc, e.g., "Reveal arc: dark canvas → particles converging → product wordmark drawn stroke-by-stroke as the first feature lands. No problem statement — pure announcement energy."]
-> - [If user wants demo: "Three composed UI panels — kanban, AI chat, command palette — each in your palette with the brand logo stamped top-left. Narration walks through each. Closer holds the wordmark."]
->
-> Brand accents I could layer in: [list 1-3 captured assets that *might* earn a place: the SVG logo for opener/closer, a hero illustration as a depth layer in one scene, a gradient image as an ambient bg wash. Note these are candidates, not assignments — most beats won't need any.]"
-
-**Important:** Lead every direction with **what the beat communicates**, then with **how it's built** (which primitives). The narrow no-go: if your first instinct is "the product-UI screenshot flies in," flip it — compose the UI from divs and CSS instead. That's the slideshow pattern this skill exists to break. For captured logos, illustrations, and hero art, no flip is needed — they're valid primary visuals when the concept calls for them.
-
-The captured assets are a brand toolkit you reach for late in the storyboard, where they serve the concept — never as the starting point of the concept itself.
-
-Present options:
-
-- **I have specific ideas** — let me describe them
-- **Surprise me** — you make the creative calls, I'll review the storyboard
-- **Let me see some options first** — propose 2–3 different creative directions and I'll pick
-
-### Question 4: Narration?
-
-Not every video needs a voiceover. Ask:
-
-- **Yes, with narration** — a voice guides the viewer through the video (most product demos, launch teasers, feature announcements)
-- **No narration, visual-only** — music/SFX only, the visuals tell the story (brand reels, social ads, music-driven pieces)
-- **Minimal narration** — just a hook sentence or tagline, rest is visual (short social ads, teasers)
-
-This decision changes the pipeline:
-
-- **With narration:** Step 3 includes a full script. Step 4 generates TTS, transcribes, maps timestamps to beats.
-- **Without narration:** Step 3 has no script (VO cues in storyboard are empty). Step 4 is skipped — beat durations are planned manually in the storyboard based on rhythm and pacing.
-
-### Question 5 (if applicable): Format?
-
-Only ask if not already specified by the user:
-
-- **Landscape** (1920×1080) — YouTube, LinkedIn, website embeds (default)
-- **Portrait** (1080×1920) — Instagram Stories, TikTok, YouTube Shorts
-- **Square** (1080×1080) — Instagram feed, Twitter/X
+跳过用户已经回答的问题。只询问缺失的内容。如果提示足够详细可以直接构建，用一条消息确认方向然后进入步骤 3。目标是填补空白，不是审讯。
 
 ---
 
-## How to Handle Responses
+## 要询问什么
 
-### "Surprise me" / minimal direction
+在询问用户任何问题之前，让自己扎根于品牌：浏览 `DESIGN.md`（刚在步骤 1 中编写）了解颜色/字体/语调；阅读 `capture/extracted/asset-descriptions.md` 了解存在哪些视觉资源；浏览 `capture/extracted/visible-text.txt` 了解网站对自己的描述。不要全部总结给用户——那是噪音；他们捕获了网站，他们知道里面有什么。用它起草一段紧凑的段落来框架品牌，然后继续提问。
 
-When the user gives no creative direction, default to what the brand's visual identity and the video's purpose suggest. The minimum context you need before defaulting: **where the video is going** (social feed / landing page / pitch deck / TV ad) and **who it's for** (developers / consumers / enterprise / general audience). If either is missing, ask once — "where will this run, and who's the audience?" — then proceed.
+用下面的问题与用户互动。如果可用，使用代理的问答 UI（多选带自定义选项）。如果不可用，以对话方式提问。
 
-With that minimum in hand, still write an ambitious storyboard. "Surprise me" means "impress me," not "play it safe." Go bold.
+### 问题 1：这个视频是做什么用的？
 
-**Autonomous mode propagates — for user-preference gates only.** When the user signals "surprise me" / "decide for me" / "just build it" here at Step 2, that signal kills downstream user-preference 💬 gates: Step 3's storyboard approval, Step 4's TTS provider choice, music yes/no, captions yes/no. Make those creative decisions yourself and present the finished video at the end. Do not ask four separate questions across four separate steps. Read the room once and commit.
+根据对捕获网站有意义的方式展示选项：
 
-**Auto mode does NOT skip quality-verification gates.** These run regardless and must produce evidence in your final summary:
+**示例（不是必需的选项）**
 
-- Asset Audit (Step 3) — view contact sheets, justify USE/SKIP per asset
-- Per-beat HTML evidence block (Step 5)
-- DoD checklist (Step 6) — animation-map, per-warning WCAG verification, audio + motion playback (or explicit "deferred" disclosure)
-- "What I did NOT verify" disclosure (Step 6)
+- **社交广告**（15–20s）——Instagram、TikTok、LinkedIn。快速、有力，前 2 秒内抓住注意力。
+- **产品演示**（30–60s）——展示关键功能。有旁白，专业。
+- **发布预告**（15–25s）——为新功能或产品制造悬念。戏剧性揭示。
+- **品牌短片**（20–45s）——展示品牌标识。视觉优先，最少旁白。
+- **功能公告**（15–30s）——突出特定功能或更新。
+- 或描述其他内容。
 
-**Test for "preference vs quality gate":** if the answer changes the _content_ of the video (which voice? captions on? beat 3 cinematic or fast?), it's a preference — auto mode decides. If the answer is "did the verification happen?", it's a quality gate — auto mode does NOT apply. Reasoning "auto mode says bias toward action, so I'll skip the contact sheets" misuses auto mode.
+这决定了时长、节拍数、旁白密度和整体能量。
 
-### Specific direction
+### 问题 2：什么风格/氛围？
 
-If they say something vague ("make it really cool"), push back gently:
+让用户描述他们想要什么——或者对描述动感和能量的具体框架做出反应，而不是美学预设。
 
-> "I want to make sure I nail what you're imagining. When you say 'cool' — do you mean: dramatic/cinematic(slow reveals and dark atmosphere)? Or high-energy (fast cuts and bold motion)? Or something else entirely?"
+不要展示带预填描述的标记风格菜单（「电影感 = 深色 + 光晕 + Apple 主题演讲能量」）。这些描述成为了简报，即使它们与品牌不匹配。健康品牌的「电影感」应该看起来完全不同于安全工具的「电影感」——但带有内置描述的标签会抹杀这种区别。
 
-### Mixed direction
+相反，用可接近的开放式问题询问：
 
-Parse each component separately. "Minimal but with cinematic transitions and a fast feature section" becomes:
-
-- **Base style:** Minimal (moderate pacing, minimal density, elegant motion)
-- **Transitions override:** Dramatic (shader effects for key moments)
-- **Beats 3–5 override:** Fast pacing, balanced density, energetic motion
-
-Note these per-beat overrides — they go into the storyboard.
-
-### "Let me see options"
-
-Propose 2–3 brief creative directions (3–4 sentences each) with different **narrative arcs** — what story the video tells, not what assets it shows. Each option leads with the message and the arc; visuals are composed scenes that serve them.
-
-> **Option A — Problem → Solution (cinematic, narrated):** Open with the problem stated as kinetic typography over a dark canvas with a single accent glow. Cut to a composed kanban board where chaotic cards animate into organized columns as narration lands the value prop. Closer: brand mark drawn stroke-by-stroke on a shader bloom of the brand gradient. Apple-keynote register. ~25s with full VO.
+> 「一些问题来确定方向：
 >
-> **Option B — Reveal arc (announcement, music-led):** Cold open: particles converging in darkness, no copy. The product wordmark draws itself across the frame as the first beat lands. Three composed feature panels each unveiled by a hard cut — kinetic typography labels, brand color washes, no screenshots. Closes on the mark + tagline + macOS hint. ~15s, music-driven, minimal narration.
+> - **节奏：** 视频应该缓慢移动，让时刻呼吸，还是快速而有力？或者介于两者之间？
+> - **情绪：** 什么氛围匹配你希望观众的感受——深色而戏剧性、干净而明亮、充满活力而生动，还是其他？
+> - **旁白：** 应该有声音引导观众浏览视频，还是让视觉自己讲述？
+> - **有特别的要求吗？** 你有偏好的任何时刻、技术或参考吗？或者说「给我惊喜」，我会从捕获中发现的内容出发。」
+
+他们的回答修改你在步骤 1 中建立的品牌基准线。当用户的词语与品牌冲突时，不要盲目覆盖——让品牌和他们的方向收敛。如果冲突很明显（用户说「暗色电影感」而品牌的整个标识是白色和柔和彩色），呈现出来并在解决之前询问。
+
+### 问题 3：这个视频必须传达的**一件事**是什么？
+
+这是策略问题。每个有效的营销视频都有一个核心信息——必须落地的一个想法。每个节拍服务那个想法，或者就不该存在。让用户在谈论视觉、资源或具体场景**之前**明确表达这一点。
+
+这样框架：
+
+> 「从你的网站来看，这是我在使用的品牌框架：
 >
-> **Option C — Demonstration (narrated walkthrough):** Three composed UI scenes — kanban from cards-as-divs, AI chat with typewriter narration sync, command palette with character-typed search — each in the brand palette with the captured logo stamped top-left as identity. CSS crossfades between. Narration walks each one. ~35s, full VO.
+> - **产品做什么：** [来自网站摘要的一句话——不是功能，实际工作]
+> - **受众：** [为谁服务，来自文案和视觉语调]
+> - **品牌声音：** [自信/俏皮/冷静/紧迫/高级——品牌用什么样的语调说话]
+>
+> 在规划视觉之前，有两个问题来锚定故事：
+>
+> 1. **这个视频必须传达的一件事是什么？** 如果观众看完后只记得一句话，那应该是什么？（价值主张、发布公告、特定功能声明、品牌感受、问题-解决方案对等）
+> 2. **叙事形状是什么？** 可能的弧：_问题 → 解决方案_（大多数演示）、_揭示_（发布、预告）、_演示_（功能展示、导览）、_氛围作品_（品牌短片——感觉重于信息）、_对比_（与竞品/前后对比）。选择或描述你自己的。
+>
+> 要么给我你的答案，要么说「给我惊喜」，我会根据品牌和你在问题 1 中说的内容来做决定。」
 
-Each option states: the arc, the primary visuals carrying it (composed or captured — whichever fits the beat), and any brand accents layered on top. **Never** an option whose primary content is a pasted product-UI screenshot — if you find yourself writing one, flip it: name what gets composed instead. Captured SVGs, illustrations, hero art, and brand photography are fine as primary visuals when the concept calls for them.
+一旦这些答案存在，**然后**勾勒合成节拍的方向——但将每个节拍锚定在信息和弧上，而不是资产列表：
 
-Let the user pick one or combine elements.
+> 「鉴于 [信息] 和 [弧]，我这样设计：
+>
+> - [组合优先的草图，基于 Q1 的答案，例如：「开场将问题表达为动态排版——'你每周浪费 4 小时在上下文切换上。' 切换到组合的看板面板，卡片从混乱动画化为有序。以品牌标志 + 标语结束。」]
+> - [带有不同弧的替代草图，例如：「揭示弧：暗色画布 → 粒子汇聚 → 产品字标在画布上逐笔绘制，同时第一个功能落地。没有问题陈述——纯公告能量。」]
+> - [如果用户想要演示：「三个组合 UI 面板——看板、AI 聊天、命令面板——每个都在你的调色板中，品牌 Logo 印在左上角。旁白贯穿每个。结束页保留字标。」]
+>
+> 我可以叠加的品牌强调：[列出 1-3 个可能值得占有一席之地的捕获资源：开场/结尾的 SVG Logo、作为深度层的一幅英雄插画、作为环境背景洗色的一张渐变图片。注意这些是候选，不是分配——大多数节拍不需要任何。]」
+
+**重要：** 每个方向先以**节拍传达什么**开头，然后是**如何构建它**（哪些原语）。狭义的禁止：如果你的第一反应是「产品 UI 截图飞入」，翻转它——用 div 和 CSS 组合 UI 代替。这就是此技能存在的目的是打破的幻灯片模式。对于捕获的 Logo、插画和英雄艺术，无需翻转——当概念需要时，它们是有效的主要视觉元素。
+
+捕获的资源是品牌工具箱，你在故事板后期才会用到，它们在那里服务概念——从不作为概念本身的起点。
+
+展示选项：
+
+- **我有具体的想法**——让我描述它们
+- **给我惊喜**——你来做创意决定，我审核故事板
+- **让我先看一些选项**——提出 2–3 个不同的创意方向，我来选
+
+### 问题 4：旁白？
+
+不是每个视频都需要配音。询问：
+
+- **是的，有旁白**——声音引导观众浏览视频（大多数产品演示、发布预告、功能公告）
+- **不要旁白，仅视觉**——仅音乐/SFX，视觉讲述故事（品牌短片、社交广告、音乐驱动作品）
+- **最少旁白**——仅一个钩子句或标语，其余为视觉（短的社交广告、预告）
+
+这个决定改变了流程：
+
+- **有旁白：** 步骤 3 包含完整脚本。步骤 4 生成 TTS、转录、将时间戳映射到节拍。
+- **没有旁白：** 步骤 3 没有脚本（故事板中的 VO 提示为空）。步骤 4 跳过——节拍时长根据节奏和速度在故事板中手动规划。
+
+### 问题 5（如果适用）：格式？
+
+仅当用户尚未指定时询问：
+
+- **横屏**（1920×1080）——YouTube、LinkedIn、网站嵌入（默认）
+- **竖屏**（1080×1920）——Instagram Stories、TikTok、YouTube Shorts
+- **方形**（1080×1080）——Instagram 信息流、Twitter/X
 
 ---
 
-## Gate
+## 如何处理回复
 
-Lock all of these before moving to Step 3. The first three are the strategic frame Step 3 builds the storyboard from — without them, the storyboard cannot land.
+### 「给我惊喜」/ 最少方向
 
-1. **Message** — the ONE thing this video must communicate, in a single sentence. (Required. Step 3 fails without this.)
-2. **Narrative arc** — Problem→Solution / Reveal / Demonstration / Vibe / Comparison / custom. (Required.)
-3. **Audience** — who's watching, where they're watching. (Required.)
-4. **Video type** — social ad / product demo / launch teaser / brand reel / feature announcement / etc. Infer from prompt.
-5. **Duration** — infer from type if not stated (demo: 30-45s, social: 15-20s, teaser: 15-25s).
-6. **Style direction** — pace / mood / specifics — from the user's words, layered onto the brand baseline from Step 1.
-7. **Specific requests** — any scenes/effects/beats they explicitly asked for.
-8. **Narration** — yes / no / minimal.
-9. **Format** — landscape unless specified otherwise.
+当用户没有给出创意方向时，默认使用品牌视觉标识和视频目的所建议的内容。在默认之前所需的最少上下文：**视频去哪里**（社交信息流 / 着陆页 / 演示文稿 / 电视广告）和**给谁看**（开发者 / 消费者 / 企业 / 大众）。如果两者中任何一个缺失，问一次——「这将在哪里播放，受众是谁？」——然后继续。
 
-**Do not ask the user to confirm what they already said.** If the prompt was "make a product demo for huly.io, show the kanban board, dark cinematic feel, full narration" — you already have type (demo), style (dark cinematic), specific requests (kanban board), and narration (full). Still need to derive or ask: the **message** ("the everything app for teams that hate context switches"), the **arc** (Demonstration), and the **audience** (small teams / fast-moving orgs). Proceed to Step 3 only when all 9 are locked.
+有了这个最少的上下文，仍然编写一个雄心勃勃的故事板。「给我惊喜」意味着「让我印象深刻」，不是「保守行事。」
+
+**自主模式传播——仅限用户偏好关卡。** 当用户在步骤 2 中表示「给我惊喜」/「替我做决定」/「直接构建」时，这个信号会消除下游用户偏好 💬 关卡：步骤 3 的故事板批准、步骤 4 的 TTS 提供商选择、音乐是/否、字幕是/否。自己做这些创意决定，并在最后展示完成的视频。不要跨越四个步骤问四个独立的问题。一次性读懂情况并做出承诺。
+
+**自动模式不会跳过质量验证关卡。** 这些无论任何都会运行，并且必须在你的最终总结中产生证据：
+
+- 资源审计（步骤 3）——查看联系表，为每个资源证明使用/跳过
+- 逐节拍 HTML 证据块（步骤 5）
+- DoD 清单（步骤 6）——动画映射、逐警告 WCAG 验证、音频 + 动效播放（或显式的「推迟」披露）
+- 「我未验证的内容」披露（步骤 6）
+
+**「偏好 vs 质量关卡」测试：** 如果答案改变了视频的_内容_（哪个语音？字幕开？节拍 3 是电影感还是快速？），这是偏好——自动模式做决定。如果答案是「验证发生了吗？」，这是质量关卡——自动模式不适用。推理「自动模式偏向行动，所以我跳过联系表」是对自动模式的误用。
+
+### 具体方向
+
+如果他们说了模糊的话（「让它真的很酷」），温和地追问：
+
+> 「我想确保我准确理解你的想象。当你说『酷』时——你是指：戏剧/电影感（缓慢揭示和暗色氛围）？还是高能量（快速切换和大胆动效）？还是完全不同的其他东西？」
+
+### 混合方向
+
+分别解析每个组件。「极简但带有电影感过渡和快速的功能部分」变成：
+
+- **基础风格：** 极简（中等节奏、最小密度、优雅动效）
+- **过渡覆盖：** 戏剧性（关键时刻的着色器效果）
+- **节拍 3–5 覆盖：** 快速节奏、平衡密度、充满活力的动效
+
+在故事板中注明这些逐节拍覆盖。
+
+### 「让我看看选项」
+
+提出 2–3 个简短的创意方向（每个 3–4 句话），带有不同的**叙事弧**——视频讲述的故事，而不是展示什么资源。每个选项以信息和弧开头；视觉是服务它们的组合场景。
+
+> **选项 A — 问题 → 解决方案（电影感，有旁白）：** 开场将问题表达为动态排版，在暗色画布上带一个强调色光晕。切换到组合的看板面板，混乱的卡片动画化为有序的列，同时旁白传达价值主张。结尾：品牌标志在品牌渐变的着色器绽放上逐笔绘制。Apple 主题演讲级别。~25s，全配音。
+>
+> **选项 B — 揭示弧（公告，音乐主导）：** 冷开场：粒子在黑暗中汇聚，没有文案。产品字标在第一个节拍落地时自绘。三个组合功能面板，每个以硬切揭示——动态排版标签、品牌色彩洗色、无截图。以标志 + 标语 + macOS 提示结束。~15s，音乐驱动，最少旁白。
+>
+> **选项 C — 演示（有旁白导览）：** 三个组合 UI 场景——看板（卡片即 div）、AI 聊天（打字机旁白同步）、命令面板（字符打字的搜索）——每个在品牌调色板中，捕获的 Logo 印在左上角作为标识。CSS 交叉淡入淡出之间。旁白贯穿每个。~35s，全配音。
+
+每个选项说明：弧、承载它的主要视觉（组合或捕获——哪个适合节拍）、以及叠加在顶部的任何品牌强调。**永远不要**一个选项的主要内容是粘贴的产品 UI 截图——如果你发现自己写了一个，翻转它：命名被组合的内容。当概念需要时，捕获的 SVG、插画、英雄艺术和品牌摄影作为主要视觉是完全可以的。
+
+让用户选择一个或组合元素。
+
+---
+
+## 关卡
+
+在进入步骤 3 之前锁定所有这些。前三个是步骤 3 构建故事板的战略框架——没有它们，故事板无法落地。
+
+1. **信息**——这个视频必须传达的一件事，用一句话表达。（必需。步骤 3 没有这个会失败。）
+2. **叙事弧**——问题→解决方案 / 揭示 / 演示 / 氛围 / 对比 / 自定义。（必需。）
+3. **受众**——谁在看，在哪里看。（必需。）
+4. **视频类型**——社交广告 / 产品演示 / 发布预告 / 品牌短片 / 功能公告 / 等。从提示推断。
+5. **时长**——如果未说明，从类型推断（演示：30-45s、社交：15-20s、预告：15-25s）。
+6. **风格方向**——节奏 / 情绪 / 细节——来自用户的措辞，叠加到步骤 1 的品牌基准线上。
+7. **特定请求**——他们明确要求的任何场景/效果/节拍。
+8. **旁白**——是 / 否 / 最少。
+9. **格式**——除非另有指定，否则为横屏。
+
+**不要要求用户确认他们已经说过的话。** 如果提示是「为 huly.io 制作产品演示，展示看板面板，暗色电影感，全旁白」——你已经有类型（演示）、风格（暗色电影感）、特定请求（看板面板）和旁白（全）。仍然需要推导或询问：**信息**（「讨厌上下文切换团队的万能应用」）、**弧**（演示）和**受众**（小团队 / 快节奏组织）。只有当所有 9 项都锁定后才进入步骤 3。

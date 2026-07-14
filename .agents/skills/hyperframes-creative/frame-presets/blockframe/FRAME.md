@@ -2,11 +2,11 @@
 version: alpha
 name: BlockFrame — Frame (video / frame layer)
 description: >
-  Video-first companion to BlockFrame's design.md. The unit is the frame (1920×1080). Atoms are
-  identical and sacred — 4px black borders + 8px hard offset shadows, the five-pastel candy palette
-  (pink/blue/green/yellow/cream) plus black/white/off-white, Inter 800–900 uppercase display +
-  Space Grotesk label chrome, square corners, label-pills, tilted decorations, star bursts, stripe
-  blocks, dot grids. Composition + frame scale rewritten. Motion out of scope.
+  BlockFrame 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣 — 4px 黑色边框 + 8px 硬偏移阴影、五粉彩糖果调色板
+  (粉/蓝/绿/黄/奶油) 加黑/白/米白、Inter 800-900 大写展示 +
+  Space Grotesk 标签铬色、方角、标签药丸、倾斜装饰、星爆、条纹
+  块、点网格。构图 + 帧比例已重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -99,30 +99,22 @@ components:
     description: "Inverted closer — the only colored shadow."
 ---
 
-# BlockFrame — Frame (video / frame layer)
+# BlockFrame — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-BlockFrame at frame scale is a **maximalist neobrutalist** system on five laws: every region has a
-4px black border, every elevated element an 8px hard offset shadow, every corner square, every
-accent a saturated pastel, and every layout allowed to be a little crooked. The joy is the
-deliberate collision — bordered cards meeting bordered cards, shadows stacking, tilted decorations
-puncturing the grid.
+帧尺度下的 BlockFrame 是一个基于五条法则的**极繁新粗野主义**系统：每个区域有 4px 黑色边框、每个抬升元素有 8px 硬偏移阴影、每个角都是方角、每个强调色都是饱和粉彩、每个布局允许稍微歪斜。乐趣在于故意的碰撞——带边框的卡片相互碰撞、阴影堆叠、倾斜装饰刺穿网格。
 
-The voice is **Inter** at weight 800–900 in tight uppercase with negative tracking (display) +
-weight 500 sentence body, and **Space Grotesk** weight 600 uppercase 0.08em as the label/chrome
-voice. Five candy pastels (pink/blue/green/yellow/cream) cycle as full-bleed grounds across frames
-— the color cycling is the primary rhythm. Depth is **hard offset shadow** (8px/4px, solid black,
-zero blur, bottom-right); the close-frame's 12px yellow shadow is the one colored exception.
+声音是 **Inter** 字重 800-900 紧大写带负字距（展示）+ 字重 500 句子正文，以及 **Space Grotesk** 字重 600 大写 0.08em 作为标签/铬色声音。五种糖果粉彩（粉/蓝/绿/黄/奶油）作为全出血底色在帧间循环——颜色循环是主要节奏。深度是**硬偏移阴影**（8px/4px，纯黑，零模糊，右下）；结束帧的 12px 黄色阴影是唯一的彩色例外。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **4px black borders + 8px hard shadows** on primary cards; 3px + 4px on chrome (weights coupled).
-- **Five-pastel palette** cycled as full-bleed grounds; black/white/off-white structural.
-- **Inter 800–900 uppercase** negative-tracked display; **Space Grotesk** label chrome.
-- **Square corners** everywhere (only the stat-deco dot is round); **tilted decorations** puncture the grid.
-- **Label-pills** open every region; star bursts, stripe blocks, dot grids are reusable attention units.
-- **Comfortably dense** — packed reads as authoritative; empty corners read as broken.
+- **4px 黑色边框 + 8px 硬阴影**在主要卡片上；铬色上 3px + 4px（字重耦合）。
+- **五粉彩调色板**循环作为全出血底色；黑/白/米白结构性。
+- **Inter 800-900 大写**负字距展示；**Space Grotesk** 标签铬色。
+- **方角**无处不在（只有 stat-deco 点是圆的）；**倾斜装饰**刺穿网格。
+- **标签药丸**开放每个区域；星爆、条纹块、点网格是可复用的注意力单元。
+- **舒适密集**——紧凑读起来权威；空角落读起来破碎。
 
 ## The Frame
 

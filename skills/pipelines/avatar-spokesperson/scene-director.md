@@ -1,82 +1,82 @@
-# Scene Director - Avatar Spokesperson Pipeline
+# 场景总监 - 虚拟形象发言人管线
 
-## When To Use
+## 使用时机
 
-Plan the visual system for the presenter-led cut. This stage decides how the speaker sits in frame, what support layers appear, and which aspect ratios are actually worth building.
+规划以主持人为中心的视觉系统。此阶段决定主讲人在画面中的位置、哪些辅助层需要出现，以及哪些宽高比值得实际构建。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/avatar-spokesperson-best-practices.md`
 - `skills/creative/typography.md`
 
-## Process
+## 流程
 
-### 1. Lock The Presenter Layout
+### 1. 锁定主持人布局
 
-Choose a primary layout:
+选择一个主要布局：
 
-- full presenter center frame,
-- presenter plus side panel,
-- presenter plus lower-third system,
-- presenter over branded background.
+- 主持人全屏居中，
+- 主持人加侧边面板，
+- 主持人加下方三分之一系统，
+- 主持人置于品牌背景之上。
 
-Keep the hero layout simple and reusable.
+保持主角布局简单且可复用。
 
-### 2. Choose Background Discipline
+### 2. 选择背景规范
 
-Use one family:
+使用同一系列：
 
-- clean solid or gradient background,
-- branded office or set,
-- product UI or image plate,
-- transparent-avatar composite plan.
+- 干净纯色或渐变背景，
+- 品牌办公场景或布景，
+- 产品 UI 或图片底板，
+- 透明虚拟形象合成方案。
 
-Background changes should mark real section changes, not compensate for weak copy.
+背景切换应标志真正的章节变化，而不是为薄弱的文案凑数。
 
-### 3. Map Support Layers
+### 3. 规划辅助层
 
-For each scene, decide whether the support layer is:
+为每个场景决定辅助层是什么：
 
-- none,
-- subtitle only,
-- lower third,
-- product image,
-- side-panel proof point,
-- CTA card.
+- 无，
+- 仅字幕，
+- 下方三分之一，
+- 产品图片，
+- 侧边栏证明点，
+- CTA 卡片。
 
-### 4. Plan Variants Late
+### 4. 推迟规划变体
 
-Default to one hero cut first. Only plan vertical or square variants if the presenter layout and text system can survive the crop.
+默认为一个主角版本。只有当主持人布局和文字系统能够承受裁切时，才规划竖屏或方形变体。
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the presenter remains primary,
-- support layers solve specific communication needs,
-- the background system is consistent,
-- variant ambition stays realistic.
+- 主持人保持主要地位，
+- 辅助层解决特定的沟通需求，
+- 背景系统保持一致，
+- 变体野心保持现实。
 
-## Narration-Over-Graphics Fallback
+## 旁白加图形降级方案
 
-When the EP triggers a no-avatar pivot (no `talking_head` or `lip_sync` available), redesign the visual system to carry the story with graphics and voice-over instead of a presenter:
+当 EP 触发无虚拟形象转向（没有 `talking_head` 或 `lip_sync` 可用），重新设计视觉系统，用图形和画外音而非主持人来承载故事：
 
-### Layout changes:
-- **Primary frame**: full-screen visual (background, image, diagram, or motion graphic) with voice-over narration underneath.
-- **Support layers**: key-point text cards, lower-third stats, illustrated diagrams, product screenshots.
-- **CTA scene**: dedicated end card with clear CTA text, no presenter needed.
+### 布局变化：
+- **主画面**：全屏视觉（背景、图片、图表或动态图形），下方配画外音旁白。
+- **辅助层**：关键点文字卡片、下方三分之一统计数据、插图图表、产品截图。
+- **CTA 场景**：专用结束卡片，配有清晰的 CTA 文字，无需主持人。
 
-### What stays the same:
-- The script and scene breaks are unchanged — the narration drives pacing.
-- Subtitle planning is unchanged.
-- Background discipline still applies (consistent family, not random).
+### 保持不变的内容：
+- 脚本和场景划分不变 — 旁白驱动节奏。
+- 字幕规划不变。
+- 背景规范仍然适用（一致的系列，而非随机）。
 
-### What changes:
-- No presenter framing decisions (center, left-third, etc.) — replaced with full-frame visual compositions.
-- Each scene needs a **primary visual** that reinforces the spoken content, since there's no face to anchor attention.
-- Plan more visual variety per scene — without a presenter, static backgrounds feel empty.
+### 变化的内容：
+- 没有主持人构图决策（居中、左侧三分之一等）— 替换为全幅视觉构图。
+- 每个场景需要一个**主要视觉元素**来强化口语内容，因为没有面部来锚定注意力。
+- 计划每个场景更多的视觉变化 — 没有主持人的情况下，静态背景会显得空旷。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Switching backgrounds every few seconds.
-- Filling empty space with decorative panels.
-- Assuming a landscape presenter layout will survive a vertical crop untouched.
-- (Fallback mode) Producing a wall of text on screen to compensate for no presenter — let the narration carry the content.
+- 每隔几秒切换背景。
+- 用装饰面板填充空白空间。
+- 假设横屏主持人布局在竖屏裁切后能完好无损。
+-（降级模式）用满屏文字来弥补没有主持人 — 让旁白承载内容。

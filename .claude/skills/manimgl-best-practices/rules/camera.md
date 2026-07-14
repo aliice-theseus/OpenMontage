@@ -1,38 +1,38 @@
-# Camera and Frame in ManimGL
+# ManimGL 中的相机和框架
 
-ManimGL's camera system is centered around the `CameraFrame`, accessible via `self.camera.frame`. This provides powerful control over both 2D and 3D perspectives.
+ManimGL 的相机系统以 `CameraFrame` 为核心，可通过 `self.camera.frame` 访问。这提供了对 2D 和 3D 视角的强大控制。
 
-## Accessing the Camera Frame
+## 访问相机框架
 
 ```python
 from manimlib import *
 
 class CameraExample(Scene):
     def construct(self):
-        # Get the camera frame
+        # 获取相机框架
         frame = self.camera.frame
 
-        # frame is a Mobject, so it has all Mobject methods
-        # move_to, shift, scale, rotate, etc.
+        # frame 是一个 Mobject，因此拥有所有 Mobject 方法
+        # move_to, shift, scale, rotate 等
 ```
 
-## 2D Camera Movement
+## 2D 相机移动
 
-### Basic Movement
+### 基本移动
 
 ```python
-# Shift the camera
+# 平移相机
 self.play(frame.animate.shift(RIGHT * 2))
 
-# Move to a specific position
+# 移动到特定位置
 self.play(frame.animate.move_to([3, 2, 0]))
 
-# Scale (zoom)
-self.play(frame.animate.scale(0.5))  # Zoom in
-self.play(frame.animate.scale(2))    # Zoom out
+# 缩放（变焦）
+self.play(frame.animate.scale(0.5))  # 放大
+self.play(frame.animate.scale(2))    # 缩小
 ```
 
-### Following Objects
+### 跟随对象
 
 ```python
 class FollowObject(Scene):
@@ -40,88 +40,88 @@ class FollowObject(Scene):
         frame = self.camera.frame
         dot = Dot(color=RED)
 
-        # Camera follows dot
+        # 相机跟随点
         frame.add_updater(lambda m: m.move_to(dot))
 
-        # Move dot around
+        # 移动点
         self.add(dot)
         self.play(dot.animate.shift(RIGHT * 5), run_time=3)
         self.play(dot.animate.shift(UP * 3), run_time=2)
         self.wait()
 ```
 
-### Frame Dimensions
+### 框架尺寸
 
 ```python
-# Set frame width/height
+# 设置框架宽度/高度
 frame.set_width(10)
 frame.set_height(6)
 
-# Animate frame size
+# 动画化框架尺寸
 self.play(frame.animate.set_width(20), run_time=2)
 ```
 
-## 3D Camera Orientation
+## 3D 相机方向
 
-### reorient() Method
+### reorient() 方法
 
-The `reorient()` method is the primary way to set 3D camera orientation in ManimGL.
+`reorient()` 方法是在 ManimGL 中设置 3D 相机方向的主要方式。
 
 ```python
-# Signature:
+# 签名：
 # frame.reorient(theta, phi, gamma=0, center=ORIGIN, height=8)
 
-# Parameters:
-# - theta: Rotation around z-axis (azimuthal angle) in degrees
-# - phi: Angle from z-axis (polar angle) in degrees
-# - gamma: Roll angle in degrees (optional)
-# - center: Point the camera looks at (optional)
-# - height: Frame height (optional)
+# 参数：
+# - theta: 绕 z 轴旋转（方位角），角度制
+# - phi: 与 z 轴的夹角（极角），角度制
+# - gamma: 翻滚角，角度制（可选）
+# - center: 相机观察的点（可选）
+# - height: 框架高度（可选）
 
-# Common views:
-frame.reorient(0, 0)        # Front view (XY plane)
-frame.reorient(20, 70)      # Isometric-like view
-frame.reorient(0, 90)       # Top-down view (XY plane from above)
-frame.reorient(90, 90)      # Side view (YZ plane)
-frame.reorient(45, 45)      # Diagonal view
+# 常见视角：
+frame.reorient(0, 0)        # 前视图（XY 平面）
+frame.reorient(20, 70)      # 类等轴视图
+frame.reorient(0, 90)       # 俯视图（从上方看 XY 平面）
+frame.reorient(90, 90)      # 侧视图（YZ 平面）
+frame.reorient(45, 45)      # 对角视图
 ```
 
-### Euler Angles
+### 欧拉角
 
 ```python
-# Set angles individually
+# 单独设置角度
 frame.set_theta(30 * DEGREES)
 frame.set_phi(70 * DEGREES)
 frame.set_gamma(0 * DEGREES)
 
-# Set all at once
+# 全部同时设置
 frame.set_euler_angles(
     theta=30 * DEGREES,
     phi=70 * DEGREES,
     gamma=0 * DEGREES
 )
 
-# Get current angles
+# 获取当前角度
 theta = frame.get_theta()
 phi = frame.get_phi()
 gamma = frame.get_gamma()
 ```
 
-### Incremental Rotation
+### 增量旋转
 
 ```python
-# Increment angles (useful for animations)
+# 增加角度（用于动画）
 frame.increment_theta(10 * DEGREES)
 frame.increment_phi(5 * DEGREES)
 frame.increment_gamma(2 * DEGREES)
 
-# Animated increments
+# 动画化增量
 self.play(frame.animate.increment_theta(90 * DEGREES))
 ```
 
-## Animating Camera
+## 动画化相机
 
-### Simple Camera Animations
+### 简单的相机动画
 
 ```python
 class AnimateCamera(Scene):
@@ -131,16 +131,16 @@ class AnimateCamera(Scene):
         cube = Cube()
         self.add(cube)
 
-        # Reorient to isometric view
+        # 重新定向到等轴视图
         self.play(frame.animate.reorient(20, 70), run_time=2)
         self.wait()
 
-        # Rotate around object
+        # 围绕对象旋转
         self.play(frame.animate.increment_theta(360 * DEGREES), run_time=8)
         self.wait()
 ```
 
-### Continuous Camera Motion
+### 连续相机运动
 
 ```python
 class ContinuousRotation(Scene):
@@ -151,18 +151,18 @@ class ContinuousRotation(Scene):
         sphere = Sphere(radius=2, color=BLUE)
         self.add(sphere)
 
-        # Add continuous rotation updater
+        # 添加连续旋转更新器
         frame.add_updater(lambda m, dt: m.increment_theta(20 * dt))
 
-        # Let it rotate for 10 seconds
+        # 让它旋转 10 秒
         self.wait(10)
 
-        # Stop rotation
+        # 停止旋转
         frame.clear_updaters()
         self.wait()
 ```
 
-### Camera Zoom In/Out
+### 相机放大/缩小
 
 ```python
 class ZoomEffect(Scene):
@@ -173,11 +173,11 @@ class ZoomEffect(Scene):
         objects.arrange(RIGHT, buff=1)
         self.add(objects)
 
-        # Zoom out to see all objects
+        # 缩小以看到所有对象
         self.play(frame.animate.set_width(20), run_time=2)
         self.wait()
 
-        # Zoom in on first object
+        # 放大到第一个对象
         self.play(
             frame.animate.set_width(2).move_to(objects[0]),
             run_time=2
@@ -185,11 +185,11 @@ class ZoomEffect(Scene):
         self.wait()
 ```
 
-## Fixing Mobjects in Frame
+## 在框架中固定 Mobject
 
-### fix_in_frame() Method
+### fix_in_frame() 方法
 
-Keep 2D elements fixed in screen space while the camera moves.
+在相机移动时保持 2D 元素固定在屏幕空间。
 
 ```python
 class FixedInFrame(Scene):
@@ -197,22 +197,22 @@ class FixedInFrame(Scene):
         frame = self.camera.frame
         frame.reorient(20, 70)
 
-        # 3D object that moves with camera
+        # 3D 对象随相机移动
         cube = Cube(color=BLUE)
         self.add(cube)
 
-        # 2D label that stays fixed
+        # 2D 标签保持固定
         title = Text("Rotating Cube", font_size=60)
         title.to_edge(UP)
-        title.fix_in_frame()  # Fixes it to screen space
+        title.fix_in_frame()  # 固定到屏幕空间
         self.add(title)
 
-        # Rotate camera - cube rotates, title stays fixed
+        # 旋转相机 - 立方体旋转，标题保持固定
         self.play(frame.animate.reorient(60, 80), run_time=3)
         self.wait()
 ```
 
-### Multiple Fixed Elements
+### 多个固定元素
 
 ```python
 class MultipleFixed(Scene):
@@ -220,11 +220,11 @@ class MultipleFixed(Scene):
         frame = self.camera.frame
         frame.reorient(30, 70)
 
-        # 3D content
+        # 3D 内容
         surface = Sphere(radius=2, color=BLUE, opacity=0.7)
         self.add(surface)
 
-        # Fixed UI elements
+        # 固定的 UI 元素
         title = Text("3D Visualization", font_size=48)
         title.to_edge(UP)
         title.fix_in_frame()
@@ -239,36 +239,36 @@ class MultipleFixed(Scene):
 
         self.add(title, subtitle, controls)
 
-        # Rotate camera
+        # 旋转相机
         self.play(frame.animate.increment_theta(180 * DEGREES), run_time=6)
 ```
 
-## Reset Camera
+## 重置相机
 
 ```python
-# Reset to default state
+# 重置为默认状态
 frame.to_default_state()
 
-# Animate reset
+# 动画化重置
 self.play(frame.animate.to_default_state())
 ```
 
-## Camera Center
+## 相机中心
 
 ```python
-# Set what the camera looks at
+# 设置相机注视点
 frame.set_center([2, 3, 0])
 
-# Animate center change
+# 动画化中心变化
 self.play(frame.animate.set_center([0, 0, 2]))
 
-# Get current center
+# 获取当前中心
 center = frame.get_center()
 ```
 
-## Advanced Camera Patterns
+## 高级相机模式
 
-### Orbit Camera Around Object
+### 轨道相机围绕对象
 
 ```python
 class OrbitCamera(Scene):
@@ -276,11 +276,11 @@ class OrbitCamera(Scene):
         frame = self.camera.frame
         frame.reorient(30, 70)
 
-        # Central object
+        # 中心对象
         torus = Torus(r1=2, r2=0.5, color=YELLOW)
         self.add(torus)
 
-        # Orbit 360 degrees
+        # 轨道 360 度
         self.play(
             frame.animate.increment_theta(360 * DEGREES),
             run_time=10,
@@ -288,25 +288,25 @@ class OrbitCamera(Scene):
         )
 ```
 
-### Camera Following Path
+### 相机沿路径移动
 
 ```python
 class CameraPath(Scene):
     def construct(self):
         frame = self.camera.frame
 
-        # Create path
+        # 创建路径
         path = Circle(radius=5)
         self.add(path)
 
-        # Dot to follow
+        # 要跟随的点
         dot = Dot(color=RED)
         dot.move_to(path.point_from_proportion(0))
 
-        # Camera follows dot
+        # 相机跟随点
         frame.add_updater(lambda m: m.move_to(dot))
 
-        # Move dot along path
+        # 沿路径移动点
         self.play(
             MoveAlongPath(dot, path),
             run_time=8,
@@ -314,14 +314,14 @@ class CameraPath(Scene):
         )
 ```
 
-### Multiple Camera Positions
+### 多个相机位置
 
 ```python
 class CameraTour(Scene):
     def construct(self):
         frame = self.camera.frame
 
-        # Create scene
+        # 创建场景
         objects = VGroup(
             Square(side_length=2, color=RED).shift(LEFT * 3),
             Circle(radius=1, color=BLUE),
@@ -329,7 +329,7 @@ class CameraTour(Scene):
         )
         self.add(objects)
 
-        # Tour each object
+        # 浏览每个对象
         for obj in objects:
             self.play(
                 frame.animate.set_width(3).move_to(obj),
@@ -337,24 +337,24 @@ class CameraTour(Scene):
             )
             self.wait()
 
-        # Return to overview
+        # 返回全景
         self.play(
             frame.animate.set_width(14).move_to(ORIGIN),
             run_time=2
         )
 ```
 
-### Dynamic Camera with Updater
+### 带更新器的动态相机
 
 ```python
 class DynamicCamera(Scene):
     def construct(self):
         frame = self.camera.frame
 
-        # Moving object
+        # 移动的对象
         dot = Dot(color=RED)
 
-        # Camera tracks and zooms based on distance from origin
+        # 相机追踪并根据距离原点距离缩放
         def update_frame(frame):
             frame.move_to(dot)
             dist = np.linalg.norm(dot.get_center())
@@ -362,16 +362,16 @@ class DynamicCamera(Scene):
 
         frame.add_updater(update_frame)
 
-        # Move dot around
+        # 移动点
         self.add(dot)
         self.play(dot.animate.shift(RIGHT * 5 + UP * 3), run_time=4)
         self.play(dot.animate.shift(LEFT * 8 + DOWN * 2), run_time=4)
         self.wait()
 ```
 
-## Light Source
+## 光源
 
-### Accessing and Moving Light
+### 访问和移动光源
 
 ```python
 class LightControl(Scene):
@@ -379,39 +379,39 @@ class LightControl(Scene):
         frame = self.camera.frame
         frame.reorient(20, 70)
 
-        # Get light source
+        # 获取光源
         light = self.camera.light_source
 
-        # Create 3D object
+        # 创建 3D 对象
         sphere = Sphere(radius=2, color=BLUE)
         sphere.set_gloss(0.8)
         self.add(sphere)
 
-        # Show light position (for debugging)
+        # 显示光源位置（用于调试）
         light_indicator = Dot(color=YELLOW)
         light_indicator.add_updater(lambda m: m.move_to(light.get_center()))
         self.add(light_indicator)
 
-        # Move light around
+        # 移动光源
         self.play(light.animate.move_to([5, 5, 5]), run_time=2)
         self.wait()
         self.play(light.animate.move_to([-5, -5, 5]), run_time=2)
         self.wait()
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Store frame reference**: `frame = self.camera.frame` at the start
-2. **Use reorient() for 3D**: Cleaner than setting angles individually
-3. **fix_in_frame() for UI**: Keep labels and titles readable
-4. **Smooth transitions**: Use appropriate run_time for camera movements
-5. **rate_func=linear**: For continuous rotations
-6. **to_default_state()**: Reset camera when needed
-7. **Updaters for following**: Use updaters to track moving objects
+1. **存储框架引用**：开始时使用 `frame = self.camera.frame`
+2. **3D 中使用 reorient()**：比单独设置角度更简洁
+3. **UI 使用 fix_in_frame()**：保持标签和标题可读
+4. **平滑过渡**：相机移动使用适当的 run_time
+5. **rate_func=linear**：用于连续旋转
+6. **to_default_state()**：需要时重置相机
+7. **使用更新器进行跟随**：使用 updater 追踪移动对象
 
-## Common Patterns
+## 常见模式
 
-### Zoom and pan
+### 缩放和平移
 
 ```python
 def zoom_to(self, mobject, scale_factor=1.5):
@@ -424,7 +424,7 @@ def zoom_to(self, mobject, scale_factor=1.5):
     )
 ```
 
-### 360-degree showcase
+### 360 度展示
 
 ```python
 def showcase_3d(self, mobject):
@@ -437,10 +437,10 @@ def showcase_3d(self, mobject):
     )
 ```
 
-### Picture-in-picture effect
+### 画中画效果
 
 ```python
-# Small inset camera view
+# 小窗口相机视图
 small_frame = self.camera.frame.copy()
 small_frame.set_width(4)
 small_frame.to_corner(UR, buff=0.5)

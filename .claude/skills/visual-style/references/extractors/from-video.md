@@ -1,30 +1,30 @@
-# Extract from Video
+# 从视频提取
 
-Generate a `visual-style.md` from video keyframes.
+从视频关键帧生成 `visual-style.md`。
 
-## Workflow
+## 工作流程
 
-1. **Receive video** — User provides a video URL or file
-2. **Sample keyframes** — Capture 4-6 screenshots at different points
-3. **Analyze frames** — Identify consistent visual patterns across all frames
-4. **Focus on motion** — Pay special attention to transitions and animation
-5. **Generate** — Output complete `visual-style.md`
-6. **Validate** — Ensure all required fields are present
+1. **接收视频** — 用户提供视频 URL 或文件
+2. **采样关键帧** — 在不同时间点捕获 4-6 张截图
+3. **分析帧** — 识别所有帧间一致的视觉模式
+4. **关注动效** — 特别注意过渡和动画
+5. **生成** — 输出完整的 `visual-style.md`
+6. **验证** — 确保所有必填字段齐全
 
-## Keyframe Sampling Strategy
+## 关键帧采样策略
 
-Sample frames at these intervals:
-- **0:00-0:02** — Opening/title frame
-- **0:05-0:10** — Early content frame
-- **0:15-0:20** — Middle content frame
-- **Near end** — Closing frame
-- **Transitions** — Capture mid-transition if possible
+按以下间隔采样帧：
+- **0:00-0:02** — 开场/标题帧
+- **0:05-0:10** — 早期内容帧
+- **0:15-0:20** — 中间内容帧
+- **接近结尾** — 结束帧
+- **过渡处** — 如可能，捕获过渡中间帧
 
-Look for **consistency** across frames — the style is what stays the same.
+寻找帧间的**一致性**——风格是保持不变的部分。
 
-## Extraction Prompt
+## 提取提示
 
-Use this prompt template when analyzing video frames:
+分析视频帧时使用此提示模板：
 
 ```
 Analyze these video keyframes and extract a visual-style.md.
@@ -63,45 +63,45 @@ Complete YAML frontmatter between --- delimiters
 Plus Markdown body sections
 ```
 
-## Analysis Checklist
+## 分析检查清单
 
-When extracting from video, look for:
+从视频提取时，注意查找：
 
-### Colors
-- [ ] Background colors (do they change between scenes?)
-- [ ] Primary text/graphic colors
-- [ ] Accent colors for emphasis
-- [ ] Color transitions (do colors shift?)
+### 颜色
+- [ ] 背景色（场景间是否变化？）
+- [ ] 主要文字/图形颜色
+- [ ] 用于强调的强调色
+- [ ] 颜色过渡（颜色是否变化？）
 
-### Typography
-- [ ] Title treatment (size, weight, animation)
-- [ ] Body text style (if present)
-- [ ] Caption/subtitle style
-- [ ] Text animation (fade, slide, type-on)
+### 排版
+- [ ] 标题处理（大小、字重、动画）
+- [ ] 正文样式（如有）
+- [ ] 说明文字/字幕样式
+- [ ] 文字动画（淡入、滑入、打字效果）
 
-### Motion (Critical)
-- [ ] Scene transitions (cut, wipe, dissolve, morph)
-- [ ] Element entrances (fade, slide, pop, scale)
-- [ ] Element exits (how do things leave?)
-- [ ] Easing style (linear, ease-out, bounce, snap)
-- [ ] Timing/rhythm (quick cuts, slow reveals)
-- [ ] Looping patterns (if any)
+### 动效（关键）
+- [ ] 场景过渡（剪切、擦除、溶解、变形）
+- [ ] 元素入场（淡入、滑入、弹出、缩放）
+- [ ] 元素退场（如何消失？）
+- [ ] 缓动风格（线性、ease-out、弹跳、吸附）
+- [ ] 时间/节奏（快切、慢揭示）
+- [ ] 循环模式（如有）
 
-### Layout
-- [ ] Composition style (centered, asymmetric, grid-locked)
-- [ ] Framing (full-bleed, contained, letterboxed)
-- [ ] Text placement (bottom third, centered, dynamic)
-- [ ] Aspect ratio (16:9, 9:16, 1:1)
+### 布局
+- [ ] 构图风格（居中、不对称、网格锁定）
+- [ ] 构图框架（满版、包含、信箱格式）
+- [ ] 文字位置（底部三分之一、居中、动态）
+- [ ] 宽高比（16:9、9:16、1:1）
 
-### Mood
-- [ ] Energy level (calm, energetic, intense)
-- [ ] Tone (serious, playful, dramatic)
-- [ ] Era/genre references
-- [ ] Sound-visual relationship (if audio present)
+### 氛围
+- [ ] 能量水平（平静、活力、激烈）
+- [ ] 语气（严肃、趣味、戏剧性）
+- [ ] 时代/类型参考
+- [ ] 声音-视觉关系（如有音频）
 
-## Example Output
+## 示例输出
 
-Given frames from a retro arcade-style video:
+给定复古街机风格视频的帧：
 
 ```yaml
 ---
@@ -231,10 +231,10 @@ Color palette based on original Pac-Man game (1980).
 Motion patterns reflect 8-bit hardware limitations as aesthetic choice.
 ```
 
-## Tips
+## 提示
 
-- **Focus on what's consistent** — Ignore unique content, find the system
-- **Motion is primary** — Video styles are defined by how things move
-- **Describe the rhythm** — Is it quick cuts or slow fades?
-- **Note the easing** — Does it snap, bounce, or glide?
-- **Reference the era** — Many video styles reference specific decades or genres
+- **关注一致的内容** — 忽略独特内容，找到系统
+- **动效优先** — 视频风格由事物如何移动决定
+- **描述节奏** — 是快切还是慢淡？
+- **注意缓动** — 是吸附、弹跳还是滑行？
+- **参考时代** — 许多视频风格引用特定年代或类型

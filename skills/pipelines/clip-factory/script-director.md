@@ -1,64 +1,64 @@
-# Script Director - Clip Factory Pipeline
+# 剧本导演 - Clip Factory 流水线
 
-## When To Use
+## 使用时机
 
-This stage converts the long-form source into a ranked candidate list and then into the final clip selections. You are mining for standout moments, not summarizing the entire source.
+此阶段将长视频源转换为排序后的候选列表，再最终确定剪辑选择。你的目标是挖掘亮点时刻，而非总结整个视频源。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["idea"]["brief"]` | Batch goals and platform targets |
-| Tools | `transcriber`, `scene_detect` | Transcript-first selection and visual checks |
+| Schema | `schemas/artifacts/script.schema.json` | 制品验证 |
+| 前置制品 | `state.artifacts["idea"]["brief"]` | 批次目标和平台目标 |
+| 工具 | `transcriber`, `scene_detect` | 基于转录的选择和视觉检查 |
 
-## Process
+## 流程
 
-### 1. Transcribe The Full Source
+### 1. 转录完整视频源
 
-Use `transcriber` first. The transcript is the search surface for hooks, not an afterthought.
+首先使用 `transcriber`。转录文本是寻找钩子的搜索面，而非事后补充。
 
-Use `scene_detect` only to sanity-check visual boundaries, speaker changes, or slide changes near promising moments.
+仅在亮点时刻附近使用 `scene_detect` 校验视觉边界、说话者变化或幻灯片切换。
 
-### 2. Score Candidate Moments
+### 2. 为候选时刻打分
 
-Use the brief's ranking criteria and evaluate each moment on:
+使用 brief 中的排序标准，对每个时刻进行评估：
 
-- `hook`
-- `coherence`
-- `value`
-- `energy`
-- `platform_fit`
+- `hook`（钩子）
+- `coherence`（连贯性）
+- `value`（价值）
+- `energy`（能量）
+- `platform_fit`（平台适配度）
 
-This mirrors the way modern clipping products talk about virality and clip quality, while keeping the judgment transparent.
+这反映了现代剪辑产品讨论病毒传播和剪辑质量的方式，同时保持判断透明。
 
-### 3. Apply The Standalone Test
+### 3. 应用独立测试
 
-Every approved clip must make sense to a cold viewer.
+每个通过的剪辑必须对全新观众而言也能理解。
 
-Reject or widen clips that contain:
+拒绝或扩大剪辑范围的情况包括：
 
-- unresolved pronouns,
-- references to earlier context,
-- long lead-ins before the point lands,
-- endings that stop before the payoff.
+- 未指代的代词，
+- 引用前文上下文，
+- 观点落地前过长的铺垫，
+- 在收尾前戛然而止的结尾。
 
-### 4. Select The Final Batch
+### 4. 选择最终批次
 
-Pick the smallest set that best satisfies the batch goal.
+选择最能满足批次目标的最小剪辑集。
 
-Maintain diversity across:
+保持多样性，涵盖：
 
-- source sections,
-- speakers,
-- clip families,
-- energy levels.
+- 视频源的各个段落，
+- 不同的说话者，
+- 不同的剪辑家族，
+- 不同的能量水平。
 
-### 5. Use Metadata For Ranking Truth
+### 5. 使用元数据进行排序
 
-The script schema is small, so store the richer batch analysis in `script.metadata`.
+Script schema 较小，因此将更丰富的批次分析存储在 `script.metadata` 中。
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `candidate_clips`
 - `selected_clip_ids`
@@ -67,35 +67,35 @@ Recommended metadata keys:
 - `source_coverage_map`
 - `platform_assignments`
 
-Each candidate should record:
+每个候选应记录：
 
-- source in/out,
-- hook text,
-- reason selected or rejected,
-- scoring dimensions,
-- likely crop viability.
+- 视频源入/出点，
+- 钩子文本，
+- 选择或拒绝的原因，
+- 评分维度，
+- 可能的裁剪可行性。
 
-### 6. Quality Gate
+### 6. 质量门禁
 
-- the top-ranked clips are genuinely the strongest, not just the earliest found,
-- every selected clip passes the standalone test,
-- the set covers the source deliberately instead of clustering in one section,
-- low-quality candidates are rejected honestly.
+- 排名靠前的剪辑是最优秀的，而不仅仅是最早找到的，
+- 每个选中的剪辑都通过独立测试，
+- 剪辑集有意识地覆盖整个视频源，而非集中在一个段落，
+- 低质量的候选被诚实拒绝。
 
-### Mid-Production Fact Verification
+### 制作中的事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在剧本编写中遇到不确定的情况：
+- 使用 `web_search` 验证事实性主张，然后再写入剧本
+- 使用 `web_search` 查找参考图像以确保视觉准确性
+- 在决策日志中记录验证：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+剧本中的每个事实性主张都应可追溯到 `research_brief`。
+如果你提出了研究中不存在的观点，请进行额外研究并添加来源。
+不要捏造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Trusting first-pass candidate timestamps without transcript-level review.
-- Selecting too many calm, same-energy clips.
-- Preserving chronological order instead of ranking by quality.
-- Treating transcript quality issues as minor when they affect selection accuracy.
+- 未经转录层级审查就轻信初轮候选的时间戳。
+- 选择了太多平静、同能量的剪辑。
+- 保留时间顺序而非按质量排序。
+- 将转录质量问题视为小问题，而它会影响选择准确性。

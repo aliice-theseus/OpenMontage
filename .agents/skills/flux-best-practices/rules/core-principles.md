@@ -1,138 +1,137 @@
 ---
 name: core-principles
-description: Universal prompting principles that apply to all FLUX models
+description: 适用于所有 FLUX 模型的通用提示词原则
 ---
 
-# Core FLUX Prompting Principles
+# FLUX 核心提示词原则
 
-These principles apply to all FLUX models and form the foundation of effective prompting.
+这些原则适用于所有 FLUX 模型，是有效提示词编写的基础。
 
-## 1. Positive Descriptions Only
+## 1. 仅使用正面描述
 
-FLUX does NOT support negative prompts. Always describe what you WANT, not what you don't want.
+FLUX 不支持负面提示词。始终描述你**想要**的内容，而不是你不想要的内容。
 
-### Wrong Approach
+### 错误方法
 ```
 a portrait of a woman, no glasses, no hat, no makeup
 ```
 
-### Correct Approach
+### 正确方法
 ```
 a portrait of a woman with natural skin, clear face, bare head, visible eyes
 ```
 
-See [negative-prompt-alternatives.md](negative-prompt-alternatives.md) for comprehensive replacement strategies.
+参见 [negative-prompt-alternatives.md](negative-prompt-alternatives.md) 了解全面的替换策略。
 
-## 2. Prompt Structure Formula
+## 2. 提示词结构公式
 
-Build prompts using this structure for consistent results:
-
-```
-[Subject] + [Action/Pose] + [Style/Medium] + [Context/Setting] + [Lighting] + [Technical Details]
-```
-
-### Example
+使用此结构构建提示词以获得一致的结果：
 
 ```
-A young woman with flowing auburn hair (subject)
-dancing gracefully in mid-leap (action)
-in the style of classical oil painting (style)
-in a moonlit garden with roses (context)
-soft diffused moonlight with subtle rim lighting (lighting)
-medium shot, shallow depth of field (technical)
+[主体] + [动作/姿态] + [风格/媒介] + [上下文/场景] + [光照] + [技术细节]
 ```
 
-## 3. Specificity Matters
+### 示例
 
-More specific prompts yield dramatically better results.
+```
+一个年轻女子，飘逸的赤褐色长发（主体）
+优雅地在半空中舞蹈（动作）
+古典油画风格（风格）
+在月光洒满玫瑰的花园里（上下文）
+柔和的漫射月光，带有微妙的轮廓光（光照）
+中景，浅景深（技术）
+```
 
-### Vague (Poor Results)
+## 3. 具体性很重要
+
+更具体的提示词能产生显著更好的结果。
+
+### 模糊（结果差）
 ```
 a cat sitting
 ```
 
-### Specific (Excellent Results)
+### 具体（结果优秀）
 ```
-A fluffy orange tabby cat with bright green eyes sitting regally on a vintage
-velvet armchair, afternoon sunlight streaming through lace curtains, warm
-golden hour lighting, shallow depth of field, shot on medium format film
+一只毛茸茸的橙色虎斑猫，明亮的绿眼睛，庄严地坐在一张复古天鹅绒扶手椅上，
+下午的阳光透过蕾丝窗帘洒进来，温暖的金色时光光照，
+浅景深，中画幅胶片拍摄
 ```
 
-## 4. Natural Language Works Best
+## 4. 自然语言效果最佳
 
-Write prompts as descriptive prose rather than keyword lists.
+将提示词写成描述性散文，而不是关键词列表。
 
-### Keyword Style (Less Effective)
+### 关键词风格（效果较差）
 ```
 woman, portrait, beautiful, blonde, studio, professional, 8k, detailed
 ```
 
-### Prose Style (More Effective)
+### 散文风格（效果更好）
 ```
-A professional studio portrait of a beautiful blonde woman in her thirties,
-captured with soft studio lighting that accentuates her features, rendered
-in stunning detail with natural skin texture and subtle catchlights in her eyes
-```
-
-## 5. Lighting is Critical
-
-Always specify lighting - it has the single greatest impact on image quality.
-
-### Natural Lighting
-- Golden hour - warm, soft, directional
-- Overcast - soft, diffused, even
-- Harsh midday - high contrast, strong shadows
-- Dappled forest light - specular, organic patterns
-
-### Studio Lighting
-- Softbox - even, professional
-- Rim light - edge definition, separation
-- Butterfly lighting - beauty, glamour
-- Rembrandt lighting - dramatic, classic portraits
-
-### Atmospheric Lighting
-- Volumetric fog - depth, mystery
-- God rays - dramatic, spiritual
-- Neon glow - urban, cyberpunk
-- Candlelight - warm, intimate
-
-### Mood-Based Lighting
-- Dramatic shadows - tension, noir
-- High key - bright, airy, clean
-- Low key - moody, mysterious
-- Chiaroscuro - strong contrast, painterly
-
-## 6. Word Order Matters
-
-FLUX prioritizes elements that appear earlier in the prompt. Front-load important elements.
-
-### Less Effective
-```
-A forest background with soft lighting where a knight in shining armor stands
+一位三十多岁美丽金发女性的专业工作室肖像照，
+柔和的影室灯光突出了她的五官，呈现惊人细节，
+自然的皮肤纹理和眼中微妙的眼神光
 ```
 
-### More Effective
+## 5. 光照至关重要
+
+始终指定光照 - 它对图像质量的影响最大。
+
+### 自然光照
+- 黄金时刻 - 温暖、柔和、定向
+- 阴天 - 柔和、漫射、均匀
+- 正午强光 - 高对比度、强阴影
+- 斑驳的森林光线 - 镜面反射、有机图案
+
+### 影室灯光
+- 柔光箱 - 均匀、专业
+- 轮廓光 - 边缘定义、分离
+- 蝴蝶光 - 美丽、魅力
+- 伦勃朗光 - 戏剧性、经典肖像
+
+### 氛围光照
+- 体积雾 - 深度、神秘
+- 上帝光 - 戏剧性、神圣
+- 霓虹光芒 - 都市、赛博朋克
+- 烛光 - 温暖、亲密
+
+### 基于情绪的光照
+- 戏剧性阴影 - 紧张、黑色电影
+- 高调 - 明亮、通透、干净
+- 低调 - 忧郁、神秘
+- 明暗对比 - 强对比、绘画感
+
+## 6. 词序很重要
+
+FLUX 会优先处理提示词中较早出现的元素。将重要元素前置。
+
+### 效果较差
 ```
-A knight in shining armor stands in a forest, soft dappled lighting filtering
-through the canopy
+在柔和光线的森林背景中，一个身穿闪亮盔甲的骑士站着
 ```
 
-## 7. Medium Prompt Length
+### 效果更好
+```
+一个身穿闪亮盔甲的骑士站在森林中，柔和的斑驳光线透过树冠洒落
+```
 
-Optimal prompt length is typically 30-80 words (FLUX can handle up to 512 tokens).
+## 7. 中等提示词长度
 
-- Too short: Lacks direction, generic results
-- Too long: Can become unfocused
-- Sweet spot: Enough detail to guide, not so much it confuses
+最佳提示词长度通常为 30-80 个词（FLUX 最多可处理 512 个 token）。
 
-## 8. Iterative Refinement
+- 太短：缺乏方向，结果泛化
+- 太长：可能变得不聚焦
+- 最佳点：足够的细节来引导，但又不会多到让人困惑
 
-Build prompts iteratively:
+## 8. 迭代优化
 
-1. Start with core subject and action
-2. Add style and medium
-3. Specify lighting and atmosphere
-4. Include technical details
-5. Refine based on results
+迭代地构建提示词：
 
-Change one element at a time to understand what affects your output.
+1. 从核心主体和动作开始
+2. 添加风格和媒介
+3. 指定光照和氛围
+4. 包含技术细节
+5. 根据结果进行优化
+
+一次更改一个元素，以了解什么会影响你的输出。

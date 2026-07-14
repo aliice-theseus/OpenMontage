@@ -1,53 +1,53 @@
-# Script Director - Cinematic Pipeline
+# 剧本导演 - 电影化流水线
 
-## When To Use
+## 适用场景
 
-This stage builds the beat map, selected lines, title-card copy, and reveal structure for the cinematic piece. You are shaping rhythm, not writing a dense explainer.
+此阶段构建节拍图、精选台词、标题卡片文案以及电影化作品的揭示结构。你塑造的是节奏，而非撰写密集的解说文。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["proposal"]["proposal_packet"]` | Emotional arc and source truth |
-| Tools | `transcriber`, `scene_detect` | Optional dialogue mining and source review |
+| 模式 | `schemas/artifacts/script.schema.json` | 制品验证 |
+| 前置产物 | `state.artifacts["proposal"]["proposal_packet"]` | 情感弧线和源信息 |
+| 工具 | `transcriber`, `scene_detect` | 可选的对话挖掘和源审阅 |
 
-## Process
+## 流程
 
-### 1. Build A Beat Map First
+### 1. 先构建节拍图
 
-Use a simple structure:
+使用简洁的结构：
 
-- hook,
-- escalation,
-- reveal,
-- landing.
+- 钩子（hook），
+- 升级（escalation），
+- 揭示（reveal），
+- 落地（landing）。
 
-If the piece is longer, add one midpoint turn. Do not let it become essay-shaped.
+如果篇幅较长，增加一个中点转折。不要让结构变成论文式。
 
-### 2. Use Dialogue Sparingly
+### 2. 精打细算使用对话
 
-If source speech exists, use `transcriber` to find:
+如果存在源语音，使用 `transcriber` 查找：
 
-- strong standalone lines,
-- emotional phrases,
-- concise declarations,
-- reveal phrases.
+- 有力的独立台词，
+- 情感短语，
+- 简洁的陈述，
+- 揭示性短语。
 
-If there is no useful dialogue, keep the script title-led or narration-led and say so in metadata.
+如果没有有用的对话，保持剧本以标题主导或以旁白主导，并在元数据中注明。
 
-### 3. Keep Title Cards Short
+### 3. 保持标题卡片简短
 
-Title-card copy should feel trailer-like:
+标题卡片文案应具有预告片质感：
 
-- fewer words,
-- more contrast,
-- more whitespace,
-- more timing precision.
+- 更少的词汇，
+- 更强的对比，
+- 更多的留白，
+- 更精准的时机。
 
-### 4. Store Beat Truth In Metadata
+### 4. 将节拍真相存入元数据
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `beat_map`
 - `dialogue_selects`
@@ -55,26 +55,25 @@ Recommended metadata keys:
 - `music_turns`
 - `silence_windows`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the beat map escalates cleanly,
-- dialogue and title cards do not explain the same thing twice,
-- the reveal lands distinctly,
-- the landing gives the viewer a final feeling or action.
+- 节拍图清洁地递进升级，
+- 对话和标题卡片不重复解释同一件事，
+- 揭示部分落地清晰分明，
+- 落地部分给观众一个最终的情感或行动。
 
-### Mid-Production Fact Verification
+### 制作中期事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在剧本写作过程中遇到不确定性：
+- 使用 `web_search` 核实事实性主张，然后再将其写入剧本
+- 使用 `web_search` 查找参考图像以确保视觉准确性
+- 在决策日志中记录核查：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+剧本中的每个事实性主张都应可追溯到 `research_brief`。
+如果你提出的主张不在调研材料中，请做额外调研并补充来源。不要编造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Writing full explanatory paragraphs instead of beats.
-- Using too many title cards.
-- Revealing the best moment too early.
+- 写成完整的解释性段落而非节拍。
+- 使用过多的标题卡片。
+- 过早揭示最佳时刻。

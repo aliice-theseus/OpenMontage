@@ -1,6 +1,6 @@
-# Warm / Editorial
+# 温暖 / 编辑
 
-Storytelling, documentaries, case studies, narrative content.
+讲故事、纪录片、案例研究、叙事内容。
 
 ```
 #264653 #2A9D8F #E9C46A #F4A261 #E76F51

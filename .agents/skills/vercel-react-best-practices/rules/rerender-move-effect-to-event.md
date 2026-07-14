@@ -1,15 +1,15 @@
 ---
-title: Put Interaction Logic in Event Handlers
+title: 将交互逻辑放入事件处理程序
 impact: MEDIUM
-impactDescription: avoids effect re-runs and duplicate side effects
+impactDescription: 避免 effect 重复执行和重复副作用
 tags: rerender, useEffect, events, side-effects, dependencies
 ---
 
-## Put Interaction Logic in Event Handlers
+## 将交互逻辑放入事件处理程序
 
-If a side effect is triggered by a specific user action (submit, click, drag), run it in that event handler. Do not model the action as state + effect; it makes effects re-run on unrelated changes and can duplicate the action.
+如果副作用是由特定的用户操作（提交、点击、拖拽）触发的，在事件处理程序中执行它。不要将操作建模为状态 + effect；这会使 effects 在无关更改时重新执行，并且可能重复操作。
 
-**Incorrect (event modeled as state + effect):**
+**不正确（事件被建模为状态 + effect）：**
 
 ```tsx
 function Form() {
@@ -23,11 +23,11 @@ function Form() {
     }
   }, [submitted, theme])
 
-  return <button onClick={() => setSubmitted(true)}>Submit</button>
+  return <button onClick={() => setSubmitted(true)}>提交</button>
 }
 ```
 
-**Correct (do it in the handler):**
+**正确（在 handler 中执行）：**
 
 ```tsx
 function Form() {
@@ -38,8 +38,8 @@ function Form() {
     showToast('Registered', theme)
   }
 
-  return <button onClick={handleSubmit}>Submit</button>
+  return <button onClick={handleSubmit}>提交</button>
 }
 ```
 
-Reference: [Should this code move to an event handler?](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)
+参考：[这段代码应该移到事件处理程序中吗？](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)

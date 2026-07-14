@@ -1,51 +1,42 @@
-# Tier 4 — escape-hatch
+# 第 4 层 — 逃生舱
 
-## What it tests
+## 测试内容
 
-T4 is the **lint-only** tier. There are no renders to diff — the skill is
-graded on whether it correctly _refuses_ to translate each case (and
-recommends the runtime interop pattern from PR #214 instead) or, where
-appropriate, translates after dropping warning-level decorations.
+T4 是**仅 lint** 层级。无需渲染进行差异比较 — 技能的评分基于它是否能正确_拒绝_翻译每个案例（并推荐来自 PR #214 的运行时互操作模式），或者在适当情况下，在丢弃警告级别的装饰后进行翻译。
 
-Each `cases/*.tsx` file is a minimal Remotion composition that
-demonstrates one specific pattern. The skill should:
+每个 `cases/*.tsx` 文件是一个最小的 Remotion 合成，演示一个特定模式。技能应：
 
-1. Run `scripts/lint_source.py` over the source.
-2. Compare the JSON output to `expected.json` for that case.
-3. Take the documented `skill_action`:
-   - `refuse_translation_recommend_interop` — print the rationale + link to
-     the PR #214 interop guide; do not produce HF output.
-   - `drop_lambda_code_translate_remainder_if_clean` — drop the
-     `@remotion/lambda` code with a note; translate the rest only if no
-     other blockers are present.
-   - `translate_after_dropping_wrappers` — translate normally; drop
-     `useCallback` / `useMemo` / `delayRender` wrappers.
-   - `inline_hook_body_if_pure` — inline the custom hook's body if it's a
-     pure derivation of `useCurrentFrame`; otherwise bow out.
+1. 对源码运行 `scripts/lint_source.py`。
+2. 将 JSON 输出与该案例的 `expected.json` 进行比较。
+3. 执行文档化的 `skill_action`：
+   - `refuse_translation_recommend_interop` — 打印理由 + PR #214 互操作指南的链接；不产生 HF 输出。
+   - `drop_lambda_code_translate_remainder_if_clean` — 丢弃 `@remotion/lambda` 代码并附注说明；仅在没有其他阻断器时翻译其余部分。
+   - `translate_after_dropping_wrappers` — 正常翻译；丢弃 `useCallback` / `useMemo` / `delayRender` 包装器。
+   - `inline_hook_body_if_pure` — 如果是 `useCurrentFrame` 的纯推导，内联自定义 hook 的函数体；否则退出。
 
-## Cases
+## 案例
 
-| #   | File                       | Expected finding                    | Notes                                           |
-| --- | -------------------------- | ----------------------------------- | ----------------------------------------------- |
-| 01  | `01-use-state.tsx`         | blocker `r2hf/use-state`            | useState driving animation                      |
-| 02  | `02-use-effect-deps.tsx`   | blocker `r2hf/use-effect-deps`      | useEffect/useLayoutEffect with non-empty deps   |
-| 03  | `03-async-metadata.tsx`    | blocker `r2hf/async-metadata`       | calculateMetadata returns a Promise             |
-| 04  | `04-third-party-react.tsx` | blocker `r2hf/third-party-react-ui` | imports `@mui/material`                         |
-| 05  | `05-lambda-config.tsx`     | warning `r2hf/lambda-import`        | imports `@remotion/lambda` — drops, translates  |
-| 06  | `06-warnings-only.tsx`     | warnings only                       | delayRender / useCallback / useMemo             |
-| 07  | `07-custom-hook.tsx`       | warning `r2hf/custom-hook`          | locally-defined `useFadeIn` (export const form) |
-| 08  | `08-mixed.tsx`             | 3 blockers + 1 warning              | aggregate-findings test                         |
+| #   | 文件                       | 预期发现                             | 说明                                           |
+| --- | -------------------------- | ------------------------------------ | ----------------------------------------------- |
+| 01  | `01-use-state.tsx`         | 阻断器 `r2hf/use-state`              | useState 驱动动画                                |
+| 02  | `02-use-effect-deps.tsx`   | 阻断器 `r2hf/use-effect-deps`        | useEffect/useLayoutEffect 带非空依赖             |
+| 03  | `03-async-metadata.tsx`    | 阻断器 `r2hf/async-metadata`         | calculateMetadata 返回 Promise                   |
+| 04  | `04-third-party-react.tsx` | 阻断器 `r2hf/third-party-react-ui`   | 导入 `@mui/material`                             |
+| 05  | `05-lambda-config.tsx`     | 警告 `r2hf/lambda-import`            | 导入 `@remotion/lambda` — 丢弃，翻译             |
+| 06  | `06-warnings-only.tsx`     | 仅警告                               | delayRender / useCallback / useMemo              |
+| 07  | `07-custom-hook.tsx`       | 警告 `r2hf/custom-hook`              | 本地定义的 `useFadeIn`（export const 形式）       |
+| 08  | `08-mixed.tsx`             | 3 个阻断器 + 1 个警告                 | 聚合发现测试                                      |
 
-## Validation
+## 验证
 
 ```bash
 ./validate.sh
 ```
 
-The script runs `lint_source.py` against each case and asserts:
+脚本对每个案例运行 `lint_source.py` 并断言：
 
-- Each expected blocker rule fires with severity `blocker`.
-- Each expected warning rule fires with severity `warning` (or stronger).
-- `lint_source.py`'s exit code is 1 when blockers are expected, 0 otherwise.
+- 每个预期的阻断器规则以 `blocker` 严重性触发。
+- 每个预期的警告规则以 `warning`（或更强）严重性触发。
+- 当预期有阻断器时，`lint_source.py` 的退出码为 1，否则为 0。
 
-T4 passes when every case matches its expected output. No renders involved.
+当每个案例匹配其预期输出时，T4 通过。不涉及渲染。

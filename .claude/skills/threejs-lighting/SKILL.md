@@ -1,16 +1,16 @@
 ---
 name: threejs-lighting
-description: Three.js lighting - light types, shadows, environment lighting. Use when adding lights, configuring shadows, setting up IBL, or optimizing lighting performance.
+description: Three.js 灯光 — 灯光类型、阴影、环境光照。在添加灯光、配置阴影、设置 IBL 或优化灯光性能时使用。
 ---
 
-# Three.js Lighting
+# Three.js 灯光
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
 
-// Basic lighting setup
+// 基础灯光设置
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
@@ -19,36 +19,36 @@ directionalLight.position.set(5, 5, 5);
 scene.add(directionalLight);
 ```
 
-## Light Types Overview
+## 灯光类型概览
 
-| Light            | Description            | Shadow Support | Cost     |
+| 灯光 | 描述 | 阴影支持 | 性能消耗 |
 | ---------------- | ---------------------- | -------------- | -------- |
-| AmbientLight     | Uniform everywhere     | No             | Very Low |
-| HemisphereLight  | Sky/ground gradient    | No             | Very Low |
-| DirectionalLight | Parallel rays (sun)    | Yes            | Low      |
-| PointLight       | Omnidirectional (bulb) | Yes            | Medium   |
-| SpotLight        | Cone-shaped            | Yes            | Medium   |
-| RectAreaLight    | Area light (window)    | No\*           | High     |
+| AmbientLight | 均匀照亮所有方向 | 否 | 极低 |
+| HemisphereLight | 天空/地面渐变 | 否 | 极低 |
+| DirectionalLight | 平行光线（太阳） | 是 | 低 |
+| PointLight | 全向发光（灯泡） | 是 | 中 |
+| SpotLight | 锥形光束 | 是 | 中 |
+| RectAreaLight | 面光源（窗户） | 否* | 高 |
 
-\*RectAreaLight shadows require custom solutions
+\*RectAreaLight 阴影需要自定义解决方案
 
-## AmbientLight
+## AmbientLight（环境光）
 
-Illuminates all objects equally. No direction, no shadows.
+均匀照亮所有对象。无方向，无阴影。
 
 ```javascript
 // AmbientLight(color, intensity)
 const ambient = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambient);
 
-// Modify at runtime
+// 运行时修改
 ambient.color.set(0xffffcc);
 ambient.intensity = 0.3;
 ```
 
-## HemisphereLight
+## HemisphereLight（半球光）
 
-Gradient from sky to ground color. Good for outdoor scenes.
+从天空到地面的颜色渐变。适合室外场景。
 
 ```javascript
 // HemisphereLight(skyColor, groundColor, intensity)
@@ -56,38 +56,38 @@ const hemi = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.6);
 hemi.position.set(0, 50, 0);
 scene.add(hemi);
 
-// Properties
-hemi.color; // Sky color
-hemi.groundColor; // Ground color
+// 属性
+hemi.color; // 天空颜色
+hemi.groundColor; // 地面颜色
 hemi.intensity;
 ```
 
-## DirectionalLight
+## DirectionalLight（方向光）
 
-Parallel light rays. Simulates distant light source (sun).
+平行光线。模拟远距离光源（太阳）。
 
 ```javascript
 // DirectionalLight(color, intensity)
 const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(5, 10, 5);
 
-// Light points at target (default: 0, 0, 0)
+// 光源指向目标（默认：0, 0, 0）
 dirLight.target.position.set(0, 0, 0);
 scene.add(dirLight.target);
 
 scene.add(dirLight);
 ```
 
-### DirectionalLight Shadows
+### DirectionalLight 阴影
 
 ```javascript
 dirLight.castShadow = true;
 
-// Shadow map size (higher = sharper, more expensive)
+// 阴影贴图大小（越大越清晰，越耗性能）
 dirLight.shadow.mapSize.width = 2048;
 dirLight.shadow.mapSize.height = 2048;
 
-// Shadow camera (orthographic)
+// 阴影摄像机（正交投影）
 dirLight.shadow.camera.near = 0.5;
 dirLight.shadow.camera.far = 50;
 dirLight.shadow.camera.left = -10;
@@ -95,21 +95,21 @@ dirLight.shadow.camera.right = 10;
 dirLight.shadow.camera.top = 10;
 dirLight.shadow.camera.bottom = -10;
 
-// Shadow softness
-dirLight.shadow.radius = 4; // Blur radius (PCFSoftShadowMap only)
+// 阴影柔化
+dirLight.shadow.radius = 4; // 模糊半径（仅限 PCFSoftShadowMap）
 
-// Shadow bias (fixes shadow acne)
+// 阴影偏移（修复阴影痤疮）
 dirLight.shadow.bias = -0.0001;
 dirLight.shadow.normalBias = 0.02;
 
-// Helper to visualize shadow camera
+// 可视化阴影摄像机的辅助器
 const helper = new THREE.CameraHelper(dirLight.shadow.camera);
 scene.add(helper);
 ```
 
-## PointLight
+## PointLight（点光源）
 
-Emits light in all directions from a point. Like a light bulb.
+从一点向所有方向发射光线。类似灯泡。
 
 ```javascript
 // PointLight(color, intensity, distance, decay)
@@ -117,74 +117,74 @@ const pointLight = new THREE.PointLight(0xffffff, 1, 100, 2);
 pointLight.position.set(0, 5, 0);
 scene.add(pointLight);
 
-// Properties
-pointLight.distance; // Maximum range (0 = infinite)
-pointLight.decay; // Light falloff (physically correct = 2)
+// 属性
+pointLight.distance; // 最大范围（0 = 无限）
+pointLight.decay; // 光衰减（物理正确 = 2）
 ```
 
-### PointLight Shadows
+### PointLight 阴影
 
 ```javascript
 pointLight.castShadow = true;
 pointLight.shadow.mapSize.width = 1024;
 pointLight.shadow.mapSize.height = 1024;
 
-// Shadow camera (perspective - 6 directions for cube map)
+// 阴影摄像机（透视 — 6 个方向的立方体贴图）
 pointLight.shadow.camera.near = 0.5;
 pointLight.shadow.camera.far = 50;
 
 pointLight.shadow.bias = -0.005;
 ```
 
-## SpotLight
+## SpotLight（聚光灯）
 
-Cone-shaped light. Like a flashlight or stage light.
+锥形光束。类似手电筒或舞台灯光。
 
 ```javascript
 // SpotLight(color, intensity, distance, angle, penumbra, decay)
 const spotLight = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 6, 0.5, 2);
 spotLight.position.set(0, 10, 0);
 
-// Target (light points at this)
+// 目标（灯光指向此点）
 spotLight.target.position.set(0, 0, 0);
 scene.add(spotLight.target);
 
 scene.add(spotLight);
 
-// Properties
-spotLight.angle; // Cone angle (radians, max Math.PI/2)
-spotLight.penumbra; // Soft edge (0-1)
-spotLight.distance; // Range
-spotLight.decay; // Falloff
+// 属性
+spotLight.angle; // 锥角（弧度，最大 Math.PI/2）
+spotLight.penumbra; // 柔化边缘（0-1）
+spotLight.distance; // 范围
+spotLight.decay; // 衰减
 ```
 
-### SpotLight Shadows
+### SpotLight 阴影
 
 ```javascript
 spotLight.castShadow = true;
 spotLight.shadow.mapSize.width = 1024;
 spotLight.shadow.mapSize.height = 1024;
 
-// Shadow camera (perspective)
+// 阴影摄像机（透视）
 spotLight.shadow.camera.near = 0.5;
 spotLight.shadow.camera.far = 50;
 spotLight.shadow.camera.fov = 30;
 
 spotLight.shadow.bias = -0.0001;
 
-// Focus (affects shadow projection)
+// 焦点（影响阴影投影）
 spotLight.shadow.focus = 1;
 ```
 
-## RectAreaLight
+## RectAreaLight（矩形区域光）
 
-Rectangular area light. Great for soft, realistic lighting.
+矩形面光源。适合柔和、逼真的照明。
 
 ```javascript
 import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
-// Must initialize uniforms first
+// 必须先初始化 uniforms
 RectAreaLightUniformsLib.init();
 
 // RectAreaLight(color, intensity, width, height)
@@ -193,45 +193,45 @@ rectLight.position.set(0, 5, 0);
 rectLight.lookAt(0, 0, 0);
 scene.add(rectLight);
 
-// Helper
+// 辅助器
 const helper = new RectAreaLightHelper(rectLight);
 rectLight.add(helper);
 
-// Note: Only works with MeshStandardMaterial and MeshPhysicalMaterial
-// Does not cast shadows natively
+// 注意：仅适用于 MeshStandardMaterial 和 MeshPhysicalMaterial
+// 原生不支持投射阴影
 ```
 
-## Shadow Setup
+## 阴影设置
 
-### Enable Shadows
+### 启用阴影
 
 ```javascript
-// 1. Enable on renderer
+// 1. 在渲染器上启用
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-// Shadow map types:
-// THREE.BasicShadowMap - fastest, low quality
-// THREE.PCFShadowMap - default, filtered
-// THREE.PCFSoftShadowMap - softer edges
-// THREE.VSMShadowMap - variance shadow map
+// 阴影贴图类型：
+// THREE.BasicShadowMap - 最快，低质量
+// THREE.PCFShadowMap - 默认，过滤
+// THREE.PCFSoftShadowMap - 更柔和的边缘
+// THREE.VSMShadowMap - 方差阴影贴图
 
-// 2. Enable on light
+// 2. 在灯光上启用
 light.castShadow = true;
 
-// 3. Enable on objects
+// 3. 在对象上启用
 mesh.castShadow = true;
 mesh.receiveShadow = true;
 
-// Ground plane
+// 地面
 floor.receiveShadow = true;
-floor.castShadow = false; // Usually false for floors
+floor.castShadow = false; // 地面通常为 false
 ```
 
-### Optimizing Shadows
+### 优化阴影
 
 ```javascript
-// Tight shadow camera frustum
+// 紧缩阴影摄像机视锥体
 const d = 10;
 dirLight.shadow.camera.left = -d;
 dirLight.shadow.camera.right = d;
@@ -240,18 +240,18 @@ dirLight.shadow.camera.bottom = -d;
 dirLight.shadow.camera.near = 0.5;
 dirLight.shadow.camera.far = 30;
 
-// Fix shadow acne
-dirLight.shadow.bias = -0.0001; // Depth bias
-dirLight.shadow.normalBias = 0.02; // Bias along normal
+// 修复阴影痤疮
+dirLight.shadow.bias = -0.0001; // 深度偏移
+dirLight.shadow.normalBias = 0.02; // 沿法线偏移
 
-// Shadow map size (balance quality vs performance)
-// 512 - low quality
-// 1024 - medium quality
-// 2048 - high quality
-// 4096 - very high quality (expensive)
+// 阴影贴图大小（平衡质量与性能）
+// 512 - 低质量
+// 1024 - 中等质量
+// 2048 - 高质量
+// 4096 - 极高（昂贵）
 ```
 
-### Contact Shadows (Fake, Fast)
+### 接触阴影（伪阴影，快速）
 
 ```javascript
 import { ContactShadows } from "three/examples/jsm/objects/ContactShadows.js";
@@ -266,39 +266,39 @@ const contactShadows = new ContactShadows({
 scene.add(contactShadows);
 ```
 
-## Light Helpers
+## 灯光辅助器
 
 ```javascript
 import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper.js";
 
-// DirectionalLight helper
+// DirectionalLight 辅助器
 const dirHelper = new THREE.DirectionalLightHelper(dirLight, 5);
 scene.add(dirHelper);
 
-// PointLight helper
+// PointLight 辅助器
 const pointHelper = new THREE.PointLightHelper(pointLight, 1);
 scene.add(pointHelper);
 
-// SpotLight helper
+// SpotLight 辅助器
 const spotHelper = new THREE.SpotLightHelper(spotLight);
 scene.add(spotHelper);
 
-// Hemisphere helper
+// Hemisphere 辅助器
 const hemiHelper = new THREE.HemisphereLightHelper(hemiLight, 5);
 scene.add(hemiHelper);
 
-// RectAreaLight helper
+// RectAreaLight 辅助器
 const rectHelper = new RectAreaLightHelper(rectLight);
 rectLight.add(rectHelper);
 
-// Update helpers when light changes
+// 灯光变化时更新辅助器
 dirHelper.update();
 spotHelper.update();
 ```
 
-## Environment Lighting (IBL)
+## 环境照明（IBL）
 
-Image-Based Lighting using HDR environment maps.
+使用 HDR 环境贴图的基于图像的照明。
 
 ```javascript
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
@@ -307,16 +307,16 @@ const rgbeLoader = new RGBELoader();
 rgbeLoader.load("environment.hdr", (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping;
 
-  // Set as scene environment (affects all PBR materials)
+  // 设置为场景环境（影响所有 PBR 材质）
   scene.environment = texture;
 
-  // Optional: also use as background
+  // 可选：也用作背景
   scene.background = texture;
-  scene.backgroundBlurriness = 0; // 0-1, blur the background
+  scene.backgroundBlurriness = 0; // 0-1，模糊背景
   scene.backgroundIntensity = 1;
 });
 
-// PMREMGenerator for better reflections
+// PMREMGenerator 用于更好的反射
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 pmremGenerator.compileEquirectangularShader();
 
@@ -328,40 +328,36 @@ rgbeLoader.load("environment.hdr", (texture) => {
 });
 ```
 
-### Cube Texture Environment
+### 立方体贴图环境
 
 ```javascript
 const cubeLoader = new THREE.CubeTextureLoader();
 const envMap = cubeLoader.load([
-  "px.jpg",
-  "nx.jpg",
-  "py.jpg",
-  "ny.jpg",
-  "pz.jpg",
-  "nz.jpg",
+  "px.jpg", "nx.jpg",
+  "py.jpg", "ny.jpg",
+  "pz.jpg", "nz.jpg",
 ]);
 
 scene.environment = envMap;
 scene.background = envMap;
 ```
 
-## Light Probes (Advanced)
+## 光照探针（高级）
 
-Capture lighting from a point in space for ambient lighting.
+从空间中某一点捕捉光照信息，用于环境照明。
 
 ```javascript
 import { LightProbeGenerator } from "three/examples/jsm/lights/LightProbeGenerator.js";
 
-// Generate from cube texture
+// 从立方体贴图生成
 const lightProbe = new THREE.LightProbe();
 scene.add(lightProbe);
 
 lightProbe.copy(LightProbeGenerator.fromCubeTexture(cubeTexture));
 
-// Or from render target
+// 或从渲染目标生成
 const cubeCamera = new THREE.CubeCamera(
-  0.1,
-  100,
+  0.1, 100,
   new THREE.WebGLCubeRenderTarget(256),
 );
 cubeCamera.update(renderer, scene);
@@ -370,49 +366,49 @@ lightProbe.copy(
 );
 ```
 
-## Common Lighting Setups
+## 常用灯光设置
 
-### Three-Point Lighting
+### 三点照明
 
 ```javascript
-// Key light (main light)
+// 主光
 const keyLight = new THREE.DirectionalLight(0xffffff, 1);
 keyLight.position.set(5, 5, 5);
 scene.add(keyLight);
 
-// Fill light (softer, opposite side)
+// 补光（更柔和，在另一侧）
 const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
 fillLight.position.set(-5, 3, 5);
 scene.add(fillLight);
 
-// Back light (rim lighting)
+// 背光（轮廓光）
 const backLight = new THREE.DirectionalLight(0xffffff, 0.3);
 backLight.position.set(0, 5, -5);
 scene.add(backLight);
 
-// Ambient fill
+// 环境补光
 const ambient = new THREE.AmbientLight(0x404040, 0.3);
 scene.add(ambient);
 ```
 
-### Outdoor Daylight
+### 室外日光
 
 ```javascript
-// Sun
+// 太阳
 const sun = new THREE.DirectionalLight(0xffffcc, 1.5);
 sun.position.set(50, 100, 50);
 sun.castShadow = true;
 scene.add(sun);
 
-// Sky ambient
+// 天空环境
 const hemi = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.6);
 scene.add(hemi);
 ```
 
-### Indoor Studio
+### 室内工作室
 
 ```javascript
-// Multiple area lights
+// 多个面光源
 RectAreaLightUniformsLib.init();
 
 const light1 = new THREE.RectAreaLight(0xffffff, 5, 2, 2);
@@ -425,12 +421,12 @@ light2.position.set(-3, 3, 3);
 light2.lookAt(0, 0, 0);
 scene.add(light2);
 
-// Ambient fill
+// 环境补光
 const ambient = new THREE.AmbientLight(0x404040, 0.2);
 scene.add(ambient);
 ```
 
-## Light Animation
+## 灯光动画
 
 ```javascript
 const clock = new THREE.Clock();
@@ -438,44 +434,44 @@ const clock = new THREE.Clock();
 function animate() {
   const time = clock.getElapsedTime();
 
-  // Orbit light around scene
+  // 灯光围绕场景旋转
   light.position.x = Math.cos(time) * 5;
   light.position.z = Math.sin(time) * 5;
 
-  // Pulsing intensity
+  // 脉动强度
   light.intensity = 1 + Math.sin(time * 2) * 0.5;
 
-  // Color cycling
+  // 颜色循环
   light.color.setHSL((time * 0.1) % 1, 1, 0.5);
 
-  // Update helpers if using
+  // 如果使用辅助器则更新
   lightHelper.update();
 }
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Limit light count**: Each light adds shader complexity
-2. **Use baked lighting**: For static scenes, bake to textures
-3. **Smaller shadow maps**: 512-1024 often sufficient
-4. **Tight shadow frustums**: Only cover needed area
-5. **Disable unused shadows**: Not all lights need shadows
-6. **Use light layers**: Exclude objects from certain lights
+1. **限制灯光数量**：每个灯光增加着色器复杂度
+2. **使用烘焙光照**：对于静态场景，烘焙到纹理中
+3. **较小的阴影贴图**：512-1024 通常足够
+4. **紧缩阴影视锥体**：仅覆盖需要的区域
+5. **禁用未使用的阴影**：并非所有灯光都需要阴影
+6. **使用灯光图层**：将对象排除在特定灯光之外
 
 ```javascript
-// Light layers
-light.layers.set(1); // Light only affects layer 1
-mesh.layers.enable(1); // Mesh is on layer 1
-otherMesh.layers.disable(1); // Other mesh not affected
+// 灯光图层
+light.layers.set(1); // 灯光仅影响图层 1
+mesh.layers.enable(1); // 网格在图层 1 上
+otherMesh.layers.disable(1); // 其他网格不受影响
 
-// Selective shadows
+// 选择性阴影
 mesh.castShadow = true;
 mesh.receiveShadow = true;
-decorMesh.castShadow = false; // Small objects often don't need to cast
+decorMesh.castShadow = false; // 小对象通常不需要投射阴影
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-materials` - Material light response
-- `threejs-textures` - Lightmaps and environment maps
-- `threejs-postprocessing` - Bloom and other light effects
+- `threejs-materials` — 材质对光的响应
+- `threejs-textures` — 光照贴图和环境贴图
+- `threejs-postprocessing` — 泛光和其他灯光效果

@@ -1,37 +1,37 @@
-# Script Director - Localization Dub Pipeline
+# 剧本导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Turn the approved localization brief into a transcript-backed, reviewable script package for every target language. This stage should create text truth before any dubbing audio is generated.
+将已批准的本地化需求简报转化为基于转录文本、可审核的每目标语言剧本包。此阶段应在任何配音音频生成之前创建文本真相。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/localization-dubbing-best-practices.md`
 - `skills/creative/storytelling.md`
 
-## Process
+## 流程
 
-### 1. Build Source Transcript Truth
+### 1. 构建源转录文本真相
 
-Start with the source transcript and fix obvious errors in:
+从源转录文本开始，修正其中的明显错误：
 
-- names,
-- terminology,
-- speaker allocation,
-- numbers,
-- CTA phrasing.
+- 人名
+- 术语
+- 发言人分配
+- 数字
+- 行动号召（CTA）措辞
 
-### 2. Produce Reviewable Target Copy
+### 2. 生成可审核的目标语言文案
 
-For each target language, generate text that can be reviewed before synthesis. Record where terms should remain unchanged.
+针对每种目标语言，生成可在合成前接受审核的文本。记录哪些术语应保持不变。
 
-### 3. Preserve Structure Where Practical
+### 3. 在可行情况下保留结构
 
-Keep section timing and sequence aligned to the source unless the translation clearly needs a different pacing strategy.
+保持段落时序和顺序与源视频一致，除非翻译明显需要不同的节奏策略。
 
-### 4. Use Metadata For Localization Control
+### 4. 使用元数据进行本地化控制
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `source_transcript_status`
 - `target_language_sections`
@@ -40,26 +40,25 @@ Recommended metadata keys:
 - `pronunciation_notes`
 - `review_status_by_language`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the source transcript is strong enough to trust,
-- target-language copy exists for every planned deliverable,
-- glossary terms are preserved,
-- the script package can be reviewed before audio generation.
+- 源转录文本足够可靠
+- 每个计划交付物都有对应的目标语言文案
+- 词汇表术语得以保留
+- 剧本包可在音频生成前接受审核
 
-### Mid-Production Fact Verification
+### 中期制作事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在剧本编写过程中遇到不确定的内容：
+- 使用 `web_search` 在将事实性声明写入剧本前进行核实
+- 使用 `web_search` 查找参考图片以确保视觉准确性
+- 在决策日志中记录核查情况：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+剧本中的每一个事实性声明都应能追溯到 `research_brief`。
+如果你做出了研究中未包含的声明，请进行额外研究并添加来源。不要编造统计数据、日期或出处。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Generating audio from an unreviewed transcript.
-- Letting product names drift across languages.
-- Treating translation text as final timing without acknowledging length drift.
+- 在未经审核的转录文本基础上生成音频
+- 产品名称在各语言间出现不一致
+- 将翻译文本视为最终时序而不考虑长度变化

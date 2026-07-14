@@ -1,18 +1,18 @@
-# Worked Example: Adding a Block
+# 实际操作示例：添加块
 
-## Scenario
+## 场景
 
-User has an existing HyperFrames project and wants to add an animated chart alongside their video content.
+用户有现有的 HyperFrames 项目，想要在其视频内容旁边添加动画图表。
 
-## Steps
+## 步骤
 
-### 1. Install the block
+### 1. 安装块
 
 ```bash
 hyperframes add data-chart
 ```
 
-### 2. Wire into index.html
+### 2. 接入到 index.html
 
 ```html
 <div id="stage" data-composition-id="main" data-width="1920" data-height="1080" data-duration="30">
@@ -25,7 +25,7 @@ hyperframes add data-chart
     style="position: absolute; width: 60%; height: 100%; left: 0; top: 0; object-fit: cover;"
   ></video>
 
-  <!-- Data chart appears at 5s in the right 40% of the screen -->
+  <!-- 数据图表在 5s 出现在屏幕右侧 40% 处 -->
   <div
     data-composition-id="data-chart"
     data-composition-src="compositions/data-chart.html"
@@ -39,13 +39,13 @@ hyperframes add data-chart
 </div>
 ```
 
-### 3. Lint and preview
+### 3. Lint 和预览
 
 ```bash
 hyperframes lint
 hyperframes preview
 ```
 
-### 4. Customize (optional)
+### 4. 自定义（可选）
 
-Edit `compositions/data-chart.html` — data arrays are at the top of the script, colors are in the CSS rules scoped under `[data-composition-id="data-chart"]`.
+编辑 `compositions/data-chart.html`——数据数组在脚本顶部，颜色在 `[data-composition-id="data-chart"]` 作用域下的 CSS 规则中。

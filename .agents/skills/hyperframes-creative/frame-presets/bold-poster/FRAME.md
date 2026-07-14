@@ -2,12 +2,12 @@
 version: alpha
 name: Bold Poster — Frame (video / frame layer)
 description: >
-  Video-first companion to Bold Poster's design.md. The unit is the frame (1920×1080). Atoms are
-  identical and sacred — the four-color palette (white / brown-black ink / tomato red / off-white),
-  the three-face stack (Shrikhand display tilted at poster scale, Libre Baskerville serif body,
-  Space Grotesk mono chrome), the stacked text-shadow on red display, the 3px+1.5px double-border
-  grid, red leftbar cards, red em-dash bullets, and the red progress bar. Composition + frame scale
-  rewritten. Motion out of scope.
+  Bold Poster 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣 — 四色调色板 (白 / 棕黑墨水 / 番茄红 / 米白)、
+  三面堆叠 (Shrikhand 展示在海报尺度倾斜、Libre Baskerville 衬线正文、
+  Space Grotesk 等宽铬色)、红色展示上的堆叠文字阴影、3px+1.5px 双边框
+  网格、红色左边距卡片、红色 em-dash 项目符号和红色进度条。构图 + 帧比例
+  已重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -83,29 +83,22 @@ components:
     description: "No default disc bullets; capped at three."
 ---
 
-# Bold Poster — Frame (video / frame layer)
+# Bold Poster — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Bold Poster at frame scale is a **populist editorial poster** — vintage Italian sports-magazine
-display, classical serif body, one saturated tomato red, grids ruled in ink. Every frame should
-feel _printed_: heavy display type at poster scale, locked to one red accent, on a white/off-white
-sheet (or a full red/dark statement panel), with decoration kept to a strict minimum.
+帧尺度下的 Bold Poster 是一个**民粹编辑海报**——复古意大利运动杂志展示、古典衬线正文、一种饱和番茄红、油墨绘制的网格。每一帧都应感觉是_印刷品_：海报尺度的粗重展示文字、锁定一种红色强调色、在白色/米白纸张上（或全红/深色声明面板），装饰保持在严格最低限度。
 
-The voice is a three-face stack: **Shrikhand** (heavy slab-script, weight 400 only, routinely
-tilted −6°..+2°) carries every hero title, section header, stat, and card title; **Libre
-Baskerville** (literary serif) carries every body paragraph — it's what makes the system feel
-printed; **Space Grotesk** (uppercase, 2–3px tracked) is chrome only — labels, eyebrows, counters,
-bullet bodies. The plane is flat; the _only_ shadow is the stacked text-shadow on red display.
+声音是三面堆叠：**Shrikhand**（粗重板状手写体、仅字重 400、常规倾斜 -6°..+2°）承载每个英雄标题、章节标题、统计和卡片标题；**Libre Baskerville**（文学衬线）承载每个正文段落——这就是让系统感觉像印刷品的原因；**Space Grotesk**（大写、2-3px 字距）仅为铬色——标签、眉标、计数器、项目符号正文。平面是平的；_唯一_阴影是红色展示上的堆叠文字阴影。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Four colors only** — white / brown-black ink / tomato red / off-white. Red is the lone accent.
-- **Shrikhand display, tilted** (−6° stat, −5° close, −4° hero-red, +2° hero-bottom) — the signature movement.
-- **Libre Baskerville serif body** (line 1.75); **Space Grotesk** chrome (uppercase tracked).
-- **Double-border grids** (3px outer + 1.5px inner ink); **red leftbar cards**; **red em-dash bullets** (max 3).
-- **Stacked text-shadow** on red display — the only shadow; flat plane otherwise; square corners.
-- **Red progress bar** at the bottom edge of every frame.
+- **仅四种颜色** — 白 / 棕黑墨水 / 番茄红 / 米白。红色是唯一强调色。
+- **Shrikhand 展示、倾斜**（−6° 统计、−5° 结尾、−4° 英雄红、+2° 英雄底）— 标志性动作。
+- **Libre Baskerville 衬线正文**（行高 1.75）；**Space Grotesk** 铬色（大写追踪）。
+- **双边框网格**（3px 外 + 1.5px 内墨水）；**红色左边距卡片**；**红色 em-dash 项目符号**（最多 3 个）。
+- **堆叠文字阴影**在红色展示上 — 唯一阴影；否则平面；方角。
+- **红色进度条**在每帧底部边缘。
 
 ## The Frame
 

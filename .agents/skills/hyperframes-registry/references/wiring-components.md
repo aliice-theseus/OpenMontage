@@ -1,22 +1,22 @@
-# Wiring Components
+# 接入组件
 
-Components are effect snippets — HTML, CSS, and optionally JS that you merge directly into an existing composition. Unlike blocks, components have no standalone timeline; they participate in the host composition's timeline.
+组件是效果片段——HTML、CSS 和可选的 JS，你直接合并到现有作品中。与块不同，组件没有独立的时间线；它们参与宿主作品的时间线。
 
-## General process
+## 通用流程
 
-1. Run `hyperframes add <component-name>`
-2. Open the installed file (e.g., `compositions/components/grain-overlay.html`)
-3. Read the comment header for usage instructions
-4. Copy the parts into your host composition:
-   - **HTML elements** — inside your `<div data-composition-id="...">`
-   - **CSS styles** — into your composition's `<style>` block
-   - **JS setup** — into your composition's `<script>`, before your timeline code
-   - **Timeline calls** — into your GSAP timeline (if the component exposes them)
+1. 运行 `hyperframes add <component-name>`
+2. 打开已安装的文件（例如 `compositions/components/grain-overlay.html`）
+3. 阅读注释标题中的使用说明
+4. 将各部分复制到你的宿主作品中：
+   - **HTML 元素**——在你的 `<div data-composition-id="...">` 内部
+   - **CSS 样式**——放入作品的 `<style>` 块
+   - **JS 设置**——放入作品的 `<script>`，在你的时间线代码之前
+   - **时间线调用**——放入你的 GSAP 时间线（如果组件暴露了它们）
 
-## Example: grain-overlay (CSS-only, no timeline integration)
+## 示例：grain-overlay（纯 CSS，无需时间线集成）
 
 ```html
-<!-- Paste the overlay div into your composition -->
+<!-- 将叠加 div 粘贴到你的作品中 -->
 <div
   id="grain-overlay"
   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100;"
@@ -25,15 +25,15 @@ Components are effect snippets — HTML, CSS, and optionally JS that you merge d
 </div>
 ```
 
-Then paste the CSS keyframes and `.grain-texture` rule into your styles. No GSAP timeline calls needed — the grain animates via CSS `@keyframes`.
+然后将 CSS 关键帧和 `.grain-texture` 规则粘贴到你的样式中。无需 GSAP 时间线调用——颗粒通过 CSS `@keyframes` 动画。
 
-## Example: shimmer-sweep (needs timeline integration)
+## 示例：shimmer-sweep（需要时间线集成）
 
-See `examples/add-component.md` for the full shimmer-sweep walkthrough (HTML wrapping, CSS, JS setup, and timeline call).
+参见 `examples/add-component.md` 了解完整的 shimmer-sweep 演示（HTML 包装、CSS、JS 设置和时间线调用）。
 
-## Key principles
+## 关键原则
 
-- Components inherit the host composition's dimensions and duration
-- Place component HTML at the appropriate z-index relative to your content
-- Read the comment header in each snippet for customizable values
-- Run `hyperframes lint` after wiring to catch structural issues
+- 组件继承宿主作品的尺寸和时长
+- 将组件 HTML 放在相对于你内容的适当 z-index 处
+- 阅读每个片段中的注释标题以了解可自定义的值
+- 接入后运行 `hyperframes lint` 以捕获结构问题

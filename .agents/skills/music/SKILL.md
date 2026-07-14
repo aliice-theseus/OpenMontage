@@ -1,18 +1,18 @@
 ---
 name: music
-description: Generate music using ElevenLabs Music API. Use when creating instrumental tracks, songs with lyrics, background music, jingles, or any AI-generated music composition. Supports prompt-based generation, composition plans for granular control, and detailed output with metadata.
+description: 使用 ElevenLabs Music API 生成音乐。在创建器乐音轨、带歌词的歌曲、背景音乐、广告歌或任何 AI 生成的音乐作品时使用。支持基于提示的生成、用于精细控制的创作计划以及带元数据的详细输出。
 license: MIT
-compatibility: Requires internet access and an ElevenLabs API key (ELEVENLABS_API_KEY).
+compatibility: 需要互联网连接和 ElevenLabs API 密钥（ELEVENLABS_API_KEY）。
 metadata: {"openclaw": {"requires": {"env": ["ELEVENLABS_API_KEY"]}, "primaryEnv": "ELEVENLABS_API_KEY"}}
 ---
 
-# ElevenLabs Music Generation
+# ElevenLabs 音乐生成
 
-Generate music from text prompts - supports instrumental tracks, songs with lyrics, and fine-grained control via composition plans.
+从文本提示生成音乐——支持器乐音轨、带歌词的歌曲以及通过创作计划进行精细控制。
 
-> **Setup:** See [Installation Guide](references/installation.md). For JavaScript, use `@elevenlabs/*` packages only.
+> **设置：** 请参阅 [安装指南](references/installation.md)。对于 JavaScript，请仅使用 `@elevenlabs/*` 包。
 
-## Quick Start
+## 快速入门
 
 ### Python
 
@@ -53,22 +53,22 @@ curl -X POST "https://api.elevenlabs.io/v1/music" \
   -d '{"prompt": "A chill lo-fi beat", "music_length_ms": 30000}' --output output.mp3
 ```
 
-## Methods
+## 方法
 
-| Method | Description |
+| 方法 | 描述 |
 |--------|-------------|
-| `music.compose` | Generate audio from a prompt or composition plan |
-| `music.composition_plan.create` | Generate a structured plan for fine-grained control |
-| `music.compose_detailed` | Generate audio + composition plan + metadata |
-| `music.upload` | Upload an audio file for later inpainting workflows and optionally extract its composition plan |
+| `music.compose` | 从提示或创作计划生成音频 |
+| `music.composition_plan.create` | 生成结构化计划以实现精细控制 |
+| `music.compose_detailed` | 生成音频 + 创作计划 + 元数据 |
+| `music.upload` | 上传音频文件用于后续修复工作流，并可选择提取其创作计划 |
 
-See [API Reference](references/api_reference.md) for full parameter details.
+完整参数详情请参阅 [API 参考](references/api_reference.md)。
 
-`music.upload` is available to enterprise clients with access to the inpainting feature.
+`music.upload` 仅对有权访问修复功能的企业客户可用。
 
-## Composition Plans
+## 创作计划
 
-For granular control, generate a composition plan first, modify it, then compose:
+为实现精细控制，先生成创作计划，修改它，然后创作：
 
 ```python
 plan = client.music.composition_plan.create(
@@ -76,8 +76,8 @@ plan = client.music.composition_plan.create(
     music_length_ms=60000
 )
 
-# Inspect/modify styles and sections
-print(plan.positiveGlobalStyles)  # e.g. ["orchestral", "epic", "cinematic"]
+# 检查/修改风格和章节
+print(plan.positiveGlobalStyles)  # 例如 ["orchestral", "epic", "cinematic"]
 
 audio = client.music.compose(
     composition_plan=plan,
@@ -85,13 +85,13 @@ audio = client.music.compose(
 )
 ```
 
-## Content Restrictions
+## 内容限制
 
-- Cannot reference specific artists, bands, or copyrighted lyrics
-- `bad_prompt` errors include a `prompt_suggestion` with alternative phrasing
-- `bad_composition_plan` errors include a `composition_plan_suggestion`
+- 不能引用特定艺术家、乐队或受版权保护的歌词
+- `bad_prompt` 错误包含带有替代措辞的 `prompt_suggestion`
+- `bad_composition_plan` 错误包含 `composition_plan_suggestion`
 
-## Error Handling
+## 错误处理
 
 ```python
 try:
@@ -100,9 +100,9 @@ except Exception as e:
     print(f"API error: {e}")
 ```
 
-Common errors: 401 (invalid key), 422 (invalid params), 429 (rate limit).
+常见错误：401（无效密钥）、422（无效参数）、429（速率限制）。
 
-## References
+## 参考文档
 
-- [Installation Guide](references/installation.md)
-- [API Reference](references/api_reference.md)
+- [安装指南](references/installation.md)
+- [API 参考](references/api_reference.md)

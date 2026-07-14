@@ -1,74 +1,74 @@
 ---
-title: Use Functional setState Updates
+title: 使用函数式 setState 更新
 impact: MEDIUM
-impactDescription: prevents stale closures and unnecessary callback recreations
+impactDescription: 防止过期闭包和不必要的回调重建
 tags: react, hooks, useState, useCallback, callbacks, closures
 ---
 
-## Use Functional setState Updates
+## 使用函数式 setState 更新
 
-When updating state based on the current state value, use the functional update form of setState instead of directly referencing the state variable. This prevents stale closures, eliminates unnecessary dependencies, and creates stable callback references.
+当基于当前状态值更新状态时，使用 setState 的函数式更新形式，而不是直接引用状态变量。这可以防止过期闭包，消除不必要的依赖，并创建稳定的回调引用。
 
-**Incorrect (requires state as dependency):**
+**错误做法（需要将 state 作为依赖）：**
 
 ```tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
-  // Callback must depend on items, recreated on every items change
+  // 回调必须依赖 items，每次 items 变化都重新创建
   const addItems = useCallback((newItems: Item[]) => {
     setItems([...items, ...newItems])
-  }, [items])  // ❌ items dependency causes recreations
+  }, [items])  // ❌ items 依赖导致重新创建
   
-  // Risk of stale closure if dependency is forgotten
+  // 如果忘记依赖，存在过期闭包风险
   const removeItem = useCallback((id: string) => {
     setItems(items.filter(item => item.id !== id))
-  }, [])  // ❌ Missing items dependency - will use stale items!
+  }, [])  // ❌ 缺少 items 依赖 - 将使用过期的 items！
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
 ```
 
-The first callback is recreated every time `items` changes, which can cause child components to re-render unnecessarily. The second callback has a stale closure bug—it will always reference the initial `items` value.
+第一个回调在每次 `items` 变化时都会重新创建，可能导致子组件不必要的重渲染。第二个回调存在过期闭包 bug——它将始终引用初始的 `items` 值。
 
-**Correct (stable callbacks, no stale closures):**
+**正确做法（稳定的回调，无过期闭包）：**
 
 ```tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
-  // Stable callback, never recreated
+  // 稳定回调，永不重新创建
   const addItems = useCallback((newItems: Item[]) => {
     setItems(curr => [...curr, ...newItems])
-  }, [])  // ✅ No dependencies needed
+  }, [])  // ✅ 无需依赖
   
-  // Always uses latest state, no stale closure risk
+  // 始终使用最新状态，无过期闭包风险
   const removeItem = useCallback((id: string) => {
     setItems(curr => curr.filter(item => item.id !== id))
-  }, [])  // ✅ Safe and stable
+  }, [])  // ✅ 安全且稳定
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
 ```
 
-**Benefits:**
+**好处：**
 
-1. **Stable callback references** - Callbacks don't need to be recreated when state changes
-2. **No stale closures** - Always operates on the latest state value
-3. **Fewer dependencies** - Simplifies dependency arrays and reduces memory leaks
-4. **Prevents bugs** - Eliminates the most common source of React closure bugs
+1. **稳定的回调引用** - 状态变化时无需重新创建回调
+2. **无过期闭包** - 始终操作最新状态值
+3. **更少的依赖** - 简化依赖数组并减少内存泄漏
+4. **防止错误** - 消除 React 闭包错误最常见的来源
 
-**When to use functional updates:**
+**何时使用函数式更新：**
 
-- Any setState that depends on the current state value
-- Inside useCallback/useMemo when state is needed
-- Event handlers that reference state
-- Async operations that update state
+- 任何依赖于当前状态值的 setState
+- 在 useCallback/useMemo 内部需要状态时
+- 引用状态的事件处理函数
+- 更新状态的异步操作
 
-**When direct updates are fine:**
+**何时直接更新没问题：**
 
-- Setting state to a static value: `setCount(0)`
-- Setting state from props/arguments only: `setName(newName)`
-- State doesn't depend on previous value
+- 将状态设置为静态值：`setCount(0)`
+- 仅从 props/arguments 设置状态：`setName(newName)`
+- 状态不依赖于先前的值
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler can automatically optimize some cases, but functional updates are still recommended for correctness and to prevent stale closure bugs.
+**注意：** 如果你的项目启用了 [React Compiler](https://react.dev/learn/react-compiler)，编译器可以自动优化某些情况，但为了正确性和防止过期闭包错误，仍然推荐使用函数式更新。

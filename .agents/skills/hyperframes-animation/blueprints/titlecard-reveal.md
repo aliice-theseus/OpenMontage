@@ -1,42 +1,42 @@
-# titlecard-reveal — Title-Card / Single-Card Reveal
+# titlecard-reveal — 标题卡片 / 单卡片揭示
 
-**intent**: The calm breather/landing beat — one clean title or single brand/proof card revealed with exactly one restrained move (a slide-up crossfade, or a wipe-away-to-reveal), then a still hold. Low motion is the payload, not a deficiency.
+**意图**：平静的呼吸/着陆节拍——一张干净的标题或单一品牌/证明卡片，用一个克制的动作（上滑交叉淡入淡出，或擦拭揭示）揭示，然后静止保持。低运动是交付物，而非缺陷。
 
-**roles served**
+**服务角色**
 
-- Benefits (from `benefits-titlecard-crossfade`, #34): a calm two-line value title card — headline value line, then one slide-up crossfade to a qualifier/elaboration line that holds center.
-- Social_Proof (from `social-proof-reveal-card`, #35): wipe a busy app-collage open away with one diagonal pill-sweep to reveal a clean brand lockup (icon + wordmark) plus a centered "loved by [N]+ [audience] teams" social-proof line that spring-settles and holds.
+- Benefits（来自 `benefits-titlecard-crossfade`，#34）：一个平静的两行价值标题卡片——标题价值行，然后一次上滑交叉淡入淡出到限定词/阐述行，该行居中保持。
+- Social_Proof（来自 `social-proof-reveal-card`，#35）：用一个对角胶囊擦拭将繁忙的应用拼贴画擦开，露出一个干净的品牌组合（图标 + wordmark）加上一个居中的"受 [N]+ [audience] 团队喜爱"社交证明行，弹簧稳定并保持。
 
-**duration**: 3–5s (Benefits 3–4s; Social_Proof ~5s / observed 4.7s).
+**时长**：3–5 秒（Benefits 3–4 秒；Social_Proof ~5 秒 / 观察到 4.7 秒）。
 
-**shot structure**
+**镜头结构**
 
 ```
-Scene 1 (0.0–~0.4s): static camera on [neutral / dark background]. Establish the opening state.
-  Variant — Benefits: empty-to-text — [benefit line 1] is about to fade in centered (no busy open).
-  Variant — Social_Proof: a busy intro frame holds briefly — an [app-screenshot / use-case collage] of overlapping cards under a [setup line].
+场景 1（0.0–~0.4 秒）：摄像机静止在 [中性/暗色背景] 上。建立开场状态。
+  变体 — Benefits：空白到文本 — [benefit line 1] 即将居中淡入（无繁忙开场）。
+  变体 — Social_Proof：一个繁忙的引入画幅短暂保持 — 重叠卡片组成的 [app-screenshot / use-case collage] 在 [setup line] 下。
 
-Scene 2 (~0.4–~1.5s): the ONE move executes — a single restrained reveal that brings the calm card to center.
-  Variant — Benefits: [benefit line 1] fades in centered while scaling slightly (~95%→100%, smooth ease-out) and holds.
-  Variant — Social_Proof: a large [accent-color] rounded pill sweeps diagonally bottom-left → top-right and exits the corner, clip-path wiping the collage away to reveal the [brand logo lockup] beneath as the [logo icon] strokes draw on.
+场景 2（~0.4–~1.5 秒）：**一个**动作执行 — 一个克制的揭示，将平静的卡片带到中心。
+  变体 — Benefits：[benefit line 1] 居中淡入同时略微缩放（~95%→100%，平滑缓出）并保持。
+  变体 — Social_Proof：一个大的 [accent-color] 圆角胶囊沿对角线左下→右上扫过并离开角落，clip-path 擦除拼贴画，露出下方的 [品牌 logo 组合]，同时 [logo 图标] 描画绘制。
 
-Scene 3 (~1.5s–end): the revealed/settled card holds to the end (the allocated stillness). At most one subtle live element (a slow breathing pulse on the card, or a very slow camera drift). No second development phase.
-  Variant — Benefits: [benefit line 1] translates up and fades out as [benefit line 2 — qualifier / elaboration] translates up from below center and fades in to take center; holds. (This single slide-up crossfade IS the one move — Benefits front-loads no Scene-2 wipe.)
-  Variant — Social_Proof: the lockup — [logo icon] centered, [wordmark] below, centered [social-proof tagline] "Loved by [N]+ [audience] teams" (the [N]+ may count up) — spring-settles small, then holds.
+场景 3（~1.5 秒–结束）：揭示/稳定的卡片保持到结束（分配的静止）。最多一个微妙的动态元素（卡片上的缓慢呼吸脉冲，或非常缓慢的摄像机漂移）。无第二阶段发展。
+  变体 — Benefits：[benefit line 1] 上移并淡出，同时 [benefit line 2 — qualifier / elaboration] 从中心下方上移并淡入占据中心；保持。（这个单次上滑交叉淡入淡出就是**那一个**动作 — Benefits 在场景 2 中没有前置擦拭。）
+  变体 — Social_Proof：组合 — [logo icon] 居中，[wordmark] 在其下，居中的 [social-proof tagline] "受 [N]+ [audience] 团队喜爱"（[N]+ 可能计数递增）— 弹簧小幅稳定，然后保持。
 ```
 
-**motion vocabulary**: single restrained reveal (gentle fade-in + subtle scale-up settle | diagonal clip-path pill-wipe), one slide-up crossfade between two centered lines (Benefits), icon stroke draw-on (Social_Proof), optional "[N]+ teams" count-up, logo+tagline spring-settle-and-hold, subtle breathing on the held card, hold-to-end. Calm register — no spring chains, no tumble, no per-beat flips, no second phase. Camera static (optional very slow drift only).
+**动词语汇**：单次克制揭示（柔和淡入 + 微妙缩放稳定 | 对角 clip-path 胶囊擦拭），两个居中行之间的一次上滑交叉淡入淡出（Benefits），图标描画绘制（Social_Proof），可选 "[N]+ 团队"计数递增，logo+标语弹簧稳定并保持，保持卡片上的微妙呼吸，保持到结束。平静基调——无弹簧链、无翻滚、无逐个节拍翻转、无第二阶段。摄像机静止（可选仅非常缓慢的漂移）。
 
-**rule mapping**
+**规则映射**
 
-- gentle fade-in + subtle scale-up settle (Benefits Scene 2) → `rules/scale-swap-transition.md` (restrained in/settle; cross-reference the fade ease in `techniques.md`)
-- single slide-up crossfade between two centered lines (Benefits Scene 3) → `rules/discrete-text-sequence.md` (one line hands off to the next; translate-up + crossfade)
-- diagonal pill-wipe reveal (Social_Proof Scene 2) → `rules/techniques.md` (clip-path reveal masks — the wipe)
-- icon stroke draw-on (Social_Proof Scene 2) → `rules/svg-path-draw.md`
-- "[N]+ teams" count-up (Social_Proof Scene 3, optional) → `rules/counting-dynamic-scale.md`
-- logo + tagline spring-settle-and-hold (Social_Proof Scene 3) → `rules/spring-pop-entrance.md` (single soft settle; intentionally one beat, not a chain)
-- subtle breathing on the held card (the one live element during the hold) → `rules/sine-wave-loop.md`
+- 柔和淡入 + 微妙缩放稳定（Benefits 场景 2）→ `rules/scale-swap-transition.md`（克制进入/稳定；交叉参考 `techniques.md` 中的淡入缓动）
+- 两个居中行之间的单次上滑交叉淡入淡出（Benefits 场景 3）→ `rules/discrete-text-sequence.md`（一行交接给下一行；上移 + 交叉淡入淡出）
+- 对角胶囊擦拭揭示（Social_Proof 场景 2）→ `rules/techniques.md`（clip-path 揭示遮罩 — 擦拭）
+- 图标描画绘制（Social_Proof 场景 2）→ `rules/svg-path-draw.md`
+- "[N]+ 团队"计数递增（Social_Proof 场景 3，可选）→ `rules/counting-dynamic-scale.md`
+- 标语弹簧稳定并保持（Social_Proof 场景 3）→ `rules/spring-pop-entrance.md`（单次柔和稳定；有意为一个节拍，而非链）
+- 保持卡片上的微妙呼吸（保持期间的一个动态元素）→ `rules/sine-wave-loop.md`
 
-**camera modifier**: optional — a single very slow drift/push under the hold only → `rules/multi-phase-camera.md`. Default is fully static; do not add unless the held beat would otherwise read as a freeze-frame.
+**摄像机修饰**：可选 — 仅在保持期间的单次非常缓慢的漂移/推进 → `rules/multi-phase-camera.md`。默认为完全静止；除非保持的节拍会读作定格画面，否则不要添加。
 
-**stillness note**: This is a legitimate allocated-stillness beat. The hold in Scene 3 is the deliverable, not an unanimated gap — do NOT manufacture a development phase, extra swaps, or force-animation. One restrained move + a subtle hold (optionally one breathing element or one slow drift) is the correct and complete shape.
+**静止说明**：这是一个合法的分配静止节拍。场景 3 中的保持是交付物，而非未动画化的间隙——不要制造发展阶段、额外交换或强制动画。一次克制动作 + 微妙保持（可选一个呼吸元素或一次缓慢漂移）是正确且完整的形态。

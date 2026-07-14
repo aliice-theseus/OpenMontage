@@ -1,6 +1,6 @@
-# Minimal Composition
+# 最小合成
 
-The smallest renderable HyperFrames composition — a standalone (top-level) root with one clip and one tween:
+最小的可渲染 HyperFrames 合成 — 一个包含一个剪辑和一个补间的独立（顶层）根：
 
 ```html
 <!doctype html>
@@ -8,7 +8,7 @@ The smallest renderable HyperFrames composition — a standalone (top-level) roo
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <title>Minimal HyperFrames Composition</title>
+    <title>最小 HyperFrames 合成</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       body {
@@ -57,10 +57,10 @@ The smallest renderable HyperFrames composition — a standalone (top-level) roo
 </html>
 ```
 
-Required elements:
+必需元素：
 
-- Root `<div>` with `data-composition-id`, `data-width`, `data-height`, `data-duration`
-- At least one clip (any element with `data-start`, `data-duration`, `data-track-index`)
-- GSAP timeline created paused, registered on `window.__timelines["<composition-id>"]`
+- 带有 `data-composition-id`、`data-width`、`data-height`、`data-duration` 的根 `<div>`
+- 至少一个剪辑（任何带有 `data-start`、`data-duration`、`data-track-index` 的元素）
+- GSAP 时间线创建为暂停状态，注册在 `window.__timelines["<composition-id>"]`
 
-This pattern is **standalone** (top-level `index.html`) — no `<template>` wrapper around the root. For sub-compositions (files loaded by `data-composition-src`), see `sub-compositions.md`.
+此模式是**独立**（顶层 `index.html`）— 根周围没有 `<template>` 包装器。关于子合成（由 `data-composition-src` 加载的文件），请参见 `sub-compositions.md`。

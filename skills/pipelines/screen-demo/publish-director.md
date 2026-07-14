@@ -1,80 +1,80 @@
-# Publish Director - Screen Demo Pipeline
+# 发布导演 - 屏幕演示流水线
 
-## When To Use
+## 使用时机
 
-Package the finished demo so the user can publish it quickly and so the metadata reflects the actual task, result, and tools involved.
+打包完成的演示，使用户能够快速发布，并且元数据反映实际的任务、结果和使用的工具。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 目的 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["compose"]["render_report"]`, `state.artifacts["idea"]["brief"]`, `state.artifacts["script"]["script"]` | Video, brief, and sections |
-| Playbook | Active style playbook | Thumbnail and copy tone |
+| Schema | `schemas/artifacts/publish_log.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["compose"]["render_report"]`、`state.artifacts["idea"]["brief"]`、`state.artifacts["script"]["script"]` | 视频、需求说明和章节 |
+| 执行手册 | 活跃的风格执行手册 | 缩略图和文案风格 |
 
-## Process
+## 流程
 
-### 1. Build Searchable Metadata
+### 1. 构建可搜索的元数据
 
-Screen-demo titles work best when they combine:
+屏幕演示标题在结合以下要素时效果最佳：
 
-- task,
-- tool,
-- outcome.
+- 任务
+- 工具
+- 结果
 
-Good patterns:
+好的模式：
 
-- `How to deploy on Vercel from Next.js`
-- `Fix CORS in React + Express`
-- `Set up GitHub Actions for Python tests`
+- `如何从 Next.js 部署到 Vercel`
+- `修复 React + Express 中的 CORS`
+- `为 Python 测试设置 GitHub Actions`
 
-Pull keywords from:
+从以下来源提取关键词：
 
-- software names,
-- frameworks,
-- commands,
-- exact error text,
-- outcome words such as `deploy`, `fix`, `connect`, `publish`, `ship`.
+- 软件名称
+- 框架
+- 命令
+- 精确的错误文本
+- 结果词汇，如 `部署`、`修复`、`连接`、`发布`、`上线`
 
-### 2. Use Chapter Markers As Navigation
+### 2. 使用章节标记作为导航
 
-Use script sections as the basis for chapter markers and packaging bullets. A good screen-demo package makes the workflow skimmable before the user even presses play.
+以脚本章节为基础构建章节标记和打包要点。一个好的屏幕演示包应使用户在按下播放前就能浏览工作流。
 
-### 3. Thumbnail Strategy
+### 3. 缩略图策略
 
-If a thumbnail concept is needed, it should show:
+如果需要缩略图概念，应展示：
 
-- the result state, not a generic setup screen,
-- the recognizable tool surface,
-- 2-4 words of value text.
+- 结果状态，而非通用的设置界面
+- 可识别的工具界面
+- 2-4 个字的价值文本
 
-Store the concept in `publish_log.metadata.thumbnail_concepts`.
+将概念存储在 `publish_log.metadata.thumbnail_concepts` 中。
 
-### 4. Package By Platform
+### 4. 按平台打包
 
-Prepare:
+准备：
 
-- video file,
-- title and description/caption,
-- chapter markers where relevant,
-- keyword list,
-- thumbnail concept notes.
+- 视频文件
+- 标题和说明/字幕
+- 相关的章节标记
+- 关键词列表
+- 缩略图概念备注
 
-For developer or product-demo content, also package:
+对于开发者或产品演示内容，还需打包：
 
-- commands shown,
-- software/version mentions,
-- error terms if it is a troubleshooting demo.
+- 展示的命令
+- 软件/版本提及
+- 如果是故障排除演示，包含错误术语
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- metadata names the real tool and task,
-- chapters match the actual rendered flow,
-- export folders are clean and reusable,
-- copy is tailored to the platform instead of duplicated.
+- 元数据命名了真实的工具和任务
+- 章节与实际渲染的流程匹配
+- 导出文件夹整洁且可复用
+- 文案针对平台定制而非重复使用
 
-## Common Pitfalls
+## 常见陷阱
 
-- Publishing with generic titles that omit the actual software or task.
-- Using the same caption for YouTube, LinkedIn, and short-form social.
-- Building chapter markers from the script without checking the render.
+- 使用省略了实际软件或任务的通用标题发布
+- 对 YouTube、LinkedIn 和短视频社交平台使用相同的说明文字
+- 在不检查渲染的情况下从脚本构建章节标记

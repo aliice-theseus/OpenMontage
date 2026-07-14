@@ -1,257 +1,257 @@
-# D3.js Scale Reference
+# D3.js 比例尺参考
 
-Comprehensive guide to all d3 scale types with examples and use cases.
+所有 d3 比例尺类型及示例和用例的全面指南。
 
-## Continuous scales
+## 连续比例尺
 
-### Linear scale
+### 线性比例尺
 
-Maps continuous input domain to continuous output range with linear interpolation.
+用线性插值将连续输入域映射到连续输出范围。
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range([0, 500]);
 
-scale(50);  // Returns 250
-scale(0);   // Returns 0
-scale(100); // Returns 500
+scale(50);  // 返回 250
+scale(0);   // 返回 0
+scale(100); // 返回 500
 
-// Invert scale (get input from output)
-scale.invert(250); // Returns 50
+// 反转比例尺（从输出获取输入）
+scale.invert(250); // 返回 50
 ```
 
-**Use cases:**
-- Most common scale for quantitative data
-- Axes, bar lengths, position encoding
-- Temperature, prices, counts, measurements
+**用例：**
+- 最常用的定量数据比例尺
+- 坐标轴、条形长度、位置编码
+- 温度、价格、计数、测量值
 
-**Methods:**
-- `.domain([min, max])` - Set input domain
-- `.range([min, max])` - Set output range
-- `.invert(value)` - Get domain value from range value
-- `.clamp(true)` - Restrict output to range bounds
-- `.nice()` - Extend domain to nice round values
+**方法：**
+- `.domain([min, max])` - 设置输入域
+- `.range([min, max])` - 设置输出范围
+- `.invert(value)` - 从范围值获取域值
+- `.clamp(true)` - 将输出限制在范围边界内
+- `.nice()` - 将域扩展到整齐的整数
 
-### Power scale
+### 幂比例尺
 
-Maps continuous input to continuous output with exponential transformation.
+用指数变换将连续输入映射到连续输出。
 
 ```javascript
 const sqrtScale = d3.scalePow()
-  .exponent(0.5)  // Square root
+  .exponent(0.5)  // 平方根
   .domain([0, 100])
   .range([0, 500]);
 
 const squareScale = d3.scalePow()
-  .exponent(2)  // Square
+  .exponent(2)  // 平方
   .domain([0, 100])
   .range([0, 500]);
 
-// Shorthand for square root
+// 平方根的简写
 const sqrtScale2 = d3.scaleSqrt()
   .domain([0, 100])
   .range([0, 500]);
 ```
 
-**Use cases:**
-- Perceptual scaling (human perception is non-linear)
-- Area encoding (use square root to map values to circle radii)
-- Emphasising differences in small or large values
+**用例：**
+- 感知缩放（人类感知是非线性的）
+- 面积编码（使用平方根将值映射到圆半径）
+- 强调小值或大值的差异
 
-### Logarithmic scale
+### 对数比例尺
 
-Maps continuous input to continuous output with logarithmic transformation.
+用对数变换将连续输入映射到连续输出。
 
 ```javascript
 const logScale = d3.scaleLog()
-  .domain([1, 1000])  // Must be positive
+  .domain([1, 1000])  // 必须为正数
   .range([0, 500]);
 
-logScale(1);    // Returns 0
-logScale(10);   // Returns ~167
-logScale(100);  // Returns ~333
-logScale(1000); // Returns 500
+logScale(1);    // 返回 0
+logScale(10);   // 返回约 167
+logScale(100);  // 返回约 333
+logScale(1000); // 返回 500
 ```
 
-**Use cases:**
-- Data spanning multiple orders of magnitude
-- Population, GDP, wealth distributions
-- Logarithmic axes
-- Exponential growth visualisations
+**用例：**
+- 跨越多个数量级的数据
+- 人口、GDP、财富分布
+- 对数坐标轴
+- 指数增长可视化
 
-**Important:** Domain values must be strictly positive (>0).
+**重要：** 域值必须严格为正（>0）。
 
-### Time scale
+### 时间比例尺
 
-Specialised linear scale for temporal data.
+时间数据的专用线性比例尺。
 
 ```javascript
 const timeScale = d3.scaleTime()
   .domain([new Date(2020, 0, 1), new Date(2024, 0, 1)])
   .range([0, 800]);
 
-timeScale(new Date(2022, 0, 1)); // Returns 400
+timeScale(new Date(2022, 0, 1)); // 返回 400
 
-// Invert to get date
-timeScale.invert(400); // Returns Date object for mid-2022
+// 反转获取日期
+timeScale.invert(400); // 返回 2022 年中期的 Date 对象
 ```
 
-**Use cases:**
-- Time series visualisations
-- Timeline axes
-- Temporal animations
-- Date-based interactions
+**用例：**
+- 时间序列可视化
+- 时间线坐标轴
+- 时间动画
+- 基于日期的交互
 
-**Methods:**
-- `.nice()` - Extend domain to nice time intervals
-- `.ticks(count)` - Generate nicely-spaced tick values
-- All linear scale methods apply
+**方法：**
+- `.nice()` - 将域扩展到整齐的时间间隔
+- `.ticks(count)` - 生成间隔合理的刻度值
+- 所有线性比例尺方法都适用
 
-### Quantize scale
+### 量化比例尺
 
-Maps continuous input to discrete output buckets.
+将连续输入映射到离散输出桶。
 
 ```javascript
 const quantizeScale = d3.scaleQuantize()
   .domain([0, 100])
   .range(['low', 'medium', 'high']);
 
-quantizeScale(25);  // Returns 'low'
-quantizeScale(50);  // Returns 'medium'
-quantizeScale(75);  // Returns 'high'
+quantizeScale(25);  // 返回 'low'
+quantizeScale(50);  // 返回 'medium'
+quantizeScale(75);  // 返回 'high'
 
-// Get the threshold values
-quantizeScale.thresholds(); // Returns [33.33, 66.67]
+// 获取阈值
+quantizeScale.thresholds(); // 返回 [33.33, 66.67]
 ```
 
-**Use cases:**
-- Binning continuous data
-- Heat map colours
-- Risk categories (low/medium/high)
-- Age groups, income brackets
+**用例：**
+- 连续数据分箱
+- 热图颜色
+- 风险类别（低/中/高）
+- 年龄组、收入区间
 
-### Quantile scale
+### 分位数比例尺
 
-Maps continuous input to discrete output based on quantiles.
+基于分位数将连续输入映射到离散输出。
 
 ```javascript
 const quantileScale = d3.scaleQuantile()
-  .domain([3, 6, 7, 8, 8, 10, 13, 15, 16, 20, 24]) // Sample data
+  .domain([3, 6, 7, 8, 8, 10, 13, 15, 16, 20, 24]) // 样本数据
   .range(['low', 'medium', 'high']);
 
-quantileScale(8);  // Returns based on quantile position
-quantileScale.quantiles(); // Returns quantile thresholds
+quantileScale(8);  // 基于分位数位置返回
+quantileScale.quantiles(); // 返回分位数阈值
 ```
 
-**Use cases:**
-- Equal-size groups regardless of distribution
-- Percentile-based categorisation
-- Handling skewed distributions
+**用例：**
+- 等大小分组，无论分布如何
+- 基于百分位的分类
+- 处理偏态分布
 
-### Threshold scale
+### 阈值比例尺
 
-Maps continuous input to discrete output with custom thresholds.
+使用自定义阈值将连续输入映射到离散输出。
 
 ```javascript
 const thresholdScale = d3.scaleThreshold()
   .domain([0, 10, 20])
   .range(['freezing', 'cold', 'warm', 'hot']);
 
-thresholdScale(-5);  // Returns 'freezing'
-thresholdScale(5);   // Returns 'cold'
-thresholdScale(15);  // Returns 'warm'
-thresholdScale(25);  // Returns 'hot'
+thresholdScale(-5);  // 返回 'freezing'
+thresholdScale(5);   // 返回 'cold'
+thresholdScale(15);  // 返回 'warm'
+thresholdScale(25);  // 返回 'hot'
 ```
 
-**Use cases:**
-- Custom breakpoints
-- Grade boundaries (A, B, C, D, F)
-- Temperature categories
-- Air quality indices
+**用例：**
+- 自定义断点
+- 等级界限（A、B、C、D、F）
+- 温度类别
+- 空气质量指数
 
-## Sequential scales
+## 序列比例尺
 
-### Sequential colour scale
+### 序列颜色比例尺
 
-Maps continuous input to continuous colour gradient.
+将连续输入映射到连续颜色渐变。
 
 ```javascript
 const colourScale = d3.scaleSequential(d3.interpolateBlues)
   .domain([0, 100]);
 
-colourScale(0);   // Returns lightest blue
-colourScale(50);  // Returns mid blue
-colourScale(100); // Returns darkest blue
+colourScale(0);   // 返回最浅蓝色
+colourScale(50);  // 返回中间蓝色
+colourScale(100); // 返回最深蓝色
 ```
 
-**Available interpolators:**
+**可用插值器：**
 
-**Single hue:**
-- `d3.interpolateBlues`, `d3.interpolateGreens`, `d3.interpolateReds`
-- `d3.interpolateOranges`, `d3.interpolatePurples`, `d3.interpolateGreys`
+**单色：**
+- `d3.interpolateBlues`、`d3.interpolateGreens`、`d3.interpolateReds`
+- `d3.interpolateOranges`、`d3.interpolatePurples`、`d3.interpolateGreys`
 
-**Multi-hue:**
-- `d3.interpolateViridis`, `d3.interpolateInferno`, `d3.interpolateMagma`
-- `d3.interpolatePlasma`, `d3.interpolateWarm`, `d3.interpolateCool`
-- `d3.interpolateCubehelixDefault`, `d3.interpolateTurbo`
+**多色：**
+- `d3.interpolateViridis`、`d3.interpolateInferno`、`d3.interpolateMagma`
+- `d3.interpolatePlasma`、`d3.interpolateWarm`、`d3.interpolateCool`
+- `d3.interpolateCubehelixDefault`、`d3.interpolateTurbo`
 
-**Use cases:**
-- Heat maps, choropleth maps
-- Continuous data visualisation
-- Temperature, elevation, density
+**用例：**
+- 热图、分区统计图
+- 连续数据可视化
+- 温度、海拔、密度
 
-### Diverging colour scale
+### 发散颜色比例尺
 
-Maps continuous input to diverging colour gradient with a midpoint.
+将连续输入映射到带中点的发散颜色渐变。
 
 ```javascript
 const divergingScale = d3.scaleDiverging(d3.interpolateRdBu)
   .domain([-10, 0, 10]);
 
-divergingScale(-10); // Returns red
-divergingScale(0);   // Returns white/neutral
-divergingScale(10);  // Returns blue
+divergingScale(-10); // 返回红色
+divergingScale(0);   // 返回白色/中性
+divergingScale(10);  // 返回蓝色
 ```
 
-**Available interpolators:**
-- `d3.interpolateRdBu` - Red to blue
-- `d3.interpolateRdYlBu` - Red, yellow, blue
-- `d3.interpolateRdYlGn` - Red, yellow, green
-- `d3.interpolatePiYG` - Pink, yellow, green
-- `d3.interpolateBrBG` - Brown, blue-green
-- `d3.interpolatePRGn` - Purple, green
-- `d3.interpolatePuOr` - Purple, orange
-- `d3.interpolateRdGy` - Red, grey
-- `d3.interpolateSpectral` - Rainbow spectrum
+**可用插值器：**
+- `d3.interpolateRdBu` - 红到蓝
+- `d3.interpolateRdYlBu` - 红、黄、蓝
+- `d3.interpolateRdYlGn` - 红、黄、绿
+- `d3.interpolatePiYG` - 粉、黄、绿
+- `d3.interpolateBrBG` - 棕、蓝绿
+- `d3.interpolatePRGn` - 紫、绿
+- `d3.interpolatePuOr` - 紫、橙
+- `d3.interpolateRdGy` - 红、灰
+- `d3.interpolateSpectral` - 彩虹光谱
 
-**Use cases:**
-- Data with meaningful midpoint (zero, average, neutral)
-- Positive/negative values
-- Above/below comparisons
-- Correlation matrices
+**用例：**
+- 具有有意义中点的数据（零、平均值、中性）
+- 正/负值
+- 高于/低于比较
+- 相关矩阵
 
-### Sequential quantile scale
+### 序列分位数比例尺
 
-Combines sequential colour with quantile mapping.
+结合序列颜色与分位数映射。
 
 ```javascript
 const sequentialQuantileScale = d3.scaleSequentialQuantile(d3.interpolateBlues)
   .domain([3, 6, 7, 8, 8, 10, 13, 15, 16, 20, 24]);
 
-// Maps based on quantile position
+// 基于分位数位置映射
 ```
 
-**Use cases:**
-- Perceptually uniform binning
-- Handling outliers
-- Skewed distributions
+**用例：**
+- 感知均匀分箱
+- 处理异常值
+- 偏态分布
 
-## Ordinal scales
+## 序数比例尺
 
-### Band scale
+### 带比例尺
 
-Maps discrete input to continuous bands (rectangles) with optional padding.
+将离散输入映射到连续带（矩形），带可选内边距。
 
 ```javascript
 const bandScale = d3.scaleBand()
@@ -259,29 +259,29 @@ const bandScale = d3.scaleBand()
   .range([0, 400])
   .padding(0.1);
 
-bandScale('A');           // Returns start position (e.g., 0)
-bandScale('B');           // Returns start position (e.g., 110)
-bandScale.bandwidth();    // Returns width of each band (e.g., 95)
-bandScale.step();         // Returns total step including padding
-bandScale.paddingInner(); // Returns inner padding (between bands)
-bandScale.paddingOuter(); // Returns outer padding (at edges)
+bandScale('A');           // 返回起始位置（如 0）
+bandScale('B');           // 返回起始位置（如 110）
+bandScale.bandwidth();    // 返回每个带的宽度（如 95）
+bandScale.step();         // 返回包括内边距的总步长
+bandScale.paddingInner(); // 返回内边距（带之间）
+bandScale.paddingOuter(); // 返回外边距（边缘）
 ```
 
-**Use cases:**
-- Bar charts (most common use case)
-- Grouped elements
-- Categorical axes
-- Heat map cells
+**用例：**
+- 条形图（最常见用例）
+- 分组元素
+- 分类坐标轴
+- 热图单元格
 
-**Padding options:**
-- `.padding(value)` - Sets both inner and outer padding (0-1)
-- `.paddingInner(value)` - Padding between bands (0-1)
-- `.paddingOuter(value)` - Padding at edges (0-1)
-- `.align(value)` - Alignment of bands (0-1, default 0.5)
+**内边距选项：**
+- `.padding(value)` - 同时设置内外边距（0-1）
+- `.paddingInner(value)` - 带之间的内边距（0-1）
+- `.paddingOuter(value)` - 边缘的外边距（0-1）
+- `.align(value)` - 带的对齐（0-1，默认 0.5）
 
-### Point scale
+### 点比例尺
 
-Maps discrete input to continuous points (no width).
+将离散输入映射到连续点（无宽度）。
 
 ```javascript
 const pointScale = d3.scalePoint()
@@ -289,78 +289,78 @@ const pointScale = d3.scalePoint()
   .range([0, 400])
   .padding(0.5);
 
-pointScale('A'); // Returns position (e.g., 50)
-pointScale('B'); // Returns position (e.g., 150)
-pointScale('C'); // Returns position (e.g., 250)
-pointScale('D'); // Returns position (e.g., 350)
-pointScale.step(); // Returns distance between points
+pointScale('A'); // 返回位置（如 50）
+pointScale('B'); // 返回位置（如 150）
+pointScale('C'); // 返回位置（如 250）
+pointScale('D'); // 返回位置（如 350）
+pointScale.step(); // 返回点之间的距离
 ```
 
-**Use cases:**
-- Line chart categorical x-axis
-- Scatter plot with categorical axis
-- Node positions in network graphs
-- Any point positioning for categories
+**用例：**
+- 折线图分类 x 轴
+- 带分类轴的散点图
+- 网络图中的节点位置
+- 任何分类的点定位
 
-### Ordinal colour scale
+### 序数颜色比例尺
 
-Maps discrete input to discrete output (colours, shapes, etc.).
+将离散输入映射到离散输出（颜色、形状等）。
 
 ```javascript
 const colourScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-colourScale('apples');  // Returns first colour
-colourScale('oranges'); // Returns second colour
-colourScale('apples');  // Returns same first colour (consistent)
+colourScale('apples');  // 返回第一个颜色
+colourScale('oranges'); // 返回第二个颜色
+colourScale('apples');  // 返回相同的第一个颜色（一致）
 
-// Custom range
+// 自定义范围
 const customScale = d3.scaleOrdinal()
   .domain(['cat1', 'cat2', 'cat3'])
   .range(['#FF6B6B', '#4ECDC4', '#45B7D1']);
 ```
 
-**Built-in colour schemes:**
+**内置颜色方案：**
 
-**Categorical:**
-- `d3.schemeCategory10` - 10 colours
-- `d3.schemeAccent` - 8 colours
-- `d3.schemeDark2` - 8 colours
-- `d3.schemePaired` - 12 colours
-- `d3.schemePastel1` - 9 colours
-- `d3.schemePastel2` - 8 colours
-- `d3.schemeSet1` - 9 colours
-- `d3.schemeSet2` - 8 colours
-- `d3.schemeSet3` - 12 colours
-- `d3.schemeTableau10` - 10 colours
+**分类：**
+- `d3.schemeCategory10` - 10 种颜色
+- `d3.schemeAccent` - 8 种颜色
+- `d3.schemeDark2` - 8 种颜色
+- `d3.schemePaired` - 12 种颜色
+- `d3.schemePastel1` - 9 种颜色
+- `d3.schemePastel2` - 8 种颜色
+- `d3.schemeSet1` - 9 种颜色
+- `d3.schemeSet2` - 8 种颜色
+- `d3.schemeSet3` - 12 种颜色
+- `d3.schemeTableau10` - 10 种颜色
 
-**Use cases:**
-- Category colours
-- Legend items
-- Multi-series charts
-- Network node types
+**用例：**
+- 类别颜色
+- 图例项
+- 多系列图表
+- 网络节点类型
 
-## Scale utilities
+## 比例尺工具
 
-### Nice domain
+### 整齐域
 
-Extend domain to nice round values.
+将域扩展到整齐的整数。
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0.201, 0.996])
   .nice();
 
-scale.domain(); // Returns [0.2, 1.0]
+scale.domain(); // 返回 [0.2, 1.0]
 
-// With count (approximate tick count)
+// 带计数（近似刻度数）
 const scale2 = d3.scaleLinear()
   .domain([0.201, 0.996])
   .nice(5);
 ```
 
-### Clamping
+### 钳制
 
-Restrict output to range bounds.
+将输出限制在范围边界内。
 
 ```javascript
 const scale = d3.scaleLinear()
@@ -368,13 +368,13 @@ const scale = d3.scaleLinear()
   .range([0, 500])
   .clamp(true);
 
-scale(-10); // Returns 0 (clamped)
-scale(150); // Returns 500 (clamped)
+scale(-10); // 返回 0（被钳制）
+scale(150); // 返回 500（被钳制）
 ```
 
-### Copy scales
+### 复制比例尺
 
-Create independent copies.
+创建独立副本。
 
 ```javascript
 const scale1 = d3.scaleLinear()
@@ -382,75 +382,75 @@ const scale1 = d3.scaleLinear()
   .range([0, 500]);
 
 const scale2 = scale1.copy();
-// scale2 is independent of scale1
+// scale2 独立于 scale1
 ```
 
-### Tick generation
+### 刻度生成
 
-Generate nice tick values for axes.
+为坐标轴生成整齐的刻度值。
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range([0, 500]);
 
-scale.ticks(10);        // Generate ~10 ticks
-scale.tickFormat(10);   // Get format function for ticks
-scale.tickFormat(10, ".2f"); // Custom format (2 decimal places)
+scale.ticks(10);        // 生成约 10 个刻度
+scale.tickFormat(10);   // 获取刻度的格式函数
+scale.tickFormat(10, ".2f"); // 自定义格式（2 位小数）
 
-// Time scale ticks
+// 时间比例尺刻度
 const timeScale = d3.scaleTime()
   .domain([new Date(2020, 0, 1), new Date(2024, 0, 1)]);
 
-timeScale.ticks(d3.timeYear);      // Yearly ticks
-timeScale.ticks(d3.timeMonth, 3);  // Every 3 months
-timeScale.tickFormat(5, "%Y-%m");  // Format as year-month
+timeScale.ticks(d3.timeYear);      // 每年刻度
+timeScale.ticks(d3.timeMonth, 3);  // 每 3 个月
+timeScale.tickFormat(5, "%Y-%m");  // 格式化为年-月
 ```
 
-## Colour spaces and interpolation
+## 颜色空间与插值
 
-### RGB interpolation
+### RGB 插值
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range(["blue", "red"]);
-// Default: RGB interpolation
+// 默认：RGB 插值
 ```
 
-### HSL interpolation
+### HSL 插值
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range(["blue", "red"])
   .interpolate(d3.interpolateHsl);
-// Smoother colour transitions
+// 更平滑的颜色过渡
 ```
 
-### Lab interpolation
+### Lab 插值
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range(["blue", "red"])
   .interpolate(d3.interpolateLab);
-// Perceptually uniform
+// 感知均匀
 ```
 
-### HCL interpolation
+### HCL 插值
 
 ```javascript
 const scale = d3.scaleLinear()
   .domain([0, 100])
   .range(["blue", "red"])
   .interpolate(d3.interpolateHcl);
-// Perceptually uniform with hue
+// 带色相的感知均匀
 ```
 
-## Common patterns
+## 常见模式
 
-### Diverging scale with custom midpoint
+### 带自定义中点的发散比例尺
 
 ```javascript
 const scale = d3.scaleLinear()
@@ -459,7 +459,7 @@ const scale = d3.scaleLinear()
   .interpolate(d3.interpolateHcl);
 ```
 
-### Multi-stop gradient scale
+### 多停渐变比例尺
 
 ```javascript
 const scale = d3.scaleLinear()
@@ -467,43 +467,43 @@ const scale = d3.scaleLinear()
   .range(["#d53e4f", "#fc8d59", "#fee08b", "#e6f598", "#66c2a5"]);
 ```
 
-### Radius scale for circles (perceptual)
+### 圆的半径比例尺（感知）
 
 ```javascript
 const radiusScale = d3.scaleSqrt()
   .domain([0, d3.max(data, d => d.value)])
   .range([0, 50]);
 
-// Use with circles
+// 与圆一起使用
 circle.attr("r", d => radiusScale(d.value));
 ```
 
-### Adaptive scale based on data range
+### 基于数据范围的自适应比例尺
 
 ```javascript
 function createAdaptiveScale(data) {
   const extent = d3.extent(data);
   const range = extent[1] - extent[0];
   
-  // Use log scale if data spans >2 orders of magnitude
+  // 如果数据跨越 >2 个数量级，使用对数比例尺
   if (extent[1] / extent[0] > 100) {
     return d3.scaleLog()
       .domain(extent)
       .range([0, width]);
   }
   
-  // Otherwise use linear
+  // 否则使用线性
   return d3.scaleLinear()
     .domain(extent)
     .range([0, width]);
 }
 ```
 
-### Colour scale with explicit categories
+### 带显式类别的颜色比例尺
 
 ```javascript
 const colourScale = d3.scaleOrdinal()
   .domain(['Low Risk', 'Medium Risk', 'High Risk'])
   .range(['#2ecc71', '#f39c12', '#e74c3c'])
-  .unknown('#95a5a6'); // Fallback for unknown values
+  .unknown('#95a5a6'); // 未知值的回退
 ```

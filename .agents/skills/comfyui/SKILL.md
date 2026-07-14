@@ -1,55 +1,55 @@
 ---
 name: comfyui
-description: Use when working with ComfyUI workflows in OpenMontage, including comfyui_image/comfyui_video, custom workflow_json/workflow_path inputs, output_node selection, missing model setup, LoRAs, low-VRAM workflow choices, and community workflow imports.
+description: 在 OpenMontage 中使用 ComfyUI 工作流时使用，包括 comfyui_image/comfyui_video、自定义 workflow_json/workflow_path 输入、输出节点选择、缺失模型设置、LoRA、低显存工作流选择和社区工作流导入。
 ---
 
-# ComfyUI Workflows in OpenMontage
+# OpenMontage 中的 ComfyUI 工作流
 
-Use this skill before calling `comfyui_image` or `comfyui_video`, and when converting a community ComfyUI workflow into an OpenMontage tool call.
+在调用 `comfyui_image` 或 `comfyui_video` 之前，以及在将社区 ComfyUI 工作流转换为 OpenMontage 工具调用时使用此技能。
 
-## Server Contract
+## 服务器契约
 
-- ComfyUI must be running before the tool can generate. The default server is `http://localhost:8188`; override it with `COMFYUI_SERVER_URL`.
-- Health and hardware status come from `GET /system_stats`.
-- Jobs are submitted to `POST /prompt`, completed outputs are read from `GET /history/{prompt_id}`, and artifact bytes are downloaded with `GET /view`.
-- Export workflows with ComfyUI's API-format JSON, not the UI layout format. If a downloaded workflow will not submit, re-export it from ComfyUI with API format enabled.
+- ComfyUI 必须在工具生成前正在运行。默认服务器为 `http://localhost:8188`；可通过 `COMFYUI_SERVER_URL` 覆盖。
+- 健康状态和硬件信息来自 `GET /system_stats`。
+- 任务提交至 `POST /prompt`，完成的输出从 `GET /history/{prompt_id}` 读取，制品字节通过 `GET /view` 下载。
+- 使用 ComfyUI 的 API 格式 JSON（而非 UI 布局格式）导出工作流。如果下载的工作流无法提交，请在 ComfyUI 中启用 API 格式后重新导出。
 
-## Choosing a Workflow
+## 选择工作流
 
-- Use bundled workflows when the requested operation matches and the local machine has the required models and VRAM.
-- Use a custom `workflow_json` or `workflow_path` when the user needs a community recipe, a lower-VRAM model, a different style family, or custom nodes.
-- For 8GB-12GB GPUs, prefer lower-footprint workflows such as Wan 2.1 1.3B, LTXV FP8 or quantized workflows, or Wan 2.2 GGUF/quantized community workflows. The bundled Wan 2.2 14B FP8 video workflows are a 16GB-class path, not a provider-wide floor.
-- Do not promise that arbitrary custom workflows will fit a machine. The workflow, quantization, resolution, frame count, and offload settings determine the real resource envelope.
+- 当请求的操作匹配且本地机器具有所需模型和显存时，使用捆绑的工作流。
+- 当用户需要社区配方、较低显存的模型、不同风格系列或自定义节点时，使用自定义 `workflow_json` 或 `workflow_path`。
+- 对于 8GB-12GB GPU，优先选择占用较低的工作流，例如 Wan 2.1 1.3B、LTXV FP8 或量化工作流，或 Wan 2.2 GGUF/量化社区工作流。捆绑的 Wan 2.2 14B FP8 视频工作流是 16GB 级别的路径，而非提供商的通用最低配置。
+- 不要承诺任意自定义工作流都能适配某台机器。工作流、量化、分辨率、帧数和卸载设置决定了实际的资源开销范围。
 
-## Output Node Contract
+## 输出节点约定
 
-- Custom workflows must pass `output_node`.
-- Pick the node that writes the artifact, usually `SaveImage`, `SaveVideo`, `VHS_VideoCombine`, or another terminal saver node.
-- Pass the node ID as a string, for example `"108"`. Do not pass the class name.
-- If a workflow has multiple savers, choose the final deliverable node, not previews or intermediates.
+- 自定义工作流必须传递 `output_node`。
+- 选择写入制品的节点，通常为 `SaveImage`、`SaveVideo`、`VHS_VideoCombine` 或其他终端保存节点。
+- 将节点 ID 作为字符串传递，例如 `"108"`。不要传递类名。
+- 如果工作流有多个保存器，选择最终的交付节点，而非预览或中间节点。
 
-## Templated vs Fixed Nodes
+## 模板化节点与固定节点
 
-- Identify templated nodes before execution: prompt text, seed, dimensions, frame count, source image, sampler settings, and output filename prefix.
-- Fixed nodes are model loaders, VAEs, text encoders, LoRA loaders, schedulers, and graph wiring. Do not mutate those unless the workflow author intended that customization.
-- For community workflows, inspect each loader node and note every required model or custom node before running. Missing models should be handled through the tool's structured `missing_models` payload when available.
+- 在执行前识别模板化节点：提示文本、种子、尺寸、帧数、源图像、采样器设置和输出文件名前缀。
+- 固定节点是模型加载器、VAE、文本编码器、LoRA 加载器、调度器和图连接。除非工作流作者意图自定义，否则不要修改这些节点。
+- 对于社区工作流，检查每个加载器节点，并在运行前记录每个必需的模型或自定义节点。缺失模型应通过工具的 `missing_models` 结构化负载处理（若可用）。
 
-## Model and LoRA Setup
+## 模型和 LoRA 设置
 
-- Use ComfyUI Manager or the workflow author's model links when available, and respect model licenses.
-- Place models in the folders expected by the loader nodes: diffusion models under `ComfyUI/models/diffusion_models/`, text encoders under `ComfyUI/models/text_encoders/`, VAEs under `ComfyUI/models/vae/`, and LoRAs under `ComfyUI/models/loras/`.
-- For LoRA stacks, use `LoraLoader` or `LoraLoaderModelOnly` chains in the workflow. Record each LoRA name plus `strength_model` and `strength_clip` when applicable.
-- The current ComfyUI tools do not inject LoRAs into arbitrary graphs. To use LoRAs, provide a workflow that already contains the LoRA loader chain and pass model-stack provenance.
+- 在可用时使用 ComfyUI Manager 或工作流作者的模型链接，并遵守模型许可。
+- 将模型放置在加载器节点期望的文件夹中：扩散模型在 `ComfyUI/models/diffusion_models/` 下，文本编码器在 `ComfyUI/models/text_encoders/` 下，VAE 在 `ComfyUI/models/vae/` 下，LoRA 在 `ComfyUI/models/loras/` 下。
+- 对于 LoRA 栈，在工作流中使用 `LoraLoader` 或 `LoraLoaderModelOnly` 链。记录每个 LoRA 名称以及适用的 `strength_model` 和 `strength_clip`。
+- 当前的 ComfyUI 工具不会将 LoRA 注入任意图。要使用 LoRA，请提供一个已包含 LoRA 加载器链的工作流，并传递模型栈来源信息。
 
-## Provenance
+## 溯源信息
 
-- For custom workflows, provide `workflow_name` and `workflow_model` when known.
-- Provide `workflow_model_stack` for reproducibility when the workflow is not bundled. Include base checkpoint or diffusion model, quantization, text encoder, VAE, LoRAs and strengths, sampler or scheduler, steps, and guidance if the workflow exposes them.
-- The tools record the final workflow hash. Treat that hash plus the model stack, seed, dimensions, and prompt as the reproducibility contract.
+- 对于自定义工作流，在已知时提供 `workflow_name` 和 `workflow_model`。
+- 当工作流非捆绑时，提供 `workflow_model_stack` 以确保可重现性。如果工作流暴露，包括基础检查点或扩散模型、量化、文本编码器、VAE、LoRA 及强度、采样器或调度器、步数和引导尺度。
+- 工具会记录最终的工作流哈希。将该哈希连同模型栈、种子、尺寸和提示词视为可重现性契约。
 
-## Failure Handling
+## 故障处理
 
-- If the server is unavailable, surface the structured setup offer. Starting ComfyUI or setting `COMFYUI_SERVER_URL` is the first fix.
-- If models are missing, read `data.missing_models[]`; each item should include the file name, role, destination hint, and download URL when OpenMontage knows it.
-- If custom nodes are missing, ask the user to install them through ComfyUI Manager or the workflow author's documented install path, then restart ComfyUI.
-- If a long render times out locally, check ComfyUI history before retrying from scratch; the server may still have completed the prompt.
+- 如果服务器不可用，展示结构化的设置建议。启动 ComfyUI 或设置 `COMFYUI_SERVER_URL` 是首要修复步骤。
+- 如果模型缺失，读取 `data.missing_models[]`；每个条目应包含文件名、角色、目标位置提示和下载 URL（当 OpenMontage 知道时）。
+- 如果缺少自定义节点，要求用户通过 ComfyUI Manager 或工作流作者文档中记录的安装路径来安装，然后重新启动 ComfyUI。
+- 如果长时间渲染在本地超时，在从头重试前检查 ComfyUI 历史记录；服务器可能已经完成了该提示。

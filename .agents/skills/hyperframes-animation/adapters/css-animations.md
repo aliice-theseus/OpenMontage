@@ -1,25 +1,25 @@
 ---
 name: hyperframes-css-animations
-description: CSS animation adapter patterns for HyperFrames. Use when authoring CSS keyframes, animation-delay based timing, animation-fill-mode, animation-play-state, or CSS-only motion that HyperFrames must seek deterministically during preview and rendering.
+description: CSS 动画适配器模式，用于 HyperFrames。在编写 CSS 关键帧、基于 animation-delay 的时间控制、animation-fill-mode、animation-play-state 或纯 CSS 动效（HyperFrames 必须在预览和渲染期间确定性定位）时使用。
 ---
 
-# CSS Animations for HyperFrames
+# CSS 动画用于 HyperFrames
 
-HyperFrames can seek CSS keyframe animations through its `css` runtime adapter. Use this for simple repeated motifs, background motion, shimmer, glow, masks, and non-sequenced decoration.
+HyperFrames 可以通过其 `css` 运行时适配器定位 CSS 关键帧动画。用于简单的重复主题、背景运动、闪烁、辉光、遮罩和非序列化的装饰。
 
-For scene choreography, GSAP is usually clearer. CSS animations work best when the motion belongs to one element and has a fixed duration.
+对于场景编排，GSAP 通常更清晰。CSS 动画在动效属于单个元素且具有固定时长时效果最佳。
 
-## Contract
+## 约定
 
-- Put the animated element in the DOM before runtime initialization finishes.
-- Give timed elements a `data-start` value so local animation time matches the clip.
-- Use finite `animation-duration` and `animation-iteration-count` because the negative-delay fallback cannot represent unbounded duration in environments without WAAPI-backed CSS animations.
-- Prefer `animation-fill-mode: both` so seeked states hold before and after active motion.
-- Avoid wall-clock JavaScript, hover-triggered state, and class toggles that depend on user events.
+- 在运行时初始化完成之前将动画元素放入 DOM。
+- 为时间化元素指定 `data-start` 值，使本地动画时间与剪辑匹配。
+- 使用有限的 `animation-duration` 和 `animation-iteration-count`，因为负延迟回退无法在没有 WAAPI 支持的 CSS 动画环境中表示无界时长。
+- 优先使用 `animation-fill-mode: both`，使定位状态在活跃动效前后都能保持。
+- 避免使用挂钟 JavaScript、悬停触发的状态以及依赖用户事件的类切换。
 
-The adapter discovers elements with computed `animation-name`, seeks their browser `Animation` handles when available, and falls back to pausing with negative `animation-delay`.
+适配器发现具有计算后 `animation-name` 的元素，在可用时定位其浏览器的 `Animation` 句柄，并回退到使用负 `animation-delay` 暂停。
 
-## Basic Pattern
+## 基本模式
 
 ```html
 <div
@@ -59,9 +59,9 @@ The adapter discovers elements with computed `animation-name`, seeks their brows
 </style>
 ```
 
-## Stagger Pattern
+## 错开（Stagger）模式
 
-Use CSS custom properties to avoid duplicating keyframes:
+使用 CSS 自定义属性以避免重复关键帧：
 
 ```html
 <div class="clip dots" data-start="1" data-duration="3" data-track-index="3">
@@ -95,30 +95,30 @@ Use CSS custom properties to avoid duplicating keyframes:
 </style>
 ```
 
-## Good Uses
+## 适用场景
 
-- Decorative loops with a known repeat count.
-- Mask, glow, shimmer, grain, and subtle parallax layers.
-- Simple one-element entrances where a full JS timeline would be excessive.
+- 具有已知重复次数的装饰性循环。
+- 遮罩、辉光、闪烁、颗粒感和微妙的视差层。
+- 简单的单元素入场，完整 JS 时间线会显得过度。
 
-## Avoid
+## 避免
 
-- Infinite CSS animations unless you have verified the browser exposes seekable WAAPI-backed CSS animation handles. Prefer a finite iteration count covering the visible duration.
-- Animating layout properties like `top`, `left`, `width`, or `height` when transforms work.
-- Relying on hover, focus, scroll, or media queries to trigger render-critical motion.
-- Changing animation classes after startup unless another deterministic timeline controls that change.
+- 无限的 CSS 动画，除非已验证浏览器暴露了可定位的 WAAPI 支持 CSS 动画句柄。优先使用覆盖可见时长的有限迭代次数。
+- 在 transforms 可以工作时动画化布局属性如 `top`、`left`、`width` 或 `height`。
+- 依赖悬停、焦点、滚动或媒体查询来触发渲染关键的运动。
+- 启动后更改动画类，除非另一个确定性时间线控制该更改。
 
-## Validation
+## 验证
 
-After editing CSS animation compositions:
+编辑 CSS 动画组合后：
 
 ```bash
 npx hyperframes lint
 npx hyperframes validate
 ```
 
-## Credits And References
+## 参考与致谢
 
-- HyperFrames adapter source: `packages/core/src/runtime/adapters/css.ts`.
-- MDN CSS animation documentation: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation
-- MDN `animation-fill-mode`: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-fill-mode
+- HyperFrames 适配器源码：`packages/core/src/runtime/adapters/css.ts`。
+- MDN CSS 动画文档：https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation
+- MDN `animation-fill-mode`：https://developer.mozilla.org/en-US/docs/Web/CSS/animation-fill-mode

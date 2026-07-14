@@ -1,4 +1,4 @@
-# Installation
+# 安装
 
 ## JavaScript / TypeScript
 
@@ -6,16 +6,16 @@
 npm install @elevenlabs/elevenlabs-js
 ```
 
-> **Important:** Always use `@elevenlabs/elevenlabs-js`. The old `elevenlabs` npm package (v1.x) is deprecated and should not be used.
+> **重要：** 始终使用 `@elevenlabs/elevenlabs-js`。旧的 `elevenlabs` npm 包（v1.x）已弃用，不应再使用。
 
 ```javascript
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 
-// Option 1: Environment variable (recommended)
-// Set ELEVENLABS_API_KEY in your environment
+// 选项 1：环境变量（推荐）
+// 在环境中设置 ELEVENLABS_API_KEY
 const client = new ElevenLabsClient();
 
-// Option 2: Pass directly
+// 选项 2：直接传递
 const client = new ElevenLabsClient({ apiKey: "your-api-key" });
 ```
 
@@ -28,23 +28,23 @@ pip install elevenlabs
 ```python
 from elevenlabs import ElevenLabs
 
-# Option 1: Environment variable (recommended)
-# Set ELEVENLABS_API_KEY in your environment
+# 选项 1：环境变量（推荐）
+# 在环境中设置 ELEVENLABS_API_KEY
 client = ElevenLabs()
 
-# Option 2: Pass directly
+# 选项 2：直接传递
 client = ElevenLabs(api_key="your-api-key")
 ```
 
 ## cURL / REST API
 
-Set your API key as an environment variable:
+将 API 密钥设置为环境变量：
 
 ```bash
 export ELEVENLABS_API_KEY="your-api-key"
 ```
 
-Include in requests via the `xi-api-key` header:
+通过 `xi-api-key` 头在请求中包含：
 
 ```bash
 curl -X POST "https://api.elevenlabs.io/v1/sound-generation" \
@@ -53,11 +53,11 @@ curl -X POST "https://api.elevenlabs.io/v1/sound-generation" \
   -d '{"text": "Thunder rumbling in the distance"}' --output output.mp3
 ```
 
-## Getting an API Key
+## 获取 API 密钥
 
-1. Sign up at [elevenlabs.io](https://elevenlabs.io)
-2. Go to [API Keys](https://elevenlabs.io/app/settings/api-keys)
-3. Click **Create API Key**
-4. Copy and store securely
+1. 在 [elevenlabs.io](https://elevenlabs.io) 注册
+2. 前往 [API Keys](https://elevenlabs.io/app/settings/api-keys)
+3. 点击 **Create API Key**
+4. 复制并安全存储
 
-Or use the `setup-api-key` skill for guided setup.
+或使用 `setup-api-key` 技能进行引导式设置。

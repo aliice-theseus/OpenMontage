@@ -1,108 +1,108 @@
-# Motion Principles
+# 运动原则
 
-## Contents
+## 目录
 
-- Guardrails
-- What you do not do without being told
-- Visual composition
-- Image motion treatment
-- Load-bearing GSAP rules
+- 护栏规则
+- 未经指示不得做的事
+- 视觉构图
+- 图片运动处理
+- 承重 GSAP 规则
 
-## Guardrails
+## 护栏规则
 
-You know these rules but you violate them. Stop.
+你知道这些规则但违反它们。停止。
 
-- **Don't use the same ease on every tween.** You default to `power2.out` on everything. Vary eases like you vary font weights — no more than 2 independent tweens with the same ease in a scene.
-- **Don't use the same speed on everything.** You default to 0.4-0.5s for everything. The slowest scene should be 3× slower than the fastest. Vary duration deliberately.
-- **Don't enter everything from the same direction.** You default to `y: 30, opacity: 0` on every element. Vary: from left, from right, from scale, opacity-only, letter-spacing.
-- **Don't use the same stagger on every scene.** Each scene needs its own rhythm.
-- **Don't use ambient zoom on every scene.** Pick different ambient motion per scene: slow pan, subtle rotation, scale push, color shift, or nothing. Stillness after motion is powerful.
-- **Don't start at t=0.** Offset the first animation 0.1-0.3s. Zero-delay feels like a jump cut.
+- **不要在每一个补间上使用相同的缓动。** 你默认为所有内容使用 `power2.out`。像变化字重一样变化缓动——场景中不超过 2 个独立的补间使用相同的缓动。
+- **不要在所有内容上使用相同的速度。** 你默认为所有内容使用 0.4-0.5 秒。最慢的场景应比最快的慢 3 倍。有意变化时长。
+- **不要从同一方向进入所有内容。** 你默认为每个元素使用 `y: 30, opacity: 0`。变化：从左、从右、从缩放、仅不透明度、字距。
+- **不要在每场戏使用相同的交错。** 每个场景需要自己的节奏。
+- **不要在每场戏使用环境缩放。** 每场戏选择不同的环境运动：慢摇、微妙旋转、缩放推近、颜色偏移或什么都没有。运动后的静止是有力的。
+- **不要从 t=0 开始。** 将第一个动画偏移 0.1-0.3 秒。零延迟感觉像跳切。
 
-## What You Don't Do Without Being Told
+## 未经指示不得做的事
 
-### Easing is emotion, not technique
+### 缓动是情感，不是技术
 
-The transition is the verb. The easing is the adverb. A slide-in with `expo.out` = confident. With `sine.inOut` = dreamy. With `elastic.out` = playful. Same motion, different meaning. Choose the adverb deliberately.
+过渡是动词。缓动是副词。`expo.out` 的滑入 = 自信。`sine.inOut` = 梦幻。`elastic.out` = 俏皮。相同的运动，不同的含义。有意识选择副词。
 
-**Direction rules — these are not optional:**
+**方向规则——这些不是可选的：**
 
-- `.out` for elements entering. Starts fast, decelerates. Feels responsive. This is your default.
-- `.in` for elements leaving. Starts slow, accelerates away. Throws them off.
-- `.inOut` for elements moving between positions.
+- `.out` 用于进入的元素。快速开始，减速。感觉响应迅速。这是你的默认设置。
+- `.in` 用于离开的元素。缓慢开始，加速离开。把它们甩掉。
+- `.inOut` 用于在位置间移动的元素。
 
-You get this backwards constantly. Ease-in for entrances feels sluggish. Ease-out for exits feels reluctant.
+你经常搞反这个。入场缓入感觉迟钝。出场缓出感觉不情愿。
 
-### Speed communicates weight
+### 速度传达重量
 
-- Fast (0.15-0.3s) — energy, urgency, confidence
-- Medium (0.3-0.5s) — professional, most content
-- Slow (0.5-0.8s) — gravity, luxury, contemplation
-- Very slow (0.8-2.0s) — cinematic, emotional, atmospheric
+- 快（0.15-0.3s）— 能量、紧迫、自信
+- 中（0.3-0.5s）— 专业、大多数内容
+- 慢（0.5-0.8s）— 重力、奢华、沉思
+- 很慢（0.8-2.0s）— 电影感、情感、氛围
 
-### Scene structure: build / breathe / resolve
+### 场景结构：构建 / 呼吸 / 收束
 
-Every scene has three phases. You dump everything in the build and leave nothing for breathe or resolve.
+每个场景有三个阶段。你把所有内容都倾泻在构建阶段，不给呼吸或收束留空间。
 
-- **Build (0-30%)** — elements enter, staggered. Don't dump everything at once.
-- **Breathe (30-70%)** — content visible, alive with ONE ambient motion.
-- **Resolve (70-100%)** — exit or decisive end. Exits are faster than entrances.
+- **构建（0-30%）** — 元素交错进入。不要一次倾泻所有内容。
+- **呼吸（30-70%）** — 内容可见，通过一个环境运动保持活力。
+- **收束（70-100%）** — 退出或决定性结束。退出比进入更快。
 
-### Transitions are meaning
+### 过渡即意义
 
-- **Crossfade** = "this continues"
-- **Hard cut** = "wake up" / disruption
-- **Slow dissolve** = "drift with me"
+- **交叉淡入淡出** = "这继续"
+- **硬切** = "醒来" / 中断
+- **慢溶解** = "与我漂流"
 
-You crossfade everything. Use hard cuts for disruption and register shifts.
+你对所有内容都用交叉淡入淡出。对中断和语域转换使用硬切。
 
-### Choreography is hierarchy
+### 编排即层级
 
-The element that moves first is perceived as most important. Stagger in order of importance, not DOM order. Don't wait for completion — overlap entries. Total stagger sequence under 500ms regardless of item count.
+最先移动的元素被认为最重要。按重要性顺序交错，而非 DOM 顺序。不要等待完成——重叠入场。无论项目数量多少，总交错序列控制在 500ms 以内。
 
-### Asymmetry
+### 不对称
 
-Entrances need longer than exits. A card takes 0.4s to appear but 0.25s to disappear.
+入场需要比出场更长的时间。一张卡片需要 0.4s 出现但只需要 0.25s 消失。
 
-## Visual Composition
+## 视觉构图
 
-You build for the web. Video frames are not pages.
+你为网页构建。视频帧不是页面。
 
-- **Two focal points minimum per scene.** The eye needs somewhere to travel. Never a single text block floating in empty space.
-- **Fill the frame.** Hero text: 60-80% of width. You will try to use web-sized elements. Don't.
-- **Three layers minimum per scene.** Background treatment (glow, oversized faded type, color panel). Foreground content. Accent elements (dividers, labels, data bars).
-- **Background is not empty.** Radial glows, oversized faded type bleeding off-frame, subtle border panels, hairline rules. Pure solid #000 reads as "nothing loaded."
-- **Anchor to edges.** Pin content to left/top or right/bottom. Centered-and-floating is a web pattern.
-- **Split frames.** Data panel on the left, content on the right. Top bar with metadata, full-width below. Zone-based layouts, not centered stacks.
-- **Use structural elements.** Rules, dividers, border panels. They create paths for the eye and animate well (scaleX from 0).
+- **每场至少两个焦点。** 眼睛需要有地方可看。永远不要单个文本块漂浮在空白空间中。
+- **填满画幅。** 主标题文字：宽度的 60-80%。你会想用网页尺寸的元素。不要。
+- **每场至少三层。** 背景处理（光晕、超大褪色文字、色彩面板）。前景内容。点缀元素（分割线、标签、数据条）。
+- **背景不是空的。** 径向光晕、超大褪色文字溢出画框、微妙边框面板、发丝线。纯色 #000 读作"什么都没加载。"
+- **锚定到边缘。** 将内容固定在左/上或右/下。居中浮动是网页模式。
+- **分割画幅。** 左侧数据面板，右侧内容。顶部带有元数据的状态栏，下方全宽。基于区域布局，而非居中堆叠。
+- **使用结构元素。** 标尺、分割线、边框面板。它们为眼睛创建路径且动画效果好（scaleX 从 0 开始）。
 
-## Image Motion Treatment
+## 图片运动处理
 
-Never embed a raw flat image. Every image must have motion treatment:
+永远不要嵌入原始平面图像。每张图片都必须有运动处理：
 
-- **Perspective tilt**: use `gsap.set(el, { transformPerspective: 1200, rotationY: -8 })` + `box-shadow` — creates depth. Do NOT use CSS `transform: perspective(...)` as GSAP will overwrite it.
-- **Slow zoom (Ken Burns)**: GSAP `scale: 1` → `1.04` over beat duration — makes photos cinematic
-- **Device frame**: Wrap in a laptop/phone shape using CSS `border-radius` and `box-shadow`
-- **Floating UI**: Extract a key element and animate it at a different z-depth for parallax
-- **Scroll reveal**: Clip the image to a viewport window and animate `y` position
+- **透视倾斜**：使用 `gsap.set(el, { transformPerspective: 1200, rotationY: -8 })` + `box-shadow` — 创造深度。不要使用 CSS `transform: perspective(...)`，因为 GSAP 会覆盖它。
+- **慢速缩放（Ken Burns）**：GSAP `scale: 1` → `1.04` 跨越节拍时长——让照片具有电影感
+- **设备框架**：使用 CSS `border-radius` 和 `box-shadow` 包裹在笔记本/手机形状中
+- **浮动 UI**：提取关键元素并在不同的 z 深度上为其添加视差动画
+- **滚动揭示**：将图像裁剪到视口窗口并动画化 `y` 位置
 
-## Load-Bearing GSAP Rules
+## 承重 GSAP 规则
 
-Rules below came out of two independent website capture builds (2026-04-20) where compositions lint-clean and still ship broken — elements that never appear, ambient motion that doesn't scrub, entrance tweens that silently kill their target. The linter cannot catch these; the rules must be followed by the author.
+以下规则源自两个独立的网站捕获构建（2026-04-20），其中合成 lint 代码干净但发布时仍然损坏——从未出现的元素、无法擦洗的环境运动、静默杀死其目标的入场补间。linter 无法捕获这些；作者必须遵循这些规则。
 
-- **No iframes for captured content.** Iframes do not seek deterministically with the timeline — the capture engine cannot scrub inside them, so they appear frozen (or blank) in the rendered output. If the source you're stylizing is a live web app, use the screenshots from `capture/` as stacked panels or layered images, not live embeds.
+- **捕获内容不要使用 iframe。** iframe 不能确定性地随时间线搜寻——捕获引擎无法在其中擦洗，因此它们在渲染输出中会显示为冻结（或空白）。如果你正在样式化的源是一个实时 Web 应用，使用来自 `capture/` 的截图作为堆叠面板或分层图像，而非实时嵌入。
 
-- **Never stack two transform tweens on the same element.** A common failure: a `y` entrance plus a `scale` Ken Burns on the same `<img>`. The second tween's `immediateRender: true` writes the element's initial state at construction time, overwriting whatever the first tween set — leaving the element invisible or offscreen with no lint warning. A secondary mechanism: `tl.from()` resets to its declared "from" state when the playhead is seeked past the timeline's end, so an element that looked correct in linear playback vanishes in the capture engine's non-linear seek. Fix one of two ways:
+- **永远不要在同一个元素上叠加两个变换补间。** 一个常见的失败：同一个 `<img>` 上的 `y` 入场加上 `scale` Ken Burns。第二个补间的 `immediateRender: true` 在构建时写入元素的初始状态，覆盖第一个补间设置的内容——使元素不可见或离屏，且没有 lint 警告。次要机制：当播放头被搜寻超过时间线末尾时，`tl.from()` 会重置为其声明的"from"状态，因此在线性播放中看起来正确的元素会在捕获引擎的非线性搜寻中消失。两种修复方式之一：
 
   ```html
-  <!-- BAD: two transforms on one element -->
+  <!-- 不好：一个元素上两个变换 -->
   <img class="hero" src="..." />
   <script>
     tl.from(".hero", { y: 50, opacity: 0, duration: 0.6 }, 0);
-    tl.to(".hero", { scale: 1.04, duration: beat }, 0); // kills the entrance
+    tl.to(".hero", { scale: 1.04, duration: beat }, 0); // 杀死入场
   </script>
 
-  <!-- GOOD option A: combine into one tween -->
+  <!-- 好 选项A：合并为一个补间 -->
   <script>
     tl.fromTo(
       ".hero",
@@ -112,39 +112,39 @@ Rules below came out of two independent website capture builds (2026-04-20) wher
     );
   </script>
 
-  <!-- GOOD option B: split across parent + child -->
+  <!-- 好 选项B：在父级和子级之间拆分 -->
   <div class="hero-wrap"><img class="hero" src="..." /></div>
   <script>
-    tl.from(".hero-wrap", { y: 50, opacity: 0, duration: 0.6 }, 0); // entrance on parent
-    tl.to(".hero", { scale: 1.04, duration: beat }, 0); // Ken Burns on child
+    tl.from(".hero-wrap", { y: 50, opacity: 0, duration: 0.6 }, 0); // 父级入场
+    tl.to(".hero", { scale: 1.04, duration: beat }, 0); // 子级 Ken Burns
   </script>
   ```
 
-- **Prefer `tl.fromTo()` over `tl.from()` inside `.clip` scenes.** `gsap.from()` sets `immediateRender: true` by default, which writes the "from" state at timeline construction — before the `.clip` scene's `data-start` is active. Elements can flash visible, start from the wrong position, or skip their entrance entirely when the scene is seeked non-linearly (which the capture engine does). Explicit `fromTo` makes the state at every timeline position deterministic:
+- **在 `.clip` 场景中优先使用 `tl.fromTo()` 而非 `tl.from()`。** `gsap.from()` 默认设置 `immediateRender: true`，它在时间线构建时写入"from"状态——在 `.clip` 场景的 `data-start` 激活之前。当场景被非线性搜寻时（捕获引擎会这样做），元素可能闪烁可见、从错误位置开始或完全跳过入场。显式的 `fromTo` 使每个时间线位置的状态都是确定性的：
 
   ```js
-  // BRITTLE: immediateRender interacts badly with scene boundaries
+  // 脆弱：immediateRender 与场景边界交互不良
   tl.from(el, { opacity: 0, y: 50, duration: 0.6 }, t);
 
-  // DETERMINISTIC: state is defined at both ends, no immediateRender surprise
+  // 确定性：两端状态都已定义，无 immediateRender 意外
   tl.fromTo(el, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6 }, t);
   ```
 
-- **Ambient pulses must attach to the seekable `tl`, never bare `gsap.to()`.** Auras, shimmers, gentle float loops, logo breathing — all of these must be added to the scene's timeline, not fired standalone. Standalone tweens run on wallclock time and do not scrub with the capture engine, so the effect is absent in the rendered video even though it looks correct in the studio preview:
+- **环境脉动必须附加到可搜寻的 `tl`，永远不要用裸 `gsap.to()`。** 光环、微光、温和浮动循环、标志呼吸——所有这些都必须添加到场景的时间线中，而不是独立触发。独立补间按挂钟时间运行，不会随捕获引擎擦洗，因此即使它在 Studio 预览中看起来正确，在渲染视频中效果也会缺失：
 
   ```js
-  // BAD: lives outside the timeline, never renders in capture
+  // 不好：存在于时间线之外，在捕获中从不渲染
   gsap.to(".aura", { scale: 1.08, yoyo: true, repeat: 5, duration: 1.2 });
 
-  // GOOD: seekable, deterministic, renders
+  // 好：可搜寻、确定性、可渲染
   tl.to(".aura", { scale: 1.08, yoyo: true, repeat: 5, duration: 1.2 }, 0);
   ```
 
-- **Hard-kill every scene boundary, not just captions.** The caption hard-kill rule above generalizes: any element whose visibility changes at a beat boundary needs a deterministic `tl.set()` kill after its fade, because later tweens on the same element (or `immediateRender` from a sibling tween) can resurrect it. Apply to every element with an exit animation:
+- **硬杀死每个场景边界，不仅是字幕。** 上面的字幕硬杀死规则可以泛化：任何在节拍边界改变可见性的元素都需要在淡化后有一个确定性的 `tl.set()` 杀死，因为同一元素上的后续补间（或兄弟补间的 `immediateRender`）可以复活它。应用于每个有退出动画的元素：
 
   ```js
   tl.to(el, { opacity: 0, duration: 0.3 }, beatEnd);
-  tl.set(el, { opacity: 0, visibility: "hidden" }, beatEnd + 0.3); // deterministic kill
+  tl.set(el, { opacity: 0, visibility: "hidden" }, beatEnd + 0.3); // 确定性杀死
   ```
 
-These are the exact rules with the exact code examples — don't summarize or shorten them. They exist because compositions that lint clean still ship broken without them.
+这些是确切的规则并带有确切的代码示例——不要总结或缩短它们。它们存在是因为没有它们，lint 干净的合成仍然会在发布时损坏。

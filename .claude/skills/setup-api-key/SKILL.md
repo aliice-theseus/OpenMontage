@@ -1,77 +1,77 @@
 ---
 name: setup-api-key
-description: Guides users through setting up an ElevenLabs API key for ElevenLabs MCP tools. Use when the user needs to configure an ElevenLabs API key, when ElevenLabs tools fail due to missing API key, or when the user mentions needing access to ElevenLabs. First checks whether ELEVENLABS_API_KEY is already configured and valid, and only runs full setup when needed.
+description: 指导用户设置 ElevenLabs API 密钥以使用 ElevenLabs MCP 工具。在用户需要配置 ElevenLabs API 密钥、ElevenLabs 工具因缺少 API 密钥而失败、或用户提到需要访问 ElevenLabs 时使用。首先检查 ELEVENLABS_API_KEY 是否已配置且有效，仅在需要时执行完整设置。
 license: MIT
-compatibility: Requires internet access to elevenlabs.io and api.elevenlabs.io.
+compatibility: 需要访问 elevenlabs.io 和 api.elevenlabs.io 的互联网连接。
 ---
 
-# ElevenLabs API Key Setup
+# ElevenLabs API 密钥设置
 
-Guide the user through obtaining and configuring an ElevenLabs API key.
+指导用户获取和配置 ElevenLabs API 密钥。
 
-## Workflow
+## 工作流
 
-### Step 0: Check for an existing API key first
+### 步骤 0：首先检查现有的 API 密钥
 
-Before asking the user for a key, check for an existing `ELEVENLABS_API_KEY`:
+在向用户索要密钥之前，检查是否已存在 `ELEVENLABS_API_KEY`：
 
-1. Check whether `ELEVENLABS_API_KEY` exists in the current environment.
-2. If it's not in the environment, check `.env` for `ELEVENLABS_API_KEY=<value>`.
-3. If an existing key is found, **validate it**:
+1. 检查当前环境中是否存在 `ELEVENLABS_API_KEY`。
+2. 如果不在环境中，检查 `.env` 中是否有 `ELEVENLABS_API_KEY=<value>`。
+3. 如果找到现有密钥，**验证它**：
    ```
    GET https://api.elevenlabs.io/v1/user
-   Header: xi-api-key: <existing-api-key>
+   头: xi-api-key: <现有-api-key>
    ```
-4. **If existing key validation succeeds:**
-   - Tell the user ElevenLabs is already configured and working
-   - Skip the setup flow
-   - Ask whether they want to replace/rotate the key; if not, stop
-5. **If existing key validation fails:**
-   - Tell the user the existing key appears invalid or expired
-   - Continue to Step 1
+4. **如果现有密钥验证成功：**
+   - 告诉用户 ElevenLabs 已配置并可正常使用
+   - 跳过设置流程
+   - 询问是否要更换/轮换密钥；如果不需要，则停止
+5. **如果现有密钥验证失败：**
+   - 告诉用户现有密钥似乎无效或已过期
+   - 继续到步骤 1
 
-### Step 1: Request the API key
+### 步骤 1：请求 API 密钥
 
-Tell the user:
+告诉用户：
 
-> To set up ElevenLabs, open the API keys page: https://elevenlabs.io/app/settings/api-keys
+> 要设置 ElevenLabs，请打开 API 密钥页面：https://elevenlabs.io/app/settings/api-keys
 >
-> (Need an account? Create one at https://elevenlabs.io/app/sign-up first)
+> （需要一个账号？先在 https://elevenlabs.io/app/sign-up 创建一个）
 >
-> If you don't have an API key yet:
-> 1. Click "Create key"
-> 2. Name it (or use the default)
-> 3. Set permission for your key. If you provide a key with "User" permission set to "Read" this skill will automatically verify if your key works
-> 4. Click "Create key" to confirm
-> 5. **Copy the key immediately** - it's only shown once!
+> 如果你还没有 API 密钥：
+> 1. 点击"创建密钥"
+> 2. 命名它（或使用默认名称）
+> 3. 为你的密钥设置权限。如果你提供的密钥"用户"权限设置为"读取"，本技能会自动验证你的密钥是否有效
+> 4. 点击"创建密钥"确认
+> 5. **立即复制密钥** - 仅显示一次！
 >
-> Paste your API key here when ready.
+> 准备好后在此粘贴你的 API 密钥。
 
-Then wait for the user's next message which should contain the API key.
+然后等待用户的下一条消息，其中应包含 API 密钥。
 
-### Step 2: Validate and configure
+### 步骤 2：验证和配置
 
-Once the user provides the API key:
+用户提供 API 密钥后：
 
-1. **Validate the key** by making a request:
+1. **验证密钥** 通过发起请求：
    ```
    GET https://api.elevenlabs.io/v1/user
-   Header: xi-api-key: <the-api-key>
+   头: xi-api-key: <api-key>
    ```
 
-2. **If validation fails:**
-   - Tell the user the API key appears to be invalid
-   - Ask them to try again
-   - Remind them of the URL: https://elevenlabs.io/app/settings/api-keys
-   - If it fails a second time, display an error and exit
+2. **如果验证失败：**
+   - 告诉用户 API 密钥似乎无效
+   - 请他们重试
+   - 提醒他们 URL：https://elevenlabs.io/app/settings/api-keys
+   - 如果再次失败，显示错误并退出
 
-3. **If validation succeeds**, save the API key in a `.env` file:
+3. **如果验证成功**，将 API 密钥保存到 `.env` 文件中：
    ```
-   ELEVENLABS_API_KEY=<the-api-key>
+   ELEVENLABS_API_KEY=<api-key>
    ```
-   - If `.env` already has `ELEVENLABS_API_KEY=...`, replace that line
-   - Otherwise add a new line for `ELEVENLABS_API_KEY`
+   - 如果 `.env` 已有 `ELEVENLABS_API_KEY=...`，替换该行
+   - 否则为 `ELEVENLABS_API_KEY` 添加新行
 
-4. **Confirm success:**
-   > Done! Your key is stored as an environment variable in .env
-   > Keep the key safe! Don't share it with anyone!
+4. **确认成功：**
+   > 完成！你的密钥已作为环境变量存储在 .env 中
+   > 请保管好密钥！不要与任何人分享！

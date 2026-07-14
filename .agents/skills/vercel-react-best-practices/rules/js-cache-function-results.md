@@ -1,22 +1,22 @@
 ---
-title: Cache Repeated Function Calls
+title: 缓存重复函数调用
 impact: MEDIUM
-impactDescription: avoid redundant computation
+impactDescription: 避免冗余计算
 tags: javascript, cache, memoization, performance
 ---
 
-## Cache Repeated Function Calls
+## 缓存重复函数调用
 
-Use a module-level Map to cache function results when the same function is called repeatedly with the same inputs during render.
+当同一个函数在渲染期间使用相同的输入被重复调用时，使用模块级 Map 来缓存函数结果。
 
-**Incorrect (redundant computation):**
+**不正确（冗余计算）：**
 
 ```typescript
 function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
       {projects.map(project => {
-        // slugify() called 100+ times for same project names
+        // slugify() 对相同的项目名称被调用了 100+ 次
         const slug = slugify(project.name)
         
         return <ProjectCard key={project.id} slug={slug} />
@@ -26,10 +26,10 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Correct (cached results):**
+**正确（缓存结果）：**
 
 ```typescript
-// Module-level cache
+// 模块级缓存
 const slugifyCache = new Map<string, string>()
 
 function cachedSlugify(text: string): string {
@@ -45,7 +45,7 @@ function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
       {projects.map(project => {
-        // Computed only once per unique project name
+        // 每个唯一项目名称只计算一次
         const slug = cachedSlugify(project.name)
         
         return <ProjectCard key={project.id} slug={slug} />
@@ -55,7 +55,7 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Simpler pattern for single-value functions:**
+**单值函数的更简单模式：**
 
 ```typescript
 let isLoggedInCache: boolean | null = null
@@ -69,12 +69,12 @@ function isLoggedIn(): boolean {
   return isLoggedInCache
 }
 
-// Clear cache when auth changes
+// 在身份验证变化时清除缓存
 function onAuthChange() {
   isLoggedInCache = null
 }
 ```
 
-Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
+使用 Map（而非 hook），这样它可以在任何地方工作：工具函数、事件处理程序，不仅仅是在 React 组件中。
 
-Reference: [How we made the Vercel Dashboard twice as fast](https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fast)
+参考：[我们如何让 Vercel 仪表盘提速两倍](https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fast)

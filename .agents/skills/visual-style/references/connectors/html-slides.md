@@ -1,14 +1,14 @@
-# HTML Slides Connector (frontend-slides)
+# HTML 幻灯片连接器（frontend-slides）
 
-Apply a `visual-style.md` to HTML slide presentations.
+将 `visual-style.md` 应用于 HTML 幻灯片演示。
 
-## Overview
+## 概述
 
-This connector maps `visual-style.md` fields to CSS variables and styling rules for use with [frontend-slides](https://github.com/zarazhangrui/frontend-slides) or similar HTML presentation frameworks.
+此连接器将 `visual-style.md` 字段映射到 CSS 变量和样式规则，用于 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 或类似的 HTML 演示框架。
 
-## Field Mapping
+## 字段映射
 
-| visual-style.md field | CSS output |
+| visual-style.md 字段 | CSS 输出 |
 |-----------------------|------------|
 | `colors.primary[0].hex` | `--color-bg` |
 | `colors.primary[1].hex` | `--color-text` |
@@ -16,30 +16,30 @@ This connector maps `visual-style.md` fields to CSS variables and styling rules 
 | `colors.neutral[0].hex` | `--color-muted` |
 | `typography.display.family` | `--font-display` |
 | `typography.body.family` | `--font-body` |
-| `typography.display` | `h1, h2, h3` styling |
-| `typography.body` | `p, li` styling |
-| `typography.caption` | `.label, code, small` styling |
-| `typography.rules` | Additional CSS rules |
-| `layout.grid` | CSS grid/flexbox system |
-| `layout.aspect_ratio` | Slide dimensions |
-| `motion.transitions` | CSS slide transitions |
-| `mood.avoid` | Design constraints checklist |
+| `typography.display` | `h1, h2, h3` 样式 |
+| `typography.body` | `p, li` 样式 |
+| `typography.caption` | `.label, code, small` 样式 |
+| `typography.rules` | 额外 CSS 规则 |
+| `layout.grid` | CSS 网格/flexbox 系统 |
+| `layout.aspect_ratio` | 幻灯片尺寸 |
+| `motion.transitions` | CSS 幻灯片过渡 |
+| `mood.avoid` | 设计约束检查清单 |
 
-## CSS Variables Template
+## CSS 变量模板
 
 ```css
 :root {
-  /* Colors */
+  /* 颜色 */
   --color-bg: [colors.primary[0].hex];
   --color-text: [colors.primary[1].hex];
   --color-accent: [colors.accent[0].hex];
   --color-muted: [colors.neutral[0].hex];
 
-  /* Typography */
+  /* 排版 */
   --font-display: "[typography.display.family]", system-ui, sans-serif;
   --font-body: "[typography.body.family]", system-ui, sans-serif;
 
-  /* Spacing (derive from style) */
+  /* 间距（从风格推导） */
   --space-sm: clamp(0.5rem, 1vw, 1rem);
   --space-md: clamp(1rem, 2vw, 2rem);
   --space-lg: clamp(2rem, 4vw, 4rem);
@@ -54,7 +54,7 @@ body {
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: [typography.display.weight];
-  /* Apply typography.display.style rules */
+  /* 应用 typography.display.style 规则 */
 }
 
 .accent {
@@ -66,19 +66,19 @@ h1, h2, h3 {
 }
 ```
 
-## frontend-slides Constraints
+## frontend-slides 约束
 
-When generating HTML slides, follow these rules:
+生成 HTML 幻灯片时，遵循以下规则：
 
-1. **Single HTML file** — Zero dependencies, inline CSS/JS
-2. **Viewport units** — All sizes use `clamp()`, never fixed px/rem
-3. **No scrolling** — `height: 100vh; overflow: hidden;` per slide
-4. **Content overflow** — If content doesn't fit, split into multiple slides
-5. **Google Fonts** — Load via `<link>` tag in `<head>`
+1. **单个 HTML 文件** — 零依赖，内联 CSS/JS
+2. **视口单位** — 所有尺寸使用 `clamp()`，绝不用固定 px/rem
+3. **无滚动** — 每张幻灯片 `height: 100vh; overflow: hidden;`
+4. **内容溢出** — 如果内容不适合，拆分为多张幻灯片
+5. **Google Fonts** — 通过 `<link>` 标签在 `<head>` 中加载
 
-## Example: Swiss Style Slides
+## 示例：瑞士风格幻灯片
 
-Given `mueller-brockmann-swiss.visual-style.md`:
+给定 `mueller-brockmann-swiss.visual-style.md`：
 
 ```html
 <!DOCTYPE html>
@@ -86,7 +86,7 @@ Given `mueller-brockmann-swiss.visual-style.md`:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presentation</title>
+  <title>演示文稿</title>
   <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -127,7 +127,7 @@ Given `mueller-brockmann-swiss.visual-style.md`:
 
     .accent { color: var(--color-accent); }
 
-    /* Grid overlay for Swiss style */
+    /* 瑞士风格网格叠加 */
     .slide::before {
       content: '';
       position: absolute;
@@ -146,24 +146,24 @@ Given `mueller-brockmann-swiss.visual-style.md`:
 </head>
 <body>
   <section class="slide">
-    <h1>Grid-locked<br><span class="accent">precision</span></h1>
+    <h1>网格锁定<br><span class="accent">精度</span></h1>
   </section>
 </body>
 </html>
 ```
 
-## Workflow
+## 工作流
 
-1. **Load the style** — Read the `visual-style.md` file
-2. **Generate CSS variables** — Map colors and typography
-3. **Apply typography rules** — Follow `typography.rules` constraints
-4. **Check constraints** — Verify against `mood.avoid` list
-5. **Generate slides** — One `<section class="slide">` per slide
-6. **Validate** — Ensure no scrolling, all sizes responsive
+1. **加载风格** — 读取 `visual-style.md` 文件
+2. **生成 CSS 变量** — 映射颜色和排版
+3. **应用排版规则** — 遵循 `typography.rules` 约束
+4. **检查约束** — 对照 `mood.avoid` 列表验证
+5. **生成幻灯片** — 每张幻灯片一个 `<section class="slide">`
+6. **验证** — 确保无滚动，所有尺寸响应式
 
-## Tips
+## 技巧
 
-- **Typography drives hierarchy** — Use `typography.display` for headlines, `typography.body` for content
-- **Honor the avoid list** — Check `mood.avoid` before adding decorative elements
-- **Transitions** — Map `motion.transitions` to CSS transitions between slides
-- **Font loading** — Always include fallback fonts in the stack
+- **排版驱动层级** — 标题使用 `typography.display`，内容使用 `typography.body`
+- **遵守避免列表** — 添加装饰元素前检查 `mood.avoid`
+- **过渡** — 将 `motion.transitions` 映射到幻灯片之间的 CSS 过渡
+- **字体加载** — 始终在堆栈中包含后备字体

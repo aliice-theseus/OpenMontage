@@ -1,46 +1,46 @@
-# dataviz-countup — Data-Viz / Count-Up
+# dataviz-countup — 数据可视化 / 计数递增
 
-**intent**: Make numbers and charts the hero — a count-up ring/number, a trend chart, a tilted stat/card grid — and traverse the data instruments with a camera that pushes THROUGH them (or scrolls across them) to land on one hero metric, so the data itself carries the argument.
+**意图**：让数字和图表成为主角 — 一个计数递增环/数字、趋势图、倾斜的统计/卡片网格 — 用摄像机**推进穿过**它们（或滚动经过它们）来遍历数据工具，着陆在一个主角度量上，使数据本身承载论证。
 
-**roles served**
+**服务角色**
 
-- Problem (from `problem-dataviz-pushthrough` / #9 Problem_1): quantifies the pain with real-looking instruments — a count-up ring → a trend chart → a stat grid — the camera pushing THROUGH each object into the next to dramatize a worsening / large-scale problem ("X% of people struggle with…").
-- Product_Intro (from `product-intro-dataviz-scroll-reveal` / #19 Product_Intro_06): a confident "look at the result / the data" open — hard-cut from a hook word into a perspective-tilted grid of data-viz cards, then a hands-off camera scroll lands one glowing hero metric while a kinetic tagline assembles word-by-word.
-- Hook (from `hook-counter-burst`): a cold-open hook on ONE dramatic statistic — the frame opens dark and empty, 3–5 thematic icons puncture in clustered at center, then the headline number EXPLODES upward in size as the icons fling outward to their marks (the count-up and the spread are one beat), closed by a slow camera lean-in. Kinetic from frame 1.
+- Problem（来自 `problem-dataviz-pushthrough` / #9 Problem_1）：用真实外观的工具量化痛点 — 一个计数递增环 → 趋势图 → 统计网格 — 摄像机**推进穿过**每个对象进入下一个，以戏剧化一个恶化/大规模问题（"X% 的人挣扎于…"）。
+- Product_Intro（来自 `product-intro-dataviz-scroll-reveal` / #19 Product_Intro_06）：一个自信的"看结果/看数据"开场 — 从钩子词硬切进入一个透视倾斜的数据可视化卡片网格，然后一个无需操作的摄像机滚动着陆一个发光主角度量，同时动感标语逐词组装。
+- Hook（来自 `hook-counter-burst`）：一个冷开场钩子在一个戏剧性统计数据上 — 画面打开时黑暗空旷，3–5 个主题图标集中在中心刺入，然后标题数字在尺寸上**爆炸**增大，同时图标向各自位置甩出（计数递增和扩散是一个节拍），由缓慢摄像机靠入关闭。从帧 1 开始动感。
 
-**duration**: ~4–12s (Hook ~4s · Product_Intro ~6s · Problem ~11–12s)
+**时长**：~4–12 秒（Hook ~4 秒 · Product_Intro ~6 秒 · Problem ~11–12 秒）
 
-**shot structure**
-Data-viz field on `[bg color]` (dark or light, soft corner glows); `[gradient A→B]` brand stroke on charts/rings; clean sans-serif white/dark text; a continuous camera move runs underneath that traverses 2–3 data instruments and resolves on a hero metric. One instrument per beat; the camera carries the cut.
+**镜头结构**
+数据可视化场在 `[bg color]` 上（暗或亮，柔和角落辉光）；图表/环上的 `[gradient A→B]` 品牌描画；干净无衬线白色/暗色文本；一个连续摄像机移动在其下运行，遍历 2–3 个数据工具并解析在一个主角度量上。每个节拍一个工具；摄像机承载切换。
 
-- Scene 1 (0.0–Xs): the first data instrument establishes centered — a `[stat]` reads as the hero. A bold center number COUNTS UP `[start]`→`[end]` (font-size growing with the value), with `[stat label]` below; its paired graphic (a circular progress RING sweeping to `[pct]` with a `[gradient]` stroke, or a bar/fill) animates in on the SAME ease so number + graphic land as one beat. Supporting `[avatar/object]` elements pop in with spring overshoot into a scattered glowing orbit; a `[headline]` fades up. A very slow continuous camera zoom-in runs throughout.
-- Scene 2 (Xs–Ys): the camera traverses to the next instrument and that instrument animates — a `[gradient]` trend line / area chart DRAWS left→right on grid lines (Problem), or off-center cards SCROLL away as the layout glides (Product_Intro). The arriving `[stat-2]` number counts up / the chart resolves.
-- Scene 3 / Scene N (…–end): the camera lands the `[hero metric card]` (big number + label + delta + rising chart) in dead-center; a soft `[accent]` glow blooms behind it; the move reaches its peak then eases to a settled, slightly wider composition with the hero centered and supporting cards flanking it. HOLD on the final frame.
+- 场景 1（0.0–Xs）：第一个数据工具居中建立 — 一个 `[stat]` 读作主角。一个粗体中心数字**计数递增** `[start]`→`[end]`（字号随值增长），`[stat label]` 在其下；其配对图形（环形进度**环**扫到 `[pct]`，带 `[gradient]` 描画，或条/填充）在**相同**缓动上动画，使数字+图形作为一节拍着陆。支持 `[avatar/object]` 元素以弹簧过冲弹出进入分散的发光轨道；一个 `[headline]` 淡入。一个非常缓慢的连续摄像机放大贯穿始终。
+- 场景 2（Xs–Ys）：摄像机遍历到下一个工具，该工具动画化 — 一个 `[gradient]` 趋势线/面积图在网格线上从左到右**绘制**（Problem），或偏离中心卡片滚动离开，同时布局滑动（Product_Intro）。到达的 `[stat-2]` 数字计数递增 / 图表解析。
+- 场景 3 / 场景 N（…–结束）：摄像机将 `[hero metric card]`（大数字 + 标签 + 增量 + 上升图表）在正中着陆；一个柔和 `[accent]` 辉光在其后绽放；移动达到其峰值然后缓到一个稳定的、略宽的构图，主角居中，支持卡片在两侧。在最终画面上**保持**。
 
-- Variant — Problem (push-THROUGH, count-up → trend → grid): Scene 1 is a centered circular progress ring + count-up center number with scattered glowing `[avatar/object]` orbit. Scene 2 is a fast camera PUSH-IN straight through the center of the ring (ring, number, orbiting elements scale up and fly out of frame) into a rounded `[card]` holding `[stat-2 header]` over a `[gradient]` line chart with grid lines + translucent area fill that draws left→right; camera pushes through then settles. Scene 3: camera PANS to a second `[card]` whose number counts up, holding a grid of the `[avatar/object]` elements — a subset dim/blur while the rest receive `[accent]` circular checkmark badges that SPRING-POP; camera settles to the end. The traversal is z-depth push-through between instruments.
-- Variant — Product_Intro (scroll-to-hero + word-by-word tagline): a brief opener — Scene 0 (~0.0–0.85s): a full-frame `[hero-color orb]` with a bold white `[hook phrase]` over it; static shimmer, then HARD CUT. Scene 1 cuts to a slightly perspective-TILTED grid of `[data-viz / product cards]` (charts, heatmaps, stat cards with deltas + source footers) with `[tagline word 1]` centered; the grid begins SCROLLING (e.g. toward upper-left) with its tilt held. Scene 2: the grid keeps scrolling so the `[hero metric card]` glides into dead-center as off-center cards slide away; `[tagline word 1]` translates out and `[word 2]` rises in from a frame edge. Scene 3: hero card settles centered, `[accent]` glow blooms behind it, camera PUSHES IN slightly; `[word 2]` holds near it. Scene 4: `[word 2]` slides out, the final `[tagline word]` drops in from the opposite edge above the still-glowing hero, push-in peaks. Scene 5: overlay type clears, camera eases BACK OUT to a settled wider tilted composition — hero centered with glow, supporting cards flanking. The traversal is a hands-off camera SCROLL across a tilted card plane (no cursor, no clicks) + a one-word-at-a-time kinetic headline + push-in-then-out bookend.
+- 变体 — Problem（推进穿过，计数递增 → 趋势 → 网格）：场景 1 是一个居中环形进度环 + 计数递增中心数字，带分散发光 `[avatar/object]` 轨道。场景 2 是一个快速摄像机**推进进入**直穿环的中心（环、数字、轨道元素放大并飞出画面）进入一个圆角 `[card]`，持有 `[stat-2 header]` 在 `[gradient]` 线图上，带网格线 + 半透明区域填充，从左到右绘制；摄像机推进然后稳定。场景 3：摄像机**平移**到第二个 `[card]`，其数字计数递增，持有 `[avatar/object]` 元素的网格 — 一个子集变暗/模糊，而其余的接收 `[accent]` 圆形勾选标记徽章，**弹簧弹出**；摄像机稳定到结束。遍历是工具之间的 z 深度推进穿过。
+- 变体 — Product_Intro（滚动到主角 + 逐词标语）：一个简短开场 — 场景 0（~0.0–0.85 秒）：一个全帧 `[hero-color orb]` 带粗体白色 `[hook phrase]` 在其上；静态闪烁，然后**硬切**。场景 1 切到一个略透视**倾斜**的 `[data-viz / product cards]` 网格（图表、热图、带增量和源页脚的统计卡片），`[tagline word 1]` 居中；网格开始**滚动**（例如向左上方向），保持其倾斜。场景 2：网格继续滚动，使 `[hero metric card]` 滑入正中，同时偏离中心卡片滑开；`[tagline word 1]` 平移出去，`[word 2]` 从画面边缘上升。场景 3：主角卡片居中稳定，`[accent]` 辉光在其后绽放，摄像机略微**推进**；`[word 2]` 在其附近保持。场景 4：`[word 2]` 滑出，最终 `[tagline word]` 从对侧边缘掉入仍在发光的主角上方，推进达到峰值。场景 5：叠加字体清除，摄像机**缓出拉回**到一个稳定的更宽倾斜构图 — 主角居中带辉光，支持卡片在两侧。遍历是一个无需操作的摄像机跨倾斜卡片平面**滚动**（无光标、无点击）+ 一次一个词的动感标题 + 推入然后拉出书挡。
 
-**motion vocabulary**
-count-up number with font-size growing on the value; circular progress-ring sweep; growth bar / progress fill; gradient trend-line + area-fill left→right draw; spring-overshoot pop-in of scattered glowing avatar/object elements; perspective-tilted card grid; directional grid scroll (cards glide in/out of center); hero-card centering; soft accent glow bloom behind the hero; slow continuous zoom-in; fast camera push-IN / push-THROUGH the center of an instrument; lateral/vertical camera pan between cards; gentle push-in that peaks then eases back out to a wider settle; selective dim/blur of a subset + spring-pop checkmark badges; full-frame hook orb → hard cut; kinetic tagline assembled word-by-word (each word drops/rises from a frame edge, prior word slides out).
+**动词语汇**
+计数递增数字，字号随值增长；环形进度环扫过；增长条/进度填充；渐变趋势线 + 面积填充从左到右绘制；弹簧过冲弹出分散发光头像/对象元素；透视倾斜卡片网格；方向网格滚动（卡片滑入/滑出中心）；主角卡片居中；主角后的柔和重音辉光**绽放**；缓慢连续放大；快速摄像机推进进入 / **推进穿过**工具中心；卡片之间的横向/垂直摄像机平移；柔和推进，达到峰值然后缓出拉回到更宽的稳定；选择性变暗/模糊子集 + 弹簧弹出勾选标记徽章；全帧钩子球 → 硬切；动感标语逐词组装（每个词从画面边缘掉入/上升，前一个词滑出）。
 
-**rule mapping** (motion verb → `rules/<id>.md`)
+**规则映射**（动作动词 → `rules/<id>.md`）
 
-- count-up number whose font-size grows with the value → `counting-dynamic-scale` (primary text rule)
-- circular progress-ring sweep (the ring fill) → `stat-bars-and-fills` (ring form) — its draw mechanics delegate to → `svg-path-draw`
-- growth bars / progress fill paired beside a number → `stat-bars-and-fills` (primary data rule)
-- gradient trend-line / area-chart left→right draw → `svg-path-draw` (a path/line draws itself)
-- spring-overshoot pop-in of the avatar/object elements → `spring-pop-entrance` (elastic overshoot); the scattered-ring layout of glowing avatars/objects → `avatar-cloud-network`; if they keep drifting/orbiting → `orbit-3d-entry`
-- spring-pop `[accent]` checkmark badges → `spring-pop-entrance`
-- perspective-tilted card grid (tilt held static while content moves) → `3d-page-scroll`
-- directional scroll across the tilted card plane (cards glide in/out of center) → `3d-page-scroll` (scroll) + `viewport-change` (lateral/vertical pan form)
-- hero metric card centering (scroll/pan lands the target dead-center) → `coordinate-target-zoom` (target lands at viewport center) / `viewport-change`
-- hard-cut from the hook orb into the grid → `scale-swap-transition`
-- kinetic tagline assembled word-by-word → `kinetic-beat-slam` (one onset grid, distinct per-word entrances)
-- slow continuous zoom-in + push-THROUGH the instruments + lateral/vertical pan between cards + push-in-then-out bookend → `multi-phase-camera` (see camera modifier)
-- soft accent glow BLOOM behind the hero card → `ambient-glow-bloom` (un-triggered soft glow/bloom behind the static hero element — distinct from `press-release-spring`'s press-triggered glow and `asr-keyword-glow`'s word-timed envelope)
-- selective dim/blur of a SUBSET of grid items (focus-falloff on the non-highlighted cards) → `depth-of-field-blur` (selective per-element blur/dim to spotlight the highlighted cards — the same focus-falloff rule used in `constellation-hub`)
+- 计数递增数字，字号随值增长 → `counting-dynamic-scale`（主要文本规则）
+- 环形进度环扫过（环填充）→ `stat-bars-and-fills`（环形形式）— 其绘制机制委托给 → `svg-path-draw`
+- 数字旁配对增长条/进度填充 → `stat-bars-and-fills`（主要数据规则）
+- 渐变趋势线/面积图从左到右绘制 → `svg-path-draw`（路径/线绘制自身）
+- 头像/对象元素的弹簧过冲弹出 → `spring-pop-entrance`（弹性过冲）；发光头像/物体的分散环布局 → `avatar-cloud-network`；如果它们持续漂移/轨道运行 → `orbit-3d-entry`
+- 弹簧弹出 `[accent]` 勾选标记徽章 → `spring-pop-entrance`
+- 透视倾斜卡片网格（倾斜保持静止，内容移动）→ `3d-page-scroll`
+- 跨倾斜卡片平面的方向滚动（卡片滑入/滑出中心）→ `3d-page-scroll`（滚动）+ `viewport-change`（横向/垂直平移形式）
+- 主角度量卡片居中（滚动/平移将目标正中着陆）→ `coordinate-target-zoom`（目标在视口中心着陆）/ `viewport-change`
+- 从钩子球到网格的硬切 → `scale-swap-transition`
+- 动感标语逐词组装 → `kinetic-beat-slam`（一个开始网格，每个词不同入场）
+- 缓慢连续放大 + 推进穿过工具 + 卡片之间的横向/垂直平移 + 推入然后拉出书挡 → `multi-phase-camera`（参见摄像机修饰）
+- 主角卡片后的柔和重音辉光**绽放** → `ambient-glow-bloom`（静态主角元素后无触发的柔和辉光/绽放 — 与 `press-release-spring` 的按下触发辉光和 `asr-keyword-glow` 的单词定时包络不同）
+- 网格项目子集的选择性变暗/模糊（非高亮卡片上的焦点衰减）→ `depth-of-field-blur`（选择性逐元素模糊/变暗以聚光灯高亮卡片 — 与 `constellation-hub` 中使用的相同焦点衰减规则）
 
-**camera modifier**: The camera is the through-line that traverses the data instruments — one camera wrapper sequenced by `multi-phase-camera`, with each stop targeted via `coordinate-target-zoom` onto the focal instrument/card.
+**摄像机修饰**：摄像机是遍历数据工具的主线 — 一个摄像机包裹由 `multi-phase-camera` 排序，每个停靠点通过 `coordinate-target-zoom` 瞄准焦点工具/卡片。
 
-- Problem — push-THROUGH: a slow continuous zoom-in (drift overlay) plus a fast PUSH-IN straight through the center of one instrument into the next (`multi-phase-camera`, Steady-push pattern), then a lateral/vertical PAN to the final card. Z-depth push-through is the signature (distinguishes it from a flat pan-tour).
-- Product_Intro — scroll-to-hero + bookend push: a hands-off directional SCROLL across the tilted card plane (`3d-page-scroll` scroll / `viewport-change` pan) that lands the hero card center, then a gentle push-in that PEAKS and eases BACK OUT to a wider settle (`multi-phase-camera`, Bookend-pull pattern). No cursor, no clicks — the camera does the navigating.
+- Problem — 推进穿过：缓慢连续放大（漂移叠加）加上一次快速**推进进入**直穿一个工具的中心进入下一个（`multi-phase-camera`，稳定推进模式），然后横向/垂直**平移**到最终卡片。Z 深度推进穿过是标志性动作（将其与平面平移巡览区分开）。
+- Product_Intro — 滚动到主角 + 书挡推进：无需操作的方向**滚动**跨倾斜卡片平面（`3d-page-scroll` 滚动 / `viewport-change` 平移），将主角卡片中心着陆，然后柔和推进，**达到峰值**并缓出**拉回**到更宽的稳定（`multi-phase-camera`，书挡拉出模式）。无光标，无点击 — 摄像机做导航。

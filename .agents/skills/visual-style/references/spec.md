@@ -1,123 +1,123 @@
-# visual-style.md Format Specification
+# visual-style.md 格式规范
 
-**Version:** 1.0
-**Status:** Draft
+**版本：** 1.0
+**状态：** 草案
 
-## Overview
+## 概述
 
-A `visual-style.md` file is a Markdown document with YAML frontmatter that defines a complete visual design system. The format is designed to be:
+`visual-style.md` 文件是一个带有 YAML 前置元数据的 Markdown 文档，定义完整的视觉设计系统。该格式设计为：
 
-- **Human-readable** — Understandable in any text editor
-- **AI-consumable** — Every field directly usable by AI models
-- **Portable** — Works across any tool that reads the format
+- **人类可读** — 在任何文本编辑器中都可理解
+- **AI 可消费** — 每个字段都可供 AI 模型直接使用
+- **可移植** — 可在任何读取该格式的工具中使用
 
-## File Structure
+## 文件结构
 
 ```
 ---
-[YAML frontmatter]
+[YAML 前置元数据]
 ---
 
-[Markdown body sections]
+[Markdown 正文章节]
 ```
 
-## Required Fields
+## 必填字段
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `name` | string | Display name for the style |
-| `version` | string | Spec version (currently `1.0`) |
-| `style_prompt_short` | string | 1-2 sentence elevator pitch |
-| `style_prompt_full` | string | Full natural language generation prompt — **the most important field** |
-| `colors.primary` | array | At least 2 colors, each with `name`, `hex`, `role` |
+| `name` | string | 风格的显示名称 |
+| `version` | string | 规范版本（当前为 `1.0`）|
+| `style_prompt_short` | string | 1-2 句电梯演讲 |
+| `style_prompt_full` | string | 完整的自然语言生成提示 — **最重要的字段** |
+| `colors.primary` | array | 至少 2 种颜色，各有 `name`、`hex`、`role` |
 
-## Optional Fields
+## 可选字段
 
-### Metadata
+### 元数据
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `tags` | array | Categorical tags (e.g., "iconic design", "retro tech") |
-| `author` | string | Credit for the style creator |
-| `source_url` | string | URL this style was extracted from |
-| `created` | string | ISO date (YYYY-MM-DD) |
+| `tags` | array | 分类标签（例如 "传奇设计"、"复古科技"）|
+| `author` | string | 风格创作者的致谢 |
+| `source_url` | string | 提取此风格的 URL |
+| `created` | string | ISO 日期（YYYY-MM-DD）|
 
-### Colors
+### 颜色
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `colors.accent` | array | Accent colors with name/hex/role |
-| `colors.neutral` | array | Neutral colors with name/hex/role |
+| `colors.accent` | array | 强调色，含 name/hex/role |
+| `colors.neutral` | array | 中性色，含 name/hex/role |
 
-**Color object schema:**
+**颜色对象模式：**
 ```yaml
-- name: "Descriptive Name"
+- name: "描述性名称"
   hex: "#RRGGBB"
-  role: "how this color is used in the system"
+  role: "该颜色在系统中的使用方式"
 ```
 
-### Typography
+### 排版
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `typography.display` | object | Display/heading typography |
-| `typography.body` | object | Body text typography |
-| `typography.caption` | object | Caption/label typography |
-| `typography.rules` | array | Typography rules and constraints |
+| `typography.display` | object | 展示/标题排版 |
+| `typography.body` | object | 正文排版 |
+| `typography.caption` | object | 说明文字/标签排版 |
+| `typography.rules` | array | 排版规则和约束 |
 
-**Typography object schema:**
+**排版对象模式：**
 ```yaml
 display:
-  family: "Font Family Name"
+  family: "字体族名称"
   weight: "bold"
   style: "uppercase, tight tracking"
 ```
 
-### Layout
+### 布局
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `layout.grid` | string | Grid system description |
-| `layout.alignment` | string | Alignment approach |
-| `layout.aspect_ratio` | string | Default aspect ratio (e.g., "16:9") |
-| `layout.notes` | array | Additional layout guidelines |
+| `layout.grid` | string | 网格系统描述 |
+| `layout.alignment` | string | 对齐方式 |
+| `layout.aspect_ratio` | string | 默认宽高比（例如 "16:9"）|
+| `layout.notes` | array | 额外布局指南 |
 
-### Motion
+### 动效
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `motion.transitions` | array | Transition types used |
-| `motion.animation_style` | string | Overall animation approach |
-| `motion.pacing` | string | Timing/rhythm description |
-| `motion.audio_cues` | array | Sound design notes |
+| `motion.transitions` | array | 使用的过渡类型 |
+| `motion.animation_style` | string | 整体动画方式 |
+| `motion.pacing` | string | 时间/节奏描述 |
+| `motion.audio_cues` | array | 声音设计说明 |
 
-### Mood
+### 氛围
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `mood.keywords` | array | Mood/feeling keywords |
-| `mood.era` | string | Time period reference |
-| `mood.cultural_reference` | string | Cultural/historical context |
-| `mood.avoid` | array | **Anti-patterns** — things to explicitly avoid |
+| `mood.keywords` | array | 氛围/感觉关键词 |
+| `mood.era` | string | 时代参考 |
+| `mood.cultural_reference` | string | 文化/历史背景 |
+| `mood.avoid` | array | **反模式** — 明确避免的内容 |
 
-### Assets
+### 资产
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `assets.reference_images` | array | URLs to reference images |
-| `assets.gsep_elements` | array | URLs to overlay/graphic elements |
-| `assets.html_snippets` | array | URLs to HTML component examples |
-| `assets.color_palette_image` | object | URL to color palette visualization |
+| `assets.reference_images` | array | 参考图片的 URL |
+| `assets.gsep_elements` | array | 覆盖层/图形元素的 URL |
+| `assets.html_snippets` | array | HTML 组件示例的 URL |
+| `assets.color_palette_image` | object | 调色板可视化的 URL |
 
-**Important:** Assets are always URLs, never embedded binary data.
+**重要：** 资产始终使用 URL，绝不嵌入二进制数据。
 
-### Extensions
+### 扩展
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `x_*` | object | Namespaced tool-specific extensions |
+| `x_*` | object | 命名空间化的工具特定扩展 |
 
-Example:
+示例：
 ```yaml
 x_heygen:
   video_id: "abc123"
@@ -127,141 +127,141 @@ x_figma:
   library_id: "xyz789"
 ```
 
-## Markdown Body Sections
+## Markdown 正文章节
 
-After the YAML frontmatter, include these optional Markdown sections:
+在 YAML 前置元数据之后，包括以下可选的 Markdown 章节：
 
 ### `## Connectors`
 
-Tool-specific translation notes:
+工具特定的转换说明：
 
 ```markdown
 ## Connectors
 
 ### HeyGen Video Agent
-Feed `style_prompt_full` as the visual style block. Use `motion.transitions`
-for scene cuts. Orientation: landscape.
+将 `style_prompt_full` 作为视觉风格块输入。使用 `motion.transitions`
+进行场景切换。方向：横向。
 
 ### HTML Slides
-Map colors to CSS variables. Use `typography.display` for h1-h3.
+将颜色映射到 CSS 变量。对 h1-h3 使用 `typography.display`。
 ```
 
 ### `## Design Principles`
 
-Freeform design philosophy:
+自由形式的设计哲学：
 
 ```markdown
 ## Design Principles
 
-Typography drives hierarchy. Color is used sparingly and intentionally.
-Every element snaps to a baseline grid. White space is a feature.
+排版驱动层级。颜色使用克制且有意图。
+每个元素都对齐基线网格。留白是一种特色。
 ```
 
 ### `## Extraction Notes`
 
-Source documentation (when extracted):
+来源文档（提取时）：
 
 ```markdown
 ## Extraction Notes
 
-Extracted from https://example.com on 2026-03-12.
-Primary colors sampled from hero section.
-Typography identified via browser dev tools.
+于 2026-03-12 从 https://example.com 提取。
+主色从英雄区域采样。
+通过浏览器开发工具识别排版。
 ```
 
-## Complete Example
+## 完整示例
 
 ```yaml
 ---
-name: "Josef Müller-Brockmann Swiss International Style"
+name: "Josef Müller-Brockmann 瑞士国际风格"
 version: "1.0"
 tags:
-  - iconic design
-  - sleek minimal
+  - 标志性设计
+  - 极简风格
 author: "Bin"
 source_url: ""
 created: "2026-03-12"
 
 style_prompt_short: >
-  Grid-locked Swiss precision. Black and white base with electric blue
-  accent. Helvetica only. Data visualizations as hero elements.
+  网格锁定的瑞士精度。黑白基调配电光蓝
+  强调色。仅 Helvetica。数据可视化作为主角元素。
 
 style_prompt_full: >
-  Josef Müller-Brockmann Swiss International Style. Grid-locked layouts
-  with mathematical precision. Black and white base with ONE accent color
-  (electric blue #0066FF). Strong diagonal compositions. Helvetica
-  typography only. Data visualizations are the hero — animated charts,
-  counters, grids. Every frame snaps to a grid. Transitions are horizontal
-  grid wipes. No organic shapes. No gradients. No stock photography.
-  Everything is geometric, systematic, precise.
+  Josef Müller-Brockmann 瑞士国际风格。网格锁定的布局
+  具有数学精度。黑白基调配一种强调色
+  （电光蓝 #0066FF）。强烈的对角线构图。仅 Helvetica
+  排版。数据可视化是主角 — 动画图表、
+  计数器、网格。每一帧都对齐网格。过渡是水平
+  网格擦拭。无有机形状。无渐变。无图库摄影。
+  一切都是几何的、系统的、精确的。
 
 colors:
   primary:
-    - name: "Pure Black"
+    - name: "纯黑"
       hex: "#000000"
-      role: "dominant ground, text, structural elements"
-    - name: "Pure White"
+      role: "主导底色、文字、结构元素"
+    - name: "纯白"
       hex: "#FFFFFF"
-      role: "background fields, negative space"
+      role: "背景区域、留白空间"
   accent:
-    - name: "Electric Blue"
+    - name: "电光蓝"
       hex: "#0066FF"
-      role: "the ONE accent — data highlights, key emphasis"
+      role: "唯一强调色 — 数据高亮、关键强调"
   neutral:
-    - name: "Grid Gray"
+    - name: "网格灰"
       hex: "#CCCCCC"
-      role: "grid lines, secondary structure"
+      role: "网格线、次级结构"
 
 typography:
   display:
     family: "Helvetica"
     weight: "bold"
-    style: "uppercase or sentence case, tight tracking"
+    style: "大写或句首大写，紧凑字距"
   body:
     family: "Helvetica"
     weight: "regular"
-    style: "flush left, ragged right, generous leading"
+    style: "左对齐，右侧参差，宽松行距"
   caption:
     family: "Helvetica"
     weight: "light"
-    style: "small, uppercase, wide tracking"
+    style: "小号，大写，宽字距"
   rules:
-    - "Helvetica ONLY — no other typeface"
-    - "Type sizes follow a mathematical scale"
-    - "Always flush left — never centered"
+    - "仅 Helvetica — 无其他字体"
+    - "字号遵循数学比例"
+    - "始终左对齐 — 绝不居中"
 
 layout:
-  grid: "Strict modular grid — 12 columns"
-  alignment: "Flush left, grid-snapped"
+  grid: "严格的模块化网格 — 12 列"
+  alignment: "左对齐，对齐到网格"
   aspect_ratio: "16:9"
   notes:
-    - "Every element locked to the grid"
-    - "Data visualizations are the hero elements"
+    - "每个元素锁定到网格"
+    - "数据可视化是主角元素"
 
 motion:
   transitions:
-    - "horizontal grid wipes"
-    - "elements snapping to grid positions"
-    - "clean hard cuts"
+    - "水平网格擦拭"
+    - "元素对齐到网格位置"
+    - "干净硬切"
   animation_style: >
-    Geometric precision. Elements snap to grid positions.
-    Charts animate systematically. Nothing bounces.
-  pacing: "Measured, confident, unhurried"
+    几何精度。元素对齐到网格位置。
+    图表系统化地动画。没有什么会弹跳。
+  pacing: "沉稳、自信、不慌不忙"
 
 mood:
   keywords:
-    - "precise"
-    - "systematic"
-    - "authoritative"
-    - "geometric"
-  era: "1950s–1970s (timeless)"
-  cultural_reference: "Müller-Brockmann, Grid Systems in Graphic Design"
+    - "精确"
+    - "系统化"
+    - "权威"
+    - "几何"
+  era: "1950–1970 年代（永恒）"
+  cultural_reference: "Müller-Brockmann，《平面设计中的网格系统》"
   avoid:
-    - "organic or curved shapes"
-    - "gradients"
-    - "stock photography"
-    - "centered text"
-    - "decorative elements"
+    - "有机或曲线形状"
+    - "渐变"
+    - "图库摄影"
+    - "居中文字"
+    - "装饰元素"
 
 assets:
   reference_images: []
@@ -273,52 +273,52 @@ assets:
 
 ## Design Principles
 
-Typography and the grid are the only design elements needed.
-Mathematical relationships create visual harmony.
-Restraint is the ultimate sophistication.
+排版和网格是唯一需要的设计元素。
+数学关系创造视觉和谐。
+克制是终极的优雅。
 
 ## Connectors
 
 ### HeyGen Video Agent
-Use `style_prompt_full` verbatim. No avatar, no b-roll — pure motion graphics.
-Hard cuts between scenes.
+逐字使用 `style_prompt_full`。无虚拟角色，无 B 卷 — 纯动态图形。
+场景之间硬切。
 
 ### HTML Slides
-Map to CSS: `--color-bg: #000`, `--color-text: #FFF`, `--color-accent: #0066FF`.
-Use Helvetica via system fonts or Google Fonts equivalent.
+映射到 CSS：`--color-bg: #000`、`--color-text: #FFF`、`--color-accent: #0066FF`。
+通过系统字体或等效的 Google Fonts 使用 Helvetica。
 ```
 
-## Validation
+## 验证
 
-A valid `visual-style.md` must have:
+有效的 `visual-style.md` 必须有：
 
-1. Valid YAML frontmatter between `---` delimiters
-2. All required fields present
-3. `colors.primary` with at least 2 color objects
-4. Each color object with `name`, `hex`, and `role`
-5. `version` set to `1.0`
+1. `---` 分隔符之间的有效 YAML 前置元数据
+2. 所有必填字段存在
+3. `colors.primary` 至少有 2 个颜色对象
+4. 每个颜色对象都有 `name`、`hex` 和 `role`
+5. `version` 设置为 `1.0`
 
-## Versioning
+## 版本管理
 
-The `version` field refers to the spec version, not the style version. When the spec changes:
+`version` 字段指规范版本，而非样式版本。当规范更改时：
 
-- **Minor changes** (new optional fields): Version stays `1.0`
-- **Breaking changes** (required field changes): Version increments to `2.0`
+- **小改**（新增可选字段）：版本保持 `1.0`
+- **大改**（必填字段更改）：版本升至 `2.0`
 
-## Design Decisions
+## 设计决策
 
-### Why `style_prompt_full` is required
+### 为什么 `style_prompt_full` 是必填的
 
-Many AI tools only accept a text prompt. By requiring a complete, natural language description of the style, we ensure every `visual-style.md` file is immediately usable by any tool — even ones that don't parse the structured fields.
+许多 AI 工具只接受文本提示。通过要求完整的自然语言风格描述，我们确保每个 `visual-style.md` 文件立即可供任何工具使用 — 即使它们不解析结构化字段。
 
-### Why no embedded binary data
+### 为什么没有嵌入二进制数据
 
-URLs keep files small, versionable, and portable. Binary assets should be hosted externally and referenced by URL.
+URL 使文件保持小巧、可版本化和可移植。二进制资产应外部托管并通过 URL 引用。
 
-### Why `x_*` namespacing
+### 为什么使用 `x_*` 命名空间
 
-Different tools have different capabilities. The `x_` prefix allows tool-specific configuration without polluting the core schema. Examples: `x_heygen`, `x_figma`, `x_paper`.
+不同工具有不同的能力。`x_` 前缀允许工具特定配置而不污染核心模式。示例：`x_heygen`、`x_figma`、`x_paper`。
 
-### Why `mood.avoid`
+### 为什么有 `mood.avoid`
 
-Negative constraints are as important as positive ones. Telling an AI what NOT to do is often more effective than telling it what to do.
+负面约束与正面约束同等重要。告诉 AI 不要做什么通常比告诉它要做什么更有效。

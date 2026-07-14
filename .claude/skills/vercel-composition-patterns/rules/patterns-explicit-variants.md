@@ -1,20 +1,20 @@
 ---
-title: Create Explicit Component Variants
+title: 创建显式组件变体
 impact: MEDIUM
-impactDescription: self-documenting code, no hidden conditionals
+impactDescription: 自文档化的代码，无隐藏条件
 tags: composition, variants, architecture
 ---
 
-## Create Explicit Component Variants
+## 创建显式组件变体
 
-Instead of one component with many boolean props, create explicit variant
-components. Each variant composes the pieces it needs. The code documents
-itself.
+不要创建一个带有许多布尔属性的组件，而是创建显式的变体
+组件。每个变体组合它所需的部分。代码文档化了
+自身。
 
-**Incorrect (one component, many modes):**
+**错误（一个组件，多种模式）：**
 
 ```tsx
-// What does this component actually render?
+// 这个组件实际渲染了什么？
 <Composer
   isThread
   isEditing={false}
@@ -24,23 +24,23 @@ itself.
 />
 ```
 
-**Correct (explicit variants):**
+**正确（显式变体）：**
 
 ```tsx
-// Immediately clear what this renders
+// 立即清楚它渲染什么
 <ThreadComposer channelId="abc" />
 
-// Or
+// 或
 <EditMessageComposer messageId="xyz" />
 
-// Or
+// 或
 <ForwardMessageComposer messageId="123" />
 ```
 
-Each implementation is unique, explicit and self-contained. Yet they can each
-use shared parts.
+每个实现都是独特、明确且自包含的。但它们每个都可以
+使用共享部分。
 
-**Implementation:**
+**实现：**
 
 ```tsx
 function ThreadComposer({ channelId }: { channelId: string }) {
@@ -79,7 +79,7 @@ function ForwardMessageComposer({ messageId }: { messageId: string }) {
   return (
     <ForwardMessageProvider messageId={messageId}>
       <Composer.Frame>
-        <Composer.Input placeholder="Add a message, if you'd like." />
+        <Composer.Input placeholder="如果你愿意，可以添加一条消息。" />
         <Composer.Footer>
           <Composer.Formatting />
           <Composer.Emojis />
@@ -91,10 +91,10 @@ function ForwardMessageComposer({ messageId }: { messageId: string }) {
 }
 ```
 
-Each variant is explicit about:
+每个变体明确说明：
 
-- What provider/state it uses
-- What UI elements it includes
-- What actions are available
+- 它使用什么 Provider/状态
+- 它包含哪些 UI 元素
+- 哪些操作可用
 
-No boolean prop combinations to reason about. No impossible states.
+无需推理布尔属性的组合。没有不可能的状态。

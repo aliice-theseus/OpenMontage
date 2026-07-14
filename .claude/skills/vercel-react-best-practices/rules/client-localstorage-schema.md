@@ -1,23 +1,23 @@
 ---
-title: Version and Minimize localStorage Data
+title: 版本化和最小化 localStorage 数据
 impact: MEDIUM
-impactDescription: prevents schema conflicts, reduces storage size
+impactDescription: 防止架构冲突，减少存储大小
 tags: client, localStorage, storage, versioning, data-minimization
 ---
 
-## Version and Minimize localStorage Data
+## 版本化和最小化 localStorage 数据
 
-Add version prefix to keys and store only needed fields. Prevents schema conflicts and accidental storage of sensitive data.
+为键添加版本前缀并仅存储需要的字段。防止架构冲突和意外存储敏感数据。
 
-**Incorrect:**
+**错误做法：**
 
 ```typescript
-// No version, stores everything, no error handling
+// 无版本，存储所有内容，无错误处理
 localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
 const data = localStorage.getItem('userConfig')
 ```
 
-**Correct:**
+**正确做法：**
 
 ```typescript
 const VERSION = 'v2'
@@ -26,7 +26,7 @@ function saveConfig(config: { theme: string; language: string }) {
   try {
     localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config))
   } catch {
-    // Throws in incognito/private browsing, quota exceeded, or disabled
+    // 在隐身/私密浏览、超出配额或禁用时会抛出异常
   }
 }
 
@@ -39,7 +39,7 @@ function loadConfig() {
   }
 }
 
-// Migration from v1 to v2
+// 从 v1 迁移到 v2
 function migrate() {
   try {
     const v1 = localStorage.getItem('userConfig:v1')
@@ -52,10 +52,10 @@ function migrate() {
 }
 ```
 
-**Store minimal fields from server responses:**
+**从服务端响应中存储最小字段：**
 
 ```typescript
-// User object has 20+ fields, only store what UI needs
+// User 对象有 20+ 个字段，只存储 UI 需要的
 function cachePrefs(user: FullUser) {
   try {
     localStorage.setItem('prefs:v1', JSON.stringify({
@@ -66,6 +66,6 @@ function cachePrefs(user: FullUser) {
 }
 ```
 
-**Always wrap in try-catch:** `getItem()` and `setItem()` throw in incognito/private browsing (Safari, Firefox), when quota exceeded, or when disabled.
+**始终用 try-catch 包裹：** `getItem()` 和 `setItem()` 在隐身/私密浏览（Safari、Firefox）、超出配额或禁用时会抛出异常。
 
-**Benefits:** Schema evolution via versioning, reduced storage size, prevents storing tokens/PII/internal flags.
+**好处：** 通过版本控制实现架构演进、减少存储大小、防止存储令牌/PII/内部标志。

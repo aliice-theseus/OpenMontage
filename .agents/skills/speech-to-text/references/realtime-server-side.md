@@ -1,8 +1,8 @@
-# Server-Side Real-Time Streaming
+# 服务器端实时流式传输
 
-Transcribe audio streams in real-time from your server with ultra-low latency.
+在服务器上实时转录音频流，延迟极低。
 
-## Installation
+## 安装
 
 ```bash
 # Python
@@ -12,17 +12,17 @@ pip install elevenlabs python-dotenv pydub
 npm install @elevenlabs/elevenlabs-js dotenv
 ```
 
-> **Warning:** Do not use `npm install elevenlabs` - that's an outdated v1.x package. Always use `@elevenlabs/elevenlabs-js`.
+> **警告：** 不要使用 `npm install elevenlabs`——那是过时的 v1.x 包。始终使用 `@elevenlabs/elevenlabs-js`。
 
-## Configuration
+## 配置
 
-Store your API key in a `.env` file:
+将您的 API 密钥存储在 `.env` 文件中：
 
 ```
 ELEVENLABS_API_KEY=<your_api_key_here>
 ```
 
-## Stream from URL
+## 从 URL 流式传输
 
 ### Python
 
@@ -105,9 +105,9 @@ connection.on(RealtimeEvents.CLOSE, () => {
 });
 ```
 
-## Manual Audio Chunking
+## 手动音频分块
 
-For local files or custom audio streams, convert to PCM format and send in chunks.
+对于本地文件或自定义音频流，转换为 PCM 格式并分块发送。
 
 ### Python
 
@@ -183,7 +183,7 @@ async def main():
     async def send_audio():
         audio_file_path = Path("audio.mp3")
         audio_data = load_and_convert_audio(audio_file_path)
-        chunk_size = 32000  # 1 second of audio at 16kHz
+        chunk_size = 32000  # 16kHz 下 1 秒音频
         chunks = [audio_data[i:i + chunk_size] for i in range(0, len(audio_data), chunk_size)]
 
         for i, chunk in enumerate(chunks):
@@ -278,15 +278,15 @@ async function sendAudio() {
 }
 ```
 
-## Direct WebSocket Connection
+## 直接 WebSocket 连接
 
-For cases where the SDK cannot be used:
+用于无法使用 SDK 的情况：
 
 ```
 wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime
 ```
 
-### Message Format
+### 消息格式
 
 ```json
 {
@@ -297,7 +297,7 @@ wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime
 }
 ```
 
-### Commit Message
+### 提交消息
 
 ```json
 {
@@ -305,13 +305,13 @@ wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime
 }
 ```
 
-## Audio Requirements
+## 音频要求
 
-| Parameter | Value |
-|-----------|-------|
-| Format | PCM 16-bit |
-| Sample Rate | 16000 Hz (recommended) |
-| Channels | Mono |
-| Chunk Size | 32,000 bytes = 1 second |
+| 参数        | 值                     |
+|-------------|------------------------|
+| 格式        | PCM 16 位              |
+| 采样率      | 16000 Hz（推荐）       |
+| 声道        | 单声道                 |
+| 块大小      | 32,000 字节 = 1 秒     |
 
-Supported sample rates: 8kHz to 48kHz
+支持的采样率：8kHz 到 48kHz

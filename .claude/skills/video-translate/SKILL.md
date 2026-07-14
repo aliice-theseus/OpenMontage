@@ -1,7 +1,7 @@
 ---
 name: video-translate
 description: |
-  Translate and dub existing videos into multiple languages using HeyGen. Use when: (1) Translating a video into another language, (2) Dubbing video content with lip-sync, (3) Creating multi-language versions of existing videos, (4) Audio-only translation without lip-sync, (5) Working with HeyGen's /v2/video_translate endpoint.
+  使用 HeyGen 将现有视频翻译和配音成多种语言。在以下情况下使用：(1) 将视频翻译成另一种语言，(2) 对视频内容进行配音并保持唇形同步，(3) 创建现有视频的多语言版本，(4) 仅音频翻译，无需唇形同步，(5) 使用 HeyGen 的 /v2/video_translate 端点。
 allowed-tools: mcp__heygen__*
 metadata:
   openclaw:
@@ -11,13 +11,13 @@ metadata:
     primaryEnv: HEYGEN_API_KEY
 ---
 
-# Video Translation (HeyGen)
+# 视频翻译（HeyGen）
 
-Translate and dub existing videos into multiple languages, preserving lip-sync and natural speech patterns. Provide a video URL or HeyGen video ID — no need to create the video on HeyGen first.
+将现有视频翻译和配音成多种语言，保持唇形同步和自然的语音模式。提供视频 URL 或 HeyGen 视频 ID — 无需先在 HeyGen 上创建视频。
 
-## Authentication
+## 认证
 
-All requests require the `X-Api-Key` header. Set the `HEYGEN_API_KEY` environment variable.
+所有请求都需要 `X-Api-Key` 头。设置 `HEYGEN_API_KEY` 环境变量。
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/video_translate" \
@@ -26,29 +26,29 @@ curl -X POST "https://api.heygen.com/v2/video_translate" \
   -d '{"video_url": "https://example.com/video.mp4", "output_language": "es-ES"}'
 ```
 
-## Default Workflow
+## 默认工作流
 
-1. Provide a video URL or HeyGen video ID
-2. Call `POST /v2/video_translate` with the target language
-3. Poll `GET /v2/video_translate/{translate_id}` until status is `completed`
-4. Download the translated video from the returned URL
+1. 提供视频 URL 或 HeyGen 视频 ID
+2. 使用目标语言调用 `POST /v2/video_translate`
+3. 轮询 `GET /v2/video_translate/{translate_id}` 直到状态为 `completed`
+4. 从返回的 URL 下载翻译后的视频
 
-## Creating a Translation Job
+## 创建翻译任务
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `video_url` | string | Y* | URL of video to translate (*or `video_id`) |
-| `video_id` | string | Y* | HeyGen video ID (*or `video_url`) |
-| `output_language` | string | Y | Target language code (e.g., `"es-ES"`) |
-| `title` | string | | Name for the translated video |
-| `translate_audio_only` | boolean | | Audio only, no lip-sync (faster) |
-| `speaker_num` | number | | Number of speakers in video |
-| `callback_id` | string | | Custom ID for webhook tracking |
-| `callback_url` | string | | URL for completion notification |
+| `video_url` | string | Y* | 要翻译的视频 URL（*或 `video_id`） |
+| `video_id` | string | Y* | HeyGen 视频 ID（*或 `video_url`） |
+| `output_language` | string | Y | 目标语言代码（例如 `"es-ES"`） |
+| `title` | string | | 翻译视频的名称 |
+| `translate_audio_only` | boolean | | 仅音频，无需唇形同步（更快） |
+| `speaker_num` | number | | 视频中说话者数量 |
+| `callback_id` | string | | 用于 webhook 跟踪的自定义 ID |
+| `callback_url` | string | | 完成通知的 URL |
 
-**Either** `video_url` **or** `video_id` must be provided.
+**必须提供 `video_url` 或 `video_id` 其中之一。**
 
 ### curl
 
@@ -59,7 +59,7 @@ curl -X POST "https://api.heygen.com/v2/video_translate" \
   -d '{
     "video_url": "https://example.com/original-video.mp4",
     "output_language": "es-ES",
-    "title": "Spanish Version"
+    "title": "西班牙语版本"
   }'
 ```
 
@@ -127,36 +127,36 @@ def translate_video(config: dict) -> str:
     return data["data"]["video_translate_id"]
 ```
 
-## Supported Languages
+## 支持的语言
 
-| Language | Code | Notes |
+| 语言 | 代码 | 备注 |
 |----------|------|-------|
-| English (US) | en-US | Default source |
-| Spanish (Spain) | es-ES | European Spanish |
-| Spanish (Mexico) | es-MX | Latin American |
-| French | fr-FR | Standard French |
-| German | de-DE | Standard German |
-| Italian | it-IT | Standard Italian |
-| Portuguese (Brazil) | pt-BR | Brazilian Portuguese |
-| Japanese | ja-JP | Standard Japanese |
-| Korean | ko-KR | Standard Korean |
-| Chinese (Mandarin) | zh-CN | Simplified Chinese |
-| Hindi | hi-IN | Standard Hindi |
-| Arabic | ar-SA | Modern Standard Arabic |
+| 英语（美国） | en-US | 默认源语言 |
+| 西班牙语（西班牙） | es-ES | 欧洲西班牙语 |
+| 西班牙语（墨西哥） | es-MX | 拉丁美洲 |
+| 法语 | fr-FR | 标准法语 |
+| 德语 | de-DE | 标准德语 |
+| 意大利语 | it-IT | 标准意大利语 |
+| 葡萄牙语（巴西） | pt-BR | 巴西葡萄牙语 |
+| 日语 | ja-JP | 标准日语 |
+| 韩语 | ko-KR | 标准韩语 |
+| 中文（普通话） | zh-CN | 简体中文 |
+| 印地语 | hi-IN | 标准印地语 |
+| 阿拉伯语 | ar-SA | 现代标准阿拉伯语 |
 
-## Translation Options
+## 翻译选项
 
-### Basic Translation (with lip-sync)
+### 基本翻译（带唇形同步）
 
 ```typescript
 const config = {
   video_url: "https://example.com/original.mp4",
   output_language: "es-ES",
-  title: "Spanish Translation",
+  title: "西班牙语翻译",
 };
 ```
 
-### Audio-Only Translation (faster, no lip-sync)
+### 仅音频翻译（更快，无唇形同步）
 
 ```typescript
 const config = {
@@ -166,7 +166,7 @@ const config = {
 };
 ```
 
-### Multi-Speaker Videos
+### 多说话者视频
 
 ```typescript
 const config = {
@@ -176,19 +176,19 @@ const config = {
 };
 ```
 
-## Advanced Options (v4 API)
+## 高级选项（v4 API）
 
-For more control over translation:
+如需对翻译进行更多控制：
 
 ```typescript
 interface VideoTranslateV4Request {
   input_video_id?: string;
   google_url?: string;
-  output_languages: string[];        // Multiple languages in one call
+  output_languages: string[];        // 单次调用多种语言
   name: string;
-  srt_key?: string;                  // Custom SRT subtitles
+  srt_key?: string;                  // 自定义 SRT 字幕
   instruction?: string;
-  vocabulary?: string[];             // Terms to preserve as-is
+  vocabulary?: string[];             // 按原样保留的术语
   brand_voice_id?: string;
   speaker_num?: number;
   keep_the_same_format?: boolean;
@@ -201,17 +201,17 @@ interface VideoTranslateV4Request {
 }
 ```
 
-### Multiple Output Languages
+### 多种输出语言
 
 ```typescript
 const config = {
   input_video_id: "original_video_id",
   output_languages: ["es-ES", "fr-FR", "de-DE"],
-  name: "Multi-language translations",
+  name: "多语言翻译",
 };
 ```
 
-### Custom Vocabulary (preserve specific terms)
+### 自定义词汇表（保留特定术语）
 
 ```typescript
 const config = {
@@ -221,7 +221,7 @@ const config = {
 };
 ```
 
-### Custom SRT Subtitles
+### 自定义 SRT 字幕
 
 ```typescript
 const config = {
@@ -232,7 +232,7 @@ const config = {
 };
 ```
 
-## Checking Translation Status
+## 检查翻译状态
 
 ### curl
 
@@ -270,9 +270,9 @@ async function getTranslateStatus(translateId: string): Promise<TranslateStatusR
 }
 ```
 
-## Polling for Completion
+## 轮询完成
 
-Translations take longer than standard video generation — allow up to 30 minutes.
+翻译比标准视频生成耗时更长 — 最多等待 30 分钟。
 
 ```typescript
 async function waitForTranslation(
@@ -289,34 +289,34 @@ async function waitForTranslation(
       case "completed":
         return status.video_url!;
       case "failed":
-        throw new Error(status.message || "Translation failed");
+        throw new Error(status.message || "翻译失败");
       default:
-        console.log(`Status: ${status.status}...`);
+        console.log(`状态: ${status.status}...`);
         await new Promise((r) => setTimeout(r, pollIntervalMs));
     }
   }
 
-  throw new Error("Translation timed out");
+  throw new Error("翻译超时");
 }
 ```
 
-## Complete Workflow
+## 完整工作流
 
 ```typescript
 async function translateAndDownload(
   videoUrl: string,
   targetLanguage: string
 ): Promise<string> {
-  console.log(`Starting translation to ${targetLanguage}...`);
+  console.log(`开始翻译到 ${targetLanguage}...`);
   const translateId = await translateVideo({
     video_url: videoUrl,
     output_language: targetLanguage,
   });
-  console.log(`Translation ID: ${translateId}`);
+  console.log(`翻译 ID: ${translateId}`);
 
-  console.log("Processing translation...");
+  console.log("正在处理翻译...");
   const translatedVideoUrl = await waitForTranslation(translateId);
-  console.log(`Translation complete: ${translatedVideoUrl}`);
+  console.log(`翻译完成: ${translatedVideoUrl}`);
 
   return translatedVideoUrl;
 }
@@ -327,9 +327,9 @@ const spanishVideo = await translateAndDownload(
 );
 ```
 
-## Batch Translation
+## 批量翻译
 
-Translate to multiple languages in parallel:
+并行翻译成多种语言：
 
 ```typescript
 async function translateToMultipleLanguages(
@@ -353,7 +353,7 @@ async function translateToMultipleLanguages(
       const videoUrl = await waitForTranslation(job.translateId);
       results[job.lang] = videoUrl;
     } catch (error) {
-      results[job.lang] = `error: ${error.message}`;
+      results[job.lang] = `错误: ${error.message}`;
     }
   }
 
@@ -366,25 +366,25 @@ const translations = await translateToMultipleLanguages(
 );
 ```
 
-## Features
+## 功能特点
 
-- **Lip Sync** — Automatically adjusts speaker's lip movements to match translated audio
-- **Voice Cloning** — Translated audio matches the original speaker's voice characteristics
-- **Music Track Control** — Optionally remove background music with `disable_music_track: true`
-- **Speech Enhancement** — Improve audio quality with `enable_speech_enhancement: true`
+- **唇形同步** — 自动调整说话者的嘴唇运动以匹配翻译后的音频
+- **声音克隆** — 翻译后的音频匹配原始说话者的声音特征
+- **音乐轨道控制** — 可选择通过 `disable_music_track: true` 移除背景音乐
+- **语音增强** — 通过 `enable_speech_enhancement: true` 提高音频质量
 
-## Best Practices
+## 最佳实践
 
-1. **Source quality matters** — Use high-quality source videos for better results
-2. **Clear audio** — Videos with clear speech translate better
-3. **Single speaker** — Best results with single-speaker content
-4. **Moderate pacing** — Very fast speech may affect quality
-5. **Test first** — Try with shorter clips before translating long videos
-6. **Allow extra time** — Translation takes longer than video generation (up to 30 min)
+1. **源质量很重要** — 使用高质量源视频以获得更好效果
+2. **清晰音频** — 语音清晰的视频翻译效果更好
+3. **单说话者** — 单说话者内容效果最佳
+4. **适中语速** — 非常快速的语音可能影响质量
+5. **先测试** — 在翻译长视频前先用较短视频片段尝试
+6. **预留额外时间** — 翻译比视频生成耗时更长（最多 30 分钟）
 
-## Error Handling
+## 错误处理
 
-Common errors and how to handle them:
+常见错误及其处理方式：
 
 ```typescript
 async function safeTranslate(
@@ -396,13 +396,13 @@ async function safeTranslate(
     return { success: true, result: url };
   } catch (error) {
     if (error.message.includes("quota")) {
-      return { success: false, error: "Insufficient credits" };
+      return { success: false, error: "积分不足" };
     }
     if (error.message.includes("duration")) {
-      return { success: false, error: "Video too long" };
+      return { success: false, error: "视频太长" };
     }
     if (error.message.includes("format")) {
-      return { success: false, error: "Unsupported video format" };
+      return { success: false, error: "不支持的视频格式" };
     }
     return { success: false, error: error.message };
   }

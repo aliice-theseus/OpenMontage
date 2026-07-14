@@ -2,120 +2,120 @@
 name: "Game Boy Color"
 version: "1.0"
 tags:
-  - pixel retro
-  - gaming
-author: "Visual Style Gallery"
+  - 像素复古
+  - 游戏
+author: "视觉风格图库"
 created: "2026-03-12"
 
 style_prompt_short: >
-  Late 90s handheld gaming nostalgia. Limited color palette,
-  chunky pixels, portable adventures in your pocket.
+  90 年代末掌机游戏的怀旧情怀。有限的调色板、
+  粗颗粒像素、口袋里的便携冒险。
 
 style_prompt_full: >
-  Game Boy Color aesthetic from the late 1990s. Limited color palette
-  per scene (originally 56 colors, often using 4-10 per sprite).
-  Characteristic GBC colors: that specific teal-green (#0F380F to
-  #9BBC0F gradient), purple shell (#663399), berry (#CC3366), teal
-  (#339999), atomic purple (#6B3FA0). Chunky pixel graphics at low
-  resolution (160x144 native). Dithering patterns for shading.
-  Simple sprite animations at low frame rates (10-15fps). UI elements
-  have that distinctive GBC border style. Sound design would be
-  chiptune — 4-channel audio aesthetic. Portable, colorful, charming.
-  Not as limited as original Game Boy, but still clearly constrained.
-  Pokemon Crystal, Link's Awakening DX, Wario Land 3 as references.
+  1990 年代末的 Game Boy Color 美学。每个场景有限的
+  调色板（原版 56 色，每个精灵通常使用 4-10 色）。
+  标志性的 GBC 颜色：特有的青绿（#0F380F 到
+  #9BBC0F 渐变）、紫色外壳（#663399）、莓果色（#CC3366）、青色
+  （#339999）、原子紫（#6B3FA0）。低分辨率下的粗像素图形
+  （原生 160x144）。用于阴影的抖动模式。
+  低帧率的简单精灵动画（10-15fps）。UI 元素
+  具有独特的 GBC 边框风格。声音设计为
+  芯片音乐——4 通道音频美学。便携、多彩、迷人。
+  不如原版 Game Boy 受限，但仍明显有约束。
+  参考：水晶版宝可梦、塞尔达传说 DX、瓦里奥大陆 3。
 
 colors:
   primary:
-    - name: "GBC Dark Green"
+    - name: "GBC 深绿"
       hex: "#0F380F"
-      role: "darkest tone, outlines"
-    - name: "GBC Light Green"
+      role: "最深色调，轮廓线"
+    - name: "GBC 浅绿"
       hex: "#9BBC0F"
-      role: "lightest tone, highlights"
+      role: "最浅色调，高光"
   accent:
-    - name: "GBC Purple"
+    - name: "GBC 紫"
       hex: "#663399"
-      role: "original shell color, brand accent"
-    - name: "Berry Pink"
+      role: "原版外壳颜色，品牌强调"
+    - name: "莓果粉"
       hex: "#CC3366"
-      role: "berry shell variant"
-    - name: "Teal"
+      role: "莓果外壳变体"
+    - name: "青色"
       hex: "#339999"
-      role: "teal shell variant"
-    - name: "Atomic Purple"
+      role: "青色外壳变体"
+    - name: "原子紫"
       hex: "#6B3FA0"
-      role: "atomic purple shell, special emphasis"
+      role: "原子紫外壳，特殊强调"
   neutral:
-    - name: "GBC Mid Green"
+    - name: "GBC 中绿"
       hex: "#306230"
-      role: "mid-tone, secondary elements"
-    - name: "GBC Pale Green"
+      role: "中间色调，次要元素"
+    - name: "GBC 淡绿"
       hex: "#8BAC0F"
-      role: "light mid-tone"
+      role: "浅中间色调"
 
 typography:
   display:
-    family: "Pixel font (8x8 or 16x16)"
-    weight: "regular (pixels are pixels)"
-    style: "uppercase or mixed, chunky"
+    family: "像素字体（8x8 或 16x16）"
+    weight: "常规（像素就是像素）"
+    style: "大写或混合，粗颗粒"
   body:
-    family: "Pixel font"
-    weight: "regular"
-    style: "dialogue box style"
+    family: "像素字体"
+    weight: "常规"
+    style: "对话框风格"
   caption:
-    family: "Pixel font"
-    weight: "regular"
-    style: "small, menu text"
+    family: "像素字体"
+    weight: "常规"
+    style: "小号，菜单文字"
   rules:
-    - "All text must be pixel-perfect"
-    - "Limited character sets (like actual GBC)"
-    - "Text boxes with characteristic borders"
-    - "Text reveals character by character"
+    - "所有文字必须像素完美"
+    - "有限的字符集（像真实的 GBC）"
+    - "带特色边框的文本框"
+    - "文字逐字符显示"
 
 layout:
-  grid: "8-pixel base unit"
-  alignment: "Centered menus, left-aligned dialogue"
-  aspect_ratio: "10:9 (GBC native) or 16:9 (modern)"
+  grid: "8 像素基本单位"
+  alignment: "菜单居中，对话框左对齐"
+  aspect_ratio: "10:9（GBC 原生）或 16:9（现代）"
   notes:
-    - "160x144 native resolution, scale up evenly"
-    - "HUD elements at screen edges"
-    - "Dialogue boxes at bottom third"
-    - "Sprite-based compositions"
+    - "160x144 原生分辨率，均匀缩放"
+    - "HUD 元素位于屏幕边缘"
+    - "对话框在底部三分之一处"
+    - "基于精灵的构图"
 
 motion:
   transitions:
-    - "screen wipes (iris, horizontal, vertical)"
-    - "palette fade (to white or black)"
-    - "no smooth transitions"
+    - "屏幕擦除（虹膜、水平、垂直）"
+    - "调色板淡出（到白色或黑色）"
+    - "无平滑过渡"
   animation_style: >
-    Low frame rate sprite animation (10-15fps). Two-frame walk cycles.
-    Screen transitions are instant or use classic wipes.
-    UI elements appear and disappear, don't fade.
-  pacing: "Quick, responsive, game-like"
+    低帧率精灵动画（10-15fps）。两帧行走循环。
+    屏幕过渡瞬发或使用经典擦除。
+    UI 元素直接出现和消失，不淡入淡出。
+  pacing: "快速，响应式，类游戏"
   audio_cues:
-    - "chiptune"
-    - "4-channel audio"
-    - "8-bit sound effects"
-    - "menu blips and bloops"
+    - "芯片音乐"
+    - "4 通道音频"
+    - "8 位音效"
+    - "菜单哔哔声"
 
 mood:
   keywords:
-    - "nostalgic"
-    - "portable"
-    - "colorful"
-    - "charming"
-    - "playful"
-    - "adventure"
+    - "怀旧"
+    - "便携"
+    - "多彩"
+    - "迷人"
+    - "有趣"
+    - "冒险"
   era: "1998-2003"
-  cultural_reference: "Pokemon Crystal, Link's Awakening DX, Wario Land 3, Game Boy Color hardware"
+  cultural_reference: "水晶版宝可梦、塞尔达传说 DX、瓦里奥大陆 3、Game Boy Color 硬件"
   avoid:
-    - "smooth gradients"
-    - "high resolution graphics"
-    - "photorealistic elements"
-    - "modern UI patterns"
-    - "more than 56 colors total"
-    - "smooth animations"
-    - "anti-aliasing"
+    - "平滑渐变"
+    - "高分辨率图形"
+    - "照片写实元素"
+    - "现代 UI 模式"
+    - "超过 56 种颜色"
+    - "平滑动画"
+    - "抗锯齿"
 
 assets:
   reference_images: []
@@ -129,31 +129,31 @@ x_heygen:
   orientation: "landscape"
 ---
 
-## Design Principles
+## 设计原则
 
-Constraints breed creativity.
-Every pixel counts when you only have 160x144.
-Color is precious — use it intentionally.
-Charm comes from character, not complexity.
+约束催生创造力。
+当你只有 160x144 时，每个像素都很重要。
+色彩是珍贵的——有目的地使用它。
+魅力来自个性，而非复杂。
 
-## Connectors
+## 连接器
 
-### HeyGen Video Agent
-Use `style_prompt_full` verbatim. Emphasize: chunky pixels, limited colors,
-low frame rate animations. Screen wipe transitions. Chiptune audio aesthetic.
-No smooth movements — everything is discrete pixel steps.
+### HeyGen 视频代理
+逐字使用 `style_prompt_full`。强调：粗像素、有限颜色、
+低帧率动画。屏幕擦除过渡。芯片音乐音频美学。
+无平滑运动——一切都是离散的像素步进。
 
-### HTML Slides
-Use pixel fonts (Press Start 2P, VT323). Scale graphics at integer multiples
-only (2x, 3x, 4x) to maintain pixel crispness. GBC green palette as default,
-shell colors for accents. Dialogue box borders.
+### HTML 幻灯片
+使用像素字体（Press Start 2P、VT323）。仅以整数倍
+（2x、3x、4x）缩放图形以保持像素清晰度。默认 GBC 绿色调色板，
+外壳色用于强调。对话框边框。
 
 ### paper.design
-Design at low resolution, scale up. Use GBC color palette.
-Dithering patterns for shading. Sprite-based compositions.
-8-pixel grid for all elements.
+在低分辨率下设计，再放大。使用 GBC 调色板。
+用于阴影的抖动模式。基于精灵的构图。
+所有元素使用 8 像素网格。
 
 ### Figma
-Color styles: `gbc/dark-green`, `gbc/mid-green`, `gbc/pale-green`, `gbc/light-green`,
-plus shell color variants. 8x8 pixel grid. Use pixel fonts or
-design custom pixel type. No anti-aliasing on exports.
+颜色样式：`gbc/dark-green`、`gbc/mid-green`、`gbc/pale-green`、`gbc/light-green`，
+加上外壳颜色变体。8x8 像素网格。使用像素字体或
+设计自定义像素字体。导出时无抗锯齿。

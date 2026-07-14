@@ -1,43 +1,43 @@
-# text module · motion vocabulary (primitive → GSAP)
+# 文本模块 · 动态词汇表（原语 → GSAP）
 
-Named primitives the Director references in `motion` strings and the Builder implements. `code_hint`s are framework-neutral physics; the GSAP recipe is the HF implementation. Prefer an HF **registry component** (bottom) when one fits — don't reinvent.
+Director 在 `motion` 字符串中引用的命名原语，Builder 实现它们。`code_hint` 是框架中立的物理描述；GSAP 配方是 HF 实现。当有合适的 HF **注册表组件**（底部）时优先使用 — 不要重新发明。
 
-## Entry
+## 入场
 
-| primitive                     | GSAP recipe (into CSS end-state)                               | suits                     |
-| ----------------------------- | -------------------------------------------------------------- | ------------------------- |
-| `slide_bottom/top/left/right` | `from({ y:±150 / x:±200, opacity:0, ease:"power4.out" })`      | calm, build, professional |
-| `scale_grow`                  | `from({ scale:0, opacity:0, duration:.6, ease:"power2.out" })` | calm, gentle              |
-| `scale_punch`                 | `from({ scale:.6, opacity:0, ease:"back.out(2.2)" })`          | impact, energetic         |
-| `fade_in`                     | `from({ opacity:0, duration:.4 })`                             | subtle                    |
-| `fade_blur`                   | `from({ opacity:0, filter:"blur(14px)" })`                     | cinematic, dreamy         |
-| `typewriter`                  | reveal via clip/`SplitText` width step                         | technical, narrative      |
-| `word_reveal`                 | per-word `from({opacity:0,y:..}, stagger:.1)`                  | storytelling              |
-| `wave`                        | per-letter `from({y:..}, stagger:{each:.04})`                  | flowing, musical          |
-| `bounce_in`                   | `from({y:-120}, ease:"bounce.out")`                            | playful                   |
-| `slam`                        | `from({ y:-300, ease:"power4.out" })` + shake on land          | impact, heavy             |
+| 原语                           | GSAP 配方（进入 CSS 终态）                                          | 适用场景                   |
+| ----------------------------- | ------------------------------------------------------------------- | -------------------------- |
+| `slide_bottom/top/left/right` | `from({ y:±150 / x:±200, opacity:0, ease:"power4.out" })`          | 平静、构建感、专业         |
+| `scale_grow`                  | `from({ scale:0, opacity:0, duration:.6, ease:"power2.out" })`      | 平静、柔和                 |
+| `scale_punch`                 | `from({ scale:.6, opacity:0, ease:"back.out(2.2)" })`               | 冲击、有活力               |
+| `fade_in`                     | `from({ opacity:0, duration:.4 })`                                  | 微妙                       |
+| `fade_blur`                   | `from({ opacity:0, filter:"blur(14px)" })`                          | 电影感、梦幻               |
+| `typewriter`                  | 通过 clip/`SplitText` 宽度步进揭示                                   | 技术、叙事                 |
+| `word_reveal`                 | 逐词 `from({opacity:0,y:..}, stagger:.1)`                           | 讲故事                     |
+| `wave`                        | 逐字母 `from({y:..}, stagger:{each:.04})`                           | 流动感、音乐感             |
+| `bounce_in`                   | `from({y:-120}, ease:"bounce.out")`                                 | 俏皮                       |
+| `slam`                        | `from({ y:-300, ease:"power4.out" })` + 落地时震动                  | 冲击、重型                 |
 
-## Emphasis (in place, often on a beat)
+## 强调（原地，通常在节拍上）
 
-| primitive     | GSAP recipe                                                          | suits              |
-| ------------- | -------------------------------------------------------------------- | ------------------ |
-| `scale_pulse` | `to({ scale:1.12, yoyo:true, repeat:1, ease:"sine.inOut" })` at beat | rhythmic, peak     |
-| `shake`       | `to({ keyframes:[{x:-9},{x:9},{x:0}], ease:"none" })`                | urgent, intense    |
-| `glow`        | `to({ textShadow:"0 0 46px <ink/accent>", yoyo:true, repeat:1 })`    | important, magical |
-| `color_shift` | `to({ color:"<accent>" })` (or accent on the word in CSS)            | dynamic            |
+| 原语           | GSAP 配方                                                            | 适用场景           |
+| ------------- | -------------------------------------------------------------------- | ----------------- |
+| `scale_pulse` | `to({ scale:1.12, yoyo:true, repeat:1, ease:"sine.inOut" })` 在节拍 | 节奏感、峰值      |
+| `shake`       | `to({ keyframes:[{x:-9},{x:9},{x:0}], ease:"none" })`               | 紧急、强烈        |
+| `glow`        | `to({ textShadow:"0 0 46px <ink/accent>", yoyo:true, repeat:1 })`   | 重要、魔法般      |
+| `color_shift` | `to({ color:"<accent>" })`（或在 CSS 中为词加重音）                   | 动态              |
 
-## Exit
+## 退出
 
-| primitive   | GSAP recipe                                        | suits      |
-| ----------- | -------------------------------------------------- | ---------- |
-| `fade_out`  | `to({ opacity:0, duration:.4, ease:"power2.in" })` | ending     |
-| `slide_out` | `to({ y/x: off, opacity:0, ease:"power2.in" })`    | transition |
-| `scale_out` | `to({ scale:1.06, opacity:0, ease:"power2.in" })`  | transition |
+| 原语         | GSAP 配方                                        | 适用场景      |
+| ----------- | ------------------------------------------------ | ------------ |
+| `fade_out`  | `to({ opacity:0, duration:.4, ease:"power2.in" })` | 结束         |
+| `slide_out` | `to({ y/x: off, opacity:0, ease:"power2.in" })`    | 过渡         |
+| `scale_out` | `to({ scale:1.06, opacity:0, ease:"power2.in" })`  | 过渡         |
 
-## Accent graphics (not text)
+## 装饰图形（非文字）
 
-`underline_sweep` `fromTo({scaleX:0},{scaleX:1}, transformOrigin:"left center")` · `bar_wipe` · `hold_breath` `to({scale:1.015, ease:"sine.inOut"})`.
+`underline_sweep` `fromTo({scaleX:0},{scaleX:1}, transformOrigin:"left center")` · `bar_wipe` · `hold_breath` `to({scale:1.015, ease:"sine.inOut"})`。
 
-## Prefer HF registry components when they fit
+## 优先使用 HF 注册表组件（如适用）
 
-`caption-kinetic-slam` · `caption-editorial-emphasis` · `caption-neon-glow` · `caption-glitch-rgb` · `caption-particle-burst` · `caption-weight-shift` · `caption-matrix-decode` · `caption-pill-karaoke` · `shimmer-sweep`. These are pre-built, in-ecosystem, and already render-tested — the Builder should reach for them before hand-rolling an equivalent.
+`caption-kinetic-slam` · `caption-editorial-emphasis` · `caption-neon-glow` · `caption-glitch-rgb` · `caption-particle-burst` · `caption-weight-shift` · `caption-matrix-decode` · `caption-pill-karaoke` · `shimmer-sweep`。这些是预先构建的、在生态系统内的且已经过渲染测试 — Builder 应优先使用它们，而不是手动编写等效内容。

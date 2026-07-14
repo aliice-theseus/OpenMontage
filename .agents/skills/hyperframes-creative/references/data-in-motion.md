@@ -1,19 +1,19 @@
-# Data in Motion
+# 动态数据
 
-Light guidance for data and stats in video compositions. `house-style.md` handles aesthetics; this just addresses data-specific pitfalls.
+视频合成中数据和统计的轻量指导。`house-style.md` 处理美学；这里只解决数据特定的陷阱。
 
-## Visual Continuity
+## 视觉连续性
 
-When successive stats belong to the same concept (Q1 → Q2 → Q3 → Q4, or three metrics for the same product), keep them in the same visual space with the same aesthetic. Only the VALUE changes. An aesthetic change should signal a new concept, not just a new number.
+当连续统计数据属于同一概念（Q1 → Q2 → Q3 → Q4，或同一产品的三个指标）时，将它们放在同一视觉空间中，使用相同的美学。只有**值**变化。美学变化应标志着新概念，而不仅仅是新数字。
 
-## Numbers Need Visual Weight
+## 数字需要视觉重量
 
-A number on its own floats in empty space. Pair every metric with a visual element that gives it presence — a proportional fill bar, a background color shift, a shape that represents the value, a progress ring. The visual doesn't need to be a chart — it just needs to fill the frame and make the data feel tangible rather than just text on a background.
+数字本身在空白空间中漂浮。将每个指标与赋予其存在感的视觉元素搭配——比例填充条、背景颜色变化、代表数值的形状、进度环。视觉不需要是图表——它只需要填充画幅并使数据感觉有实体感，而不仅仅是背景上的文字。
 
-## Avoid Web Patterns
+## 避免 Web 模式
 
-- **No pie charts** — hard to compare, looks like PowerPoint
-- **No multi-axis charts** — viewer can't study intersections in a 3-second window
-- **No 6-panel dashboards** — 2-3 related metrics side-by-side is fine, 6+ is a web pattern
-- **No gridlines, tick marks, or legends** — visual noise that adds nothing in motion
-- **No chart library output** — build with GSAP + SVG/CSS, not D3 or Chart.js
+- **没有饼图**——难以比较，看起来像 PowerPoint
+- **没有多轴图**——观众无法在 3 秒窗口内研究交叉点
+- **没有 6 面板仪表盘**——2-3 个相关指标并排放置可以，6+ 是网页模式
+- **没有网格线、刻度标记或图例**——在运动中毫无贡献的视觉噪音
+- **没有图表库输出**——使用 GSAP + SVG/CSS 构建，而不是 D3 或 Chart.js

@@ -1,15 +1,14 @@
 ---
-title: Prefer Composing Children Over Render Props
+title: 优先使用 Children 组合而非 Render Props
 impact: MEDIUM
-impactDescription: cleaner composition, better readability
+impactDescription: 更清晰的组合，更好的可读性
 tags: composition, children, render-props
 ---
 
-## Prefer Children Over Render Props
+## 优先使用 Children 组合而非 Render Props
 
-Use `children` for composition instead of `renderX` props. Children are more
-readable, compose naturally, and don't require understanding callback
-signatures.
+使用 `children` 进行组合而非 `renderX` props。Children 更具可读性，
+自然组合，并且不需要理解回调签名。
 
 **Incorrect (render props):**
 

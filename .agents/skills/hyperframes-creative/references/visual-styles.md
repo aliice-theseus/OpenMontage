@@ -1,43 +1,43 @@
-# Visual Style Library
+# 视觉风格库
 
-Named visual identities for HyperFrames videos. Each style is grounded in a real graphic design tradition and expressed as a DESIGN.md-compatible token block. Use them as starters — copy the YAML into your project's `design.md` front matter, then customize.
+HyperFrames 视频的命名视觉标识。每种风格都基于真实的平面设计传统，并以 DESIGN.md 兼容的令牌块形式表达。将其作为起点——将 YAML 复制到项目的 `design.md` front matter 中，然后进行自定义。
 
-**How to pick:** Match mood first, content second. Ask: _"What should the viewer FEEL?"_
+**如何选择：** 先匹配情绪，再匹配内容。问：_"观众应该感受到什么？"_
 
-**How to use:** Copy the style's YAML token block into `design.md` front matter. Add `## Overview`, `## Colors`, `## Typography`, `## Elevation`, `## Components`, `## Do's and Don'ts` prose sections to complete the file.
+**如何使用：** 将风格的 YAML 令牌块复制到 `design.md` 的 front matter 中。添加 `## 概述`、`## 颜色`、`## 排版`、`## 层级`、`## 组件`、`## 该做与不该做` 等散文段落以完善文件。
 
-## Contents
+## 目录
 
-- Quick reference
-- Swiss Pulse
-- Velvet Standard
-- Deconstructed
-- Maximalist Type
-- Data Drift
-- Soft Signal
-- Folk Frequency
-- Shadow Cut
-- Mood to style guide
-- Creating custom styles
+- 快速参考
+- Swiss Pulse（瑞士脉动）
+- Velvet Standard（丝绒标准）
+- Deconstructed（解构）
+- Maximalist Type（极繁主义字体）
+- Data Drift（数据漂移）
+- Soft Signal（软信号）
+- Folk Frequency（民谣频率）
+- Shadow Cut（阴影切割）
+- 情绪到风格指南
+- 创建自定义风格
 
-## Quick Reference
+## 快速参考
 
-| Style           | Mood                  | Best for                           | Transition shader                 |
-| --------------- | --------------------- | ---------------------------------- | --------------------------------- |
-| Swiss Pulse     | Clinical, precise     | SaaS, data, dev tools, metrics     | Cinematic Zoom or SDF Iris        |
-| Velvet Standard | Premium, timeless     | Luxury, enterprise, keynotes       | Cross-Warp Morph                  |
-| Deconstructed   | Industrial, raw       | Tech launches, security, punk      | Glitch or Whip Pan                |
-| Maximalist Type | Loud, kinetic         | Big announcements, launches        | Ridged Burn                       |
-| Data Drift      | Futuristic, immersive | AI, ML, cutting-edge tech          | Gravitational Lens or Domain Warp |
-| Soft Signal     | Intimate, warm        | Wellness, personal stories, brand  | Thermal Distortion                |
-| Folk Frequency  | Cultural, vivid       | Consumer apps, food, communities   | Swirl Vortex or Ripple Waves      |
-| Shadow Cut      | Dark, cinematic       | Dramatic reveals, security, exposé | Domain Warp                       |
+| 风格             | 情绪                 | 最适合                         | 过渡着色器                       |
+| --------------- | --------------------- | ------------------------------ | -------------------------------- |
+| Swiss Pulse     | 临床、精确             | SaaS、数据、开发工具、指标       | Cinematic Zoom 或 SDF Iris       |
+| Velvet Standard | 高级、永恒             | 奢侈品、企业、主题演讲           | Cross-Warp Morph                 |
+| Deconstructed   | 工业、原始             | 技术发布、安全、朋克             | Glitch 或 Whip Pan               |
+| Maximalist Type | 响亮、动态             | 重大公告、发布会                 | Ridged Burn                      |
+| Data Drift      | 未来感、沉浸式          | AI、ML、尖端科技               | Gravitational Lens 或 Domain Warp |
+| Soft Signal     | 亲密、温暖             | 健康、个人故事、品牌             | Thermal Distortion               |
+| Folk Frequency  | 文化、生动             | 消费者应用、食品、社区           | Swirl Vortex 或 Ripple Waves     |
+| Shadow Cut      | 黑暗、电影感            | 戏剧性揭示、安全、曝光           | Domain Warp                      |
 
 ---
 
 ## 1. Swiss Pulse — Josef Müller-Brockmann
 
-**Mood:** Clinical, precise | **Best for:** SaaS dashboards, developer tools, APIs, metrics
+**情绪：** 临床、精确 | **最适合：** SaaS 仪表盘、开发者工具、API、指标
 
 ```yaml
 name: Swiss Pulse
@@ -81,13 +81,13 @@ motion:
   transition: cinematic-zoom
 ```
 
-Grid-locked compositions. Every element snaps to an invisible 12-column grid. Numbers dominate the frame at 80–120px. Animated counters count up from 0. Hard cuts, no decorative transitions. Nothing floats.
+网格锁定构图。每个元素都对齐到不可见的 12 列网格。数字以 80-120px 占据画面主导。动画计数器从 0 开始计数。硬切，无装饰性过渡。没有浮动元素。
 
 ---
 
 ## 2. Velvet Standard — Massimo Vignelli
 
-**Mood:** Premium, timeless | **Best for:** Luxury products, enterprise software, keynotes, investor decks
+**情绪：** 高级、永恒 | **最适合：** 奢侈品、企业软件、主题演讲、投资者演示
 
 ```yaml
 name: Velvet Standard
@@ -130,13 +130,13 @@ motion:
   transition: cross-warp-morph
 ```
 
-Generous negative space. Symmetrical, centered, architectural precision. Thin sans-serif, ALL CAPS, wide letter-spacing. Sequential reveals with long holds. Nothing snaps — everything glides with intention. Luxury takes its time.
+慷慨的负空间。对称、居中、建筑般的精确性。纤细无衬线体，全大写，宽字距。顺序揭示配以长停留。没有突兀——一切都带着意图滑行。奢华不赶时间。
 
 ---
 
 ## 3. Deconstructed — Neville Brody
 
-**Mood:** Industrial, raw | **Best for:** Tech news, developer launches, security products, punk-energy reveals
+**情绪：** 工业、原始 | **最适合：** 科技新闻、开发者发布会、安全产品、朋克能量揭示
 
 ```yaml
 name: Deconstructed
@@ -177,13 +177,13 @@ motion:
   transition: glitch
 ```
 
-Type at angles, overlapping edges, escaping frames. Bold industrial weight. Gritty textures: scan-line effects, glitch artifacts baked into design. Text SLAMS and SHATTERS. Letters scramble then snap to final position. Intentional irregularity — nothing should feel polished.
+倾斜的字体、重叠的边缘、溢出画框。粗犷的工业重量。砂砾质感：扫描线效果、故障伪影融入了设计。文字砰然撞击并碎裂。字母打乱然后弹跳到最终位置。故意的不规则——不应有任何抛光感。
 
 ---
 
 ## 4. Maximalist Type — Paula Scher
 
-**Mood:** Loud, kinetic | **Best for:** Big product launches, milestone announcements, high-energy hype videos
+**情绪：** 响亮、动态 | **最适合：** 大型产品发布会、里程碑公告、高能量宣传视频
 
 ```yaml
 name: Maximalist Type
@@ -223,13 +223,13 @@ motion:
   transition: ridged-burn
 ```
 
-Text IS the visual. Overlapping type layers at different scales and angles, filling 50–80% of frame. Bold saturated colors — maximum contrast. Everything kinetic: slamming, sliding, scaling. 2–3 second rapid-fire scenes. No static moments. Fast arrivals, hard stops.
+文字就是视觉本身。不同比例和角度的重叠字体层，填充画幅的 50-80%。大胆饱和的颜色——最大对比度。一切都是动态的：撞击、滑动、缩放。2-3 秒的快速场景。没有静态时刻。快速入场，硬性停止。
 
 ---
 
 ## 5. Data Drift — Refik Anadol
 
-**Mood:** Futuristic, immersive | **Best for:** AI products, ML platforms, data companies, speculative tech
+**情绪：** 未来感、沉浸式 | **最适合：** AI 产品、ML 平台、数据公司、前瞻科技
 
 ```yaml
 name: Data Drift
@@ -273,13 +273,13 @@ motion:
   transition: gravitational-lens
 ```
 
-Thin futuristic sans-serif — floating, weightless, minimal. Fluid morphing compositions. Extreme scale shifts (micro → macro). Particles coalesce into numbers. Light traces data paths through the frame. Smooth, continuous, organic. Nothing hard.
+纤细的未来感无衬线体——漂浮、失重、极简。流体变形构图。极端的尺度转换（微观 → 宏观）。粒子聚合成数字。光线在画幅中描绘数据路径。流畅、连续、有机。没有硬边缘。
 
 ---
 
 ## 6. Soft Signal — Stefan Sagmeister
 
-**Mood:** Intimate, warm | **Best for:** Wellness brands, personal stories, lifestyle products, human-centered apps
+**情绪：** 亲密、温暖 | **最适合：** 健康品牌、个人故事、生活方式产品、以人为本的应用
 
 ```yaml
 name: Soft Signal
@@ -325,13 +325,13 @@ motion:
   transition: thermal-distortion
 ```
 
-Handwritten-style or humanist serif fonts. Personal, lowercase, delicate. Close-up framing: single element fills the frame. Slow drifts and floats, never snaps. Soft organic motion. Nothing should feel hurried or polished. Intimate, never corporate.
+手写风格或人文主义衬线字体。个人化、小写、精致。特写构图：单个元素充满画框。缓慢漂移和浮动，从不突兀。柔软的有机运动。不应感到匆忙或抛光。亲密，从不企业化。
 
 ---
 
 ## 7. Folk Frequency — Eduardo Terrazas
 
-**Mood:** Cultural, vivid | **Best for:** Consumer apps, food platforms, community products, festive launches
+**情绪：** 文化、生动 | **最适合：** 消费者应用、食品平台、社区产品、节日发布
 
 ```yaml
 name: Folk Frequency
@@ -377,13 +377,13 @@ motion:
   transition: swirl-vortex
 ```
 
-Bold warm rounded type. Pattern and repetition — folk art rhythm and density. Layered compositions with rich visual texture. Every frame feels handcrafted. Colorful motion: elements bounce, pop, spin into place with joy. Overshoots feel intentional. Celebratory energy.
+大胆温暖的圆角字体。图案和重复——民间艺术的节奏和密度。层次丰富的构图，视觉纹理丰富。每一帧都感觉是手工制作的。多彩运动：元素跳跃、弹出、快乐地旋转到位。过冲感觉是有意的。庆祝的能量。
 
 ---
 
 ## 8. Shadow Cut — Hans Hillmann
 
-**Mood:** Dark, cinematic | **Best for:** Security products, dramatic reveals, investigative content, intense launches
+**情绪：** 黑暗、电影感 | **最适合：** 安全产品、戏剧性揭示、调查内容、高强度发布
 
 ```yaml
 name: Shadow Cut
@@ -426,32 +426,32 @@ motion:
   transition: domain-warp
 ```
 
-Near-monochrome: deep blacks, cold greys, stark white + one blood accent. Sharp angular text like film noir title cards. Heavy contrast, no softness. Elements emerge from darkness — reveal is the narrative. Slow creeping push-ins, dramatic scale reveals. The pause before the hit matters. Domain Warp dissolves reality before the next scene.
+近单色：深黑、冷灰、纯白 + 一个血色强调。锐利的棱角字体，如同黑色电影标题卡。重对比度，无柔和感。元素从黑暗中浮现——揭示即是叙事。缓慢爬行的推进，戏剧性的尺度展示。节奏中的停顿至关重要。Domain Warp 在下一场景前溶解现实。
 
 ---
 
-## Mood → Style Guide
+## 情绪 → 风格指南
 
-| If the content feels...            | Use...          |
+| 如果内容感觉...                    | 使用...         |
 | ---------------------------------- | --------------- |
-| Data-driven, analytical, technical | Swiss Pulse     |
-| Premium, enterprise, luxury        | Velvet Standard |
-| Raw, punk, aggressive, rebellious  | Deconstructed   |
-| Hype, loud, high-energy launch     | Maximalist Type |
-| AI, ML, speculative, futuristic    | Data Drift      |
-| Human, warm, personal, wellness    | Soft Signal     |
-| Cultural, fun, consumer, festive   | Folk Frequency  |
-| Dark, dramatic, intense, cinematic | Shadow Cut      |
+| 数据驱动、分析型、技术感            | Swiss Pulse     |
+| 高端、企业、奢华                    | Velvet Standard |
+| 原始、朋克、激进、反叛              | Deconstructed   |
+| 炒作、响亮、高能量发布              | Maximalist Type |
+| AI、ML、推测性、未来感             | Data Drift      |
+| 人性化、温暖、个人、健康            | Soft Signal     |
+| 文化、有趣、消费、节日              | Folk Frequency  |
+| 黑暗、戏剧、强烈、电影感            | Shadow Cut      |
 
 ---
 
-## Creating Custom Styles
+## 创建自定义风格
 
-These 8 styles are starters — not constraints. Create your own:
+这 8 种风格是起点——不是限制。创建你自己的：
 
-1. **Name it** after a designer, art movement, or cultural reference
-2. **Write YAML tokens** — `colors` (2–5 tokens), `typography` (2–3 scales), `rounded`, `spacing`, `motion` (energy + easing + duration + atmosphere + transition)
-3. **Add prose** — one paragraph describing the feel, what to do, what to avoid
-4. **Token references** — use `{colors.accent}`, `{typography.headline}` in component definitions
+1. **命名**— 以设计师、艺术运动或文化参考命名
+2. **编写 YAML 令牌** — `colors`（2-5 个令牌）、`typography`（2-3 个等级）、`rounded`、`spacing`、`motion`（能量 + 缓动 + 时长 + 氛围 + 过渡）
+3. **添加散文** — 一段描述感觉、该做什么、避免什么
+4. **令牌引用** — 在组件定义中使用 `{colors.accent}`、`{typography.headline}`
 
-The pattern: **YAML tokens (what) → prose rationale (why) → components (how they combine).**
+模式：**YAML 令牌（什么）→ 散文理由（为什么）→ 组件（它们如何组合）。**

@@ -1,24 +1,23 @@
 ---
 name: character-animation-qa
-description: Review local character animation with schema checks, Playwright browser previews, frame sampling, and FFmpeg/ffprobe final output checks.
+description: 通过 schema 检查、Playwright 浏览器预览、帧采样和 FFmpeg/ffprobe 最终输出检查来审查本地角色动画。
 license: MIT
 ---
 
-# Character Animation QA
+# 角色动画 QA
 
-Use this skill before presenting a character-animation preview or final render.
+在展示角色动画预览或最终渲染之前使用此技能。
 
-## Review Layers
+## 审查层次
 
-1. Schema validation: character design, rig plan, pose library, action timeline.
-2. Static asset checks: referenced parts and backgrounds exist.
-3. Browser preview: load the preview, capture screenshots, collect console errors.
-4. Motion check: compare sampled frames for non-trivial differences.
-5. Final MP4 check: ffprobe metadata, duration, resolution, audio, frame samples.
-6. Agent visual review: inspect sampled frames for detached limbs, bad layers,
-   off-frame characters, unreadable expressions, broken text.
+1. Schema 验证：角色设计、绑定计划、姿态库、动作时间线。
+2. 静态资源检查：引用的部件和背景存在。
+3. 浏览器预览：加载预览、截取屏幕截图、收集控制台错误。
+4. 运动检查：比较采样帧是否存在非微小差异。
+5. 最终 MP4 检查：ffprobe 元数据、时长、分辨率、音频、帧样本。
+6. 代理视觉审查：检查采样帧是否存在肢体分离、图层错误、角色出框、表情模糊、文字断裂。
 
-## Playwright Pattern
+## Playwright 模式
 
 ```ts
 const browser = await chromium.launch();
@@ -27,17 +26,17 @@ await page.goto(previewUrl, { waitUntil: "networkidle" });
 await page.screenshot({ path: "preview.png" });
 ```
 
-## Pass/Revise/Fail
+## 通过/修改/失败
 
-- `pass`: technical checks pass, acting is readable.
-- `revise`: fixable rig/timeline issue.
-- `fail`: missing assets, blank render, runtime failure, or wrong runtime.
+- `pass`：技术检查通过，表演可读。
+- `revise`：可修复的绑定/时间线问题。
+- `fail`：缺少资源、渲染空白、运行失败或运行时错误。
 
-## Sources
+## 参考资料
 
-- Playwright screenshots:
+- Playwright 屏幕截图：
   https://playwright.dev/docs/screenshots
-- Playwright page navigation:
+- Playwright 页面导航：
   https://playwright.dev/docs/api/class-page#page-goto
-- FFmpeg/ffprobe should be used for final media probing:
+- FFmpeg/ffprobe 应用于最终媒体探测：
   https://ffmpeg.org/ffprobe.html

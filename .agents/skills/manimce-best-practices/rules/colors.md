@@ -1,25 +1,25 @@
 ---
 name: colors
-description: Color constants, gradients, and color manipulation in Manim
+description: Manim 中的颜色常量、渐变和颜色操作
 metadata:
   tags: color, colors, gradient, rgb, hex, palette
 ---
 
-# Colors in Manim
+# Manim 中的颜色
 
-Manim provides predefined color constants and supports custom colors.
+Manim 提供预定义的颜色常量，并支持自定义颜色。
 
-## Color Constants
+## 颜色常量
 
-### Primary Colors
+### 主要颜色
 ```python
 RED, GREEN, BLUE
 YELLOW, ORANGE, PINK, PURPLE
-WHITE, BLACK, GREY (or GRAY)
+WHITE, BLACK, GREY（或 GRAY）
 ```
 
-### Color Variants (Shades)
-Most colors have variants from `_A` (lightest) to `_E` (darkest):
+### 颜色变体（色调）
+大多数颜色有从 `_A`（最亮）到 `_E`（最暗）的变体：
 ```python
 BLUE_A, BLUE_B, BLUE_C, BLUE_D, BLUE_E
 RED_A, RED_B, RED_C, RED_D, RED_E
@@ -27,7 +27,7 @@ GREEN_A, GREEN_B, GREEN_C, GREEN_D, GREEN_E
 GREY_A, GREY_B, GREY_C, GREY_D, GREY_E
 ```
 
-### Common Named Colors
+### 常用命名颜色
 ```python
 TEAL, TEAL_A, TEAL_B, TEAL_C, TEAL_D, TEAL_E
 GOLD, GOLD_A, GOLD_B, GOLD_C, GOLD_D, GOLD_E
@@ -35,128 +35,128 @@ MAROON, MAROON_A, MAROON_B, MAROON_C, MAROON_D, MAROON_E
 PURPLE, PURPLE_A, PURPLE_B, PURPLE_C, PURPLE_D, PURPLE_E
 ```
 
-### Special Colors
+### 特殊颜色
 ```python
-PURE_RED, PURE_GREEN, PURE_BLUE  # RGB primaries
+PURE_RED, PURE_GREEN, PURE_BLUE  # RGB 三原色
 LIGHT_GREY, DARK_GREY
 LIGHTER_GREY, DARKER_GREY
 LIGHT_BROWN, DARK_BROWN
 ```
 
-## Using Colors
+## 使用颜色
 
-### Setting Color on Creation
+### 创建时设置颜色
 ```python
 circle = Circle(color=RED)
 square = Square(color=BLUE, fill_color=GREEN, fill_opacity=0.5)
 text = Text("Hello", color=YELLOW)
 ```
 
-### Setting Color After Creation
+### 创建后设置颜色
 ```python
 circle = Circle()
 circle.set_color(RED)
 ```
 
-## Hex Colors
+## 十六进制颜色
 
 ```python
-# Use hex strings
+# 使用十六进制字符串
 circle = Circle(color="#FF5733")
 square = Square(color="#2ECC71")
 
-# RGB values (0-1 range)
+# RGB 值（0-1 范围）
 from manim import rgb_to_color
 custom = rgb_to_color([0.5, 0.2, 0.8])
 ```
 
-## Fill vs Stroke Color
+## 填充 vs 描边颜色
 
 ```python
 square = Square()
-square.set_fill(RED, opacity=0.8)      # Interior color
-square.set_stroke(BLUE, width=4)       # Border color
+square.set_fill(RED, opacity=0.8)      # 内部颜色
+square.set_stroke(BLUE, width=4)       # 边框颜色
 ```
 
-### Combined Styling
+### 组合样式
 ```python
 square = Square(
-    color=BLUE,            # Sets both fill and stroke
-    fill_opacity=0.5,      # Fill transparency
-    stroke_width=4         # Border thickness
+    color=BLUE,            # 同时设置填充和描边
+    fill_opacity=0.5,      # 填充透明度
+    stroke_width=4         # 边框粗细
 )
 ```
 
-## Gradients
+## 渐变
 
-### Color Gradient on Mobject
+### 在 Mobject 上的颜色渐变
 ```python
 text = Text("GRADIENT")
 text.set_color_by_gradient(RED, YELLOW, GREEN)
 ```
 
-### Gradient Along Path
+### 沿路径渐变
 ```python
 line = Line(LEFT * 3, RIGHT * 3)
 line.set_color_by_gradient(BLUE, GREEN, YELLOW)
 ```
 
-## Color Interpolation
+## 颜色插值
 
-Create colors between two colors:
+创建两种颜色之间的颜色：
 
 ```python
 from manim import interpolate_color
 
-# Get color halfway between RED and BLUE
+# 获取 RED 和 BLUE 之间的一半颜色
 mid_color = interpolate_color(RED, BLUE, 0.5)
 
-# Create a range of colors
+# 创建颜色范围
 colors = [interpolate_color(RED, BLUE, alpha) for alpha in np.linspace(0, 1, 10)]
 ```
 
-## ManimColor Class
+## ManimColor 类
 
-For advanced color manipulation, use ManimColor directly:
+如需高级颜色操作，直接使用 ManimColor：
 
 ```python
 from manim import ManimColor
 
-# Create from various formats
-color1 = ManimColor("#FF0000")           # From hex
-color2 = ManimColor((0.0, 1.0, 0.5))     # From RGB floats (0-1)
-color3 = ManimColor([255, 165, 0])       # From RGB ints (0-255)
+# 从各种格式创建
+color1 = ManimColor("#FF0000")           # 从十六进制
+color2 = ManimColor((0.0, 1.0, 0.5))     # 从 RGB 浮点数（0-1）
+color3 = ManimColor([255, 165, 0])       # 从 RGB 整数（0-255）
 
-# Color manipulation methods
-lighter = color1.lighter()               # Lighter version
-darker = color1.darker()                 # Darker version
-inverted = color1.invert()               # Inverted color
-with_alpha = color1.opacity(0.5)         # With 50% opacity
+# 颜色操作方法
+lighter = color1.lighter()               # 更亮的版本
+darker = color1.darker()                 # 更暗的版本
+inverted = color1.invert()               # 反转颜色
+with_alpha = color1.opacity(0.5)         # 50% 不透明度
 
-# Convert formats
-hex_str = color1.to_hex()                # To hex string
-rgb = color1.to_rgb()                    # To RGB float array
-hsv = color1.to_hsv()                    # To HSV array
+# 格式转换
+hex_str = color1.to_hex()                # 转十六进制字符串
+rgb = color1.to_rgb()                    # 转 RGB 浮点数组
+hsv = color1.to_hsv()                    # 转 HSV 数组
 
-# Interpolation
-mixed = color1.interpolate(color2, 0.5)  # Blend two colors
+# 插值
+mixed = color1.interpolate(color2, 0.5)  # 混合两种颜色
 ```
 
-## Opacity
+## 不透明度
 
 ```python
-# Set opacity (0 = transparent, 1 = opaque)
+# 设置不透明度（0 = 透明，1 = 不透明）
 circle = Circle(fill_opacity=0.5, stroke_opacity=0.8)
 
-# Modify opacity
-circle.set_opacity(0.5)         # Both fill and stroke
-circle.set_fill_opacity(0.7)    # Fill only
-circle.set_stroke_opacity(0.3)  # Stroke only
+# 修改不透明度
+circle.set_opacity(0.5)         # 同时影响填充和描边
+circle.set_fill_opacity(0.7)    # 仅填充
+circle.set_stroke_opacity(0.3)  # 仅描边
 ```
 
-## Color by Value
+## 按值着色
 
-Color mobjects based on a value (useful for data visualization):
+根据值对 mobject 着色（用于数据可视化）：
 
 ```python
 class ColorByValue(Scene):
@@ -164,13 +164,13 @@ class ColorByValue(Scene):
         dots = VGroup(*[Dot() for _ in range(10)]).arrange(RIGHT)
 
         for i, dot in enumerate(dots):
-            # Color from blue (cold) to red (hot)
+            # 从蓝色（冷）到红色（热）着色
             dot.set_color(interpolate_color(BLUE, RED, i / 9))
 
         self.add(dots)
 ```
 
-## Random Colors
+## 随机颜色
 
 ```python
 from manim import random_color, random_bright_color
@@ -179,7 +179,7 @@ circle = Circle(color=random_color())
 square = Square(color=random_bright_color())
 ```
 
-## Color Lists for Animations
+## 颜色列表用于动画
 
 ```python
 class ColorCycle(Scene):
@@ -192,10 +192,10 @@ class ColorCycle(Scene):
             self.play(circle.animate.set_color(color), run_time=0.5)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use color variants for depth** - `BLUE_E` for shadows, `BLUE_A` for highlights
-2. **Maintain color consistency** - Use the same colors for related concepts
-3. **Use opacity for layering** - Semi-transparent fills show overlapping
-4. **Consider colorblind accessibility** - Avoid red-green only distinctions
-5. **Use gradients sparingly** - They can be distracting
+1. **使用颜色变体表现深度** - `BLUE_E` 用于阴影，`BLUE_A` 用于高亮
+2. **保持颜色一致** - 相关概念使用相同颜色
+3. **使用不透明度进行分层** - 半透明填充显示重叠
+4. **考虑色盲可访问性** - 避免仅使用红绿区分
+5. **谨慎使用渐变** - 可能分散注意力

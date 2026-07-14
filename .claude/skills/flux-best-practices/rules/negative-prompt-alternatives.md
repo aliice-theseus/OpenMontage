@@ -1,202 +1,202 @@
 ---
 name: negative-prompt-alternatives
-description: Positive alternatives to negative prompts
+description: 负面提示的正面替代方案
 ---
 
-# Negative Prompt Alternatives
+# 负面提示替代方案
 
-FLUX does not support negative prompts. This guide provides positive alternatives for common negative prompt patterns.
+FLUX 不支持负面提示。本指南为常见的负面提示模式提供正面替代方案。
 
-## Why No Negative Prompts?
+## 为什么没有负面提示？
 
-Negative prompts can actually make models focus MORE on unwanted elements. Instead, describe exactly what you DO want - this gives clearer direction and better results.
+负面提示实际上可能会让模型更加关注不想要的元素。相反，准确描述你确实想要的内容——这能提供更清晰的方向和更好的结果。
 
-## Replacement Strategy
+## 替换策略
 
-For any unwanted element:
-1. Identify what you don't want
-2. Ask: "What would be there instead?"
-3. Describe the positive alternative
+对于任何不想要的元素：
+1. 识别你不想要什么
+2. 问："那里应该有什么？"
+3. 描述正面的替代方案
 
-## Common Replacements
+## 常见替换
 
-### People/Crowds
+### 人物/人群
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no people" | "empty", "deserted", "solitary", "abandoned" |
-| "no crowds" | "quiet", "peaceful", "secluded", "private" |
-| "without background people" | "isolated subject", "clean background", "solo figure" |
+| "没有人" | "空荡的"、"荒凉的"、"独自的"、"废弃的" |
+| "没有人群" | "安静的"、"宁静的"、"僻静的"、"私密的" |
+| "没有背景人物" | "孤立的主体"、"干净的背景"、"独影" |
 
-**Example:**
+**示例：**
 ```
-Bad: A beach scene, no people
-Good: A deserted beach at dawn, pristine untouched sand, solitary seagull
+差：海滩场景，没有人
+好：黎明时分的荒凉海滩，原始未触碰的沙滩，孤独的海鸥
 ```
 
-### Skin/Appearance
+### 皮肤/外貌
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no makeup" | "natural skin", "bare face", "fresh-faced" |
-| "no blemishes" | "clear skin", "smooth complexion", "healthy glow" |
-| "no wrinkles" | "youthful skin", "smooth features" |
+| "不化妆" | "自然肌肤"、"素颜"、"清新面容" |
+| "没有瑕疵" | "干净肌肤"、"光滑肤质"、"健康光泽" |
+| "没有皱纹" | "年轻肌肤"、"光滑特征" |
 
-**Example:**
+**示例：**
 ```
-Bad: Portrait of woman, no makeup, no blemishes
-Good: Portrait of a woman with natural clear skin, fresh-faced with a healthy glow
+差：女性肖像，不化妆，没有瑕疵
+好：拥有自然干净肌肤的女性肖像，清新面容，健康光泽
 ```
 
-### Accessories
+### 配饰
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no glasses" | "visible eyes", "unobstructed gaze", "clear eye contact" |
-| "no hat" | "bare head", "visible hair", "uncovered head" |
-| "no jewelry" | "minimal accessories", "understated", "unadorned" |
+| "不戴眼镜" | "可见的眼睛"、"无遮挡的目光"、"清晰的眼神接触" |
+| "不戴帽子" | "露出的头部"、"可见的头发"、"未遮盖的头部" |
+| "没有首饰" | "极简配饰"、"低调"、"不加装饰" |
 
-**Example:**
+**示例：**
 ```
-Bad: Man portrait, no glasses, no hat
-Good: Portrait of a man with clear direct gaze, wind-swept visible hair
+差：男性肖像，不戴眼镜，不戴帽子
+好：目光清晰直接的男性肖像，风吹过的可见头发
 ```
 
-### Colors
+### 颜色
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no color" | "monochrome", "black and white", "grayscale" |
-| "not colorful" | "muted tones", "subdued palette", "desaturated" |
-| "no bright colors" | "neutral tones", "earth tones", "soft pastels" |
+| "没有颜色" | "单色"、"黑白"、"灰度" |
+| "不鲜艳" | "柔和色调"、"低调调色板"、"去饱和" |
+| "没有亮色" | "中性色调"、"大地色"、"柔和粉色" |
 
-**Example:**
+**示例：**
 ```
-Bad: Landscape photo, no bright colors
-Good: Landscape in muted earth tones, soft morning light, desaturated palette
+差：风景照片，没有亮色
+好：柔和大地色调的风景，柔和的晨光，去饱和调色板
 ```
 
-### Text/Watermarks
+### 文本/水印
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no text" | "clean surfaces", "unmarked", "text-free" |
-| "no watermark" | "pristine image", "clean composition" |
-| "no logos" | "unbranded", "plain", "logo-free surface" |
+| "没有文字" | "干净的表面"、"无标记"、"无文字" |
+| "没有水印" | "原始图像"、"干净的构图" |
+| "没有标志" | "无品牌"、"素面"、"无标志表面" |
 
-**Example:**
+**示例：**
 ```
-Bad: Product photo, no watermark, no text
-Good: Clean product photography with pristine unmarked surfaces, minimal unbranded design
+差：产品照片，没有水印，没有文字
+好：干净的产品摄影，原始无标记表面，极简无品牌设计
 ```
 
-### Style/Era
+### 风格/时代
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "not modern" | "traditional", "classical", "vintage", "historical" |
-| "no CGI look" | "photorealistic", "authentic", "natural", "organic" |
-| "not cartoonish" | "realistic", "lifelike", "naturalistic" |
+| "不现代" | "传统的"、"古典的"、"复古的"、"历史的" |
+| "没有CGI感" | "照片级写实的"、"真实的"、"自然的"、"有机的" |
+| "不像卡通" | "写实的"、"逼真的"、"自然主义的" |
 
-**Example:**
+**示例：**
 ```
-Bad: Building design, not modern, no futuristic elements
-Good: Traditional Victorian architecture with classical ornate details and period-accurate features
+差：建筑设计，不现代，没有未来元素
+好：传统维多利亚建筑，古典华丽细节，时代准确的特征
 ```
 
-### Quality/Artifacts
+### 质量/伪影
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no blur" | "sharp focus", "crisp details", "tack-sharp" |
-| "no noise" | "clean image", "smooth gradients", "low ISO" |
-| "no artifacts" | "pristine quality", "clean render", "flawless" |
+| "不模糊" | "锐利对焦"、"清晰细节"、"极致锐利" |
+| "没有噪点" | "干净的图像"、"平滑渐变"、"低 ISO" |
+| "没有伪影" | "原始质量"、"干净渲染"、"完美无瑕" |
 
-**Example:**
+**示例：**
 ```
-Bad: Portrait, no blur, no noise
-Good: Tack-sharp portrait with pristine image quality, smooth skin tones, crisp details
+差：肖像，不模糊，没有噪点
+好：极致锐利的肖像，原始图像质量，平滑的肤色，清晰的细节
 ```
 
-### Objects
+### 物体
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no cars" | "pedestrian area", "car-free zone", "walking street" |
-| "no buildings" | "open landscape", "natural scenery", "wilderness" |
-| "no furniture" | "empty room", "bare space", "minimalist interior" |
+| "没有汽车" | "步行区"、"无车区域"、"步行街" |
+| "没有建筑" | "开阔景观"、"自然风景"、"荒野" |
+| "没有家具" | "空房间"、"空旷空间"、"极简内饰" |
 
-**Example:**
+**示例：**
 ```
-Bad: Street scene, no cars, no modern buildings
-Good: Historic cobblestone walking street lined with traditional stone buildings from the 1800s
+差：街景，没有汽车，没有现代建筑
+好：历史鹅卵石步行街，两旁是 19 世纪的传统石造建筑
 ```
 
-### Weather/Environment
+### 天气/环境
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no rain" | "clear sky", "dry weather", "sunny day" |
-| "no clouds" | "clear blue sky", "cloudless", "perfect visibility" |
-| "not dark" | "well-lit", "bright", "daylight", "illuminated" |
+| "没有雨" | "晴朗天空"、"干燥天气"、"晴天" |
+| "没有云" | "晴朗蓝天"、"无云"、"极佳能见度" |
+| "不暗" | "光线充足"、"明亮"、"白天"、"照亮" |
 
-**Example:**
+**示例：**
 ```
-Bad: Outdoor portrait, no rain, no clouds, not dark
-Good: Outdoor portrait under clear blue sky on a bright sunny day, perfect natural lighting
+差：户外肖像，没有雨，没有云，不暗
+好：晴朗蓝天下明亮晴天的户外肖像，完美的自然光
 ```
 
-### Composition
+### 构图
 
-| Instead of | Use |
+| 替代前 | 使用 |
 |-----------|-----|
-| "no distractions" | "clean composition", "focused framing", "minimal elements" |
-| "nothing in background" | "solid background", "isolated subject", "clean backdrop" |
-| "no clutter" | "organized", "tidy", "minimal", "streamlined" |
+| "没有干扰" | "干净的构图"、"聚焦的取景"、"极简元素" |
+| "背景什么都没有" | "纯色背景"、"孤立的主体"、"干净的背景" |
+| "不杂乱" | "整洁的"、"有序的"、"极简的"、"精简的" |
 
-**Example:**
+**示例：**
 ```
-Bad: Product shot, no distractions, nothing in background
-Good: Product on clean white seamless backdrop, isolated subject, minimal focused composition
-```
-
-## Complex Replacement Examples
-
-### Original Negative-Heavy Prompt
-```
-Portrait of a woman, no glasses, no makeup, no wrinkles, no blemishes,
-no bright colors, no distracting background, no harsh lighting
+差：产品拍摄，没有干扰，背景什么都没有
+好：产品在干净的白色无缝背景上，孤立的主体，极简聚焦的构图
 ```
 
-### Positive Rewrite
+## 复杂替换示例
+
+### 原始充满负面提示
 ```
-Portrait of a youthful woman with clear natural skin and visible bright eyes,
-fresh-faced with a healthy glow, wearing muted earth tones against a soft
-blurred neutral background, gentle diffused lighting creating soft shadows
+女性肖像，不戴眼镜，不化妆，没有皱纹，没有瑕疵，
+没有亮色，没有干扰背景，没有刺眼的光线
 ```
 
-### Original Negative-Heavy Prompt
+### 正面重写
 ```
-Landscape photo, no people, no buildings, no power lines, no modern elements,
-no overcast sky, no dead trees
-```
-
-### Positive Rewrite
-```
-Pristine wilderness landscape with lush green living forest, clear blue sky,
-untouched natural scenery stretching to the horizon, peaceful solitude with
-only birdsong and wind, golden hour sunlight filtering through healthy foliage
+年轻女性的肖像，拥有干净自然的肌肤和可见的明亮眼睛，
+清新面容带着健康光泽，穿着柔和大地色调，背景是柔和
+模糊的中性色，温柔的漫射光形成柔和的阴影
 ```
 
-## Quick Reference Card
+### 原始充满负面提示
+```
+风景照片，没有人，没有建筑，没有电线杆，没有现代元素，
+没有阴天，没有枯树
+```
 
-| Unwanted | Positive Alternative |
+### 正面重写
+```
+原始荒野景观，茂密的翠绿森林，晴朗的蓝天，
+未触及的自然风景延伸至地平线，只有鸟鸣和风声的宁静孤独，
+金色时刻的阳光透过茂密的树叶洒落
+```
+
+## 快速参考卡
+
+| 不想要的 | 正面替代 |
 |----------|---------------------|
-| No people | Empty, solitary, deserted |
-| No makeup | Natural, fresh-faced, bare |
-| No text | Clean, unmarked, pristine |
-| No blur | Sharp, crisp, tack-sharp |
-| No modern | Traditional, vintage, classical |
-| No dark | Bright, well-lit, luminous |
-| No busy | Minimal, clean, focused |
-| No artificial | Natural, organic, authentic |
+| 没有人 | 空荡的、独自的、荒凉的 |
+| 不化妆 | 自然的、清新面容、素颜 |
+| 没有文字 | 干净的、无标记、原始的 |
+| 不模糊 | 锐利的、清晰的、极致锐利 |
+| 不现代 | 传统的、复古的、古典的 |
+| 不暗 | 明亮的、光线充足的、发光的 |
+| 不杂乱 | 极简的、干净的、聚焦的 |
+| 不人工 | 自然的、有机的、真实的 |

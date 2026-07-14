@@ -1,13 +1,13 @@
----
+﻿---
 version: alpha
 name: Coral — Frame (video / frame layer)
 description: >
-  Video-first companion to Coral's design.md. The unit is the frame (1920×1080), not the
-  slide-in-a-deck. Atoms are identical and sacred — the three-surface system (coral fire /
-  ink black / warm cream), Bebas Neue uppercase tracked + Inter body, the 45° diagonal hatch,
-  decorative wallpaper numerals, hard color-region splits, zero shadow, zero radius (save
-  circles). Composition, frame scale, and aspect-ratio behavior are rewritten for the frame.
-  Motion is out of scope.
+  Coral 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)，不是
+  幻灯片中的一页。原子相同且神圣 — 三表面系统（珊瑚火 /
+  墨黑 / 暖奶油）、Bebas Neue 大写追踪 + Inter 正文、45° 对角线阴影、
+  装饰性壁纸数字、硬颜色区域分割、零阴影、零圆角（除
+  圆形外）。构图、帧比例和宽高比行为已为帧重写。
+  运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -105,210 +105,158 @@ components:
     description: "Footer band beneath a feature region — Bebas title left, Inter meta right."
 ---
 
-# Coral — Frame (video / frame layer)
+# Coral — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Coral at frame scale is a **bold magazine poster** built from three solid surfaces — coral fire,
-ink black, warm cream — that meet at **hard color edges.** The region boundary IS the layout: a
-frame splits into a coral plane + a cream plane, or a coral panel + an ink panel, each holding a
-self-contained composition. No gradient transitions, no rounded junctions, no drop shadows.
+帧尺度下的 Coral 是一个**大胆的杂志海报**，由三个实色表面构建 — 珊瑚火、墨黑、暖奶油 — 在**硬颜色边缘**交汇。区域边界就是布局：帧分割为珊瑚平面 + 奶油平面，或珊瑚面板 + 墨水面板，每个容纳一个独立构图。无渐变过渡、无圆角连接、无投影。
 
-The voice is a two-face hierarchy: **Bebas Neue** — tall condensed caps, always uppercase, always
-tracked (1–12px) — carries every headline, stat, title, and meta figure; **Inter** carries every
-body line, label, and attribution across weights 300–700. Bebas declares; Inter explains. The
-signature atmospherics are the **45° diagonal hatch** (6% ink) over coral regions and the
-**oversized wallpaper numeral** (12% ink) behind a region's title.
+语气是一个双面层级：**Bebas Neue**（高窄大写字母，始终大写，始终带字距 1–12px）承载每个标题、统计数字、标题和元数据图形；**Inter**（字重 300–700）承载每行正文、标签和署名。Bebas 宣告；Inter 解释。标志性的氛围是珊瑚区域上的 **45° 对角线阴影**（6% 墨水）和区域标题背后的 **超大壁纸数字**（12% 墨水）。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Three surfaces, hard edges** — `{colors.coral}` / `{colors.black}` / `{colors.cream}` as solid regions.
-- **Bebas uppercase + tracking** on every display element; **Inter** on every body/label.
-- **45° hatch** (6% ink) on coral regions; **wallpaper numerals** (12%) and **giant marks** (35%) behind content.
-- **Ink-on-fire** — Bebas on coral is always ink, never white. Eyebrows coral on cream/ink, ink on coral.
-- **Flat** — no shadow, no elevation; radius only on circles (nav dots, timeline nodes).
-- **Coral as accent AND environment** — 4–5px coral borders, 48px coral icon squares, and full coral regions.
+- **三表面，硬边缘** — `{colors.coral}` / `{colors.black}` / `{colors.cream}` 作为实色区域。
+- **Bebas 大写 + 字距** 在每个展示元素上；**Inter** 在每个正文/标签上。
+- **45° 阴影**（6% 墨水）在珊瑚区域；**壁纸数字**（12%）和**巨型标记**（35%）在内容背后。
+- **墨上火** — 珊瑚上的 Bebas 始终用墨水色，从不白色。眉标在奶油/墨水上为珊瑚色，在珊瑚上为墨水色。
+- **扁平** — 无阴影，无层级；仅圆形有圆角（导航点、时间线节点）。
+- **珊瑚既是强调色也是环境色** — 4–5px 珊瑚边框、48px 珊瑚图标方块和完整珊瑚区域。
 
-### Frame Craft Bar
+### 帧工艺条
 
-Three eyeball tests gate every frame before any structural check:
+三项目测检查在任何结构检查前把关每帧：
 
-- **Squint** — one element dominates at **3–6× its nearest neighbor**: the `hero-title`/`jumbo-feature` or a wallpaper numeral behind a region's title, never two rival headlines.
-- **Silence** — coral/cream/ink regions read **40–55% empty**; the **three-column catalog is the one dense exception**. A coral region underfilled gets a wallpaper numeral, never more content.
-- **Restraint** — coral fires as **either accent or one full region per frame** (not both at full strength); one giant-mark per quote; ink-on-fire (never white on coral).
-- **Reference** — aim at a **sports-magazine cover / Saul Bass travel poster** (solid planes at hard edges, condensed caps as architecture); failure looks like a **soft drop-shadowed card deck**.
+- **眯眼测试** — 一个元素以 **3–6 倍于最近邻元素**占主导：`hero-title`/`jumbo-feature` 或区域标题后的壁纸数字，绝不允许两个竞争的标题。
+- **留白测试** — 珊瑚/奶油/墨水区域呈现 **40–55% 空白**；**三列目录是唯一密集的例外**。填充不足的珊瑚区域应添加壁纸数字，而非更多内容。
+- **克制测试** — 珊瑚作为**每帧要么是强调色要么是一个完整区域**（不可同时全强度使用）；每段引用一个巨型标记；墨上火（珊瑚上从不白色）。
+- **参照测试** — 瞄准**体育杂志封面 / Saul Bass 旅行海报**（硬边缘上的实色平面，紧凑大写字母作为架构）；失败看起来像**柔和的投影卡片组**。
 
-## The Frame
+## 帧
 
-- **Primary:** 1920×1080 (16:9). Display sizes authored in **`cqw`** (`px ÷ 1920 × 100 = cqw`).
-- **Vertical:** 1080×1920 (9:16). **Square:** 1080×1080 (1:1).
-- **Safe area:** `5cqw` (pad-x) standard frame padding; region edges may bleed full-frame.
+- **主尺寸：** 1920×1080 (16:9)。展示尺寸以 **`cqw`** 为单位编写（`px ÷ 1920 × 100 = cqw`）。
+- **竖版：** 1080×1920 (9:16)。**方版：** 1080×1080 (1:1)。
+- **安全区域：** `5cqw`（pad-x）标准帧内边距；区域边缘可全幅出血。
 
-**The container law (load-bearing).** Every frame ground sets `container-type: size`; ALL
-frame-relative units are `cqw`/`cqh` resolved against it — **never `vw`.** A `vw`-sized frame
-inflates whenever it isn't full-screen; `cqw` resolves against the frame at any render size.
+**容器法则（承重规则）。** 每个帧容器设置 `container-type: size`；所有帧相对单位都是以它为基准的 `cqw`/`cqh` — **绝不用 `vw`**。使用 `vw` 尺寸的帧在非全屏渲染时会膨胀；`cqw` 在任何渲染尺寸下都相对于帧解析。
 
-## Colors
+## 颜色
 
-Tokens identical to the source. At frame scale the three surfaces are intermixed by composition —
-coral/cream, coral/ink, ink/cream, or single-surface. `{colors.coral}` is both accent (borders,
-icon squares, timeline nodes, eyebrows on cream/ink) and environment (full regions). Headlines:
-ink on cream/coral, cream on ink — **never gray, never white-on-coral.** Eyebrows: coral on
-cream/ink, ink on coral — coral-on-coral does not exist. The only sanctioned gradient is the rare
-135° coral-dark→coral feature region; everything else is flat.
+色值令牌与源文件一致。在帧尺度下，三个表面根据构图混合使用 — 珊瑚/奶油、珊瑚/墨水、墨水/奶油或单表面。`{colors.coral}` 既作强调色（边框、图标方块、时间线节点、奶油/墨水上的眉标）也作环境色（完整区域）。标题：奶油/珊瑚上墨水色，墨水上奶油色 — **绝不用灰色，绝不用白字在珊瑚上。** 眉标：奶油/墨水上珊瑚色，珊瑚上墨水色 — 不存在珊瑚上珊瑚。唯一允许的渐变是罕见的 135° 珊瑚深→珊瑚特色区域；其他一切均为纯色。
 
-## Typography
+## 排版
 
-Two ramps. The **reading ramp** (Inter body 1.0cqw, body-light 1.5cqw, labels in px) carries copy
-and eyebrows; the **display/hero ramp** (Bebas, `card-title` 1.9cqw → `jumbo-feature` 9.0cqw, plus
-the decorative `background-numeral` 10cqw and `giant-mark` 14cqw) carries every headline and stat.
+两个阶梯。**阅读阶梯**（Inter 正文 1.0cqw，正文浅色 1.5cqw，标签以 px 为单位）承载文案和眉标；**展示/英雄阶梯**（Bebas，`card-title` 1.9cqw 到 `jumbo-feature` 9.0cqw，加上装饰性的 `background-numeral` 10cqw 和 `giant-mark` 14cqw）承载所有标题和统计数据。
 
-- **Legibility floor:** any load-bearing line ≥ **1.4cqw**; px labels are chrome only.
-- **Fit-to-measure:** size the headline to its line length. Cap the block at **≤ 78cqw**; ≤3 words → `hero-title`/`jumbo-feature`; 4–6 → `section-headline`; 7+ → `column-title`.
-- **Every Bebas element is uppercase with ≥1px tracking** (2px standard, 4px hero, 12px jumbo). **Every Inter label is uppercase, 1–4px tracked.** No italic, no underline, no sentence-case Bebas.
+- **可读性底线：** 任何承重行 ≥ **1.4cqw**；px 标签仅为铬色装饰。
+- **按篇幅调整：** 根据标题的行长调整字号。将标题块限制在 **≤ 78cqw**；≤3 词 → `hero-title`/`jumbo-feature`；4–6 → `section-headline`；7+ → `column-title`。
+- **每个 Bebas 元素均为大写且字距 ≥1px**（标准 2px，英雄 4px，超大 12px）。**每个 Inter 标签均为大写，字距 1–4px。** 无斜体、无下划线、无句首大写的 Bebas。
 
-## Depth & Surface
+## 深度与表面
 
-Flat, with hard color edges. Depth signals only:
+扁平，带有硬色边缘。深度信号仅：
 
-- **Hard region boundaries** — the primary structural device.
-- **Accent borders** — 5px coral top (cards), 4px coral left (sidebar tiles), 4px ink (timeline).
-- **45° hatch** — 6% ink texture on coral regions (no depth).
-- **Wallpaper typography** — numerals at 12%, giant marks at 35%, layered behind content.
+- **硬区域边界** — 主要结构手段。
+- **强调边框** — 5px 珊瑚顶部（卡片）、4px 珊瑚左侧（侧边栏磁贴）、4px 墨水色（时间线）。
+- **45° 阴影** — 珊瑚区域上的 6% 墨水纹理（不产生深度感）。
+- **壁纸排版** — 12% 的数字、35% 的巨型标记，分层在内容背后。
 
-**Ceiling:** no box-shadow, no elevated card, no soft gradient (save the one 135° coral feature), no rounded rectangle.
+**天花板规则：** 无盒阴影、无抬升卡片、无柔和渐变（除了一处 135° 珊瑚特色）、无圆角矩形。
 
-## Shapes
+## 形状
 
-- **0 radius** on every rectangle — regions, cards, sidebar tiles, icon squares, info bars, accent lines.
-- **50%** on circles only — nav dots (10px), nav arrows (44px), timeline nodes (20px).
+- 每个矩形 **0 圆角** — 区域、卡片、侧边栏磁贴、图标方块、信息栏、强调线。
+- 仅圆形 **50%** — 导航点（10px）、导航箭头（44px）、时间线节点（20px）。
 
-## Components
+## 组件
 
-- **region-split** — the layout device; surfaces meet at a hard edge.
-- **card** (5px coral top) / **sidebar-item** (4px coral left) / **card-icon** (48px coral square) — the only chrome on each is its single coral border.
-- **diagonal-hatch** / **background-numeral** / **giant-mark** — the atmospheric + wallpaper signatures on coral regions.
-- **accent-line** — coral sub-headline rule. **timeline** — ink line, coral nodes, cream halos. **info-bar** — cream-dark footer band.
+- **region-split** — 布局手段；表面在硬边缘处交汇。
+- **card**（5px 珊瑚顶部）/ **sidebar-item**（4px 珊瑚左侧）/ **card-icon**（48px 珊瑚方块）— 每个元素上唯一的铬色装饰就是其单一的珊瑚边框。
+- **diagonal-hatch** / **background-numeral** / **giant-mark** — 珊瑚区域上的氛围加壁纸签名元素。
+- **accent-line** — 珊瑚色副标题线。**timeline** — 墨水色线、珊瑚节点、奶油色光晕。**info-bar** — 深奶油色底部栏。
 
-## Frame Treatments
+## 帧处理方案
 
-> Recipe per plate: ground · container · composes · focal · chrome · accent · silence · Fixed/Free · density.
-> Lean centered where the move allows; vary anchor; one idea per region.
+> 每块板的配方：背景 · 容器 · 组成 · 焦点 · 铬色 · 强调 · 留白 · 固定/自由 · 密度
+> 在动势允许时偏向居中；变化锚点；每区域一个想法。
 
-### 1 · Region-Split Cover (identity · move: hard region edge · left)
+### 1 · 区域分割封面（标识 · 动势：硬区域边缘 · 左对齐）
 
-**Ground** 38/62 split — `{colors.coral}` top band (hatch + wallpaper numeral) over `{colors.cream}`.
-**Container** grid rows; brand + meta in the coral band, hero title in the cream field. **Composes**
-region-split, diagonal-hatch, background-numeral, hero-title. **Focal** a 2-line `hero-title` in
-ink, second line in `{colors.coral}`, left-anchored in the cream field. **Chrome** Bebas brand left
+**背景** 38/62 分割 — `{colors.coral}` 顶部带（阴影 + 壁纸数字）在 `{colors.cream}` 之上。**容器** 网格行；品牌 + 元数据在珊瑚带中，英雄标题在奶油区域中。**组成** region-split、diagonal-hatch、background-numeral、hero-title。**焦点** 墨水色的两行 `hero-title`，第二行为 `{colors.coral}`，左对齐锚定在奶油区域中。**铬色** 珊瑚带左侧的 Bebas 品牌 — 右侧的 Bebas 元数据。**强调** 珊瑚带 + 珊瑚第二行。**留白** 奶油区域约 45% 空白。**固定** 带中墨水上火、珊瑚上阴影、硬边缘。**自由** 标题文案、哪行是珊瑚色、元数据。**密度** 稀疏。
 
-- Bebas meta right in the coral band. **Accent** coral band + coral second line. **Silence** the
-  cream field ~45% empty. **Fixed** ink-on-fire in band, hatch on coral, hard edge. **Free** title
-  copy, which line is coral, meta. **Density** sparse.
+### 2 · 特色统计（锚点 · 动势：比例 · 珊瑚环境 · 左对齐）
 
-### 2 · Feature Stat (anchor · move: scale · coral environment · left)
+**背景** 全 `{colors.coral}` 带阴影。**组成** diagonal-hatch、background-numeral、section-label、stat headline、body-light。**焦点** 墨水色的 `stat-numeral`/`jumbo-feature` 数字或两行标题，背后有 `background-numeral`（12% 墨水）作为壁纸。**铬色** 墨水色的 `section-label` 眉标；可选 Inter-300 支撑行 ≤44cqw。**强调** 珊瑚背景本身就是环境色；墨水色字体，无白色。**留白** 珊瑚区域约 40% 空白。**固定** 墨水色在珊瑚上、有阴影、背后有壁纸数字。**自由** 数字、标题、支撑文案。**密度** 稀疏。
 
-**Ground** full `{colors.coral}` with hatch. **Composes** diagonal-hatch, background-numeral,
-section-label, stat headline, body-light. **Focal** a `stat-numeral`/`jumbo-feature` figure or
-2-line headline in ink, with a `background-numeral` (12% ink) behind it as wallpaper. **Chrome** an
-ink `section-label` eyebrow; an optional Inter-300 support line ≤44cqw. **Accent** the coral ground
-IS the environment; ink type, no white. **Silence** ~40% of the coral field empty. **Fixed**
-ink-on-coral, hatch present, wallpaper numeral behind. **Free** the figure, headline, support copy.
-**Density** sparse.
+### 3 · 引用布局（引用 · 动势：面板分割 · 巨型标记）
 
-### 3 · Quote Layout (quote · move: panel split · giant mark)
+**背景** 40/60 分割 — `{colors.coral}` 左侧面板（阴影 + giant-mark）+ `{colors.black}` 右侧面板。**组成** region-split、giant-mark、body-light、accent-line、quote-attribution。**焦点** 墨水面板上的 `{colors.cream}` Inter **字重 300** 的 2–3 行拉引文。**铬色** 珊瑚面板上的 `giant-mark`（35% 墨水）；署名上方的 `60×4` 珊瑚强调线。**强调** 珊瑚面板 + 珊瑚强调线。**留白** 珊瑚面板大部分是标记。**固定** Inter-300 引用、墨水面板、珊瑚上墨水标记。**自由** 引用、署名、标记字形。**密度** 稀疏。
 
-**Ground** 40/60 split — `{colors.coral}` left panel (hatch + giant-mark) + `{colors.black}` right
-panel. **Composes** region-split, giant-mark, body-light, accent-line, quote-attribution.
-**Focal** a 2–3 line pull quote in `{colors.cream}` Inter **weight 300** on the ink panel.
-**Chrome** a `giant-mark` (35% ink) on the coral panel; a `60×4` coral accent-line above the
-attribution. **Accent** coral panel + coral accent-line. **Silence** the coral panel is mostly the
-mark. **Fixed** Inter-300 quote, ink panel, ink-on-coral mark. **Free** quote, attribution, mark
-glyph. **Density** sparse.
+### 4 · 结束板（收尾 · 动势：奶油区域 + 珊瑚带 · 居中）
 
-### 4 · Closing Plate (closer · move: cream field + coral band · centered)
+**背景** `{colors.cream}` 区域，底部有 `{colors.coral}` 带（阴影）。**组成** section-label、section-headline/hero-title、accent-line、info-bar。**焦点** 墨水色的两行结尾语，居中，下方有一条珊瑚 `accent-line`。**铬色** 上方的墨水色眉标；珊瑚带底部栏承载 Bebas 结尾语 + 年份。**强调** 珊瑚带 + 珊瑚强调线。**留白** 约 55% 空白奶油。**固定** 居中、墨水色字体、一条珊瑚带。**自由** 结尾语文案、带内容。**密度** 稀疏。
 
-**Ground** `{colors.cream}` field with a bottom `{colors.coral}` band (hatch). **Composes**
-section-label, section-headline/hero-title, accent-line, info-bar. **Focal** a 2-line sign-off in
-ink, centered, with a coral `accent-line` beneath. **Chrome** an ink eyebrow above; a coral band
-footer carrying a Bebas sign-off + year. **Accent** coral band + coral accent-line. **Silence**
-~55% empty cream. **Fixed** centered, ink type, one coral band. **Free** sign-off copy, band
-contents. **Density** sparse.
+### 5 · 三列目录（目录 · 动势：密度 — 密集帧 · 居中标题）
 
-### 5 · Three-Column Catalog (catalog · move: density — the dense frame · centered head)
+**背景** `{colors.cream}`（或 `{colors.black}`），`pad-x`。**组成** section-headline、3× card。**焦点** 三个白色 `card` 上方居中的 `section-headline`（5px 珊瑚顶部、48px 图标方块、Bebas 标题、Inter 正文、珊瑚统计）。**强调** 三个珊瑚顶部边框 + 图标方块。**留白** 紧凑 — 密度例外。**固定** 5px 珊瑚顶部为唯一铬色，无阴影/圆角。**自由** 三张卡片的内容。**密度** 密集例外。
 
-**Ground** `{colors.cream}` (or `{colors.black}`), `pad-x`. **Composes** section-headline, 3× card.
-**Focal** a centered `section-headline` over three white `card`s (5px coral top, 48px icon square,
-Bebas title, Inter body, coral stat). **Accent** the three coral top borders + icon squares.
-**Silence** tight — the density exception. **Fixed** 5px coral top as sole chrome, no shadow/radius.
-**Free** the three cards' content. **Density** dense-exception.
+### 6 · 时间线（流程 · 动势：水平轨道 · 左对齐）
 
-### 6 · Timeline (process · move: horizontal rail · left)
+**背景** `{colors.cream}`，`pad-x`。**组成** section-headline、timeline。**焦点** 墨水色时间线，带有 4–5 个珊瑚节点（奶油色光晕）和 Bebas 标签。**强调** 珊瑚节点。**留白** 适中。**固定** 墨水色线、珊瑚节点、奶油色光晕。**自由** 节点数量、标签。**密度** 标准。
 
-**Ground** `{colors.cream}`, `pad-x`. **Composes** section-headline, timeline. **Focal** the ink
-timeline-line with 4–5 coral nodes (cream halos) and Bebas labels. **Accent** coral nodes.
-**Silence** moderate. **Fixed** ink line, coral nodes, cream halos. **Free** node count, labels.
-**Density** standard.
+## 构图规则
 
-## Composition Rules
+### 应做
 
-### Do
+- 构图为**多表面区域分割** — 珊瑚 / 墨水 / 奶油在硬边缘交汇；边界即布局。
+- 设置每个 Bebas 元素为**大写 + 字距**（标准 2px、英雄 4px、超大 12px）；每个 Inter 标签大写，字距 1–4px。
+- 眉标渲染为**奶油/墨水上珊瑚色、珊瑚上墨水色**；标题在奶油/珊瑚上用墨水色，墨水上用奶油色。
+- 在珊瑚区域应用 **45° 阴影**（6% 墨水）；用 **12% 壁纸数字** 填充不足的珊瑚区域。
+- 在这些元素上使用 **5px 珊瑚顶部**（卡片）/ **4px 珊瑚左侧**（磁贴）作为唯一铬色。
+- 封面结尾语和目录标题偏向居中；特色和引用偏向左侧/面板分割。
 
-- Compose as **multi-surface region splits** — coral / ink / cream meeting at hard edges; the boundary is the layout.
-- Set every Bebas element **uppercase + tracked** (2px standard, 4px hero, 12px jumbo); every Inter label uppercase, 1–4px.
-- Render eyebrows **coral on cream/ink, ink on coral**; headlines ink on cream/coral, cream on ink.
-- Apply the **45° hatch** (6% ink) on coral regions; fill underweight coral regions with a **12% wallpaper numeral**.
-- Use the **5px coral top** (cards) / **4px coral left** (tiles) as the only chrome on those elements.
-- Lean centered on cover sign-offs and catalog heads; left/panel-split on features and quotes.
+### 避免
 
-### Don't
+- 不要使用句首大写或无字距的 Bebas；不要搭配非 Inter 的正文字体。
+- 不要添加第四表面、投影、层级或圆角矩形。
+- 不要在珊瑚上使用白色标题（始终用墨水色）或任何地方使用灰色标题（灰色用于正文/元数据）。
+- 不要用渐变柔化区域边界（罕见的 135° 珊瑚特色除外）。
+- 不要用零散片段填充珊瑚区域 — 要么完全填充，要么添加壁纸数字/巨型标记。
+- 不要让标题撑满到边缘 — 长行应降低字号阶梯。
 
-- Don't render Bebas in sentence case or untracked; don't pair it with a non-Inter body sans.
-- Don't add a fourth surface, a drop shadow, an elevation, or a rounded rectangle.
-- Don't put white headlines on coral (always ink) or gray headlines anywhere (gray is body/meta).
-- Don't soften a region boundary with a gradient (except the rare 135° coral feature).
-- Don't fill a coral region with sparse fragments — fully populate it or add a wallpaper numeral / giant mark.
-- Don't blow a headline edge-to-edge — step the ramp down for long lines.
+## 宽高比行为
 
-## Aspect-Ratio Behavior
-
-| Treatment            | 16:9                       | 9:16                                 | 1:1                  |
+| 处理方案            | 16:9                       | 9:16                                 | 1:1                  |
 | -------------------- | -------------------------- | ------------------------------------ | -------------------- |
-| Region-Split Cover   | 38/62 rows, title left     | taller coral band, title below       | 40/60, title lower   |
-| Feature Stat         | figure left, numeral right | figure top, numeral behind           | centered figure      |
-| Quote Layout         | 40/60 coral+ink            | stacked: coral mark top, quote below | stacked              |
-| Closing Plate        | cream + bottom coral band  | cream + taller band                  | centered, band below |
-| Three-Column Catalog | head over 3-up             | head top, 3 stacked                  | head top, 2+1        |
-| Timeline             | horizontal rail            | vertical rail                        | compact horizontal   |
+| 区域分割封面   | 38/62 行，标题左对齐     | 珊瑚带加高，标题在下方       | 40/60，标题靠下   |
+| 特色统计         | 数字左，数值右 | 数字顶部，数值在后           | 居中数字      |
+| 引用布局         | 40/60 珊瑚+墨水            | 堆叠：珊瑚标记顶部，引用在下方 | 堆叠              |
+| 结束板        | 奶油+底部珊瑚带  | 奶油+加高带                  | 居中，带在下方 |
+| 三列目录 | 标题在上 3列             | 标题顶部，3列堆叠                  | 标题顶部，2+1        |
+| 时间线             | 水平轨道            | 垂直轨道                        | 紧凑水平   |
 
-Safe area holds the `5cqw` padding on the short edge; re-step display per ratio so no load-bearing
-line drops below the 1.4cqw floor. Bebas runs ~20% wider in CJK — adjust line breaks per ratio.
+安全区域在短边上保持 `5cqw` 内边距；根据比例调整展示字号阶梯，确保承重行不低于 1.4cqw 底线。Bebas 在 CJK 中约宽 20% — 根据比例调整换行。
 
-## Approved Entities
+## 批准的实体
 
-No real customers, logos, or vendors are defined in the source — render any such mark as a
-placeholder. The system supplies surfaces and geometry, not brands.
+源文件中未定义真实客户、标志或供应商 — 任何此类标记均渲染为占位符。系统提供表面和几何结构，而非品牌。
 
-## Numerals & Claims (hard rule)
+## 数字与断言（硬性规则）
 
-Never invent figures, stats, dates, or counts at frame scale. Render slots as `— figure —`,
-`{metric}`, `N×`. Real numerals appear only when the script supplies them — the feature stat,
-catalog, and timeline especially carry placeholders, not fabricated values. Wallpaper numerals
-(01, 02…) are decorative and may be ordinal.
+绝不在帧尺度上编造数字、统计数据、日期或计数。将插槽渲染为 `— figure —`、`{metric}`、`N×`。真实数字仅当脚本提供时才出现 — 特色统计、目录和时间线尤其使用占位符，而非虚构值。壁纸数字（01，02…）为装饰性的，可以是序数。
 
-## Pre-Render Self-Audit
+## 渲染前自查
 
-- **Squint** — one focal element per region dominates at 3–5× its neighbor.
-- **Silence** — sparse frames 40–55% empty; only the catalog runs dense.
-- **Surfaces** — two or three of coral/ink/cream, meeting at hard edges; no fourth surface.
-- **Type** — Bebas uppercase + tracked, fit-to-measure; ink-on-coral; eyebrow color correct for surface; ≥1.4cqw floor.
-- **Depth** — 0 shadow, 0 rounded rectangle; hatch + wallpaper carry texture.
-- **Anchor** — centered on sign-offs/heads, panel/left on features/quotes; no 3 consecutive frames share an anchor.
-- **Fabrication** — every numeral traces to the script, else placeholder.
+- **眯眼测试** — 每区域一个焦点元素以 3–5 倍于邻元素占主导。
+- **留白测试** — 稀疏帧 40–55% 空白；仅目录运行密集。
+- **表面** — 珊瑚/墨水/奶油中的两个或三个，在硬边缘交汇；无第四表面。
+- **字体** — Bebas 大写 + 字距，按篇幅调整；珊瑚上墨水色；眉标颜色与表面匹配；≥1.4cqw 底线。
+- **深度** — 0 阴影、0 圆角矩形；阴影加壁纸承载纹理。
+- **锚点** — 结尾语/标题居中，特色/引用面板/左对齐；无连续 3 帧共享同一锚点。
+- **虚构** — 每个数字来源于脚本，否则为占位符。
 
-## Known Gaps
+## 已知差距
 
-- **Motion intentionally out of scope.** frame.md specifies composition only; timing and transitions are a later stage. The 0.6s opacity fade in the source is a deck mechanic, not a frame spec.
-- **Bebas Neue + Inter via Google Fonts.** CJK pairing (ZCOOL XiaoWei / Yozai) carries over from the source's CJK section; Bebas runs ~20% wider in CJK.
-- **9:16 / 1:1 are guidance**, not pixel-locked; verify the legibility floor per ratio.
-- The 45° hatch, wallpaper numerals, giant marks, and timeline dash are CSS-only; no external imagery is required.
+- **运动设计有意不在范围之内。** frame.md 仅指定构图；时间和过渡是后续阶段。源文件中的 0.6s 透明度淡入淡出是幻灯片机制，而非帧规范。
+- **Bebas Neue + Inter 通过 Google Fonts。** CJK 配对（ZCOOL XiaoWei / Yozai）继承自源文件的 CJK 部分；Bebas 在 CJK 中约宽 20%。
+- **9:16 / 1:1 为指导性**，非像素锁定；验证每种比例下的可读性底线。
+- 45° 阴影、壁纸数字、巨型标记和时间线虚线均为纯 CSS；无需外部图像。

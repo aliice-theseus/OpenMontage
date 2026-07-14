@@ -1,12 +1,12 @@
 ---
 name: animations
-description: Fundamental animation skills for Remotion
+description: Remotion 基础动画技能
 metadata:
   tags: animations, transitions, frames, useCurrentFrame
 ---
 
-All animations MUST be driven by the `useCurrentFrame()` hook.  
-Write animations in seconds and multiply them by the `fps` value from `useVideoConfig()`.
+所有动画都必须由 `useCurrentFrame()` 钩子驱动。  
+以秒为单位编写动画，然后乘以 `useVideoConfig()` 中的 `fps` 值。
 
 ```tsx
 import { useCurrentFrame } from "remotion";
@@ -23,5 +23,5 @@ export const FadeIn = () => {
 };
 ```
 
-CSS transitions or animations are FORBIDDEN - they will not render correctly.  
-Tailwind animation class names are FORBIDDEN - they will not render correctly.
+**禁止**使用 CSS 过渡或动画——它们无法正确渲染。  
+**禁止**使用 Tailwind 动画类名——它们无法正确渲染。

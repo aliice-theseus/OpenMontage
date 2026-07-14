@@ -1,15 +1,15 @@
 ---
-title: Use useTransition Over Manual Loading States
+title: 优先使用 useTransition 而非手动加载状态
 impact: LOW
-impactDescription: reduces re-renders and improves code clarity
+impactDescription: 减少重渲染并提高代码清晰度
 tags: rendering, transitions, useTransition, loading, state
 ---
 
-## Use useTransition Over Manual Loading States
+## 优先使用 useTransition 而非手动加载状态
 
-Use `useTransition` instead of manual `useState` for loading states. This provides built-in `isPending` state and automatically manages transitions.
+使用 `useTransition` 而不是手动的 `useState` 来处理加载状态。它提供内置的 `isPending` 状态并自动管理过渡。
 
-**Incorrect (manual loading state):**
+**不正确（手动加载状态）：**
 
 ```tsx
 function SearchResults() {
@@ -35,7 +35,7 @@ function SearchResults() {
 }
 ```
 
-**Correct (useTransition with built-in pending state):**
+**正确（带内置待定状态的 useTransition）：**
 
 ```tsx
 import { useTransition, useState } from 'react'
@@ -46,10 +46,10 @@ function SearchResults() {
   const [isPending, startTransition] = useTransition()
 
   const handleSearch = (value: string) => {
-    setQuery(value) // Update input immediately
+    setQuery(value) // 立即更新输入
     
     startTransition(async () => {
-      // Fetch and update results
+      // 获取并更新结果
       const data = await fetchResults(value)
       setResults(data)
     })
@@ -65,11 +65,11 @@ function SearchResults() {
 }
 ```
 
-**Benefits:**
+**好处：**
 
-- **Automatic pending state**: No need to manually manage `setIsLoading(true/false)`
-- **Error resilience**: Pending state correctly resets even if the transition throws
-- **Better responsiveness**: Keeps the UI responsive during updates
-- **Interrupt handling**: New transitions automatically cancel pending ones
+- **自动待定状态**：无需手动管理 `setIsLoading(true/false)`
+- **错误恢复能力**：即使 transition 抛出异常，待定状态也能正确重置
+- **更好的响应性**：在更新期间保持 UI 响应
+- **中断处理**：新的 transition 自动取消待定的
 
-Reference: [useTransition](https://react.dev/reference/react/useTransition)
+参考：[useTransition](https://react.dev/reference/react/useTransition)

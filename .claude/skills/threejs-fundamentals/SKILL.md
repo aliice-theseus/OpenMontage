@@ -1,16 +1,16 @@
 ---
 name: threejs-fundamentals
-description: Three.js scene setup, cameras, renderer, Object3D hierarchy, coordinate systems. Use when setting up 3D scenes, creating cameras, configuring renderers, managing object hierarchies, or working with transforms.
+description: Three.js 场景设置、摄像机、渲染器、Object3D 层级、坐标系统。在设置 3D 场景、创建摄像机、配置渲染器、管理对象层级或处理变换时使用。
 ---
 
-# Three.js Fundamentals
+# Three.js 基础
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
 
-// Create scene, camera, renderer
+// 创建场景、摄像机、渲染器
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -24,13 +24,13 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
-// Add a mesh
+// 添加网格
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// Add light
+// 添加灯光
 scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(5, 5, 5);
@@ -38,7 +38,7 @@ scene.add(dirLight);
 
 camera.position.z = 5;
 
-// Animation loop
+// 动画循环
 function animate() {
   requestAnimationFrame(animate);
   cube.rotation.x += 0.01;
@@ -47,7 +47,7 @@ function animate() {
 }
 animate();
 
-// Handle resize
+// 处理窗口大小变化
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -55,41 +55,41 @@ window.addEventListener("resize", () => {
 });
 ```
 
-## Core Classes
+## 核心类
 
-### Scene
+### Scene（场景）
 
-Container for all 3D objects, lights, and cameras.
+所有 3D 对象、灯光和摄像机的容器。
 
 ```javascript
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000); // Solid color
-scene.background = texture; // Skybox texture
-scene.background = cubeTexture; // Cubemap
-scene.environment = envMap; // Environment map for PBR
-scene.fog = new THREE.Fog(0xffffff, 1, 100); // Linear fog
-scene.fog = new THREE.FogExp2(0xffffff, 0.02); // Exponential fog
+scene.background = new THREE.Color(0x000000); // 纯色背景
+scene.background = texture; // 天空盒纹理
+scene.background = cubeTexture; // 立方体贴图
+scene.environment = envMap; // PBR 环境贴图
+scene.fog = new THREE.Fog(0xffffff, 1, 100); // 线性雾
+scene.fog = new THREE.FogExp2(0xffffff, 0.02); // 指数雾
 ```
 
-### Cameras
+### Cameras（摄像机）
 
-**PerspectiveCamera** - Most common, simulates human eye.
+**PerspectiveCamera（透视摄像机）** — 最常见，模拟人眼。
 
 ```javascript
 // PerspectiveCamera(fov, aspect, near, far)
 const camera = new THREE.PerspectiveCamera(
-  75, // Field of view (degrees)
-  window.innerWidth / window.innerHeight, // Aspect ratio
-  0.1, // Near clipping plane
-  1000, // Far clipping plane
+  75, // 视野（度）
+  window.innerWidth / window.innerHeight, // 宽高比
+  0.1, // 近裁剪面
+  1000, // 远裁剪面
 );
 
 camera.position.set(0, 5, 10);
 camera.lookAt(0, 0, 0);
-camera.updateProjectionMatrix(); // Call after changing fov, aspect, near, far
+camera.updateProjectionMatrix(); // 在更改 fov、aspect、near、far 后调用
 ```
 
-**OrthographicCamera** - No perspective distortion, good for 2D/isometric.
+**OrthographicCamera（正交摄像机）** — 无透视失真，适合 2D/等距视图。
 
 ```javascript
 // OrthographicCamera(left, right, top, bottom, near, far)
@@ -105,7 +105,7 @@ const camera = new THREE.OrthographicCamera(
 );
 ```
 
-**ArrayCamera** - Multiple viewports with sub-cameras.
+**ArrayCamera（阵列摄像机）** — 使用子摄像机的多个视口。
 
 ```javascript
 const cameras = [];
@@ -122,99 +122,99 @@ for (let i = 0; i < 4; i++) {
 const arrayCamera = new THREE.ArrayCamera(cameras);
 ```
 
-**CubeCamera** - Renders environment maps for reflections.
+**CubeCamera（立方体摄像机）** — 为反射渲染环境贴图。
 
 ```javascript
 const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
 const cubeCamera = new THREE.CubeCamera(0.1, 1000, cubeRenderTarget);
 scene.add(cubeCamera);
 
-// Use for reflections
+// 用于反射
 material.envMap = cubeRenderTarget.texture;
 
-// Update each frame (expensive!)
+// 每帧更新（开销大！）
 cubeCamera.position.copy(reflectiveMesh.position);
 cubeCamera.update(renderer, scene);
 ```
 
-### WebGLRenderer
+### WebGLRenderer（WebGL 渲染器）
 
 ```javascript
 const renderer = new THREE.WebGLRenderer({
-  canvas: document.querySelector("#canvas"), // Optional existing canvas
-  antialias: true, // Smooth edges
-  alpha: true, // Transparent background
-  powerPreference: "high-performance", // GPU hint
-  preserveDrawingBuffer: true, // For screenshots
+  canvas: document.querySelector("#canvas"), // 可选现有 canvas
+  antialias: true, // 平滑边缘
+  alpha: true, // 透明背景
+  powerPreference: "high-performance", // GPU 提示
+  preserveDrawingBuffer: true, // 用于截图
 });
 
 renderer.setSize(width, height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Tone mapping
+// 色调映射
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 
-// Color space (Three.js r152+)
+// 色彩空间（Three.js r152+）
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-// Shadows
+// 阴影
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-// Clear color
+// 清除颜色
 renderer.setClearColor(0x000000, 1);
 
-// Render
+// 渲染
 renderer.render(scene, camera);
 ```
 
 ### Object3D
 
-Base class for all 3D objects. Mesh, Group, Light, Camera all extend Object3D.
+所有 3D 对象的基类。Mesh、Group、Light、Camera 都继承自 Object3D。
 
 ```javascript
 const obj = new THREE.Object3D();
 
-// Transform
+// 变换
 obj.position.set(x, y, z);
-obj.rotation.set(x, y, z); // Euler angles (radians)
-obj.quaternion.set(x, y, z, w); // Quaternion rotation
+obj.rotation.set(x, y, z); // 欧拉角（弧度）
+obj.quaternion.set(x, y, z, w); // 四元数旋转
 obj.scale.set(x, y, z);
 
-// Local vs World transforms
+// 局部 vs 世界变换
 obj.getWorldPosition(targetVector);
 obj.getWorldQuaternion(targetQuaternion);
 obj.getWorldDirection(targetVector);
 
-// Hierarchy
+// 层级
 obj.add(child);
 obj.remove(child);
 obj.parent;
 obj.children;
 
-// Visibility
+// 可见性
 obj.visible = false;
 
-// Layers (for selective rendering/raycasting)
+// 图层（用于选择性渲染/光线投射）
 obj.layers.set(1);
 obj.layers.enable(2);
 obj.layers.disable(0);
 
-// Traverse hierarchy
+// 遍历层级
 obj.traverse((child) => {
   if (child.isMesh) child.material.color.set(0xff0000);
 });
 
-// Matrix updates
-obj.matrixAutoUpdate = true; // Default: auto-update matrices
-obj.updateMatrix(); // Manual matrix update
-obj.updateMatrixWorld(true); // Update world matrix recursively
+// 矩阵更新
+obj.matrixAutoUpdate = true; // 默认：自动更新矩阵
+obj.updateMatrix(); // 手动矩阵更新
+obj.updateMatrixWorld(true); // 递归更新世界矩阵
 ```
 
-### Group
+### Group（组）
 
-Empty container for organizing objects.
+用于组织对象的空容器。
 
 ```javascript
 const group = new THREE.Group();
@@ -222,49 +222,49 @@ group.add(mesh1);
 group.add(mesh2);
 scene.add(group);
 
-// Transform entire group
+// 变换整个组
 group.position.x = 5;
 group.rotation.y = Math.PI / 4;
 ```
 
-### Mesh
+### Mesh（网格）
 
-Combines geometry and material.
+结合几何体和材质。
 
 ```javascript
 const mesh = new THREE.Mesh(geometry, material);
 
-// Multiple materials (one per geometry group)
+// 多种材质（每个几何体组一个）
 const mesh = new THREE.Mesh(geometry, [material1, material2]);
 
-// Useful properties
+// 常用属性
 mesh.geometry;
 mesh.material;
 mesh.castShadow = true;
 mesh.receiveShadow = true;
 
-// Frustum culling
-mesh.frustumCulled = true; // Default: skip if outside camera view
+// 视锥体裁剪
+mesh.frustumCulled = true; // 默认：在摄像机视图外时跳过
 
-// Render order
-mesh.renderOrder = 10; // Higher = rendered later
+// 渲染顺序
+mesh.renderOrder = 10; // 越大越晚渲染
 ```
 
-## Coordinate System
+## 坐标系统
 
-Three.js uses a **right-handed coordinate system**:
+Three.js 使用**右手坐标系**：
 
-- **+X** points right
-- **+Y** points up
-- **+Z** points toward viewer (out of screen)
+- **+X** 指向右
+- **+Y** 指向上
+- **+Z** 指向观察者（屏幕外）
 
 ```javascript
-// Axes helper
+// 坐标轴辅助
 const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper); // Red=X, Green=Y, Blue=Z
+scene.add(axesHelper); // 红=X, 绿=Y, 蓝=Z
 ```
 
-## Math Utilities
+## 数学工具
 
 ### Vector3
 
@@ -274,7 +274,7 @@ v.set(x, y, z);
 v.copy(otherVector);
 v.clone();
 
-// Operations (modify in place)
+// 运算（原地修改）
 v.add(v2);
 v.sub(v2);
 v.multiply(v2);
@@ -285,19 +285,19 @@ v.negate();
 v.clamp(min, max);
 v.lerp(target, alpha);
 
-// Calculations (return new value)
+// 计算（返回新值）
 v.length();
-v.lengthSq(); // Faster than length()
+v.lengthSq(); // 比 length() 更快
 v.distanceTo(v2);
 v.dot(v2);
-v.cross(v2); // Modifies v
+v.cross(v2); // 修改 v
 v.angleTo(v2);
 
-// Transform
+// 变换
 v.applyMatrix4(matrix);
 v.applyQuaternion(q);
-v.project(camera); // World to NDC
-v.unproject(camera); // NDC to world
+v.project(camera); // 世界坐标到 NDC
+v.unproject(camera); // NDC 到世界坐标
 ```
 
 ### Matrix4
@@ -308,7 +308,7 @@ m.identity();
 m.copy(other);
 m.clone();
 
-// Build transforms
+// 构建变换
 m.makeTranslation(x, y, z);
 m.makeRotationX(theta);
 m.makeRotationY(theta);
@@ -316,23 +316,23 @@ m.makeRotationZ(theta);
 m.makeRotationFromQuaternion(q);
 m.makeScale(x, y, z);
 
-// Compose/decompose
+// 组合/分解
 m.compose(position, quaternion, scale);
 m.decompose(position, quaternion, scale);
 
-// Operations
+// 运算
 m.multiply(m2); // m = m * m2
 m.premultiply(m2); // m = m2 * m
 m.invert();
 m.transpose();
 
-// Camera matrices
+// 摄像机矩阵
 m.makePerspective(left, right, top, bottom, near, far);
 m.makeOrthographic(left, right, top, bottom, near, far);
 m.lookAt(eye, target, up);
 ```
 
-### Quaternion
+### Quaternion（四元数）
 
 ```javascript
 const q = new THREE.Quaternion();
@@ -341,22 +341,22 @@ q.setFromAxisAngle(axis, angle);
 q.setFromRotationMatrix(matrix);
 
 q.multiply(q2);
-q.slerp(target, t); // Spherical interpolation
+q.slerp(target, t); // 球面插值
 q.normalize();
 q.invert();
 ```
 
-### Euler
+### Euler（欧拉角）
 
 ```javascript
-const euler = new THREE.Euler(x, y, z, "XYZ"); // Order matters!
+const euler = new THREE.Euler(x, y, z, "XYZ"); // 顺序很重要！
 euler.setFromQuaternion(q);
 euler.setFromRotationMatrix(m);
 
-// Rotation orders: 'XYZ', 'YXZ', 'ZXY', 'XZY', 'YZX', 'ZYX'
+// 旋转顺序：'XYZ', 'YXZ', 'ZXY', 'XZY', 'YZX', 'ZYX'
 ```
 
-### Color
+### Color（颜色）
 
 ```javascript
 const color = new THREE.Color(0xff0000);
@@ -365,15 +365,15 @@ const color = new THREE.Color("rgb(255, 0, 0)");
 const color = new THREE.Color("#ff0000");
 
 color.setHex(0x00ff00);
-color.setRGB(r, g, b); // 0-1 range
-color.setHSL(h, s, l); // 0-1 range
+color.setRGB(r, g, b); // 0-1 范围
+color.setHSL(h, s, l); // 0-1 范围
 
 color.lerp(otherColor, alpha);
 color.multiply(otherColor);
 color.multiplyScalar(2);
 ```
 
-### MathUtils
+### MathUtils（数学工具）
 
 ```javascript
 THREE.MathUtils.clamp(value, min, max);
@@ -387,50 +387,50 @@ THREE.MathUtils.smoothstep(x, min, max);
 THREE.MathUtils.smootherstep(x, min, max);
 ```
 
-## Common Patterns
+## 常用模式
 
-### Proper Cleanup
+### 正确清理
 
 ```javascript
 function dispose() {
-  // Dispose geometries
+  // 释放几何体
   mesh.geometry.dispose();
 
-  // Dispose materials
+  // 释放材质
   if (Array.isArray(mesh.material)) {
     mesh.material.forEach((m) => m.dispose());
   } else {
     mesh.material.dispose();
   }
 
-  // Dispose textures
+  // 释放纹理
   texture.dispose();
 
-  // Remove from scene
+  // 从场景中移除
   scene.remove(mesh);
 
-  // Dispose renderer
+  // 释放渲染器
   renderer.dispose();
 }
 ```
 
-### Clock for Animation
+### 动画时钟
 
 ```javascript
 const clock = new THREE.Clock();
 
 function animate() {
-  const delta = clock.getDelta(); // Time since last frame (seconds)
-  const elapsed = clock.getElapsedTime(); // Total time (seconds)
+  const delta = clock.getDelta(); // 距离上一帧的时间（秒）
+  const elapsed = clock.getElapsedTime(); // 总时间（秒）
 
-  mesh.rotation.y += delta * 0.5; // Consistent speed regardless of framerate
+  mesh.rotation.y += delta * 0.5; // 不论帧率如何，速度一致
 
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
 ```
 
-### Responsive Canvas
+### 响应式 Canvas
 
 ```javascript
 function onWindowResize() {
@@ -446,30 +446,30 @@ function onWindowResize() {
 window.addEventListener("resize", onWindowResize);
 ```
 
-### Loading Manager
+### 加载管理器
 
 ```javascript
 const manager = new THREE.LoadingManager();
 
-manager.onStart = (url, loaded, total) => console.log("Started loading");
-manager.onLoad = () => console.log("All loaded");
+manager.onStart = (url, loaded, total) => console.log("开始加载");
+manager.onLoad = () => console.log("全部加载完成");
 manager.onProgress = (url, loaded, total) => console.log(`${loaded}/${total}`);
-manager.onError = (url) => console.error(`Error loading ${url}`);
+manager.onError = (url) => console.error(`加载 ${url} 出错`);
 
 const textureLoader = new THREE.TextureLoader(manager);
 const gltfLoader = new GLTFLoader(manager);
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Limit draw calls**: Merge geometries, use instancing, atlas textures
-2. **Frustum culling**: Enabled by default, ensure bounding boxes are correct
-3. **LOD (Level of Detail)**: Use `THREE.LOD` for distance-based mesh switching
-4. **Object pooling**: Reuse objects instead of creating/destroying
-5. **Avoid `getWorldPosition` in loops**: Cache results
+1. **限制绘制调用**：合并几何体、使用实例化、纹理图集
+2. **视锥体裁剪**：默认启用，确保包围盒正确
+3. **LOD（细节级别）**：使用 `THREE.LOD` 实现基于距离的网格切换
+4. **对象池化**：重用对象而非创建/销毁
+5. **避免在循环中调用 `getWorldPosition`**：缓存结果
 
 ```javascript
-// Merge static geometries
+// 合并静态几何体
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 const merged = mergeGeometries([geo1, geo2, geo3]);
 
@@ -481,8 +481,8 @@ lod.addLevel(lowDetailMesh, 100);
 scene.add(lod);
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-geometry` - Geometry creation and manipulation
-- `threejs-materials` - Material types and properties
-- `threejs-lighting` - Light types and shadows
+- `threejs-geometry` — 几何体创建和操作
+- `threejs-materials` — 材质类型和属性
+- `threejs-lighting` — 灯光类型和阴影

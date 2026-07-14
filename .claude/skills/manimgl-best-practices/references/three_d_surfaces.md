@@ -1,24 +1,24 @@
-# 3D Surfaces - Reference Guide
+# 3D 曲面 - 参考指南
 
-**Example file**: `examples/three_d_surfaces.py`
+**示例文件**：`examples/three_d_surfaces.py`
 
-## User Query Scenarios
+## 用户查询场景
 
-This example addresses queries like:
-- "Create a 3D surface visualization"
-- "Show a parametric surface"
-- "Animate camera rotation around object"
-- "Create a torus/sphere/cone"
-- "Show saddle surface"
+本示例解决如下查询：
+- "创建 3D 曲面可视化"
+- "展示参数曲面"
+- "动画化相机围绕物体的旋转"
+- "创建环面/球体/圆锥"
+- "展示鞍面"
 
-## Scene Thinking Process (3b1b Style)
+## 场景思考过程（3b1b 风格）
 
-### 1. Core Concept
-**Parametric Surfaces**: Define surfaces as functions (u,v) → (x,y,z). Camera movement reveals 3D structure.
+### 1. 核心概念
+**参数曲面**：将曲面定义为函数 (u,v) → (x,y,z)。相机移动揭示 3D 结构。
 
-### 2. Technical Implementation
+### 2. 技术实现
 
-#### Basic Parametric Surface
+#### 基本参数曲面
 ```python
 surface = ParametricSurface(
     lambda u, v: [u, v, np.sin(u) * np.cos(v)],
@@ -30,19 +30,19 @@ surface.set_color(BLUE)
 surface.set_opacity(0.8)
 ```
 
-#### Camera Setup and Movement
+#### 相机设置和移动
 ```python
 frame = self.frame
 frame.reorient(-30, 70, 0)  # phi, theta, gamma
 frame.set_height(10)
 
-# Animate camera
+# 动画化相机
 self.play(frame.animate.reorient(30, 60, 0), run_time=3)
 ```
 
-#### Sphere with Latitude/Longitude Lines
+#### 带经纬线的球体
 ```python
-# Latitude lines
+# 纬线
 for phi in np.linspace(-PI/2 + 0.3, PI/2 - 0.3, 6):
     line = ParametricCurve(
         lambda t: radius * np.array([
@@ -54,9 +54,9 @@ for phi in np.linspace(-PI/2 + 0.3, PI/2 - 0.3, 6):
     )
 ```
 
-#### Torus Parameterization
+#### 环面参数化
 ```python
-R, r = 2, 0.7  # Major and minor radius
+R, r = 2, 0.7  # 主半径和次半径
 torus = ParametricSurface(
     lambda u, v: [
         (R + r * np.cos(v)) * np.cos(u),
@@ -68,19 +68,19 @@ torus = ParametricSurface(
 )
 ```
 
-### 3. Scene Variants
+### 3. 场景变体
 
-| Scene | Purpose |
+| 场景 | 用途 |
 |-------|---------|
-| `ParametricSurface3D` | z = sin(x)cos(y) with camera orbit |
-| `SphereSurface` | Sphere with grid lines, rotating |
-| `ConeUnfolding` | 3D cone visualization |
-| `SaddleSurface` | z = x² - y² with cross-sections |
-| `TorusSurface` | Donut shape with rotation |
+| `ParametricSurface3D` | z = sin(x)cos(y) 带相机轨道 |
+| `SphereSurface` | 带网格线的球体，旋转 |
+| `ConeUnfolding` | 3D 圆锥可视化 |
+| `SaddleSurface` | z = x² - y² 带截面 |
+| `TorusSurface` | 甜甜圈形状带旋转 |
 
-## Key Patterns
+## 关键模式
 
-### Pattern: ThreeDAxes
+### 模式：ThreeDAxes
 ```python
 axes = ThreeDAxes(
     x_range=(-3, 3, 1),
@@ -89,21 +89,21 @@ axes = ThreeDAxes(
 )
 ```
 
-### Pattern: Rotating Objects
+### 模式：旋转对象
 ```python
 self.play(
     Rotate(surface, TAU, axis=UP, run_time=6, rate_func=linear),
 )
 ```
 
-### Pattern: Frame Reorientation
+### 模式：框架重新定向
 ```python
 # reorient(phi, theta, gamma, center, height)
-frame.reorient(-30, 70, 0)  # Just angles
-frame.animate.reorient(60, 60, 0)  # Animated
+frame.reorient(-30, 70, 0)  # 仅角度
+frame.animate.reorient(60, 60, 0)  # 动画化
 ```
 
-## Run Commands
+## 运行命令
 
 ```bash
 manimgl three_d_surfaces.py ParametricSurface3D -w

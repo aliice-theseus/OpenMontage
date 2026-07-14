@@ -1,8 +1,8 @@
-## Scale / Zoom
+## 缩放
 
-### Zoom Through
+### 缩放穿过
 
-Old zooms past camera + blurs, new zooms in from behind.
+旧场景缩放越过相机 + 模糊，新场景从后面放大进入。
 
 ```js
 tl.to(old, { scale: 2.5, opacity: 0, filter: "blur(8px)", duration: 0.4, ease: "power3.in" }, T);
@@ -11,9 +11,9 @@ tl.fromTo(new,
   { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, T + 0.15);
 ```
 
-### Zoom Out
+### 缩小
 
-Old shrinks away, new was behind it. Needs z-index management.
+旧场景缩小消失，新场景在其后面。需要 z-index 管理。
 
 ```js
 tl.set(new, { opacity: 1, zIndex: 1 }, T);

@@ -1,289 +1,123 @@
 ---
 name: prompt-optimizer
-description: Write production-quality prompts for HeyGen Video Agent — from basic ideas to fully art-directed scene-by-scene scripts
+description: 为 HeyGen Video Agent 编写生产质量提示——从基础想法到完全艺术指导的逐场景脚本
 ---
 
-# Video Agent Prompt Optimizer
+# Video Agent 提示优化器
 
-Write effective prompts for the HeyGen Video Agent API. Based on patterns from 40+ produced videos.
+为 HeyGen Video Agent API 编写有效的提示。基于 40+ 个制作视频的模式。
 
-**The core insight: Video Agent is an HTML interpreter.** It renders layouts, typography, and structured content natively. Describe B-roll as layered text motion graphics with action verbs ("slams in," "types on," "counts up") — not layout specs ("upper-left, 48pt").
+**核心洞察：Video Agent 是一个 HTML 解释器。** 它原生渲染布局、排版和结构化内容。将 B-roll 描述为带动作动词的分层文本运动图形（「猛击进入」、「打字到」、「计数到」）——而不是布局规格（「左上角，48pt」）。
 
-## Reference Files
+## 参考文件
 
-| File | Load when... |
+| 文件 | 何时加载…… |
 |------|-------------|
-| [visual-styles.md](visual-styles.md) | Choosing a visual style (20 styles with full specs) |
-| [prompt-examples.md](prompt-examples.md) | Writing a prompt from scratch (full production example + templates) |
+| [visual-styles.md](visual-styles.md) | 选择视觉风格时（20 种风格及完整规格） |
+| [prompt-examples.md](prompt-examples.md) | 从头编写提示时（完整生产示例 + 模板） |
 
-## Workflow: Brief to Prompt
+## 工作流：简报到提示
 
-1. **Pull data** — Research the topic: web search, APIs, internal docs. Gather real quotes, stats, handles
-2. **Synthesize a thesis** — Not a list. A story. *"X is happening because Y — here's the proof."* Group into 3-5 themes with a narrative arc
-3. **Choose a style** — Match mood first, content second. Ask: *"What should the viewer FEEL?"* See [visual-styles.md](visual-styles.md)
-4. **Write the avatar** — Thematic wardrobe matching content's emotional context. Brand logos and content-specific props in the set (see Avatar Guide below)
-5. **Extract critical text** — List every number, quote, handle, and label that must appear literally
-6. **Break into scenes** — One concept per scene. Rotate scene types. Never 3+ of same type in a row. At least 2 pure B-roll scenes
-7. **Write voiceover** — Spell out numbers in VO ("one-point-eight-five million"), use figures on screen ("1.85M"). Narration on EVERY scene including B-roll
-8. **Layer each B-roll scene** — L1 background, L2 hero, L3 supporting, L4 info bar, L5 effects. Every element must MOVE
-9. **Add music direction** — Reference artists, describe energy arc
-10. **Add narration style** — How to deliver: fast/slow, where to pause, emotional register per section
+1. **提取数据**——研究主题：网络搜索、API、内部文档。收集真实引用、统计数据、账号
+2. **综合论点**——不是列表。是一个故事。*「因为 Y，所以 X 正在发生——这是证据。」* 按叙事弧分组为 3-5 个主题
+3. **选择风格**——先匹配情绪，再匹配内容。问：*「观众应该有什么感觉？」* 参见 [visual-styles.md](visual-styles.md)
+4. **编写虚拟形象**——与内容情感上下文匹配的主题服装。品牌 Logo 和内容特定道具在场景中（参见下方虚拟形象指南）
+5. **提取关键文本**——列出必须字面出现的每个数字、引用、账号和标签
+6. **分解为场景**——每个场景一个概念。轮换场景类型。从不连续 3+ 个相同类型。至少 2 个纯 B-roll 场景
+7. **编写配音**——配音中拼出数字（「一百八十五万」），屏幕上使用数字（「1.85M」）。每个场景都有旁白，包括 B-roll
+8. **分层每个 B-roll 场景**——L1 背景、L2 英雄、L3 支持、L4 信息栏、L5 特效。每个元素必须**动**
+9. **添加音乐方向**——参考艺术家，描述能量弧
+10. **添加旁白风格**——如何朗读：快/慢、哪里停顿、每个部分的情感基调
 
-## Prompt Anatomy
+## 提示结构
 
-Every production-quality prompt follows this structure:
-
-```
-FORMAT:    What kind of video, how long, what energy
-TONE:      Emotional register, references
-AVATAR:    Detailed physical + environment description (60-100 words)
-STYLE:     Named aesthetic with colors, typography, motion rules, transitions
-CRITICAL ON-SCREEN TEXT:  Exact strings that must appear
-SCENE-BY-SCENE:  Individual scene breakdowns with VO and layered visuals
-MUSIC:     Genre, reference artists, energy arc
-NARRATION STYLE:  How to deliver the voiceover
-```
-
-### FORMAT
+每个生产质量提示都遵循此结构：
 
 ```
-FORMAT: 75-second high-energy tech daily briefing. Think: a creator who just got amazing news.
-FORMAT: Bloomberg-style strategy briefing. 100-120 seconds. CEO-delivered.
+FORMAT：什么类型的视频、多长、什么能量
+TONE：情感基调、参考
+AVATAR：详细的身体 + 环境描述（60-100 词）
+STYLE：命名的美学风格，含颜色、排版、动效规则、过渡
+CRITICAL ON-SCREEN TEXT：必须出现的确文字符串
+SCENE-BY-SCENE：带配音和分层视觉的逐场景分解
+MUSIC：流派、参考艺术家、能量弧
+NARRATION STYLE：如何朗读配音
 ```
 
-### TONE
+## 动词语汇
 
-```
-TONE: Confident, direct, data-backed. Highlights hit hard. Lowlights are honest — no spin.
-TONE: Edgy, punk tech commentary. Vice News meets The Face magazine — raw, confrontational.
-```
+### 高能量
+| 动词 | 示例 |
+|------|---------|
+| **猛击** | `"$95M" 从左侧 -5 度猛击进入` |
+| **撞击** | `标题从右侧撞击进入，冲击时屏幕震动` |
+| **重击** | `引用卡片从底部重击出现` |
+| **盖印** | `数据块以 0.4s 交错盖印进入` |
+| **粉碎** | `文本在 1.5s 后粉碎，揭示底部的数字` |
 
-### CRITICAL ON-SCREEN TEXT
+### 中能量
+| 动词 | 示例 |
+|------|---------|
+| **层叠** | `三张卡片从顶部层叠进入，0.3s 交错` |
+| **滑入** | `滚动条从右侧滑入——持续滚动` |
+| **落下** | `"TIER 1" 带着白色闪光落下` |
+| **填充** | `进度条从 0 填充到 90%，橙色` |
+| **绘制** | `图表线从左到右自行绘制` |
 
-List every exact string that must appear on screen. Without this, the agent may summarize, round numbers, or rephrase quotes.
+### 低能量
+| 动词 | 示例 |
+|------|---------|
+| **打字到** | `引用以斜体白色逐词打字到` |
+| **淡入** | `Logo 在中心淡入，保持 3 秒` |
+| **浮动** | `散景球体以不同速度浮动过画面` |
+| **变形** | `数字从 17 变形到 18.9` |
+| **计数到** | `"1.85M" 从 0 计数到，琥珀色 96pt` |
 
-```
-CRITICAL ON-SCREEN TEXT (display literally):
-- "$141M ARR — All-Time High"
-- "1.85M Signups — +28% MoM"
-- Quote: "Use technology to serve the message, not distract from it." — Shalev Hani
-- "@username" — exact social handle
-```
+## 场景类型
 
-### MUSIC & NARRATION
-
-```
-MUSIC: Driving electronic, heavy bass drops on key numbers. Run the Jewels meets
-a tech keynote. Builds relentlessly, only softens for customer stories.
-
-NARRATION STYLE: High energy throughout. Let numbers PUNCH — pause before big ones,
-then deliver hard. Customer stories get warmth. The close should feel like a mic drop.
-```
-
-## Avatar Description Guide
-
-**The avatar is NOT a fixed headshot** — design it for each video like a movie character. Think costume designer + set designer.
-
-### Thematic Wardrobe Rule
-
-The avatar's outfit and environment MUST match the content's emotional/cultural context:
-
-| Content Type | Avatar Design | NOT This |
-|---|---|---|
-| Chinese New Year | Red qipao with gold embroidery, lantern-lit courtyard | "Reporter in a blazer" |
-| Breaking tech news | Field reporter, windswept hair, earpiece, city skyline | "Anchor at a desk" |
-| Sleep science | Oversized cream knit, cross-legged on bed, warm lamp | "Analyst in a lab" |
-| Reddit community | Messy desk, Reddit alien on monitors, upvote arrows on wall | "Researcher in a studio" |
-
-### What to Specify
-
-| Element | Weak | Strong |
-|---------|------|--------|
-| Clothing | "Business casual" | "Black ribbed merino turtleneck, high collar framing jaw" |
-| Environment | "An office" | "Glass-walled conference room. Whiteboard with hand-drawn tier pyramid" |
-| Monitor content | "Computer screens" | "Monitor shows scrolling green terminal text and red security alerts" |
-| Lighting | "Well lit" | "Cool blue monitor glow from left, warm amber desk lamp from right" |
-
-### Template
-
-```
-AVATAR: [Clothing — fabric, color, fit, accessories, posture].
-[Setting — specific props, brand logos, what's on the walls].
-[Monitors/desk — content visible on screens, items on desk].
-[Lighting — direction, color temperature]. [Mood of the space].
-60-100 words. 3+ content-specific props. Brand elements visible.
-```
-
-## Scene Types
-
-| Type | Format | When to Use |
+| 类型 | 格式 | 何时使用 |
 |------|--------|-------------|
-| **A-ROLL** | Avatar speaking to camera | Intros, key insights, CTAs, emotional beats |
-| **FULL SCREEN B-ROLL** | No avatar — motion graphics only | Data visualization, information-dense content |
-| **A-ROLL + OVERLAY** | Split frame: avatar + content | Presenting data while maintaining human connection |
+| **A-ROLL** | 虚拟形象对着镜头说话 | 开场、关键见解、CTA、情感节拍 |
+| **全屏 B-ROLL** | 无虚拟形象——仅运动图形 | 数据可视化、信息密集内容 |
+| **A-ROLL + 叠加** | 分屏：虚拟形象 + 内容 | 展示数据同时保持人际连接 |
 
-**Rotation is mandatory.** Never 3+ of the same type in a row. Every prompt needs at least 2 pure B-roll scenes.
+**轮换是强制性的。** 从不连续 3+ 个相同类型。每个提示至少需要 2 个纯 B-roll 场景。
 
-**Voiceover on EVERY scene.** Every B-roll scene MUST include a `VOICEOVER:` line. Silent B-roll = broken video.
+**每个场景都有配音。** 每个 B-roll 场景**必须**包含 `VOICEOVER:` 行。静默 B-roll = 破损视频。
 
-### Scene Anatomy
+## 视觉分层系统
 
-**A-ROLL:**
-```
-SCENE 1 — A-ROLL (10s)
-[Avatar center-frame, excited, hands gesturing]
-VOICEOVER: "The exact script for this scene."
-Lower-third: "TITLE TEXT" white on blue bar.
-```
+将 B-roll 分解为 5 个堆叠层。这是运动图形场景最强大的技巧。
 
-**B-ROLL with layers:**
-```
-SCENE 2 — FULL SCREEN B-ROLL (12s)
-[NO AVATAR — motion graphic only]
-VOICEOVER: "The exact script for this scene."
-LAYER 1: Dark #1a1a1a background with subtle grid lines pulsing.
-LAYER 2: "HEADLINE" SLAMS in from left in white Bold 100pt at -5 degrees.
-LAYER 3: Three data cards CASCADE from right, staggered 0.3s.
-LAYER 4: Bottom ticker SLIDES in: "supporting text scrolling continuously."
-LAYER 5: Grid lines RIPPLE outward from impact point.
-Hard cut.
-```
-
-**A-ROLL + OVERLAY:**
-```
-SCENE 3 — A-ROLL + OVERLAY (10s)
-[SPLIT — Avatar LEFT 35%. Content RIGHT 65%. NO overlap.]
-Avatar gestures toward content side.
-VOICEOVER: "The exact script for this scene."
-RIGHT SIDE: "HEADLINE" in cyan 60pt. Three stats COUNT UP below.
-```
-
-Alternate which side the avatar appears on between overlay scenes.
-
-## The Visual Layer System
-
-Break B-roll into 5 stacked layers. This is the most powerful technique for motion graphics scenes.
-
-| Layer | Purpose | Examples |
+| 层 | 目的 | 示例 |
 |-------|---------|---------|
-| **L1** | Background | Textured surface, grid, gradient, color field |
-| **L2** | Hero content | Main headline/number that dominates the frame |
-| **L3** | Supporting data | Cards, stats, bullet points, secondary information |
-| **L4** | Information bar | Tickers, labels, source attributions, quotes |
-| **L5** | Effects | Particles, glitches, grid animations, ambient motion |
+| **L1** | 背景 | 纹理表面、网格、渐变、色场 |
+| **L2** | 英雄内容 | 主导画面的主标题/数字 |
+| **L3** | 支持数据 | 卡片、统计、要点、次要信息 |
+| **L4** | 信息栏 | 滚动条、标签、来源归属、引用 |
+| **L5** | 特效 | 粒子、故障、网格动画、环境动效 |
 
-Every B-roll: 4+ layers. Every overlay content side: 3+ layers. **Every element must MOVE.**
+每个 B-roll：4+ 层。每个叠加内容侧：3+ 层。**每个元素必须动。**
 
-## Motion Vocabulary
+## 不管用的做法
 
-### High Energy
-| Verb | Example |
-|------|---------|
-| **SLAMS** | `"$95M" SLAMS in from left at -5 degrees` |
-| **CRASHES** | `Title CRASHES in from right, screen-shake on impact` |
-| **PUNCHES** | `Quote card PUNCHES up from bottom` |
-| **STAMPS** | `Data blocks STAMP in staggered 0.4s` |
-| **SHATTERS** | `Text SHATTERS after 1.5s, revealing number underneath` |
+持续产生较差结果的模式：
 
-### Medium Energy
-| Verb | Example |
-|------|---------|
-| **CASCADE** | `Three cards CASCADE from top, staggered 0.3s` |
-| **SLIDES** | `Ticker SLIDES in from right — continuous scroll` |
-| **DROPS** | `"TIER 1" DROPS in with white flash` |
-| **FILLS** | `Progress bar FILLS 0 to 90% in orange` |
-| **DRAWS** | `Chart line DRAWS itself left to right` |
-
-### Low Energy
-| Verb | Example |
-|------|---------|
-| **types on** | `Quote types on word by word in italic white` |
-| **fades in** | `Logo fades in at center, held for 3 seconds` |
-| **FLOATS** | `Bokeh orbs FLOAT across frame at different speeds` |
-| **morphs** | `Number morphs from 17 to 18.9` |
-| **COUNTS UP** | `"1.85M" COUNTS UP from 0 in amber 96pt` |
-
-## Transition Types
-
-| Transition | Energy | Styles It Fits |
-|------------|--------|---------------|
-| Smash cut | Aggressive | Deconstructed, Maximalist, Carnival Surge |
-| White flash frame | Punchy | Deconstructed, Maximalist |
-| Grid wipe | Systematic | Swiss Pulse, Digital Grid |
-| Hard cut | Clean | Swiss Pulse, Shadow Cut |
-| Liquid dissolve | Elegant | Data Drift, Dream State |
-| Slow cross-dissolve | Refined | Velvet Standard |
-| Pop cut / bounce | Fun | Play Mode, Carnival Surge |
-| Snap cut | Urgent | Red Wire, Contact Sheet |
-| Soft dissolve | Warm | Soft Signal, Warm Grain, Quiet Drama |
-| Iris wipe | Nostalgic | Heritage Reel |
-
-## Timing Guidelines
-
-| Content Type | Duration |
-|--------------|----------|
-| Hook/Intro (A-roll) | 6-10 seconds |
-| Data-heavy B-roll | 10-15 seconds (NEVER ≤5s — causes black frames) |
-| A-roll + Overlay | 8-12 seconds |
-| CTA / Close (A-roll) | 6-8 seconds |
-
-**Common video lengths:** Social clip: 30-45s (5-7 scenes) | Briefing: 60-75s (7-9 scenes) | Deep dive: 90-120s (10-13 scenes)
-
-**Speaking pace:** ~150 words/minute. Calculate: `words / 150 * 60 = seconds`
-
-## What Doesn't Work
-
-Patterns that consistently produce poor results:
-
-**Layout language** — Screen coordinates cause empty/black B-roll:
+**布局语言**——屏幕坐标导致空/黑色 B-roll：
 ```
-❌ "UPPER-LEFT: headline in 48pt Helvetica"
-❌ "CENTER-SCREEN: display at coordinates (400, 300)"
-✅ "135K" SLAMS in from left, white Impact 120pt, fills 40% of frame.
+❌ "左上角：标题 48pt Helvetica"
+❌ "屏幕中央：坐标 (400, 300) 处显示"
+✅ "135K" 从左侧猛击进入，白色 Impact 120pt，填充画面 40%。
 ```
 
-**Named artists without specs** — "Ikko Tanaka style" means nothing to Video Agent. Translate to concrete rules:
+**命名设计师无规格**——「Ikko Tanaka 风格」对 Video Agent 毫无意义。翻译为具体规则：
 ```
-❌ "Use an Ikko Tanaka style"
-✅ "Flat color blocks, maximum 3 colors per frame, 60% negative space, typography as primary element"
+❌ "使用 Ikko Tanaka 风格"
+✅ "纯色块，每帧最多 3 种颜色，60% 负空间，排版为主要元素"
 ```
 
-**Style examples injected into prompts** — Full example scenes from a style library confuse the agent. Use the style's **rules**, not example scenes.
+**注入样式示例到提示中**——来自样式库的完整示例场景会混淆代理。使用样式的**规则**，而不是示例场景。
 
-**Forced short B-roll (≤5 seconds)** — Too short for rendering. Every tested video with 5s B-roll had empty/black screens. Use 10-15s.
+**强制短 B-roll（≤5 秒）**——太短无法渲染。每个经过测试的 5s B-roll 视频都有空/黑屏。使用 10-15s。
 
-**Content as a list, not a story** — "Here are 5 tweets" produces flat videos. Always synthesize: *"X is happening because Y — here's the proof."*
-
-## Production Insights
-
-### Style Performance (from 40+ videos)
-
-| Rank | Style | Strength |
-|------|-------|----------|
-| 1 | Deconstructed (Brody) | Most reliable across all topics |
-| 2 | Swiss Pulse (Müller-Brockmann) | Best for data-heavy content |
-| 3 | Digital Grid (Crouwel) | Strong for tech topics |
-| 4 | Geometric Bold (Tanaka) | Elegant and versatile |
-| 5 | Maximalist Type (Scher) | High energy, use sparingly |
-
-### Duration by Approach
-
-| Approach | Avg Duration | Quality |
-|----------|-------------|---------|
-| Natural storyboard + custom avatar | ~106s | Best |
-| Natural storyboard, no custom avatar | ~69s | Good |
-| Forced short scenes + custom avatar | ~71s | Mixed |
-| Layout language prompts | ~48s | Poor |
-
-## Quality Checklist
-
-- [ ] Thesis-driven — story, not bullet points
-- [ ] Style named with colors, typography, motion, transitions (see [visual-styles.md](visual-styles.md))
-- [ ] Avatar has thematic wardrobe + branded environment (60-100 words)
-- [ ] Critical text listed — every stat, quote, label
-- [ ] Scenes rotate types — never 3+ same type. At least 2 B-roll scenes
-- [ ] Every scene has VOICEOVER — including B-roll
-- [ ] B-roll scenes have 4+ layers, every element has motion verbs
-- [ ] B-roll scenes are 10-15 seconds (never ≤5s)
-- [ ] Brand logos appear when discussing companies
-- [ ] Every element moves — no static frames
+**内容为列表，而不是故事**——「这里有 5 条推文」会产生平淡的视频。始终综合：*「因为 Y，所以 X 正在发生——这是证据。」*

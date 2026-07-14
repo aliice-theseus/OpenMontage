@@ -1,23 +1,23 @@
 ---
 name: hyperframes-waapi
-description: Web Animations API adapter patterns for HyperFrames. Use when authoring element.animate() motion, Animation currentTime seeking, document.getAnimations(), KeyframeEffect timing, fill modes, or native browser animations that must render deterministically in HyperFrames.
+description: Web Animations API 适配器模式，用于 HyperFrames。在编写 element.animate() 动画、Animation currentTime 定位、document.getAnimations()、KeyframeEffect 时间控制、填充模式或需要在 HyperFrames 中确定性渲染的原生浏览器动画时使用。
 ---
 
-# Web Animations API for HyperFrames
+# Web Animations API 用于 HyperFrames
 
-HyperFrames can seek Web Animations API animations through its `waapi` runtime adapter. WAAPI is useful when you want native browser keyframes with JavaScript-created timing and no GSAP dependency.
+HyperFrames 可以通过其 `waapi` 运行时适配器定位 Web Animations API 动画。当你希望使用原生浏览器关键帧配合 JavaScript 创建的时间控制，且无需 GSAP 依赖时，WAAPI 非常有用。
 
-## Contract
+## 约定
 
-- Create animations synchronously during composition initialization.
-- Use `element.animate(...)` with finite `duration` and `iterations`.
-- Use `fill: "both"` so seeked states persist.
-- Pause animations after creation or let the adapter pause them on first seek.
-- Avoid callbacks and promises for render-critical state.
+- 在组合初始化期间**同步**创建动画。
+- 使用 `element.animate(...)` 并指定有限的 `duration` 和 `iterations`。
+- 使用 `fill: "both"` 使定位后的状态保持持久。
+- 创建后暂停动画，或让适配器在首次定位时暂停。
+- 避免在渲染关键状态中使用回调和 Promise。
 
-The adapter calls `document.getAnimations()`, sets each animation's `currentTime` to HyperFrames time in milliseconds, then pauses it.
+适配器调用 `document.getAnimations()`，将每个动画的 `currentTime` 设置为 HyperFrames 时间（毫秒），然后暂停它。
 
-## Basic Pattern
+## 基本模式
 
 ```html
 <div id="orb" class="clip orb" data-start="2" data-duration="3" data-track-index="2"></div>
@@ -43,7 +43,7 @@ The adapter calls `document.getAnimations()`, sets each animation's `currentTime
 </script>
 ```
 
-## Stagger Pattern
+## 错开（Stagger）模式
 
 ```js
 document.querySelectorAll(".token").forEach((token, index) => {
@@ -64,31 +64,31 @@ document.querySelectorAll(".token").forEach((token, index) => {
 });
 ```
 
-## Good Uses
+## 适用场景
 
-- Lightweight DOM motion where CSS keyframes are too rigid and GSAP is unnecessary.
-- Generated animations from structured data.
-- Simple timelines that can be represented as keyframes, delays, and offsets.
+- 轻量级的 DOM 动画，CSS 关键帧过于死板且不需要 GSAP 的场合。
+- 从结构化数据生成的动画。
+- 可以用关键帧、延迟和偏移量表示的简单时间线。
 
-## Avoid
+## 避免
 
-- Infinite `iterations`.
-- Depending on `animation.finished` to mutate render-critical DOM.
-- Running separate clocks with `requestAnimationFrame`, timers, or `performance.now()`.
-- Animating layout properties when transforms and opacity can express the motion.
-- Assuming clip-local start time is automatic. WAAPI adapter seeks document-level animation time; model clip offsets with `delay` or create the animation on an element whose visibility is controlled by HyperFrames timing.
+- 无限的 `iterations`。
+- 依赖 `animation.finished` 来改变渲染关键 DOM。
+- 使用 `requestAnimationFrame`、定时器或 `performance.now()` 运行单独的时钟。
+- 在可以用 transforms 和 opacity 表达动画的情况下，对布局属性进行动画。
+- 假设剪辑本地开始时间会自动处理。WAAPI 适配器定位文档级动画时间；使用 `delay` 建模剪辑偏移，或在元素上创建动画，其可见性由 HyperFrames 时间控制。
 
-## Validation
+## 验证
 
-After editing a WAAPI composition:
+编辑 WAAPI 组合后：
 
 ```bash
 npx hyperframes lint
 npx hyperframes validate
 ```
 
-## Credits And References
+## 参考与致谢
 
-- HyperFrames adapter source: `packages/core/src/runtime/adapters/waapi.ts`.
-- MDN Web Animations API guide: https://developer.mozilla.org/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
-- MDN `Animation.currentTime`: https://developer.mozilla.org/en-US/docs/Web/API/Animation/currentTime
+- HyperFrames 适配器源码：`packages/core/src/runtime/adapters/waapi.ts`。
+- MDN Web Animations API 指南：https://developer.mozilla.org/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+- MDN `Animation.currentTime`：https://developer.mozilla.org/en-US/docs/Web/API/Animation/currentTime

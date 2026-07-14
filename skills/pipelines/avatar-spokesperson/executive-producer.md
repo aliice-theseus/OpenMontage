@@ -1,35 +1,35 @@
-# Executive Producer — Avatar Spokesperson Pipeline
+# 执行制片人 — 虚拟形象发言人管线
 
-## When to Use
+## 使用时机
 
-You are the **Executive Producer (EP)** for an avatar spokesperson video. You orchestrate the pipeline serially with quality gates focused on **lip-sync quality, presenter framing, audio clarity, and CTA landing**.
+您是虚拟形象发言人视频的**执行制片人（EP）**。您按顺序编排管线流程，并设置质量门禁，重点关注**唇形同步质量、主持人构图、音频清晰度和 CTA 落地**。
 
-**No pre-production stages.** The project is script-driven with a digital presenter as the anchor. The EP ensures the avatar looks natural, audio is clean, and support graphics stay secondary.
+**无前期制作阶段。** 项目以脚本为驱动，以数字主持人为核心。EP 确保虚拟形象看起来自然、音频清晰、辅助图形保持次要地位。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Pipeline | `pipeline_defs/avatar-spokesperson.yaml` | Stage definitions |
-| Skills | All 7 director skills + `meta/reviewer` | Stage execution |
-| Schemas | All artifact schemas | Validation |
-| Playbook | Active style playbook | Quality constraints |
+| 管线 | `pipeline_defs/avatar-spokesperson.yaml` | 阶段定义 |
+| 技能 | 全部 7 个导演技能 + `meta/reviewer` | 阶段执行 |
+| 模式 | 所有工件模式 | 验证 |
+| 剧本 | 当前风格剧本 | 质量约束 |
 
-## Cumulative State
+## 累积状态
 
 ```
 EP_STATE:
   pipeline: avatar-spokesperson
-  playbook: <selected>
-  target_duration_seconds: <from brief>
-  budget_total_usd: <configured>
+  playbook: <已选择>
+  target_duration_seconds: <来自简报>
+  budget_total_usd: <已配置>
   budget_spent_usd: 0.0
 
-  # Avatar-specific
+  # 虚拟形象特定
   avatar_path: null            # heygen_api / sadtalker / musetalk / stock
   narration_source: null       # tts / provided_audio
-  cta_type: null               # what the viewer should do after watching
-  presenter_framing: null      # layout: center, left-third, etc.
+  cta_type: null               # 观众观看后应做什么
+  presenter_framing: null      # 布局：center, left-third, 等
 
   artifacts:
     idea: null
@@ -44,128 +44,127 @@ EP_STATE:
   issues_log: []
 ```
 
-## Pivot Decision Matrix
+## 转向决策矩阵
 
-`talking_head` is the preferred tool but commonly unavailable (requires GPU or HeyGen API key). When blocked, the EP must route the project explicitly — not improvise.
+`talking_head` 是首选工具，但通常不可用（需要 GPU 或 HeyGen API 密钥）。当受阻时，EP 必须明确地路由项目 — 而不是即兴发挥。
 
 ```
-IF talking_head AVAILABLE:
-  → Standard avatar path. Proceed as normal.
+IF talking_head 可用：
+  → 标准虚拟形象路径。正常进行。
 
-IF talking_head UNAVAILABLE and lip_sync AVAILABLE:
-  → Lip-sync path. User must supply a presenter plate (existing footage).
-    Script and scene plan stay the same.
+IF talking_head 不可用 且 lip_sync 可用：
+  → 唇形同步路径。用户必须提供主持人底板（现有素材）。
+    脚本和场景计划保持不变。
 
-IF NEITHER talking_head NOR lip_sync AVAILABLE:
-  → Narration-Over-Graphics pivot.
-    Tell the user: "No avatar tool is configured. I can produce a
-    narration-over-graphics video instead — your script and CTA stay the same,
-    but the presenter is replaced with styled visuals, text overlays, and
-    voice-over narration."
-    If the user approves:
-      - Switch scene-director to narration-over-graphics layout (see its fallback section).
-      - Switch asset-director to no-avatar path (see its fallback section).
-      - CTA and script are unchanged.
-    If the user declines:
-      - Mark the project blocked. Do not proceed with a half-working avatar.
+IF talking_head 和 lip_sync 均不可用：
+  → 旁白加图形转向。
+    告知用户："没有配置虚拟形象工具。我可以改为制作旁白加图形视频 —
+    您的脚本和 CTA 保持不变，但主持人将被样式化视觉元素、文字叠加和
+    画外音旁白取代。"
+    如果用户批准：
+      - 将 scene-director 切换到旁白加图形布局（参见其降级方案章节）。
+      - 将 asset-director 切换到无虚拟形象路径（参见其降级方案章节）。
+      - CTA 和脚本不变。
+    如果用户拒绝：
+      - 将项目标记为受阻。不要用半成品虚拟形象继续。
 ```
 
-**The pivot decision happens at G1 (after IDEA).** Do not wait until the ASSETS stage to discover the tool is missing.
+**转向决策在 G1（IDEA 之后）进行。** 不要等到 ASSETS 阶段才发现工具缺失。
 
-## EP-Specific Cross-Stage Checks
+## EP 特定跨阶段检查
 
-### After IDEA stage:
+### IDEA 阶段之后：
 ```
-CHECK: Avatar path feasibility
-  - Is the avatar generation path explicit (which tool)?
-  - Is the required tool available in the registry?
-  - If tool unavailable: run the Pivot Decision Matrix above
-  - Are CTA and audience appropriate for spokesperson format?
-```
-
-### After SCRIPT stage:
-```
-CHECK: Spoken copy quality
-  - Is the script concise and natural-sounding when read aloud?
-  - Are scene breaks realistic for avatar delivery (no mid-sentence cuts)?
-  - Is on-screen text restrained (presenter is the focus, not graphics)?
-
-CHECK: Duration fit
-  - Word count aligns with natural speaking pace (~140-160 WPM for spokesperson)
+检查：虚拟形象路径可行性
+  - 虚拟形象生成路径是否明确（使用哪个工具）？
+  - 所需工具在注册表中是否可用？
+  - 如果工具不可用：执行上述转向决策矩阵
+  - CTA 和受众是否适合发言人格式？
 ```
 
-### After SCENE_PLAN stage:
+### SCRIPT 阶段之后：
 ```
-CHECK: Presenter layout
-  - Is the speaker layout consistent and coherent?
-  - Are support overlays secondary to the presenter?
-  - Are background changes minimal (max 2-3 distinct backgrounds)?
+检查：口语文案质量
+  - 脚本是否简洁且朗读时听起来自然？
+  - 场景划分是否适合虚拟形象交付（没有句中切分）？
+  - 屏幕文字是否克制（主持人是焦点，而非图形）？
 
-CHECK: Subtitle safety
-  - Is subtitle placement planned to avoid overlapping the presenter's face?
-```
-
-### After ASSETS stage:
-```
-CHECK: Avatar generation
-  - Did the avatar tool produce a usable video?
-  - Is lip-sync timing acceptable?
-  - Is narration audio clear and natural?
-  - Budget gate: 90% threshold warning
-
-CHECK: Support asset restraint
-  - Are support graphics (backgrounds, overlays) minimal?
-  - Do they match the playbook style?
+检查：时长符合度
+  - 字数符合自然说话速度（发言人约 140-160 WPM）
 ```
 
-### After EDIT stage:
+### SCENE_PLAN 阶段之后：
 ```
-CHECK: Presenter primacy
-  - Is the presenter visually primary in every scene?
-  - Are graphics and captions reinforcing, not crowding?
-  - Does CTA land clearly (dedicated end section)?
+检查：主持人布局
+  - 主讲人布局是否一致且连贯？
+  - 辅助叠加层是否次于主持人？
+  - 背景变化是否最少（最多 2-3 个不同的背景）？
 
-CHECK: Timeline completeness
-  - All cuts reference valid assets
-  - Audio ducking if background music present
-```
-
-### After COMPOSE stage:
-```
-CHECK: Output validation
-  - ffprobe: duration, resolution, codec
-  - Lip-sync or mouth timing acceptable for the chosen path
-  - Subtitle placement clean and non-overlapping
-  - Audio clear and presenter-focused
-  - No uncanny-valley artifacts that break immersion
+检查：字幕安全性
+  - 字幕位置是否规划好以避免遮挡主持人的面部？
 ```
 
-## Quality Gates Summary
+### ASSETS 阶段之后：
+```
+检查：虚拟形象生成
+  - 虚拟形象工具是否生成了可用的视频？
+  - 唇形同步时序是否可接受？
+  - 旁白音频是否清晰自然？
+  - 预算门禁：90% 阈值警告
 
-| Gate | After Stage | What's Checked | Fail Action |
+检查：辅助素材克制性
+  - 辅助图形（背景、叠加层）是否最少？
+  - 它们是否匹配剧本风格？
+```
+
+### EDIT 阶段之后：
+```
+检查：主持人主导地位
+  - 主持人在每个场景中是否在视觉上占主导？
+  - 图形和字幕是否在强化而非拥挤？
+  - CTA 是否清晰落地（专用结尾部分）？
+
+检查：时间线完整性
+  - 所有剪辑引用有效素材
+  - 如有背景音乐则进行音频闪避
+```
+
+### COMPOSE 阶段之后：
+```
+检查：输出验证
+  - ffprobe：时长、分辨率、编码格式
+  - 唇形同步或口型时序对所选择路径可接受
+  - 字幕放置干净且不重叠
+  - 音频清晰且以主持人为主
+  - 没有破坏沉浸感的恐怖谷效应
+```
+
+## 质量门禁总结
+
+| 门禁 | 阶段之后 | 检查内容 | 失败处理 |
 |------|-------------|---------------|-------------|
-| G1 | idea | Avatar path feasibility, CTA fit | Revise |
-| G2 | script | Spoken copy quality, duration | Revise |
-| G3 | scene_plan | Presenter layout, subtitle safety | Revise |
-| G4 | assets | Avatar quality, lip-sync, budget | Revise |
-| G5 | edit | Presenter primacy, CTA landing | Revise |
-| G6 | compose | Lip-sync, subtitle placement, audio | Revise or send-back |
-| G7 | publish | Metadata, presenter thumbnail | Revise |
-| FINAL | all | Avatar naturalness, audio, CTA | Send-back |
+| G1 | idea | 虚拟形象路径可行性、CTA 契合度 | 修订 |
+| G2 | script | 口语文案质量、时长 | 修订 |
+| G3 | scene_plan | 主持人布局、字幕安全性 | 修订 |
+| G4 | assets | 虚拟形象质量、唇形同步、预算 | 修订 |
+| G5 | edit | 主持人主导地位、CTA 落地 | 修订 |
+| G6 | compose | 唇形同步、字幕放置、音频 | 修订或退回 |
+| G7 | publish | 元数据、主持人缩略图 | 修订 |
+| FINAL | 全部 | 虚拟形象自然度、音频、CTA | 退回 |
 
-## Execution Limits
+## 执行限制
 
-| Limit | Value |
+| 限制项 | 数值 |
 |-------|-------|
-| Max revisions per stage | 3 |
-| Max send-backs per stage pair | 1 |
-| Max total send-backs | 3 |
-| Max total budget | Configurable (default $2) |
-| Max total wall-time | 12 minutes |
+| 每个阶段最大修订次数 | 3 |
+| 每对阶段最大退回次数 | 1 |
+| 总最大退回次数 | 3 |
+| 总最大预算 | 可配置（默认 $2） |
+| 总最大运行时间 | 12 分钟 |
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Uncanny valley**: If avatar quality is low, it undermines the entire video. Be honest about tool capabilities.
-- **Graphics overload**: The presenter IS the content. Support graphics should be minimal.
-- **Unnatural script**: Spokesperson scripts must sound conversational, not robotic or essay-like.
-- **Ignoring CTA**: Every spokesperson video has a purpose. The CTA must land clearly.
+- **恐怖谷效应**：如果虚拟形象质量低，会破坏整个视频。对工具能力要诚实。
+- **图形过载**：主持人就是内容本身。辅助图形应保持最少。
+- **不自然的脚本**：发言人脚本必须听起来像对话，而不是机器或论文风格。
+- **忽视 CTA**：每个发言人视频都有目的。CTA 必须清晰落地。

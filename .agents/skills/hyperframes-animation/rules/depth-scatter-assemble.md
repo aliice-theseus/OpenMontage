@@ -1,33 +1,33 @@
 ---
 name: depth-scatter-assemble
-description: N elements scatter into / reassemble from a rotating 3D depth-cloud, each starting at a deterministic index-derived 3D offset and settling to a clean flat layout.
+description: N 个元素散开进入/重新组装自旋转的 3D 深度云，每个从确定性的索引派生的 3D 偏移开始并稳定到干净的平面布局。
 metadata:
   tags: 3d, scatter, assemble, depth, cloud, tumble, kinetic, letter, fragment, logo, reassemble
 ---
 
-# Depth Scatter ↔ Assemble
+# 深度散开 ↔ 组装
 
-N elements (glyphs, cards, icons, logo fragments) fly in from a rotating 3D depth-cloud and lock into a clean on-screen layout — or the reverse. Each element starts at a **deterministic** 3D offset (translateZ depth + rotateX/rotateY + an x/y scatter derived from its index), then tweens to its assembled flat position (`z: 0, rotation: 0`). Because every scattered position is computed by trig on the element's index — never `Math.random` — it renders identically every frame.
+N 个元素（字形、卡片、图标、logo 碎片）从旋转的 3D 深度云飞入并锁定到清晰的屏幕布局 — 或反过来。每个元素从**确定性**的 3D 偏移开始（translateZ 深度 + rotateX/rotateY + 从其索引派生的 x/y 散开），然后补间到其组装的平面位置（`z: 0, rotation: 0`）。因为每个散开位置通过索引的三角函数计算 — 从不 `Math.random` — 每帧渲染相同。
 
-Distinct from `orbit-3d-entry` (flip-in then a continuous orbit) and `center-outward-expansion` (a flat 2D burst from one shared center): here each element has its **own** point in a 3D cloud, and the resolve is a flat assembled layout, not an orbit or a radial spray.
+与 `orbit-3d-entry`（翻转入场然后连续轨道）和 `center-outward-expansion`（从共享中心的平面 2D 爆发）不同：这里每个元素在 3D 云中有其**自己的**点，解析是平面组装布局，而非轨道或径向喷射。
 
-## How It Works
+## 工作原理
 
-Each element resolves to a flat layout position (`targetX/Y`, set once in CSS or via `data-*`). Its **scattered** state is derived from its index `i`:
+每个元素解析到平面布局位置（`targetX/Y`，在 CSS 中或通过 `data-*` 设置一次）。其**散开**状态从其索引 `i` 派生：
 
 ```js
-const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // ~2.39943 rad — even angular spread, no clumping
-const a = i * GOLDEN; // this element's angle in the cloud
-const scatterX = Math.cos(a) * RADIUS; // index-derived, deterministic
+const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // ~2.39943 rad — 均匀角度分布，无聚集
+const a = i * GOLDEN; // 此元素在云中的角度
+const scatterX = Math.cos(a) * RADIUS; // 索引派生，确定性
 const scatterY = Math.sin(a) * RADIUS;
-const scatterZ = Z_NEAR - (i / (n - 1)) * (Z_NEAR - Z_FAR); // stepped depth across the cloud
-const rotX = Math.sin(a) * TUMBLE; // tumble orientation, also from the angle
+const scatterZ = Z_NEAR - (i / (n - 1)) * (Z_NEAR - Z_FAR); // 跨云的步进深度
+const rotX = Math.sin(a) * TUMBLE; // 翻滚方向，也来自角度
 const rotY = Math.cos(a) * TUMBLE;
 ```
 
-A single 0→1 `progress` proxy interpolates each element between scattered and assembled (lerp every channel). At `progress = 0` the elements form the depth-cloud; at `progress = 1` they sit flat in the layout. Run it forward and it's **assemble**; the cloud itself slowly rotates (a stage `rotateY` tween) so the scatter has life before it locks.
+一个单一的 0→1 `progress` 代理将每个元素在散开和组装之间插值（每通道 lerp）。在 `progress = 0` 时元素形成深度云；在 `progress = 1` 时它们平面坐落在布局中。正向运行是**组装**；云本身缓慢旋转（一个舞台 `rotateY` 补间），使散开在锁定前具有生命力。
 
-Requires `perspective` on the stage and `transform-style: preserve-3d` on the stage AND each element, or the z-depth and tumble flatten to a 2D scale.
+需要在舞台上设置 `perspective`，并在舞台**和**每个元素上设置 `transform-style: preserve-3d`，否则 z 深度和翻滚会平面化为 2D 缩放。
 
 ## HTML
 
@@ -40,8 +40,8 @@ Requires `perspective` on the stage and `transform-style: preserve-3d` on the st
   data-duration="4"
   data-track-index="0"
 >
-  <!-- The cloud rotates; the layout lives inside it. targetX/Y = each
-       element's FLAT assembled offset from stage center (px). -->
+  <!-- 云旋转；布局生活在其中。targetX/Y = 每个
+       元素距离舞台中心（px）的平面组装偏移。 -->
   <div class="cloud-stage">
     <div class="frag" data-target-x="-260" data-target-y="0">{glyph1}</div>
     <div class="frag" data-target-x="-130" data-target-y="0">{glyph2}</div>
@@ -52,7 +52,7 @@ Requires `perspective` on the stage and `transform-style: preserve-3d` on the st
 </div>
 ```
 
-For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic type, one `.frag` per glyph (inject spans from the phrase string at setup so width is exact — see Variations).
+对于 logo 组合，`targetX/Y` 描述部件的休息布局；对于动感排版，每个字形一个 `.frag`（在设置时从短语字符串注入 span 使宽度精确 — 参见变体）。
 
 ## CSS
 
@@ -64,7 +64,7 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
   display: grid;
   place-items: center;
   background: {bgColor};
-  perspective: 1400px; /* REQUIRED — without it, z-depth + tumble read as flat 2D scale */
+  perspective: 1400px; /* 必需 — 没有它，z 深度 + 翻滚读作平面 2D 缩放 */
 }
 .cloud-stage {
   position: relative;
@@ -72,12 +72,12 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
   height: 100%;
   display: grid;
   place-items: center;
-  transform-style: preserve-3d; /* REQUIRED — preserves child 3D context */
+  transform-style: preserve-3d; /* 必需 —  preserve child 3D context */
   will-change: transform;
 }
 .frag {
   position: absolute;
-  /* Live at stage center; GSAP translates each one to its layout / cloud point. */
+  /* 位于舞台中心；GSAP 将每个平移到其布局/云点。 */
   top: 50%;
   left: 50%;
   display: grid;
@@ -86,13 +86,13 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
   font-weight: 900;
   font-size: 120px;
   color: {textColor};
-  transform-style: preserve-3d; /* each fragment keeps its own 3D context */
-  backface-visibility: hidden; /* hides the mirrored face mid-tumble */
+  transform-style: preserve-3d; /* 每个碎片保持其自己的 3D 上下文 */
+  backface-visibility: hidden; /* 在翻滚中隐藏镜像面 */
   will-change: transform, opacity;
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -102,12 +102,12 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
 
   const frags = Array.from(document.querySelectorAll(".frag"));
   const n = frags.length;
-  const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // ~2.39943 — even spread, no clumps
+  const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // ~2.39943 — 均匀分布，无聚集
 
-  // RADIUS, Z_NEAR, Z_FAR, TUMBLE, ASSEMBLE_DUR, ASSEMBLE_EASE, STAGGER,
-  // CLOUD_SPIN_DEG, CLOUD_SPIN_DUR — named constants per "How to Choose Values".
+  // RADIUS、Z_NEAR、Z_FAR、TUMBLE、ASSEMBLE_DUR、ASSEMBLE_EASE、STAGGER、
+  // CLOUD_SPIN_DEG、CLOUD_SPIN_DUR — 按"如何选择值"中的命名常量。
 
-  // Precompute each fragment's deterministic scattered state from its index.
+  // 从每个碎片的索引预计算其确定性的散开状态。
   const scatter = frags.map((el, i) => {
     const a = i * GOLDEN;
     const depthT = n > 1 ? i / (n - 1) : 0;
@@ -120,12 +120,12 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
     };
   });
 
-  // 1) Park every fragment in the cloud BEFORE any tween fires.
+  // 1) 在任何补间触发前，将每个碎片放置在云中。
   frags.forEach((el, i) => {
     const s = scatter[i];
     gsap.set(el, {
       xPercent: -50,
-      yPercent: -50, // bake self-centering so x/y are offsets from stage center
+      yPercent: -50, // 烘焙自居中，使 x/y 成为距舞台中心的偏移
       x: s.x,
       y: s.y,
       z: s.z,
@@ -135,14 +135,14 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
     });
   });
 
-  // 2) The cloud rotates so the scatter has life before / during assembly.
+  // 2) 云旋转，使散开在组装前/期间有生命力。
   tl.to(
     ".cloud-stage",
     { rotationY: CLOUD_SPIN_DEG, duration: CLOUD_SPIN_DUR, ease: "power1.out" },
     0,
   );
 
-  // 3) ASSEMBLE — each fragment tweens from its cloud point to its flat target.
+  // 3) 组装 — 每个碎片从其云点补间到其平面目标。
   frags.forEach((el, i) => {
     tl.to(
       el,
@@ -154,9 +154,9 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
         rotationY: 0,
         opacity: 1,
         duration: ASSEMBLE_DUR,
-        ease: ASSEMBLE_EASE, // out-ease — fragments fly in then settle
+        ease: ASSEMBLE_EASE, // out 缓动 — 碎片飞入然后稳定
       },
-      i * STAGGER, // index stagger reads as "cloud collapsing inward"
+      i * STAGGER, // 索引错开读作"云向内塌缩"
     );
   });
 
@@ -164,14 +164,14 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
 </script>
 ```
 
-## Variations
+## 变体
 
-### Tumble-swap (mid-shot hand-off between two phrases)
+### 翻滚交换（两个短语之间的镜头中段交接）
 
-The signature for `kinetic-type-beats` beat changes: one phrase's glyphs scatter **into** the cloud at the same moment the next phrase's glyphs assemble **out** of it — a 3D hand-off between two states, never an empty frame. Two glyph sets share the cloud; drive both with one shared 0→1 `progress` so they cross deterministically.
+`kinetic-type-beats` 节拍变化的标志性动作：一个短语的字形**进入**云中散开，同时下一个短语的字形从云中**出来**组装 — 两个状态之间的 3D 交接，从无空帧。两组字形共享云；用一个共享的 0→1 `progress` 驱动两者，使它们确定性交叉。
 
 ```js
-// outgoing[] and incoming[] are two glyph arrays, each with precomputed scatter[] (above).
+// outgoing[] 和 incoming[] 是两个字形数组，每个有预计算的 scatter[]（见上）。
 const swap = { p: 0 };
 tl.to(
   swap,
@@ -182,7 +182,7 @@ tl.to(
     onUpdate: () => {
       const p = swap.p;
       outgoing.forEach((el, i) => {
-        // 1 → 0: layout → cloud (scatters AWAY)
+        // 1 → 0：布局 → 云（散开**离开**）
         const s = outScatter[i];
         const tx = Number(el.dataset.targetX);
         const ty = Number(el.dataset.targetY);
@@ -192,7 +192,7 @@ tl.to(
           ` rotateX(${s.rotationX * p}deg) rotateY(${s.rotationY * p}deg)`;
       });
       incoming.forEach((el, i) => {
-        // 0 → 1: cloud → layout (assembles IN)
+        // 0 → 1：云 → 布局（组装**进入**）
         const s = inScatter[i];
         const tx = Number(el.dataset.targetX);
         const ty = Number(el.dataset.targetY);
@@ -207,97 +207,89 @@ tl.to(
 );
 ```
 
-Inject a per-glyph span set for each phrase at setup (so `targetX` per glyph is the exact laid-out advance width — measure after `document.fonts.ready`), and hide each set's opacity to 0 until its window.
+在设置时为每个短语注入逐字形 span 集（使每个字形的 `targetX` 是精确的布局前进宽度 — 在 `document.fonts.ready` 后测量），并将每组的不透明度隐藏到 0 直到其窗口。
 
-### Radial letter-explode → resolve
+### 径向字母爆炸 → 解析
 
-A flat-plane special case (the `kinetic-type-beats` "letters explode radially then resolve" GAP): set `Z_NEAR = Z_FAR = 0` and `TUMBLE` small so the cloud is a 2D ring, then reverse the assemble for the explode — fragments fling out to `scatter[i]` then snap back to layout. Pure in-plane, no depth.
+平面特例（`kinetic-type-beats` "字母径向爆炸然后解析"缺口）：设置 `Z_NEAR = Z_FAR = 0` 和 `TUMBLE` 小，使云成为 2D 环，然后反转组装用于爆炸 — 碎片飞出到 `scatter[i]` 然后快照回布局。纯平面内，无深度。
 
-### Scatter-OUT (final-frame exit only)
+### 散开退出（仅最终帧退出）
 
-Reverse the assemble (layout → cloud, opacity 1→0) ONLY as the composition's last beat. A scatter-out mid-shot reads as an exit and breaks the shot — keep entrances and hand-offs as assemble or tumble-swap.
+仅作为组合的最后一个节拍反转组装（布局 → 云，不透明度 1→0）。镜头中段的散开退出读作退出并破坏镜头 — 保持入场和交接为组装或翻滚交换。
 
-### Parallax depth slide-in (logo lockup)
+### 视差深度滑入（logo 组合）
 
-For `logo-assemble-lockup`, give back layers a larger `|Z_FAR|` and a longer `ASSEMBLE_DUR`, foreground parts a shallower depth and shorter duration — parts at different depths slide in at different apparent speeds (parallax) and lock into the lockup.
+对于 `logo-assemble-lockup`，给后层更大的 `|Z_FAR|` 和更长的 `ASSEMBLE_DUR`，前景部分更浅的深度和更短的时长 — 不同深度的部分以不同的表观速度滑入（视差）并锁定到组合中。
 
-## How to Choose Values
+## 如何选择值
 
-- **n (ELEMENT_COUNT)** — fragments / glyphs in the cloud
-  - Range: 4–14 (glyph sets follow the word length; for fragments/cards stay 4–9)
-  - Effects: few reads as deliberate assembly; many reads as a dense swarm condensing
-  - Constraints: above ~14 the cloud crowds the center and individual paths stop reading
+- **n（元素数量）** — 云中的碎片/字形
+  - 范围：4–14（字形集跟随词长；对于碎片/卡片保持 4–9）
+  - 效果：少读作有意的组装；多读作密集蜂群凝聚
+  - 约束：超过 ~14 云拥挤中心，个别路径停止可读
+- **RADIUS** — 云在 x/y 平面中的扩散（px）
+  - 范围：250–700 px
+  - 效果：小 = 几乎不分离的紧结；大 = 碎片从画面边缘到达
+  - 约束：保持最远散开在所选 `perspective` 的画面内，否则碎片从屏幕外弹出，无行进可读
+- **Z_NEAR / Z_FAR** — 云的深度带（px），前/后
+  - 范围：Z_NEAR +150 到 +450；Z_FAR −150 到 −500
+  - 效果：宽带（例如 +400 / −400）给出强烈的朝摄像机飞/远离摄像机深度；窄带保持几乎平坦
+  - 约束：非常大的 `|z|` 配合短 `perspective` 会过度扭曲（碎片先巨大然后微小）— 加宽 `perspective` 以匹配
+- **TUMBLE** — 散开碎片的峰值 rotateX/rotateY（度）
+  - 范围：40–110°
+  - 效果：低 = 碎片几乎直立漂入；高 = 它们在空中翻滚并在到达时旋转直立
+  - 约束：使用 `backface-visibility: hidden`，超过 90° 的字形在补间中间显示空白（翻滚意图如此）；对于单面有内容的卡片，上限约为 80°
+- **ASSEMBLE_DUR** — 每碎片云 → 布局补间（秒）
+  - 范围：0.7–1.4 秒
+  - 效果：短 = 干脆锁定；长 = 浮动凝聚
+  - 约束：`(n − 1) × STAGGER + ASSEMBLE_DUR` 必须适应场景的组装窗口
+- **ASSEMBLE_EASE** — 跨碎片的共享缓动
+  - 离散选择：`power3.out`、`expo.out`、`back.out(1.4)`
+  - 选择：`power3.out` 默认（飞入，稳定）。`expo.out` 在末端快照硬着陆。`back.out` 添加座位时的微小过冲。避免 `in` 缓动 — 碎片看起来像被吸入云中
+- **STAGGER** — 连续碎片组装开始之间的间隔（秒）
+  - 范围：0.03–0.09 秒
+  - 效果：< 0.03 = 单一和弦（整个云同时塌缩）；> 0.09 = 缓慢滴答，失去"蜂群"读感
+  - 约束：`n × STAGGER` 应保持在 `ASSEMBLE_DUR` 以下，使云作为一个运动塌缩，而非队列
+- **CLOUD_SPIN_DEG / CLOUD_SPIN_DUR** — 组装期间舞台 rotateY（度/秒）
+  - 范围：15–60°，时长 ≥ `ASSEMBLE_DUR`
+  - 效果：轻柔旋转给散开生命力，使其不读作冻结的爆炸图；太快与组装竞争
+  - 约束：保持有限并在稳定时结束 — 无 `repeat`
+- **SWAP_DUR / SWAP_AT**（翻滚交换）— 交接长度/触发时间（秒）
+  - 范围：SWAP_DUR 0.5–1.0 秒；SWAP_AT 在节拍边界上
+  - 效果：更短 = 硬交叉；更长 = 可见的穿云溶解
+  - 约束：传入和传出**必须**共享一个 `progress`（一个补间），使它们在相同瞬间交叉
 
-- **RADIUS** — cloud spread in the x/y plane, px
-  - Range: 250–700 px
-  - Effects: small = a tight knot that barely separates; large = fragments arrive from the frame edges
-  - Constraints: keep the farthest scatter inside frame at the chosen `perspective`, or fragments pop in from off-screen with no travel read
+## 关键原则
 
-- **Z_NEAR / Z_FAR** — depth band of the cloud, px (front / back)
-  - Range: Z_NEAR +150 to +450; Z_FAR −150 to −500
-  - Effects: a wide band (e.g. +400 / −400) gives strong fly-toward / recede-from camera depth; a narrow band keeps it nearly flat
-  - Constraints: very large `|z|` against a short `perspective` over-distorts (fragments smear huge then tiny) — widen `perspective` to match
+- **场景根上的 `perspective` + 舞台**和**每个碎片上的 `preserve-3d`** — 没有全部三个，z 深度和翻滚塌缩为平面缩放
+- **每个散开值都是索引派生的** — `cos/sin(i × GOLDEN)`，按 `i/(n−1)` 步进的 `z`。黄金角度均匀分布点，无聚集，且（关键）**无 `Math.random`**，因此云每次渲染 bit 相同
+- **在添加补间**之前 **`gsap.set` 云** — 先将每个碎片以 `opacity: 0` 停在其散开点；组装补间从那里开始。跳过设置会使第 0 帧显示组装好的布局，然后在第一个补间开始时传送
+- **解析为平面** — 稳定状态是布局中的 `z: 0, rotationX: 0, rotationY: 0`。解析后仍倾斜的云读作未完成
+- **仅组装/交接；散开退出是退出** — 碎片在镜头中段离开进入云读作镜头结束。使用正向组装用于入场，翻滚交换用于节拍变化；保留散开退出给最终帧
+- **深度排序是自动的** — 在 `preserve-3d` 内，绘制顺序遵循实际 Z，因此较近的碎片正确地遮挡较远的碎片，无需手动 z-index（与轨道情况不同，那里在 2D 中伪造轨道，需要上限 z-index）
 
-- **TUMBLE** — peak rotateX/rotateY of scattered fragments, deg
-  - Range: 40–110°
-  - Effects: low = fragments drift in nearly upright; high = they tumble through space and rotate upright on arrival
-  - Constraints: with `backface-visibility: hidden`, glyphs past 90° show blank mid-tween (intended for the tumble); for cards with content on one face, cap near 80°
+## 关键约束
 
-- **ASSEMBLE_DUR** — per-fragment cloud → layout tween, s
-  - Range: 0.7–1.4 s
-  - Effects: short = snappy lock-in; long = a floating condense
-  - Constraints: `(n − 1) × STAGGER + ASSEMBLE_DUR` must fit the scene's assembly window
+- **无 `Math.random` / `Date.now`** — 从索引派生每个散开坐标（黄金角三角函数 + 步进深度）。这是本规则的全部要点：随机化的云每帧渲染不同，定位会破坏
+- **无 CSS `transition`** — 所有运动都是暂停时间线上的 GSAP 补间
+- **无 `repeat` / `yoyo` / 无限** — 云旋转和每次组装都是有限的、一次性的补间，在稳定前结束
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **仅使用变换别名** — `x`、`y`、`z`、`scale`、`rotation`/`rotationX`/`rotationY`。永远不要 `width`/`height`/`left`/`top`；`x`/`y` 与 `xPercent/yPercent -50` 自居中组合
+- **舞台 + 碎片上设置 `will-change: transform`** — 许多同时的 3D 变换受益于合成器提示
+- **在翻滚交换中，两组字形使用一个共享 `progress`** — 两个独立的补间可以在定位下相位漂移，交叉看起来不再像一个交接
 
-- **ASSEMBLE_EASE** — shared ease across fragments
-  - Discrete choice: `power3.out`, `expo.out`, `back.out(1.4)`
-  - Selection: `power3.out` default (fly in, settle). `expo.out` snaps hard at the end. `back.out` adds a small overshoot as parts seat. Avoid `in` easings — fragments look sucked backward into the cloud mid-air.
+## 组合
 
-- **STAGGER** — gap between successive fragments' assembly starts, s
-  - Range: 0.03–0.09 s
-  - Effects: < 0.03 = a single chord (whole cloud collapses at once); > 0.09 = a slow drip that loses the "swarm" read
-  - Constraints: `n × STAGGER` should stay below `ASSEMBLE_DUR` so the cloud is collapsing as one motion, not a queue
+- [orbit-3d-entry.md](orbit-3d-entry.md) — 替代 3D 入场（稳定到连续轨道而非平面组合）；共享 `perspective` + `preserve-3d` 舞台设置
+- [hacker-flip-3d.md](hacker-flip-3d.md) — 碎片就座时的逐字形 3D 翻转/解码；分层实现"字母翻滚进入并在到达时解码"效果
+- [3d-text-depth-layers.md](3d-text-depth-layers.md) — 一旦锁定，给组装的 wordmark 堆叠挤压效果
+- [center-outward-expansion.md](center-outward-expansion.md) — 平面 2D 表亲（单个共享中心，无深度），当不需要透视时
+- [press-release-spring.md](press-release-spring.md) — 云解析后组装组合上的弹簧稳定
+- [sine-wave-loop.md](sine-wave-loop.md) — 在解析布局上空闲呼吸，而非冻结保持
 
-- **CLOUD_SPIN_DEG / CLOUD_SPIN_DUR** — stage rotateY over the assembly, deg / s
-  - Range: 15–60° over a duration ≥ `ASSEMBLE_DUR`
-  - Effects: a gentle spin gives the scatter life so it doesn't read as a frozen explosion diagram; too fast competes with the assembly
-  - Constraints: keep finite and ending by settle — no `repeat`
+## 与 HF 技能配对
 
-- **SWAP_DUR / SWAP_AT** (tumble-swap) — hand-off length / when it fires, s
-  - Range: SWAP_DUR 0.5–1.0 s; SWAP_AT on the beat boundary
-  - Effects: shorter = a hard cross; longer = a visible dissolve-through-cloud
-  - Constraints: outgoing and incoming MUST share one `progress` (one tween) so they cross at the same instant
-
-## Key Principles
-
-- **`perspective` on the scene root + `preserve-3d` on stage AND each fragment** — without all three, z-depth and tumble collapse to a flat scale
-- **Every scattered value is index-derived** — `cos/sin(i × GOLDEN)`, stepped `z` by `i/(n−1)`. The golden angle spreads points evenly with no clumps and (critically) **no `Math.random`**, so the cloud is byte-identical every render
-- **`gsap.set` the cloud BEFORE adding tweens** — park each fragment at its scatter point with `opacity: 0` first; the assemble tweens FROM there. Skipping the set leaves frame 0 showing the assembled layout, then a teleport when the first tween starts
-- **Resolve flat** — the settled state is `z: 0, rotationX: 0, rotationY: 0` in the layout. A cloud that resolves still-tilted reads as unfinished
-- **Assemble / hand-off only; scatter-OUT is an exit** — fragments leaving for the cloud mid-shot reads as the shot ending. Use forward assemble for entrances, tumble-swap for beat changes; reserve scatter-out for the final frame
-- **Depth ordering is automatic** — inside `preserve-3d`, paint order follows actual Z, so nearer fragments correctly occlude farther ones with no manual z-index (unlike the orbit case, where the orbit is faked in 2D and needs capped z-index)
-
-## Critical Constraints
-
-- **No `Math.random` / `Date.now`** — derive every scatter coordinate from the index (golden-angle trig + stepped depth). This is the whole point of the rule: a randomized cloud renders differently each frame and the seek breaks
-- **No CSS `transition`** — all motion is GSAP tweens on the paused timeline
-- **No `repeat` / `yoyo` / infinite** — the cloud spin and every assemble are finite, one-shot tweens that end before settle
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **Transform aliases only** — `x`, `y`, `z`, `scale`, `rotation`/`rotationX`/`rotationY`. Never `width`/`height`/`left`/`top`; `x`/`y` compose with the `xPercent/yPercent -50` self-centering
-- **`will-change: transform`** on stage + fragments — many simultaneous 3D transforms benefit from compositor hints
-- **In tumble-swap, one shared `progress` for both glyph sets** — two separate tweens can drift out of phase under seek and the cross stops looking like a single hand-off
-
-## Combinations
-
-- [orbit-3d-entry.md](orbit-3d-entry.md) — alternative 3D entrance (settles into a continuous orbit instead of a flat lockup); shares the `perspective` + `preserve-3d` stage setup
-- [hacker-flip-3d.md](hacker-flip-3d.md) — per-glyph 3D flip/decode as the fragments seat; layer for a "letters tumble in AND decode on arrival" read
-- [3d-text-depth-layers.md](3d-text-depth-layers.md) — give the assembled wordmark a stacked extrusion once it locks
-- [center-outward-expansion.md](center-outward-expansion.md) — flat 2D cousin (single shared center, no depth) when perspective isn't wanted
-- [press-release-spring.md](press-release-spring.md) — a spring settle on the assembled lockup once the cloud resolves
-- [sine-wave-loop.md](sine-wave-loop.md) — idle breathe on the resolved layout instead of a frozen hold
-
-## Pairs with HF skills
-
-- `/hyperframes-animation` — timeline + `onUpdate` API (the shared-progress tumble-swap)
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 时间线 + `onUpdate` API（共享进度的翻滚交换）
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

@@ -1,12 +1,12 @@
-# Real-Time Event Reference
+# 实时事件参考
 
-Complete reference for events in real-time speech-to-text streaming.
+实时语音转文本流式传输中事件的完整参考。
 
-## Sent Events (Client → Server)
+## 发送事件（客户端 → 服务器）
 
 ### input_audio_chunk
 
-Send audio data for transcription.
+发送音频数据进行转录。
 
 ```json
 {
@@ -17,17 +17,17 @@ Send audio data for transcription.
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `message_type` | string | Yes | Always `"input_audio_chunk"` |
-| `audio_base_64` | string | Yes | Base64-encoded PCM audio data |
-| `commit` | boolean | Yes | Whether to commit after this chunk |
-| `sample_rate` | number | No | Sample rate in Hz (8000-48000) |
-| `previous_text` | string | No | Context from prior transcript (first chunk only, max 50 chars) |
+| 字段           | 类型    | 必需 | 描述                                        |
+|----------------|---------|------|---------------------------------------------|
+| `message_type` | string  | 是   | 始终为 `"input_audio_chunk"`                |
+| `audio_base_64`| string  | 是   | Base64 编码的 PCM 音频数据                  |
+| `commit`       | boolean | 是   | 此块后是否提交                              |
+| `sample_rate`  | number  | 否   | 采样率（Hz），8000-48000                     |
+| `previous_text`| string  | 否   | 先前转录的上下文（仅首块，最多 50 个字符）   |
 
 ### commit
 
-Finalize the current transcript segment.
+最终确定当前转录片段。
 
 ```json
 {
@@ -35,13 +35,13 @@ Finalize the current transcript segment.
 }
 ```
 
-## Received Events (Server → Client)
+## 接收事件（服务器 → 客户端）
 
-All received events use `message_type` as the discriminator field.
+所有接收事件使用 `message_type` 作为区分字段。
 
 ### session_started
 
-Connection established successfully.
+连接成功建立。
 
 ```json
 {
@@ -60,7 +60,7 @@ Connection established successfully.
 
 ### partial_transcript
 
-Interim transcription results, updates frequently as audio is processed.
+中间转录结果，在处理音频时频繁更新。
 
 ```json
 {
@@ -69,14 +69,14 @@ Interim transcription results, updates frequently as audio is processed.
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `message_type` | string | `"partial_transcript"` |
-| `text` | string | Current partial transcription |
+| 字段           | 类型   | 描述                      |
+|----------------|--------|---------------------------|
+| `message_type` | string | `"partial_transcript"`    |
+| `text`         | string | 当前部分转录              |
 
 ### committed_transcript
 
-Final transcription after commit.
+提交后的最终转录。
 
 ```json
 {
@@ -85,14 +85,14 @@ Final transcription after commit.
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `message_type` | string | `"committed_transcript"` |
-| `text` | string | Finalized transcription |
+| 字段           | 类型   | 描述                      |
+|----------------|--------|---------------------------|
+| `message_type` | string | `"committed_transcript"`  |
+| `text`         | string | 最终确定的转录            |
 
 ### committed_transcript_with_timestamps
 
-Final transcription with word-level timing. Sent after `committed_transcript` when `include_timestamps=true`.
+带词级时间的最终转录。在 `include_timestamps=true` 时，于 `committed_transcript` 之后发送。
 
 ```json
 {
@@ -107,23 +107,23 @@ Final transcription with word-level timing. Sent after `committed_transcript` wh
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `message_type` | string | `"committed_transcript_with_timestamps"` |
-| `text` | string | Full transcription text |
-| `language_code` | string | Detected language code |
-| `words` | array | Word-level timing data |
-| `words[].text` | string | The word or token |
-| `words[].start` | number | Start time in seconds |
-| `words[].end` | number | End time in seconds |
-| `words[].type` | string | `"word"`, `"spacing"`, or `"audio_event"` |
-| `words[].speaker_id` | string | Speaker identifier (if diarization enabled) |
+| 字段                 | 类型    | 描述                      |
+|----------------------|---------|---------------------------|
+| `message_type`       | string  | `"committed_transcript_with_timestamps"` |
+| `text`               | string  | 完整转录文本              |
+| `language_code`      | string  | 检测到的语言代码          |
+| `words`              | array   | 词级时间数据              |
+| `words[].text`       | string  | 词或标记                  |
+| `words[].start`      | number  | 开始时间（秒）            |
+| `words[].end`        | number  | 结束时间（秒）            |
+| `words[].type`       | string  | `"word"`、`"spacing"` 或 `"audio_event"` |
+| `words[].speaker_id` | string  | 说话人标识（如果启用了分离）|
 
-## Error Events
+## 错误事件
 
 ### error
 
-Sent when an error occurs.
+发生错误时发送。
 
 ```json
 {
@@ -132,38 +132,38 @@ Sent when an error occurs.
 }
 ```
 
-### Error Codes
+### 错误码
 
-| Code | Description |
-|------|-------------|
-| `auth_error` | Invalid API key or token |
-| `quota_exceeded` | Usage limit reached |
-| `input_error` | Unsupported audio format or invalid input |
-| `rate_limited` | Too many requests |
-| `commit_throttled` | Commits sent too frequently |
-| `session_time_limit_exceeded` | Session exceeded max duration |
-| `unaccepted_terms` | Terms not accepted in dashboard |
-| `resource_exhausted` | Server capacity reached |
-| `queue_overflow` | Server queue capacity reached |
-| `chunk_size_exceeded` | Audio chunk too large |
-| `insufficient_audio_activity` | Not enough speech detected |
-| `transcriber_error` | Internal processing error |
+| 代码                           | 描述                           |
+|--------------------------------|--------------------------------|
+| `auth_error`                   | 无效的 API 密钥或令牌          |
+| `quota_exceeded`               | 达到使用限制                   |
+| `input_error`                  | 不支持的音频格式或无效输入     |
+| `rate_limited`                 | 请求过多                       |
+| `commit_throttled`             | 提交过于频繁                   |
+| `session_time_limit_exceeded`  | 会话超过最大时长               |
+| `unaccepted_terms`             | 在控制面板中未接受条款         |
+| `resource_exhausted`           | 服务器容量已满                 |
+| `queue_overflow`               | 服务器队列容量已满             |
+| `chunk_size_exceeded`          | 音频块过大                     |
+| `insufficient_audio_activity`  | 未检测到足够的语音             |
+| `transcriber_error`            | 内部处理错误                   |
 
-## Connection Events
+## 连接事件
 
 ### open
 
-WebSocket connection established (standard WebSocket event, not a JSON message).
+WebSocket 连接已建立（标准 WebSocket 事件，非 JSON 消息）。
 
 ### close
 
-WebSocket connection closed (standard WebSocket close frame with code and reason).
+WebSocket 连接已关闭（带码和原因的标准 WebSocket 关闭帧）。
 
-## Event Handling Examples
+## 事件处理示例
 
 ### Python
 
-The Python SDK abstracts the wire protocol. You can use `event.type` (not `message_type`) when using the SDK's event objects:
+Python SDK 抽象了线协议。使用 SDK 事件对象时可以使用 `event.type`（而非 `message_type`）：
 
 ```python
 async for event in connection:
@@ -182,7 +182,7 @@ async for event in connection:
 
 ### JavaScript
 
-The JavaScript SDK uses event names matching the `message_type` values:
+JavaScript SDK 使用与 `message_type` 值匹配的事件名称：
 
 ```javascript
 connection.on("session_started", (data) => {

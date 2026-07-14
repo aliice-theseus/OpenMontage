@@ -1,22 +1,22 @@
 ---
 name: svg-path-draw
-description: Animate SVG paths drawing progressively using stroke-dasharray and stroke-dashoffset.
+description: 使用 stroke-dasharray 和 stroke-dashoffset 逐步动画化 SVG 路径绘制。
 metadata:
   tags: svg, stroke, draw, path, reveal, icon, vector
 ---
 
-# SVG Path Draw
+# SVG 路径绘制
 
-Reveals an SVG shape by animating its stroke as if a pen were tracing it. The line appears to be drawn in real-time.
+通过动画化 SVG 形状的描画来揭示它，就像用笔实时描绘一样。
 
-## How It Works
+## 工作原理
 
-The trick uses two SVG stroke properties together:
+该技巧一起使用两个 SVG 描画属性：
 
-1. **`stroke-dasharray = <pathLength>`** — sets the dash pattern to a single dash equal to the path's total length, so the entire path is "one dash"
-2. **`stroke-dashoffset`** — controls how much of the dash is shifted out of view. Start at `pathLength` (entire path is offset out → invisible), animate to `0` (no offset → fully drawn)
+1. **`stroke-dasharray = <pathLength>`** — 将虚线模式设置为等于路径总长度的单个虚线，使整个路径成为"一条虚线"
+2. **`stroke-dashoffset`** — 控制虚线的多少部分被移出视野。从 `pathLength` 开始（整个路径偏移出去 → 不可见），动画化到 `0`（无偏移 → 完全绘制）
 
-The path length is computed via the DOM API `path.getTotalLength()`.
+路径长度通过 DOM API `path.getTotalLength()` 计算。
 
 ## HTML
 
@@ -30,7 +30,7 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   data-track-index="0"
 >
   <svg class="logo-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <!-- Multi-segment glyph; draw all segments sequentially -->
+    <!-- 多段字形；顺序绘制所有段 -->
     <path id="bar-left" d="M 60 40 L 60 160" />
     <path id="bar-right" d="M 140 40 L 140 160" />
     <path id="bar-mid" d="M 60 100 L 140 100" />
@@ -61,10 +61,10 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   fill: none;
   stroke: {accentColor};
   stroke-width: 12;
-  stroke-linecap: round; /* soften endpoints */
+  stroke-linecap: round; /* 柔化端点 */
   stroke-linejoin: round;
-  /* Initial state: invisible. GSAP fills strokeDasharray + strokeDashoffset
-     based on each path's measured length. */
+  /* 初始状态：不可见。GSAP 根据每个路径的测量长度填充
+     strokeDasharray + strokeDashoffset。 */
 }
 
 .brand-line {
@@ -72,31 +72,31 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   font-weight: 700;
   font-size: 48px;
   color: {textColor};
-  opacity: 0; /* fades in after stroke completes */
+  opacity: 0; /* 描画完成后淡入 */
   letter-spacing: 0.04em;
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
 <script>
   window.__timelines = window.__timelines || {};
 
-  // Named constants — assignments live in the example, not here.
-  // See "How to Choose Values" below for ranges and selection criteria.
-  const SEGMENT_DRAW_DUR; // per-segment stroke duration
-  const FINAL_SEGMENT_DUR; // shorter draw on the last (shorter) segment
-  const SEG_1_START; // first segment start time
-  const SEG_2_START; // second segment start time (overlaps SEG_1 tail)
-  const SEG_3_START; // third segment start time (overlaps SEG_2 tail)
-  const BRAND_FADE_DUR; // wordmark fade-in duration
-  const BRAND_FADE_START; // wordmark fade-in start (after last stroke settles)
+  // 命名常量 — 赋值在示例中，不在此处。
+  // 参见下方"如何选择值"以了解范围和选择标准。
+  const SEGMENT_DRAW_DUR; // 每段描画时长
+  const FINAL_SEGMENT_DUR; // 最后（较短）段的较短描画
+  const SEG_1_START; // 第一段开始时间
+  const SEG_2_START; // 第二段开始时间（与 SEG_1 尾部重叠）
+  const SEG_3_START; // 第三段开始时间（与 SEG_2 尾部重叠）
+  const BRAND_FADE_DUR; // wordmark 淡入时长
+  const BRAND_FADE_START; // wordmark 淡入开始（最后描画稳定后）
 
-  // Measure each path's total length and set up its dash pattern.
-  // getTotalLength() is a real DOM API — its return value is dynamic
-  // measured geometry, NOT a magic number.
+  // 测量每个路径的总长度并设置其虚线模式。
+  // getTotalLength() 是一个真实的 DOM API — 其返回值是动态
+  // 测量的几何数据，不是魔术数字。
   const paths = document.querySelectorAll(".logo-mark path");
   paths.forEach((p) => {
     const len = p.getTotalLength();
@@ -106,8 +106,8 @@ The path length is computed via the DOM API `path.getTotalLength()`.
 
   const tl = gsap.timeline({ paused: true });
 
-  // Stagger draws across segments — each starts before the previous finishes
-  // so the eye reads continuous motion.
+  // 跨段的错开绘制 — 每个在前一个完成前开始
+  // 使眼睛读作连续运动。
   tl.to(
     "#bar-left",
     {
@@ -136,7 +136,7 @@ The path length is computed via the DOM API `path.getTotalLength()`.
     SEG_3_START,
   );
 
-  // Brand line fades in after the strokes settle
+  // 品牌线在描画稳定后淡入
   tl.to(
     ".brand-line",
     {
@@ -151,61 +151,61 @@ The path length is computed via the DOM API `path.getTotalLength()`.
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **SEGMENT_DRAW_DUR** — per-segment stroke duration
-  - Range: 0.3-0.8s
-  - Effects: low end reads as a fast snap (good for short segments); high end reads as a deliberate pen trace (good for long curves)
-  - Constraints: must be short enough that the total chain (last segment finish) ends before BRAND_FADE_START; longer than ~1s feels sluggish for a logo reveal
-  - Reference: short outline segments use ~0.5s
+- **SEGMENT_DRAW_DUR** — 每段描画时长
+  - 范围：0.3-0.8 秒
+  - 效果：低端读作快速快照（适合短段）；高端读作有意的笔迹（适合长曲线）
+  - 约束：必须足够短，使总链（最后段完成）在 BRAND_FADE_START 前结束；长于 ~1 秒对于 logo 揭示感觉迟缓
+  - 参考：短轮廓段使用 ~0.5 秒
 
-- **FINAL_SEGMENT_DUR** — duration of the shortest / final segment
-  - Range: 0.25-0.6s
-  - Effects: should be proportional to segment length — a short connector drawn at SEGMENT_DRAW_DUR appears slower than its longer siblings
-  - Constraints: typically 60-80% of SEGMENT_DRAW_DUR when the segment is visibly shorter than the others
-  - Reference: a mid-bar that is roughly 2/3 the length of the verticals uses ~0.35s
+- **FINAL_SEGMENT_DUR** — 最短/最终段的时长
+  - 范围：0.25-0.6 秒
+  - 效果：应与段长度成比例 — 以 SEGMENT_DRAW_DUR 绘制的短连接件看起来比其较长的兄弟更慢
+  - 约束：当段明显比其他段短时，通常为 SEGMENT_DRAW_DUR 的 60-80%
+  - 参考：大约为垂直段 2/3 长度的中间条使用 ~0.35 秒
 
-- **SEG_1_START** — first segment start time
-  - Range: 0-0.4s
-  - Effects: 0 starts immediately on play; >0 gives a brief beat of empty stage before motion
-  - Constraints: should be ≥ 0
-  - Reference: a small lead-in of ~0.2s lets the viewer settle before motion
+- **SEG_1_START** — 第一段开始时间
+  - 范围：0-0.4 秒
+  - 效果：0 立即开始播放；>0 在运动前给一段短暂的空白舞台
+  - 约束：应为 ≥ 0
+  - 参考：~0.2 秒的小引导让观看者在运动前稳定
 
-- **SEG_2_START** — second segment start time
-  - Range: SEG_1_START + (0.5 \* SEGMENT_DRAW_DUR) to SEG_1_START + SEGMENT_DRAW_DUR
-  - Effects: closer to SEG_1_START + 0.5\*SEGMENT_DRAW_DUR feels rapid/overlapping; closer to SEG_1_START + SEGMENT_DRAW_DUR feels sequential
-  - Constraints: stagger ~70-80% of SEGMENT_DRAW_DUR reads as continuous motion (not 3 isolated animations)
-  - Reference: SEG_1_START + ~0.25s (about half of SEGMENT_DRAW_DUR)
+- **SEG_2_START** — 第二段开始时间
+  - 范围：SEG_1_START + (0.5 × SEGMENT_DRAW_DUR) 到 SEG_1_START + SEGMENT_DRAW_DUR
+  - 效果：接近 SEG_1_START + 0.5×SEGMENT_DRAW_DUR 感觉快速/重叠；接近 SEG_1_START + SEGMENT_DRAW_DUR 感觉顺序
+  - 约束：错开 ~SEGMENT_DRAW_DUR 的 70-80% 读作连续运动（而非 3 个独立的动画）
+  - 参考：SEG_1_START + ~0.25 秒（约 SEGMENT_DRAW_DUR 的一半）
 
-- **SEG_3_START** — third segment start time
-  - Range: SEG_2_START + (0.5 \* SEGMENT_DRAW_DUR) to SEG_2_START + SEGMENT_DRAW_DUR
-  - Effects: same as SEG_2_START — controls perceived rhythm
-  - Constraints: should preserve the same stagger ratio used between SEG_1 and SEG_2
-  - Reference: SEG_2_START + ~0.4s
+- **SEG_3_START** — 第三段开始时间
+  - 范围：SEG_2_START + (0.5 × SEGMENT_DRAW_DUR) 到 SEG_2_START + SEGMENT_DRAW_DUR
+  - 效果：与 SEG_2_START 相同 — 控制感知节奏
+  - 约束：应保持与 SEG_1 和 SEG_2 之间相同的错开比例
+  - 参考：SEG_2_START + ~0.4 秒
 
-- **BRAND_FADE_DUR** — wordmark fade-in duration
-  - Range: 0.3-0.8s
-  - Effects: low end snaps in (urgent); high end glides in (premium / branded)
-  - Constraints: must finish before the composition's `data-duration` ends
-  - Reference: a calm logo lockup uses ~0.5s
+- **BRAND_FADE_DUR** — wordmark 淡入时长
+  - 范围：0.3-0.8 秒
+  - 效果：低端快照进入（紧急）；高端滑入（高级/品牌）
+  - 约束：必须在组合的 `data-duration` 结束前完成
+  - 参考：平静的 logo 组合使用 ~0.5 秒
 
-- **BRAND_FADE_START** — wordmark fade-in start time
-  - Range: max(SEG_3_START + FINAL_SEGMENT_DUR, …) to that value + 0.4s
-  - Effects: starting exactly at last stroke end feels tightly chained; adding a small beat gives the strokes a moment to "settle" before the wordmark joins
-  - Constraints: MUST be ≥ SEG_3_START + FINAL_SEGMENT_DUR (otherwise wordmark appears during the draw and competes with it)
-  - Reference: SEG_3_START + FINAL_SEGMENT_DUR + ~0.2s
+- **BRAND_FADE_START** — wordmark 淡入开始时间
+  - 范围：max(SEG_3_START + FINAL_SEGMENT_DUR, …) 到该值 + 0.4 秒
+  - 效果：正好在最后描画结束时开始感觉紧密链接；增加一个小节拍给描画一些"稳定"时间，然后 wordmark 加入
+  - 约束：**必须** ≥ SEG_3_START + FINAL_SEGMENT_DUR（否则 wordmark 在绘制期间出现并与它竞争）
+  - 参考：SEG_3_START + FINAL_SEGMENT_DUR + ~0.2 秒
 
-Ease families used here are discrete choices, not tunable scalars:
+此处使用的缓动族是离散选择，而非可调标量：
 
-- **stroke draws** use `power2.out` — gentle deceleration mimics a hand lifting at end of stroke. Do NOT use `back.out` or `elastic.out` (pens don't bounce).
-- **brand fade** uses `power1.out` — soft tail on an opacity tween.
-- For a constant-speed "real pen" tracing feel, swap to `none` (see Variations).
+- **描画绘制**使用 `power2.out` — 柔和减速模仿笔在描画结束时抬起。不要使用 `back.out` 或 `elastic.out`（笔不会弹跳）。
+- **品牌淡入**使用 `power1.out` — 不透明度补间上的柔和尾迹。
+- 对于恒定速度的"真实笔"描绘感觉，使用 `none`（参见变体）。
 
-## Variations
+## 变体
 
-### Rotation start point (start from top instead of 3 o'clock)
+### 旋转起始点（从顶部开始而非 3 点钟方向）
 
-By default, `<circle>` and `<rect>` start their stroke at 3 o'clock. Rotate the element to start from top:
+默认情况下，`<circle>` 和 `<rect>` 的描画从 3 点钟方向开始。旋转元素使其从顶部开始：
 
 ```html
 <circle
@@ -217,17 +217,17 @@ By default, `<circle>` and `<rect>` start their stroke at 3 o'clock. Rotate the 
 />
 ```
 
-### Linear (constant-speed) draw
+### 线性（恒定速度）绘制
 
-Use `ease: 'none'` for steady-rate drawing (like an actual pen tracing):
+使用 `ease: 'none'` 实现稳定速度绘制（如实际笔迹）：
 
 ```js
 tl.to("#path", { strokeDashoffset: 0, duration: SEGMENT_DRAW_DUR, ease: "none" }, SEG_1_START);
 ```
 
-### Draw then fill
+### 绘制然后填充
 
-For SVG shapes that have a fill color, animate fill opacity to come in AFTER the stroke completes:
+对于有填充颜色的 SVG 形状，在描画完成后动画化填充不透明度：
 
 ```js
 tl.to(
@@ -242,33 +242,33 @@ tl.to(
 );
 ```
 
-Requires `fill-opacity: 0` initially and a real `fill` color in CSS.
+需要在 CSS 中初始设置 `fill-opacity: 0` 和真实的 `fill` 颜色。
 
-## Key Principles
+## 关键原则
 
-- **Set `strokeDasharray` to the path's `getTotalLength()` value**, not an arbitrary number — guessing means stroke will animate but not match the geometry
-- **Start `strokeDashoffset` at the same length**, animate down to `0`
-- **Measure inside the timeline setup, not at module top** — SVG may not be rendered when module code runs in some environments. In HF runtime this works at top because SVG is inline, but be safe
-- **`stroke-linecap: round`** for softer endpoints (less abrupt finish)
-- **For sequential multi-path draws, stagger by ~70-80% of the previous segment's duration** — eye reads it as continuous motion, not N separate animations
-- **Don't pair with `back.out` or `elastic.out`** — bouncing strokes feel wrong (the pen wouldn't bounce)
+- **将 `strokeDasharray` 设置为路径的 `getTotalLength()` 值**，而非任意数字 — 猜测意味着描画会动画但不匹配几何体
+- **从相同长度开始设置 `strokeDashoffset`**，动画化到 `0`
+- **在时间线设置中测量，而非模块顶部** — 在某些环境中模块代码运行时 SVG 可能尚未渲染。在 HF 运行时中，由于 SVG 是内联的，在顶部可以工作，但安全起见
+- **`stroke-linecap: round`** 用于更柔和的端点（不那么突兀的结束）
+- **对于顺序多路径绘制，以前一段时长的大约 70-80% 错开** — 眼睛读作连续运动，而非 N 个独立的动画
+- **不要与 `back.out` 或 `elastic.out` 配对** — 弹跳的描画感觉不对（笔不会弹跳）
 
-## Critical Constraints
+## 关键约束
 
-- **`fill: none` in CSS for outline-only draws** — otherwise the fill area appears immediately and ruins the reveal
-- **Path length is measured in the browser**: requires SVG to be in the DOM. HF inline SVG is fine; loaded `<image>` SVGs may not be
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **Works on**: `<path>`, `<circle>`, `<rect>`, `<line>`, `<polyline>`, `<polygon>`, `<ellipse>` (anything with a stroke)
-- **For complex paths**, if `getTotalLength()` looks wrong, overestimate `strokeDasharray` slightly (e.g. `len * 1.05`) — too large is invisible during animation start (no visible gap), too small clips the end
+- **仅轮廓绘制的 CSS 中设置 `fill: none`** — 否则填充区域立即出现，破坏揭示效果
+- **路径长度在浏览器中测量**：要求 SVG 在 DOM 中。HF 内联 SVG 没问题；加载的 `<image>` SVG 可能不行
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **适用于**：`<path>`、`<circle>`、`<rect>`、`<line>`、`<polyline>`、`<polygon>`、`<ellipse>`（任何带描画属性的元素）
+- **对于复杂路径**，如果 `getTotalLength()` 看起来不对，略微高估 `strokeDasharray`（例如 `len * 1.05`）— 太大在动画开始时不可见（无可见间隙），太小会裁剪末端
 
-## Combinations
+## 组合
 
-- [counting-dynamic-scale.md](counting-dynamic-scale.md) — pair: stroke draws an icon while a number counts up beside it
-- [hacker-flip-3d.md](hacker-flip-3d.md) — pair: SVG logo draws, then a hacker-flipped wordmark reveals under it
+- [counting-dynamic-scale.md](counting-dynamic-scale.md) — 配对：描画绘制图标，同时数字在其旁边计数递增
+- [hacker-flip-3d.md](hacker-flip-3d.md) — 配对：SVG logo 绘制，然后在其下揭示黑客翻转的 wordmark
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — timeline + stroke property tween
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 时间线 + 描画属性补间
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

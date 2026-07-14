@@ -1,189 +1,189 @@
 ---
 name: text
-description: Text mobjects, fonts, and text styling in Manim
+description: 文本 mobjects、字体和 Manim 中的文本样式
 metadata:
   tags: text, font, typography, markup, paragraph
 ---
 
-# Text in Manim
+# Manim 中的文本
 
-The `Text` class renders text using Pango/Cairo, supporting various fonts and styles.
+`Text` 类使用 Pango/Cairo 渲染文本，支持多种字体和样式。
 
-## Basic Text
+## 基本文本
 
 ```python
 from manim import *
 
 class TextExample(Scene):
     def construct(self):
-        text = Text("Hello World")
+        text = Text("你好世界")
         self.play(Write(text))
 ```
 
-## Text Parameters
+## 文本参数
 
 ```python
 text = Text(
-    "Hello World",
-    font_size=48,           # Size (default: 48)
-    color=BLUE,             # Text color
-    font="Arial",           # Font family
-    weight=BOLD,            # NORMAL, BOLD, etc.
+    "你好世界",
+    font_size=48,           # 字号（默认：48）
+    color=BLUE,             # 文本颜色
+    font="Arial",           # 字体系列
+    weight=BOLD,            # NORMAL, BOLD 等
     slant=ITALIC,           # NORMAL, ITALIC, OBLIQUE
-    line_spacing=1.5,       # Space between lines
+    line_spacing=1.5,       # 行间距
 )
 ```
 
-## Font Size
+## 字号
 
 ```python
-# Using font_size parameter
-small = Text("Small", font_size=24)
-medium = Text("Medium", font_size=48)
-large = Text("Large", font_size=72)
+# 使用 font_size 参数
+small = Text("小号", font_size=24)
+medium = Text("中号", font_size=48)
+large = Text("大号", font_size=72)
 
-# Using scale after creation
-text = Text("Hello").scale(2)
+# 创建后使用 scale
+text = Text("你好").scale(2)
 ```
 
-## Custom Fonts
+## 自定义字体
 
 ```python
-# Use any installed system font
-text = Text("Custom Font", font="Comic Sans MS")
-text = Text("Monospace", font="Courier New")
-text = Text("Serif", font="Times New Roman")
+# 使用任何已安装的系统字体
+text = Text("自定义字体", font="SimHei")
+text = Text("等宽字体", font="Courier New")
+text = Text("衬线字体", font="Times New Roman")
 ```
 
-## Text Styling with MarkupText
+## 使用 MarkupText 进行文本样式
 
-Use Pango markup for mixed styling within one Text object:
+使用 Pango 标记语言在一个 Text 对象中实现混合样式：
 
 ```python
 class MarkupExample(Scene):
     def construct(self):
         text = MarkupText(
-            f'all in red <span fgcolor="{YELLOW}">except this</span>',
+            f'全部红色 <span fgcolor="{YELLOW}">除了这个</span>',
             color=RED
         )
         self.play(Write(text))
 ```
 
-### Available Markup Tags
+### 可用的标记标签
 
 ```python
-# Bold and italic
-text = MarkupText('<b>Bold</b> and <i>Italic</i>')
+# 粗体和斜体
+text = MarkupText('<b>粗体</b> 和 <i>斜体</i>')
 
-# Colors using fgcolor
-text = MarkupText('<span fgcolor="yellow">Yellow</span>')
+# 使用 fgcolor 设置颜色
+text = MarkupText('<span fgcolor="yellow">黄色</span>')
 
-# Subscripts and superscripts
-text = MarkupText('H<sub>2</sub>O and x<sup>2</sup>')
+# 下标和上标
+text = MarkupText('H<sub>2</sub>O 和 x<sup>2</sup>')
 
-# Font size
-text = MarkupText('<big>Big</big> and <small>small</small>')
+# 字号
+text = MarkupText('<big>大</big> 和 <small>小</small>')
 
-# Underline and strikethrough
-text = MarkupText('<u>Underline</u> and <s>Strike</s>')
+# 下划线和删除线
+text = MarkupText('<u>下划线</u> 和 <s>删除线</s>')
 
-# Double underline with color
-text = MarkupText('<span underline="double" underline_color="green">text</span>')
+# 带颜色的双下划线
+text = MarkupText('<span underline="double" underline_color="green">文本</span>')
 
-# Monospace
-text = MarkupText('type <tt>help</tt> for help')
+# 等宽字体
+text = MarkupText('输入 <tt>help</tt> 获取帮助')
 ```
 
-### Gradients in MarkupText
+### MarkupText 中的渐变
 
 ```python
-# Global gradient
-text = MarkupText("nice gradient", gradient=(BLUE, GREEN))
+# 全局渐变
+text = MarkupText("漂亮的渐变", gradient=(BLUE, GREEN))
 
-# Inline gradient
+# 内联渐变
 text = MarkupText(
-    'nice <gradient from="RED" to="YELLOW">colored</gradient> text'
+    '漂亮的 <gradient from="RED" to="YELLOW">彩色</gradient> 文本'
 )
 ```
 
-### Escaping Special Characters
+### 转义特殊字符
 
 ```python
-# Must escape these characters:
-# > as &gt;
-# < as &lt;
-# & as &amp;
-text = MarkupText("5 &gt; 3 and 2 &lt; 4")
+# 必须转义以下字符：
+# > 为 &gt;
+# < 为 &lt;
+# & 为 &amp;
+text = MarkupText("5 &gt; 3 且 2 &lt; 4")
 ```
 
-## Multi-line Text
+## 多行文本
 
 ```python
-# Using \n for line breaks
-text = Text("Line 1\nLine 2\nLine 3")
+# 使用 \n 换行
+text = Text("第一行\n第二行\n第三行")
 
-# Using Paragraph for better control
+# 使用 Paragraph 获得更好控制
 from manim import Paragraph
 
 para = Paragraph(
-    "This is a longer text",
-    "that spans multiple lines",
-    "with automatic alignment",
+    "这是一段较长的文本",
+    "跨越了多行",
+    "自动对齐",
     line_spacing=0.5
 )
 ```
 
-## Coloring Parts of Text
+## 文本部分着色
 
 ```python
 class ColoredText(Scene):
     def construct(self):
-        text = Text("Hello World")
-        text[0:5].set_color(RED)    # "Hello" in red
-        text[6:11].set_color(BLUE)  # "World" in blue
+        text = Text("你好世界")
+        text[0:2].set_color(RED)    # "你好" 红色
+        text[2:4].set_color(BLUE)   # "世界" 蓝色
         self.play(Write(text))
 ```
 
-## Text with Gradients
+## 渐变色文本
 
 ```python
-text = Text("Gradient Text")
+text = Text("渐变文本")
 text.set_color_by_gradient(RED, YELLOW, GREEN)
 ```
 
-## Accessing Characters
+## 访问字符
 
 ```python
 text = Text("ABCDE")
 
-# Individual characters
+# 单个字符
 text[0]  # 'A'
 text[1]  # 'B'
 
-# Slices
+# 切片
 text[0:3]  # 'ABC'
 text[-1]   # 'E'
 
-# Iterate
+# 遍历
 for char in text:
     char.set_color(random_color())
 ```
 
-## Text Positioning
+## 文本定位
 
 ```python
-# Standard positioning methods work
-text = Text("Hello")
+# 标准定位方法都适用
+text = Text("你好")
 text.to_edge(UP)
 text.to_corner(UL)
 text.move_to(ORIGIN)
 text.next_to(other_mobject, DOWN)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use Text for regular text** - Simple and fast
-2. **Use MarkupText for mixed styles** - When you need multiple colors/weights
-3. **Use MathTex for math** - Text doesn't render LaTeX
-4. **Install fonts system-wide** - Manim uses system fonts
-5. **Keep font_size consistent** - Use the same size for related text
+1. **常规文本使用 Text** —— 简单快速
+2. **混合样式使用 MarkupText** —— 需要多种颜色/字重时
+3. **数学公式使用 MathTex** —— Text 不渲染 LaTeX
+4. **全局安装字体** —— Manim 使用系统字体
+5. **保持 font_size 一致** —— 相关文本使用相同字号

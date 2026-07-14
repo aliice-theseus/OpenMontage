@@ -1,17 +1,17 @@
 ---
 name: camera
-description: MovingCameraScene, zoom, pan, and camera manipulation
+description: MovingCameraScene（移动相机场景）、缩放、平移和相机操作
 metadata:
   tags: camera, zoom, pan, frame, movingcamerascene, 3d
 ---
 
-# Camera Control
+# 相机控制
 
-Control what the viewer sees with camera manipulation.
+通过相机操作控制观众看到的内容。
 
 ## MovingCameraScene
 
-For 2D scenes with camera movement (zoom, pan).
+用于具有相机移动（缩放、平移）的 2D 场景。
 
 ```python
 from manim import *
@@ -22,13 +22,13 @@ class CameraExample(MovingCameraScene):
         square = Square().shift(RIGHT * 3)
         self.add(circle, square)
 
-        # Access camera frame
-        # self.camera.frame is the viewable area
+        # 访问相机帧
+        # self.camera.frame 是可视区域
 ```
 
-## Zooming
+## 缩放
 
-### Zoom In/Out by Scaling Frame
+### 通过缩放帧进行缩放
 
 ```python
 class ZoomExample(MovingCameraScene):
@@ -37,31 +37,31 @@ class ZoomExample(MovingCameraScene):
         dots.arrange_in_grid(10, 10, buff=0.3)
         self.add(dots)
 
-        # Zoom in (make frame smaller)
+        # 放大（使帧变小）
         self.play(self.camera.frame.animate.scale(0.5))
         self.wait()
 
-        # Zoom out (make frame larger)
+        # 缩小（使帧变大）
         self.play(self.camera.frame.animate.scale(4))
 ```
 
-### Zoom to Specific Width
+### 缩放到指定宽度
 
 ```python
 class ZoomToWidth(MovingCameraScene):
     def construct(self):
-        text = Text("Focus on me!")
+        text = Text("聚焦我！")
         self.add(text)
 
-        # Zoom to fit text with padding
+        # 缩放以适配文本（带间距）
         self.play(
             self.camera.frame.animate.set(width=text.width * 1.5)
         )
 ```
 
-## Panning
+## 平移
 
-### Move Camera to Location
+### 移动相机到目标位置
 
 ```python
 class PanExample(MovingCameraScene):
@@ -70,15 +70,15 @@ class PanExample(MovingCameraScene):
         c2 = Circle().shift(RIGHT * 3)
         self.add(c1, c2)
 
-        # Pan to first circle
+        # 平移到第一个圆形
         self.play(self.camera.frame.animate.move_to(c1))
         self.wait()
 
-        # Pan to second circle
+        # 平移到第二个圆形
         self.play(self.camera.frame.animate.move_to(c2))
 ```
 
-### Combined Zoom and Pan
+### 缩放和平移组合
 
 ```python
 class ZoomAndPan(MovingCameraScene):
@@ -87,17 +87,17 @@ class ZoomAndPan(MovingCameraScene):
         triangle = Triangle().shift(RIGHT * 2)
         self.add(square, triangle)
 
-        # Zoom in and pan simultaneously
+        # 同时缩放和平移
         self.play(
             self.camera.frame.animate.scale(0.5).move_to(square)
         )
         self.wait()
 
-        # Move to triangle (still zoomed)
+        # 移动到三角形（保持缩放状态）
         self.play(self.camera.frame.animate.move_to(triangle))
 ```
 
-## Save and Restore Camera State
+## 保存和恢复相机状态
 
 ```python
 class SaveRestoreCamera(MovingCameraScene):
@@ -105,20 +105,20 @@ class SaveRestoreCamera(MovingCameraScene):
         circle = Circle()
         self.add(circle)
 
-        # Save current state
+        # 保存当前状态
         self.camera.frame.save_state()
 
-        # Make changes
+        # 进行更改
         self.play(self.camera.frame.animate.scale(0.3).move_to(circle))
         self.wait()
 
-        # Restore to saved state
+        # 恢复到保存的状态
         self.play(Restore(self.camera.frame))
 ```
 
 ## auto_zoom
 
-Automatically zoom to fit mobjects.
+自动缩放以适配 mobject。
 
 ```python
 class AutoZoomExample(MovingCameraScene):
@@ -129,15 +129,15 @@ class AutoZoomExample(MovingCameraScene):
         ])
         self.add(squares)
 
-        # Zoom to fit specific mobject
+        # 缩放到适配指定 mobject
         self.play(self.camera.auto_zoom(squares[0]))
         self.wait()
 
-        # Zoom to fit all with margin
+        # 缩放到适配所有（带边距）
         self.play(self.camera.auto_zoom(squares, margin=1))
 ```
 
-## 3D Camera (ThreeDScene)
+## 3D 相机（ThreeDScene）
 
 ```python
 class ThreeDCameraExample(ThreeDScene):
@@ -146,14 +146,14 @@ class ThreeDCameraExample(ThreeDScene):
         sphere = Sphere()
         self.add(axes, sphere)
 
-        # Set initial camera orientation
+        # 设置初始相机方向
         self.set_camera_orientation(
-            phi=75 * DEGREES,    # Angle from z-axis
-            theta=-45 * DEGREES  # Angle around z-axis
+            phi=75 * DEGREES,    # 与 z 轴的角度
+            theta=-45 * DEGREES  # 绕 z 轴的角度
         )
 ```
 
-### Animated Camera Rotation
+### 动画化相机旋转
 
 ```python
 class RotatingCamera(ThreeDScene):
@@ -163,13 +163,13 @@ class RotatingCamera(ThreeDScene):
 
         self.set_camera_orientation(phi=75 * DEGREES, theta=0)
 
-        # Continuous rotation
+        # 持续旋转
         self.begin_ambient_camera_rotation(rate=0.2)
         self.wait(5)
         self.stop_ambient_camera_rotation()
 ```
 
-### Move 3D Camera
+### 移动 3D 相机
 
 ```python
 class Move3DCamera(ThreeDScene):
@@ -179,7 +179,7 @@ class Move3DCamera(ThreeDScene):
 
         self.set_camera_orientation(phi=75 * DEGREES, theta=-45 * DEGREES)
 
-        # Animate camera movement
+        # 动画化相机移动
         self.move_camera(
             phi=45 * DEGREES,
             theta=45 * DEGREES,
@@ -187,22 +187,22 @@ class Move3DCamera(ThreeDScene):
         )
 ```
 
-## Camera Background
+## 相机背景
 
 ```python
 class CameraBackground(Scene):
     def construct(self):
-        # Set background color
+        # 设置背景颜色
         self.camera.background_color = BLUE_E
 
         circle = Circle()
         self.add(circle)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use MovingCameraScene for zoom/pan** - Regular Scene camera is static
-2. **Save state before complex movements** - Easy to restore
-3. **Use auto_zoom for dynamic content** - Automatically fits content
-4. **Keep camera movements smooth** - Don't make viewers dizzy
-5. **Use 3D camera rotation sparingly** - Can be disorienting
+1. **缩放/平移使用 MovingCameraScene** —— 普通 Scene 的相机是静态的
+2. **复杂移动前保存状态** —— 便于恢复
+3. **动态内容使用 auto_zoom** —— 自动适配内容
+4. **保持相机移动平滑** —— 不要让观众感到眩晕
+5. **谨慎使用 3D 相机旋转** —— 可能会让人迷失方向

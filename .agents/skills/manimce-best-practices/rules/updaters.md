@@ -1,17 +1,17 @@
 ---
 name: updaters
-description: Updaters, ValueTracker, and dynamic animations
+description: Updaters、ValueTracker 和动态动画
 metadata:
   tags: updater, valuetracker, dynamic, always, add_updater
 ---
 
-# Updaters and Dynamic Animations
+# Updaters 和动态动画
 
-Updaters allow mobjects to automatically update based on other values or mobjects.
+Updaters 允许 mobject 基于其他值或 mobject 自动更新。
 
-## Basic Updaters
+## 基本 Updater
 
-Add a function that runs every frame.
+添加每帧运行的函数。
 
 ```python
 from manim import *
@@ -21,7 +21,7 @@ class UpdaterExample(Scene):
         dot = Dot()
         label = Text("Follow me").next_to(dot, UP)
 
-        # Label always follows the dot
+        # 标签始终跟随点
         label.add_updater(lambda m: m.next_to(dot, UP))
 
         self.add(dot, label)
@@ -29,76 +29,76 @@ class UpdaterExample(Scene):
         self.play(dot.animate.shift(DOWN * 2), run_time=2)
 ```
 
-## Updater Syntax
+## Updater 语法
 
 ```python
-# Lambda function
+# Lambda 函数
 mobject.add_updater(lambda m: m.move_to(target.get_center()))
 
-# Named function
+# 命名函数
 def follow_target(mob):
     mob.next_to(target, RIGHT)
 
 mobject.add_updater(follow_target)
 
-# With dt (delta time) parameter
+# 带 dt（时间增量）参数
 def time_based_update(mob, dt):
-    mob.rotate(dt * PI)  # Rotate based on time elapsed
+    mob.rotate(dt * PI)  # 基于已用时间旋转
 
 mobject.add_updater(time_based_update)
 ```
 
 ## ValueTracker
 
-A mobject that holds a numeric value. Perfect for animating parameters.
+存储数值的 mobject。非常适合动画化参数。
 
 ```python
 class ValueTrackerExample(Scene):
     def construct(self):
-        # Create tracker
+        # 创建跟踪器
         tracker = ValueTracker(0)
 
-        # Create number display
+        # 创建数字显示
         number = DecimalNumber(0, num_decimal_places=2)
         number.add_updater(lambda m: m.set_value(tracker.get_value()))
 
-        # Create circle that grows with tracker
+        # 创建随跟踪器增长的圆
         circle = Circle()
         circle.add_updater(lambda m: m.set_width(tracker.get_value()))
 
         self.add(number, circle)
 
-        # Animate the tracker
+        # 动画化跟踪器
         self.play(tracker.animate.set_value(4), run_time=3)
         self.play(tracker.animate.set_value(1), run_time=2)
 ```
 
-### ValueTracker Operations
+### ValueTracker 操作
 
 ```python
 tracker = ValueTracker(5)
 
-# Get and set value
+# 获取和设置值
 current = tracker.get_value()
 tracker.set_value(10)
 
-# Increment
+# 增加
 tracker.increment_value(2.5)
 
-# Arithmetic operators (direct manipulation, no animation)
+# 算术运算符（直接操作，无动画）
 tracker += 1
 tracker -= 2
 tracker *= 3
 tracker /= 2
 
-# Animate changes
+# 动画化更改
 self.play(tracker.animate.set_value(100))
 self.play(tracker.animate.increment_value(-50))
 ```
 
-## DecimalNumber with ValueTracker
+## 带 ValueTracker 的 DecimalNumber
 
-Display a changing number:
+显示变化的数字：
 
 ```python
 class NumberDisplay(Scene):
@@ -120,14 +120,14 @@ class NumberDisplay(Scene):
 
 ## always_redraw
 
-Recreate a mobject every frame based on current values.
+基于当前值每帧重新创建 mobject。
 
 ```python
 class AlwaysRedrawExample(Scene):
     def construct(self):
         tracker = ValueTracker(1)
 
-        # Line that always connects two points based on tracker
+        # 始终连接两个点的线
         line = always_redraw(
             lambda: Line(
                 LEFT * 2,
@@ -140,15 +140,15 @@ class AlwaysRedrawExample(Scene):
         self.play(tracker.animate.set_value(0.5), run_time=2)
 ```
 
-## Common Updater Patterns
+## 常见 Updater 模式
 
-### Following Another Mobject
+### 跟随另一个 Mobject
 ```python
 follower.add_updater(lambda m: m.move_to(leader.get_center()))
 follower.add_updater(lambda m: m.next_to(leader, RIGHT))
 ```
 
-### Pointing at Another Mobject
+### 指向另一个 Mobject
 ```python
 arrow = Arrow(ORIGIN, RIGHT)
 arrow.add_updater(lambda m: m.put_start_and_end_on(
@@ -157,37 +157,37 @@ arrow.add_updater(lambda m: m.put_start_and_end_on(
 ))
 ```
 
-### Rotating Continuously
+### 连续旋转
 ```python
 mobject.add_updater(lambda m, dt: m.rotate(dt * PI))
 ```
 
-### Matching Properties
+### 匹配属性
 ```python
-# Match color
+# 匹配颜色
 follower.add_updater(lambda m: m.set_color(leader.get_color()))
 
-# Match position with offset
+# 匹配带偏移的位置
 follower.add_updater(lambda m: m.move_to(leader.get_center() + UP))
 ```
 
-## Removing Updaters
+## 移除 Updaters
 
 ```python
-# Remove specific updater
+# 移除特定 updater
 mobject.remove_updater(updater_function)
 
-# Remove all updaters
+# 移除所有 updater
 mobject.clear_updaters()
 
-# Suspend temporarily
+# 临时暂停
 mobject.suspend_updating()
 mobject.resume_updating()
 ```
 
-## Updaters with Animations
+## Updaters 与动画
 
-Updaters continue running during animations:
+Updaters 在动画期间持续运行：
 
 ```python
 class UpdaterDuringAnimation(Scene):
@@ -201,7 +201,7 @@ class UpdaterDuringAnimation(Scene):
 
 ## TracedPath
 
-Built-in updater for drawing paths:
+用于绘制路径的内置 updater：
 
 ```python
 class TracedPathExample(Scene):
@@ -217,10 +217,10 @@ class TracedPathExample(Scene):
         )
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use ValueTracker for animated parameters** - Clean and controllable
-2. **Use always_redraw for complex shapes** - When updaters get complicated
-3. **Clear updaters when done** - Prevent performance issues
-4. **Keep updater functions simple** - Complex logic can slow rendering
-5. **Use dt for time-based animations** - Frame-rate independent
+1. **动画参数使用 ValueTracker** - 简洁且可控
+2. **复杂形状使用 always_redraw** - 当 updater 变得复杂时
+3. **完成后清除 updater** - 防止性能问题
+4. **保持 updater 函数简单** - 复杂逻辑可能降低渲染速度
+5. **基于时间的动画使用 dt** - 帧率无关

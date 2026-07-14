@@ -1,17 +1,17 @@
 ---
-title: Use Compound Components
+title: 使用复合组件
 impact: HIGH
-impactDescription: enables flexible composition without prop drilling
+impactDescription: 实现灵活的组合，无需属性钻取
 tags: composition, compound-components, architecture
 ---
 
-## Use Compound Components
+## 使用复合组件
 
-Structure complex components as compound components with a shared context. Each
-subcomponent accesses shared state via context, not props. Consumers compose the
-pieces they need.
+将复杂组件结构化为具有共享 context 的复合组件。每个
+子组件通过 context 而非属性访问共享状态。消费者组合
+他们需要的部分。
 
-**Incorrect (monolithic component with render props):**
+**错误（带渲染属性的单体组件）：**
 
 ```tsx
 function Composer({
@@ -41,7 +41,7 @@ function Composer({
 }
 ```
 
-**Correct (compound components with shared context):**
+**正确（带共享 context 的复合组件）：**
 
 ```tsx
 const ComposerContext = createContext<ComposerContextValue | null>(null)
@@ -77,10 +77,10 @@ function ComposerSubmit() {
   const {
     actions: { submit },
   } = use(ComposerContext)
-  return <Button onPress={submit}>Send</Button>
+  return <Button onPress={submit}>发送</Button>
 }
 
-// Export as compound component
+// 作为复合组件导出
 const Composer = {
   Provider: ComposerProvider,
   Frame: ComposerFrame,
@@ -94,7 +94,7 @@ const Composer = {
 }
 ```
 
-**Usage:**
+**用法：**
 
 ```tsx
 <Composer.Provider state={state} actions={actions} meta={meta}>
@@ -109,4 +109,4 @@ const Composer = {
 </Composer.Provider>
 ```
 
-Consumers explicitly compose exactly what they need. No hidden conditionals. And the state, actions and meta are dependency-injected by a parent provider, allowing multiple usages of the same component structure.
+消费者明确地组合他们需要的内容。没有隐藏的条件判断。而且 state、actions 和 meta 由父级 Provider 进行依赖注入，允许同一组件结构的多次使用。

@@ -1,84 +1,84 @@
-# Typography
+# 排版
 
-The compiler **pre-bundles a fixed set** of fonts (the table below) — write one of those families in `font-family` and it renders deterministically, offline, with no setup and no warning. A name _outside_ that set is **not silently dropped**: if it's a real Google font the compiler fetches it from Google Fonts at **build time** and embeds it, so it _does_ render — but that implicit path (a) trips a `font_family_without_font_face` lint warning, and (b) is **fail-closed in distributed/cloud renders** — if Google is unreachable the render _errors_ rather than quietly substituting a system font. Beyond that, **local renders auto-capture fonts you actually have**: a family installed on your machine, a local `@font-face` path, or an external CDN stylesheet all get compressed to woff2 and inlined at build time. So a name on **neither** the bundle **nor** Google Fonts only truly falls back to a generic system font when it's _also_ not installed locally and not declared in an `@font-face` — and even that logs a compiler warning. **One caveat**: distributed/cloud (Lambda) renders disable system-font capture, so don't rely on a locally-installed-only font for those. So don't assume an un-bundled display name will Just Work: for anything that must render predictably, pick a bundled family below **or embed your own `@font-face`** (see "Finding Fonts").
+编译器**预捆绑了一组固定**的字体（下表）——在 `font-family` 中写入这些字体家族之一，它就能确定性、离线地渲染，无需设置且无警告。如果使用该集合**之外**的名称，**不会静默丢弃**：如果它是一个真正的 Google 字体，编译器会在**构建时**从 Google Fonts 获取并嵌入它，因此它_确实_会渲染——但这条隐式路径 (a) 会触发 `font_family_without_font_face` 的 lint 警告，(b) 在**分布式/云端渲染中会失败关闭**——如果 Google 不可达，渲染会_报错_，而不是静默替换为系统字体。除此之外，**本地渲染会自动捕获你实际拥有的字体**：你机器上安装的字体家族、本地 `@font-face` 路径或外部 CDN 样式表都会在构建时压缩为 woff2 并内联。所以一个**既不**在捆绑中**也不**在 Google Fonts 中的名称，仅当它_同时_未在本地安装且未在 `@font-face` 中声明时，才会真正回退到通用系统字体——即便如此也会记录编译警告。**一个注意事项**：分布式/云端（Lambda）渲染禁用系统字体捕获，因此不要依赖仅本地安装的字体。所以不要假设未捆绑的显示名称就能直接工作：对于任何必须可预测渲染的内容，请选择以下捆绑家族**或嵌入你自己的 `@font-face`**（参见"寻找字体"）。
 
-## Contents
+## 目录
 
-- Fonts that embed (auto-resolve)
-- Banned fonts
-- Guardrails
-- What you do not do without being told
-- Finding fonts
-- Selection thinking
-- Similar-font pairing
-- Dark backgrounds
-- OpenType features for data
+- 可嵌入的字体（自动解析）
+- 禁用字体
+- 护栏规则
+- 未经指示不得做的事
+- 寻找字体
+- 选择思维
+- 相似字体搭配
+- 深色背景
+- 用于数据的 OpenType 特性
 
-## Fonts That Embed (auto-resolve)
+## 可嵌入的字体（自动解析）
 
-These **18 families** are the ones the renderer **pre-bundles** — embedded as local data URIs with no network fetch, so they render offline and deterministically with zero setup, no lint warning, and no fail-closed fetch risk. Write any of them as a `font-family` and it renders; **only the listed weights exist** (asking for a weight a family doesn't ship gives a synthetic/fallback weight, not a real cut). (Any _other_ real Google font still works via the implicit build-time fetch described in the intro — but only these render with none of those caveats.)
+以下 **18 个家族**是渲染器**预捆绑**的——嵌入为本地 data URI，无需网络获取，因此它们离线且确定性地渲染，零设置，无 lint 警告，无失败关闭的获取风险。将它们中的任何一个作为 `font-family` 写入，它就会渲染；**只存在列出的字重**（请求一个家族不提供的字重会得到合成/回退字重，而不是真实切口）。（任何_其他_真正的 Google 字体仍然通过介绍中描述的隐式构建时获取工作——但只有这些字体渲染时没有任何那些注意事项。）
 
-| Family            | Weights         | Role              |
-| ----------------- | --------------- | ----------------- |
-| Inter             | 400 · 700 · 900 | sans (body/UI)    |
-| Roboto            | 400 · 700 · 900 | sans              |
-| Open Sans         | 400 · 700       | sans              |
-| Lato              | 400 · 700 · 900 | sans              |
-| Nunito            | 400 · 700 · 900 | sans (rounded)    |
-| Montserrat        | 400 · 700 · 900 | geometric sans    |
-| Poppins           | 400 · 700 · 900 | geometric sans    |
-| Outfit            | 400 · 700 · 900 | geometric sans    |
-| Oswald            | 400 · 700       | condensed sans    |
-| **League Gothic** | **400 only**    | condensed display |
-| **Archivo Black** | **400 only**    | heavy display     |
-| Playfair Display  | 400 · 700 · 900 | serif (display)   |
-| EB Garamond       | 400 · 700       | serif (text)      |
-| Space Mono        | 400 · 700       | mono              |
-| IBM Plex Mono     | 400 · 700       | mono              |
-| JetBrains Mono    | 400 · 700       | mono              |
-| Source Code Pro   | 400 · 700       | mono              |
-| Noto Sans JP      | 400 · 700       | CJK (Japanese)    |
+| 家族              | 字重             | 角色                |
+| ----------------- | --------------- | ------------------- |
+| Inter             | 400 · 700 · 900 | 无衬线（正文/UI）     |
+| Roboto            | 400 · 700 · 900 | 无衬线               |
+| Open Sans         | 400 · 700       | 无衬线               |
+| Lato              | 400 · 700 · 900 | 无衬线               |
+| Nunito            | 400 · 700 · 900 | 无衬线（圆角）        |
+| Montserrat        | 400 · 700 · 900 | 几何无衬线            |
+| Poppins           | 400 · 700 · 900 | 几何无衬线            |
+| Outfit            | 400 · 700 · 900 | 几何无衬线            |
+| Oswald            | 400 · 700       | 紧缩无衬线            |
+| **League Gothic** | **仅 400**      | 紧缩展示              |
+| **Archivo Black** | **仅 400**      | 粗重展示              |
+| Playfair Display  | 400 · 700 · 900 | 衬线（展示）          |
+| EB Garamond       | 400 · 700       | 衬线（正文）          |
+| Space Mono        | 400 · 700       | 等宽                 |
+| IBM Plex Mono     | 400 · 700       | 等宽                 |
+| JetBrains Mono    | 400 · 700       | 等宽                 |
+| Source Code Pro   | 400 · 700       | 等宽                 |
+| Noto Sans JP      | 400 · 700       | CJK（日文）           |
 
-> ⚠ **League Gothic and Archivo Black ship weight 400 ONLY** — they are already heavy/condensed display faces. Do not request `font-weight: 700/900` on them.
+> ⚠ **League Gothic 和 Archivo Black 仅提供 400 字重**——它们本身就是粗重/紧缩的展示字体。不要对它们请求 `font-weight: 700/900`。
 
-**Aliases** — these common names resolve to an embedded family, so you may safely write them: `Helvetica Neue` / `Helvetica` / `Arial` → Inter · `Futura` / `DIN Alternate` / `Arial Black` → Montserrat · `Bebas Neue` → League Gothic · `Segoe UI` → Roboto · `Courier New` / `Courier` → JetBrains Mono · `Garamond` → EB Garamond. (This is why a "safe" `Helvetica Neue` stack always renders — it maps to embedded Inter.)
+**别名**——这些常用名称解析为嵌入家族，因此你可以安全地使用它们：`Helvetica Neue` / `Helvetica` / `Arial` → Inter · `Futura` / `DIN Alternate` / `Arial Black` → Montserrat · `Bebas Neue` → League Gothic · `Segoe UI` → Roboto · `Courier New` / `Courier` → JetBrains Mono · `Garamond` → EB Garamond。（这就是为什么"安全"的 `Helvetica Neue` 堆叠总是能渲染——它映射到嵌入的 Inter。）
 
-**Reconciling with the Banned list below:** several embedded families (Inter, Roboto, Open Sans, Lato, Nunito, Poppins, Outfit, Playfair Display, EB Garamond) are _also_ on the Banned monoculture list — they render fine but read as generic. The families that are **embedded AND not banned** — your safe-and-distinctive picks — are: **Montserrat, Oswald, League Gothic, Archivo Black, Space Mono, IBM Plex Mono, JetBrains Mono, Source Code Pro, Noto Sans JP**. Reach for these (or a non-bundled font you've confirmed via the Finding-Fonts step). A non-bundled name isn't guaranteed-broken — a real Google font is auto-fetched and embedded — but it carries a lint warning and a fail-closed fetch in cloud renders, so for anything that must render predictably, **embed it yourself via `@font-face`** (see "Finding Fonts") rather than relying on the implicit fetch.
+**与下面的禁用列表协调：** 几个嵌入家族（Inter、Roboto、Open Sans、Lato、Nunito、Poppins、Outfit、Playfair Display、EB Garamond）_也_在禁用单一文化列表中——它们渲染得很好但读起来很通用。**已嵌入且未被禁用**的家族——你的安全且独特的选择——是：**Montserrat、Oswald、League Gothic、Archivo Black、Space Mono、IBM Plex Mono、JetBrains Mono、Source Code Pro、Noto Sans JP**。选择这些（或通过"寻找字体"步骤确认的非捆绑字体）。非捆绑名称不一定会出问题——真正的 Google 字体会被自动获取和嵌入——但它带有 lint 警告和在云端渲染中的失败关闭获取，因此对于任何必须可预测渲染的内容，**通过 `@font-face` 自行嵌入**（参见"寻找字体"）而不是依赖隐式获取。
 
-## Banned
+## 禁用
 
-Training-data defaults that every LLM reaches for. These produce monoculture across compositions.
+每个 LLM 都会使用的训练数据默认值。这些会在合成中产生单一文化。
 
 Inter, Roboto, Open Sans, Noto Sans, Arimo, Lato, Source Sans, PT Sans, Nunito, Poppins, Outfit, Sora, Playfair Display, Cormorant Garamond, Bodoni Moda, EB Garamond, Cinzel, Prata, Syne
 
-**Syne in particular** is the most overused "distinctive" display font. It is an instant AI design tell.
+**尤其是 Syne** 是最被滥用的"独特"展示字体。它是一个即时的 AI 设计标志。
 
-## Guardrails
+## 护栏规则
 
-You know these rules but you violate them. Stop.
+你知道这些规则但违反它们。停止。
 
-- **Don't pair two sans-serifs.** You do this constantly — one for headlines, one for body. Cross the boundary: serif + sans, or sans + mono.
-- **One expressive font per scene.** You pick two interesting fonts trying to make it "better." One performs, one recedes.
-- **Weight contrast must be extreme.** You default to 400 vs 700. Video needs 300 vs 900. The difference must be visible in motion at a glance.
-- **Video sizes, not web sizes.** Body: 20px minimum. Headlines: 60px+. Data labels: 16px. You will try to use 14px. Don't.
+- **不要搭配两种无衬线字体。** 你经常这样做——一个用于标题，一个用于正文。跨越边界：衬线 + 无衬线，或无衬线 + 等宽。
+- **每场景一个表现性字体。** 你选择两种有趣的字体试图让它"更好"。一个表现，一个退居次要。
+- **字重对比必须极端。** 你默认使用 400 vs 700。视频需要 300 vs 900。差异必须在运动中一目了然。
+- **视频尺寸，而非网页尺寸。** 正文：最小 20px。标题：60px+。数据标签：16px。你会想用 14px。不要。
 
-## What You Don't Do Without Being Told
+## 未经指示不得做的事
 
-- **Tension should mean something.** Don't pattern-match pairings. Ask WHY these two fonts disagree. The pairing should embody the content's contradiction — mechanical vs human, public vs private, institutional vs personal. If you can't articulate the tension, it's arbitrary.
-- **Register switching.** Assign different fonts to different communicative modes — one voice for statements, another for data, another for attribution. Not hierarchy on a page. Voices in a conversation.
-- **Tension can live inside a single font.** A font that looks familiar but is secretly strange creates tension with the viewer's expectations, not with another font.
-- **One variable changed = dramatic contrast.** Same letterforms, monospaced vs proportional. Same family at different optical sizes. Changing only rhythm while everything else stays constant.
-- **Double personality works.** Two expressive fonts can coexist if they share an attitude (both irreverent, both precise) even when their forms are completely different.
-- **Time is hierarchy.** The first element to appear is the most important. In video, sequence replaces position.
-- **Motion is typography.** How a word enters carries as much meaning as the font. A 0.1s slam vs a 2s fade — same font, completely different message.
-- **Fixed reading time.** 3 seconds on screen = must be readable in 2. Fewer words, larger type.
-- **Tracking tighter than web.** -0.03em to -0.05em on display sizes. Video encoding compresses letter detail.
+- **张力应有意义。** 不要模式匹配搭配。问为什么这两种字体不一致。搭配应体现内容的矛盾——机械 vs 人性化、公开 vs 私密、机构 vs 个人。如果你说不清这种张力，它就是武断的。
+- **语域切换。** 将不同的字体分配给不同的交流模式——一种声音用于陈述，另一种用于数据，再一种用于归属。不是页面上的层级。而是对话中的声音。
+- **张力可以存在于单个字体内部。** 一个看起来熟悉但暗藏奇怪的字体，是与观众的期望产生张力，而不是与另一种字体。
+- **改变一个变量 = 戏剧性的对比。** 相同的字形，等宽 vs 比例。同一家族在不同视觉尺寸下。只改变节奏而其他一切保持不变。
+- **双重个性有效。** 两种表现性字体如果共享态度（都玩世不恭，都精确），即使它们的形式完全不同，也可以共存。
+- **时间就是层级。** 第一个出现的元素最重要。在视频中，顺序取代位置。
+- **运动即是排版。** 一个词如何进入画面承载着与字体本身同样多的意义。0.1 秒的撞击 vs 2 秒的淡入——同样的字体，完全不同的信息。
+- **固定阅读时间。** 屏幕上 3 秒 = 必须在 2 秒内可读。更少的词，更大的字体。
+- **字距比网页更紧。** 显示尺寸上 -0.03em 到 -0.05em。视频编码会压缩字母细节。
 
-## Finding Fonts
+## 寻找字体
 
-Don't default to what you know. If the content is luxury, a grotesque sans might create more tension than the expected Didone serif. Decide the register first, then search.
+不要默认使用你知道的字体。如果内容是奢华品，一个 grotesque 无衬线体可能比预期的 Didone 衬线体创造更多张力。先决定语域，再搜索。
 
-Save this script to `/tmp/fontquery.py` and run with `curl -s 'https://fonts.google.com/metadata/fonts' > /tmp/gfonts.json && python3 /tmp/fontquery.py /tmp/gfonts.json`:
+将此脚本保存到 `/tmp/fontquery.py` 并运行 `curl -s 'https://fonts.google.com/metadata/fonts' > /tmp/gfonts.json && python3 /tmp/fontquery.py /tmp/gfonts.json`：
 
 ```python
 import json, sys, random
@@ -162,57 +162,57 @@ for cat in R:
     print()
 ```
 
-Five categories: trending sans, trending serif, monospace, impact/condensed, script/handwriting. All dynamically filtered from Google Fonts metadata — no hardcoded font names. Cross classification boundaries when pairing.
+五个类别：流行无衬线、流行衬线、等宽、冲击/紧缩、手写/手书。全部从 Google Fonts 元数据动态筛选——没有硬编码的字体名称。搭配时跨越分类界限。
 
-## Selection Thinking
+## 选择思维
 
-Don't pick fonts by category reflex (editorial → serif, tech → mono, modern → geometric sans). That's pattern matching, not design.
+不要凭类别反射选择字体（编辑→衬线、科技→等宽、现代→几何无衬线）。那是模式匹配，不是设计。
 
-1. **Name the register.** What voice is the content speaking in? Institutional authority? Personal confession? Technical precision? Casual irreverence? The register narrows the field more than the category.
-2. **Think physically.** Imagine the font as a physical object the brand could ship — a museum exhibit caption, a hand-painted shop sign, a 1970s mainframe terminal manual, a fabric label inside a coat, a children's book printed on cheap newsprint, a tax form. Whichever physical object fits the register is pointing at the right _kind_ of typeface.
-3. **Reject your first instinct.** The first font that feels right is usually your training-data default for that register. If you picked it last time too, find something else.
-4. **Cross-check the assumption.** An editorial brief does NOT need a serif. A technical brief does NOT need a sans. A children's product does NOT need a rounded display font. The most distinctive choice often contradicts the category expectation.
+1. **命名语域。** 内容在用哪种声音说话？机构权威？个人忏悔？技术精确？随意不敬？语域比类别更能缩小选择范围。
+2. **物理化思考。** 想象字体作为品牌可以交付的物理对象——博物馆展品说明、手绘店招、1970 年代大型机终端手册、外套内的织物标签、印刷在廉价新闻纸上的儿童书、税务表格。符合语域的物理对象指向了正确_种类_的字体。
+3. **拒绝你的第一直觉。** 第一个感觉正确的字体通常是你对该语域的训练数据默认值。如果你上次也选了它，找点别的。
+4. **交叉检查假设。** 编辑简报不需要衬线体。技术简报不需要无衬线体。儿童产品不需要圆角展示字体。最独特的选择往往违背类别期望。
 
-## Similar-Font Pairing
+## 相似字体搭配
 
-Never pair two fonts that are similar but not identical — two geometric sans-serifs, two transitional serifs, two humanist sans. They create visual friction without clear hierarchy. The viewer senses something is "off" but can't articulate it. Either use one font at two weights, or pair fonts that contrast on multiple axes: serif + sans, condensed + wide, geometric + humanist.
+永远不要搭配两种相似但不相同的字体——两种几何无衬线体、两种过渡衬线体、两种人文无衬线体。它们会产生视觉摩擦而没有清晰的层级。观看者感觉有些"不对"但说不出来。要么使用一种字体的两个字重，要么搭配在多个轴上对比的字体：衬线 + 无衬线、紧缩 + 宽体、几何 + 人文。
 
-## Dark Backgrounds
+## 深色背景
 
-Light text on dark backgrounds creates two optical illusions you need to compensate for:
+深色背景上的浅色文字会产生两种需要补偿的视错觉：
 
-- **Increased apparent weight.** Light-on-dark reads heavier than dark-on-light at the same `font-weight`. Use 350 instead of 400 for body text. Headlines are less affected because size compensates.
-- **Tighter apparent spacing.** Light halos around letterforms reduce perceived gaps. Increase `line-height` by 0.05-0.1 beyond your light-background value. For display sizes, add 0.01em `letter-spacing` to counteract.
+- **表观字重增加。** 相同的 `font-weight` 下，浅色在深色上比深色在浅色上更重。正文用 350 代替 400。标题受影响较小，因为尺寸补偿了。
+- **表观间距更紧。** 字形周围的浅色光晕减少了感知间隙。将 `line-height` 比浅色背景值增加 0.05-0.1。对于显示尺寸，添加 0.01em `letter-spacing` 来抵消。
 
-## OpenType Features for Data
+## 用于数据的 OpenType 特性
 
-Most fonts ship with OpenType features that are off by default. Turn them on for data compositions:
+大多数字体内置了默认关闭的 OpenType 特性。为数据合成打开它们：
 
 ```css
-/* Tabular numbers — digits align vertically in columns */
+/* 表格数字——数字在列中垂直对齐 */
 .stat-value,
 .timer,
 .data-column {
   font-variant-numeric: tabular-nums;
 }
 
-/* Diagonal fractions — renders 1/2 as ½ */
+/* 对角分数——将 1/2 渲染为 ½ */
 .recipe-amount,
 .ratio {
   font-variant-numeric: diagonal-fractions;
 }
 
-/* Small caps for abbreviations — less visual shouting */
+/* 缩写的小型大写——减少视觉喊叫 */
 .abbreviation,
 .unit {
   font-variant-caps: all-small-caps;
 }
 
-/* Disable ligatures in code — fi, fl, ffi should stay separate */
+/* 禁用代码中的连字——fi, fl, ffi 应保持分离 */
 code,
 .code {
   font-variant-ligatures: none;
 }
 ```
 
-`tabular-nums` is essential any time numbers are stacked vertically — stat callouts, timers, scoreboards, data tables. Without it, digits have proportional widths and columns don't align.
+任何数字垂直堆叠的地方——统计标注、计时器、记分牌、数据表——`tabular-nums` 都是必需的。没有它，数字具有比例宽度，列无法对齐。

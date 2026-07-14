@@ -1,156 +1,154 @@
-# Text To Speech
+# 文字转语音（TTS）
 
-`npx hyperframes tts` auto-detects a provider from env vars; explicit override via `--provider`.
+`npx hyperframes tts` 从环境变量自动检测提供商；可通过 `--provider` 显式覆盖。
 
-> **Run the Preflight first — no credential is not a green light to silently use the local voice.** Before generating a voiceover, complete the sign-in **Preflight** (see `../SKILL.md` → Preflight): run `npx hyperframes auth status`, recommend signing in, and **STOP for the user's choice** (sign in for HeyGen voices, or continue offline with local Kokoro). This applies to a one-off "generate a voiceover" request just as much as inside a full workflow.
+> **首先运行预检——无凭证不是静默使用本地语音的绿灯。** 在生成配音之前，完成登录**预检**（参见 `../SKILL.md` → 预检）：运行 `npx hyperframes auth status`，建议登录，并**等待用户选择**（登录以使用 HeyGen 语音，或离线继续使用本地 Kokoro）。这同样适用于单独的「生成配音」请求和完整工作流。
 
-## Provider chain
+## 提供商链
 
-| Order | Provider          | Env trigger                                 | Voice IDs                                   | Word timestamps                           | Audio format         |
-| ----- | ----------------- | ------------------------------------------- | ------------------------------------------- | ----------------------------------------- | -------------------- |
-| 1     | HeyGen (Starfish) | `$HEYGEN_API_KEY` / `~/.heygen/credentials` | UUIDs from `GET /v3/voices?engine=starfish` | **Yes** (`word_timestamps[]` in response) | mp3 → wav via ffmpeg |
-| 2     | ElevenLabs        | `$ELEVENLABS_API_KEY`                       | UUIDs from elevenlabs.io dashboard          | No                                        | mp3 → wav via ffmpeg |
-| 3     | Kokoro-82M        | always (local fallback)                     | `am_michael`, `af_heart`, … (54 voices)     | No                                        | wav direct           |
+| 顺序 | 提供商 | 环境变量触发 | 语音 ID | 词语时间戳 | 音频格式 |
+| ---- | ----------------- | ------------------------------------------- | ------------------------------------------- | ----------------------------------------- | -------------------- |
+| 1 | HeyGen（Starfish） | `$HEYGEN_API_KEY` / `~/.heygen/credentials` | 来自 `GET /v3/voices?engine=starfish` 的 UUID | **是**（响应中的 `word_timestamps[]`） | mp3 → 通过 ffmpeg 转 wav |
+| 2 | ElevenLabs | `$ELEVENLABS_API_KEY` | 来自 elevenlabs.io 仪表板的 UUID | 否 | mp3 → 通过 ffmpeg 转 wav |
+| 3 | Kokoro-82M | 始终可用（本地备选） | `am_michael`、`af_heart`……（54 个语音） | 否 | 直接 wav |
 
 ```bash
-# Auto-detect (HeyGen if key set, else ElevenLabs, else Kokoro)
-npx hyperframes tts "Welcome to HyperFrames" -o narration.wav
+# 自动检测（设置了密钥则用 HeyGen，否则 ElevenLabs，否则 Kokoro）
+npx hyperframes tts "欢迎使用 HyperFrames" -o narration.wav
 
-# Pin the provider explicitly
-npx hyperframes tts "Hello" --provider kokoro
-npx hyperframes tts "Hello" --provider heygen --voice <heygen-uuid>
-npx hyperframes tts "Hello" --provider elevenlabs --voice 21m00Tcm4TlvDq8ikWAM
+# 显式指定提供商
+npx hyperframes tts "你好" --provider kokoro
+npx hyperframes tts "你好" --provider heygen --voice <heygen-uuid>
+npx hyperframes tts "你好" --provider elevenlabs --voice 21m00Tcm4TlvDq8ikWAM
 
-# HeyGen path: capture word timestamps in one call (skips a Whisper pass)
-npx hyperframes tts "Hi there" --words narration.words.json
+# HeyGen 路径：一次调用捕获词语时间戳（跳过 Whisper 步骤）
+npx hyperframes tts "你好" --words narration.words.json
 ```
 
-## Self-contained HeyGen (no CLI) — `scripts/heygen-tts.mjs`
+## 独立的 HeyGen（无需 CLI）——`scripts/heygen-tts.mjs`
 
-The published `hyperframes tts` CLI synthesizes locally with Kokoro only. When you
-want HeyGen specifically — best quality **plus** word timestamps in one call — use
-the skill's bundled script, which calls the HeyGen v3 REST API directly and needs
-no CLI provider plumbing:
+已发布的 `hyperframes tts` CLI 仅使用 Kokoro 在本地合成。当您
+专门需要 HeyGen——最佳质量**加上**一次调用获取词语时间戳——请使用
+此技能附带的脚本，它直接调用 HeyGen v3 REST API，无需
+CLI 提供商管道：
 
-The script resolves a HeyGen credential the same way the CLI does — first source
-wins: `$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → a project `.env` (auto-loaded,
-walks up ≤5 dirs) → `~/.heygen/credentials` (shared with heygen-cli;
-`$HEYGEN_CONFIG_DIR` overrides the dir). An OAuth login is sent as
-`Authorization: Bearer`; an API key as `X-Api-Key`. If the only credential is an
-expired OAuth token it stops with a hint to run `npx hyperframes auth refresh`.
+该脚本以与 CLI 相同的方式解析 HeyGen 凭证——第一个来源
+胜出：`$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → 项目 `.env`（自动加载，
+向上搜索最多 5 层目录）→ `~/.heygen/credentials`（与 heygen-cli 共享；
+`$HEYGEN_CONFIG_DIR` 覆盖目录）。OAuth 登录作为
+`Authorization: Bearer` 发送；API 密钥作为 `X-Api-Key` 发送。如果唯一的凭证是
+过期的 OAuth 令牌，它会停止并提示运行 `npx hyperframes auth refresh`。
 
 ```bash
-# Only needed if you haven't run `npx hyperframes auth login`:
-export HEYGEN_API_KEY=...   # or put it in a project .env
+# 仅在尚未运行 `npx hyperframes auth login` 时需要：
+export HEYGEN_API_KEY=...   # 或将其放在项目 .env 中
 
-# Synthesize + capture word timestamps in one call (skips a Whisper pass)
+# 一次调用合成 + 捕获词语时间戳（跳过 Whisper 步骤）
 node skills/hyperframes-media/scripts/heygen-tts.mjs \
-  "Welcome to HyperFrames." -o narration.wav --words narration.words.json
+  "欢迎使用 HyperFrames。" -o narration.wav --words narration.words.json
 
 node skills/hyperframes-media/scripts/heygen-tts.mjs ./script.txt -o narration.wav
-node skills/hyperframes-media/scripts/heygen-tts.mjs --list   # public starfish voices
+node skills/hyperframes-media/scripts/heygen-tts.mjs --list   # 列出公共 starfish 语音
 ```
 
-- **Voice:** `--voice <id>` must be a **starfish** voice_id (`--list`, or `GET /v3/voices?engine=starfish`). v2-catalog ids are rejected with HTTP 400. Omit `--voice` (English) and it defaults to **Marcia** (`05f19352e8f74b0392a8f411eba40de1`, a fixed default so the choice is deterministic). Non-English with no `--voice` falls back to the first matching catalog voice.
-- **Output:** `.wav` → transcoded to 44.1k mono via ffmpeg; `.mp3` → raw bytes (no ffmpeg needed).
-- **Words:** `--words <path>` writes the flat `[{id,text,start,end}]` shape below, drop-in for the captions pipeline. HeyGen's `<start>`/`<end>` boundary sentinels are filtered out and ids are re-contiguous.
-- **Non-English:** `--lang <code>` (anything but `en`) is sent as the request `language`.
+- **语音：** `--voice <id>` 必须是 **starfish** voice_id（`--list`，或 `GET /v3/voices?engine=starfish`）。v2 目录的 ID 会返回 HTTP 400 错误。省略 `--voice`（英语）则默认为 **Marcia**（`05f19352e8f74b0392a8f411eba40de1`，这是一个固定的默认值，使选择具有确定性）。非英语且未指定 `--voice` 则回退到目录中第一个匹配的语音。
+- **输出：** `.wav` → 通过 ffmpeg 转码为 44.1k 单声道；`.mp3` → 原始字节（无需 ffmpeg）。
+- **词语：** `--words <path>` 写入下面的扁平 `[{id,text,start,end}]` 格式，可直接用于字幕流水线。HeyGen 的 `<start>`/`<end>` 边界标记被过滤掉，ID 重新连续编号。
+- **非英语：** `--lang <code>`（除 `en` 外的任何值）作为请求的 `language` 发送。
 
-## When to use which provider
+## 何时使用哪个提供商
 
-| Goal                                                      | Use                                                 |
+| 目标 | 使用 |
 | --------------------------------------------------------- | --------------------------------------------------- |
-| Best voice quality + word timestamps in one call          | **HeyGen**                                          |
-| Drop-in cloud TTS, big voice catalog                      | **ElevenLabs**                                      |
-| Offline, no API key, fast iteration                       | **Kokoro**                                          |
-| Non-English multilingual with deterministic phonemization | **Kokoro** (`ef_dora`, `jf_alpha`, `zf_xiaobei`, …) |
+| 一次调用获得最佳语音质量 + 词语时间戳 | **HeyGen** |
+| 即插即用的云端 TTS，庞大的语音目录 | **ElevenLabs** |
+| 离线，无需 API 密钥，快速迭代 | **Kokoro** |
+| 非英语多语言，确定性音素化 | **Kokoro**（`ef_dora`、`jf_alpha`、`zf_xiaobei`……） |
 
-## Expressive narration contract
+## 表现性配音约定
 
-Before generating narration, write a compact voice-performance plan:
+在生成配音之前，编写一个简洁的语音表演计划：
 
-- `performance_intent` - who the narrator is and how they should feel
-- `pacing_profile` - contemplative, conversational, energetic, technical, or custom
-- `energy_curve` - how the read changes across the piece
-- `pause_policy` - where silence should happen and why
-- section-level cues - `pace`, `energy`, `emphasis_words`, `pause_before_seconds`,
-  `pause_after_seconds`, and optional provider-ready text
+- `performance_intent`——叙述者是谁以及他们应该有什么感觉
+- `pacing_profile`——沉思的、对话式的、充满活力的、技术性的或自定义的
+- `energy_curve`——朗读在整段内容中的变化方式
+- `pause_policy`——哪些地方应该有静默以及为什么
+- 段落级提示——`pace`、`energy`、`emphasis_words`、`pause_before_seconds`、
+  `pause_after_seconds` 以及可选的提供商就绪文本
 
-Do not rely on a vague instruction like "make it natural." Put the direction in
-the text or provider settings:
+不要依赖像「让它自然」这样模糊的指示。将方向放在
+文本或提供商设置中：
 
-- Use short sentences and purposeful punctuation.
-- Use `<break time="0.4s"/>` to `<break time="1.0s"/>` for important pauses when
-  the chosen provider supports SSML-style break tags.
-- Generate a sample from the most performance-sensitive section before batching.
-- If the sample sounds monotone, rushed, or ignores pauses, revise the plan or
-  provider settings before generating the rest.
+- 使用短句和有目的性的标点符号。
+- 当所选提供商支持 SSML 风格的 break 标签时，使用 `<break time="0.4s"/>` 到 `<break time="1.0s"/>` 来实现重要停顿。
+- 在批量生成之前，先从对表演最敏感的部分生成一个样本。
+- 如果样本听起来单调、急促或忽略了停顿，在生成其余部分之前修改计划或提供商设置。
 
-## ffmpeg requirement
+## ffmpeg 要求
 
-HeyGen + ElevenLabs return mp3. The CLI transcodes to wav when `--output` ends in `.wav` (the default and what downstream `ffprobe` + Whisper expect). If you'd rather skip the transcode, pass `-o file.mp3`. Without `ffmpeg` on PATH, `.wav` output from the cloud providers fails — install ffmpeg or use `.mp3`.
+HeyGen + ElevenLabs 返回 mp3。当 `--output` 以 `.wav` 结尾时（这是默认设置，也是下游 `ffprobe` + Whisper 所期望的），CLI 会转码为 wav。如果您希望跳过转码，传递 `-o file.mp3`。如果 PATH 上没有 `ffmpeg`，云端提供商的 `.wav` 输出将失败——请安装 ffmpeg 或使用 `.mp3`。
 
-## Voice selection (Kokoro)
+## 语音选择（Kokoro）
 
-Default `af_heart`. Curated picks:
+默认 `af_heart`。精选推荐：
 
-| Content type      | Voice                  |
+| 内容类型 | 语音 |
 | ----------------- | ---------------------- |
-| Product demo      | `af_heart`, `af_nova`  |
-| Tutorial / how-to | `am_adam`, `bf_emma`   |
-| Marketing / promo | `af_sky`, `am_michael` |
-| Documentation     | `bf_emma`, `bm_george` |
-| Casual / social   | `af_heart`, `af_sky`   |
+| 产品演示 | `af_heart`、`af_nova` |
+| 教程/操作指南 | `am_adam`、`bf_emma` |
+| 营销/推广 | `af_sky`、`am_michael` |
+| 文档 | `bf_emma`、`bm_george` |
+| 休闲/社交 | `af_heart`、`af_sky` |
 
-Run `npx hyperframes tts --list` for the bundled set.
+运行 `npx hyperframes tts --list` 查看捆绑的语音集。
 
-## Multilingual (Kokoro voice prefix → language)
+## 多语言（Kokoro 语音前缀 → 语言）
 
-The first letter of a Kokoro voice ID picks the phonemizer language; `--lang` overrides auto-detection.
+Kokoro 语音 ID 的第一个字母决定了音素化器语言；`--lang` 可覆盖自动检测。
 
-| Prefix | Language             |
+| 前缀 | 语言 |
 | ------ | -------------------- |
-| `a`    | American English     |
-| `b`    | British English      |
-| `e`    | Spanish              |
-| `f`    | French               |
-| `h`    | Hindi                |
-| `i`    | Italian              |
-| `j`    | Japanese             |
-| `p`    | Brazilian Portuguese |
-| `z`    | Mandarin             |
+| `a` | 美式英语 |
+| `b` | 英式英语 |
+| `e` | 西班牙语 |
+| `f` | 法语 |
+| `h` | 印地语 |
+| `i` | 意大利语 |
+| `j` | 日语 |
+| `p` | 巴西葡萄牙语 |
+| `z` | 普通话 |
 
 ```bash
 npx hyperframes tts "La reunión empieza a las nueve" --voice ef_dora --provider kokoro
-npx hyperframes tts "Today is a nice day" --voice af_heart --provider kokoro
+npx hyperframes tts "今天是个好天气" --voice af_heart --provider kokoro
 ```
 
-Valid `--lang` codes (only needed to override the voice's auto-detected language): `en-us`, `en-gb`, `es`, `fr-fr`, `hi`, `it`, `pt-br`, `ja`, `zh`.
+有效的 `--lang` 代码（仅在需要覆盖语音的自动检测语言时使用）：`en-us`、`en-gb`、`es`、`fr-fr`、`hi`、`it`、`pt-br`、`ja`、`zh`。
 
-Non-English phonemization requires `espeak-ng` system-wide (`brew install espeak-ng` / `apt-get install espeak-ng`).
+非英语音素化需要系统级安装 `espeak-ng`（`brew install espeak-ng` / `apt-get install espeak-ng`）。
 
-## Speed
+## 速度
 
-- `0.7-0.8` — tutorial, complex content, accessibility
-- `1.0` — natural pace (default)
-- `1.1-1.2` — intros, transitions, upbeat content
-- `1.5+` — rarely appropriate, test carefully
+- `0.7-0.8`——教程、复杂内容、无障碍
+- `1.0`——自然语速（默认）
+- `1.1-1.2`——开场白、过渡、 upbeat 内容
+- `1.5+`——很少适用，请谨慎测试
 
-Honored by Kokoro + HeyGen; ElevenLabs ignores `--speed` (use voice settings on their dashboard).
+Kokoro + HeyGen 支持速度设置；ElevenLabs 忽略 `--speed`（在其仪表板的语音设置中调整）。
 
-## Long scripts
+## 长脚本
 
-Past a few paragraphs, write the text to a `.txt` file and pass the path. Inputs over ~5 minutes of speech may benefit from splitting into segments.
+超过几段文字后，将文本写入 `.txt` 文件并传递路径。超过约 5 分钟语音的输入可能适合拆分为多个段落。
 
-## HeyGen word-timestamp shape
+## HeyGen 词语时间戳格式
 
-When `--words <path>` is passed to a HeyGen call, the file is written in the same flat shape `transcribe` produces — drop-in compatible with the captions pipeline:
+当向 HeyGen 调用传递 `--words <path>` 时，文件以与 `transcribe` 生成的相同的扁平格式写入——可直接与字幕流水线兼容：
 
 ```json
 [
-  { "id": "w0", "text": "Hi", "start": 0.0, "end": 0.21 },
-  { "id": "w1", "text": "there", "start": 0.22, "end": 0.55 }
+  { "id": "w0", "text": "嗨", "start": 0.0, "end": 0.21 },
+  { "id": "w1", "text": "你好", "start": 0.22, "end": 0.55 }
 ]
 ```
 
-For ElevenLabs / Kokoro, run `npx hyperframes transcribe narration.wav --model small.en` to get the same shape.
+对于 ElevenLabs / Kokoro，运行 `npx hyperframes transcribe narration.wav --model small.en` 以获得相同格式。

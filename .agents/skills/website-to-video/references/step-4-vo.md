@@ -1,111 +1,111 @@
-# Step 4: VO, Timing + Captions
+# 步骤 4：配音、时序 + 字幕
 
-## If Step 2 said "no narration"
+## 如果步骤 2 说「无旁白」
 
-Skip the TTS sections below. The storyboard already has beat durations planned based on pacing and rhythm — those become `data-start` and `data-duration` values directly in Step 5.
+跳过下面的 TTS 部分。故事板已经基于节奏和速度规划了节拍时长——这些将直接成为步骤 5 中的 `data-start` 和 `data-duration` 值。
 
-**Background music:** Ask the user before moving to Step 5:
+**背景音乐：** 在进入步骤 5 之前询问用户：
 
-> "Do you have a music track for this video? If not, I can suggest where to find one:
+> 「你有这个视频的音乐曲目吗？如果没有，我可以建议在哪里找到：
 >
-> - **Artlist.io** or **Musicbed** — licensed music for commercial use
-> - **Uppbeat.io** or **Pixabay Music** — free tracks with attribution
-> - **Freesound.org** — free samples and loops
+> - **Artlist.io** 或 **Musicbed**——用于商业用途的授权音乐
+> - **Uppbeat.io** 或 **Pixabay Music**——带署名的免费曲目
+> - **Freesound.org**——免费样本和循环
 >
-> Or share a reference track ('something like this') and I can find something similar."
+> 或者分享一个参考曲目（「像这样的」），我可以找到类似的东西。」
 
-If the user provides a track: note the file path and BPM in the storyboard for Step 5 to wire into `index.html`. If they skip music entirely, the video uses SFX only — confirm that's intentional.
+如果用户提供了曲目：在故事板中记下文件路径和 BPM，供步骤 5 在 `index.html` 中连接。如果他们完全跳过音乐，视频仅使用 SFX——确认这是有意为之。
 
-Move to Step 5.
+进入步骤 5。
 
 ---
 
-## Generate a test clip before full narration — calibrate timing first
+## 在完整旁白之前生成测试片段——先校准时序
 
-Generate a 2-sentence test clip NOW using the script's opening lines. Measure the actual duration. Kokoro compresses scripts by ~40% (35s planned → 19s actual) and HeyGen runs faster than expected. If you discover the audio is 40% shorter than expected, you'll need to revise the storyboard beat timings before investing time in full narration generation.
+**现在**使用脚本的开场行生成一个 2 句话的测试片段。测量实际时长。Kokoro 将脚本压缩约 40%（规划的 35s → 实际 19s），HeyGen 运行得比预期快。如果你发现音频比预期短 40%，你需要在投资时间进行完整旁白生成之前修改故事板节拍时序。
 
-**Do this before committing to beat count and durations:**
+**在提交到节拍数和时长之前执行此操作：**
 
 ```bash
-# Quick Kokoro test (2 sentences):
-npx hyperframes tts "First sentence. Second sentence." --voice af_nova --output /tmp/test-tts.wav
-# Measure: seconds ÷ words × total script words = estimated full audio length
+# 快速 Kokoro 测试（2 句话）：
+npx hyperframes tts "第一句话。第二句话。" --voice af_nova --output /tmp/test-tts.wav
+# 测量：秒数 ÷ 词数 × 脚本总词数 = 估计的完整音频长度
 ```
 
-If the estimate puts your video at ±15% of the planned duration, proceed. If it's more than 15% off, recalibrate the script length first:
+如果估计值将你的视频放在规划时长的 ±15% 以内，继续。如果偏差超过 15%，首先重新校准脚本长度：
 
-- **Audio TOO SHORT** (more than 15% under planned duration) → add strategic pauses. In `narration.txt`, insert blank lines between paragraphs (≈0.6s each) or `...` between sentences (≈0.4s each). Aim for the pauses to land at storyboard beat boundaries so the silence feels intentional, not dead air.
-- **Audio TOO LONG** (more than 15% over planned duration) → identify the beat in your storyboard with the highest words-per-second density. Cut one supporting sentence from THAT beat's lines — preserve the lead sentence (the one that names the beat's idea). Re-measure with another test clip before committing to full generation.
-- **Audio matches plan but beat boundaries drift** → adjust the storyboard durations to match the actual narration, not the other way around. The audio is the ground truth once narration is generated.
+- **音频太短**（比规划时长短超过 15%）→ 添加策略性停顿。在 `narration.txt` 中，在段落之间插入空行（每个约 0.6s）或在句子之间插入 `...`（每个约 0.4s）。目标是让停顿落在故事板节拍边界上，使静默感觉有意而非空白。
+- **音频太长**（比规划时长长超过 15%）→ 确定故事板中词语密度最高的节拍。从那**个**节拍的行中删除一个支持句——保留前导句（命名节拍想法的那个）。在提交完整生成之前，用另一个测试片段重新测量。
+- **音频匹配计划但节拍边界漂移** → 调整故事板时长以匹配实际旁白，而不是反过来。一旦旁白生成，音频就是地面实况。
 
-The script formula assumes constant words-per-second, but punctuation, dramatic pauses, and silence cues all stretch real audio. Always trust a measured test clip over the formula.
+脚本公式假设恒定的词/秒速度，但标点、戏剧性停顿和静默提示都会拉伸实际音频。始终相信测量的测试片段而不是公式。
 
-## Background music
+## 背景音乐
 
-**Always ask about background music** — even when narration is present:
+**始终询问背景音乐**——即使有旁白：
 
-> "Do you want background music under the narration? (Artlist.io, Musicbed for licensed; Uppbeat/Pixabay for free; or share a reference track). Even a subtle ambient underscore makes pauses between sentences feel intentional rather than empty."
+> 「你想要旁白下的背景音乐吗？（Artlist.io、Musicbed 用于授权；Uppbeat/Pixabay 用于免费；或分享参考曲目）。即使是微妙的氛围背景音也能让句子之间的停顿感觉有意而非空洞。」
 
-If they want music, note the track in the storyboard for Step 5 to wire into `index.html`.
+如果他们想要音乐，在故事板中记下曲目，供步骤 5 在 `index.html` 中连接。
 
-## TTS Provider
+## TTS 提供商
 
-Ask the user which voice provider they'd like:
+询问用户他们希望使用哪个语音提供商：
 
-> **Which voice provider would you like to use for narration?**
+> **你想使用哪个语音提供商进行旁白？**
 >
-> 1. **HeyGen TTS** — Good quality voices, and it returns word-level timestamps automatically (saves a separate transcription step). Requires HeyGen API key.
-> 2. **ElevenLabs** — Large voice library, very natural output. Requires ElevenLabs API key. Does not return word timestamps — you'll transcribe separately.
-> 3. **Kokoro** (Free) — Runs locally, no API key needed. Decent quality but more robotic than the others. Good for drafts or budget runs.
+> 1. **HeyGen TTS**——良好的语音质量，自动返回词语级时间戳（省去单独的转录步骤）。需要 HeyGen API 密钥。
+> 2. **ElevenLabs**——庞大的语音库，非常自然的输出。需要 ElevenLabs API 密钥。不返回词语时间戳——需要单独转录。
+> 3. **Kokoro（免费）**——本地运行，无需 API 密钥。质量尚可，但比其他选项更像机器人。适合草稿或预算运行。
 
-If the user picks ElevenLabs or HeyGen and doesn't have a key set up yet, help them:
+如果用户选择 ElevenLabs 或 HeyGen 但尚未设置密钥，帮助他们：
 
-- **ElevenLabs:** "Add `ELEVENLABS_API_KEY=your-key` to a `.env` file in the project root, or just paste it here and I'll set it up."
-- **HeyGen:** "Add `HEYGEN_API_KEY=your-key` to a `.env` file, or paste it here."
+- **ElevenLabs：**「将 `ELEVENLABS_API_KEY=your-key` 添加到项目根目录的 `.env` 文件中，或直接粘贴到此处，我会设置它。」
+- **HeyGen：**「将 `HEYGEN_API_KEY=your-key` 添加到 `.env` 文件，或粘贴到此处。」
 
-Don't judge or critique if the user pastes a key directly in chat — just use it and move on.
+不要评判或批评用户是否直接在聊天中粘贴密钥——直接使用并继续。
 
-## Audition voices
+## 试听语音
 
-After the provider is selected, audition at least 2 voices with the first sentence of SCRIPT.md.
+在提供商选定后，使用 SCRIPT.md 的第一句话试听至少 2 个语音。
 
-**ElevenLabs:**
+**ElevenLabs：**
 
-- If the ElevenLabs MCP is available: use `mcp__elevenlabs__search_voices` to browse, `mcp__elevenlabs__text_to_speech` to generate.
-- If no MCP: call the REST API directly:
+- 如果 ElevenLabs MCP 可用：使用 `mcp__elevenlabs__search_voices` 浏览，`mcp__elevenlabs__text_to_speech` 生成。
+- 如果没有 MCP：直接调用 REST API：
 
   ```bash
-  # List voices
+  # 列出语音
   curl -s "https://api.elevenlabs.io/v1/voices" \
     -H "xi-api-key: $ELEVENLABS_API_KEY" | jq '.voices[:5] | .[].name'
 
-  # Generate speech (replace VOICE_ID with chosen voice)
+  # 生成语音（将 VOICE_ID 替换为选定的语音）
   curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/VOICE_ID" \
     -H "xi-api-key: $ELEVENLABS_API_KEY" \
     -H "Content-Type: application/json" \
-    -d '{"text":"First sentence of your script","model_id":"eleven_multilingual_v2"}' \
+    -d '{"text":"你脚本的第一句话","model_id":"eleven_multilingual_v2"}' \
     --output narration.mp3
   ```
 
-- Does not return word timestamps — transcribe separately after generating.
+- 不返回词语时间戳——生成后单独转录。
 
-**HeyGen TTS:**
+**HeyGen TTS：**
 
-- If the HeyGen MCP is available: use the TTS tool directly.
-- If no MCP: use the v3 API (current; v1/v2 deprecated, supported until Oct 2026). **Auth depends on credential type:** the `x-api-key` header below works only with an **account API key** (`HEYGEN_API_KEY`). If you authenticated via **OAuth** (e.g. claude.ai / the HeyGen MCP login), `x-api-key` will 401 — send `Authorization: Bearer $HEYGEN_OAUTH_TOKEN` instead, or just use the MCP TTS tool above.
+- 如果 HeyGen MCP 可用：直接使用 TTS 工具。
+- 如果没有 MCP：使用 v3 API（当前版本；v1/v2 已弃用，支持到 2026 年 10 月）。**认证取决于凭证类型：** 下面的 `x-api-key` 头仅对**账户 API 密钥**（`HEYGEN_API_KEY`）有效。如果你通过 **OAuth** 认证（例如 claude.ai / HeyGen MCP 登录），`x-api-key` 会返回 401——改为发送 `Authorization: Bearer $HEYGEN_OAUTH_TOKEN`，或直接使用上述 MCP TTS 工具。
 
   ```bash
-  # List voices — response shape: { "data": [...], "has_more": bool }
-  # data is a direct list (NOT data.voices — that was v2)
+  # 列出语音——响应格式：{ "data": [...], "has_more": bool }
+  # data 是直接列表（不是 data.voices——那是 v2）
   curl -s "https://api.heygen.com/v3/voices?engine=starfish&type=public&limit=20" \
     -H "x-api-key: $HEYGEN_API_KEY" | python3 -c \
     "import json,sys; v=json.load(sys.stdin)['data']; [print(x['voice_id'], x['name'], x['language']) for x in v[:10]]"
 
-  # Generate audio — response: { "data": { "audio_url": ..., "word_timestamps": [...] } }
+  # 生成音频——响应：{ "data": { "audio_url": ..., "word_timestamps": [...] } }
   curl -s -X POST "https://api.heygen.com/v3/voices/speech" \
     -H "x-api-key: $HEYGEN_API_KEY" \
     -H "Content-Type: application/json" \
-    -d '{"text":"Your script here","voice_id":"VOICE_ID","speed":1.0}' \
+    -d '{"text":"你的脚本在此","voice_id":"VOICE_ID","speed":1.0}' \
     | python3 -c "
   import json,sys
   r=json.load(sys.stdin)
@@ -114,57 +114,57 @@ After the provider is selected, audition at least 2 voices with the first senten
   open('transcript_raw.json','w').write(json.dumps(d.get('word_timestamps',[]),indent=2))
   "
 
-  # Then download the audio
-  curl -sL "AUDIO_URL_FROM_ABOVE" --output narration.mp3
+  # 然后下载音频
+  curl -sL "来自上方的 AUDIO_URL" --output narration.mp3
   ```
 
-- Returns word-level timestamps directly in the response — no separate transcription step needed.
+- 直接在响应中返回词语级时间戳——无需单独的转录步骤。
 
-**Kokoro (free, local):**
+**Kokoro（免费，本地）：**
 
 ```bash
 npx hyperframes tts SCRIPT.md --voice af_nova --output narration.wav
 ```
 
-No API key, no MCP needed. Runs locally. Use `--list` to see all 54 available voices.
+无需 API 密钥，无需 MCP。本地运行。使用 `--list` 查看所有 54 个可用语音。
 
-Pick the voice that sounds most natural and conversational. Listen for pacing — does it breathe between sentences? Does it sound like a person or a robot?
+选择听起来最自然和会话式的语音。听节奏——它在句子之间呼吸吗？听起来像人还是机器人？
 
-## Script length check
+## 脚本长度检查
 
-Before generating, verify the script makes sense for the video. Word count depends entirely on the creative direction. The storyboard's pacing and style determine how much narration the video needs.
+在生成之前，验证脚本对视频有意义。词数完全取决于创意方向。故事板的节奏和风格决定视频需要多少旁白。
 
-The key check: are there stretches where NOTHING is happening — no narration AND no compelling visual movement? Those are dead spots that lose the viewer. Every second needs either spoken words or strong visual energy carrying it.
+关键检查：是否有连续的地方**没有什么在发生**——没有旁白也没有引人注目的视觉运动？这些是失去观众的死点。每一秒要么需要口语词，要么需要强大的视觉能量来承载。
 
-## Generate full narration
+## 生成完整旁白
 
-Generate the full script as `narration.wav` (or `.mp3`) in the project directory.
+将完整脚本生成为项目目录中的 `narration.wav`（或 `.mp3`）。
 
-**If any command hangs for more than 60 seconds — don't just wait.** The user is sitting there watching you do nothing. Escalation order:
+**如果任何命令挂起超过 60 秒——不要只是等待。** 用户坐在那里看着你什么都不做。升级顺序：
 
-1. **Try again** — kill the process, run the same command again (transient failures are common)
-2. **Try different flags** — smaller model (`--model tiny.en`), different voice, shorter test sentence first
-3. **Try a different tool for the same task** — if `hyperframes transcribe` hangs, run `whisper-cli` directly on the audio
-4. **Switch provider entirely** — if ElevenLabs is down, try HeyGen or Kokoro. If Kokoro hangs, try ElevenLabs.
+1. **再试一次**——杀死进程，再次运行同一命令（瞬时故障很常见）
+2. **尝试不同的标志**——更小的模型（`--model tiny.en`）、不同的语音、先用短的测试句
+3. **尝试用于同一任务的不同工具**——如果 `hyperframes transcribe` 挂起，直接对音频运行 `whisper-cli`
+4. **完全切换提供商**——如果 ElevenLabs 宕机，尝试 HeyGen 或 Kokoro。如果 Kokoro 挂起，尝试 ElevenLabs。
 
-Never sit idle for 10 minutes hoping a stuck process will finish.
+永远不要闲坐 10 分钟希望一个卡住的进程会完成。
 
-**Kokoro pronunciation issues:** Kokoro mispronounces product names and tech terms. Always apply substitutions before generating. Known problems and fixes:
+**Kokoro 发音问题：** Kokoro 会错误发音产品名称和技术术语。在生成之前始终应用替换。已知问题和修复：
 
-- `API` → `A P I` (spell it out)
-- `UI` → `U I`, `SaaS` → `sass`, `DevOps` → `dev ops`
-- Product names with unusual spelling: test the first sentence first and listen. Common failure: "Vercel" → "versatile", "WorkOS" → "work O S", "One API" → "Wanna PI"
-- If a name sounds wrong: write it phonetically in `narration.txt` (e.g., `Vercel` → `Ver-sell`, `Supabase` → `Soopa-base`)
-- Always generate a short test clip with the first 2 sentences before generating the full audio
-- **No SSML tags** — Kokoro reads them as literal text. `<break time="1s"/>` is spoken as "break time equals one slash." Use blank lines or `...` for pauses in `narration.txt`
+- `API` → `A P I`（拼写出来）
+- `UI` → `U I`、`SaaS` → `sass`、`DevOps` → `dev ops`
+- 拼写不寻常的产品名称：先测试第一句并听。常见失败：「Vercel」→「versatile」、「WorkOS」→「work O S」、「One API」→「Wanna PI」
+- 如果名称听起来不对：在 `narration.txt` 中按发音写（例如 `Vercel` → `Ver-sell`、`Supabase` → `Soopa-base`）
+- 始终先生成包含前 2 句话的短测试片段，然后再生成完整音频
+- **没有 SSML 标签**——Kokoro 会将其作为字面文本读取。`<break time="1s"/>` 会被读作「break time equals one slash。」在 `narration.txt` 中使用空行或 `...` 表示停顿
 
-For ElevenLabs and HeyGen TTS, substitutions are usually unnecessary — they handle product names correctly.
+对于 ElevenLabs 和 HeyGen TTS，替换通常不需要——它们正确处理产品名称。
 
-**Also save the exact spoken text** — with pronunciation substitutions applied (e.g., `API` → `A P I`, `$2T` → `two trillion` and etc.) — as `narration.txt` in the same directory. This is the string passed to TTS, distinct from `SCRIPT.md` which is the human-readable creative doc. Having `narration.txt` makes it trivial to regenerate the audio later with a different voice without re-deriving the substitutions. Name it exactly `narration.txt`.
+**同时保存确切的朗读文本**——应用发音替换后（例如 `API` → `A P I`、`$2T` → `two trillion` 等）——作为同一目录中的 `narration.txt`。这是传递给 TTS 的字符串，与作为人类可读创意文档的 `SCRIPT.md` 不同。拥有 `narration.txt` 使得稍后无需重新推导替换即可用不同的语音重新生成音频。精确命名为 `narration.txt`。
 
-## Transcribe for word-level timestamps
+## 转写为词语级时间戳
 
-**If you used HeyGen v3 TTS:** word timestamps were returned in the generate call. Normalize the format before saving — HeyGen v3 uses `word` but the pipeline expects `text`:
+**如果你使用了 HeyGen v3 TTS：** 词语时间戳已在生成调用中返回。在保存前规范化格式——HeyGen v3 使用 `word` 但流水线期望 `text`：
 
 ```python
 import json
@@ -173,58 +173,58 @@ normalized = [{"text": w["word"], "start": w["start"], "end": w["end"]} for w in
 json.dump(normalized, open('transcript.json', 'w'), indent=2)
 ```
 
-No separate transcription step needed.
+无需单独的转录步骤。
 
-**If you used ElevenLabs or Kokoro:**
+**如果你使用了 ElevenLabs 或 Kokoro：**
 
 ```bash
 npx hyperframes transcribe narration.wav
 ```
 
-Produces `transcript.json` with `[{ text, start, end }]` for every word. These timestamps are the source of truth for all beat durations.
+生成 `transcript.json`，每个词包含 `[{ text, start, end }]`。这些时间戳是所有节拍时长的真相来源。
 
-## Map timestamps to beats
+## 将时间戳映射到节拍
 
-Go through STORYBOARD.md beat by beat. For each beat:
+逐节拍检查 STORYBOARD.md。对于每个节拍：
 
-1. Find the first word of that beat's VO cue in `transcript.json`
-2. Find the last word of that beat's VO cue
-3. Set `beat.start = firstWord.start`, `beat.end = lastWord.end`
-4. Add 0.3-0.5s padding at the end for visual breathing room
+1. 在 `transcript.json` 中找到该节拍配音提示的第一个词
+2. 找到该节拍配音提示的最后一个词
+3. 设置 `beat.start = firstWord.start`、`beat.end = lastWord.end`
+4. 在末尾添加 0.3-0.5s 的填充以提供视觉呼吸空间
 
-Update STORYBOARD.md with real durations. Replace estimated times (e.g., "0:00-0:05") with actual timestamps as precise as possible (e.g., "0.00-3.21s").
+用实际时长更新 STORYBOARD.md。将估计时间（例如「0:00-0:05」）替换为尽可能精确的实际时间戳（例如「0.00-3.21s」）。
 
-Beat boundaries land on word onsets — hard cuts to the VO.
+节拍边界落在词语起始上——硬切到配音。
 
-## Timing reconciliation — required before Step 5
+## 时序对账——在步骤 5 之前必需
 
-After mapping all beats, compare real total audio duration against the storyboard's planned duration:
+在映射所有节拍后，将实际总音频时长与故事板的规划时长进行比较：
 
 ```
-real_total = last_word.end + cta_hold (typically 2–3s)
-planned_total = sum of all beat planned durations
+real_total = last_word.end + cta_hold（通常 2–3s）
+planned_total = 所有节拍规划时长之和
 delta = |real_total - planned_total|
 ```
 
-**If delta > 15% of planned total — do not proceed to Step 5 without resolving it.** Common causes and fixes:
+**如果 delta > 规划总时长的 15%——不要不解决就进入步骤 5。** 常见原因和修复：
 
-- **Audio shorter than planned (most common with Kokoro):** Kokoro generates compressed speech with minimal pauses. Proportionally scale all non-CTA beat durations down to match the real audio. Example: planned 30s, audio 19s — multiply each beat duration by 19/30 (excluding the CTA hold). Update STORYBOARD.md.
-- **Audio much longer than planned (>30% over):** The script was too long for the intended duration. Trim the script (remove one beat's VO), regenerate audio, re-transcribe.
-- **CTA beat timing:** The CTA beat should hold for 2–3 seconds after the last spoken word — not extend to fill empty time. `cta_start = last_word.end + 0.3s`, `cta_duration = 2.5s`. Hard cap. Dead silence after the CTA hold loses the viewer.
+- **音频短于规划（Kokoro 最常见）：** Kokoro 生成压缩的语音，停顿最少。按比例将所有非 CTA 节拍时长缩减到匹配实际音频。示例：规划 30s，音频 19s——将每个节拍时长乘以 19/30（不包括 CTA 保持）。更新 STORYBOARD.md。
+- **音频远长于规划（>30% 超出）：** 脚本对于预期的时长来说太长。修剪脚本（删除一个节拍的配音），重新生成音频，重新转写。
+- **CTA 节拍时序：** CTA 节拍应在最后口播词之后保持 2–3 秒——而不是扩展到填充空白时间。`cta_start = last_word.end + 0.3s`、`cta_duration = 2.5s`。硬上限。CTA 保持后的死寂会失去观众。
 
-**Always tell the user** if you adjusted durations significantly from the storyboard plan. They approved a specific beat structure — if it changed, they need to know.
+**如果与故事板计划相比显著调整了时长，始终告知用户。** 他们批准了特定的节拍结构——如果它变了，他们需要知道。
 
-## Captions
+## 字幕
 
-After the narration is generated and transcribed, ask the user:
+在旁白生成并转写后，询问用户：
 
-> **Would you like captions on the video?**
+> **你想要视频上的字幕吗？**
 >
-> - **Yes** — per-word captions synced to the narration. Great for social media (most viewers watch on mute) and accessibility.
-> - **No** — narration audio only, no text overlay.
+> - **是**——与旁白同步的逐词字幕。适合社交媒体（大多数观众静音观看）和无障碍访问。
+> - **否**——仅旁白音频，无文本叠加。
 
-If yes, captions are built as a separate composition (`compositions/captions.html`) in Step 5. The `transcript.json` drives the timing — each word appears/highlights as it's spoken. Read [the captions reference](../../hyperframes/references/captions.md) for styling options (scale-pop, typewriter, fade+slide, etc.) and positioning rules.
+如果选是，字幕将在步骤 5 中作为独立作品（`compositions/captions.html`）构建。`transcript.json` 驱动时序——每个词在念出时出现/高亮。阅读[字幕参考](../../hyperframes/references/captions.md)了解样式选项（缩放弹出、打字机、淡出+滑动等）和定位规则。
 
-## Save timing data for Step 5
+## 为步骤 5 保存时序数据
 
-Record the final beat timings (start, duration) so Step 5 (Build) can use them when building `index.html`. The storyboard now has real timestamps — these become `data-start` and `data-duration` values on each scene slot when the root composition is assembled in Step 5.
+记录最终节拍时序（开始、时长），以便步骤 5（构建）在构建 `index.html` 时使用。故事体现在有时间戳——当根作品在步骤 5 中组装时，这些将成为每个场景槽上的 `data-start` 和 `data-duration` 值。

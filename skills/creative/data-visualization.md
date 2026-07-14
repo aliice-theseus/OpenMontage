@@ -1,344 +1,334 @@
-# Data Visualization Strategy Skill
+# 数据可视化策略技能
 
-## When to Use
+## 何时使用
 
-Apply this skill when a scene requires presenting data visually: statistics, comparisons,
-trends, compositions, or key metrics. This skill guides chart type selection, animation
-sequencing, label placement, data density, and color usage to produce charts that are
-clear, accurate, and effective in video.
+当场景需要以视觉方式呈现数据时应用此技能：统计数据、比较、趋势、构成或关键指标。本技能指导图表类型选择、动画排序、标签放置、数据密度和颜色使用，以生成清晰、准确且在视频中有效的图表。
 
-## Tools
+## 工具
 
-| Tool | Role |
+| 工具 | 作用 |
 |------|------|
-| `diagram_gen` | Generate charts via Mermaid or D3 |
-| `image_selector` | Generate stylized chart illustrations (FLUX/DALL-E) |
-| Remotion | Animated chart components (bar grow, line draw, pie fill) |
-| Manim | Mathematical plots, coordinate systems, function graphs |
+| `diagram_gen` | 通过 Mermaid 或 D3 生成图表 |
+| `image_selector` | 生成风格化的图表插图（FLUX/DALL-E） |
+| Remotion | 动画图表组件（条形增长、线条绘制、饼图填充） |
+| Manim | 数学绘图、坐标系、函数图 |
 
-## Chart Type Decision Tree
+## 图表类型决策树
 
-Follow this tree top-to-bottom. Stop at the first match.
+从上到下遵循此树。在第一个匹配处停止。
 
 ```
-Is there data to visualize?
-  NO  -> Use a text card or stat card instead
-  YES -> How many data points?
-           < 3 -> Use text or stat card (charts look empty with 1-2 points)
-           3-9 -> Continue to "What story does the data tell?"
-           > 12 -> Simplify first: aggregate into top-N + "Other", then continue
+是否有数据需要可视化？
+  否  -> 改为使用文字卡片或数据卡片
+  是  -> 有多少数据点？
+            < 3 -> 使用文字或数据卡片（1-2个点的图表看起来空）
+            3-9 -> 继续"数据讲述什么故事？"
+            > 12 -> 先简化：聚合为前N + "其他"，然后继续
 
-What story does the data tell?
+数据讲述什么故事？
   |
-  |-- Comparing quantities across categories?
-  |     -> BAR CHART (horizontal if labels are long)
+  |-- 比较不同类别的数量？
+  |     -> 条形图（标签长时用水平）
   |
-  |-- Showing a trend over time?
-  |     -> LINE CHART (area chart if showing volume)
+  |-- 显示随时间变化的趋势？
+  |     -> 折线图（显示体积时用面积图）
   |
-  |-- Showing parts of a whole?
-  |     -> PIE / DONUT CHART (max 5-6 slices)
-  |     (If > 6 categories, aggregate smallest into "Other")
+  |-- 显示整体的组成部分？
+  |     -> 饼图/环形图（最多5-6个扇形）
+  |     （如果超过6类，将最小的聚合为"其他"）
   |
-  |-- Showing key metrics / KPIs?
-  |     -> KPI GRID (3-6 stat cards in a grid layout)
+  |-- 显示关键指标/KPI？
+  |     -> KPI 网格（3-6个数据卡片在网格布局中）
   |
-  |-- Showing ranking or ordered list?
-  |     -> HORIZONTAL BAR CHART (sorted descending)
+  |-- 显示排名或有序列表？
+  |     -> 水平条形图（降序排列）
   |
-  |-- Showing before/after or change?
-  |     -> PAIRED BAR CHART or STAT CARD with delta arrow
+  |-- 显示前后或变化？
+  |     -> 配对条形图或带增量箭头的数据卡片
   |
-  |-- Showing correlation between two variables?
-  |     -> LINE CHART with dual series (avoid scatter in video -- too dense)
+  |-- 显示两个变量之间的相关性？
+  |     -> 双系列折线图（避免视频中的散点图 — 过于密集）
   |
-  |-- None of the above?
-  |     -> Default to BAR CHART (most universally readable)
+  |-- 以上都不是？
+  |     -> 默认使用条形图（最通用的可读性）
 ```
 
-### When NOT to Use a Chart
+### 何时不使用图表
 
-| Situation | Do This Instead |
-|-----------|----------------|
-| Fewer than 3 data points | Stat card or text overlay: "Revenue grew 40% to $2.1M" |
-| More than 12 categories | Aggregate into top 5-7 + "Other", then chart |
-| Single number to emphasize | Full-screen stat card with impact animation |
-| Qualitative comparison | Side-by-side images or text table |
-| Data requires 30+ seconds to read | Split into multiple simpler charts across scenes |
+| 情况 | 改为这样做 |
+|------|-----------|
+| 少于3个数据点 | 数据卡片或文字叠加："收入增长40%到210万美元" |
+| 超过12个类别 | 聚合为前5-7个 + "其他"，然后制图 |
+| 单个数字要强调 | 全屏数据卡片带冲击动画 |
+| 定性比较 | 并排图像或文字表格 |
+| 数据需要30秒以上阅读 | 在多个场景中拆分为多个更简单的图表 |
 
-## Animation Sequencing
+## 动画排序
 
-Every chart in video should be animated. Static charts feel like slides, not video.
+视频中的每个图表都应动画化。静态图表感觉像幻灯片，不是视频。
 
-### Pattern: Build-Up (Default)
+### 模式：逐步构建（默认）
 
-Show empty axes/frame, then animate data in.
-
-```
-Frame 0.0s: Empty chart frame (axes, title, gridlines visible)
-Frame 0.3s: First data element begins animating in
-Frame 2.0s: All data elements fully rendered
-Frame 2.0-5.0s: Hold for readability
-```
-
-- **Bar charts:** Bars grow upward from baseline (stagger left-to-right, 0.1s delay each)
-- **Line charts:** Line draws left-to-right following the data path
-- **Pie/donut charts:** Slices fill clockwise from 12 o'clock, largest slice first
-- **KPI grid:** Numbers count up from 0 to final value (odometer effect)
-
-### Pattern: Narrative Highlight
-
-Highlight one element at a time as narration mentions it.
+先显示空坐标轴/框架，然后将数据动画显示。
 
 ```
-Frame 0.0s: Full chart visible but all elements at 30% opacity (desaturated)
-Frame 0.5s: First highlighted element goes full color + slight scale-up
-Frame 3.0s: First element returns to normal, second element highlights
-...continue for each narrated point
+帧0.0秒：空白图表框架（坐标轴、标题、网格线可见）
+帧0.3秒：第一个数据元素开始动画显示
+帧2.0秒：所有数据元素完全渲染
+帧2.0-5.0秒：保持以利可读性
 ```
 
-Use when the narrator walks through specific data points. Keeps viewer focus synchronized
-with the voiceover.
+- **条形图：** 条形从基线向上增长（从左到右错开，每步0.1秒延迟）
+- **折线图：** 线条从左到右沿数据路径绘制
+- **饼图/环形图：** 扇形从12点钟方向顺时针填充，最大扇形优先
+- **KPI 网格：** 数字从0计数到最终值（里程表效果）
 
-### Pattern: Comparison Reveal
+### 模式：叙事高亮
 
-Show baseline, then animate the change.
-
-```
-Frame 0.0s: Baseline data visible (e.g., "Before" bars)
-Frame 2.0s: Hold baseline for comprehension
-Frame 2.5s: Animate change (bars grow/shrink to "After" values)
-Frame 3.5s: Delta labels appear (+40%, -15%, etc.)
-Frame 3.5-7.0s: Hold for readability
-```
-
-Use for before/after, year-over-year, or A/B comparisons.
-
-### Timing Rules
-
-| Element | Animation Duration | Hold Duration |
-|---------|-------------------|---------------|
-| Chart build-up | 2-4 seconds | 3-5 seconds |
-| Single element highlight | 0.3-0.5 seconds | 2-3 seconds |
-| Comparison transition | 1-2 seconds | 3-5 seconds |
-| KPI counter | 1.5-2 seconds | 2-3 seconds |
-| Label/annotation appear | 0.2-0.3 seconds | Remains on screen |
-
-**Critical rule:** The chart must be fully built and held for at least 3 seconds before the
-scene transitions. Viewers need time to read. If the narration moves on before the chart is
-readable, either extend the scene or simplify the chart.
-
-## Label Placement Rules
-
-### Bar Charts
+每次旁白提到一个元素时高亮一个元素。
 
 ```
-Vertical bars:
-  - Value labels: ABOVE each bar (or INSIDE if bar is tall enough for legible text)
-  - Category labels: Below on x-axis, horizontal text
-  - If labels overlap: rotate 45 degrees or use horizontal bars instead
-  - Y-axis: include gridlines, omit axis label if title makes it obvious
-
-Horizontal bars:
-  - Value labels: TO THE RIGHT of each bar
-  - Category labels: Left-aligned on y-axis
-  - Preferred when category names are longer than 2 words
+帧0.0秒：完整图表可见但所有元素30%不透明度（去饱和）
+帧0.5秒：第一个高亮元素变为全彩色 + 轻微放大
+帧3.0秒：第一个元素恢复正常，第二个元素高亮
+...继续每个讲述的数据点
 ```
 
-### Line Charts
+当叙述者逐一讲解特定数据点时使用。保持观众焦点与画外音同步。
+
+### 模式：比较揭示
+
+先显示基线，然后动画显示变化。
 
 ```
-  - Endpoint labels: Show value at the last data point (right end)
-  - Start label: Show value at the first data point (left end) for context
-  - Dense data (>7 points): Label only start, end, and notable peaks/valleys
-  - Avoid: Labels on every point (creates clutter in video)
-  - Legend: Top-right or inline (label next to the line) for multi-series
+帧0.0秒：基线数据可见（例如，"之前"的条形）
+帧2.0秒：保持基线以便理解
+帧2.5秒：动画显示变化（条形增长/缩小到"之后"的值）
+帧3.5秒：增量标签出现（+40%, -15% 等）
+帧3.5-7.0秒：保持可读性
 ```
 
-### Pie / Donut Charts
+用于前后对比、同比或 A/B 比较。
+
+### 计时规则
+
+| 元素 | 动画时长 | 保持时长 |
+|------|---------|---------|
+| 图表构建 | 2-4秒 | 3-5秒 |
+| 单元素高亮 | 0.3-0.5秒 | 2-3秒 |
+| 比较过渡 | 1-2秒 | 3-5秒 |
+| KPI 计数器 | 1.5-2秒 | 2-3秒 |
+| 标签/注释出现 | 0.2-0.3秒 | 停留在屏幕上 |
+
+**关键规则：** 图表必须完全构建并保持至少3秒，然后场景才能过渡。观众需要时间阅读。如果旁白在图表可读之前就继续了，要么延长场景，要么简化图表。
+
+## 标签放置规则
+
+### 条形图
 
 ```
-  - Large slices (>= 10%): Label INSIDE the slice (percentage + category)
-  - Small slices (< 10%): Label OUTSIDE with leader line connecting to slice
-  - Center of donut: Use for total value or key metric label
-  - Maximum: 5-6 slices. Combine anything under 5% into "Other"
-  - Always show percentages, not just raw values
+垂直条形：
+  - 数值标签：在每条上方（如果条形足够高放得下可读文字则放在内部）
+  - 类别标签：x轴下方，水平文字
+  - 如果标签重叠：旋转45度或改用水平条形
+  - Y轴：包含网格线，如果标题说明确则省略轴标签
+
+水平条形：
+  - 数值标签：在每条右侧
+  - 类别标签：y轴上左对齐
+  - 当类别名称超过2个词时优先使用
 ```
 
-### KPI Grid
+### 折线图
 
 ```
-  - Large number: Center of each card, using stat_card font (3-4x body size)
-  - Label: Below the number, smaller font, describes the metric
-  - Delta indicator: Small arrow + percentage showing change (green up, red down)
-  - Grid: 2x2 or 3x2 layout, evenly spaced, consistent card sizing
+  - 端点标签：在最后一个数据点显示值（右端）
+  - 开始标签：在第一个数据点显示值（左端）以提供上下文
+  - 密集数据（>7点）：仅标记开始、结束和显著的峰/谷
+  - 避免：在每个点上标记（在视频中造成混乱）
+  - 图例：右上角或内联（在线条旁标记）用于多系列
 ```
 
-### Universal Label Rules
-
-- **Title visible:** Every chart must have a clear title (top-left or top-center)
-- **Source citation:** If data is from an external source, show "Source: [name]" in small text at bottom
-- **Units:** Always show units (%, $, seconds, etc.) either in the title or on the axis
-- **No orphan labels:** Every visual element must be labeled or explained by the narration
-
-## Data Density vs Readability
-
-### The Video Rule: Less Is More
-
-Video is not a spreadsheet. The viewer cannot pause, scroll, or zoom. Every data point
-competes for attention in a 5-7 second window.
+### 饼图/环形图
 
 ```
-Ideal data points per chart type:
-  Bar chart:     5-7 bars (max 9)
-  Line chart:    5-12 points (max 15, but label sparsely)
-  Pie chart:     3-5 slices (max 6)
-  KPI grid:      3-6 metrics (max 6)
+  - 大扇形（>= 10%）：在扇形内部标记（百分比 + 类别）
+  - 小扇形（< 10%）：在外部标记，用引线连接到扇形
+  - 环形中心：用于总值或关键指标标签
+  - 最大：5-6个扇形。将任何低于5%的合并为"其他"
+  - 始终显示百分比，而不仅仅是原始值
 ```
 
-### Simplification Strategies
-
-| Problem | Solution |
-|---------|----------|
-| Too many categories (>9) | Show top 5-7, aggregate rest into "Other" |
-| Too many time periods | Aggregate (monthly -> quarterly, daily -> weekly) |
-| Multiple metrics to show | Split into separate charts across scenes |
-| Wide value ranges | Use normalized/percentage view instead of absolute |
-| Decimal precision | Round aggressively: $1,234,567 -> $1.2M |
-
-### Font Size Minimums (at 1080p)
-
-These are non-negotiable for readability on screens including mobile:
-
-| Element | Minimum Size | Recommended |
-|---------|-------------|-------------|
-| Chart title | 32px | 36-40px |
-| Axis labels | 24px | 28px |
-| Value labels | 24px | 28px |
-| Annotations | 20px | 24px |
-| Source citation | 16px | 18px |
-
-**Scaling rule:** For 4K output, multiply by 2x. For 720p, these minimums still apply
-(they are the floor).
-
-## Color Usage
-
-### Deriving Chart Colors from the Playbook
-
-Charts must look like they belong to the video. Always derive colors from the active
-style playbook.
+### KPI 网格
 
 ```
-Color derivation priority:
-  1. playbook.visual_language.color_palette.chart_palette  (if the playbook defines one)
-  2. Derive from primary + accent colors:
-       - Bar/slice 1: primary[0]
-       - Bar/slice 2: accent[0]
-       - Bar/slice 3: primary[1]
-       - Bar/slice 4: accent[1]
-       - Bar/slice 5+: generate by adjusting lightness of primary[0]
-  3. Background: use playbook background color
-  4. Text/labels: use playbook text color
-  5. Gridlines: use playbook muted color at 50% opacity
+  - 大数字：每张卡片中心，使用数据卡片字体（正文大小的3-4倍）
+  - 标签：数字下方，较小字体，描述指标
+  - 增量指示器：小箭头 + 百分比显示变化（绿色向上，红色向下）
+  - 网格：2x2或3x2布局，均匀间距，一致卡片大小
 ```
 
-### Highlight and Focus
+### 通用标签规则
+
+- **标题可见：** 每个图表必须有清晰标题（左上或中上）
+- **来源引用：** 如果数据来自外部来源，在底部小字显示"来源：[名称]"
+- **单位：** 始终显示单位（%、$、秒等），在标题中或坐标轴上
+- **无孤立标签：** 每个视觉元素必须被标记或由旁白解释
+
+## 数据密度 vs 可读性
+
+### 视频规则：少即是多
+
+视频不是电子表格。观众不能暂停、滚动或缩放。每个数据点在5-7秒窗口内争夺注意力。
 
 ```
-Highlighting strategy:
-  - KEY data point:    Full saturation of accent[0], slight scale-up (1.05x)
-  - FOCUS data points: Full saturation of their assigned color
-  - NON-FOCUS points:  Desaturate to 30% opacity or use muted color
-  - BASELINE/CONTEXT:  Dashed lines using muted color
+每种图表类型的理想数据点：
+  条形图：     5-7条（最多9条）
+  折线图：     5-12点（最多15点，但稀疏标记）
+  饼图：       3-5个扇形（最多6个）
+  KPI 网格：   3-6个指标（最多6个）
 ```
 
-### Accessibility Rules
+### 简化策略
 
-Never rely on color alone to convey meaning:
+| 问题 | 解决方案 |
+|------|----------|
+| 类别太多（>9） | 显示前5-7个，其余聚合为"其他" |
+| 时间段太多 | 聚合（月度→季度，每日→每周） |
+| 多个指标要显示 | 跨场景拆分为多个独立图表 |
+| 数值范围广泛 | 使用标准化/百分比视图而非绝对值 |
+| 小数精度 | 积极舍入：$1,234,567 → $120万 |
 
-- **Add patterns:** Use hatching, dots, or stripes on bars/slices in addition to color
-- **Add labels:** Every bar/slice/line must have a text label, not just a legend
-- **Contrast:** Minimum 3:1 contrast ratio between adjacent chart elements
-- **Colorblind-safe:** Avoid red-green as the only differentiator. Prefer blue-orange or
-  blue-yellow pairings when showing positive/negative
+### 最小字体大小（1080p下）
 
-## Common Pitfalls
+这些在屏幕上（包括移动端）可读性是不可妥协的：
 
-### Misleading Charts
+| 元素 | 最小尺寸 | 推荐 |
+|------|---------|------|
+| 图表标题 | 32px | 36-40px |
+| 轴标签 | 24px | 28px |
+| 数值标签 | 24px | 28px |
+| 注释 | 20px | 24px |
+| 来源引用 | 16px | 18px |
 
-| Pitfall | Why It Misleads | Fix |
-|---------|----------------|-----|
-| Truncated y-axis (not starting at 0) | Small differences look enormous | Always start bar chart y-axis at 0 |
-| 3D charts | Perspective distorts size perception | Always use 2D flat charts |
-| Dual y-axes with different scales | Implies false correlation | Use two separate charts side by side |
-| Cherry-picked time range | Hides broader context | Show full relevant range or acknowledge truncation |
-| Pie chart with too many slices | Impossible to compare small angles | Max 5-6 slices, aggregate rest |
+**缩放规则：** 4K输出乘以2倍。720p下这些最小值仍然适用（它们是底线）。
 
-### Animation Mistakes
+## 颜色使用
 
-| Pitfall | Fix |
-|---------|-----|
-| Animation too fast (< 1.5s) | Viewers cannot track what appeared. Minimum 2s build-up |
-| No hold time after animation | Scene cuts away before chart is readable. Hold 3-5s minimum |
-| All elements appear at once | Loses the narrative. Stagger element entrance |
-| Gratuitous bouncing/spinning | Distracts from data. Use clean ease-in-out per playbook |
+### 从剧本派生图表颜色
 
-### Design Mistakes
+图表必须看起来属于视频。始终从活动的风格剧本派生颜色。
 
-| Pitfall | Fix |
-|---------|-----|
-| Too many colors (>5 in one chart) | Limit to 4-5 distinct colors. Aggregate or split charts |
-| Missing title | Every chart needs a title. Viewers have no other context |
-| Tiny font on mobile | Enforce minimums: 32px title, 24px labels at 1080p |
-| Decorative gridlines | Use light gridlines or none. They should aid reading, not decorate |
-| Dark text on dark background | Use playbook text color on playbook background. Check contrast |
+```
+颜色派生优先级：
+  1. 剧本.视觉语言.调色板.图表调色板（如果剧本定义了的话）
+  2. 从主色+强调色派生：
+       - 条形/扇形1：主色[0]
+       - 条形/扇形2：强调色[0]
+       - 条形/扇形3：主色[1]
+       - 条形/扇形4：强调色[1]
+       - 条形/扇形5+：通过调整主色[0]的亮度生成
+  3. 背景：使用剧本背景颜色
+  4. 文字/标签：使用剧本文字颜色
+  5. 网格线：使用50%不透明度的剧本柔和色
+```
 
-## Integration with Scene Director
+### 高亮与焦点
 
-When the Scene Director identifies a data visualization need, apply this skill as follows:
+```
+高亮策略：
+  - 关键数据点：    强调色[0]的完全饱和度，轻微放大（1.05x）
+  - 焦点数据点：    其分配颜色的完全饱和度
+  - 非焦点点：      去饱和至30%不透明度或使用柔和色
+  - 基线/背景：     使用柔和色的虚线
+```
 
-1. **Determine chart type** using the decision tree above
-2. **Specify animation pattern** in the scene's `movement` field (e.g., "build-up: bars grow from baseline over 2s, hold 4s")
-3. **Include label specifications** in `overlay_notes` (e.g., "value labels above bars, title top-left, source bottom-right")
-4. **Reference playbook colors** in `required_assets` description (e.g., "bar chart using primary[0] #2563EB for main bars, accent[0] #F59E0B for highlight bar")
-5. **Set scene duration** to accommodate animation (2-4s) + hold (3-5s) = minimum 5s per chart scene
+### 可访问性规则
 
-### Example Scene Specification
+绝不依赖颜色作为传递含义的唯一方式：
+
+- **添加模式：** 在条形/扇形上使用阴影线、点或条纹，配合颜色
+- **添加标签：** 每个条形/扇形/线条必须有文字标签，而不仅仅是图例
+- **对比度：** 相邻图表元素之间最小3:1对比度
+- **色盲安全：** 避免红绿作为唯一区分方式。显示正/负时优先使用蓝橙或蓝黄配对
+
+## 常见陷阱
+
+### 误导性图表
+
+| 陷阱 | 为何误导 | 修复 |
+|------|---------|------|
+| Y轴截断（不从0开始） | 小差异看起来巨大 | 条形图Y轴始终从0开始 |
+| 3D图表 | 透视扭曲大小感知 | 始终使用2D平面图表 |
+| 不同刻度的双Y轴 | 暗示虚假相关性 | 并排使用两个独立图表 |
+| 精选的时间范围 | 隐藏更广泛的背景 | 显示完整相关范围或承认截断 |
+| 扇形太多的饼图 | 无法比较小角度 | 最多5-6个扇形，其余聚合 |
+
+### 动画错误
+
+| 陷阱 | 修复 |
+|------|------|
+| 动画太快（< 1.5秒） | 观众无法跟踪出现的内容。最少2秒构建 |
+| 动画后无保持时间 | 图表可读前场景已切走。最少保持3-5秒 |
+| 所有元素同时出现 | 失去叙事性。错开元素进入 |
+| 无节制的弹跳/旋转 | 分散数据注意力。按剧本使用干净的缓入缓出 |
+
+### 设计错误
+
+| 陷阱 | 修复 |
+|------|------|
+| 颜色太多（一个图表中>5种） | 限制在4-5种不同颜色。聚合或拆分图表 |
+| 缺少标题 | 每个图表都需要标题。观众没有其他上下文 |
+| 移动端字体过小 | 强制执行最小值：1080p下标题32px，标签24px |
+| 装饰性网格线 | 使用浅色网格线或不用。它们应辅助阅读，非装饰 |
+| 深色背景上的深色文字 | 在剧本背景上使用剧本文字颜色。检查对比度 |
+
+## 与场景导演的集成
+
+当场景导演识别出数据可视化需求时，按如下方式应用本技能：
+
+1. **使用上方的决策树确定图表类型**
+2. **在场景的 `movement` 字段中指定动画模式**（例如，"逐步构建：条形从基线在2秒内增长，保持4秒"）
+3. **在 `overlay_notes` 中包含标签规格**（例如，"条形上方数值标签，左上角标题，右下角来源"）
+4. **在 `required_assets` 描述中引用剧本颜色**（例如，"使用主色[0] #2563EB 做主条、强调色[0] #F59E0B 做高亮条的条形图"）
+5. **设置场景时长以适应动画（2-4秒）+ 保持（3-5秒）= 每个图表场景至少5秒**
+
+### 场景规格示例
 
 ```json
 {
   "id": "scene-7",
   "type": "animation",
-  "description": "Horizontal bar chart comparing response times: Traditional DB 450ms, Vector DB 12ms, Cached 3ms. Bars grow left-to-right with stagger. Vector DB bar highlighted in accent color. Hold for readability.",
+  "description": "水平条形图比较响应时间：传统DB 450ms，向量DB 12ms，缓存3ms。条形从左到右错开增长。向量DB条用强调色高亮。保持可读性。",
   "start_seconds": 32,
   "end_seconds": 40,
   "script_section_id": "s5",
-  "framing": "full-screen chart, centered with generous padding",
-  "movement": "build-up: bars grow from left over 2.5s with 0.3s stagger, hold 5s",
-  "transition_in": "fade",
-  "transition_out": "dissolve",
-  "overlay_notes": "Title: 'Query Response Time Comparison'. Value labels right of bars (ms units). Source: 'Benchmark 2024' bottom-right 16px. Vector DB bar uses accent[0], others use primary[0] at 50% opacity.",
+  "framing": "全屏图表，居中，有充裕边距",
+  "movement": "逐步构建：条形在2.5秒内从左增长，0.3秒错开，保持5秒",
+  "transition_in": " fade",
+  "transition_out": "溶解",
+  "overlay_notes": "标题：'查询响应时间比较'。条形右侧数值标签（ms单位）。来源：右下角'2024基准测试'16px。向量DB条使用强调色[0]，其他条使用50%不透明度的主色[0]。",
   "required_assets": [
     {
       "type": "chart_data",
-      "description": "Horizontal bar chart data: Traditional DB 450ms, Vector DB 12ms, Cached 3ms. Use playbook primary #2563EB at 50% for context bars, accent #F59E0B for Vector DB highlight bar.",
+      "description": "水平条形图数据：传统DB 450ms，向量DB 12ms，缓存3ms。上下文条使用剧本主色 #2563EB 50%不透明度，向量DB高亮条使用强调色 #F59E0B。",
       "source": "generate"
     }
   ]
 }
 ```
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] Chart type matches the data story (not just "default to bar chart")
-- [ ] Data points within limits: 5-7 bars, 3-5 pie slices, 5-12 line points
-- [ ] Animation duration: 2-4s build, 3-5s hold minimum
-- [ ] All text meets size minimums: 32px title, 24px labels at 1080p
-- [ ] Colors derived from active playbook palette
-- [ ] Key data point has visual emphasis (highlight color, scale, or annotation)
-- [ ] No reliance on color alone for meaning (labels + patterns for accessibility)
-- [ ] Y-axis starts at 0 for bar charts
-- [ ] No 3D effects or perspective distortion
-- [ ] Title is visible and descriptive
-- [ ] Source cited if using external data
-- [ ] Chart is readable when paused at any frame during the hold period
+- [ ] 图表类型匹配数据故事（不仅仅是"默认使用条形图"）
+- [ ] 数据点在限制内：5-7条条形，3-5个饼图扇形，5-12个折线点
+- [ ] 动画时长：2-4秒构建，3-5秒最小保持
+- [ ] 所有文字满足尺寸最小值：1080p下标题32px，标签24px
+- [ ] 颜色从活动的剧本调色板派生
+- [ ] 关键数据点有视觉强调（高亮颜色、缩放或注释）
+- [ ] 不依赖颜色作为唯一含义（标签+模式以确保可访问性）
+- [ ] 条形图Y轴从0开始
+- [ ] 无3D效果或透视变形
+- [ ] 标题可见且具描述性
+- [ ] 如果使用外部数据，引用来源
+- [ ] 在保持期间的任何帧暂停时图表可读

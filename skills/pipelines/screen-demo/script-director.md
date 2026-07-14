@@ -1,94 +1,94 @@
-# Script Director - Screen Demo Pipeline
+# 脚本导演 - 屏幕演示流水线
 
-## When To Use
+## 使用时机
 
-You are turning the inspected recording into a timestamped procedural script. Unlike explainer work, you are not inventing the flow. You are synchronizing language to actions the viewer will literally see.
+您需要将检查过的录制内容转化为带时间戳的程序化脚本。与解说类工作不同，您不是在创造流程，而是将语言与观众将看到的实际动作同步。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 目的 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["idea"]["brief"]` | Brief with workflow, critical moments, and source notes |
-| Tools | `transcriber`, `frame_sampler`, `audio_enhance` | Audio/transcript inspection and spot checks |
+| Schema | `schemas/artifacts/script.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["idea"]["brief"]` | 包含工作流、关键时刻和源素材备注的需求说明 |
+| 工具 | `transcriber`、`frame_sampler`、`audio_enhance` | 音频/转录检查与抽样验证 |
 
-## Process
+## 流程
 
-### 1. Decide The Script Mode
+### 1. 决定脚本模式
 
-Use the brief metadata to choose one of three modes:
+根据需求说明元数据选择三种模式之一：
 
-| Voiceover Status | Strategy |
+| 旁白状态 | 策略 |
 |-----------------|----------|
-| `voiced` | Transcribe, tighten, and preserve the speaker's phrasing where possible |
-| `silent` | Write text-led or optional TTS-ready narration around the actions |
-| `partial` | Transcribe the existing speech and bridge only where necessary |
+| `voiced`（有配音） | 转录、精简，并尽可能保留演讲者的措辞 |
+| `silent`（静音） | 围绕操作编写以文字为主导或可选的 TTS 就绪旁白 |
+| `partial`（部分有配音） | 转录已有的语音，仅在必要处补充衔接 |
 
-If the recording is silent and TTS was not available in preflight, do not pretend there will be narration later. Write the script so the video can still work with captions, hook cards, and step labels.
+如果录制是静音的且在预检中 TTS 不可用，不要假装后续会有旁白。编写脚本时应使视频仍然能通过字幕、钩子卡片和步骤标签正常工作。
 
-### 2. Build The Action Map
+### 2. 构建操作地图
 
-The action map is the real backbone of this stage. Use `frame_sampler` and `transcriber` together to log:
+操作地图是此阶段的真正核心。结合使用 `frame_sampler` 和 `transcriber` 记录：
 
-- exact task boundaries,
-- clicks worth highlighting,
-- typed input worth slowing down,
-- waits worth speeding up or cutting,
-- the result moment to preserve in real time.
+- 精确的任务边界
+- 值得高亮标注的点击
+- 值得放慢速度的输入
+- 值得加速或裁剪的等待
+- 需要实时保留的结果时刻
 
-Store detailed action information in `script.metadata.interaction_map`. Keep `sections` clean and schema-valid.
+将详细的操作信息存储在 `script.metadata.interaction_map` 中。保持 `sections` 清晰且符合 schema 验证。
 
-Useful `interaction_map` fields:
+有用的 `interaction_map` 字段：
 
 - `timestamp_seconds`
 - `action_type`
 - `target`
 - `importance`
-- `suggested_treatment` (`realtime`, `speed_up`, `cut`, `highlight`, `zoom`)
+- `suggested_treatment`（`realtime`、`speed_up`、`cut`、`highlight`、`zoom`）
 
-### 3. Write Sections By Step
+### 3. 按步骤编写章节
 
-Each `script.sections[]` entry should correspond to a real user step, not a thematic paragraph.
+每个 `script.sections[]` 条目应对应一个实际用户步骤，而非主题段落。
 
-Good section labels:
+好的章节标签：
 
-- `Open the settings panel`
-- `Paste the API token`
-- `Run the build`
-- `Verify the live result`
+- `打开设置面板`
+- `粘贴 API 令牌`
+- `运行构建`
+- `验证实时结果`
 
-Every section should do three things:
+每个章节应做到三件事：
 
-- say what is happening,
-- say why it matters,
-- leave clear cues for highlights, zooms, or speed changes.
+- 说明正在发生什么
+- 说明为什么这很重要
+- 为高亮标注、缩放或速度变化留下清晰的提示
 
-### 4. Keep The Narration Procedural
+### 4. 保持旁白的程序化风格
 
-Use the research-backed rules:
+遵循研究支持的规则：
 
-- narrate intent and effect, not obvious cursor motion,
-- keep wording short and direct,
-- avoid jargon unless the target audience clearly expects it,
-- keep the action on screen synchronized with the wording,
-- preserve the speaker's natural voice if the source already has narration.
+- 旁白应说明意图和效果，而非明显的光标移动
+- 保持措辞简短直接
+- 除非目标受众明确熟悉，否则避免使用专业行话
+- 保持屏幕上的动作与措辞同步
+- 如果源素材已有旁白，保留演讲者的自然语音
 
-### 5. Mark Pacing Decisions
+### 5. 标注节奏决策
 
-Use section-level notes and `metadata.speed_plan` to call out:
+使用章节级注释和 `metadata.speed_plan` 来标注：
 
-| Speed Factor | When to Use | Example |
+| 速度系数 | 使用时机 | 示例 |
 |-------------|-------------|---------|
-| `0.75-1.0x` | Important click or result | Small control, key validation moment |
-| `1.5-2.0x` | routine typing or navigation | filling obvious fields |
-| `3.0-6.0x` | installs, builds, loading | dependency install, compile |
-| `cut` | no learning value | long idle wait |
+| `0.75-1.0x` | 重要点击或结果 | 小控件、关键验证时刻 |
+| `1.5-2.0x` | 常规输入或导航 | 填写明显的字段 |
+| `3.0-6.0x` | 安装、构建、加载 | 依赖安装、编译 |
+| `cut`（裁剪） | 无学习价值 | 长时间空闲等待 |
 
-Do not put critical proof moments inside sped-up sections.
+不要将关键的证明时刻放在加速段落内。
 
-### 6. Use Metadata For Screen-Specific Detail
+### 6. 使用元数据存储屏幕特定细节
 
-Recommended `script.metadata` fields:
+推荐的 `script.metadata` 字段：
 
 - `interaction_map`
 - `speed_plan`
@@ -97,31 +97,30 @@ Recommended `script.metadata` fields:
 - `callout_candidates`
 - `sections_needing_zoom`
 
-### 7. Quality Gate
+### 7. 质量门禁
 
-| Criterion | Question |
+| 检查项 | 问题 |
 |-----------|----------|
-| **Action coverage** | Is every critical moment from the brief annotated with a timestamp? |
-| **Narration sync** | Does each narration segment align with what's happening on screen? |
-| **Speed marking** | Are dead-time segments marked for acceleration or removal? |
-| **Enhancement density** | Are highlights reserved for true attention shifts rather than every click? |
-| **Technical accuracy** | Are all software names, commands, and UI elements named correctly? |
-| **Word economy** | Is narration concise and procedural? |
+| **操作覆盖** | 需求说明中的每个关键时刻是否都标注了时间戳？ |
+| **旁白同步** | 每个旁白段是否与屏幕上正在发生的内容对齐？ |
+| **速度标记** | 死时间段是否标记为加速或移除？ |
+| **增强密度** | 高亮标注是否仅用于真正的注意力转移而非每次点击？ |
+| **技术准确性** | 所有软件名称、命令和 UI 元素是否命名正确？ |
+| **用词精炼** | 旁白是否简洁且程序化？ |
 
-### Mid-Production Fact Verification
+### 制作中的事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在脚本编写过程中遇到不确定的情况：
+- 使用 `web_search` 在写入脚本前验证事实性声明
+- 使用 `web_search` 查找参考图片以确保视觉准确性
+- 在决策日志中记录验证：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+脚本中的每条事实性声明都应可追溯到 `research_brief`。
+如果做出了研究中没有的声明，请进行额外研究并添加来源。不要编造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Narrating the cursor instead of the outcome.
-- Letting spoken timing drift away from the visual action.
-- Keeping builds and loading screens in real time.
-- Writing a silent-recording script that secretly depends on unavailable TTS.
+- 旁白讲述光标而非结果
+- 口述时机与视觉动作脱节
+- 以实时速度保留构建和加载画面
+- 为静音录制编写的脚本暗中依赖不可用的 TTS

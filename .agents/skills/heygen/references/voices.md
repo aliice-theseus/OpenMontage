@@ -1,13 +1,13 @@
 ---
 name: voices
-description: Listing voices, locales, speed/pitch configuration for HeyGen
+description: 列出声音、语言区域、HeyGen 的速度/音调配置
 ---
 
-# HeyGen Voices
+# HeyGen 声音
 
-HeyGen provides a wide variety of AI voices for different languages, accents, and styles. Voices convert your text script into natural-sounding speech.
+HeyGen 为不同语言、口音和风格提供多种多样的 AI 声音。声音将您的文本脚本转换为自然语音。
 
-## Listing Available Voices
+## 列出可用声音
 
 ### curl
 
@@ -70,7 +70,7 @@ def list_voices() -> list:
     return data["data"]["voices"]
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -100,30 +100,30 @@ def list_voices() -> list:
 }
 ```
 
-## Supported Languages
+## 支持的语言
 
-HeyGen supports many languages including:
+HeyGen 支持多种语言，包括：
 
-| Language | Code | Notes |
+| 语言 | 代码 | 说明 |
 |----------|------|-------|
-| English (US) | en-US | Multiple voice options |
-| English (UK) | en-GB | British accent |
-| Spanish | es-ES | Spain Spanish |
-| Spanish (Latin) | es-MX | Mexican Spanish |
-| French | fr-FR | France French |
-| German | de-DE | Standard German |
-| Portuguese | pt-BR | Brazilian Portuguese |
-| Chinese (Mandarin) | zh-CN | Simplified Chinese |
-| Japanese | ja-JP | Standard Japanese |
-| Korean | ko-KR | Standard Korean |
-| Italian | it-IT | Standard Italian |
-| Dutch | nl-NL | Standard Dutch |
-| Polish | pl-PL | Standard Polish |
-| Arabic | ar-SA | Saudi Arabic |
+| 英语（美国） | en-US | 多种声音选项 |
+| 英语（英国） | en-GB | 英式口音 |
+| 西班牙语 | es-ES | 西班牙西班牙语 |
+| 西班牙语（拉丁） | es-MX | 墨西哥西班牙语 |
+| 法语 | fr-FR | 法国法语 |
+| 德语 | de-DE | 标准德语 |
+| 葡萄牙语 | pt-BR | 巴西葡萄牙语 |
+| 中文（普通话） | zh-CN | 简体中文 |
+| 日语 | ja-JP | 标准日语 |
+| 韩语 | ko-KR | 标准韩语 |
+| 意大利语 | it-IT | 标准意大利语 |
+| 荷兰语 | nl-NL | 标准荷兰语 |
+| 波兰语 | pl-PL | 标准波兰语 |
+| 阿拉伯语 | ar-SA | 沙特阿拉伯语 |
 
-## Using Voices in Video Generation
+## 在视频生成中使用声音
 
-### Basic Voice Usage
+### 基本声音用法
 
 ```typescript
 const videoConfig = {
@@ -144,7 +144,7 @@ const videoConfig = {
 };
 ```
 
-### Voice with Speed Adjustment
+### 带速度调整的声音
 
 ```typescript
 const videoConfig = {
@@ -159,14 +159,14 @@ const videoConfig = {
         type: "text",
         input_text: "This is spoken at a faster pace.",
         voice_id: "1bd001e7e50f421d891986aad5158bc8",
-        speed: 1.2, // 1.0 is normal, range: 0.5 - 2.0
+        speed: 1.2, // 1.0 是正常速度，范围：0.5 - 2.0
       },
     },
   ],
 };
 ```
 
-### Voice with Pitch Adjustment
+### 带音调调整的声音
 
 ```typescript
 const videoConfig = {
@@ -181,54 +181,54 @@ const videoConfig = {
         type: "text",
         input_text: "This has a higher pitch.",
         voice_id: "1bd001e7e50f421d891986aad5158bc8",
-        pitch: 10, // Range: -20 to 20
+        pitch: 10, // 范围：-20 到 20
       },
     },
   ],
 };
 ```
 
-## Adding Pauses with Break Tags
+## 使用暂停标签添加暂停
 
-HeyGen supports SSML-style `<break>` tags to add pauses in scripts.
+HeyGen 支持 SSML 风格的 `<break>` 标签在脚本中添加暂停。
 
-### Break Tag Format
+### 暂停标签格式
 
 ```
 <break time="Xs"/>
 ```
 
-Where `X` is the duration in seconds (e.g., `1s`, `1.5s`, `0.5s`).
+其中 `X` 是秒数（例如 `1s`、`1.5s`、`0.5s`）。
 
-### Requirements
+### 要求
 
-| Rule | Example |
+| 规则 | 示例 |
 |------|---------|
-| Use seconds with "s" suffix | `<break time="1.5s"/>` ✓ |
-| Must have space before tag | `word <break time="1s"/>` ✓ |
-| Must have space after tag | `<break time="1s"/> word` ✓ |
-| Self-closing tag | `<break time="1s"/>` ✓ |
+| 使用带"s"后缀的秒数 | `<break time="1.5s"/>` ✓ |
+| 标签前必须有空格 | `word <break time="1s"/>` ✓ |
+| 标签后必须有空格 | `<break time="1s"/> word` ✓ |
+| 自闭合标签 | `<break time="1s"/>` ✓ |
 
-**Incorrect:** `word<break time="1s"/>word` (no spaces)
-**Correct:** `word <break time="1s"/> word`
+**错误：** `word<break time="1s"/>word`（无空格）
+**正确：** `word <break time="1s"/> word`
 
-### Examples
+### 示例
 
 ```typescript
-// Single pause
+// 单个暂停
 const script1 = "Hello and welcome. <break time=\"1s\"/> Let me introduce our product.";
 
-// Multiple pauses
+// 多个暂停
 const script2 = "First point. <break time=\"1.5s\"/> Second point. <break time=\"1s\"/> Third point.";
 
-// Pause at start (dramatic opening)
+// 开头暂停（戏剧性开场）
 const script3 = "<break time=\"0.5s\"/> Welcome to our presentation.";
 
-// Longer pause for emphasis
+// 较长的暂停用于强调
 const script4 = "And the winner is... <break time=\"2s\"/> You!";
 ```
 
-### Full Example
+### 完整示例
 
 ```typescript
 const scriptWithPauses = `
@@ -256,27 +256,27 @@ const videoConfig = {
 };
 ```
 
-### Consecutive Breaks
+### 连续暂停
 
-Multiple consecutive break tags are automatically combined:
+多个连续的暂停标签会自动合并：
 
 ```typescript
-// These two breaks:
+// 这两个暂停：
 "Hello <break time=\"1s\"/> <break time=\"0.5s\"/> world"
 
-// Are treated as a single 1.5s pause
+// 会被视为一个 1.5 秒的暂停
 ```
 
-### Best Practices
+### 最佳实践
 
-1. **Use for emphasis** - Add pauses before important points
-2. **Keep pauses reasonable** - 0.5s to 2s is typical; longer feels unnatural
-3. **Match natural speech** - Add pauses where a human would breathe or pause
-4. **Test the output** - Listen to generated audio to verify timing feels right
+1. **用于强调** - 在重要内容前添加暂停
+2. **暂停保持合理** - 0.5 秒到 2 秒是典型值；更长会感觉不自然
+3. **匹配自然语音** - 在人类会呼吸或停顿的地方添加暂停
+4. **测试输出** - 收听生成的音频以验证时间感觉合适
 
-## Using Custom Audio Instead of TTS
+## 使用自定义音频代替 TTS
 
-Instead of text-to-speech, you can provide your own audio:
+不使用文本转语音，您可以提供自己的音频：
 
 ```typescript
 const videoConfig = {
@@ -296,9 +296,9 @@ const videoConfig = {
 };
 ```
 
-## Filtering Voices
+## 过滤声音
 
-### By Language
+### 按语言
 
 ```typescript
 function filterByLanguage(voices: Voice[], language: string): Voice[] {
@@ -311,7 +311,7 @@ const englishVoices = filterByLanguage(voices, "english");
 const spanishVoices = filterByLanguage(voices, "spanish");
 ```
 
-### By Gender
+### 按性别
 
 ```typescript
 function filterByGender(voices: Voice[], gender: "male" | "female"): Voice[] {
@@ -321,7 +321,7 @@ function filterByGender(voices: Voice[], gender: "male" | "female"): Voice[] {
 const femaleVoices = filterByGender(voices, "female");
 ```
 
-### By Features
+### 按功能
 
 ```typescript
 function filterByFeatures(
@@ -342,7 +342,7 @@ function filterByFeatures(
 const expressiveVoices = filterByFeatures(voices, { emotionSupport: true });
 ```
 
-## Voice Selection Helper
+## 声音选择辅助函数
 
 ```typescript
 interface VoiceSelectionCriteria {
@@ -374,7 +374,7 @@ async function findVoice(criteria: VoiceSelectionCriteria): Promise<Voice | null
   return filtered[0] || null;
 }
 
-// Usage
+// 使用
 const voice = await findVoice({
   language: "english",
   gender: "female",
@@ -382,9 +382,9 @@ const voice = await findVoice({
 });
 ```
 
-## Multi-Language Videos
+## 多语言视频
 
-Create videos with different languages per scene:
+创建每场景使用不同语言的视频：
 
 ```typescript
 const multiLanguageConfig = {
@@ -417,21 +417,21 @@ const multiLanguageConfig = {
 };
 ```
 
-## Matching Voice to Avatar
+## 将声音匹配到虚拟角色
 
-### Recommended: Use Avatar's Default Voice
+### 推荐：使用虚拟角色的默认声音
 
-Many avatars have a `default_voice_id` that's pre-matched. **This is the best approach.**
+许多虚拟角色有预先匹配的 `default_voice_id`。**这是最佳方法。**
 
 ```typescript
-// Using v2 API to get avatar with default voice
+// 使用 v2 API 获取带默认声音的虚拟角色
 const response = await fetch(
   "https://api.heygen.com/v2/avatar_group.list?include_public=true",
   { headers: { "X-Api-Key": process.env.HEYGEN_API_KEY! } }
 );
 const { data } = await response.json();
 
-// Find avatar with a default voice
+// 找到有默认声音的虚拟角色
 const avatar = data.avatar_group_list.find((a: any) => a.default_voice_id);
 
 if (avatar) {
@@ -441,18 +441,18 @@ if (avatar) {
       voice: {
         type: "text",
         input_text: script,
-        voice_id: avatar.default_voice_id, // Pre-matched voice
+        voice_id: avatar.default_voice_id, // 预先匹配的声音
       },
     }],
   };
 }
 ```
 
-See [avatars.md](avatars.md) for complete examples.
+详见 [avatars.md](avatars.md) 获取完整示例。
 
-### Fallback: Match Gender Manually
+### 回退：手动匹配性别
 
-If avatar has no default voice, match genders manually:
+如果虚拟角色没有默认声音，手动匹配性别：
 
 ```typescript
 interface AvatarVoicePair {
@@ -469,16 +469,16 @@ async function findMatchingAvatarAndVoice(
     listVoices(),
   ]);
 
-  // Default to male if no preference
+  // 如果没有偏好，默认为男性
   const gender = preferredGender || "male";
 
-  // Find avatar with matching gender
+  // 找到匹配性别的虚拟角色
   const avatar = avatars.find((a) => a.gender === gender);
   if (!avatar) {
     throw new Error(`No ${gender} avatar available`);
   }
 
-  // Find voice with matching gender AND language
+  // 找到匹配性别 AND 语言的声音
   const voice = voices.find(
     (v) => v.gender === gender && v.language.toLowerCase().includes("english")
   );
@@ -494,12 +494,12 @@ async function findMatchingAvatarAndVoice(
 }
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Match voice gender to avatar** - Always pair male voices with male avatars, female with female
-2. **Match voice to content** - Use professional voices for business content
-3. **Test voice previews** - Listen to preview audio before selecting
-4. **Consider locale** - Match voice accent to target audience
-5. **Use natural pacing** - Adjust speed for clarity, typically 0.9-1.1x
-6. **Add pauses** - Use SSML breaks for more natural speech flow
-7. **Validate availability** - Always verify voice_id exists before using
+1. **声音性别与虚拟角色匹配** - 始终将男性声音与男性虚拟角色配对，女性与女性配对
+2. **声音匹配内容** - 商务内容使用专业声音
+3. **测试声音预览** - 选择前收听预览音频
+4. **考虑语言区域** - 声音口音匹配目标受众
+5. **使用自然节奏** - 调整速度以获得清晰度，通常为 0.9-1.1 倍
+6. **添加暂停** - 使用 SSML 中断实现更自然的语音流
+7. **验证可用性** - 使用前始终验证 voice_id 是否存在

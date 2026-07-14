@@ -1,293 +1,277 @@
 ---
 name: i2i-prompting
-description: Image-to-image editing prompts with FLUX models
+description: 使用 FLUX 模型进行图生图编辑的提示词
 ---
 
-# Image-to-Image (I2I) Prompting
+# 图生图（I2I）提示词编写
 
-Guide to effective image-to-image editing with FLUX models.
+使用 FLUX 模型进行有效图生图编辑的指南。
 
-## Overview
+## 概述
 
-All FLUX.2 models support image-to-image editing via reference images:
-- **FLUX.2 [klein]**: Up to 4 reference images - fast editing
-- **FLUX.2 [pro]**: Up to 8 reference images - balanced quality/speed
-- **FLUX.2 [max]**: Up to 8-10 reference images - highest quality editing
-- **FLUX.2 [flex]**: Up to 8 reference images - best for typography edits
+所有 FLUX.2 模型都支持通过参考图片进行图生图编辑：
+- **FLUX.2 [klein]**：最多 4 张参考图片 - 快速编辑
+- **FLUX.2 [pro]**：最多 8 张参考图片 - 平衡质量/速度
+- **FLUX.2 [max]**：最多 8-10 张参考图片 - 最高质量编辑
+- **FLUX.2 [flex]**：最多 8 张参考图片 - 最适合排版编辑
 
-Simply provide your source image as a reference and describe the desired changes. The model understands image context and can modify specific elements while preserving others.
+只需提供源图片作为参考并描述所需更改。模型理解图像上下文，可以在保留其他元素的同时修改特定元素。
 
-> **Note:** FLUX.2 models are recommended for image editing. They provide better results than the older FLUX.1 Kontext models.
+> **注意：** 推荐使用 FLUX.2 模型进行图片编辑。它们比旧的 FLUX.1 Kontext 模型提供更好的结果。
 
-## Providing Images
+## 提供图片
 
-**Preferred: Use URLs directly** - simpler and more convenient than base64.
+**推荐：直接使用 URL** - 比 base64 更简单方便。
 
-When you have an image URL, pass it directly to `input_image`:
+当你有图片 URL 时，直接传递给 `input_image`：
 
 ```json
 {
-  "prompt": "Change the background to a beach sunset",
+  "prompt": "将背景改为海滩日落",
   "input_image": "https://example.com/photo.jpg"
 }
 ```
 
-The API fetches URLs automatically. Both URL and base64 work, but URLs are recommended when available.
+API 会自动获取 URL。URL 和 base64 都可以使用，但推荐在可用时使用 URL。
 
-## Basic Edit Patterns
+## 基本编辑模式
 
-### Simple Modifications
-Direct, single-change instructions:
-
-```
-Change the car color to red
-```
+### 简单修改
+直接的单变更指令：
 
 ```
-Make the sky a dramatic sunset
+将汽车颜色改为红色
 ```
 
 ```
-Add snow to the ground
-```
-
-### Attribute Changes
-Modifying specific characteristics:
-
-```
-Change her hair color to platinum blonde
+让天空变成戏剧性的日落
 ```
 
 ```
-Make the building taller
+在地面添加积雪
+```
+
+### 属性更改
+修改特定特征：
+
+```
+将她的发色改为铂金色
 ```
 
 ```
-Age the person to appear 20 years older
-```
-
-## Controlled Editing
-
-### Explicit Preservation
-When you need to keep specific elements unchanged:
-
-```
-Change the background to a beach scene while keeping the subject's
-pose, clothing, and expression exactly the same
+让建筑更高
 ```
 
 ```
-Transform the daytime photo to nighttime, maintaining the exact
-composition, colors of the subject's outfit, and lighting direction
+让这个人看起来老 20 岁
 ```
 
-### Style Preservation
-Preventing unwanted style shifts:
+## 受控编辑
+
+### 显式保留
+当你需要保持特定元素不变时：
 
 ```
-Change the season to autumn with falling leaves, but maintain
-the photograph's realistic style and color grading
-```
-
-```
-Add rain effects to the scene while preserving the painting's
-impressionist brushwork and color palette
-```
-
-## Transformation Types
-
-### Environmental Changes
-
-#### Time of Day
-```
-Convert to golden hour lighting with warm tones and long shadows,
-keeping all other elements identical
+将背景改为海滩场景，同时保持主体的姿态、服装和表情完全一致
 ```
 
 ```
-Transform to blue hour with city lights beginning to glow,
-maintaining the exact composition
+将白天照片转换为夜晚，保持精确的构图、主体服装的颜色和光照方向
 ```
 
-#### Weather
-```
-Add heavy rain with wet reflections on surfaces, dark overcast sky
-```
+### 风格保留
+防止不必要的风格转变：
 
 ```
-Create a foggy atmosphere with reduced visibility, mysterious mood
-```
-
-#### Season
-```
-Transform to winter with snow covering surfaces, bare trees,
-cold blue color cast
+将季节改为秋天，有落叶，但保持照片的写实风格和调色
 ```
 
 ```
-Change to spring with cherry blossoms, fresh green leaves,
-soft warm lighting
+为场景添加雨水效果，同时保留绘画的印象派笔触和调色板
 ```
 
-### Style Transfer
+## 变换类型
 
-#### Artistic Movements
-```
-Transform into Art Nouveau style with flowing organic lines,
-decorative patterns, and muted earth tones
-```
+### 环境变化
 
+#### 时间变化
 ```
-Convert to Pop Art style with bold primary colors, halftone dots,
-and high contrast graphic treatment
-```
-
-#### Artist References
-```
-Reimagine in the style of Monet with visible brushstrokes,
-soft focus, and impressionist color harmony
+转换为金色时刻光照，温暖色调和长阴影，保持所有其他元素不变
 ```
 
 ```
-Transform to match Edward Hopper's style with dramatic lighting,
-urban isolation feeling, and muted palette
+转换为蓝色时刻，城市灯光开始发光，保持精确构图
 ```
 
-#### Medium Conversion
+#### 天气
 ```
-Convert this photograph to a detailed pencil sketch with
-careful shading and visible line work
+添加大雨，表面有湿润反光，暗色阴天
 ```
 
 ```
-Transform into a watercolor painting with soft edges,
-transparent washes, and paper texture visible
+创建雾蒙蒙的氛围，能见度降低，神秘感
 ```
 
-### Subject Modifications
-
-#### Clothing Changes
+#### 季节
 ```
-Change the outfit to a formal black suit with white shirt and red tie
+转换为冬天，积雪覆盖表面，光秃的树木，冷蓝色调
 ```
 
 ```
-Replace the casual clothes with traditional Japanese kimono in blue floral pattern
+改为春天，有樱花、鲜绿的叶子和柔和温暖的光线
 ```
 
-#### Expression Changes
-```
-Change the expression to a warm genuine smile
-```
+### 风格迁移
 
+#### 艺术运动
 ```
-Make the expression more serious and contemplative
-```
-
-#### Age Modifications
-```
-Age the subject to appear as a wise elderly person with grey hair and wrinkles
+转换为新艺术风格，流畅有机的线条、装饰性图案和柔和的大地色系
 ```
 
 ```
-Make the subject appear younger, around 25 years old
+转换为波普艺术风格，大胆的原色、半色调圆点和高对比度图形处理
 ```
 
-### Object Editing
-
-#### Addition
+#### 艺术家参考
 ```
-Add a vintage leather briefcase in the subject's left hand
+以莫奈的风格重新构想，可见笔触、柔焦和印象派色彩和谐
 ```
 
 ```
-Place a steaming cup of coffee on the table
+转换为爱德华·霍珀的风格，戏剧性光线、城市孤独感和柔和调色板
 ```
 
-#### Removal
+#### 媒介转换
 ```
-Remove the background people, replace with empty street
-```
-
-```
-Remove the text/logo from the shirt, replace with solid color
-```
-
-#### Replacement
-```
-Replace the modern car with a 1960s vintage Mustang in cherry red
+将这张照片转换为细致的铅笔素描，有精细的明暗处理可见的线条
 ```
 
 ```
-Swap the coffee mug for an ornate teacup with floral pattern
+转换为水彩画，柔和边缘、透明水彩层，可见纸张纹理
 ```
 
-## Text Editing
+### 主体修改
 
-### Adding Text
+#### 服装更改
 ```
-Add a neon sign reading "OPEN 24 HOURS" in the window,
-glowing red letters with blue outline
-```
-
-```
-Include a wooden sign with hand-painted text "Welcome Home"
-mounted above the door
-```
-
-### Modifying Text
-```
-Change the store sign to read "BAKER'S DOZEN" in the same style
+将服装改为正式的黑色西装、白衬衫和红领带
 ```
 
 ```
-Update the poster text to "SUMMER SALE 2025" maintaining the design
+将休闲服装替换为蓝色花卉图案的传统日本和服
 ```
 
-## Complex Multi-Step Edits
-
-For dramatic transformations, consider breaking into steps:
-
-### Step-by-Step Approach
-Instead of:
+#### 表情更改
 ```
-Transform this modern office into a Victorian library with completely
-different furniture, add a fireplace, change the lighting to candlelit,
-and age the photograph
+将表情改为温暖真诚的微笑
 ```
 
-Try sequential edits:
-1. `Change the furniture style to Victorian antique pieces`
-2. `Add a stone fireplace on the right wall`
-3. `Transform lighting to warm candlelit atmosphere`
-4. `Apply vintage photograph aesthetic with sepia tones`
-
-## Common Pitfalls
-
-### Avoid Vague Instructions
 ```
-Bad: Make it look better
-Good: Increase contrast, add warm color grading, sharpen details
+让表情更加严肃和沉思
 ```
 
-### Be Specific About Scope
+#### 年龄修改
 ```
-Bad: Change the background
-Good: Replace the office background with a tropical beach at sunset,
-      maintaining the subject's exact position and lighting direction
+让主体变老，看起来像一位白发皱纹的智慧长者
 ```
 
-### Explicit Style Preservation
 ```
-Bad: Make it nighttime
-Good: Transform to nighttime while maintaining the photorealistic style,
-      add appropriate artificial lighting sources
+让主体看起来更年轻，大约 25 岁左右
 ```
 
-## Best Practices
+### 物体编辑
 
-1. **Start Simple** - Begin with single-element changes
-2. **Be Explicit** - State what should change AND what should stay
-3. **Reference Context** - Mention existing elements when relevant
-4. **Iterate** - Refine through multiple small edits rather than one large one
-5. **Preserve Deliberately** - Always specify style/composition preservation needs
+#### 添加
+```
+在主体左手添加一个复古皮革公文包
+```
+
+```
+在桌子上放一杯热气腾腾的咖啡
+```
+
+#### 移除
+```
+移除背景中的人，替换为空荡的街道
+```
+
+```
+移除衬衫上的文字/标志，替换为纯色
+```
+
+#### 替换
+```
+将现代汽车替换为樱桃红色的 1960 年代复古野马
+```
+
+```
+将咖啡杯替换为带有花卉图案的华丽茶杯
+```
+
+## 文字编辑
+
+### 添加文字
+```
+在窗户上添加一个霓虹灯牌，显示"OPEN 24 HOURS"，
+红色发光文字配蓝色轮廓
+```
+
+```
+在门上方安装一个木牌，带有手绘文字"Welcome Home"
+```
+
+### 修改文字
+```
+将商店招牌改为"BAKER'S DOZEN"，保持相同风格
+```
+
+```
+将海报文字更新为"SUMMER SALE 2025"，保持设计不变
+```
+
+## 复杂多步编辑
+
+对于戏剧性的变换，考虑分步进行：
+
+### 分步方法
+不要这样：
+```
+将这个现代办公室改造成维多利亚图书馆，完全不同家具，
+添加壁炉，将光照改为烛光，并对照片做旧处理
+```
+
+尝试顺序编辑：
+1. `将家具风格改为维多利亚古董家具`
+2. `在右侧墙壁添加石壁炉`
+3. `将光照转换为温暖的烛光氛围`
+4. `应用复古照片美学，配以棕褐色调`
+
+## 常见陷阱
+
+### 避免模糊指令
+```
+差：让它看起来更好
+好：增加对比度，添加暖色调，锐化细节
+```
+
+### 明确范围
+```
+差：改变背景
+好：将办公室背景替换为日落时分的热带海滩，
+     保持主体的精确位置和光照方向
+```
+
+### 显式风格保留
+```
+差：变成夜晚
+好：转换为夜晚同时保持照片级写实风格，
+     添加适当的人工光源
+```
+
+## 最佳实践
+
+1. **从简单开始** - 从单元素变更开始
+2. **明确表达** - 说明应该改变什么 AND 应该保留什么
+3. **参考上下文** - 相关时提及现有元素
+4. **迭代** - 通过多次小编辑而不是一次大编辑来优化
+5. **刻意保留** - 始终指定风格/构图保留需求

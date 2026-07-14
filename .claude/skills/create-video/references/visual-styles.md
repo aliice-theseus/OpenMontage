@@ -3,365 +3,365 @@ name: visual-styles
 description: 20 named visual styles for Video Agent prompts — each with colors, typography, motion, and transitions
 ---
 
-# Visual Style Library — 20 Styles
+# 视觉风格库 — 20 种风格
 
-Named visual styles for Video Agent prompts. Each is inspired by a real graphic designer. Ordered by mood intensity.
+Video Agent 提示词的命名视觉风格。每种风格受一位真实平面设计师启发。按情绪强度排序。
 
-**Picking a style:** Match mood first, content second. Ask: *"What should the viewer FEEL?"*
+**选择风格：** 先匹配情绪，后匹配内容。问：*"观众应该感受到什么？"*
 
-**Using a style:** Copy the style block into your prompt's STYLE section. Use the visual language rules — don't inject the example B-roll scenes (they confuse the agent).
+**使用风格：** 将风格块复制到提示词的 STYLE 部分。使用视觉语言规则——不要注入示例 B-roll 场景（这会混淆 AI）。
 
-**Custom styles:** These are examples. Create your own by combining elements, referencing other designers, art movements, or cultural aesthetics. The pattern: **named style + designer reference + color palette + typography + motion rules + transitions.**
+**自定义风格：** 这些是示例。您可以通过组合元素、参考其他设计师、艺术运动或文化美学来创建自己的风格。模式是：**命名风格 + 设计师参考 + 调色板 + 排版 + 动态规则 + 过渡。**
 
-## Quick Reference
+## 快速参考
 
-| # | Style | Artist | Mood | Best For |
+| # | 风格 | 艺术家 | 情绪 | 最适合 |
 |---|---|---|---|---|
-| 1 | Soft Signal | Sagmeister | Intimate, warm | Personal stories, wellness |
-| 2 | Warm Grain | Eksell | Organic, friendly | Environmental, sustainability |
-| 3 | Quiet Drama | Ray | Humanist, contemplative | Profiles, biographical |
-| 4 | Heritage Reel | Cassandre | Nostalgic, vintage | History, retrospectives |
-| 5 | Silk Route | Abedini | Flowing, mysterious | Global affairs, cross-cultural |
-| 6 | Swiss Pulse | Müller-Brockmann | Clinical, precise | Data-heavy, analytical |
-| 7 | Geometric Bold | Tanaka | Minimal, elegant | Lifestyle, visual essays |
-| 8 | Velvet Standard | Vignelli | Premium, timeless | Luxury, investor updates |
-| 9 | Digital Grid | Crouwel | Systematic, technical | Infrastructure, engineering |
-| 10 | Contact Sheet | Brodovitch | Editorial, investigative | Journalism, deep dives |
-| 11 | Folk Frequency | Terrazas | Cultural, vivid | Festivals, food, heritage |
-| 12 | Earth Pulse | Ghariokwu | Grounded, communal | Community, grassroots |
-| 13 | Dream State | Tomaszewski | Surreal, poetic | Op-eds, philosophy |
-| 14 | Play Mode | Ahn Sang-soo | Playful, irreverent | Entertainment, pop culture |
-| 15 | Carnival Surge | Lins | Euphoric, celebratory | Milestones, hype |
-| 16 | Shadow Cut | Hillmann | Dark, cinematic | Exposés, investigations |
-| 17 | Deconstructed | Brody | Industrial, raw | Tech news, punk energy |
-| 18 | Maximalist Type | Scher | Loud, kinetic | Big announcements, launches |
-| 19 | Data Drift | Anadol | Futuristic, immersive | AI/tech, innovation |
-| 20 | Red Wire | Tartakover | Urgent, immediate | Breaking news, crisis |
+| 1 | Soft Signal | Sagmeister | 亲密、温暖 | 个人故事、健康 |
+| 2 | Warm Grain | Eksell | 有机、友好 | 环境、可持续性 |
+| 3 | Quiet Drama | Ray | 人文、沉思 | 人物简介、传记 |
+| 4 | Heritage Reel | Cassandre | 怀旧、复古 | 历史、回顾 |
+| 5 | Silk Route | Abedini | 流畅、神秘 | 全球事务、跨文化 |
+| 6 | Swiss Pulse | Müller-Brockmann | 冷静、精确 | 数据密集、分析 |
+| 7 | Geometric Bold | Tanaka | 极简、优雅 | 生活方式、视觉文章 |
+| 8 | Velvet Standard | Vignelli | 高端、永恒 | 奢侈品、投资者更新 |
+| 9 | Digital Grid | Crouwel | 系统化、技术 | 基础设施、工程 |
+| 10 | Contact Sheet | Brodovitch | 编辑、调查 | 新闻、深度解读 |
+| 11 | Folk Frequency | Terrazas | 文化、生动 | 节日、美食、传统 |
+| 12 | Earth Pulse | Ghariokwu | 接地气、社群 | 社区、草根 |
+| 13 | Dream State | Tomaszewski | 超现实、诗意 | 评论、哲学 |
+| 14 | Play Mode | Ahn Sang-soo | 俏皮、不敬 | 娱乐、流行文化 |
+| 15 | Carnival Surge | Lins | 狂喜、庆祝 | 里程碑、炒作 |
+| 16 | Shadow Cut | Hillmann | 黑暗、电影感 | 曝光、调查 |
+| 17 | Deconstructed | Brody | 工业、原始 | 科技新闻、朋克能量 |
+| 18 | Maximalist Type | Scher | 响亮、动态 | 重大公告、发布 |
+| 19 | Data Drift | Anadol | 未来、沉浸 | AI/科技、创新 |
+| 20 | Red Wire | Tartakover | 紧急、即时 | 突发新闻、危机 |
 
-## Mood-to-Style Guide
+## 情绪到风格指南
 
-| Content feels... | Use... |
+| 内容感觉... | 使用... |
 |---|---|
-| Personal, intimate | Soft Signal, Quiet Drama |
-| Natural, earthy | Warm Grain, Earth Pulse |
-| Nostalgic, historical | Heritage Reel |
-| Data-driven, analytical | Swiss Pulse, Digital Grid |
-| Elegant, premium | Velvet Standard, Geometric Bold |
-| Cultural, global | Silk Route, Folk Frequency |
-| Investigative, serious | Contact Sheet, Shadow Cut |
-| Fun, lighthearted | Play Mode, Carnival Surge |
-| Philosophical, abstract | Dream State |
-| Punk, grassroots, raw | Deconstructed |
-| Hype, loud, high-energy | Maximalist Type |
-| Tech-forward, futuristic | Data Drift |
-| Breaking, urgent | Red Wire |
+| 个人、亲密 | Soft Signal, Quiet Drama |
+| 自然、朴实 | Warm Grain, Earth Pulse |
+| 怀旧、历史 | Heritage Reel |
+| 数据驱动、分析 | Swiss Pulse, Digital Grid |
+| 优雅、高端 | Velvet Standard, Geometric Bold |
+| 文化、全球 | Silk Route, Folk Frequency |
+| 调查、严肃 | Contact Sheet, Shadow Cut |
+| 有趣、轻松 | Play Mode, Carnival Surge |
+| 哲学、抽象 | Dream State |
+| 朋克、草根、原始 | Deconstructed |
+| 炒作、响亮、高能 | Maximalist Type |
+| 科技前沿、未来 | Data Drift |
+| 突发、紧急 | Red Wire |
 
 ---
 
 ## 1. Soft Signal — Stefan Sagmeister
 
-**Mood:** Intimate, warm | **Best for:** Personal stories, wellness, reflections
+**情绪：** 亲密、温暖 | **最适合：** 个人故事、健康、反思
 
-- Warm amber and cream with dusty rose, sage green, honey gold accents
-- Handwritten-style text overlays — personal, lowercase, delicate
-- Close-up framing: hands, faces, textures. Macro lens feel
-- Slow drifts and floats, never snaps. Soft dissolves, warm light leaks
+- 暖琥珀色和奶油色，搭配灰玫瑰色、鼠尾草绿、蜜金色点缀
+- 手写风格文字叠加——个人化、小写、细腻
+- 特写构图：手、脸、纹理。微距镜头感
+- 缓慢漂移和浮动，从不突然。柔和溶解，温暖漏光
 
 ```
-STYLE — SOFT SIGNAL (Sagmeister): Warm amber/cream, dusty rose, sage green.
-Handwritten-style text. Close-up framing. Slow drifts and floats.
-Soft dissolves with warm light leaks.
+风格 — SOFT SIGNAL (Sagmeister)：暖琥珀色/奶油色、灰玫瑰色、鼠尾草绿。
+手写风格文字。特写构图。缓慢漂移和浮动。
+柔和溶解，带温暖漏光。
 ```
 
 ## 2. Warm Grain — Olle Eksell
 
-**Mood:** Organic, friendly | **Best for:** Environmental, sustainability, community
+**情绪：** 有机、友好 | **最适合：** 环境、可持续性、社区
 
-- Earth tones: ochre, forest green, terracotta, cream, soft brown
-- Rounded sans-serif type. Organic rounded compositions — nothing angular
-- 16mm film grain, slightly desaturated. Natural textures: wood, linen, stone
-- Gentle wipes, soft cuts, unhurried
+- 大地色系：赭石、森林绿、赤陶、奶油色、柔和棕色
+- 圆角无衬线字体。有机圆润的构图——没有棱角
+- 16mm 胶片颗粒，略微去饱和。自然纹理：木材、亚麻、石材
+- 柔和划像、软切，不紧不慢
 
 ```
-STYLE — WARM GRAIN (Eksell): Earth tones — ochre, forest green, terracotta, cream.
-Organic rounded compositions. 16mm film grain. Rounded sans-serif.
-Gentle wipes and soft cuts.
+风格 — WARM GRAIN (Eksell)：大地色系——赭石、森林绿、赤陶、奶油色。
+有机圆润构图。16mm 胶片颗粒。圆角无衬线字体。
+柔和划像和软切。
 ```
 
 ## 3. Quiet Drama — Satyajit Ray
 
-**Mood:** Humanist, contemplative | **Best for:** Profiles, biographical, cultural
+**情绪：** 人文、沉思 | **最适合：** 人物简介、传记、文化
 
-- Muted warm: sepia, deep brown, soft gold, off-white, charcoal
-- Clean serif type, positioned with care. Portrait framing
-- Strong single-source contrast: window light, single lamp
-- Deliberate pacing, longer holds. Slow fades to black
+- 柔和暖色：棕褐色、深棕色、柔和金色、米白、炭灰
+- 干净衬线字体，精心布局。肖像构图
+- 强单一光源对比：窗光、单盏灯
+- 刻意节奏，更长的停留。缓慢淡出到黑色
 
 ```
-STYLE — QUIET DRAMA (Ray): Muted warm — sepia, deep brown, soft gold.
-Portrait framing. Clean serif. Strong single-source contrast.
-Slow fades to black.
+风格 — QUIET DRAMA (Ray)：柔和暖色——棕褐色、深棕色、柔和金色。
+肖像构图。干净衬线字体。强单一光源对比。
+缓慢淡出到黑色。
 ```
 
 ## 4. Heritage Reel — Cassandre
 
-**Mood:** Nostalgic, vintage | **Best for:** History, retrospectives, brand origins
+**情绪：** 怀旧、复古 | **最适合：** 历史、回顾、品牌起源
 
-- Faded gold, deep burgundy, navy, cream, sepia wash
-- Elegant centered serif like classic film title cards
-- Vignetting, softened edges. Film grain, light scratches, gentle jitter
-- Iris wipes, film reel flicker
+- 褪色金色、深酒红、海军蓝、奶油色、棕褐色调
+- 优雅居中衬线字体，如经典电影标题卡片
+- 暗角、柔化边缘。胶片颗粒、轻微划痕、柔和抖动
+- 虹膜划像、胶片卷盘闪烁
 
 ```
-STYLE — HERITAGE REEL (Cassandre): Faded gold, burgundy, navy, sepia wash.
-Elegant centered serif. Vignetting and aged film grain.
-Iris wipe transitions.
+风格 — HERITAGE REEL (Cassandre)：褪色金色、酒红、海军蓝、棕褐色调。
+优雅居中衬线字体。暗角和陈旧胶片颗粒。
+虹膜划像过渡。
 ```
 
 ## 5. Silk Route — Reza Abedini
 
-**Mood:** Flowing, mysterious | **Best for:** Global affairs, cross-cultural, art/design
+**情绪：** 流畅、神秘 | **最适合：** 全球事务、跨文化、艺术/设计
 
-- Rich jewel tones: deep teal, burgundy, gold, lapis blue, black
-- Elegant spaced type along natural visual lines
-- Layered compositions — foreground, midground, background all active
-- Flowing dissolves, smooth morphs
+- 丰富宝石色调：深青绿、酒红、金色、天青蓝、黑色
+- 沿自然视觉线排版的优雅间距文字
+- 分层构图——前景、中景、背景均活跃
+- 流动溶解、平滑变形
 
 ```
-STYLE — SILK ROUTE (Abedini): Jewel tones — deep teal, burgundy, gold, lapis blue.
-Layered compositions, all depths active. Elegant spaced type.
-Flowing dissolves and smooth morphs.
+风格 — SILK ROUTE (Abedini)：宝石色调——深青绿、酒红、金色、天青蓝。
+分层构图，所有景深均活跃。优雅间距文字。
+流动溶解和平滑变形。
 ```
 
 ## 6. Swiss Pulse — Josef Müller-Brockmann
 
-**Mood:** Clinical, precise | **Best for:** Data-heavy, analytical, financial, metrics
+**情绪：** 冷静、精确 | **最适合：** 数据密集、分析、金融、指标
 
-- Black (#1a1a1a), white, ONE accent: electric blue (#0066FF)
-- Helvetica Bold headlines, Regular labels. Numbers LARGE (80-120pt)
-- Grid-locked compositions. Every element snaps to 12-column grid
-- Animated counters COUNT UP from 0. Diagonal compositions on key moments
-- Grid wipes, hard cuts. No dissolves
+- 黑色（#1a1a1a）、白色、一种强调色：电光蓝（#0066FF）
+- Helvetica Bold 标题，Regular 标签。数字要大（80-120pt）
+- 网格锁定构图。每个元素对齐到 12 列网格
+- 动画计数器从 0 开始计数。关键时刻采用对角线构图
+- 网格划像、硬切。无溶解
 
 ```
-STYLE — SWISS PULSE (Müller-Brockmann): Black/white + electric blue #0066FF.
-Grid-locked. Helvetica Bold. Animated counters. Diagonal accents.
-Grid wipe transitions.
+风格 — SWISS PULSE (Müller-Brockmann)：黑/白 + 电光蓝 #0066FF。
+网格锁定。Helvetica Bold。动画计数器。对角线强调。
+网格划像过渡。
 ```
 
 ## 7. Geometric Bold — Ikko Tanaka
 
-**Mood:** Minimal, elegant | **Best for:** Clean lifestyle, culture, visual essays, brand profiles
+**情绪：** 极简、优雅 | **最适合：** 干净生活方式、文化、视觉文章、品牌简介
 
-- Maximum 3 flat colors per frame — no gradients
-- Bold clean type as primary visual element
-- Asymmetric composition, 60% negative space minimum. Single focal point
-- Clean cuts on beat, no effects
+- 每帧最多 3 种纯色——无渐变
+- 大胆干净的字体作为主要视觉元素
+- 不对称构图，至少 60% 留白。单一焦点
+- 按节拍干净切，无特效
 
 ```
-STYLE — GEOMETRIC BOLD (Tanaka): Max 3 flat colors per frame.
-60% negative space. Bold type as primary element.
-Single focal point. Clean cuts on beat.
+风格 — GEOMETRIC BOLD (Tanaka)：每帧最多 3 种纯色。
+60% 留白。粗体字为主要元素。
+单一焦点。按节拍干净切。
 ```
 
 ## 8. Velvet Standard — Massimo Vignelli
 
-**Mood:** Premium, timeless | **Best for:** Luxury, investor updates, keynotes, product showcases
+**情绪：** 高端、永恒 | **最适合：** 奢侈品、投资者更新、主题演讲、产品展示
 
-- Black, white, ONE rich accent: deep navy (#1a237e) or gold (#c9a84c)
-- Thin sans-serif, ALL CAPS, letter-spaced wide
-- Generous negative space. Symmetrical, centered, architectural precision
-- Slow, deliberate. Sequential reveals. Elegant cross-dissolves
+- 黑色、白色、一种丰富强调色：深海军蓝（#1a237e）或金色（#c9a84c）
+- 细无衬线字体，全大写，宽字间距
+- 慷慨留白。对称、居中、建筑精度
+- 缓慢、从容。顺序揭示。优雅交叉溶解
 
 ```
-STYLE — VELVET STANDARD (Vignelli): Black, white, one accent: gold #c9a84c.
-Thin ALL CAPS, wide spacing. Generous negative space.
-Slow elegant cross-dissolves.
+风格 — VELVET STANDARD (Vignelli)：黑、白、一种强调色：金色 #c9a84c。
+细体全大写，宽间距。慷慨留白。
+缓慢优雅交叉溶解。
 ```
 
 ## 9. Digital Grid — Wim Crouwel
 
-**Mood:** Systematic, technical | **Best for:** Infrastructure, engineering, code, tech
+**情绪：** 系统化、技术 | **最适合：** 基础设施、工程、代码、科技
 
-- Dark (#0a0a0a) with cyan (#00E5FF), amber (#FFB300), green (#00FF88)
-- Monospaced type throughout. Code-terminal aesthetic
-- Pixel grid overlays visible. Everything snaps to system
-- Grid nodes light up sequentially. Scan-line effects, cursor blinks
-- Clean wipe transitions
+- 深色（#0a0a0a）搭配青色（#00E5FF）、琥珀色（#FFB300）、绿色（#00FF88）
+- 全程使用等宽字体。代码终端美学
+- 像素网格叠加可见。一切对齐到系统
+- 网格节点顺序亮起。扫描线效果、光标闪烁
+- 干净划像过渡
 
 ```
-STYLE — DIGITAL GRID (Crouwel): Monospaced type. Dark #0a0a0a with cyan #00E5FF, amber #FFB300.
-Pixel grid overlays. Terminal aesthetic. Clean wipe transitions.
+风格 — DIGITAL GRID (Crouwel)：等宽字体。深色 #0a0a0a 配青色 #00E5FF、琥珀色 #FFB300。
+像素网格叠加。终端美学。干净划像过渡。
 ```
 
 ## 10. Contact Sheet — Alexey Brodovitch
 
-**Mood:** Editorial, investigative | **Best for:** Journalism, deep dives, research breakdowns
+**情绪：** 编辑、调查 | **最适合：** 新闻、深度解读、研究分析
 
-- High contrast B&W with occasional desaturated color accents
-- Bold sans-serif captions like editorial annotations
-- Photo-editorial framing — multiple images, contact-sheet energy
-- Raw grain, imperfect focus. Tight crops on faces and hands
-- Hard cuts on beat, snap-zooms
+- 高对比度黑白，偶尔搭配去饱和色点缀
+- 粗体无衬线说明，如编辑注释
+- 图片编辑式构图——多图、联系表能量
+- 原始颗粒、不完美对焦。面部和手部紧密裁剪
+- 按节拍硬切、快拉变焦
 
 ```
-STYLE — CONTACT SHEET (Brodovitch): High contrast B&W, desaturated accents.
-Photo-editorial framing. Bold sans-serif annotations. Raw grain.
-Hard cuts on beat. Snap-zooms.
+风格 — CONTACT SHEET (Brodovitch)：高对比度黑白，去饱和强调。
+图片编辑式构图。粗体无衬线注释。原始颗粒。
+按节拍硬切。快拉变焦。
 ```
 
 ## 11. Folk Frequency — Eduardo Terrazas
 
-**Mood:** Cultural, vivid | **Best for:** Cultural events, food, tradition, heritage
+**情绪：** 文化、生动 | **最适合：** 文化活动、美食、传统、遗产
 
-- Vivid folk: hot pink, bright orange, cobalt blue, sun yellow, emerald
-- Bold warm rounded type. Pattern and repetition — folk art rhythms
-- Rich textures: woven fabrics, painted surfaces, ceramic, handmade
-- Colorful wipes, quick cuts on festive rhythm
+- 生动民俗色：亮粉、亮橙、钴蓝、阳光黄、翡翠绿
+- 粗体温暖圆角字体。图案和重复——民间艺术节奏
+- 丰富纹理：编织面料、彩绘表面、陶瓷、手工
+- 彩色划像、欢快节奏的快速切
 
 ```
-STYLE — FOLK FREQUENCY (Terrazas): Vivid folk — hot pink, cobalt blue, sun yellow, emerald.
-Bold rounded type. Folk art rhythms. Rich handmade textures.
-Colorful wipes on festive rhythm.
+风格 — FOLK FREQUENCY (Terrazas)：生动民俗色——亮粉、钴蓝、阳光黄、翡翠绿。
+粗体圆角字体。民间艺术节奏。丰富手工纹理。
+欢快节奏的彩色划像。
 ```
 
 ## 12. Earth Pulse — Lemi Ghariokwu
 
-**Mood:** Grounded, communal | **Best for:** Community, music/culture, grassroots
+**情绪：** 接地气、社群 | **最适合：** 社区、音乐/文化、草根
 
-- Warm saturated: burnt orange, deep green, rich yellow, terracotta
-- Bold expressive type, center-frame. Wide community framing
-- Rhythmic editing timed to musical beats
-- Rhythmic cuts on beat, freeze-frames for emphasis
+- 暖饱和色：焦橙色、深绿色、丰富黄色、赤陶
+- 粗体表现力字体，居中取景。广阔社区构图
+- 按音乐节拍节奏剪辑
+- 按节拍节奏切，定格强调
 
 ```
-STYLE — EARTH PULSE (Ghariokwu): Warm saturated — burnt orange, deep green, rich yellow.
-Bold expressive type. Wide community framing.
-Rhythmic cuts on beat. Freeze-frames.
+风格 — EARTH PULSE (Ghariokwu)：暖饱和色——焦橙色、深绿色、丰富黄色。
+粗体表现力字体。广阔社区构图。
+按节拍节奏切。定格画面。
 ```
 
 ## 13. Dream State — Henryk Tomaszewski
 
-**Mood:** Surreal, poetic | **Best for:** Op-eds, philosophy, think pieces, speculative
+**情绪：** 超现实、诗意 | **最适合：** 评论、哲学、思想文章、思辨
 
-- Muted palette with one surreal accent: dusty blues, grey-greens, then shock of red or gold
-- Sparse precise text — few words, maximum impact. Thin elegant floating type
-- Unusual juxtapositions. Dreamlike quality: soft edges, atmospheric haze
-- Slow morph dissolves. NEVER hard cuts
+- 柔和调色板加一个超现实强调色：灰蓝、灰绿，然后一抹红或金
+- 精简精确的文字——少词，最大冲击。细优雅浮动字体
+- 不寻常的并置。梦幻质感：柔和边缘、大气雾霭
+- 缓慢变形溶解。绝不用硬切
 
 ```
-STYLE — DREAM STATE (Tomaszewski): Muted palette + one surreal accent.
-Thin elegant floating type. Soft edges, atmospheric haze.
-Slow morph dissolves — NEVER hard cuts.
+风格 — DREAM STATE (Tomaszewski)：柔和调色板 + 一个超现实强调色。
+细优雅浮动字体。柔和边缘、大气雾霭。
+缓慢变形溶解——绝不用硬切。
 ```
 
 ## 14. Play Mode — Ahn Sang-soo
 
-**Mood:** Playful, irreverent | **Best for:** Entertainment, pop culture, listicles, fun
+**情绪：** 俏皮、不敬 | **最适合：** 娱乐、流行文化、列表文章、趣味
 
-- Bright candy: electric blue, hot pink, lime green, yellow, white
-- Bouncy oversized tilted text. Asymmetric off-kilter compositions
-- Quick cuts (1-3 seconds). Score cards, achievement popups, XP bars
-- Bouncy spring physics — text overshoots and settles, screen shakes
-- Pop cuts, whip pans, bounce effects
+- 明亮糖果色：电光蓝、亮粉、酸橙绿、黄色、白色
+- 弹跳超大倾斜文字。不对称失衡构图
+- 快切（1-3 秒）。得分卡、成就弹窗、经验值条
+- 弹跳弹簧物理——文字过冲后稳定，屏幕震动
+- 弹出切、甩镜头、弹跳效果
 
 ```
-STYLE — PLAY MODE (Ahn Sang-soo): Electric blue, hot pink, lime green.
-Bouncy spring physics. Oversized tilted text. Score cards, XP bars.
-Pop cuts, bounce effects.
+风格 — PLAY MODE (Ahn Sang-soo)：电光蓝、亮粉、酸橙绿。
+弹跳弹簧物理。超大倾斜文字。得分卡、经验值条。
+弹出切、弹跳效果。
 ```
 
 ## 15. Carnival Surge — Rico Lins
 
-**Mood:** Euphoric, celebratory | **Best for:** Big announcements, milestones, celebrations, hype
+**情绪：** 狂喜、庆祝 | **最适合：** 重大公告、里程碑、庆祝、炒作
 
-- Maximum color: hot pink (#FF1493), electric yellow (#FFE000), teal (#00CED1), orange, violet
-- MASSIVE bold text at ANGLES over footage. Collage-style overlapping
-- Rapid 1-2 second clips. Confetti, lights, constant energy
-- Smash cuts, flash frames, rapid-fire montage
+- 最大色彩：亮粉（#FF1493）、电光黄（#FFE000）、青绿（#00CED1）、橙色、紫色
+- 巨大粗体文字以角度置于画面上。拼贴风格叠加
+- 快速 1-2 秒片段。五彩纸屑、灯光、持续能量
+- 猛切、闪帧、快速连续蒙太奇
 
 ```
-STYLE — CARNIVAL SURGE (Lins): Max color — hot pink #FF1493, yellow #FFE000, teal #00CED1.
-Collage layering. Text MASSIVE at ANGLES. Confetti bursts.
-Smash cuts, flash frames.
+风格 — CARNIVAL SURGE (Lins)：最大色彩——亮粉 #FF1493、黄色 #FFE000、青绿 #00CED1。
+拼贴叠加。文字巨大且有角度。五彩纸屑爆发。
+猛切、闪帧。
 ```
 
 ## 16. Shadow Cut — Hans Hillmann
 
-**Mood:** Dark, cinematic | **Best for:** Exposés, investigations, controversy, dark deep dives
+**情绪：** 黑暗、电影感 | **最适合：** 曝光、调查、争议、黑暗深度解读
 
-- Near-monochrome: deep blacks, cold greys, stark white + blood red or toxic green
-- Sharp angular text like film noir title cards
-- Heavy shadow — faces half-lit, objects emerging from darkness
-- Slow creeping push-ins, slow reveals, tension
-- Iris to black, slow fade from darkness, hard cuts to silence
+- 近单色：深黑、冷灰、纯白 + 血红或毒绿
+- 锐利棱角文字，如黑色电影标题卡片
+- 沉重阴影——半明半暗的面孔，从黑暗中浮现的物体
+- 缓慢推进镜头、缓慢揭示、紧张感
+- 虹膜转黑、从黑暗中缓慢淡出、硬切到寂静
 
 ```
-STYLE — SHADOW CUT (Hillmann): Deep blacks, cold greys + blood red accent.
-Sharp angular text. Heavy shadow. Slow creeping push-ins.
-Hard cuts to black. Film noir tension.
+风格 — SHADOW CUT (Hillmann)：深黑、冷灰 + 血红强调。
+锐利棱角文字。沉重阴影。缓慢推进镜头。
+硬切转黑。黑色电影紧张感。
 ```
 
 ## 17. Deconstructed — Neville Brody
 
-**Mood:** Industrial, raw | **Best for:** Tech news, security, punk energy, counter-culture
+**情绪：** 工业、原始 | **最适合：** 科技新闻、安全、朋克能量、反文化
 
-- Dark grey (#1a1a1a), black, rust orange (#D4501E), raw white (#f0f0f0)
-- Type at angles, overlapping edges, escaping frames. Bold industrial
-- High contrast, gritty textures: scratched metal, peeling paint, scan-line glitch
-- Text SLAMS, SHATTERS, PUNCHES. Letters scramble then snap
-- Smash cuts, glitch transitions, white flash frames
+- 深灰色（#1a1a1a）、黑色、铁锈橙（#D4501E）、原始白（#f0f0f0）
+- 文字有角度、重叠边缘、越出画框。粗体工业风格
+- 高对比度、粗糙纹理：刮花金属、剥落油漆、扫描线故障
+- 文字猛冲、碎裂、冲击。字母混乱后弹回
+- 猛切、故障过渡、白色闪帧
 
 ```
-STYLE — DECONSTRUCTED (Brody): Dark grey #1a1a1a, rust orange #D4501E.
-Type at angles, overlapping. Gritty textures, scan-line glitch.
-Smash cuts with flash frames.
+风格 — DECONSTRUCTED (Brody)：深灰色 #1a1a1a、铁锈橙 #D4501E。
+文字有角度、重叠。粗糙纹理、扫描线故障。
+带闪帧的猛切。
 ```
 
 ## 18. Maximalist Type — Paula Scher
 
-**Mood:** Loud, kinetic | **Best for:** Big announcements, launches, high-energy recaps
+**情绪：** 响亮、动态 | **最适合：** 重大公告、发布、高能回顾
 
-- Bold saturated: red, yellow, black, white — maximum contrast
-- Text IS the visual. Overlapping layers at different scales and angles, 50-80% of frame
-- Kinetic energy: everything moving, slamming, sliding. 1-2 second rapid cuts
-- Text layered OVER footage — never empty backgrounds
-- Smash cuts, text slamming from edges, flash frames
+- 大胆饱和：红、黄、黑、白——最大对比度
+- 文字即视觉。不同比例和角度的叠加图层，占据画面 50-80%
+- 动态能量：一切都在移动、撞击、滑动。1-2 秒快速切
+- 文字叠加在画面上——绝不用空白背景
+- 猛切、文字从边缘撞击、闪帧
 
 ```
-STYLE — MAXIMALIST TYPE (Scher): Red, yellow, black, white — max contrast.
-Text IS the visual. Overlapping at different scales, 50-80% of frame.
-Kinetic everything. Smash cuts, flash frames.
+风格 — MAXIMALIST TYPE (Scher)：红、黄、黑、白——最大对比度。
+文字即视觉。不同比例叠加，占画面 50-80%。
+一切动态。猛切、闪帧。
 ```
 
 ## 19. Data Drift — Refik Anadol
 
-**Mood:** Futuristic, immersive | **Best for:** AI/tech, speculative, cutting-edge science
+**情绪：** 未来、沉浸 | **最适合：** AI/科技、思辨、前沿科学
 
-- Iridescent: holographic silver, electric purple (#7c3aed), cyan (#06b6d4), deep black (#0a0a0a)
-- Thin futuristic sans-serif — minimal, floating, weightless
-- Fluid morphing compositions. Extreme scale shifts: microscopic to cosmic
-- Particles coalesce into numbers, light traces data paths
-- Liquid dissolves, particles dispersing and reforming
+- 彩虹色：全息银、电光紫（#7c3aed）、青色（#06b6d4）、深黑（#0a0a0a）
+- 细未来无衬线字体——极简、浮动、失重
+- 流体变形构图。极端尺度变化：微观到宇宙
+- 粒子聚合成数字，光线追踪数据路径
+- 液体溶解、粒子分散和重组
 
 ```
-STYLE — DATA DRIFT (Anadol): Iridescent — purple #7c3aed, cyan #06b6d4, deep black.
-Fluid morphing compositions. Thin futuristic type.
-Liquid dissolves. Particles coalesce into numbers.
+风格 — DATA DRIFT (Anadol)：彩虹色——紫色 #7c3aed、青色 #06b6d4、深黑。
+流体变形构图。细未来风格字体。
+液体溶解。粒子聚合成数字。
 ```
 
 ## 20. Red Wire — David Tartakover
 
-**Mood:** Urgent, immediate | **Best for:** Breaking news, crisis updates, alerts
+**情绪：** 紧急、即时 | **最适合：** 突发新闻、危机更新、警报
 
-- High alert: red, black, white, emergency yellow — maximum contrast
-- Bold condensed all caps — every word screams urgency
-- Split screens, ticker-style text bars, timestamp overlays — max information density
-- Multiple text elements simultaneously. Handheld energy
-- Snap cuts, flash frames, zero breathing room
+- 高警戒：红、黑、白、紧急黄——最大对比度
+- 粗体压缩全大写——每个词都传达紧迫感
+- 分屏、走马灯式文字条、时间戳叠加——最大信息密度
+- 多个文字元素同时出现。手持拍摄的能量
+- 快切、闪帧、零喘息空间
 
 ```
-STYLE — RED WIRE (Tartakover): Red, black, white, emergency yellow.
-Bold condensed all-caps. Split screens, tickers, timestamps.
-Snap cuts, flash frames. Zero breathing room.
+风格 — RED WIRE (Tartakover)：红、黑、白、紧急黄。
+粗体压缩全大写。分屏、走马灯、时间戳。
+快切、闪帧。零喘息空间。
 ```

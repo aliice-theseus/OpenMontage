@@ -1,6 +1,6 @@
-# Jewel / Rich
+# 宝石 / 丰富
 
-Luxury, events, sophisticated, high-end content.
+奢华、活动、精致、高端内容。
 
 ```
 #5F0F40 #9A031E #FB8B24 #E36414 #0F4C5C

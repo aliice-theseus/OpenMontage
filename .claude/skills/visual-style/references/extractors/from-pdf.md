@@ -1,37 +1,37 @@
-# Extract from PDF / Brand Guide
+# 从 PDF / 品牌指南提取
 
-Generate a `visual-style.md` from a PDF brand guide or style document.
+从 PDF 品牌指南或风格文档生成 `visual-style.md`。
 
-## Workflow
+## 工作流程
 
-1. **Receive PDF** — User uploads a brand guide, style guide, or design document
-2. **Parse sections** — Identify color, typography, layout, and guidelines sections
-3. **Map to fields** — Translate brand guide specifications to visual-style.md fields
-4. **Fill gaps** — Generate `style_prompt_full` from the structured data
-5. **Output** — Complete `visual-style.md`
-6. **Validate** — Ensure all required fields are present
+1. **接收 PDF** — 用户上传品牌指南、风格指南或设计文档
+2. **解析章节** — 识别颜色、排版、布局和指南章节
+3. **映射到字段** — 将品牌指南规范转换为 visual-style.md 字段
+4. **填补空缺** — 从结构化数据生成 `style_prompt_full`
+5. **输出** — 完整的 `visual-style.md`
+6. **验证** — 确保所有必填字段齐全
 
-## Common Brand Guide Sections
+## 常见品牌指南章节
 
-| Brand Guide Section | Maps To |
-|--------------------|---------|
-| Brand Overview / Mission | `style_prompt_short`, `mood.keywords` |
-| Color Palette | `colors.*` |
-| Primary Colors | `colors.primary` |
-| Secondary/Accent Colors | `colors.accent` |
-| Typography | `typography.*` |
-| Headlines | `typography.display` |
-| Body Copy | `typography.body` |
-| Grid System | `layout.grid` |
-| Spacing | `layout.notes` |
-| Do's and Don'ts | `typography.rules`, `mood.avoid` |
-| Voice & Tone | `mood.keywords`, `style_prompt_full` |
-| Photography Style | `mood.keywords`, `mood.avoid` |
-| Iconography | `style_prompt_full` |
+| 品牌指南章节 | 映射到 |
+|-------------|--------|
+| 品牌概述/使命 | `style_prompt_short`, `mood.keywords` |
+| 调色板 | `colors.*` |
+| 主色 | `colors.primary` |
+| 次要/强调色 | `colors.accent` |
+| 排版 | `typography.*` |
+| 标题 | `typography.display` |
+| 正文 | `typography.body` |
+| 网格系统 | `layout.grid` |
+| 间距 | `layout.notes` |
+| 应与不应 | `typography.rules`, `mood.avoid` |
+| 语气与口吻 | `mood.keywords`, `style_prompt_full` |
+| 摄影风格 | `mood.keywords`, `mood.avoid` |
+| 图标设计 | `style_prompt_full` |
 
-## Extraction Prompt
+## 提取提示
 
-Use this prompt when parsing a brand guide PDF:
+解析品牌指南 PDF 时使用此提示：
 
 ```
 Parse this brand guide PDF and generate a visual-style.md.
@@ -78,23 +78,23 @@ Complete YAML frontmatter between --- delimiters
 Plus Markdown body sections (## Design Principles from brand philosophy)
 ```
 
-## Color Conversion Reference
+## 颜色转换参考
 
-Brand guides often specify colors in multiple formats:
+品牌指南通常以多种格式指定颜色：
 
-| Format | Example | Hex Conversion |
-|--------|---------|----------------|
-| Hex | #FF5500 | Use directly |
+| 格式 | 示例 | 十六进制转换 |
+|------|------|-------------|
+| Hex | #FF5500 | 直接使用 |
 | RGB | 255, 85, 0 | → #FF5500 |
-| CMYK | 0, 67, 100, 0 | Approximate to hex |
-| Pantone | PMS 021 C | Look up hex equivalent |
-| HSL | 20°, 100%, 50% | Convert to hex |
+| CMYK | 0, 67, 100, 0 | 近似到十六进制 |
+| Pantone | PMS 021 C | 查找十六进制等价 |
+| HSL | 20°, 100%, 50% | 转换为十六进制 |
 
-For Pantone colors, use the official Pantone-to-hex mapping or note the Pantone code in the `role` field.
+对于 Pantone 颜色，使用官方的 Pantone 到十六进制映射，或在 `role` 字段中注明 Pantone 代码。
 
-## Example Output
+## 示例输出
 
-Given a corporate brand guide PDF:
+给定企业品牌指南 PDF：
 
 ```yaml
 ---
@@ -234,10 +234,10 @@ Typography mapped from "Digital Standards" section.
 Do's and Don'ts synthesized into mood.avoid list.
 ```
 
-## Tips
+## 提示
 
-- **Prioritize specificity** — Brand guides are precise; preserve exact values
-- **Don't invent** — If a section isn't in the PDF, leave the field empty
-- **Synthesize style_prompt_full** — This should read like a brief you'd give a designer
-- **Capture the don'ts** — `mood.avoid` is often explicitly stated in brand guides
-- **Note the source** — Include page numbers or section names in Extraction Notes
+- **优先精确性** — 品牌指南是精确的；保留确切的值
+- **不要编造** — 如果 PDF 中没有该章节，保持字段为空
+- **综合 style_prompt_full** — 这应该读起来像你给设计师的简报
+- **捕捉"不应"** — `mood.avoid` 通常在品牌指南中明确说明
+- **记录来源** — 在提取说明中包含页码或章节名称

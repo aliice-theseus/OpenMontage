@@ -1,48 +1,41 @@
-# Executive Producer - Character Animation Pipeline
+# 执行制片人 - 角色动画管线
 
-## When To Use
+## 何时使用
 
-Use this pipeline when the requested deliverable depends on reusable animated
-characters: cartoon shorts, mascot explainers, music-led character scenes,
-dialogue between simple characters, or reference-inspired local animation.
+当所需交付物依赖于可复用的动画角色时使用本管线：卡通短片、吉祥物解说视频、音乐主导的角色场景、简单角色间的对话，或受参考启发的本地动画。
 
-Do not use this pipeline for one-off motion graphics with no acting. Route those
-to `animation`. Do not use it for avatar presenter lip-sync. Route that to
-`avatar-spokesperson`.
+不要将本管线用于一次性动态图形（无表演内容），此类需求请路由至 `animation`。也不要用于虚拟形象播报员的唇形同步，此类需求请路由至 `avatar-spokesperson`。
 
-## Contract
+## 契约
 
-The pipeline produces local, deterministic character animation. It does not
-silently substitute still-image motion for acting. If the character motion cannot
-be built with the available rigs, assets, or runtime, surface a blocker.
+本管线生成本地的、确定性的角色动画。它不会默默地用静态图像运动替代表演。如果角色运动无法用现有骨架、资源或运行时构建，则必须上报阻塞。
 
-## Stage Order
+## 阶段顺序
 
-1. `research` - understand reference, technique, and feasibility.
-2. `proposal` - present concepts, runtime options, cost, music plan, sample plan.
-3. `script` - write action-friendly beats and dialogue/narration.
-4. `character_design` - define characters, silhouettes, emotions, actions.
-5. `rig_plan` - define parts, pivots, layers, constraints, poses.
-6. `scene_plan` - map story beats to character scenes.
-7. `assets` - produce or source character parts, backgrounds, props, audio.
-8. `edit` - compile timed action timeline.
-9. `compose` - render through the approved runtime and run QA.
-10. `publish` - package the final output.
+1. `research` - 理解参考素材、技术方案和可行性。
+2. `proposal` - 呈现概念、运行时选项、成本、音乐计划、样片计划。
+3. `script` - 编写适合表演的节拍和对话/旁白。
+4. `character_design` - 定义角色、剪影、情绪、动作。
+5. `rig_plan` - 定义部件、枢轴、图层、约束、姿态。
+6. `scene_plan` - 将故事节拍映射到角色场景。
+7. `assets` - 制作或获取角色部件、背景、道具、音频。
+8. `edit` - 编译带时序的动作时间线。
+9. `compose` - 通过已批准的运行时渲染并执行质量检查。
+10. `publish` - 打包最终输出。
 
-## Governance Rules
+## 治理规则
 
-- Run registry preflight before proposal.
-- If both Remotion and HyperFrames are available, present both before locking
-  `render_runtime`.
-- Produce a 10-15 second sample before full asset generation.
-- Character differences belong in rig data, not one-off code paths.
-- Every generated or runtime-authored asset must list Layer 3 skills read.
-- Use `character_animation_reviewer` plus final `final_review` before delivery.
+- 在提案之前执行注册表预检。
+- 如果 Remotion 和 HyperFrames 都可用，在锁定 `render_runtime` 之前同时呈现两者。
+- 在全量资源生成之前制作 10-15 秒样片。
+- 角色差异属于骨架数据，而非一次性代码路径。
+- 每个生成或由运行时制作的资源必须列出已读取的 Layer 3 技能。
+- 交付前使用 `character_animation_reviewer` 加最终 `final_review`。
 
-## Send-Back Triggers
+## 驳回触发器
 
-- `character_design` lacks required actions or emotional range.
-- `rig_plan` lacks pivots for moving parts.
-- `pose_library` has no readable acting poses.
-- `action_timeline` has actions that cannot be rendered by the rig.
-- Compose used a runtime not approved in proposal.
+- `character_design` 缺少所需动作或情感范围。
+- `rig_plan` 缺少活动部件的枢轴。
+- `pose_library` 没有可读的表演姿态。
+- `action_timeline` 包含骨架无法渲染的动作。
+- 合成阶段使用了提案中未批准的运行时。

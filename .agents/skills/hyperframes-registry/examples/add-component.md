@@ -1,34 +1,34 @@
-# Worked Example: Adding a Component
+# 实际操作示例：添加组件
 
-## Scenario
+## 场景
 
-User wants to add a shimmer light sweep effect to their title text.
+用户想要为其标题文本添加闪光扫光效果。
 
-## Steps
+## 步骤
 
-### 1. Install the component
+### 1. 安装组件
 
 ```bash
 hyperframes add shimmer-sweep
 ```
 
-### 2. Read the snippet
+### 2. 阅读片段
 
-Open `compositions/components/shimmer-sweep.html` and read the comment header.
+打开 `compositions/components/shimmer-sweep.html` 并阅读注释标题。
 
-### 3. Wire into your composition
+### 3. 接入到你的作品
 
-**HTML** — wrap target elements:
+**HTML**——包装目标元素：
 
 ```html
 <div class="shimmer-sweep-target" style="--shimmer-color: rgba(255, 255, 255, 0.5)">
-  <h1 class="title">AI-Powered Video</h1>
+  <h1 class="title">AI 驱动视频</h1>
 </div>
 ```
 
-**CSS** — paste the `.shimmer-sweep-target` and `.shimmer-mask` rules from the snippet.
+**CSS**——从片段粘贴 `.shimmer-sweep-target` 和 `.shimmer-mask` 规则。
 
-**JS** — paste the auto-injection script (before timeline code):
+**JS**——粘贴自动注入脚本（在时间线代码之前）：
 
 ```js
 document.querySelectorAll(".shimmer-sweep-target").forEach((el) => {
@@ -40,7 +40,7 @@ document.querySelectorAll(".shimmer-sweep-target").forEach((el) => {
 });
 ```
 
-**Timeline** — add the sweep:
+**时间线**——添加扫光效果：
 
 ```js
 tl.fromTo(
@@ -58,16 +58,16 @@ tl.fromTo(
 );
 ```
 
-### 4. Lint and preview
+### 4. Lint 和预览
 
 ```bash
 hyperframes lint
 hyperframes preview
 ```
 
-### 5. Customize
+### 5. 自定义
 
-- `--shimmer-color`: highlight color per element
-- `--shimmer-width`: light band width (default 20%)
-- `--shimmer-angle`: sweep direction (default 120deg)
-- Timeline `duration`, `ease`, `stagger`: control speed and feel
+- `--shimmer-color`：每个元素的高亮颜色
+- `--shimmer-width`：光带宽度（默认 20%）
+- `--shimmer-angle`：扫光方向（默认 120deg）
+- 时间线 `duration`、`ease`、`stagger`：控制速度和感觉

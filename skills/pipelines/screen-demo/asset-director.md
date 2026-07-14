@@ -1,69 +1,69 @@
-# Asset Director - Screen Demo Pipeline
+# 资源导演 - 屏幕演示流水线
 
-## When To Use
+## 使用时机
 
-This stage produces the minimal but high-leverage assets that make a screen demo easier to follow: subtitles, audio cleanup, reusable overlays, masks, and optional light-weight support cards.
+此阶段产出最小但高杠杆的资源，使屏幕演示更易于跟随：字幕、音频清理、可复用叠加层、遮罩以及可选的轻量级支持卡片。
 
-## Two production modes — pick before generating assets
+## 两种制作模式 — 在生成资源前选择
 
-**Read the brief's `production_mode` field.** If `idea` didn't set one, decide here:
+**读取需求说明的 `production_mode` 字段。** 如果 `idea` 阶段没有设置，在此决定：
 
-| Mode | When | Asset production looks like |
+| 模式 | 使用时机 | 资源制作方式 |
 |---|---|---|
-| **`real_capture`** | Real app UI (browser, design tool, IDE with plugins); live behavior; user asked for their own screen recorded | Clean audio + subtitles + callout overlays (arrows, highlight masks) applied on top of the captured MP4 |
-| **`synthetic_terminal`** | CLI, terminal, install flow, make targets, git/npm commands, `.env` config — anything scriptable | **No capture at all.** Author a `terminal_scene` cut for `video_compose` (Remotion). Commands type char-by-char, output scrolls, pills announce completions. See `.agents/skills/synthetic-screen-recording/SKILL.md`. |
+| **`real_capture`** | 真实应用 UI（浏览器、设计工具、带插件的 IDE）；实时行为；用户要求录制自己的屏幕 | 在已捕获的 MP4 上叠加：清洁音频 + 字幕 + 标注叠加层（箭头、高亮遮罩） |
+| **`synthetic_terminal`** | CLI、终端、安装流程、make 目标、git/npm 命令、`.env` 配置 — 任何可脚本化的内容 | **无需录制。** 为 `video_compose`（Remotion）编写 `terminal_scene` 分镜。命令逐字键入，输出滚动，药丸徽章显示完成状态。参见 `.agents/skills/synthetic-screen-recording/SKILL.md`。 |
 
-**Mode selection heuristic:** *"Can I predict every command and its output before shooting?"* If yes → synthetic. If no → real capture.
+**模式选择启发式规则：** *"我能否在拍摄前预测每一条命令及其输出？"* 如果可以 → 合成模式。如果不行 → 实机录制。
 
-For synthetic mode, the asset stage produces:
-- **narration (tts_selector)** aligned to the exact video-time each command should type
-- **a `steps` list** (cmd/out/pause/pill primitives) that paces with narration cues
-- **a pacing verification** via `lib.verify_scene_pacing.assert_alignment(...)` — must pass before render
-- **no** screen-recorder footage, no callout arrows, no zoom-crop regions (those are real-capture concepts)
+对于合成模式，资源阶段产生：
+- **旁白（tts_selector）** 与每条命令应键入的精确视频时间对齐
+- **一个 `steps` 列表**（cmd/out/pause/pill 基元），其节奏与旁白提示相匹配
+- **一个节奏验证**，通过 `lib.verify_scene_pacing.assert_alignment(...)` — 必须在渲染前通过
+- **无**屏幕录制素材，无标注箭头，无缩放裁剪区域（这些是实机录制的概念）
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 目的 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/asset_manifest.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | What to produce |
-| Tools | `subtitle_gen`, `audio_enhance`, `tts_selector`, `image_selector`, `diagram_gen` — selectors auto-discover all available providers from the registry | Generation capabilities |
-| Playbook | Active style playbook | Typography and overlay styling |
+| Schema | `schemas/artifacts/asset_manifest.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["scene_plan"]["scene_plan"]`、`state.artifacts["script"]["script"]`、`state.artifacts["idea"]["brief"]` | 需要产出的内容 |
+| 工具 | `subtitle_gen`、`audio_enhance`、`tts_selector`、`image_selector`、`diagram_gen` — 选择器自动从注册表中发现所有可用提供方 | 生成能力 |
+| 执行手册 | 活跃的风格执行手册 | 字体和叠加层样式 |
 
-## Process
+## 流程
 
-### 1. Prioritize Utility Over Decoration
+### 1. 优先考虑实用性而非装饰性
 
-Screen demos do not need a large asset pile. They need the right few assets:
+屏幕演示不需要大量的资源堆叠。它们需要正确的少量资源：
 
-- mandatory: subtitles
-- usually mandatory: cleaned primary audio
-- usually helpful: reusable highlight box, arrow, step label, blur mask kit
-- optional: one intro card, one outro card, sparse diagram overlays
-- optional only if preflight allows it: generated narration for silent recordings
+- 必需：字幕
+- 通常必需：清洁的主音频
+- 通常有用：可复用的高亮框、箭头、步骤标签、模糊遮罩套件
+- 可选：一个开场卡片、一个结束卡片、稀疏的图解叠加层
+- 仅当预检允许时可选：为静音录制生成的旁白
 
-### 1b. Hero Scene Sample (Mandatory)
+### 1b. 主角场景示例（必须）
 
-Before batch asset generation:
-1. Identify the hero scene (the most important step or interaction in the demo)
-2. Generate ONE sample asset for that scene (subtitle style, highlight overlay, or intro card)
-3. Present it: "This is the visual direction for the most important step. Does this match what you're imagining? I'll generate the rest in this style."
-4. Wait for approval before proceeding to batch generation
+在批量资源生成之前：
+1. 确定主角场景（演示中最重要的步骤或交互）
+2. 为该场景生成**一个**示例资源（字幕样式、高亮叠加层或开场卡片）
+3. 展示它："这是最关键步骤的视觉方向。这与您设想的一致吗？我将按此风格生成其余部分。"
+4. 在继续批量生成之前等待批准
 
-This prevents the most expensive mistake: generating 10+ assets in a direction the user doesn't like.
+这可以防止最昂贵的错误：以用户不喜欢的风格生成 10 个以上的资源。
 
-### 2. Generate Subtitles First
+### 2. 首先生成字幕
 
-Rules:
+规则：
 
-- high contrast over unknown UI backgrounds,
-- never cover the text the viewer needs to read,
-- prefer phrase-level chunks unless word-by-word highlighting materially helps,
-- prepare position override notes in `asset_manifest.metadata.subtitle_zones`.
+- 在未知 UI 背景上保持高对比度
+- 绝不覆盖观众需要阅读的文本
+- 除非逐词高亮确实有帮助，否则优先选择短语级别的分段
+- 在 `asset_manifest.metadata.subtitle_zones` 中准备位置覆盖备注
 
-### 3. Build A Reusable Overlay Kit
+### 3. 构建可复用的叠加层套件
 
-Do not generate bespoke assets for every click. Build a small shared kit:
+不要为每次点击生成定制资源。构建一个小型共享套件：
 
 - `highlight_box_primary`
 - `arrow_primary`
@@ -71,38 +71,38 @@ Do not generate bespoke assets for every click. Build a small shared kit:
 - `keystroke_badge_primary`
 - `blur_mask_template`
 
-These should be reusable across scenes, with timing and placement handled downstream.
+这些应可在各场景间复用，时间和位置由下游处理。
 
-### 4. Clean Or Generate Audio Pragmatically
+### 4. 务实清理或生成音频
 
-Goals:
+目标：
 
-- remove distracting keyboard and room noise,
-- normalize speech,
-- preserve timing,
-- do not over-process into robotic audio.
+- 移除分散注意力的键盘和房间噪音
+- 标准化语音
+- 保留时序
+- 不要过度处理成机器人化的音频
 
-If the recording is silent:
+如果录制是静音的：
 
-- only generate narration if TTS passed preflight,
-- otherwise keep the asset plan text-led and note the limitation in metadata.
+- 仅当 TTS 通过了预检时才生成旁白
+- 否则保持资源计划以文字为主导，并在元数据中注明限制
 
-### 5. Only Generate Supplementary Visuals When They Earn It
+### 5. 仅在有价值时生成补充视觉元素
 
-Use `image_selector` or `diagram_gen` only for:
+使用 `image_selector` 或 `diagram_gen` 仅用于：
 
-- a short opening card,
-- a step transition card,
-- a simple diagram that clarifies a hidden process,
-- an outro card.
+- 简短的开场卡片
+- 步骤过渡卡片
+- 能澄清隐藏过程的简单图解
+- 结束卡片
 
-Do not create decorative artwork for a workflow the screen already explains.
+不要为屏幕已经解释的工作流创建装饰性图片。
 
-### 6. Build The Asset Manifest Cleanly
+### 6. 整洁地构建资源清单
 
-Every asset must have a valid schema type and `scene_id`.
+每个资源必须有有效的 schema 类型和 `scene_id`。
 
-Use `asset_manifest.metadata` for details like:
+使用 `asset_manifest.metadata` 存储细节，如：
 
 - `subtitle_zones`
 - `overlay_kit`
@@ -110,57 +110,54 @@ Use `asset_manifest.metadata` for details like:
 - `narration_mode`
 - `sensitive_regions`
 
-### 7. Quality Gate
+### 7. 质量门禁
 
-**Existence check:**
-- [ ] Subtitle file exists at declared path and parses without errors
-- [ ] Cleaned audio file exists and has the expected duration
-- [ ] Reusable overlay kit exists and covers planned callout types
-- [ ] All supplementary visuals exist at declared paths
+**存在性检查：**
+- [ ] 字幕文件在声明的路径存在且解析无错误
+- [ ] 清洁后的音频文件存在且具有预期的时长
+- [ ] 可复用叠加层套件存在且覆盖了规划的标注类型
+- [ ] 所有补充视觉元素在声明的路径存在
 
-**Timing check:**
-- [ ] Subtitle timestamps align with script section timestamps
-- [ ] If narration was generated, timing matches section duration closely enough for editing
+**时序检查：**
+- [ ] 字幕时间戳与脚本章节时间戳对齐
+- [ ] 如果生成了旁白，其时序与章节时长足够接近以进行编辑
 
-**Quality check:**
-- [ ] Subtitles are readable at output resolution
-- [ ] Cleaned audio has no remaining distracting noise
-- [ ] Callout colors have sufficient contrast
-- [ ] Blur masks fully cover the sensitive content
+**质量检查：**
+- [ ] 字幕在输出分辨率下可读
+- [ ] 清洁后的音频没有残留的分散注意力的噪音
+- [ ] 标注颜色有足够的对比度
+- [ ] 模糊遮罩完全覆盖敏感内容
 
-### Mid-Production Fact Verification
+### 制作中的事实核查
 
-If you encounter uncertainty during asset generation:
-- Use `web_search` to verify visual accuracy of subjects (e.g. what does this building actually look like?)
-- Use `web_search` to find reference images before generating illustrations
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在资源生成过程中遇到不确定的情况：
+- 使用 `web_search` 验证主体的视觉准确性（例如，这个建筑实际看起来是什么样的？）
+- 使用 `web_search` 在生成插画前查找参考图片
+- 在决策日志中记录验证：`category="visual_accuracy_check"`
 
-Visual accuracy matters. If the script mentions a specific place, person, or object,
-verify what it actually looks like before generating images. Don't rely on
-the AI model's training data — it may be wrong or outdated.
+视觉准确性很重要。如果脚本提到特定的地点、人物或对象，请在生成图片前验证其实际外观。不要依赖 AI 模型的训练数据 — 它可能错误或过时。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Generating too many one-off overlay files instead of a reusable kit.
-- Using subtitles that sit directly on top of terminal output or bottom navigation.
-- Assuming silent recordings will magically gain narration without checking TTS.
-- Spending image generation budget on visuals the raw screen already provides.
+- 生成太多一次性叠加层文件，而非可复用套件
+- 使用直接覆盖在终端输出或底部导航上的字幕
+- 假设静音录制在未检查 TTS 的情况下会神奇地获得旁白
+- 将图片生成预算花在原始屏幕已经提供的视觉元素上
 
+## 当您不知道如何操作时
 
-## When You Do Not Know How
+如果您遇到不确定的生成技术、提供方行为或提示词模式：
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+1. **搜索网络**获取当前最佳实践 — 模型和 API 频繁变化，代理的训练数据可能已过时
+2. **检查 `.agents/skills/`** 中已有的第 3 层知识（提供方特定的提示词指南、API 模式）
+3. **如果两者都无帮助**，在 `projects/<项目名称>/skills/<名称>.md` 编写项目范围的技能文档，记录您学到的内容
+4. **在技能文档中引用来源 URL**，使知识可追溯
+5. **在决策日志中记录**：`category: "capability_extension"`、`subject: "learned technique: <name>"`
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+以下方面尤其重要：
+- **视频生成提示词** — 模型对特定词汇的响应随版本变化
+- **图片模型参数** — FLUX、DALL-E、Imagen 的最佳设置各不相同且在演进
+- **音频提供方特性** — 语音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式** — 随着框架演进，新的合成技术不断涌现
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
-
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时的知识。有疑问时，先搜索。

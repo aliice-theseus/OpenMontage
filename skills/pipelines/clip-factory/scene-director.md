@@ -1,55 +1,55 @@
-# Scene Director - Clip Factory Pipeline
+# 场景导演 - Clip Factory 流水线
 
-## When To Use
+## 使用时机
 
-You are planning how each selected clip will be framed and packaged for its destination platform. This is where clip viability gets proven or disproven.
+你需要为每个选中的剪辑规划如何构图和包装，以适应目标平台。这是剪辑可行性得到验证或被否决的阶段。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Selected clips and platform goals |
-| Tools | `frame_sampler`, `scene_detect` | Visual checks and boundary inspection |
-| Playbook | Active style playbook | Layout language and safe zones |
+| Schema | `schemas/artifacts/scene_plan.schema.json` | 制品验证 |
+| 前置制品 | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 选中的剪辑和平台目标 |
+| 工具 | `frame_sampler`, `scene_detect` | 视觉检查和边界检测 |
+| Playbook | 当前样式 playbook | 布局语言和安全区域 |
 
-## Process
+## 流程
 
-### 1. Choose The Right Frame For Each Clip
+### 1. 为每个剪辑选择合适的帧
 
-Do not default every clip to `9:16`.
+不要默认将所有剪辑设为 `9:16`。
 
-Use:
+使用规则：
 
-- `9:16` when a face-first crop works,
-- `1:1` when speaker plus context both matter,
-- `16:9` when slides, demos, or multi-speaker width are essential.
+- 人脸优先的裁剪可行时使用 `9:16`，
+- 说话者与上下文都重要时使用 `1:1`，
+- 幻灯片、演示或多说话者宽度必不可少时使用 `16:9`。
 
-OpenMontage does not yet have first-class auto-reframe. If a vertical crop is weak, plan a safer aspect ratio instead of pretending the crop will work.
+OpenMontage 尚未提供一流的自动重帧功能。如果竖版裁剪效果不佳，应规划更安全的长宽比，而不是假装裁剪可行。
 
-### 2. Plan First-Second Composition
+### 2. 规划首帧与第二帧构图
 
-For each clip, define:
+为每个剪辑定义：
 
-- what the viewer sees on frame 1,
-- where hook text can safely appear,
-- where subtitles can live,
-- whether the speaker needs a punch-in or whether the original framing is already good.
+- 观众在第一帧看到什么，
+- 钩子文本可以安全出现的位置，
+- 字幕可以放置的位置，
+- 说话者是否需要特写推近，或者原有构图是否已经很好。
 
-### 3. Standardize The Batch
+### 3. 标准化整个批次
 
-Use the scene plan to lock series consistency:
+使用场景计划来锁定系列的一致性：
 
-- same top hook zone,
-- same subtitle zone,
-- same watermark / brand area,
-- same lower-third logic.
+- 相同的顶部钩子区域，
+- 相同的字幕区域，
+- 相同的水印/品牌区域，
+- 相同的下方三分之一逻辑。
 
-### 4. Store Reframe Detail In Metadata
+### 4. 将重帧详情存入元数据
 
-The schema is generic, so store richer layout notes in `scene_plan.metadata`.
+Schema 是通用的，因此将更丰富的布局说明存储在 `scene_plan.metadata` 中。
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `clip_layouts`
 - `safe_zones`
@@ -57,20 +57,20 @@ Recommended metadata keys:
 - `speaker_positions`
 - `platform_variants`
 
-### 5. Use Scenes To Represent Deliverables
+### 5. 使用场景来表示交付物
 
-Each scene should map to one clip variant or one clip family deliverable. Keep `description` human-readable and use `required_assets` for hook overlays, lower thirds, or branded frames.
+每个场景应对应一个剪辑变体或一个剪辑家族的交付物。保持 `description` 可读，并使用 `required_assets` 来指定钩子覆盖层、下方三分之一或品牌帧。
 
-### 6. Quality Gate
+### 6. 质量门禁
 
-- every clip has a platform-aware framing plan,
-- hook and subtitle zones do not collide,
-- weak vertical crops are downgraded honestly,
-- the batch will feel visually consistent when rendered together.
+- 每个剪辑都有考虑平台的构图方案，
+- 钩子和字幕区域不冲突，
+- 效果不佳的竖版裁剪被诚实降级，
+- 整个批次渲染后将具有视觉一致性。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Center-cropping a wide shot and calling it vertical optimization.
-- Ignoring slide or screen-share content while focusing only on faces.
-- Letting each clip invent its own layout.
-- Forgetting that the first frame determines whether a viewer keeps watching.
+- 将宽镜头居中裁剪后称之为竖版优化。
+- 忽略幻灯片或屏幕共享内容，只关注人脸。
+- 让每个剪辑各自发明自己的布局。
+- 忘记首帧决定了观众是否会继续观看。

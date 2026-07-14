@@ -1,15 +1,15 @@
 ---
-title: Use Loop for Min/Max Instead of Sort
+title: 使用循环而非排序求最小/最大值
 impact: LOW
-impactDescription: O(n) instead of O(n log n)
+impactDescription: O(n) 而非 O(n log n)
 tags: javascript, arrays, performance, sorting, algorithms
 ---
 
-## Use Loop for Min/Max Instead of Sort
+## 使用循环而非排序求最小/最大值
 
-Finding the smallest or largest element only requires a single pass through the array. Sorting is wasteful and slower.
+找到最小或最大元素只需要一次遍历数组。排序是浪费且较慢的。
 
-**Incorrect (O(n log n) - sort to find latest):**
+**错误做法（O(n log n) - 排序找最新）：**
 
 ```typescript
 interface Project {
@@ -24,9 +24,9 @@ function getLatestProject(projects: Project[]) {
 }
 ```
 
-Sorts the entire array just to find the maximum value.
+仅仅为了找到最大值就对整个数组排序。
 
-**Incorrect (O(n log n) - sort for oldest and newest):**
+**错误做法（O(n log n) - 排序找最早和最新）：**
 
 ```typescript
 function getOldestAndNewest(projects: Project[]) {
@@ -35,9 +35,9 @@ function getOldestAndNewest(projects: Project[]) {
 }
 ```
 
-Still sorts unnecessarily when only min/max are needed.
+当只需要最小/最大值时仍然不必要地进行排序。
 
-**Correct (O(n) - single loop):**
+**正确做法（O(n) - 单次循环）：**
 
 ```typescript
 function getLatestProject(projects: Project[]) {
@@ -69,9 +69,9 @@ function getOldestAndNewest(projects: Project[]) {
 }
 ```
 
-Single pass through the array, no copying, no sorting.
+单次遍历数组，无需复制，无需排序。
 
-**Alternative (Math.min/Math.max for small arrays):**
+**替代方案（Math.min/Math.max 用于小型数组）：**
 
 ```typescript
 const numbers = [5, 2, 8, 1, 9]
@@ -79,4 +79,4 @@ const min = Math.min(...numbers)
 const max = Math.max(...numbers)
 ```
 
-This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.
+这适用于小型数组，但对于非常大的数组，由于展开运算符的限制，可能会变慢或直接抛出错误。Chrome 143 中最大数组长度约为 124000，Safari 18 中约为 638000；具体数字可能有所不同 - 请参阅[此 fiddle](https://jsfiddle.net/qw1jabsx/4/)。为可靠性考虑，使用循环方法。

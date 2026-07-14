@@ -1,138 +1,138 @@
 ---
 name: core-principles
-description: Universal prompting principles that apply to all FLUX models
+description: 适用于所有 FLUX 模型的通用提示原则
 ---
 
-# Core FLUX Prompting Principles
+# FLUX 核心提示原则
 
-These principles apply to all FLUX models and form the foundation of effective prompting.
+这些原则适用于所有 FLUX 模型，构成有效提示的基础。
 
-## 1. Positive Descriptions Only
+## 1. 仅使用正面描述
 
-FLUX does NOT support negative prompts. Always describe what you WANT, not what you don't want.
+FLUX 不支持负面提示。始终描述你想要的内容，而不是你不想要的内容。
 
-### Wrong Approach
+### 错误方法
 ```
-a portrait of a woman, no glasses, no hat, no makeup
-```
-
-### Correct Approach
-```
-a portrait of a woman with natural skin, clear face, bare head, visible eyes
+一位女性的肖像，不要眼镜，不要帽子，不要化妆
 ```
 
-See [negative-prompt-alternatives.md](negative-prompt-alternatives.md) for comprehensive replacement strategies.
-
-## 2. Prompt Structure Formula
-
-Build prompts using this structure for consistent results:
-
+### 正确方法
 ```
-[Subject] + [Action/Pose] + [Style/Medium] + [Context/Setting] + [Lighting] + [Technical Details]
+一位女性的肖像，自然肌肤，干净的脸庞，露出的头部，可见的眼睛
 ```
 
-### Example
+参见 [negative-prompt-alternatives.md](negative-prompt-alternatives.md) 了解全面的替换策略。
+
+## 2. 提示结构公式
+
+使用此结构构建提示以获得一致的结果：
 
 ```
-A young woman with flowing auburn hair (subject)
-dancing gracefully in mid-leap (action)
-in the style of classical oil painting (style)
-in a moonlit garden with roses (context)
-soft diffused moonlight with subtle rim lighting (lighting)
-medium shot, shallow depth of field (technical)
+[主体] + [动作/姿势] + [风格/媒介] + [环境/场景] + [光照] + [技术细节]
 ```
 
-## 3. Specificity Matters
+### 示例
 
-More specific prompts yield dramatically better results.
-
-### Vague (Poor Results)
 ```
-a cat sitting
-```
-
-### Specific (Excellent Results)
-```
-A fluffy orange tabby cat with bright green eyes sitting regally on a vintage
-velvet armchair, afternoon sunlight streaming through lace curtains, warm
-golden hour lighting, shallow depth of field, shot on medium format film
+一位年轻女性，飘逸的赤褐色头发（主体）
+优雅地在半空中起舞（动作）
+古典油画风格（风格）
+在月光下的玫瑰花园中（环境）
+柔和的漫射月光，带有微妙的轮廓光（光照）
+中景，浅景深（技术）
 ```
 
-## 4. Natural Language Works Best
+## 3. 具体性很重要
 
-Write prompts as descriptive prose rather than keyword lists.
+更具体的提示能产生显著更好的结果。
 
-### Keyword Style (Less Effective)
+### 模糊（结果差）
 ```
-woman, portrait, beautiful, blonde, studio, professional, 8k, detailed
-```
-
-### Prose Style (More Effective)
-```
-A professional studio portrait of a beautiful blonde woman in her thirties,
-captured with soft studio lighting that accentuates her features, rendered
-in stunning detail with natural skin texture and subtle catchlights in her eyes
+一只坐着的猫
 ```
 
-## 5. Lighting is Critical
-
-Always specify lighting - it has the single greatest impact on image quality.
-
-### Natural Lighting
-- Golden hour - warm, soft, directional
-- Overcast - soft, diffused, even
-- Harsh midday - high contrast, strong shadows
-- Dappled forest light - specular, organic patterns
-
-### Studio Lighting
-- Softbox - even, professional
-- Rim light - edge definition, separation
-- Butterfly lighting - beauty, glamour
-- Rembrandt lighting - dramatic, classic portraits
-
-### Atmospheric Lighting
-- Volumetric fog - depth, mystery
-- God rays - dramatic, spiritual
-- Neon glow - urban, cyberpunk
-- Candlelight - warm, intimate
-
-### Mood-Based Lighting
-- Dramatic shadows - tension, noir
-- High key - bright, airy, clean
-- Low key - moody, mysterious
-- Chiaroscuro - strong contrast, painterly
-
-## 6. Word Order Matters
-
-FLUX prioritizes elements that appear earlier in the prompt. Front-load important elements.
-
-### Less Effective
+### 具体（结果优秀）
 ```
-A forest background with soft lighting where a knight in shining armor stands
+一只蓬松的橙色虎斑猫，有着明亮的绿色眼睛，庄严地坐在复古
+天鹅绒扶手椅上，午后阳光透过蕾丝窗帘洒入，温暖
+金色时刻的光线，浅景深，中画幅胶片拍摄
 ```
 
-### More Effective
+## 4. 自然语言效果最佳
+
+将提示写成描述性散文，而非关键词列表。
+
+### 关键词风格（效果较差）
 ```
-A knight in shining armor stands in a forest, soft dappled lighting filtering
-through the canopy
+女性，肖像，美丽，金发，摄影棚，专业，8k，细节丰富
 ```
 
-## 7. Medium Prompt Length
+### 散文风格（效果更好）
+```
+一位三十多岁美丽金发女性的专业摄影棚肖像，
+采用柔和的摄影棚灯光突出她的面部特征，以令人惊叹的细节呈现，
+展现自然肌肤纹理和眼中微妙的眼神光
+```
 
-Optimal prompt length is typically 30-80 words (FLUX can handle up to 512 tokens).
+## 5. 光照至关重要
 
-- Too short: Lacks direction, generic results
-- Too long: Can become unfocused
-- Sweet spot: Enough detail to guide, not so much it confuses
+始终指定光照——它对图像质量的影响最大。
 
-## 8. Iterative Refinement
+### 自然光
+- 黄金时刻 - 温暖、柔和、有方向性
+- 阴天 - 柔和、漫射、均匀
+- 正午强光 - 高对比度、强烈阴影
+- 斑驳森林光 - 镜面反射、有机图案
 
-Build prompts iteratively:
+### 影棚灯光
+- 柔光箱 - 均匀、专业
+- 轮廓光 - 边缘定义、分离
+- 蝴蝶光 - 美丽、魅力
+- 伦勃朗光 - 戏剧性、经典肖像
 
-1. Start with core subject and action
-2. Add style and medium
-3. Specify lighting and atmosphere
-4. Include technical details
-5. Refine based on results
+### 氛围灯光
+- 体积雾 - 深度、神秘感
+- 上帝光 - 戏剧性、神圣感
+- 霓虹辉光 - 都市、赛博朋克
+- 烛光 - 温暖、亲密
 
-Change one element at a time to understand what affects your output.
+### 情绪灯光
+- 戏剧性阴影 - 紧张、黑色电影
+- 高调 - 明亮、通透、干净
+- 低调 - 忧郁、神秘
+- 明暗对照 - 强烈对比、绘画感
+
+## 6. 词序很重要
+
+FLUX 会优先处理提示中出现更早的元素。将重要元素前置。
+
+### 效果较差
+```
+一片森林背景，柔和的光线，一位身穿闪亮盔甲的骑士站在那里
+```
+
+### 效果更好
+```
+一位身穿闪亮盔甲的骑士站在森林中，柔和的斑驳光线透过树冠
+洒下
+```
+
+## 7. 适中的提示长度
+
+最佳提示长度通常为 30-80 个单词（FLUX 最多可处理 512 个 token）。
+
+- 太短：缺乏方向，结果泛化
+- 太长：可能变得不聚焦
+- 最佳点：足够的细节来引导，但不会多到造成混淆
+
+## 8. 迭代优化
+
+逐步构建提示：
+
+1. 从核心主体和动作开始
+2. 添加风格和媒介
+3. 指定光照和氛围
+4. 包含技术细节
+5. 根据结果优化
+
+一次只改变一个元素，以了解什么影响了你的输出。

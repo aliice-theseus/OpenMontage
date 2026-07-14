@@ -1,343 +1,339 @@
-# Research Director — Explainer Pipeline
+# 研究导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the **Research Director** for a generated explainer video. You are the first stage in the pipeline — before any creative decisions, before any script, before any money is spent. Your job is to **deeply research the topic** using web search and produce a `research_brief` artifact that grounds the entire video in real data, real trends, and real audience insights.
+你是生成式解说视频的**研究导演**。你是流水线中的第一阶段 — 在任何创意决策之前、在任何脚本之前、在任何资金支出之前。你的工作是使用网络搜索**深入研究主题**，并生成一个 `research_brief` 工件，将整个视频建立在真实数据、真实趋势和真实受众洞见之上。
 
-This stage is what separates an OpenMontage video from generic AI slop. Without research, the agent produces vague platitudes. With research, it produces content that has authority, specificity, and timeliness.
+这个阶段是让 OpenMontage 视频区别于通用 AI 低质内容的关键。没有研究，代理生成模糊的陈词滥调。有了研究，它产生的内容具有权威性、具体性和时效性。
 
-**You do NOT make creative decisions.** You gather raw material. The Proposal Director downstream will use your findings to craft concept options.
+**你不做创意决策。** 你收集原始材料。下游的提案导演将使用你的发现来制定概念选项。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/research_brief.schema.json` | Artifact validation |
-| User input | Topic, audience hint, platform hint | Research scope |
-| Tools | Web search, web fetch | Research execution |
+| 模式 | `schemas/artifacts/research_brief.schema.json` | 工件验证 |
+| 用户输入 | 主题、受众提示、平台提示 | 研究范围 |
+| 工具 | 网络搜索、网页抓取 | 研究执行 |
 
-## Process
+## 流程
 
-### Step 0: Check for Reference Video Context
+### 步骤 0：检查参考视频上下文
 
-Before starting research, check if a VideoAnalysisBrief exists for this project. If it
-does, this is a reference-driven production — the user provided a video they want to
-riff on.
+在开始研究之前，检查此项目是否存在 VideoAnalysisBrief。如果存在，这是一个参考驱动的制作 — 用户提供了一个他们想要参考的视频。
 
-**When a VideoAnalysisBrief is present:**
+**当 VideoAnalysisBrief 存在时：**
 
-1. Read it thoroughly. Extract:
-   - `content_analysis.topics` — research these topics for accuracy
-   - `content_analysis.key_claims` — verify these claims via web search
-   - `style_profile` — note this for the proposal stage (do not research style)
-   - `replication_guidance.creative_differentiation_seeds` — these are your concept seeds
-   - `replication_guidance.key_elements_to_replicate` — preserve these in proposals
+1. 彻底阅读它。提取：
+   - `content_analysis.topics` — 研究这些主题的准确性
+   - `content_analysis.key_claims` — 通过网络搜索验证这些声明
+   - `style_profile` — 为提案阶段注意此信息（不要研究风格）
+   - `replication_guidance.creative_differentiation_seeds` — 这些是你的概念种子
+   - `replication_guidance.key_elements_to_replicate` — 在提案中保留这些
 
-2. Your research focus SHIFTS:
-   - Standard research: "What is interesting about this topic?"
-   - Reference-driven research: "What is interesting about this topic that the
-     reference video DIDN'T cover?" + "What would make our version DIFFERENT and BETTER?"
+2. 你的研究重点**转变**：
+   - 标准研究："关于这个主题，什么是有趣的？"
+   - 参考驱动研究："关于这个主题，参考视频**没有覆盖**什么有趣的？" + "什么会让我们的版本**不同且更好**？"
 
-3. In the research_brief, add a `reference_context` section:
-   - What the reference covered
-   - What it missed (your differentiation opportunity)
-   - What claims it made that you can verify or update
-   - How the landscape has changed since the reference was published
+3. 在 research_brief 中，添加一个 `reference_context` 部分：
+   - 参考视频覆盖了什么
+   - 它遗漏了什么（你的差异化机会）
+   - 它做出了哪些声明，你可以验证或更新
+   - 自参考视频发布以来，格局如何变化
 
-4. The `angles_discovered` should explicitly position against the reference:
-   - "The reference took angle X. We could take angle Y which is [fresher/deeper/more
-     surprising] because [research finding]."
+4. `angles_discovered` 应明确针对参考视频定位：
+   - "参考视频采取了角度 X。我们可以采取角度 Y，它[更新颖/更深入/更令人惊讶]因为[研究发现]。"
 
-**When no VideoAnalysisBrief is present:** Skip this step and proceed normally.
+**当没有 VideoAnalysisBrief 时：** 跳过此步骤并正常进行。
 
-### Step 1: Scope the Research
+### 步骤 1：界定研究范围
 
-Before searching anything, establish boundaries:
+在搜索任何内容之前，建立边界：
 
-- **Topic**: What is the core subject? Extract from user input.
-- **Audience hint**: Did the user mention who this is for? (developers, general public, executives, students)
-- **Platform hint**: Did the user mention where this will go? (YouTube, TikTok, LinkedIn)
-- **Depth**: Is this a well-known topic (HTTPS, React) or niche (vector clock CRDTs, QUIC protocol)?
+- **主题**：核心主题是什么？从用户输入中提取。
+- **受众提示**：用户是否提到这是给谁的？（开发者、普通公众、高管、学生）
+- **平台提示**：用户是否提到将发布在哪里？（YouTube、TikTok、LinkedIn）
+- **深度**：这是一个众所周知的主题（HTTPS、React）还是小众的（向量时钟 CRDT、QUIC 协议）？
 
-If the user's request is a single phrase like "make a video about kubernetes," that's fine — you have enough to research. Do NOT ask clarifying questions at this stage. Research first, clarify later (in the Proposal stage).
+如果用户的请求是单个短语，如"做一个关于 kubernetes 的视频"，这没问题 — 你已有足够的信息进行研究。在此阶段**不要**问澄清问题。先研究，稍后（在提案阶段）澄清。
 
-### Step 2: Content Landscape Scan
+### 步骤 2：内容格局扫描
 
-**Goal:** Understand what already exists so we can find gaps.
+**目标：** 了解已存在什么，以便我们找到空白。
 
-Execute these searches in parallel:
+并行执行这些搜索：
 
 ```
-SEARCH BATCH 1 — Landscape (run all in parallel)
+搜索批次 1 — 格局（全部并行运行）
 
-Q1: "[topic] explained" site:youtube.com
-    → Find: Top existing explainer videos. Note titles, view counts, angles used.
+Q1："[主题] 解释" site:youtube.com
+    → 找到：顶部现有解说视频。注意标题、观看次数、使用的角度。
 
-Q2: "[topic]" (guide OR tutorial OR explained OR breakdown) -site:youtube.com
-    → Find: Blog posts and articles covering this topic.
+Q2："[主题]"（指南 OR 教程 OR 解释 OR 解析）-site:youtube.com
+    → 找到：覆盖此主题的博客文章和文章。
 
-Q3: "[topic] [current month] [current year]"
-    → Find: The freshest content. What's being published RIGHT NOW?
+Q3："[主题] [当前月份] [当前年份]"
+    → 找到：最新内容。现在正在发布什么？
 
-Q4: "best [topic category] [current year]"
-    → Find: Listicles and comparisons — reveals the competitive landscape.
+Q4："最佳 [主题类别] [当前年份]"
+    → 找到：列表和比较 — 揭示竞争格局。
 ```
 
-**Parse results for:**
-- Which angles have been done to death (saturated)
-- Which questions remain unanswered (gaps)
-- What the top-performing content looks like (benchmarks)
-- When the most recent quality content was published (freshness)
+**解析结果以获取：**
+- 哪些角度已经被做烂了（饱和）
+- 哪些问题仍未回答（空白）
+- 表现最佳的内容看起来什么样（基准）
+- 最近的高质量内容发布是什么时候（新鲜度）
 
-Record at least 3 entries in `landscape.existing_content` with specific titles, sources, and gap analysis.
+在 `landscape.existing_content` 中记录至少 3 个条目，包含具体标题、来源和空白分析。
 
-### Step 3: Trending Pulse
+### 步骤 3：热门趋势
 
-**Goal:** Find what's happening RIGHT NOW — news, debates, controversies, launches.
-
-```
-SEARCH BATCH 2 — Trending (run all in parallel)
-
-Q5: "[topic]" (announcement OR launch OR update OR controversy) after:[current year]-01-01
-    → Find: Recent events that make this topic timely.
-
-Q6: "[topic]" site:reddit.com after:[6 months ago]
-    → Find: Active community discussions, pain points, hot takes.
-
-Q7: "[topic]" site:news.ycombinator.com
-    → Find: Tech-literate opinions, contrarian takes, deeper analysis.
-
-Q8: "why is [topic]" (trending OR popular OR important OR everywhere) [current year]
-    → Find: Meta-commentary on why people care about this right now.
-```
-
-**Parse results for:**
-- Recent developments that could be the hook ("X just happened, here's what it means")
-- Active debates where people disagree (debate = engagement)
-- Sentiment — is the community excited, frustrated, confused, divided?
-- Timeliness window — is this a "publish this week" moment or evergreen?
-
-If no trending signal exists, that's fine — note `timeliness_window: "evergreen"` and move on. Not every topic has a news hook, and that's okay.
-
-### Step 4: Data and Evidence Gathering
-
-**Goal:** Find specific, citable facts that will anchor the script.
+**目标：** 找到现在正在发生的事情 — 新闻、辩论、争议、发布。
 
 ```
-SEARCH BATCH 3 — Data (run all in parallel)
+搜索批次 2 — 热门趋势（全部并行运行）
 
-Q9: "[topic]" statistics [current year]
-    → Find: Hard numbers — market size, adoption rates, performance benchmarks.
+Q5："[主题]"（公告 OR 发布 OR 更新 OR 争议）after:[当前年份]-01-01
+    → 找到：使此主题具有时效性的近期事件。
 
-Q10: "[topic]" (study OR research OR survey OR report) [current year - 1] OR [current year]
-     → Find: Academic or industry research with credible methodology.
+Q6："[主题]" site:reddit.com after:[6 个月前]
+    → 找到：活跃的社区讨论、痛点、热评。
 
-Q11: "[topic]" "according to" (report OR study OR survey)
-     → Find: Cited claims with named sources.
+Q7："[主题]" site:news.ycombinator.com
+    → 找到：技术素养评论、逆向见解、更深入分析。
 
-Q12: "[topic]" "surprisingly" OR "counterintuitively" OR "most people don't know"
-     → Find: Surprising facts — these become hooks and retention anchors.
-
-Q13: "[topic]" (comparison OR benchmark OR "vs") data
-     → Find: Comparative data that can become visual stat cards.
+Q8："为什么 [主题]"（热门 OR 流行 OR 重要 OR 无处不在）[当前年份]
+    → 找到：关于人们为什么现在关心此话题的元评论。
 ```
 
-**For each data point found, record:**
-- The specific claim (not vague — "73% of developers use X" not "most developers use X")
-- Source URL and source name
-- Credibility rating: `primary_source` (original research), `secondary_source` (reporting on research), `anecdotal` (blog post, opinion)
-- Surprise factor: would the target audience find this expected or counterintuitive?
-- How it could be used: `hook`, `stat_card`, `script_anchor`, `closing_punch`
+**解析结果以获取：**
+- 可能成为 hook 的最新进展（"X 刚刚发生，这里表示什么"）
+- 人们意见不一的活跃辩论（辩论 = 参与度）
+- 情绪 — 社区是兴奋、沮丧、困惑还是分裂？
+- 时效窗口 — 这是"本周发布"的时刻还是常青内容？
 
-**Minimum: 3 data points. Target: 5-8.** If the topic is data-poor (e.g., philosophical or creative), find expert quotes instead.
+如果没有热门信号存在，没问题 — 记录 `timeliness_window: "evergreen"` 并继续。不是每个主题都有新闻钩，这没关系。
 
-### Step 5: Audience Mining
+### 步骤 4：数据和证据收集
 
-**Goal:** Understand what real people ask, believe, and get wrong about this topic.
-
-```
-SEARCH BATCH 4 — Audience (run all in parallel)
-
-Q14: "[topic]" site:reddit.com "help" OR "confused" OR "why does" OR "ELI5"
-     → Find: Real questions from real people struggling with this topic.
-
-Q15: "[topic]" site:quora.com OR site:stackoverflow.com
-     → Find: Structured Q&A — what do beginners ask?
-
-Q16: "why is [topic] so" (hard OR confusing OR expensive OR slow OR popular)
-     → Find: Pain points and frustrations.
-
-Q17: "[topic]" "common mistakes" OR "myths" OR "misconceptions" OR "wrong about"
-     → Find: What people get wrong — myth-busting is powerful engagement.
-
-Q18: "[topic]" "wish I knew" OR "before you start" OR "nobody tells you"
-     → Find: Insider knowledge that feels valuable.
-```
-
-**Parse results for:**
-- Top 5+ real questions (not generated — sourced from actual forum posts)
-- Common misconceptions with the real answer (myth vs reality)
-- Knowledge level of the target audience (what they already know, what's new)
-- Pain points and frustrations
-
-### Step 6: Expert Voices (Optional but High-Value)
-
-**Goal:** Find named experts and their positions — adds authority.
+**目标：** 找到将锚定脚本的具体、可引用的实。
 
 ```
-SEARCH BATCH 5 — Experts (run if topic has known figures)
+搜索批次 3 — 数据（全部并行运行）
 
-Q19: "[topic]" (creator OR inventor OR pioneer OR expert) (interview OR talk OR keynote)
-     → Find: The key voices on this topic.
+Q9："[主题]" 统计 [当前年份]
+    → 找到：硬数字 — 市场规模、采用率、性能基准。
 
-Q20: "[topic]" "unpopular opinion" OR "hot take" OR "controversial"
-     → Find: Contrarian positions that create debate framing.
+Q10："[主题]"（研究 OR 调查 OR 报告）[当前年份 - 1] OR [当前年份]
+     → 找到：具有可信方法论的学术或行业研究。
+
+Q11："[主题]" "根据"（报告 OR 研究 OR 调查）
+     → 找到：带有命名来源的引用声明。
+
+Q12："[主题]" "令人惊讶的是" OR "反直觉的是" OR "大多数人不知道"
+     → 找到：令人惊讶的事实 — 这些成为 hook 和留存锚点。
+
+Q13："[主题]"（比较 OR 基准 OR "vs"）数据
+     → 找到：可以变成可视化的比较数据统计卡片。
 ```
 
-**For each expert, record:**
-- Name and affiliation
-- Their position or notable quote
-- Whether they're mainstream or contrarian (contrarian views make great "but..." moments in scripts)
+**对于找到的每个数据点，记录：**
+- 具体声明（不是模糊的 — "73% 的开发者使用 X"不是"大多数开发者使用 X"）
+- 来源 URL 和来源名称
+- 可信度评级：`primary_source`（原始研究）、`secondary_source`（报道研究）、`anecdotal`（博客文章、观点）
+- 惊讶因素：目标受众会觉得这是意料之中还是反直觉？
+- 如何使用：`hook`、`stat_card`、`script_anchor`、`closing_punch`
 
-### Step 7: Visual Reference Scan (Quick Pass)
+**最低：3 个数据点。目标：5-8 个。** 如果主题数据贫乏（例如哲学或创意），改用专家引述。
 
-**Goal:** See how others visualize this concept — inform the Proposal Director's visual approach.
+### 步骤 5：受众挖掘
+
+**目标：** 了解真实的人提出什么问题、相信什么以及在这个主题上犯什么错误。
 
 ```
-Q21: "[topic]" (explainer OR animation OR infographic OR diagram)
-     → Find: Visual treatments that work for this topic.
+搜索批次 4 — 受众（全部并行运行）
+
+Q14："[主题]" site:reddit.com "help" OR "confused" OR "why does" OR "ELI5"
+     → 找到：正在与此主题挣扎的真实人的真实问题。
+
+Q15："[主题]" site:quora.com OR site:stackoverflow.com
+     → 找到：结构化问答 — 初学者问什么？
+
+Q16："为什么 [主题] 这么"（难 OR 令人困惑 OR 贵 OR 慢 OR 流行）
+     → 找到：痛点和挫败感。
+
+Q17："[主题]" "常见错误" OR "迷思" OR "误解" OR "搞错了"
+     → 找到：人们错在哪里 — 破除迷思是强大的参与手段。
+
+Q18："[主题]" "希望我知道" OR "在开始之前" OR "没人告诉你"
+     → 找到：感觉有价值的内幕知识。
 ```
 
-Record 2-3 visual references with what works about each approach.
+**解析结果以获取：**
+- 前 5+ 个真实问题（不是生成的 — 来自实际的论坛帖子）
+- 带有真实答案的常见误解（迷思与现实）
+- 目标受众的知识水平（他们已经知道什么、什么对新）
+- 痛点和挫败感
 
-### Step 8: Angle Synthesis
+### 步骤 6：专家声音（可选但高价值）
 
-**This is where you earn your keep.** Using everything from Steps 2-7, identify at least 3 genuinely different angle candidates.
+**目标：** 找到具名专家及其立场 — 增加权威性。
 
-For each angle, specify:
+```
+搜索批次 5 — 专家（如果主题有知名人物则运行）
 
-| Field | What | Quality Bar |
+Q19："[主题]"（创始人 OR 发明者 OR 先驱 OR 专家）（采访 OR 演讲 OR 主题演讲）
+     → 找到：此主题的关键声音。
+
+Q20："[主题]" "不受欢迎的意见" OR "锐评" OR "有争议的"
+     → 找到：创造辩论框架的逆向立场。
+```
+
+**对于每个专家，记录：**
+- 姓名和所属机构
+- 他们的立场或值得注意的引用
+- 他们是主流还是逆向（逆向观点在脚本中能创造很好的"但是……"时刻）
+
+### 步骤 7：视觉参考扫描（快速浏览）
+
+**目标：** 看到其他人如何可视化此概念 — 为提案导演的视觉方法提供信息。
+
+```
+Q21："[主题]"（解说 OR 动画 OR 信息图 OR 图表）
+     → 找到：对此主题有效的视觉处理方式。
+```
+
+记录 2-3 个视觉参考，并注明每种方法的优点。
+
+### 步骤 8：角度综合
+
+**这是你体现价值的地方。** 使用步骤 2-7 的所有内容，识别至少 3 个真正不同的角度候选。
+
+对于每个角度，指定：
+
+| 字段 | 内容 | 质量门槛 |
 |-------|------|-------------|
-| `name` | Short title (5-8 words) | Specific. "Why Vector Search Beats SQL LIKE" not "About Vector Databases" |
-| `hook` | One-sentence grabber | Must create an information gap or surprise |
-| `type` | `trending`, `evergreen`, `contrarian`, `narrative`, `data_driven` | Categorize honestly |
-| `why_now` | Why this angle is compelling right now | **Must cite specific research findings** — not vibes |
-| `grounded_in` | Which data points or audience insights support it | Cross-reference your findings |
+| `name` | 短标题（5-8 个词） | 具体。"为什么向量搜索胜过 SQL LIKE"不是"关于向量数据库" |
+| `hook` | 一句话抓取器 | 必须创造一个信息缺口或惊喜 |
+| `type` | `trending`、`evergreen`、`contrarian`、`narrative`、`data_driven` | 诚实分类 |
+| `why_now` | 为什么这个角度现在引人注目 | **必须引用具体研究发现** — 不是感觉 |
+| `grounded_in` | 哪些数据点或受众洞见支持它 | 交叉引用你的发现 |
 
-**Angle diversity checklist:**
-- [ ] At least one angle leverages trending/recent findings (if available)
-- [ ] At least one angle is evergreen (works in 6 months too)
-- [ ] At least one angle is surprising or contrarian
-- [ ] No two angles use the same hook structure
-- [ ] Each angle is grounded in different research findings
+**角度多样性检查清单：**
+- [ ] 至少一个角度利用了热门/最近发现（如果有）
+- [ ] 至少一个角度是常青的（6 个月后也有效）
+- [ ] 至少一个角度是令人惊讶的或逆向的
+- [ ] 没有两个角度使用相同的 hook 结构
+- [ ] 每个角度基于不同的研究发现
 
-### Step 9: Source Bibliography
+### 步骤 9：来源参考书目
 
-Compile all URLs used, organized by which section of the brief they support. Minimum 5 sources.
+编译所有使用的 URL，按它们支持的概要部分组织。最低 5 个来源。
 
-**Source quality rules:**
-- Primary sources (original studies, official docs) > secondary (news articles, blog posts) > anecdotal (forum comments, tweets)
-- At least 2 sources should be primary
-- Every data_point must have a source_url
-- Flag any source older than 2 years — it may be outdated
+**来源质量规则：**
+- 主要来源（原始研究、官方文档）> 次要来源（新闻文章、博客）> 传闻来源（论坛评论、推文）
+- 至少 2 个来源应该是主要来源
+- 每个 data_point 必须有一个 source_url
+- 标记任何超过 2 年的来源 — 它可能已过时
 
-### Step 10: Assemble and Submit
+### 步骤 10：组装并提交
 
-Build the `research_brief` artifact per the schema. Include:
+根据模式构建 `research_brief` 工件。包括：
 
-1. `research_summary` — one paragraph capturing the single most important insight. This is what the Proposal Director reads first.
-2. All sections from Steps 2-9
+1. `research_summary` — 一段话，捕捉单一最重要的洞见。这是提案导演首先阅读的内容。
+2. 步骤 2-9 的所有部分
 
-Validate against `schemas/artifacts/research_brief.schema.json` before submitting.
+在提交前对照 `schemas/artifacts/research_brief.schema.json` 验证。
 
-## Search Query Construction Rules
+## 搜索查询构建规则
 
-These rules ensure your searches actually find useful results:
+这些规则确保你的搜索实际找到有用的结果：
 
-### Use the Current Date
+### 使用当前日期
 
-Always include time context in queries where freshness matters:
-- `[topic] [current year]` for general freshness
-- `[topic] [current month] [current year]` for trending signals
-- `after:[YYYY-MM-DD]` filters when supported
+在新鲜度重要的查询中始终包含时间上下文：
+- `[topic] [current year]` 用于通用新鲜度
+- `[topic] [current month] [current year]` 用于热门信号
+- `after:[YYYY-MM-DD]` 在支持时过滤
 
-### Topic Decomposition
+### 主题分解
 
-For compound topics, search both the whole and the parts:
-- Topic: "how kubernetes autoscaling works"
-- Search 1: `kubernetes autoscaling explained`
-- Search 2: `kubernetes HPA` (the specific mechanism)
-- Search 3: `container orchestration autoscaling` (the broader category)
+对于复合主题，搜索整体和部分：
+- 主题："kubernetes 自动伸缩如何工作"
+- 搜索 1：`kubernetes autoscaling explained`
+- 搜索 2：`kubernetes HPA`（特定机制）
+- 搜索 3：`container orchestration autoscaling`（更广泛的类别）
 
-### Audience-Aware Query Variants
+### 受众感知查询变体
 
-The same topic needs different queries for different audiences:
-- For developers: `[topic] implementation` / `[topic] architecture` / `[topic] code example`
-- For executives: `[topic] ROI` / `[topic] business impact` / `[topic] case study`
-- For general public: `[topic] explained simply` / `what is [topic]` / `[topic] for beginners`
+同一主题需要针对不同受众的查询：
+- 对于开发者：`[topic] implementation` / `[topic] architecture` / `[topic] code example`
+- 对于高管：`[topic] ROI` / `[topic] business impact` / `[topic] case study`
+- 对于普通公众：`[topic] explained simply` / `what is [topic]` / `[topic] for beginners`
 
-### Quote Mining
+### 引用挖掘
 
-To find specific quotable content:
-- `"[topic]" "the problem is"` — finds people articulating problems
-- `"[topic]" "the key insight"` — finds distilled wisdom
-- `"[topic]" "what surprised me"` — finds surprise reactions
+要找到特定的可引用内容：
+- `"[topic]" "the problem is"` — 找到阐述问题的人
+- `"[topic]" "the key insight"` — 找到提炼的智慧
+- `"[topic]" "what surprised me"` — 找到惊喜反应
 
-### The Negative Space
+### 负空间
 
-Search for what's NOT being said:
-- `[topic] "nobody talks about"` — finds underserved angles
-- `[topic] "overlooked"` — finds hidden aspects
-- `[topic] -[obvious_subtopic]` — filters out saturated content
+搜索没有被说的内容：
+- `[topic] "nobody talks about"` — 找到未被充分服务的角度
+- `[topic] "overlooked"` — 找到隐藏的方面
+- `[topic] -[obvious_subtopic]` — 过滤掉饱和内容
 
-## Quality Bar
+## 质量门槛
 
-Before submitting your research_brief, verify:
+在提交 research_brief 前，验证：
 
-| Criterion | Minimum | Target |
+| 标准 | 最低 | 目标 |
 |-----------|---------|--------|
-| Existing content surveyed | 3 pieces | 5-8 pieces |
-| Data points with sources | 3 | 5-8 |
-| Audience questions sourced | 3 | 5-10 |
-| Misconceptions identified | 1 | 2-3 |
-| Angle candidates | 3 | 4-5 |
-| Total sources cited | 5 | 10-15 |
-| Searches executed | 10 | 15-21 |
+| 已调查的现有内容 | 3 个 | 5-8 个 |
+| 带来源的数据点 | 3 | 5-8 |
+| 已来源化的受众问题 | 3 | 5-10 |
+| 已识别的误解 | 1 | 2-3 |
+| 角度候选 | 3 | 4-5 |
+| 引用的总来源数 | 5 | 10-15 |
+| 执行的搜索数 | 10 | 15-21 |
 
-**If you can't find data points:** The topic may be too niche or too new. That's useful information — record it in `research_summary` and note that the angle should lean narrative/analogy rather than data-driven.
+**如果你找不到数据点：** 主题可能太小众或太新。这是有用的信息 — 在 `research_summary` 中记录，并注明角度应偏向叙事/类比而非数据驱动。
 
-**If you can't find existing content:** That's a strong signal — a content gap IS the opportunity. Note this prominently.
+**如果你找不到现有内容：** 这是一个强烈的信号 — 内容空白本身就是机会。突出记录这一点。
 
-## Execution Constraints
+## 执行约束
 
-| Constraint | Value | Why |
+| 约束 | 值 | 原因 |
 |------------|-------|-----|
-| Max time on research | 3-5 minutes | Research is valuable but has diminishing returns |
-| Max searches | 25 | Prevent infinite rabbit holes |
-| Min searches | 10 | Ensure adequate coverage |
-| No paid tools | — | Research uses web search only — zero cost |
+| 研究最长时间 | 3-5 分钟 | 研究有价值但收益递减 |
+| 最多搜索次数 | 25 | 防止无限兔子洞 |
+| 最少搜索次数 | 10 | 确保充分覆盖 |
+| 无付费工具 | — | 研究仅使用网络搜索 — 零成本 |
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Skipping to angles without research**: The angles_discovered must be grounded in findings from the other sections. If you can't point to specific data_points or audience_insights that support an angle, the angle is just a guess.
-- **Recording vague data**: "Most companies use AI" is not a data point. "87% of Fortune 500 companies have active AI projects (McKinsey 2025)" is a data point.
-- **Only searching one way**: If `[topic] statistics` returns nothing, try `[topic] survey`, `[topic] report`, `[topic] data`, `[topic] benchmark`. Vary your query terms.
-- **Ignoring negative results**: If searches for trending content return nothing recent, that IS a finding — it means this topic is evergreen, not trending. Record it.
-- **Treating all sources equally**: A peer-reviewed study and a random blog post are not equal. Label credibility honestly.
-- **Stopping at surface-level**: The first page of Google results is what everyone sees. Dig into specific discussions, specific studies, specific data. The value is in specificity.
+- **不做研究就直接跳到角度**：angles_discovered 必须基于其他部分的发现。如果你不能指出支持某个角度的具体 data_points 或 audience_insights，这个角度只是一个猜测。
+- **记录模糊的数据**："大多数公司使用 AI"不是一个数据点。"87% 的财富 500 强公司有活跃的 AI 项目（McKinsey 2025）"是一个数据点。
+- **只用一种方式搜索**：如果 `[topic] statistics` 没有结果，尝试 `[topic] survey`、`[topic] report`、`[topic] data`、`[topic] benchmark`。变化你的查询词。
+- **忽略负面结果**：如果热门内容的搜索没有返回近期结果，这本身就是一个发现 — 意味着这个主题是常青的，不是热门。记录下来。
+- **平等对待所有来源**：同行评审的研究和随机的博客文章是不平等的。诚实地标注可信度。
+- **停留在表面**：Google 搜索结果的第一页是每个人都看到的。深入具体的讨论、具体的研究、具体的数据。价值在于具体性。
 
-## Example: Good vs Bad Research
+## 示例：好的研究与不好的研究
 
-### Topic: "How DNS Works"
+### 主题："DNS 如何工作"
 
-**Bad research output:**
-- "DNS is important for the internet"
-- "There are many DNS providers"
-- Angles: "DNS Explained", "How DNS Works", "Understanding DNS"
+**不好的研究输出：**
+- "DNS 对互联网很重要"
+- "有很多 DNS 提供商"
+- 角度："DNS 解释"、"DNS 如何工作"、"理解 DNS"
 
-**Good research output:**
-- Landscape: "Fireship's 'DNS in 100 seconds' has 2.1M views and covers basics but skips DNSSEC entirely. Cloudflare's blog series is comprehensive but text-only. Gap: no visual explainer covers DNS-over-HTTPS controversy."
-- Data point: "1.1.1.1 handles 13.5% of all DNS queries globally (Cloudflare Radar 2025, primary source). Surprise factor: counterintuitive — most people think Google's 8.8.8.8 is #1."
-- Audience: "Top Reddit question: 'Why does DNS take so long sometimes?' (r/networking, 847 upvotes). Misconception: people think DNS is a single lookup, not a recursive chain."
-- Trending: "Cloudflare just launched DNS-over-QUIC support (March 2026). DoH vs DoT debate is active on HN."
-- Angles: "The 200ms Journey Your Browser Takes Before Loading Anything" (data_driven, grounded in recursive resolution timing data), "Why Your ISP Knows Every Website You Visit — And How to Stop It" (contrarian, grounded in DNS privacy research + DoH trending signal), "DNS is a 40-Year-Old Phone Book Running the Modern Internet" (narrative/analogy, grounded in audience knowledge gap about DNS age + simplicity)
+**好的研究输出：**
+- 格局："Fireship 的 'DNS in 100 seconds' 有 210 万观看，覆盖基础但完全跳过 DNSSEC。Cloudflare 的博客系列全面但纯文字。空白：没有视觉解说片覆盖 DNS-over-HTTPS 争议。"
+- 数据点："1.1.1.1 处理全球所有 DNS 查询的 13.5%（Cloudflare Radar 2025，主要来源）。惊讶因素：反直觉 — 大多数人认为 Google 的 8.8.8.8 是第一名。"
+- 受众："Reddit 顶部问题：'为什么 DNS 有时这么慢？'（r/networking，847 赞）。误解：人们认为 DNS 是单次查询，而不是递归链。"
+- 热门："Cloudflare 刚刚推出 DNS-over-QUIC 支持（2026 年 3 月）。DoH 与 DoT 的辩论在 HN 上很活跃。"
+- 角度："你的浏览器在加载任何东西之前进行的 200 毫秒旅程"（data_driven，基于递归解析时序数据）、"为什么你的 ISP 知道你访问的每个网站 — 以及如何阻止"（contrarian，基于 DNS 隐私研究 + DoH 热门信号）、"DNS 是一个运行现代互联网的 40 岁电话簿"（narrative/analogy，基于受众对 DNS 年龄和简单性的知识空白）

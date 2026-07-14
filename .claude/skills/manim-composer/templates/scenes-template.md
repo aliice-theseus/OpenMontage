@@ -1,147 +1,147 @@
-# [Video Title]
+# [视频标题]
 
-## Overview
-- **Topic**: [Core mathematical/scientific concept]
-- **Hook**: [Opening question or mystery that draws viewers in]
-- **Target Audience**: [Prerequisites - what math/science background is assumed]
-- **Estimated Length**: [X minutes]
-- **Key Insight**: [The central "aha moment" - the one thing viewers should remember]
+## 概述
+- **主题**：[核心数学/科学概念]
+- **钩子**：[吸引观众的开场问题或谜团]
+- **目标受众**：[先决条件——假设的数学/科学背景]
+- **预计时长**：[X 分钟]
+- **关键见解**：[核心"顿悟时刻"——观众应记住的一件事]
 
-## Narrative Arc
-[2-3 sentences describing the emotional and intellectual journey. Example: "We start with a puzzling observation, investigate why it's true, and discover a beautiful underlying principle that connects seemingly different ideas."]
-
----
-
-## Scene 1: [Scene Name]
-**Duration**: ~X seconds
-**Purpose**: [What this scene accomplishes in the overall narrative]
-
-### Visual Elements
-- [Mobject 1: description, color, position]
-- [Mobject 2: description, color, position]
-- [Animation sequence]
-- [Camera movements if any]
-
-### Content
-[Detailed description of what happens visually and conceptually. Be specific enough that someone could implement this scene.]
-
-### Narration Notes
-[Key points to convey, suggested tone, pacing. Not a full script, but guidance.]
-
-### Technical Notes
-- [Specific Manim classes to use]
-- [Tricky implementations or gotchas]
-- [Dependencies on previous scenes]
+## 叙事弧线
+[2-3 句话描述情感和智力旅程。示例："我们从令人费解的观察开始，研究它为什么成立，并发现一个连接看似不同想法的优美底层原理。"]
 
 ---
 
-## Scene 2: [Scene Name]
-**Duration**: ~X seconds
-**Purpose**: [Purpose]
+## 场景 1：[场景名称]
+**时长**：约 X 秒
+**目的**：[此场景在整体叙事中的作用]
 
-### Visual Elements
-- [List elements]
+### 视觉元素
+- [Mobject 1：描述、颜色、位置]
+- [Mobject 2：描述、颜色、位置]
+- [动画序列]
+- [摄像机移动（如果有）]
 
-### Content
-[Description]
+### 内容
+[视觉和概念上发生的事情的详细描述。要具体到可以让某人实现此场景。]
 
-### Narration Notes
-[Notes]
+### 旁白说明
+[要传达的关键点、建议的语气、节奏。不是完整脚本，而是指导。]
 
-### Technical Notes
-- [Notes]
-
----
-
-## Scene 3: [Scene Name]
-**Duration**: ~X seconds
-**Purpose**: [Purpose]
-
-### Visual Elements
-- [List elements]
-
-### Content
-[Description]
-
-### Narration Notes
-[Notes]
-
-### Technical Notes
-- [Notes]
+### 技术说明
+- [要使用的特定 Manim 类]
+- [技巧性实现或注意事项]
+- [对之前场景的依赖关系]
 
 ---
 
-[Add more scenes as needed]
+## 场景 2：[场景名称]
+**时长**：约 X 秒
+**目的**：[目的]
+
+### 视觉元素
+- [列出元素]
+
+### 内容
+[描述]
+
+### 旁白说明
+[说明]
+
+### 技术说明
+- [说明]
 
 ---
 
-## Transitions & Flow
+## 场景 3：[场景名称]
+**时长**：约 X 秒
+**目的**：[目的]
 
-### Scene Connections
-- Scene 1 → Scene 2: [How they connect, what carries over visually]
-- Scene 2 → Scene 3: [Connection]
-- [Continue for all transitions]
+### 视觉元素
+- [列出元素]
 
-### Recurring Visual Motifs
-- [Element that appears throughout, providing continuity]
-- [Color or shape that reinforces key concept]
+### 内容
+[描述]
+
+### 旁白说明
+[说明]
+
+### 技术说明
+- [说明]
 
 ---
 
-## Color Palette
+[根据需要添加更多场景]
 
-| Role | Color | Hex | Usage |
+---
+
+## 过渡与流程
+
+### 场景连接
+- 场景 1 → 场景 2：[它们如何连接，视觉上继承了什么]
+- 场景 2 → 场景 3：[连接]
+- [继续列出所有过渡]
+
+### 重复出现的视觉主题
+- [贯穿始终提供连续性的元素]
+- [强化关键概念的颜色或形状]
+
+---
+
+## 调色板
+
+| 角色 | 颜色 | 十六进制 | 用途 |
 |------|-------|-----|-------|
-| Primary | [e.g., Blue] | #58C4DD | [Main objects, key terms] |
-| Secondary | [e.g., Green] | #83C167 | [Results, outputs] |
-| Accent | [e.g., Yellow] | #FFFF00 | [Highlights, emphasis] |
-| Warning | [e.g., Red] | #FF6666 | [Errors, negatives] |
-| Background | [e.g., Dark grey] | #1C1C1C | [Scene background] |
+| 主色 | [例如 蓝色] | #58C4DD | [主要对象，关键术语] |
+| 辅色 | [例如 绿色] | #83C167 | [结果，输出] |
+| 强调色 | [例如 黄色] | #FFFF00 | [高亮，强调] |
+| 警告色 | [例如 红色] | #FF6666 | [错误，负面] |
+| 背景色 | [例如 深灰色] | #1C1C1C | [场景背景] |
 
 ---
 
-## Mathematical Content
+## 数学内容
 
-### Equations to Render
-1. `[LaTeX equation 1]` - used in Scene X
-2. `[LaTeX equation 2]` - used in Scene Y
-3. [Continue...]
+### 需要渲染的方程
+1. `[LaTeX 方程 1]` - 在场景 X 中使用
+2. `[LaTeX 方程 2]` - 在场景 Y 中使用
+3. [继续...]
 
-### Graphs/Plots
-1. [Function 1]: domain, key features
-2. [Function 2]: domain, key features
+### 图形/图表
+1. [函数 1]：定义域、关键特征
+2. [函数 2]：定义域、关键特征
 
-### Geometric Objects
-1. [Object]: properties, how it transforms
-2. [Continue...]
-
----
-
-## Implementation Order
-
-Suggested order for building scenes (accounting for dependencies):
-
-1. **[Scene name]** - [Why first: standalone, establishes base objects]
-2. **[Scene name]** - [Dependency notes]
-3. **[Scene name]** - [Dependency notes]
-4. [Continue...]
-
-### Shared Components
-Objects or code that should be defined once and reused:
-- [Component 1]: used in Scenes X, Y, Z
-- [Component 2]: used in Scenes A, B
+### 几何对象
+1. [对象]：属性、如何变换
+2. [继续...]
 
 ---
 
-## Open Questions / Decisions Needed
+## 实现顺序
 
-- [ ] [Question about scope, implementation, or creative direction]
-- [ ] [Another decision point]
+建议的场景构建顺序（考虑依赖关系）：
+
+1. **[场景名称]** - [为什么优先：独立，建立基础对象]
+2. **[场景名称]** - [依赖说明]
+3. **[场景名称]** - [依赖说明]
+4. [继续...]
+
+### 共享组件
+应定义一次并复用的对象或代码：
+- [组件 1]：在场景 X、Y、Z 中使用
+- [组件 2]：在场景 A、B 中使用
 
 ---
 
-## Reference Material
+## 未解决的问题 / 需要做的决定
 
-- [Link or citation to source material]
-- [Inspiration videos or images]
-- [Academic papers if relevant]
+- [ ] [关于范围、实现或创意方向的问题]
+- [ ] [另一个决策点]
+
+---
+
+## 参考资料
+
+- [源材料的链接或引用]
+- [灵感视频或图片]
+- [学术论文（如相关）]

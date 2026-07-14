@@ -1,164 +1,164 @@
-# Beat Direction
+# 节拍方向
 
-How to plan and direct individual scenes (beats) in a multi-scene composition. Read before writing any multi-scene video.
+如何规划和指导多场景合成中的各个场景（节拍）。在编写任何多场景视频前阅读。
 
-## Contents
+## 目录
 
-- Per-beat direction
-- Concept
-- Mood direction
-- Animation choreography
-- Transition
-- Depth layers
-- SFX cues
-- Rhythm planning
-- Velocity-matched transitions
-
----
-
-## Per-Beat Direction
-
-Each beat is a WORLD, not a layout. Before writing CSS specs and GSAP instructions, describe what the viewer EXPERIENCES. The difference between a great storyboard and a mediocre one:
-
-**Mediocre:** "Dark navy background. '$1.9T' in white, 280px. Logo top-left. Wave image bottom-right."
-**Great:** "Camera is already mid-flight over a vast dark canvas. The gradient wave sweeps across the frame like aurora borealis — alive, shifting. '$1.9T' SLAMS into existence with such force the wave ripples in response. This isn't a slide — it's a moment."
-
-The first describes pixels. The second describes an experience. Write the second, then figure out the pixels.
-
-Each beat should have:
-
-### Concept
-
-The big idea for this beat in 2-3 sentences. What visual WORLD are we in? What metaphor drives it? What should the viewer FEEL? This is the most important part — everything else flows from it.
-
-### Mood direction
-
-Cultural and design references, not hex codes:
-
-- "Geometric, rhythmic, precise. Think Josef Albers or Bauhaus color studies."
-- "Warm workspace. Nice notebook energy, not technical blueprint."
-- "Cinematic title sequence. The kind of opening where you lean forward."
-
-### Animation choreography
-
-Specific motion verbs per element — not "it animates in" but HOW. Verbs come from the beat's concept and content, not from an energy bucket. A wellness brand's "slow" beat might still have something that DROPS if the content is about letting go. A stats beat might FLOAT if the brand's identity is weightless.
-
-The vocabulary of motion verbs (organized by physical character, not by energy level):
-
-**Impact / weight:** SLAMS, CRASHES, PUNCHES, STAMPS, SHATTERS, DROPS (with force)
-**Directional / deliberate:** SLIDES, PUSHES, PULLS, WIPES, CUTS
-**Reveals / builds:** DRAWS, FILLS, GROWS, EXPANDS, ASSEMBLES, COUNTS UP
-**Organic / ambient:** FLOATS, DRIFTS, BREATHES, PULSES, ORBITS, MORPHS
-**Mechanical / precise:** TYPES ON, CLICKS, LOCKS IN, SNAPS, STEPS
-
-Every element gets a verb. If you can't name the verb, the element is not yet designed. The verb should follow from the beat's concept — not from a lookup of what "high energy" or "low energy" beats use.
-
-For text elements specifically, you can name a deterministic, named effect by ID (e.g. `typewriter`, `kinetic-center-build`, `soft-blur-in`) instead of inventing timing from scratch — the 24-effect vocabulary and how to load it live in `skills/hyperframes-animation/adapters/animate-text.md`.
-
-### Transition
-
-How this beat hands off to the next. Specify the type and parameters.
-
-**When to pick which:**
-
-| Choose shader transition for                                                    | Choose CSS transition for                                                           | Choose hard cut for                                            |
-| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Reveals, big reaction shots, product/logo unveils, energy shifts, "wow" moments | Continuous camera-motion beats where the scene feels like one move broken into cuts | Rapid-fire lists, percussive edits on the beat, comedic timing |
-| Any moment the music/VO punctuates with a downbeat or SFX hit                   | Beats that ease from one composition into the next with shared motion vocabulary    | Sequences of 3+ quick tempo-matched switches                   |
-| Brand moments where the transition itself _is_ the visual                       | Minimal/editorial pacing                                                            | Anytime a 0.3-0.8s transition would feel too slow              |
-
-Rule of thumb: if the beat is the _centerpiece_ of the video, shader-transition into it. If the beat is connective tissue, a CSS crossfade is fine. A brand reel of 5-7 beats usually wants 1-2 shader transitions (the hero reveal + the CTA) — too many flatten their impact.
-
-**Mixing shader and CSS crossfade transitions in one composition is supported.** Omit `shader` on any transition entry to get a smooth opacity crossfade — HyperShader manages all scene visibility regardless. Let HyperShader create the timeline (don't pass a pre-built `timeline:` option) and add all composition tweens to the returned `tl` after `init()`. Config snippet in `skills/hyperframes-animation/transitions/overview.md` → "CSS vs Shader".
-
-**CSS transitions** — 30+ patterns across 13 categories. Full code in `skills/hyperframes-animation/transitions/` (route via `catalog.md`). Pick based on the energy and feel:
-
-| Category           | Patterns                                                                 | Motion character                                                           |
-| ------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| **Push / slide**   | Push slide, vertical push, elastic push, squeeze                         | Content moves through the frame as if on a continuous surface              |
-| **Scale / zoom**   | Zoom through, zoom out                                                   | Perspective shifts — moving toward or away from content                    |
-| **Radial / clip**  | Circle iris, diamond iris, diagonal split                                | Geometric reveal — content emerges or is covered by a shape                |
-| **3D**             | 3D card flip                                                             | Physical — content flips like a tangible object                            |
-| **Dissolve**       | Crossfade, blur crossfade, focus pull, color dip                         | Overlap and blend — both scenes exist simultaneously during the transition |
-| **Cover / blinds** | Staggered color blocks, horizontal blinds (6/12 strips), vertical blinds | Structural — content is sliced, layered, or covered                        |
-| **Light**          | Light leak overlays, overexposure burn, film burn                        | Organic film — light bleeds across the frame                               |
-| **Distortion**     | Glitch (CSS RGB jitter), chromatic aberration, ripple, VHS tape          | Instability — the image itself appears to malfunction                      |
-| **Blur**           | Blur through, directional blur                                           | Soft defocus — content blurs in or out                                     |
-| **Mechanical**     | Shutter (two-half), clock wipe (9-point wedge)                           | Precision — transitions with visible mechanical logic                      |
-| **Grid**           | Grid dissolve (12/120 cells)                                             | Fragmentation — the frame breaks into pieces                               |
-| **Destruction**    | Page burn (SVG clip-path + canvas rim)                                   | Dramatic decay — the previous scene is destroyed                           |
-| **Other**          | Gravity drop, morph circle                                               | Physical or shape-based motion that doesn't fit other categories           |
-
-Common quick-picks:
-
-- **Velocity-matched upward**: exit `y:-150, blur:30px, 0.33s power2.in` → entry `y:150→0, blur:30px→0, 1.0s power2.out`
-- **Whip pan**: exit `x:-400, blur:24px, 0.3s power3.in` → entry `x:400→0, blur:24px→0, 0.3s power3.out`
-- **Blur through**: exit `blur:20px, 0.3s` → entry `blur:20px→0, 0.25s power3.out`
-- **Zoom through**: exit `scale:1→1.2, blur:20px, 0.2s power3.in` → entry `scale:0.75→1, blur:20px→0, 0.5s expo.out`
-- **Hard cut / smash cut**: instant, for rapid-fire sequences
-
-Timing presets: snappy (0.2s), smooth (0.4s), gentle (0.6s), dramatic (0.5s), instant (0.15s), luxe (0.7s).
-
-**Shader transitions** — 14 built-in WebGL GPU effects. Install with `npx hyperframes add <name>` (block name ≠ shader name — see `skills/hyperframes-registry/references/discovery.md`); full API in `packages/shader-transitions/README.md`.
-
-| Shader                  | Visual description                                                                             | Duration range |
-| ----------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
-| **domain-warp**         | Organic FBM dissolve — both scenes warp toward each other with an accent flash at the midpoint | 0.5–0.8s       |
-| **ridged-burn**         | Multifractal mask reveals the incoming scene through a burn ramp with sparks at the edge       | 0.5–0.8s       |
-| **whip-pan**            | 10-sample horizontal motion blur + lateral crossfade — reads like a camera pan between shots   | 0.3–0.5s       |
-| **sdf-iris**            | Circle SDF expands from center, with accent-tinted glow rings at the expanding edge            | 0.5–0.7s       |
-| **ripple-waves**        | Radial standing-wave UV displacement — content ripples outward as scenes cross                 | 0.6–1.0s       |
-| **gravitational-lens**  | Pinch pull toward center + R/B chromatic separation — content bends inward then releases       | 0.6–1.0s       |
-| **cinematic-zoom**      | 12 RGB-offset radial zoom blur samples — motion streak radiating from center                   | 0.4–0.6s       |
-| **chromatic-split**     | R/B radial channel shift outward, G fixed — channels separate then rejoin                      | 0.3–0.5s       |
-| **swirl-vortex**        | CCW swirl with FBM noise — content spirals away and the new scene spirals in                   | 0.5–0.8s       |
-| **thermal-distortion**  | Vertical sine + FBM horizontal displacement — heat-haze shimmer across the frame               | 0.5–0.8s       |
-| **flash-through-white** | Fade through white midpoint — almost invisible at 0.01s, noticeable at 0.3s                    | 0.01s–0.3s     |
-| **cross-warp-morph**    | FBM vector field displaces both scenes; a third FBM biases the wipe direction                  | 0.5–0.8s       |
-| **light-leak**          | Fixed off-frame light source with exponential falloff, warmth, and a ridge flare               | 0.5–0.8s       |
-| **glitch**              | Line displacement + RGB lateral split + scan modulation + posterization + flicker              | 0.3–0.5s       |
-
-**You are not limited to what's listed here.** These are the built-in options, but you can and should:
-
-- **Write custom GLSL shaders** from scratch for unique transition effects
-- **Search online** for shader code (ShaderToy, GLSL Sandbox, GitHub) and adapt it
-- **Build custom CSS transitions** that aren't in any category — combine clip-path, transforms, filters in new ways
-- **Ask the user** to provide or find specific effects if you need something specialized
-
-If the storyboard calls for an effect that doesn't exist yet — build it. The framework renders anything a browser can run.
-
-### Depth layers
-
-What's in foreground, midground, and background. Every beat should have at least 2 layers:
-
-- "BG: dark navy fill + subtle radial glow. MG: stat cards with drop shadow. FG: brand logo bottom-right."
-
-### SFX cues
-
-What sounds at what moment:
-
-- "On the capture pulse — a soft, warm analog shutter click."
-- "Left side carries a faint low drone. On fold: drone cuts. Silence. Then a single clean chime."
+- 逐节拍方向
+- 概念
+- 情绪方向
+- 动画编排
+- 过渡
+- 深度层
+- 音效提示
+- 节奏规划
+- 速度匹配过渡
 
 ---
 
-## Rhythm Planning
+## 逐节拍方向
 
-Before writing HTML, declare your scene rhythm: which scenes are quick hits, which are holds, where do shaders land, where does energy peak. Name the pattern — fast-fast-SLOW-fast-SHADER-hold — before implementing.
+每个节拍是一个**世界**，而不是一个布局。在编写 CSS 规范和 GSAP 指令之前，描述观众**体验**到什么。优秀故事板和普通故事板之间的区别：
 
-**Derive the rhythm from the storyboard and the brand, not from a lookup.** A 15-second social ad for an architectural firm and a 15-second social ad for a gaming brand have different rhythms — both are 15 seconds, but one is slow-reveal-hold-CTA and the other is rapid-fire-SLAM-hook. Video type sets constraints (duration, approximate beat count); the brand and content determine whether those beats are slow or fast, sparse or dense, dramatic or controlled.
+**普通：**"深海军蓝背景。'$1.9T' 白色，280px。左上角 logo。右下角波浪图。"
+**优秀：**"摄像机已经在广阔深色画布上空飞行。渐变波浪像北极光一样扫过画面——有生命力，在变化。'$1.9T' 砰然出现，力量之大使波浪响应地泛起涟漪。这不是一张幻灯片——这是一个时刻。"
 
-Questions that drive rhythm decisions:
+第一种描述像素。第二种描述体验。写第二种，然后想出像素。
 
-- What emotional journey should the viewer take? Where is the peak moment?
-- Where does the narration land its heaviest emphasis? That's usually where energy should peak.
-- What does the brand's own visual pacing suggest — unhurried or urgent?
-- How many beats can the duration actually support without feeling rushed or padded?
+每个节拍应有：
 
-A social ad that tries to hook in 2s, showcase 3 features, and end with a CTA in 15s will feel like noise. Sometimes "hook-hold-CTA" with one strong feature is the right rhythm for 15 seconds. Name the rhythm you've planned before implementing.
+### 概念
+
+这个节拍的大想法，用 2-3 句话。我们在什么视觉世界中？什么隐喻驱动着它？观众应该感受到什么？这是最重要的部分——其他一切都由此而来。
+
+### 情绪方向
+
+文化和设计参考，不是十六进制代码：
+
+- "几何、有节奏、精确。想想 Josef Albers 或包豪斯色彩研究。"
+- "温暖的工作空间。好的笔记本能量，不是技术蓝图。"
+- "电影片头序列。那种你向前倾身的开场。"
+
+### 动画编排
+
+每个元素的具体运动动词——不是"它动画进入"而是**如何**。动词来自节拍的概念和内容，而不是来自能量桶。一个健康品牌的"慢"节拍可能仍然有东西**掉落**，如果内容是关于放手的话。一个统计节拍可能**漂浮**，如果品牌的特性是失重的话。
+
+运动动词词汇（按物理特性组织，而非能量级别）：
+
+**冲击 / 重量：** 撞击、粉碎、重击、踩踏、碎裂、掉落（有力）
+**方向 / 有意：** 滑入、推入、拉入、擦除、剪切
+**揭示 / 构建：** 绘制、填充、生长、扩展、组装、计数
+**有机 / 环境：** 浮动、漂移、呼吸、脉动、轨道、变形
+**机械 / 精确：** 打字、点击、锁定、弹入、步入
+
+每个元素都有一个动词。如果你无法命名动词，该元素尚未设计。动词应来源于节拍的概念——而不是从"高能量"或"低能量"节拍使用的动词列表中查找。
+
+对于文本元素特别地，你可以通过 ID 命名一个确定性、命名的效果（例如 `typewriter`、`kinetic-center-build`、`soft-blur-in`）而不是从头发明时序——24 种效果词汇及如何加载它们位于 `skills/hyperframes-animation/adapters/animate-text.md`。
+
+### 过渡
+
+这个节拍如何交接到下一个。指定类型和参数。
+
+**何时选择哪种：**
+
+| 当着色器过渡适用于                                                      | 当 CSS 过渡适用于                                                               | 当硬切适用于                                            |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 揭示、大反应镜头、产品/logo 揭幕、能量转换、"哇"时刻                      | 连续摄像机运动节拍，场景感觉像一次移动被切分成多个镜头                           | 快速连射列表、节拍上的打击式剪辑、喜剧时机             |
+| 音乐/VO 用重拍或音效强调的任何时刻                                         | 使用共享运动词汇从一个合成平滑过渡到另一个的节拍                                | 3 个以上快速节奏匹配的切换序列                         |
+| 过渡本身_就是_视觉的品牌时刻                                               | 极简/编辑节奏                                                                    | 任何 0.3-0.8 秒过渡会感觉太慢的时候                    |
+
+经验法则：如果节拍是视频的_核心_，用着色器过渡进入它。如果节拍是连接性组织，CSS 交叉淡入淡出就够了。一个 5-7 个节拍的品牌卷通常需要 1-2 个着色器过渡（英雄揭示 + CTA）——太多会削弱它们的影响力。
+
+**支持在一个合成中混合着色器和 CSS 交叉淡入淡出过渡。** 在任何过渡条目上省略 `shader` 以获得平滑的不透明度交叉淡入淡出——HyperShader 管理所有场景可见性。让 HyperShader 创建时间线（不要传递预构建的 `timeline:` 选项）并在 `init()` 后将所有合成补间添加到返回的 `tl`。配置片段在 `skills/hyperframes-animation/transitions/overview.md` → "CSS vs Shader"。
+
+**CSS 过渡** — 13 个类别中的 30+ 种模式。完整代码在 `skills/hyperframes-animation/transitions/`（通过 `catalog.md` 路由）。根据能量和感觉选择：
+
+| 类别             | 模式                                                                     | 运动特性                                                               |
+| ---------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| **推/滑**        | 推滑、垂直推、弹性推、挤压                                               | 内容像在连续表面上一样穿过画框                                          |
+| **缩放/变焦**    | 缩放穿过、缩放退出                                                       | 透视变换——向内容移动或远离内容                                         |
+| **径向/裁剪**    | 圆形光圈、菱形光圈、对角线分割                                           | 几何揭示——内容通过形状出现或被覆盖                                      |
+| **3D**           | 3D 卡片翻转                                                              | 物理——内容像有形的物体一样翻转                                         |
+| **溶解**         | 交叉淡入淡出、模糊交叉淡入淡出、焦点拉取、颜色浸染                       | 重叠和混合——两个场景在过渡期间同时存在                                  |
+| **覆盖/百叶窗**  | 交错色块、水平百叶窗（6/12 条）、垂直百叶窗                              | 结构性——内容被切片、分层或覆盖                                         |
+| **光效**         | 漏光叠加、过度曝光燃烧、胶片燃烧                                         | 有机胶片——光线在画框上漫开                                             |
+| **扭曲**         | 故障（CSS RGB 抖动）、色差、波纹、VHS 磁带                               | 不稳定——图像本身似乎出现故障                                           |
+| **模糊**         | 模糊穿过、方向模糊                                                       | 柔和失焦——内容模糊进入或淡出                                           |
+| **机械**         | 快门（两半）、时钟擦除（9 点楔形）                                       | 精确——具有可见机械逻辑的过渡                                           |
+| **网格**         | 网格溶解（12/120 格）                                                    | 碎片化——画框碎成碎片                                                   |
+| **破坏**         | 页面燃烧（SVG clip-path + canvas rim）                                   | 戏剧性衰变——前一个场景被破坏                                           |
+| **其他**         | 重力掉落、变形圆                                                         | 不适合其他类别的物理或基于形状的运动                                   |
+
+常用快速选择：
+
+- **速度匹配向上**：退出 `y:-150, blur:30px, 0.33s power2.in` → 进入 `y:150→0, blur:30px→0, 1.0s power2.out`
+- **快速摇摄**：退出 `x:-400, blur:24px, 0.3s power3.in` → 进入 `x:400→0, blur:24px→0, 0.3s power3.out`
+- **模糊穿过**：退出 `blur:20px, 0.3s` → 进入 `blur:20px→0, 0.25s power3.out`
+- **缩放穿过**：退出 `scale:1→1.2, blur:20px, 0.2s power3.in` → 进入 `scale:0.75→1, blur:20px→0, 0.5s expo.out`
+- **硬切/猛切**：即时，用于快速连射序列
+
+时序预设：干脆（0.2s）、平滑（0.4s）、温和（0.6s）、戏剧（0.5s）、即时（0.15s）、奢华（0.7s）。
+
+**着色器过渡** — 14 种内置 WebGL GPU 效果。使用 `npx hyperframes add <name>` 安装（块名 ≠ 着色器名——见 `skills/hyperframes-registry/references/discovery.md`）；完整 API 在 `packages/shader-transitions/README.md`。
+
+| 着色器                  | 视觉描述                                                                               | 时长范围     |
+| ----------------------- | -------------------------------------------------------------------------------------- | ------------ |
+| **domain-warp**         | 有机 FBM 溶解——两个场景相互扭曲，在中点有强调色闪光                                     | 0.5–0.8s     |
+| **ridged-burn**         | 多分形蒙版通过燃烧坡道揭示进入的场景，边缘有火花                                          | 0.5–0.8s     |
+| **whip-pan**            | 10 采样水平运动模糊 + 横向交叉淡入淡出——读起来像镜头之间的摄像机摇摄                        | 0.3–0.5s     |
+| **sdf-iris**            | 圆形 SDF 从中心扩展，扩展边缘带有强调色色调的光环                                          | 0.5–0.7s     |
+| **ripple-waves**        | 径向驻波 UV 位移——场景交叉时内容向外波纹状扩散                                             | 0.6–1.0s     |
+| **gravitational-lens**  | 向中心捏拉 + R/B 色差分离——内容向内弯曲然后释放                                             | 0.6–1.0s     |
+| **cinematic-zoom**      | 12 RGB 偏移径向缩放模糊采样——从中心辐射出的运动条纹                                          | 0.4–0.6s     |
+| **chromatic-split**     | R/B 径向通道向外偏移，G 固定——通道分离然后重新合并                                           | 0.3–0.5s     |
+| **swirl-vortex**        | 带 FBM 噪声的逆时针涡旋——内容螺旋离开，新场景螺旋进入                                        | 0.5–0.8s     |
+| **thermal-distortion**  | 垂直正弦 + FBM 水平位移——热霾 shimmer 穿过画面                                              | 0.5–0.8s     |
+| **flash-through-white** | 通过白色中点淡入淡出——0.01s 几乎看不见，0.3s 可见                                            | 0.01s–0.3s   |
+| **cross-warp-morph**    | FBM 向量场位移两个场景；第三个 FBM 偏置擦除方向                                                | 0.5–0.8s     |
+| **light-leak**          | 固定的画面外光源，指数衰减、温暖感和脊状光晕                                                   | 0.5–0.8s     |
+| **glitch**              | 线条位移 + RGB 横向分离 + 扫描调制 + 色调分离 + 闪烁                                          | 0.3–0.5s     |
+
+**你不仅限于这里列出的内容。** 这些是内置选项，但你既可以也应该：
+
+- **从头编写自定义 GLSL 着色器**以获得独特的过渡效果
+- **在线搜索**着色器代码（ShaderToy、GLSL Sandbox、GitHub）并适配它
+- **构建自定义 CSS 过渡**，不限于任何类别——以新的方式组合 clip-path、变换、滤镜
+- **询问用户**提供或找到特定效果，如果你需要一些专业化的东西
+
+如果故事板需要尚未存在的效果——构建它。框架渲染任何浏览器能运行的内容。
+
+### 深度层
+
+前景、中景和背景中有什么。每个节拍应至少有 2 个层：
+
+- "BG：深海军蓝填充 + 微妙径向光晕。MG：带投影的统计卡片。FG：右下角品牌 logo。"
+
+### 音效提示
+
+在什么时刻发出什么声音：
+
+- "在捕获脉冲时——一个柔和、温暖的模拟快门声。"
+- "左侧带有微弱的低频嗡鸣。折叠时：嗡鸣切断。静默。然后一个干净的单音钟声。"
 
 ---
 
-## Velocity-Matched Transitions
+## 节奏规划
 
-Exit the outgoing beat with an accelerating ease (power2.in or power3.in) plus a blur ramp. Enter the incoming beat with a decelerating ease (power2.out or power3.out) plus blur clear. The fastest point of both easing curves meets at the cut — the viewer perceives continuous camera motion, not two discrete animations. Match exit velocity to entry velocity within ~5% tolerance.
+在编写 HTML 之前，声明你的场景节奏：哪些场景是快速打击，哪些是停留，着色器落在哪里，能量在哪里达到峰值。在实现之前命名模式——fast-fast-SLOW-fast-SHADER-hold。
+
+**从故事板和品牌推导节奏，而不是从查询表。** 一个建筑公司的 15 秒社交广告和一个游戏品牌的 15 秒社交广告有不同的节奏——两者都是 15 秒，但一个是慢揭示-停留-CTA，另一个是快速连射-SLAM-钩子。视频类型设定约束（时长、大致节拍数）；品牌和内容决定这些节拍是慢还是快、稀疏还是密集、戏剧性还是可控。
+
+驱动节奏决策的问题：
+
+- 观众应该经历什么样的情感旅程？高峰时刻在哪里？
+- 旁白在哪里施加最大强调？那通常是能量应该峰值的地方。
+- 品牌自身的视觉节奏暗示着什么——从容不迫还是紧迫？
+- 时长实际上能支持多少个节拍而不感到匆忙或填充？
+
+一个试图在 2 秒内钩住、展示 3 个功能并在 15 秒内以 CTA 结束的社交广告会感觉像噪音。有时"钩子-停留-CTA"配合一个强功能就是 15 秒的正确节奏。在实现之前命名你已规划的节奏。
+
+---
+
+## 速度匹配过渡
+
+使用加速缓动（power2.in 或 power3.in）加模糊坡道退出传出节拍。使用减速缓动（power2.out 或 power3.out）加模糊清除进入传入节拍。两个缓动曲线的最快点在切换处相遇——观众感知到连续的摄像机运动，而不是两个离散的动画。匹配退出速度与进入速度，容差约 5%。

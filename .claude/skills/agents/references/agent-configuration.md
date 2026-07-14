@@ -1,48 +1,48 @@
-# Agent Configuration
+# 代理配置
 
-Complete reference for configuring conversational AI agents.
+配置会话 AI 代理的完整参考。
 
-## Configuration Structure
+## 配置结构
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="My Agent",
+    name="我的代理",
     conversation_config={
         "agent": {
-            "first_message": "Hello!",
+            "first_message": "你好！",
             "language": "en",
-            "prompt": {           # LLM, system prompt, tools, and knowledge base
-                "prompt": "You are helpful.",
+            "prompt": {           # LLM、系统提示词、工具和知识库
+                "prompt": "你很有帮助。",
                 "llm": "gemini-2.0-flash",
                 "tools": [...],
                 "built_in_tools": {...}
             }
         },
-        "tts": {...},             # Voice and TTS model settings
-        "asr": {...},             # Speech recognition settings
-        "turn": {...},            # Turn-taking behavior
-        "conversation": {...},    # Duration, events, monitoring
-        "vad": {...},             # Voice activity detection config
-        "language_presets": {...}  # Language-specific overrides
+        "tts": {...},             # 语音和 TTS 模型设置
+        "asr": {...},             # 语音识别设置
+        "turn": {...},            # 轮流说话行为
+        "conversation": {...},    # 时长、事件、监控
+        "vad": {...},             # 语音活动检测配置
+        "language_presets": {...}  # 特定语言覆盖
     },
-    platform_settings={...}       # Auth, call limits
+    platform_settings={...}       # 认证、通话限制
 )
 ```
 
 ## conversation_config
 
-Controls the real-time conversation behavior.
+控制实时对话行为。
 
 ### agent
 
 ```python
 conversation_config={
     "agent": {
-        "first_message": "Hello! How can I help you today?",
+        "first_message": "你好！今天有什么可以帮助你的？",
         "language": "en",
         "disable_first_message_interruptions": False,
         "prompt": {
-            "prompt": "You are a helpful assistant.",
+            "prompt": "你是一个有用的助手。",
             "llm": "gemini-2.0-flash",
             "temperature": 0.7
         }
@@ -50,16 +50,16 @@ conversation_config={
 }
 ```
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `first_message` | string | `""` | What the agent says when conversation starts |
-| `language` | string | `"en"` | ISO 639-1 language code (en, es, fr, etc.) |
-| `disable_first_message_interruptions` | bool | `false` | Prevent user from interrupting the first message |
-| `hinglish_mode` | bool | `false` | When enabled and language is Hindi, agent responds in Hinglish |
-| `dynamic_variables` | object | - | Config with `dynamic_variable_placeholders` containing key-value pairs |
-| `prompt` | object | - | LLM configuration (see prompt section below) |
+| `first_message` | string | `""` | 对话开始时代理说的话 |
+| `language` | string | `"en"` | ISO 639-1 语言代码（en、es、fr 等） |
+| `disable_first_message_interruptions` | bool | `false` | 防止用户打断第一条消息 |
+| `hinglish_mode` | bool | `false` | 启用且语言为印地语时，代理用 Hinglish 回应 |
+| `dynamic_variables` | object | - | 包含 `dynamic_variable_placeholders` 键值对的配置 |
+| `prompt` | object | - | LLM 配置（见下方 prompt 部分） |
 
-### tts (Text-to-Speech)
+### tts（文本转语音）
 
 ```python
 conversation_config={
@@ -75,30 +75,30 @@ conversation_config={
 }
 ```
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `voice_id` | string | `"cjVigY5qzO86Huf0OWal"` | Voice to use |
-| `model_id` | string | - | TTS model (see below) |
-| `stability` | float | `0.5` | 0-1, lower = more expressive |
-| `similarity_boost` | float | `0.8` | 0-1, higher = closer to original voice |
-| `speed` | float | `1.0` | 0.7-1.2, speech speed multiplier |
-| `optimize_streaming_latency` | int | - | 0-4, higher = faster but lower quality |
-| `expressive_mode` | bool | `true` | Enable expressive voice generation |
-| `agent_output_audio_format` | string | - | Output audio codec format |
-| `pronunciation_dictionary_locators` | array | - | Pronunciation overrides |
+| `voice_id` | string | `"cjVigY5qzO86Huf0OWal"` | 使用的音色 |
+| `model_id` | string | - | TTS 模型（见下方） |
+| `stability` | float | `0.5` | 0-1，越低越有表现力 |
+| `similarity_boost` | float | `0.8` | 0-1，越高越接近原始语音 |
+| `speed` | float | `1.0` | 0.7-1.2，语速倍数 |
+| `optimize_streaming_latency` | int | - | 0-4，越高越快但质量越低 |
+| `expressive_mode` | bool | `true` | 启用富有表现力的语音生成 |
+| `agent_output_audio_format` | string | - | 输出音频编解码器格式 |
+| `pronunciation_dictionary_locators` | array | - | 发音覆盖 |
 
-**Available TTS models for agents:**
+**代理可用的 TTS 模型：**
 
-| Model ID | Languages | Latency |
+| 模型 ID | 语言数 | 延迟 |
 |----------|-----------|---------|
-| `eleven_flash_v2_5` | 32 | ~75ms (recommended) |
-| `eleven_flash_v2` | English | ~75ms |
-| `eleven_turbo_v2_5` | 32 | ~250-300ms |
-| `eleven_turbo_v2` | English | ~250-300ms |
-| `eleven_multilingual_v2` | 29 | Standard |
-| `eleven_v3_conversational` | 70+ | Standard |
+| `eleven_flash_v2_5` | 32 | 约75ms（推荐） |
+| `eleven_flash_v2` | 英语 | 约75ms |
+| `eleven_turbo_v2_5` | 32 | 约250-300ms |
+| `eleven_turbo_v2` | 英语 | 约250-300ms |
+| `eleven_multilingual_v2` | 29 | 标准 |
+| `eleven_v3_conversational` | 70+ | 标准 |
 
-### asr (Automatic Speech Recognition)
+### asr（自动语音识别）
 
 ```python
 conversation_config={
@@ -110,14 +110,14 @@ conversation_config={
 }
 ```
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `quality` | string | `"high"` | Transcription quality level |
-| `provider` | string | `"elevenlabs"` | ASR provider (`elevenlabs` or `scribe_realtime`) |
-| `keywords` | array | - | Words to boost recognition accuracy |
-| `user_input_audio_format` | string | - | Input audio format (e.g., `pcm_16000`, `ulaw_8000`) |
+| `quality` | string | `"high"` | 转录质量级别 |
+| `provider` | string | `"elevenlabs"` | ASR 提供商（`elevenlabs` 或 `scribe_realtime`） |
+| `keywords` | array | - | 提高识别准确率的词汇 |
+| `user_input_audio_format` | string | - | 输入音频格式（例如 `pcm_16000`、`ulaw_8000`） |
 
-### turn (Turn-Taking)
+### turn（轮流说话）
 
 ```python
 conversation_config={
@@ -129,33 +129,33 @@ conversation_config={
 }
 ```
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `turn_timeout` | number | `7` | Seconds to wait before re-engaging the user |
-| `turn_eagerness` | string | `"normal"` | How quickly agent responds: `patient`, `normal`, or `eager` |
-| `silence_end_call_timeout` | number | `-1` | Seconds of silence before ending call (-1 = disabled) |
-| `initial_wait_time` | number | - | Seconds to wait for user to start speaking |
-| `spelling_patience` | string | `"auto"` | Entity detection patience: `auto` or `off` |
-| `speculative_turn` | bool | `false` | Enable speculative turn detection |
-| `soft_timeout_config` | object | - | Configures a message if user is silent (see below) |
+| `turn_timeout` | number | `7` | 重新接洽用户前的等待秒数 |
+| `turn_eagerness` | string | `"normal"` | 代理回应的急切程度：`patient`、`normal` 或 `eager` |
+| `silence_end_call_timeout` | number | `-1` | 结束通话前的静默秒数（-1 = 禁用） |
+| `initial_wait_time` | number | - | 等待用户开始说话的秒数 |
+| `spelling_patience` | string | `"auto"` | 实体检测耐心度：`auto` 或 `off` |
+| `speculative_turn` | bool | `false` | 启用推测性轮流检测 |
+| `soft_timeout_config` | object | - | 用户静默时配置消息（见下方） |
 
-**soft_timeout_config:**
+**soft_timeout_config：**
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `timeout_seconds` | number | `-1` | Seconds before soft timeout (-1 = disabled) |
-| `message` | string | `"Hhmmmm...yeah."` | What agent says on timeout |
-| `use_llm_generated_message` | bool | `false` | Let LLM generate the timeout message |
+| `timeout_seconds` | number | `-1` | 软超时前的秒数（-1 = 禁用） |
+| `message` | string | `"嗯...好吧。"` | 超时代理说的话 |
+| `use_llm_generated_message` | bool | `false` | 让 LLM 生成超时消息 |
 
-## prompt (nested in conversation_config.agent)
+## prompt（嵌套在 conversation_config.agent 中）
 
-Configures the LLM behavior. This object lives at `conversation_config.agent.prompt`:
+配置 LLM 行为。此对象位于 `conversation_config.agent.prompt`：
 
 ```python
 conversation_config={
     "agent": {
         "prompt": {
-            "prompt": "You are a helpful customer service agent...",
+            "prompt": "你是一个有用的客户服务代理...",
             "llm": "gemini-2.0-flash",
             "temperature": 0.7,
             "max_tokens": 500,
@@ -167,58 +167,55 @@ conversation_config={
 }
 ```
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `prompt` | string | `""` | System prompt defining agent behavior |
-| `llm` | string | - | Model ID (see LLM providers below) |
-| `temperature` | float | `0` | 0-1, higher = more creative |
-| `max_tokens` | int | `-1` | Max tokens for LLM response (-1 = unlimited) |
-| `reasoning_effort` | string | - | Reasoning depth: `none`, `minimal`, `low`, `medium`, `high` (model-dependent) |
-| `thinking_budget` | int | - | Max thinking tokens for reasoning models |
-| `tools` | array | - | Webhook and client tool definitions |
-| `built_in_tools` | object | - | System tools (end_call, transfer, etc.) |
-| `tool_ids` | array | - | References to pre-configured tools |
-| `knowledge_base` | array | - | Documents for RAG |
-| `custom_llm` | object | - | Custom LLM endpoint config |
-| `timezone` | string | - | IANA timezone (e.g., `America/New_York`) |
-| `backup_llm_config` | object | - | Fallback LLM configuration |
-| `cascade_timeout_seconds` | number | `8` | Seconds before cascading to backup LLM (2-15) |
-| `mcp_server_ids` | array | - | MCP server IDs to connect |
-| `native_mcp_server_ids` | array | - | Native MCP server IDs |
-| `ignore_default_personality` | bool | - | Skip default personality instructions |
+| `prompt` | string | `""` | 定义代理行为的系统提示词 |
+| `llm` | string | - | 模型 ID（见下方 LLM 提供商） |
+| `temperature` | float | `0` | 0-1，越高越有创意 |
+| `max_tokens` | int | `-1` | LLM 响应的最大 token 数（-1 = 无限制） |
+| `reasoning_effort` | string | - | 推理深度：`none`、`minimal`、`low`、`medium`、`high`（取决于模型） |
+| `thinking_budget` | int | - | 推理模型的最大思考 token 数 |
+| `tools` | array | - | Webhook 和客户端工具定义 |
+| `built_in_tools` | object | - | 系统工具（end_call、transfer 等） |
+| `tool_ids` | array | - | 对预配置工具的引用 |
+| `knowledge_base` | array | - | 用于 RAG 的文档 |
+| `custom_llm` | object | - | 自定义 LLM 端点配置 |
+| `timezone` | string | - | IANA 时区（例如 `America/New_York`） |
+| `backup_llm_config` | object | - | 备用 LLM 配置 |
+| `cascade_timeout_seconds` | number | `8` | 级联到备用 LLM 前的秒数（2-15） |
+| `mcp_server_ids` | array | - | 要连接的 MCP 服务器 ID |
+| `native_mcp_server_ids` | array | - | 原生 MCP 服务器 ID |
+| `ignore_default_personality` | bool | - | 跳过默认个性化指令 |
 
-Workspace environment variables let one agent configuration span multiple deployments. Use
-`{{system_env__label}}` in server tool and MCP server URLs, `{ "env_var_label": "orders_api_key" }`
-for secret-backed tool headers, and `{ "env_var_label": "orders_oauth" }` in `auth_connection`
-to resolve per-environment auth connections at runtime.
+工作区环境变量让一个代理配置可以跨越多个部署。在服务端工具和 MCP 服务器 URL 中使用 `{{system_env__label}}`，在密钥支持的工具请求头中使用 `{ "env_var_label": "orders_api_key" }`，在 `auth_connection` 中使用 `{ "env_var_label": "orders_oauth" }` 以在运行时解析按环境的认证连接。
 
-### LLM Providers
+### LLM 提供商
 
-| Provider | Model IDs |
+| 提供商 | 模型 ID |
 |----------|-----------|
-| OpenAI | `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo` |
-| Anthropic | `claude-sonnet-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4`, `claude-haiku-4-5`, `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-haiku` |
-| Google | `gemini-3.1-flash-lite-preview`, `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`, `gemini-2.0-flash`, `gemini-2.0-flash-lite` |
-| ElevenLabs | `glm-45-air-fp8`, `qwen3-30b-a3b`, `gpt-oss-120b` (hosted, ultra-low latency) |
-| Custom | `custom-llm` (requires custom_llm config) |
+| OpenAI | `gpt-5`、`gpt-5-mini`、`gpt-5-nano`、`gpt-4.1`、`gpt-4.1-mini`、`gpt-4.1-nano`、`gpt-4o`、`gpt-4o-mini`、`gpt-4-turbo` |
+| Anthropic | `claude-sonnet-4-6`、`claude-sonnet-4-5`、`claude-sonnet-4`、`claude-haiku-4-5`、`claude-3-7-sonnet`、`claude-3-5-sonnet`、`claude-3-haiku` |
+| Google | `gemini-3.1-flash-lite-preview`、`gemini-3-pro-preview`、`gemini-3-flash-preview`、`gemini-2.5-flash`、`gemini-2.5-flash-lite`、`gemini-2.0-flash`、`gemini-2.0-flash-lite` |
+| ElevenLabs | `glm-45-air-fp8`、`qwen3-30b-a3b`、`gpt-oss-120b`（托管，超低延迟） |
+| 自定义 | `custom-llm`（需要 custom_llm 配置） |
 
-Use `GET /v1/convai/llm/list` to inspect the current model catalog, including deprecation state, token/context limits, and capability flags such as image-input support.
+使用 `GET /v1/convai/llm/list` 查看当前模型目录，包括弃用状态、token/上下文限制和功能标志（如图像输入支持）。
 
-### Custom LLM
+### 自定义 LLM
 
-The `custom_llm` field is nested inside `conversation_config.agent.prompt`:
+`custom_llm` 字段嵌套在 `conversation_config.agent.prompt` 内：
 
 ```python
 conversation_config={
     "agent": {
         "prompt": {
-            "prompt": "You are helpful.",
+            "prompt": "你很有帮助。",
             "llm": "custom-llm",
             "custom_llm": {
                 "url": "https://your-llm-endpoint.com/v1/chat/completions",
                 "model_id": "your-model-id",
                 "api_key": {"secret_id": "your-secret-id"},
-                "api_type": "chat_completions"  # or "responses"
+                "api_type": "chat_completions"  # 或 "responses"
             }
         }
     }
@@ -227,7 +224,7 @@ conversation_config={
 
 ## platform_settings
 
-Platform-level configuration for security, limits, summaries, and widget behavior.
+安全、限制、摘要和小组件行为的平台级配置。
 
 ```python
 platform_settings={
@@ -247,138 +244,135 @@ platform_settings={
 }
 ```
 
-### Top-Level Fields
+### 顶级字段
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `summary_language` | string | Language for conversation analysis outputs such as summaries, titles, evaluation rationales, and data collection rationales. If omitted, ElevenLabs infers it from the conversation. |
-| `widget` | object | Hosted widget and shareable page configuration. See the widget table below for selected options. |
-| `auth` | object | Authentication and origin restrictions for agent access |
-| `call_limits` | object | Concurrency and daily usage limits |
-| `guardrails` | object | Built-in safety and policy controls for agent interactions |
-| `privacy` | object | Recording, retention, and conversation history redaction settings |
+| `summary_language` | string | 对话分析输出的语言，如摘要、标题、评估理由和数据收集理由。如果省略，ElevenLabs 会从对话中推断。 |
+| `widget` | object | 托管小组件和可分享页面配置。选定选项见下方小组件表格。 |
+| `auth` | object | 代理访问的认证和来源限制 |
+| `call_limits` | object | 并发和每日使用限制 |
+| `guardrails` | object | 代理交互的内置安全和策略控制 |
+| `privacy` | object | 录制、保留和对话历史编辑设置 |
 
 ### auth
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `enable_auth` | bool | Require signed URLs/tokens for connections |
-| `allowlist` | array | Allowed origins for CORS |
-| `shareable_token` | string | Public conversation token |
+| `enable_auth` | bool | 连接需要签名 URL/令牌 |
+| `allowlist` | array | CORS 允许的来源 |
+| `shareable_token` | string | 公共对话令牌 |
 
 ### call_limits
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `agent_concurrency_limit` | int | Max simultaneous conversations (default: -1, unlimited) |
-| `daily_limit` | int | Max conversations per day (default: 100000) |
-| `bursting_enabled` | bool | Allow exceeding limits at 2x cost (default: true) |
+| `agent_concurrency_limit` | int | 最大同时对话数（默认：-1，无限制） |
+| `daily_limit` | int | 每日最大对话数（默认：100000） |
+| `bursting_enabled` | bool | 允许以 2 倍成本超出限制（默认：true） |
 
 ### guardrails
 
-Use `platform_settings.guardrails` to configure built-in safety controls for user input and agent behavior. The fields below cover the current schema additions that are most relevant in agent configs.
+使用 `platform_settings.guardrails` 配置用户输入和代理行为的内置安全控制。以下字段涵盖当前模式中与代理配置最相关的部分。
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `version` | string | Guardrail config version. Use `"1"` for the current schema. |
-| `focus` | object | Keeps the agent on-topic and aligned with the configured task. |
-| `prompt_injection` | object | Detects prompt injection and instruction override attempts. |
-| `custom` | object | Configures user-defined response validation guardrails. |
-| `content` | object | Configures category-specific content moderation guardrails. |
+| `version` | string | 护栏配置版本。使用 `"1"` 表示当前模式。 |
+| `focus` | object | 保持代理在话题上并与配置任务保持一致。 |
+| `prompt_injection` | object | 检测提示注入和指令覆盖尝试。 |
+| `custom` | object | 配置用户定义的响应验证护栏。 |
+| `content` | object | 配置按类别的内容审核护栏。 |
 
-**focus / prompt_injection:**
+**focus / prompt_injection：**
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `is_enabled` | bool | Enables the guardrail. |
+| `is_enabled` | bool | 启用护栏。 |
 
-**content:**
+**content：**
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `execution_mode` | string | Guardrail execution mode: `streaming` or `blocking`. |
-| `config` | object | Category threshold settings for content moderation. |
+| `execution_mode` | string | 护栏执行模式：`streaming` 或 `blocking`。 |
+| `config` | object | 内容审核的类别阈值设置。 |
 
-**content.config:**
+**content.config：**
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `sexual` | object | Threshold settings for sexual content. |
-| `violence` | object | Threshold settings for violent content. |
-| `harassment` | object | Threshold settings for harassment. |
-| `self_harm` | object | Threshold settings for self-harm content. |
-| `profanity` | object | Threshold settings for profanity. |
-| `religion_or_politics` | object | Threshold settings for religion or politics content. |
-| `medical_and_legal_information` | object | Threshold settings for medical or legal information. |
+| `sexual` | object | 色情内容的阈值设置。 |
+| `violence` | object | 暴力内容的阈值设置。 |
+| `harassment` | object | 骚扰内容的阈值设置。 |
+| `self_harm` | object | 自残内容的阈值设置。 |
+| `profanity` | object | 脏话内容的阈值设置。 |
+| `religion_or_politics` | object | 宗教或政治内容的阈值设置。 |
+| `medical_and_legal_information` | object | 医疗或法律信息的阈值设置。 |
 
-**content.config.\<category\>:**
+**content.config.\<category\>：**
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `is_enabled` | bool | Enables moderation for the category. |
-| `threshold` | number or string | Category threshold as a numeric score or one of `low`, `medium`, or `high`. |
+| `is_enabled` | bool | 启用该类别的审核。 |
+| `threshold` | number or string | 类别阈值为数字分数或 `low`、`medium`、`high` 之一。 |
 
-Blocking content guardrails and custom guardrails support a `trigger_action` that either ends
-the session immediately or retries the response. Retry removes the blocked reply, injects your
-feedback as a system message, and re-generates up to 3 times before the platform falls back to
-ending the session. Feedback templates can use `{{trigger_reason}}` and `{{agent_message}}`.
+阻挡性内容护栏和自定义护栏支持 `trigger_action`，它要么立即结束会话，要么重试响应。重试会移除被阻止的回复，将您的反馈作为系统消息注入，并重新生成最多 3 次，之后平台回退到结束会话。反馈模板可以使用 `{{trigger_reason}}` 和 `{{agent_message}}`。
 
 ### privacy
 
-Use `platform_settings.privacy` to control recording, retention, and redaction behavior. The redaction-specific field is:
+使用 `platform_settings.privacy` 控制录制、保留和编辑行为。编辑特定字段为：
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `conversation_history_redaction` | object | Redacts configured entity types from stored transcripts, audio, and analysis. |
+| `conversation_history_redaction` | object | 从存储的转录、音频和分析中编辑已配置的实体类型。 |
 
-**conversation_history_redaction:**
+**conversation_history_redaction：**
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `enabled` | bool | `false` | Whether conversation history redaction is enabled |
-| `entities` | array | - | Entity types to redact. Use parent types such as `name` or specific values such as `name.name_given`, `email_address`, `contact_number`, `dob`, and `age`. |
+| `enabled` | bool | `false` | 是否启用对话历史编辑 |
+| `entities` | array | - | 要编辑的实体类型。使用父类型如 `name` 或特定值如 `name.name_given`、`email_address`、`contact_number`、`dob` 和 `age`。 |
 
 ### widget
 
-Use `platform_settings.widget` to configure the hosted widget and shareable page defaults. For client-side embed attributes, see the widget embedding reference.
+使用 `platform_settings.widget` 配置托管小组件和可分享页面默认值。关于客户端嵌入属性，参见小组件嵌入参考。
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `dismissible` | bool | `false` | Whether the widget can be dismissed by the user |
-| `show_agent_status` | bool | `false` | Whether to show working, done, or error status while tools are running |
-| `show_conversation_id` | bool | `true` | Whether to show the conversation ID after disconnection |
-| `strip_audio_tags` | bool | `true` | Whether to strip audio markup from messages |
-| `syntax_highlight_theme` | string | auto | Code block syntax highlighting theme (`light` or `dark`); omit it to let the widget auto-detect |
+| `dismissible` | bool | `false` | 用户是否可以关闭小组件 |
+| `show_agent_status` | bool | `false` | 工具运行时是否显示工作中的、完成或错误状态 |
+| `show_conversation_id` | bool | `true` | 断开连接后是否显示对话 ID |
+| `strip_audio_tags` | bool | `true` | 是否从消息中移除音频标记 |
+| `syntax_highlight_theme` | string | 自动 | 代码块语法高亮主题（`light` 或 `dark`）；省略则让小组件自动检测 |
 
-### conversation (inside conversation_config)
+### conversation（在 conversation_config 内）
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `max_duration_seconds` | int | `600` | Max conversation duration |
-| `text_only` | bool | `false` | Text-only mode (avoids audio pricing) |
-| `monitoring_enabled` | bool | `false` | Enable real-time WebSocket monitoring |
+| `max_duration_seconds` | int | `600` | 最大对话时长 |
+| `text_only` | bool | `false` | 纯文本模式（避免音频计费） |
+| `monitoring_enabled` | bool | `false` | 启用实时 WebSocket 监控 |
 
-## Additional Top-Level Fields
+## 其他顶级字段
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `tags` | array | Classification labels for filtering (e.g., `["production"]`, `["test"]`) |
-| `workflow` | object | Conversation flow definition and tool interaction sequences |
+| `tags` | array | 用于过滤的分类标签（例如 `["production"]`、`["test"]`） |
+| `workflow` | object | 对话流定义和工具交互序列 |
 
-## Knowledge Base / RAG
+## 知识库 / RAG
 
-Knowledge base is configured inside `conversation_config.agent.prompt`:
+知识库在 `conversation_config.agent.prompt` 内配置：
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="Support Agent",
+    name="支持代理",
     conversation_config={
         "agent": {
             "prompt": {
-                "prompt": "You are a support agent. Use the knowledge base to answer questions.",
+                "prompt": "你是一个支持代理。使用知识库回答问题。",
                 "llm": "gemini-2.0-flash",
                 "knowledge_base": [
-                    {"type": "file", "id": "doc-id", "name": "Product Guide", "usage_mode": "auto"}
+                    {"type": "file", "id": "doc-id", "name": "产品指南", "usage_mode": "auto"}
                 ],
                 "rag": {
                     "enabled": True,
@@ -393,48 +387,48 @@ agent = client.conversational_ai.agents.create(
 )
 ```
 
-`rag.embedding_model` supports `e5_mistral_7b_instruct`, `multilingual_e5_large_instruct`, and `qwen3_embedding_4b`.
+`rag.embedding_model` 支持 `e5_mistral_7b_instruct`、`multilingual_e5_large_instruct` 和 `qwen3_embedding_4b`。
 
-## CRUD Operations
+## CRUD 操作
 
-### Using CLI (Recommended)
+### 使用 CLI（推荐）
 
 ```bash
-# Initialize project
+# 初始化项目
 elevenlabs agents init
 
-# Create agent from template
-elevenlabs agents add "My Agent" --template complete
-elevenlabs agents add "Support Bot" --template customer-service
+# 从模板创建代理
+elevenlabs agents add "我的代理" --template complete
+elevenlabs agents add "支持机器人" --template customer-service
 
-# List agents
+# 列出代理
 elevenlabs agents list
 
-# Check status
+# 检查状态
 elevenlabs agents status
 
-# Push local changes to platform
+# 将本地更改推送到平台
 elevenlabs agents push
-elevenlabs agents push --dry-run    # Preview changes first
+elevenlabs agents push --dry-run    # 先预览更改
 
-# Import agents from platform
-elevenlabs agents pull                      # Import all
-elevenlabs agents pull --agent <agent-id>   # Import specific agent
-elevenlabs agents pull --update             # Override local configs
+# 从平台导入代理
+elevenlabs agents pull                      # 导入所有
+elevenlabs agents pull --agent <agent-id>   # 导入特定代理
+elevenlabs agents pull --update             # 覆盖本地配置
 
-# View available templates
+# 查看可用模板
 elevenlabs agents templates list
 elevenlabs agents templates show <template-name>
 
-# Add tools
-elevenlabs tools add-webhook "API Tool"
-elevenlabs tools add-client "UI Tool"
+# 添加工具
+elevenlabs tools add-webhook "API 工具"
+elevenlabs tools add-client "UI 工具"
 
-# Generate widget code
+# 生成小组件代码
 elevenlabs agents widget <agent-id>
 ```
 
-### SDK: List Agents
+### SDK：列出代理
 
 ```python
 agents = client.conversational_ai.agents.list()
@@ -450,7 +444,7 @@ const agents = await client.conversationalAi.agents.list();
 curl -X GET "https://api.elevenlabs.io/v1/convai/agents" -H "xi-api-key: $ELEVENLABS_API_KEY"
 ```
 
-### SDK: Get Agent
+### SDK：获取代理
 
 ```python
 agent = client.conversational_ai.agents.get(agent_id="your-agent-id")
@@ -464,71 +458,71 @@ const agent = await client.conversationalAi.agents.get("your-agent-id");
 curl -X GET "https://api.elevenlabs.io/v1/convai/agents/your-agent-id" -H "xi-api-key: $ELEVENLABS_API_KEY"
 ```
 
-### SDK: Update Agent
+### SDK：更新代理
 
-Only include fields you want to change. All other settings remain unchanged.
+仅包含要更改的字段。其他所有设置保持不变。
 
-**Python:**
+**Python：**
 ```python
-# Update name
-client.conversational_ai.agents.update(agent_id="id", name="New Name")
+# 更新名称
+client.conversational_ai.agents.update(agent_id="id", name="新名称")
 
-# Update TTS voice
+# 更新 TTS 音色
 client.conversational_ai.agents.update(agent_id="id", conversation_config={
     "tts": {"voice_id": "EXAVITQu4vr4xnSDxMaL", "model_id": "eleven_flash_v2_5"}
 })
 
-# Update prompt/LLM (nested in agent)
+# 更新提示词/LLM（嵌套在 agent 中）
 client.conversational_ai.agents.update(agent_id="id", conversation_config={
-    "agent": {"prompt": {"prompt": "New instructions.", "llm": "claude-sonnet-4", "temperature": 0.8}}
+    "agent": {"prompt": {"prompt": "新指令。", "llm": "claude-sonnet-4", "temperature": 0.8}}
 })
 
-# Update first message
+# 更新第一条消息
 client.conversational_ai.agents.update(agent_id="id", conversation_config={
-    "agent": {"first_message": "Welcome back!"}
+    "agent": {"first_message": "欢迎回来！"}
 })
 
-# Update platform settings
+# 更新平台设置
 client.conversational_ai.agents.update(agent_id="id", platform_settings={
     "auth": {"enable_auth": True, "allowlist": [{"hostname": "myapp.com"}]}
 })
 ```
 
-**JavaScript:**
+**JavaScript：**
 ```javascript
-await client.conversationalAi.agents.update("id", { name: "New Name" });
+await client.conversationalAi.agents.update("id", { name: "新名称" });
 await client.conversationalAi.agents.update("id", {
   conversationConfig: { tts: { voiceId: "EXAVITQu4vr4xnSDxMaL" } }
 });
 await client.conversationalAi.agents.update("id", {
-  conversationConfig: { agent: { prompt: { prompt: "New instructions.", llm: "claude-sonnet-4" } } }
+  conversationConfig: { agent: { prompt: { prompt: "新指令。", llm: "claude-sonnet-4" } } }
 });
 ```
 
-**cURL:**
+**cURL：**
 ```bash
 curl -X PATCH "https://api.elevenlabs.io/v1/convai/agents/your-agent-id" \
   -H "xi-api-key: $ELEVENLABS_API_KEY" -H "Content-Type: application/json" \
-  -d '{"name": "New Name"}'
+  -d '{"name": "新名称"}'
 ```
 
-#### Updatable Fields
+#### 可更新字段
 
-| Section | Fields |
+| 部分 | 字段 |
 |---------|--------|
-| Root | `name`, `tags` |
-| `conversation_config.agent` | `first_message`, `language`, `disable_first_message_interruptions`, `dynamic_variables` |
-| `conversation_config.agent.prompt` | `prompt`, `llm`, `temperature`, `max_tokens`, `reasoning_effort`, `tools`, `built_in_tools`, `knowledge_base`, `custom_llm`, `timezone` |
-| `conversation_config.tts` | `voice_id`, `model_id`, `stability`, `similarity_boost`, `speed`, `optimize_streaming_latency`, `expressive_mode` |
-| `conversation_config.asr` | `quality`, `provider`, `keywords`, `user_input_audio_format` |
-| `conversation_config.turn` | `turn_timeout`, `turn_eagerness`, `silence_end_call_timeout`, `soft_timeout_config` |
-| `conversation_config.conversation` | `max_duration_seconds`, `text_only`, `monitoring_enabled` |
-| `platform_settings` | `summary_language`, `guardrails`, `privacy` |
-| `platform_settings.widget` | `dismissible`, `show_agent_status`, `show_conversation_id`, `strip_audio_tags`, `syntax_highlight_theme` |
-| `platform_settings.auth` | `enable_auth`, `allowlist` |
-| `platform_settings.call_limits` | `agent_concurrency_limit`, `daily_limit`, `bursting_enabled` |
+| 根级别 | `name`、`tags` |
+| `conversation_config.agent` | `first_message`、`language`、`disable_first_message_interruptions`、`dynamic_variables` |
+| `conversation_config.agent.prompt` | `prompt`、`llm`、`temperature`、`max_tokens`、`reasoning_effort`、`tools`、`built_in_tools`、`knowledge_base`、`custom_llm`、`timezone` |
+| `conversation_config.tts` | `voice_id`、`model_id`、`stability`、`similarity_boost`、`speed`、`optimize_streaming_latency`、`expressive_mode` |
+| `conversation_config.asr` | `quality`、`provider`、`keywords`、`user_input_audio_format` |
+| `conversation_config.turn` | `turn_timeout`、`turn_eagerness`、`silence_end_call_timeout`、`soft_timeout_config` |
+| `conversation_config.conversation` | `max_duration_seconds`、`text_only`、`monitoring_enabled` |
+| `platform_settings` | `summary_language`、`guardrails`、`privacy` |
+| `platform_settings.widget` | `dismissible`、`show_agent_status`、`show_conversation_id`、`strip_audio_tags`、`syntax_highlight_theme` |
+| `platform_settings.auth` | `enable_auth`、`allowlist` |
+| `platform_settings.call_limits` | `agent_concurrency_limit`、`daily_limit`、`bursting_enabled` |
 
-### SDK: Delete Agent
+### SDK：删除代理
 
 ```python
 client.conversational_ai.agents.delete(agent_id="your-agent-id")
@@ -542,37 +536,37 @@ await client.conversationalAi.agents.delete("your-agent-id");
 curl -X DELETE "https://api.elevenlabs.io/v1/convai/agents/your-agent-id" -H "xi-api-key: $ELEVENLABS_API_KEY"
 ```
 
-## CI/CD Integration
+## CI/CD 集成
 
-Use the CLI in your deployment pipeline:
+在部署流水线中使用 CLI：
 
 ```bash
-# Set API key as environment variable
+# 将 API 密钥设置为环境变量
 export ELEVENLABS_API_KEY="your-api-key"
 
-# Push changes (non-interactive)
+# 推送更改（非交互式）
 elevenlabs agents push
 ```
 
-## Example Configurations
+## 示例配置
 
-### Customer Support Agent
+### 客户支持代理
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="Support Agent",
+    name="支持代理",
     conversation_config={
         "agent": {
-            "first_message": "Hi! Thanks for calling TechCorp support.",
+            "first_message": "您好！感谢致电 TechCorp 支持。",
             "language": "en",
             "prompt": {
-                "prompt": "You are a customer support agent. Be helpful, professional, concise.",
+                "prompt": "你是一个客户支持代理。要有帮助、专业、简洁。",
                 "llm": "gemini-2.0-flash",
                 "temperature": 0.5,
                 "built_in_tools": {
                     "end_call": {},
                     "transfer_to_number": {
-                        "transfers": [{"transfer_destination": {"type": "phone", "phone_number": "+1234567890"}, "condition": "User asks for human support"}]
+                        "transfers": [{"transfer_destination": {"type": "phone", "phone_number": "+1234567890"}, "condition": "用户要求人工支持"}]
                     }
                 }
             }
@@ -584,16 +578,16 @@ agent = client.conversational_ai.agents.create(
 )
 ```
 
-### Low-Latency Assistant
+### 低延迟助手
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="Quick Assistant",
+    name="快速助手",
     conversation_config={
         "agent": {
-            "first_message": "Hey! What do you need?",
+            "first_message": "嘿！你需要什么？",
             "prompt": {
-                "prompt": "Fast, efficient assistant. Brief answers.",
+                "prompt": "快速高效的助手。简洁的回答。",
                 "llm": "gemini-2.0-flash",
                 "temperature": 0.3,
                 "max_tokens": 100

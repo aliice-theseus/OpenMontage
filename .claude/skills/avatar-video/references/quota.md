@@ -3,11 +3,11 @@ name: quota
 description: Credit system, usage limits, and checking remaining quota for HeyGen
 ---
 
-# HeyGen Quota and Credits
+# HeyGen 配额和积分
 
-HeyGen uses a credit-based system for video generation. Understanding quota management helps prevent failed video generation requests.
+HeyGen 使用基于积分的系统进行视频生成。了解配额管理有助于防止视频生成请求失败。
 
-## Checking Remaining Quota
+## 检查剩余配额
 
 ### curl
 
@@ -50,7 +50,7 @@ data = response.json()["data"]
 print(f"Remaining credits: {data['remaining_quota']}")
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -62,21 +62,21 @@ print(f"Remaining credits: {data['remaining_quota']}")
 }
 ```
 
-## Credit Consumption
+## 积分消耗
 
-Different operations consume different amounts of credits:
+不同的操作消耗不同数量的积分：
 
-| Operation | Credit Cost | Notes |
+| 操作 | 积分成本 | 说明 |
 |-----------|-------------|-------|
-| Standard video (1 min) | ~1 credit per minute | Varies by resolution |
-| 720p video | Base rate | Standard quality |
-| 1080p video | ~1.5x base rate | Higher quality |
-| Video translation | Varies | Depends on video length |
-| Streaming avatar | Per session | Real-time usage |
+| 标准视频（1分钟） | 约每分钟 1 积分 | 因分辨率而异 |
+| 720p 视频 | 基准费率 | 标准质量 |
+| 1080p 视频 | 约 1.5 倍基准费率 | 更高质量 |
+| 视频翻译 | 视情况而定 | 取决于视频长度 |
+| 流式虚拟形象 | 按会话计费 | 实时使用 |
 
-## Pre-Generation Quota Check
+## 生成前配额检查
 
-Always verify sufficient quota before generating videos:
+在生成视频前始终确认有足够的配额：
 
 ```typescript
 async function generateVideoWithQuotaCheck(videoConfig: VideoConfig) {
@@ -103,9 +103,9 @@ async function generateVideoWithQuotaCheck(videoConfig: VideoConfig) {
 }
 ```
 
-## Quota Management Best Practices
+## 配额管理最佳实践
 
-### 1. Monitor Usage Regularly
+### 1. 定期监控使用情况
 
 ```typescript
 async function logQuotaUsage() {
@@ -127,7 +127,7 @@ async function logQuotaUsage() {
 }
 ```
 
-### 2. Set Up Alerts
+### 2. 设置警报
 
 ```typescript
 const QUOTA_WARNING_THRESHOLD = 50;
@@ -149,9 +149,9 @@ async function checkQuotaWithAlert() {
 }
 ```
 
-### 3. Use Test Mode for Development
+### 3. 开发时使用测试模式
 
-When available, use test mode to avoid consuming credits during development:
+在可用时，使用测试模式避免在开发过程中消耗积分：
 
 ```typescript
 const videoConfig = {
@@ -162,20 +162,20 @@ const videoConfig = {
 // Test videos may have watermarks but don't consume credits
 ```
 
-## Subscription Tiers
+## 订阅等级
 
-Different subscription tiers have different quota allocations and features:
+不同的订阅等级有不同的配额分配和功能：
 
-| Tier | Features |
+| 等级 | 功能 |
 |------|----------|
-| Free | Limited credits, basic features |
-| Creator | More credits, standard avatars |
-| Team | Higher limits, team collaboration |
-| Enterprise | Custom limits, API access, priority support |
+| 免费版 | 有限积分，基本功能 |
+| 创作者版 | 更多积分，标准虚拟形象 |
+| 团队版 | 更高限额，团队协作 |
+| 企业版 | 自定义限额，API 访问，优先支持 |
 
-API access typically requires Enterprise tier or higher.
+API 访问通常需要企业版或更高版本。
 
-## Error Handling for Quota Issues
+## 配额问题的错误处理
 
 ```typescript
 async function handleQuotaError(error: any) {

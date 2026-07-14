@@ -1,216 +1,216 @@
-# Scene Examples
+# 场景示例
 
-Example scene breakdowns from 3b1b-style videos.
-
----
-
-## Example 1: Explaining the Dot Product
-
-### Scene 1: The Question
-**Duration**: ~30 seconds
-**Purpose**: Hook the viewer with the mystery
-
-**Visual Elements**
-- Two vectors a and b drawn as arrows
-- The dot product formula: a · b = |a||b|cos(θ)
-- Question mark animation
-
-**Content**
-Open on two vectors. Show the formula. Pose the question: "Why does multiplying components and adding them give you something related to the angle between vectors?"
-
-**Narration Notes**
-Tone: curious, slightly puzzled. Emphasize that the formula seems arbitrary.
-
-**Technical Notes**
-- Use Arrow for vectors
-- MathTex for formula
-- Indicate() on the cos(θ) term
+来自 3b1b 风格视频的示例场景分解。
 
 ---
 
-### Scene 2: Geometric Interpretation
-**Duration**: ~90 seconds
-**Purpose**: Show projection interpretation
+## 示例 1：解释点积
 
-**Visual Elements**
-- Vector a (horizontal, blue)
-- Vector b (angled, green)
-- Projection of b onto a (dashed line)
-- Right angle marker
-- Length labels
+### 场景 1：问题
+**时长**：约30秒
+**目的**：用谜团吸引观众
 
-**Content**
-Show that a · b equals |a| times the projection of b onto a. Animate the projection dropping down. Show this equals |a||b|cos(θ) geometrically.
+**视觉元素**
+- 两个向量 a 和 b 绘制为箭头
+- 点积公式：a · b = |a||b|cos(θ)
+- 问号动画
 
-**Narration Notes**
-"The dot product measures how much one vector goes in the direction of another."
+**内容**
+开场展示两个向量。显示公式。提出问题："为什么将分量相乘再相加会得到与向量间角度相关的值？"
 
-**Technical Notes**
-- DashedLine for projection
-- RightAngle mobject
-- animate.rotate() for showing different angles
+**解说词要点**
+语调：好奇、略带疑惑。强调该公式看似随意。
 
----
-
-### Scene 3: Numeric Connection
-**Duration**: ~60 seconds
-**Purpose**: Connect geometry to algebra
-
-**Visual Elements**
-- Coordinate grid
-- Vector a = [a₁, a₂]
-- Vector b = [b₁, b₂]
-- Components highlighted
-
-**Content**
-Show vectors on grid with components labeled. Demonstrate why a₁b₁ + a₂b₂ equals the geometric interpretation. Use specific numbers.
-
-**Narration Notes**
-Walk through calculation slowly. "Let's see why the algebra matches the geometry."
-
-**Technical Notes**
-- NumberPlane or Axes
-- Brace for component labels
-- TransformMatchingTex for equation steps
+**技术说明**
+- 使用 Arrow 表示向量
+- 使用 MathTex 表示公式
+- 在 cos(θ) 项上使用 Indicate()
 
 ---
 
-## Example 2: Introduction to Fourier Series
+### 场景 2：几何解释
+**时长**：约90秒
+**目的**：展示投影解释
 
-### Scene 1: The Hook
-**Duration**: ~45 seconds
-**Purpose**: Show the surprising result
+**视觉元素**
+- 向量 a（水平，蓝色）
+- 向量 b（有角度，绿色）
+- b 在 a 上的投影（虚线）
+- 直角标记
+- 长度标签
 
-**Visual Elements**
-- A square wave (sharp corners)
-- Sum of smooth sine waves
-- Morphing animation between them
+**内容**
+展示 a · b 等于 |a| 乘以 b 在 a 上的投影。动画显示投影落下。几何上展示这等于 |a||b|cos(θ)。
 
-**Content**
-"You can build a square wave—something with sharp corners—from perfectly smooth sine waves." Show the result first, then promise to explain how.
+**解说词要点**
+"点积衡量一个向量在另一个向量方向上的程度。"
 
-**Narration Notes**
-Tone: wonder, slight disbelief. This should feel surprising.
-
-**Technical Notes**
-- ParametricFunction for waves
-- Transform animation for the morph
-- Consider showing 1, 3, 5 terms building up
-
----
-
-### Scene 2: Building Blocks
-**Duration**: ~120 seconds
-**Purpose**: Introduce sine waves as basis
-
-**Visual Elements**
-- Single sine wave
-- Frequency visualization (faster oscillation)
-- Amplitude visualization (taller/shorter)
-- Phase visualization (shifting left/right)
-
-**Content**
-Introduce the three parameters: frequency, amplitude, phase. Show each one separately, then combine.
-
-**Narration Notes**
-Go slow. "A sine wave has three knobs we can adjust..."
-
-**Technical Notes**
-- ValueTracker for animating parameters
-- Updaters to make wave respond to trackers
-- Labels for each parameter
+**技术说明**
+- 使用 DashedLine 表示投影
+- 使用 RightAngle mobject
+- animate.rotate() 用于展示不同角度
 
 ---
 
-### Scene 3: Superposition
-**Duration**: ~90 seconds
-**Purpose**: Show waves can be added
+### 场景 3：数值联系
+**时长**：约60秒
+**目的**：连接几何与代数
 
-**Visual Elements**
-- Two sine waves (different colors)
-- Their sum (third color)
-- Point-by-point addition visualization
+**视觉元素**
+- 坐标网格
+- 向量 a = [a₁, a₂]
+- 向量 b = [b₁, b₂]
+- 分量高亮
 
-**Content**
-Show that adding waves means adding their heights at each point. Demonstrate with two specific frequencies combining.
+**内容**
+在网格上展示向量，标注分量。演示为什么 a₁b₁ + a₂b₂ 等于几何解释。使用具体数字。
 
-**Narration Notes**
-"Adding waves is simple—at each point, just add the heights."
+**解说词要点**
+慢慢讲解计算。"让我们看看为什么代数与几何相符。"
 
-**Technical Notes**
-- VGroup of three function graphs
-- Vertical lines showing addition at specific x values
-- Animate the addition happening
-
----
-
-## Example 3: Matrix as Linear Transformation
-
-### Scene 1: Grid Transformation
-**Duration**: ~60 seconds
-**Purpose**: Visual foundation
-
-**Visual Elements**
-- 2D coordinate grid (NumberPlane)
-- Basis vectors i-hat and j-hat (colored arrows)
-- Grid lines transforming
-
-**Content**
-Show a grid. Highlight i-hat (1,0) and j-hat (0,1). Apply a transformation—watch the entire grid move while tracking where basis vectors land.
-
-**Narration Notes**
-"Watch what happens to the grid when we apply this transformation. Notice how every point moves."
-
-**Technical Notes**
-- NumberPlane with visible grid lines
-- apply_matrix() method
-- Keep basis vectors visually distinct
+**技术说明**
+- 使用 NumberPlane 或 Axes
+- 使用 Brace 表示分量标签
+- 使用 TransformMatchingTex 进行方程步骤
 
 ---
 
-### Scene 2: Basis Vectors Determine Everything
-**Duration**: ~90 seconds
-**Purpose**: Key insight
+## 示例 2：傅里叶级数介绍
 
-**Visual Elements**
-- Transformed i-hat and j-hat
-- Arbitrary vector v as combination
-- v = xi + yj visualization
+### 场景 1：钩子
+**时长**：约45秒
+**目的**：展示令人惊讶的结果
 
-**Content**
-Show that knowing where i-hat and j-hat land tells you where ANY vector lands. Because v = xi + yj, the transformed v = x(new i) + y(new j).
+**视觉元素**
+- 方波（尖锐拐角）
+- 平滑正弦波的和
+- 两者之间的变形动画
 
-**Narration Notes**
-"Here's the key insight..." Build anticipation before the reveal.
+**内容**
+"你可以用完全平滑的正弦波构建一个方波——一种带有尖锐拐角的东西。"先展示结果，然后承诺解释如何做到。
 
-**Technical Notes**
-- Vector addition animation (tip-to-tail)
-- Scaling animation for coefficients
-- TransformMatchingShapes for the combination
+**解说词要点**
+语调：惊奇、略带怀疑。这应该让人感到惊讶。
+
+**技术说明**
+- 使用 ParametricFunction 表示波
+- 使用 Transform 动画进行变形
+- 考虑展示 1、3、5 项逐渐构建
 
 ---
 
-## Scene Transition Patterns
+### 场景 2：构建模块
+**时长**：约120秒
+**目的**：介绍正弦波作为基
 
-### Zoom Focus
+**视觉元素**
+- 单个正弦波
+- 频率可视化（更快振荡）
+- 振幅可视化（更高/更矮）
+- 相位可视化（左/右移动）
+
+**内容**
+介绍三个参数：频率、振幅、相位。分别展示每个参数，然后组合。
+
+**解说词要点**
+放慢速度。"正弦波有三个我们可以调节的旋钮……"
+
+**技术说明**
+- 使用 ValueTracker 动画化参数
+- 使用 Updaters 使波响应跟踪器
+- 每个参数添加标签
+
+---
+
+### 场景 3：叠加
+**时长**：约90秒
+**目的**：展示波可以相加
+
+**视觉元素**
+- 两个正弦波（不同颜色）
+- 它们的和（第三种颜色）
+- 逐点加法可视化
+
+**内容**
+展示将波相加意味着在每个点将高度相加。用两个特定频率组合演示。
+
+**解说词要点**
+"加波很简单——在每个点，只需将高度相加。"
+
+**技术说明**
+- 使用三个函数图的 VGroup
+- 在特定 x 值处显示加法的垂直线
+- 动画显示加法过程
+
+---
+
+## 示例 3：矩阵作为线性变换
+
+### 场景 1：网格变换
+**时长**：约60秒
+**目的**：视觉基础
+
+**视觉元素**
+- 2D 坐标网格 (NumberPlane)
+- 基向量 i-hat 和 j-hat（彩色箭头）
+- 网格线变换
+
+**内容**
+显示一个网格。突出显示 i-hat (1,0) 和 j-hat (0,1)。应用一个变换——观察整个网格移动，跟踪基向量的落点。
+
+**解说词要点**
+"观察应用这个变换时网格发生了什么。注意每个点如何移动。"
+
+**技术说明**
+- NumberPlane 带可见网格线
+- apply_matrix() 方法
+- 保持基向量视觉区分
+
+---
+
+### 场景 2：基向量决定一切
+**时长**：约90秒
+**目的**：关键见解
+
+**视觉元素**
+- 变换后的 i-hat 和 j-hat
+- 任意向量 v 作为组合
+- v = xi + yj 可视化
+
+**内容**
+展示知道 i-hat 和 j-hat 的落点就能知道任何向量的落点。因为 v = xi + yj，变换后的 v = x(新 i) + y(新 j)。
+
+**解说词要点**
+"这里有关键见解……"在揭示前营造期待。
+
+**技术说明**
+- 向量加法动画（首尾相接）
+- 系数的缩放动画
+- TransformMatchingShapes 用于组合
+
+---
+
+## 场景过渡模式
+
+### 缩放聚焦
 ```
-Full scene → Zoom into detail → Explain → Zoom out
-```
-
-### Side-by-Side Build
-```
-Empty left | Empty right
-Add to left | Compare
-Add to right | Connect them
+完整场景 → 放大细节 → 解释 → 缩小
 ```
 
-### Transform Chain
+### 并排构建
 ```
-Object A → Transform → Object B → Transform → Object C
-(Maintain visual continuity throughout)
+左侧空白 | 右侧空白
+添加到左侧 | 比较
+添加到右侧 | 连接它们
 ```
 
-### Reset and Rebuild
+### 变换链
 ```
-Complex scene → Clear/fade most → Focus on one element → Build new complexity
+对象 A → 变换 → 对象 B → 变换 → 对象 C
+（全程保持视觉连续性）
+```
+
+### 重置重建
+```
+复杂场景 → 清除/淡化大部分 → 聚焦一个元素 → 构建新复杂度
 ```

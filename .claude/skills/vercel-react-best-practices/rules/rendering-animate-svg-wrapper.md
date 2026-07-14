@@ -1,15 +1,15 @@
 ---
-title: Animate SVG Wrapper Instead of SVG Element
+title: 动画作用于 SVG 包装器而非 SVG 元素
 impact: LOW
-impactDescription: enables hardware acceleration
+impactDescription: 启用硬件加速
 tags: rendering, svg, css, animation, performance
 ---
 
-## Animate SVG Wrapper Instead of SVG Element
+## 动画作用于 SVG 包装器而非 SVG 元素
 
-Many browsers don't have hardware acceleration for CSS3 animations on SVG elements. Wrap SVG in a `<div>` and animate the wrapper instead.
+许多浏览器对 SVG 元素的 CSS3 动画没有硬件加速。将 SVG 包装在 `<div>` 中，并对包装器应用动画。
 
-**Incorrect (animating SVG directly - no hardware acceleration):**
+**错误做法（直接动画 SVG - 无硬件加速）：**
 
 ```tsx
 function LoadingSpinner() {
@@ -26,7 +26,7 @@ function LoadingSpinner() {
 }
 ```
 
-**Correct (animating wrapper div - hardware accelerated):**
+**正确做法（动画包装器 div - 硬件加速）：**
 
 ```tsx
 function LoadingSpinner() {
@@ -44,4 +44,4 @@ function LoadingSpinner() {
 }
 ```
 
-This applies to all CSS transforms and transitions (`transform`, `opacity`, `translate`, `scale`, `rotate`). The wrapper div allows browsers to use GPU acceleration for smoother animations.
+这适用于所有 CSS 变换和过渡（`transform`、`opacity`、`translate`、`scale`、`rotate`）。包装器 div 允许浏览器使用 GPU 加速以实现更流畅的动画。

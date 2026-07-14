@@ -1,22 +1,22 @@
 ---
 name: hacker-flip-3d
-description: Character-level 3D rotation with random glyph substitution for a decryption reveal effect.
+description: 字符级 3D 旋转，带随机字形替换，实现解密揭示效果。
 metadata:
   tags: text, 3d, reveal, decode, hacker, randomization, perspective
 ---
 
-# Hacker Flip 3D Reveal
+# 黑客翻转 3D 揭示
 
-Characters flip down from 90° in 3D while cycling through random glyphs, then settle on the target character. Creates a "decryption" or airport flap-display reveal.
+字符从 90° 在 3D 中向下翻转，同时循环通过随机字形，然后稳定在目标字符上。创造"解密"或机场翻牌显示揭示效果。
 
-## How It Works
+## 工作原理
 
-Each character gets its own per-char tween from `rotateX: 90deg` (hidden) to `rotateX: 0deg` (revealed), staggered across the word. During the flip:
+每个字符获得自己的逐字补间，从 `rotateX: 90deg`（隐藏）到 `rotateX: 0deg`（揭示），跨词错开。翻转期间：
 
-1. **Phase A (0 → ~`REVEAL_THRESHOLD` progress)**: character displays a randomly-substituted glyph that flickers (changes every `FLICKER_RATE` frames)
-2. **Phase B (`REVEAL_THRESHOLD` → 1.0 progress)**: character displays the REAL target character, settling into its final upright position
+1. **阶段 A（进度 0 → ~`REVEAL_THRESHOLD`）**：字符显示随机替换的字形，闪烁（每 `FLICKER_RATE` 帧变化一次）
+2. **阶段 B（进度 `REVEAL_THRESHOLD` → 1.0）**：字符显示真实的**目标**字符，稳定到其最终的直立位置
 
-The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the flip is mostly done, viewer sees the correct letter clicking into place.
+`REVEAL_THRESHOLD` 将"混乱"与"揭示"分开 — 到翻转基本完成时，观看者看到正确的字符卡入到位。
 
 ## HTML
 
@@ -30,13 +30,13 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
   data-track-index="0"
 >
   <div class="hacker-text-wrap" id="hacker-text" data-target="{phrase}">
-    <!-- Per-char spans get injected by setup script below.
-         Ghost placeholder (data-ghost) is rendered identically to reserve width. -->
+    <!-- 逐字 span 由下方设置脚本注入。
+         鬼影占位符（data-ghost）以相同方式渲染以保留宽度。 -->
   </div>
 </div>
 ```
 
-`{phrase}` is the target word the flip resolves to (typically a brand or short label).
+`{phrase}` 是翻转解析到的目标词（通常是品牌或短标签）。
 
 ## CSS
 
@@ -48,39 +48,39 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
   display: grid;
   place-items: center;
   background: {bgColor};
-  perspective: 1500px; /* REQUIRED — without this rotateX renders flat */
+  perspective: 1500px; /* 必需 — 没有此属性 rotateX 会平面化渲染 */
 }
 
 .hacker-text-wrap {
-  font-family: {monoFont};      /* monospace recommended so flicker glyphs hold width */
+  font-family: {monoFont};      /* 推荐等宽字体，使闪烁字形保持宽度 */
   font-weight: 900;
   font-size: HACKER_FONT_SIZE;
   color: {textColor};
   letter-spacing: 4px;
   display: flex;
-  /* Ghost / live chars are absolutely stacked; container reserves layout width */
+  /* 鬼影/活动字符绝对堆叠；容器保留布局宽度 */
   position: relative;
 }
 
 .hacker-char {
   display: inline-block;
-  /* Hinge at the bottom edge — flap-display look */
+  /* 在底边铰链 — 翻牌显示效果 */
   transform-origin: bottom;
   transform-style: preserve-3d;
-  /* Will-change improves render perf */
+  /* Will-change 提高渲染性能 */
   will-change: transform, opacity;
 }
 
-/* Ghost placeholder is hidden but reserves width for variable-glyph fonts.
-   Without this, narrow target glyphs collapse width when displayed and
-   characters shift horizontally during flicker. */
+/* 鬼影占位符隐藏但保留可变字体的宽度。
+   没有它，窄目标字形在显示时会塌缩宽度，
+   字符在闪烁期间水平移动。 */
 .hacker-ghost {
   opacity: 0;
   pointer-events: none;
 }
 ```
 
-## GSAP Timeline + Random Glyph Logic
+## GSAP 时间线 + 随机字形逻辑
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -91,7 +91,7 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
   const targetWord = wrap.dataset.target;
   const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
 
-  // Build live chars + ghost placeholders (ghost keeps layout width stable)
+  // 构建活动字符 + 鬼影占位符（鬼影保持布局宽度稳定）
   wrap.innerHTML = "";
   const ghostRow = document.createElement("div");
   ghostRow.className = "hacker-ghost";
@@ -116,8 +116,8 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
   }
   wrap.appendChild(liveRow);
 
-  // Deterministic "random" — seeded by char index + frame group so the same
-  // frame always yields the same glyph (HF seek determinism).
+  // 确定性"随机" — 由字符索引 + 帧组种子化，使相同的
+  // 帧总是产生相同的字形（HF 定位确定性）。
   function pseudoGlyph(seed) {
     const h = ((seed * 9301 + 49297) % 233280) / 233280;
     return GLYPHS[Math.floor(h * GLYPHS.length)];
@@ -125,7 +125,7 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
 
   const tl = gsap.timeline({ paused: true });
 
-  // Per-char flip — stagger across the word
+  // 逐字翻转 — 跨词错开
   charEls.forEach((el, i) => {
     const state = { p: 0 };
     tl.to(
@@ -135,16 +135,16 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
         duration: FLIP_DURATION,
         ease: "power3.out",
         onUpdate: () => {
-          // Phase A: random glyph flickering. Phase B: real character.
+          // 阶段 A：随机字形闪烁。阶段 B：真实字符。
           const progress = state.p;
           if (progress < REVEAL_THRESHOLD) {
-            // Update glyph every FLICKER_RATE worth of progress
+            // 每 FLICKER_RATE 进度更新一次字形
             const flickerSeed = i * 1000 + Math.floor(progress * 100);
             el.textContent = pseudoGlyph(flickerSeed);
           } else {
             el.textContent = el.dataset.target === " " ? " " : el.dataset.target;
           }
-          // Flip rotateX from 90 (down) to 0 (upright)
+          // 翻转 rotateX 从 90（向下）到 0（直立）
           const rotateX = 90 - progress * 90;
           const opacity = Math.min(1, progress * 2);
           el.style.transform = `rotateX(${rotateX}deg)`;
@@ -159,65 +159,65 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **HACKER_FONT_SIZE** — font-size of the flip text in px.
-  - Range: 6-10% of viewport min-dimension; the flip text is the focal beat, scale accordingly
-  - Constraints: ghost row must use the identical size so layout width stays stable mid-flicker
-  - Reference: ../../examples/proof-logo-chain.html uses `163px` at 1920×1080
-- **FLIP_DURATION** — per-character flip tween duration.
-  - Range: 0.4-1.0s; under 0.4s the random-glyph phase has no time to flicker, over 1.0s drags
-  - Effects: shorter feels snappy and modern; longer feels mechanical / typewriter
-  - Reference: ../../examples/proof-logo-chain.html uses `0.55s`
-- **CHAR_STAGGER** — delay between consecutive characters starting their flips, in seconds.
-  - Range: 0.03-0.08s; too fast and chars overlap visually, too slow and the effect feels labored
-  - Constraints: total decode time = `CHAR_STAGGER × (charCount − 1) + FLIP_DURATION`; ensure this fits the phase budget
-  - Reference: ../../examples/proof-logo-chain.html uses `0.033s` (≈2 frames at 60fps)
-- **REVEAL_THRESHOLD** — progress at which a glyph swaps from random → real.
-  - Range: 0.5-0.7; lower reveals too early (no decode tension), higher feels like a hard reveal at the end
-  - Effects: this is a discrete tuning of when the eye locks onto the real letter
-  - Reference: ../../examples/proof-logo-chain.html uses `0.6`
-- **FLICKER_RATE** — frames between glyph reshuffles during the random phase.
-  - Range: 3-6; lower than 3 looks like noise, higher than 6 looks like discrete typing instead of flicker
-  - Constraints: must be ≥ ~3 frames (see Critical Constraints)
-  - Reference: ../../examples/proof-logo-chain.html uses an equivalent of `3` (one shuffle every 3 internal-clock frames)
-- **{bgColor} / {textColor}** — stage background and live-character color tokens.
-- **{monoFont}** — monospace family preferred so flicker glyphs don't change width per swap; if a proportional font is required, the ghost placeholder makes the cost recoverable.
-- **{phrase}** — the target word the flip resolves to. Length feeds the total decode duration via `CHAR_STAGGER`.
+- **HACKER_FONT_SIZE** — 翻转文本的字体大小（px）。
+  - 范围：视口最小尺寸的 6-10%；翻转文本是焦点节拍，相应缩放
+  - 约束：鬼影行必须使用相同的尺寸，使布局宽度在闪烁期间保持稳定
+  - 参考：../../examples/proof-logo-chain.html 在 1920×1080 下使用 `163px`
+- **FLIP_DURATION** — 每字符翻转补间时长。
+  - 范围：0.4-1.0 秒；低于 0.4 秒随机字形阶段没有时间闪烁，超过 1.0 秒拖沓
+  - 效果：更短感觉干脆现代；更长感觉机械/打字机
+  - 参考：../../examples/proof-logo-chain.html 使用 `0.55s`
+- **CHAR_STAGGER** — 连续字符开始翻转的延迟（秒）。
+  - 范围：0.03-0.08 秒；太快则字符视觉重叠，太慢则效果感觉费力
+  - 约束：总解码时间 = `CHAR_STAGGER × (charCount − 1) + FLIP_DURATION`；确保它适合阶段预算
+  - 参考：../../examples/proof-logo-chain.html 使用 `0.033s`（60fps 下约 2 帧）
+- **REVEAL_THRESHOLD** — 字形从随机切换到真实的进度。
+  - 范围：0.5-0.7；较低揭示太早（无解码张力），较高感觉像结束时的硬揭示
+  - 效果：这是眼睛锁定真实字母时的离散调节
+  - 参考：../../examples/proof-logo-chain.html 使用 `0.6`
+- **FLICKER_RATE** — 随机阶段期间字形重新洗牌的帧间隔。
+  - 范围：3-6；低于 3 看起来像噪声，高于 6 看起来像离散打字而非闪烁
+  - 约束：必须 ≥ ~3 帧（参见关键约束）
+  - 参考：../../examples/proof-logo-chain.html 使用等效的 `3`（每 3 个内部时钟帧洗牌一次）
+- **{bgColor} / {textColor}** — 舞台背景和活动字符颜色标记。
+- **{monoFont}** — 优先使用等宽字体系列，使闪烁字形每次交换不改变宽度；如果必须使用比例字体，鬼影占位符使成本可恢复。
+- **{phrase}** — 翻转解析到的目标词。通过 `CHAR_STAGGER` 影响总解码时长。
 
-## Variations
+## 变体
 
-- **Top-down hinge** — swap `transform-origin: bottom` to `top` for a falling-flap look.
-- **Center spin** — `transform-origin: center` reads as a barrel roll, not a flap.
-- **Number-only pool** — restrict `GLYPHS` to digits for a price / countdown decode.
-- **Two-pass decode** — chain two `FLIP_DURATION` tweens with different glyph pools (e.g. symbols → letters → real) for a longer reveal.
+- **自上而下铰链** — 将 `transform-origin: bottom` 交换为 `top`，获得向下翻盖效果。
+- **中心旋转** — `transform-origin: center` 读作桶滚，而非翻盖。
+- **仅数字池** — 将 `GLYPHS` 限制为数字，用于价格/倒计时解码。
+- **两遍解码** — 用不同字形池（例如符号 → 字母 → 真实）链接两个 `FLIP_DURATION` 补间，以获得更长的揭示。
 
-## Key Principles
+## 关键原则
 
-- **Threshold at ~`REVEAL_THRESHOLD`** for swap from random → real glyph — close enough to settled that viewer's eye catches the right letter
-- **Hinge at `transform-origin: bottom`** for flap-display look (vs `top` for top-down, vs `center` for spin)
-- **Deterministic random** via seeded hash — HF runtime seeks frame-by-frame, so the same frame must show the same glyph (no `Math.random()`)
-- **Ghost placeholder** sits behind the live chars with identical content + same font, reserving width — without it, narrow glyphs shift the layout mid-flicker
-- **Stagger in the 0.04-0.08s range** per char — too fast and chars overlap visually, too slow and effect feels labored
-- **Center the flip dead-center via `display: grid; place-items: center;`** on the scene root — and DO NOT add decorative headers/footers (timestamp lines, "// AUTH" tags, small status dots). The flip text IS the focal beat; surrounding clutter dilutes it. If a secondary label is necessary, promote it to BIG typography in the same stacked layout (56-72px caps + tracking), not a tiny corner annotation.
+- **在 ~`REVEAL_THRESHOLD` 处从随机到真实字形的阈值** — 接近稳定，使观看者眼睛捕捉到正确字母
+- **在 `transform-origin: bottom` 处铰链** 用于翻牌显示效果（vs `top` 用于自上而下，vs `center` 用于旋转）
+- **通过种子化哈希的确定性随机** — HF 运行时逐帧定位，因此相同帧必须显示相同字形（无 `Math.random()`）
+- **鬼影占位符** 位于活动字符后面，具有相同内容 + 相同字体，保留宽度 — 没有它，窄字形会在闪烁期间移动布局
+- **每字符错开在 0.04-0.08s 范围内** — 太快则字符视觉重叠，太慢则效果感觉费力
+- **通过 `display: grid; place-items: center;` 将翻转在场景根元素上绝对居中** — 且不要添加装饰性页眉/页脚（时间戳行、"// AUTH"标签、小状态点）。翻转文本就是焦点节拍；周围的杂乱稀释了它。如果辅助标签是必要的，将其提升为相同堆叠布局中的大字号排版（56-72px 大写 + 跟踪），而非小角落注释。
 
-## Critical Constraints
+## 关键约束
 
-- **`perspective` on scene root REQUIRED** — without parent perspective, `rotateX` looks like a 2D scale, not a 3D flip
-- **`transform-style: preserve-3d` on each char** — keeps 3D context intact when chars have their own transforms
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **Deterministic randomness**: don't use `Math.random()`. Use a seed derived from char index + frame group so seek determinism holds
-- **`onUpdate` writes to DOM**: HF seeks every frame, so this runs many times — keep work O(1) per char per frame
-- **Flicker rate ≥ ~3 frames per glyph swap**: faster looks like noise, slower looks like discrete typing
+- **场景根元素上的 `perspective` 必需** — 没有父透视，`rotateX` 看起来像 2D 缩放，而非 3D 翻转
+- **每个字符上的 `transform-style: preserve-3d`** — 当字符有自己的变换时保持 3D 上下文完整
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **确定性随机**：不要使用 `Math.random()`。使用从字符索引 + 帧组派生的种子，使定位确定性保持
+- **`onUpdate` 写入 DOM**：HF 每帧定位，因此这运行很多次 — 保持每字符每帧工作为 O(1)
+- **闪烁速率 ≥ ~3 帧每次字形交换**：更快看起来像噪声，更慢看起来像离散打字
 
-## Combinations
+## 组合
 
-- [card-morph-anchor.md](card-morph-anchor.md) — pair: hacker-flip reveals a phrase, then card morphs into the next shot
-- [counting-dynamic-scale.md](counting-dynamic-scale.md) — counterpart for numeric reveals (text vs number)
+- [card-morph-anchor.md](card-morph-anchor.md) — 配对：黑客翻转揭示一个短语，然后卡片变形到下一个镜头
+- [counting-dynamic-scale.md](counting-dynamic-scale.md) — 数字揭示的对应物（文本 vs 数字）
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — timeline + per-char stagger + `onUpdate`
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 时间线 + 逐字错开 + `onUpdate`
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

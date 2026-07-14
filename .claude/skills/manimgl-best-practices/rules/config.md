@@ -1,49 +1,49 @@
-# Configuration in ManimGL
+# ManimGL 配置
 
-ManimGL uses `custom_config.yml` files for configuration. These files control directories, camera settings, window properties, and more.
+ManimGL 使用 `custom_config.yml` 文件进行配置。这些文件控制目录、相机设置、窗口属性等。
 
-## Configuration File Location
+## 配置文件位置
 
-### Default Locations
+### 默认位置
 
-ManimGL looks for `custom_config.yml` in this order:
+ManimGL 按以下顺序查找 `custom_config.yml`：
 
-1. Current directory
-2. Parent directories (recursively up to project root)
-3. ManimGL installation directory
+1. 当前目录
+2. 父目录（递归向上到项目根目录）
+3. ManimGL 安装目录
 
 ```
 my_project/
-├── custom_config.yml      # Project-specific config
+├── custom_config.yml      # 项目特定配置
 ├── scenes/
-│   ├── custom_config.yml  # Scenes-specific config (overrides project config)
+│   ├── custom_config.yml  # 场景特定配置（覆盖项目配置）
 │   └── scene.py
-└── manimlib/              # ManimGL installation
+└── manimlib/              # ManimGL 安装目录
 ```
 
-### Multiple Configs
+### 多个配置
 
 ```bash
-# Use specific config file
+# 使用特定配置文件
 manimgl scene.py MyScene --config_file /path/to/config.yml
 
-# Project structure with multiple configs
+# 多配置项目结构
 project/
-├── custom_config.yml          # Default for project
+├── custom_config.yml          # 项目默认配置
 ├── experiments/
-│   ├── custom_config.yml      # Overrides for experiments
+│   ├── custom_config.yml      # 实验覆盖配置
 │   └── test_scene.py
 └── final/
-    ├── custom_config.yml      # High quality settings
+    ├── custom_config.yml      # 高质量设置
     └── final_scene.py
 ```
 
-## Basic Configuration
+## 基本配置
 
-### Minimal custom_config.yml
+### 最小 custom_config.yml
 
 ```yaml
-# Directories
+# 目录
 directories:
   output: "./media/videos"
   raster_images: "./media/images"
@@ -51,66 +51,66 @@ directories:
   sounds: "./media/sounds"
   data: "./media/data"
 
-# Window configuration
+# 窗口配置
 window_config:
-  size: "default"  # or "fullscreen"
+  size: "default"  # 或 "fullscreen"
 
-# Camera settings
+# 相机设置
 camera_config:
   pixel_height: 1080
   pixel_width: 1920
   frame_rate: 60
 ```
 
-## Detailed Configuration Options
+## 详细配置选项
 
-### Directory Configuration
+### 目录配置
 
 ```yaml
 directories:
-  # Where rendered videos are saved
+  # 渲染视频保存位置
   output: "/path/to/output/videos"
 
-  # Where temporary files go
+  # 临时文件存储位置
   temporary_storage: "/tmp/manim"
 
-  # Image resources
+  # 图片资源
   raster_images: "./assets/images"
   vector_images: "./assets/svg"
 
-  # Audio resources
+  # 音频资源
   sounds: "./assets/audio"
 
-  # Data files
+  # 数据文件
   data: "./assets/data"
 
-  # LaTeX templates
+  # LaTeX 模板
   tex_templates: "./assets/tex_templates"
 
-  # Font directory
+  # 字体目录
   fonts: "./assets/fonts"
 ```
 
-### Camera Configuration
+### 相机配置
 
 ```yaml
 camera_config:
-  # Resolution
+  # 分辨率
   pixel_width: 1920
   pixel_height: 1080
 
-  # Frame rate
+  # 帧率
   frame_rate: 60
 
-  # Background color
+  # 背景颜色
   background_color: "#000000"
 
-  # Frame settings
+  # 框架设置
   frame_height: 8.0
-  frame_width: 14.222222222222221  # 16:9 aspect ratio
+  frame_width: 14.222222222222221  # 16:9 宽高比
 
-  # Quality presets
-  # These override pixel_width, pixel_height, frame_rate
+  # 质量预设
+  # 这些会覆盖 pixel_width, pixel_height, frame_rate
   quality:
     low:
       pixel_width: 854
@@ -130,76 +130,76 @@ camera_config:
       frame_rate: 60
 ```
 
-### Window Configuration
+### 窗口配置
 
 ```yaml
 window_config:
-  # Window size: "default", "fullscreen", or [width, height]
+  # 窗口大小："default", "fullscreen" 或 [width, height]
   size: "default"
   # size: "fullscreen"
   # size: [1280, 720]
 
-  # Window position on screen
-  position: "UR"  # Upper right
-  # Options: UL, UR, DL, DR, TOP, BOTTOM, LEFT, RIGHT, CENTER
+  # 窗口在屏幕上的位置
+  position: "UR"  # 右上
+  # 选项：UL, UR, DL, DR, TOP, BOTTOM, LEFT, RIGHT, CENTER
 
-  # Monitor to display on (for multi-monitor setups)
+  # 显示显示器（多显示器设置）
   monitor: 0
 
-  # Window title
+  # 窗口标题
   window_title: "ManimGL Preview"
 
-  # Show file name in title
+  # 在标题中显示文件名
   show_file_name_in_title: true
 ```
 
-### Style Configuration
+### 样式配置
 
 ```yaml
 style:
-  # Default color constants
+  # 默认颜色常量
   background_color: "#000000"
 
-  # Font settings
+  # 字体设置
   font: "Consolas"
   tex_font: "Latin Modern Math"
 
-  # Default stroke width
+  # 默认描边宽度
   stroke_width: 4
 
-  # Default animation run time
+  # 默认动画运行时间
   default_animation_run_time: 1.0
 ```
 
-### Universal Import Configuration
+### 通用导入配置
 
 ```yaml
-# Auto-import common modules
+# 自动导入常用模块
 universal_import_line: |
   from manimlib import *
   import numpy as np
   import itertools as it
 ```
 
-## Quality Presets
+## 质量预设
 
-### Command Line Override
+### 命令行覆盖
 
 ```bash
-# Use low quality preset
+# 使用低质量预设
 manimgl scene.py MyScene -l
 
-# Use medium quality
+# 使用中等质量
 manimgl scene.py MyScene -m
 
-# Use high quality
+# 使用高质量
 manimgl scene.py MyScene -h
 
-# Use 4K quality
+# 使用 4K 质量
 manimgl scene.py MyScene --uhd
 ```
 
-### Custom Quality Preset
+### 自定义质量预设
 
 ```yaml
 camera_config:
@@ -210,35 +210,35 @@ camera_config:
       frame_rate: 120
 ```
 
-## LaTeX Configuration
+## LaTeX 配置
 
-### TeX Configuration
+### TeX 配置
 
 ```yaml
 tex_config:
-  # TeX compiler
-  tex_compiler: "latex"  # or "xelatex", "lualatex"
+  # TeX 编译器
+  tex_compiler: "latex"  # 或 "xelatex", "lualatex"
 
-  # TeX template
+  # TeX 模板
   tex_template: "tex_template.tex"
 
-  # Additional packages
+  # 额外包
   tex_packages:
     - "amsmath"
     - "amssymb"
     - "mathtools"
 
-  # Text to LaTeX map
+  # 文本到 LaTeX 映射
   text_to_replace: {
-    # Replacements for common symbols
+    # 常见符号的替换
     "pi": "\\pi",
     "alpha": "\\alpha"
   }
 ```
 
-## Project-Specific Configuration
+## 项目特定配置
 
-### Development Config (fast iteration)
+### 开发配置（快速迭代）
 
 ```yaml
 # dev_config.yml
@@ -255,13 +255,13 @@ window_config:
   position: "UR"
 ```
 
-Usage:
+用法：
 
 ```bash
 manimgl scene.py MyScene --config_file dev_config.yml
 ```
 
-### Production Config (high quality)
+### 生产配置（高质量）
 
 ```yaml
 # prod_config.yml
@@ -277,30 +277,30 @@ style:
   default_animation_run_time: 1.5
 ```
 
-## Runtime Configuration Override
+## 运行时配置覆盖
 
-### Command Line Override
+### 命令行覆盖
 
 ```bash
-# Override single value
+# 覆盖单个值
 manimgl scene.py MyScene --config camera_config.frame_rate=30
 
-# Override multiple values
+# 覆盖多个值
 manimgl scene.py MyScene \
   --config camera_config.frame_rate=30 \
   --config camera_config.pixel_width=1280 \
   --config camera_config.pixel_height=720
 
-# Override output directory
+# 覆盖输出目录
 manimgl scene.py MyScene --config directories.output=/tmp/manim_output
 ```
 
-## Complete Example Configuration
+## 完整配置示例
 
-### Full custom_config.yml
+### 完整的 custom_config.yml
 
 ```yaml
-# Directory Configuration
+# 目录配置
 directories:
   output: "./media/videos"
   temporary_storage: "/tmp/manim"
@@ -311,7 +311,7 @@ directories:
   tex_templates: "./assets/tex"
   fonts: "./assets/fonts"
 
-# Camera Configuration
+# 相机配置
 camera_config:
   pixel_width: 1920
   pixel_height: 1080
@@ -320,7 +320,7 @@ camera_config:
   frame_height: 8.0
   frame_width: 14.222222222222221
 
-# Window Configuration
+# 窗口配置
 window_config:
   size: "default"
   position: "UR"
@@ -328,7 +328,7 @@ window_config:
   window_title: "ManimGL Preview"
   show_file_name_in_title: true
 
-# Style Configuration
+# 样式配置
 style:
   background_color: "#0a0a0a"
   font: "Consolas"
@@ -336,7 +336,7 @@ style:
   stroke_width: 4
   default_animation_run_time: 1.0
 
-# TeX Configuration
+# TeX 配置
 tex_config:
   tex_compiler: "latex"
   tex_template: "tex_template.tex"
@@ -346,30 +346,30 @@ tex_config:
     - "mathtools"
     - "physics"
 
-# Universal Imports
+# 通用导入
 universal_import_line: |
   from manimlib import *
   import numpy as np
   import itertools as it
   import random
 
-# Logging
+# 日志
 log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Separate dev and prod configs**: Use different configs for development and final renders
-2. **Project-level configs**: Keep `custom_config.yml` in project root
-3. **Override for testing**: Use `--config` flag for temporary changes
-4. **Version control**: Commit `custom_config.yml` to git
-5. **Document custom settings**: Add comments to explain non-standard values
-6. **Consistent paths**: Use relative paths for portability
-7. **Quality presets**: Use built-in quality flags (-l, -m, -h) instead of manual resolution changes
+1. **分开开发和生产配置**：开发渲染和最终渲染使用不同配置
+2. **项目级配置**：将 `custom_config.yml` 放在项目根目录
+3. **测试用覆盖**：使用 `--config` 标志进行临时更改
+4. **版本控制**：将 `custom_config.yml` 提交到 git
+5. **文档化自定义设置**：添加注释解释非标准值
+6. **一致的路径**：使用相对路径以保证可移植性
+7. **质量预设**：使用内置质量标志（-l, -m, -h）而非手动更改分辨率
 
-## Common Configurations
+## 常见配置
 
-### For YouTube Videos (1080p)
+### 用于 YouTube 视频（1080p）
 
 ```yaml
 camera_config:
@@ -379,7 +379,7 @@ camera_config:
   background_color: "#000000"
 ```
 
-### For Quick Testing
+### 用于快速测试
 
 ```yaml
 camera_config:
@@ -388,7 +388,7 @@ camera_config:
   frame_rate: 15
 ```
 
-### For 4K Production
+### 用于 4K 制作
 
 ```yaml
 camera_config:
@@ -397,7 +397,7 @@ camera_config:
   frame_rate: 60
 ```
 
-### For Vertical Video (TikTok/Shorts)
+### 用于竖屏视频（TikTok/Shorts）
 
 ```yaml
 camera_config:
@@ -408,35 +408,35 @@ camera_config:
   frame_width: 8.0
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Config Not Loading
+### 配置未加载
 
 ```bash
-# Check which config is being used
+# 检查正在使用的配置
 manimgl scene.py MyScene --verbose
 
-# Specify config explicitly
+# 显式指定配置
 manimgl scene.py MyScene --config_file ./custom_config.yml
 ```
 
-### Invalid Configuration
+### 无效配置
 
-- Ensure YAML syntax is correct (indentation, colons, etc.)
-- Check for typos in configuration keys
-- Verify paths exist and are accessible
-- Use quotes around paths with spaces
+- 确保 YAML 语法正确（缩进、冒号等）
+- 检查配置键的拼写错误
+- 验证路径存在且可访问
+- 路径中包含空格时使用引号
 
-### Performance Issues
+### 性能问题
 
 ```yaml
-# Reduce quality for testing
+# 降低测试质量
 camera_config:
   pixel_width: 854
   pixel_height: 480
   frame_rate: 15
 
-# Use temporary storage on SSD
+# 在 SSD 上使用临时存储
 directories:
   temporary_storage: "/path/to/fast/storage"
 ```

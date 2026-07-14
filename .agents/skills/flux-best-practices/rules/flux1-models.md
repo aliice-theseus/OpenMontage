@@ -1,176 +1,173 @@
 ---
 name: flux1-models
-description: Prompting guidelines for FLUX.1 model family
+description: FLUX.1 模型系列的提示词指南
 ---
 
-# FLUX.1 Model Family
+# FLUX.1 模型系列
 
-> **Tip:** FLUX.2 models are the latest generation and recommended for most use cases. FLUX.1 models are still available for specific needs.
+> **提示：** FLUX.2 模型是最新一代，推荐用于大多数用例。FLUX.1 模型仍然可用于特定需求。
 
-Guide to FLUX.1 models and their specialized capabilities.
+FLUX.1 模型及其专业能力指南。
 
-## Model Overview
+## 模型概述
 
-| Model | Purpose | Notes |
-|-------|---------|-------|
-| FLUX1.1 [pro] | Text-to-image | FLUX.2 [pro] offers improved results |
-| FLUX.1 Kontext | Image-to-image | FLUX.2 with references recommended |
-| FLUX.1 Kontext Max | Image-to-image | FLUX.2 [max] with references recommended |
-| FLUX.1 Fill | Inpainting | Useful for specific inpainting tasks |
+| 模型                 | 用途         | 说明                              |
+| -------------------- | ------------ | --------------------------------- |
+| FLUX1.1 [pro]        | 文生图       | FLUX.2 [pro] 提供更好的结果         |
+| FLUX.1 Kontext       | 图生图       | 推荐使用 FLUX.2 配合参考图片        |
+| FLUX.1 Kontext Max   | 图生图       | 推荐使用 FLUX.2 [max] 配合参考图片  |
+| FLUX.1 Fill          | 图像修复     | 适用于特定的修复任务               |
 
 ## FLUX1.1 [pro]
 
-Fast and reliable text-to-image generation.
+快速可靠的文生图生成。
 
-### Characteristics
-- Strong prompt adherence
-- Production-grade architecture
-- Consistent, reliable results
-- Scalable for high-volume
-- Pricing: $0.04 per image
+### 特性
+- 强提示词遵循能力
+- 生产级架构
+- 一致、可靠的结果
+- 可扩展处理大批量
+- 定价：每张图片 $0.04
 
-### Prompting Style
+### 提示词风格
 
-Standard descriptive prompts with clear subject and style specification.
+标准描述性提示词，带有明确的主体和风格描述。
 
-### Example Prompt
+### 示例提示词
 ```
-A golden retriever puppy playing in autumn leaves, warm afternoon sunlight,
-shallow depth of field with bokeh background, joyful expression, professional
-pet photography style
-```
-
-## FLUX.1 Kontext - Image Editing
-
-> **Recommendation:** FLUX.2 models with reference images provide improved editing results.
-
-Context-aware image-to-image editing model for transformations and modifications.
-
-### Characteristics
-- Understands image context
-- Preserves unedited regions
-- Style transfer capabilities
-- Object modification
-- Basic to complex transformations
-
-### Prompting Strategies
-
-#### Basic Edits
-Simple, direct instructions work best:
-
-```
-Change the color of the car to red
+一只金毛幼犬在秋叶中玩耍，温暖的午后阳光，
+浅景深散景背景，欢快的表情，专业宠物摄影风格
 ```
 
-```
-Make the sky sunset orange and pink
-```
+## FLUX.1 Kontext - 图像编辑
 
-#### Controlled Edits
-Be explicit about what to preserve:
+> **建议：** 使用 FLUX.2 模型配合参考图片可获得更好的编辑效果。
 
-```
-Change the setting to nighttime while maintaining the exact same
-composition and the painting's artistic style
-```
+上下文感知的图像到图像编辑模型，用于变换和修改。
 
-#### Complex Transformations
-For dramatic changes, be specific about preservation:
+### 特性
+- 理解图像上下文
+- 保留未编辑区域
+- 风格迁移能力
+- 物体修改
+- 基础到复杂的变换
 
-```
-Transform the modern office into a Victorian library with the same
-furniture arrangement. Keep the window positions and overall room
-proportions identical.
-```
+### 提示词策略
 
-#### Style Transfer
-Reference specific artistic movements:
+#### 基础编辑
+简单、直接的指令效果最佳：
 
 ```
-Transform this photograph into a Bauhaus art style with geometric
-shapes and primary colors, maintaining the original composition
-and subject positioning
+将汽车颜色改为红色
 ```
 
-#### Text Editing
-Describe text placement and integration:
-
 ```
-Add the text "OPEN" as a neon sign in the window, red glowing letters
-with slight reflection on the glass, matching the nighttime atmosphere
+让天空变成日落橙色和粉色
 ```
 
-### Tips for Kontext
-- Be explicit about what should NOT change
-- Start with simpler edits, build complexity
-- Specify style preservation when needed
-- Use for incremental refinement
+#### 受控编辑
+明确说明要保留的内容：
+
+```
+将场景改为夜晚，同时保持完全相同的构图和绘画的艺术风格
+```
+
+#### 复杂变换
+对于戏剧性的变化，具体说明保留内容：
+
+```
+将现代办公室改造成维多利亚图书馆，保持相同的家具布置。
+保持窗户位置和整体房间比例不变。
+```
+
+#### 风格迁移
+参考特定的艺术运动：
+
+```
+将这张照片转换为包豪斯艺术风格，几何形状和原色，
+保持原始构图和主体位置
+```
+
+#### 文字编辑
+描述文字位置和集成：
+
+```
+在窗户中添加"OPEN"文字作为霓虹灯牌，红色发光字母，
+在玻璃上有轻微反射，与夜间氛围相匹配
+```
+
+### Kontext 使用技巧
+- 明确说明什么不应该改变
+- 从简单的编辑开始，逐步增加复杂度
+- 在需要时指定风格保留
+- 用于增量优化
 
 ## FLUX.1 Kontext Max
 
-Advanced multi-reference editing for complex compositions.
+用于复杂构图的高级多参考编辑。
 
-### Characteristics
-- Handles up to 10 reference images
-- Best editing consistency across references
-- Complex scene composition
-- Character consistency maintenance
-- Rate limit: 6 concurrent requests
+### 特性
+- 处理最多 10 张参考图片
+- 跨参考的最佳编辑一致性
+- 复杂场景构图
+- 角色一致性保持
+- 频率限制：6 个并发请求
 
-### Multi-Reference Prompting
+### 多参考提示词
 
-#### Natural Language References
-Describe relationships between images naturally:
-
-```
-The person from image 1 is sitting in the cafe from image 2,
-wearing the outfit from image 3, with the lighting style of image 4
-```
-
-#### Explicit Indexing
-Reference images by number for precision:
+#### 自然语言参考
+自然地描述图片之间的关系：
 
 ```
-Replace the top half of the person in image 1 with the clothing
-from image 2, maintaining the pose and background
+图片 1 中的人坐在图片 2 的咖啡馆里，
+穿着图片 3 的衣服，使用图片 4 的光照风格
 ```
 
-### Tips for Kontext Max
-- Plan your reference images carefully
-- Use natural language for relationships
-- Specify which elements come from which image
-- Leverage for character consistency across scenes
-
-## FLUX.1 Fill - Inpainting
-
-Specialized tool for object removal and area completion.
-
-### Characteristics
-- Clean object removal
-- Intelligent background completion
-- Texture-aware filling
-- Seamless blending
-
-### Use Cases
-- Remove unwanted objects from photos
-- Complete partial images
-- Replace specific regions
-- Clean up image artifacts
-
-### Prompting for Fill
-
-Describe what should fill the masked area:
+#### 显式索引
+按编号精确引用图片：
 
 ```
-Fill with continuation of the brick wall texture and ivy
+将图片 1 中人物的上半部分替换为图片 2 的服装，
+保持姿势和背景不变
+```
+
+### Kontext Max 使用技巧
+- 仔细规划你的参考图片
+- 使用自然语言描述关系
+- 指定哪些元素来自哪些图片
+- 利用它实现跨场景的角色一致性
+
+## FLUX.1 Fill - 图像修复
+
+专门用于物体移除和区域补全的工具。
+
+### 特性
+- 干净地移除物体
+- 智能背景补全
+- 纹理感知填充
+- 无缝融合
+
+### 使用场景
+- 从照片中移除不需要的物体
+- 补全部分图片
+- 替换特定区域
+- 清理图像伪影
+
+### Fill 提示词
+
+描述蒙版区域应该填充什么：
+
+```
+用砖墙纹理和常春藤的延续来填充
 ```
 
 ```
-Complete with matching ocean waves and sandy beach
+
+用匹配的海浪和沙滩来补全
 ```
 
-### Tips for Fill
-- Provide context about surrounding areas
-- Specify texture and pattern continuation
-- Describe lighting consistency
-- Use for cleanup and removal tasks
+### Fill 使用技巧
+- 提供周围区域的上下文
+- 指定纹理和图案的延续
+- 描述光线一致性
+- 用于清理和移除任务

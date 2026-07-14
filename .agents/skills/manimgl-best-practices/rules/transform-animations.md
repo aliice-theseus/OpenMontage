@@ -1,12 +1,12 @@
-# Transform Animations in ManimGL
+# ManimGL 中的变换动画
 
-Transform animations morph one mobject into another or animate changes to mobject properties.
+变换动画将一个 mobject 变形为另一个，或对 mobject 属性进行动画化更改。
 
 ## Transform
 
-The basic `Transform` changes one mobject to look like another.
+基本的 `Transform` 将某个 mobject 改变为看起来像另一个。
 
-### Basic Transform
+### 基本 Transform
 
 ```python
 from manimlib import *
@@ -19,24 +19,24 @@ class BasicTransform(Scene):
         self.play(ShowCreation(square))
         self.wait()
 
-        # Transform square into circle
+        # 将正方形变换为圆形
         self.play(Transform(square, circle))
         self.wait()
 
-        # Note: After transform, square now looks like circle
-        # but it's still the square object
+        # 注意：变换后，square 看起来像 circle
+        # 但它仍然是 square 对象
 ```
 
-### Key Insight
+### 关键洞察
 
-After `Transform(A, B)`:
-- Object A remains in the scene
-- Object A now looks like B
-- Object B is not added to the scene
+在 `Transform(A, B)` 之后：
+- 对象 A 保留在场景中
+- 对象 A 现在看起来像 B
+- 对象 B 未被添加到场景中
 
 ## ReplacementTransform
 
-`ReplacementTransform` replaces the source with the target.
+`ReplacementTransform` 用目标替换源。
 
 ```python
 class ReplacementTransformExample(Scene):
@@ -47,29 +47,29 @@ class ReplacementTransformExample(Scene):
         self.play(ShowCreation(square))
         self.wait()
 
-        # Replace square with circle
+        # 用圆形替换正方形
         self.play(ReplacementTransform(square, circle))
         self.wait()
 
-        # After this, circle is in the scene, not square
+        # 之后，场景中保留的是 circle，而不是 square
 ```
 
-### When to Use Each
+### 何时使用哪种
 
 ```python
-# Use Transform when:
-# - You want to keep the same mobject reference
+# 使用 Transform 当：
+# - 你想保持同一个 mobject 引用
 square.transform_into_circle = lambda: Transform(square, Circle())
 
-# Use ReplacementTransform when:
-# - You want to swap objects
-# - The target object should remain
+# 使用 ReplacementTransform 当：
+# - 你想要交换对象
+# - 目标对象应该保留
 self.play(ReplacementTransform(old_text, new_text))
 ```
 
 ## TransformMatchingTex
 
-Morphs LaTeX expressions by matching substrings.
+通过匹配子字符串来变形 LaTeX 表达式。
 
 ```python
 class TexTransformExample(Scene):
@@ -80,17 +80,17 @@ class TexTransformExample(Scene):
         self.play(Write(eq1))
         self.wait()
 
-        # Matching parts smoothly transform
+        # 匹配部分平滑变换
         self.play(TransformMatchingTex(eq1, eq2))
         self.wait()
 ```
 
-### With Color Mapping
+### 带颜色映射
 
 ```python
 class ColoredTexTransform(Scene):
     def construct(self):
-        # Set up equations with colors
+        # 设置带颜色的方程
         eq1 = Tex(
             R"(a + b)^2 = a^2 + 2ab + b^2",
             t2c={"a": BLUE, "b": GREEN}
@@ -106,10 +106,10 @@ class ColoredTexTransform(Scene):
         self.wait()
 ```
 
-### With isolate Parameter
+### 使用 isolate 参数
 
 ```python
-# Isolate specific parts for better matching
+# 隔离特定部分以获得更好的匹配
 eq1 = Tex(
     R"x^2 + 2x + 1",
     isolate=["x", "^2", "+", "1", "2"]
@@ -124,10 +124,10 @@ self.wait()
 self.play(TransformMatchingTex(eq1, eq2))
 ```
 
-### With Key Mapping
+### 带键映射
 
 ```python
-# Map specific substrings
+# 映射特定子字符串
 eq1 = Tex(R"x^2 + y^2 = r^2")
 eq2 = Tex(R"a^2 + b^2 = c^2")
 
@@ -145,12 +145,12 @@ self.play(TransformMatchingTex(
 
 ## TransformMatchingShapes
 
-Morphs objects by matching similar shapes.
+通过匹配相似形状来变形对象。
 
 ```python
 class ShapeTransform(Scene):
     def construct(self):
-        # Source group
+        # 源组
         source = VGroup(
             Circle(radius=0.5, color=BLUE),
             Square(side_length=1, color=GREEN),
@@ -158,7 +158,7 @@ class ShapeTransform(Scene):
         )
         source.arrange(RIGHT, buff=0.5)
 
-        # Target group
+        # 目标组
         target = VGroup(
             Circle(radius=1, color=RED),
             Square(side_length=0.5, color=PURPLE),
@@ -174,7 +174,7 @@ class ShapeTransform(Scene):
 
 ## MoveToTarget
 
-Set a target state for a mobject and animate to it.
+为 mobject 设置目标状态并进行动画化。
 
 ```python
 class MoveToTargetExample(Scene):
@@ -182,21 +182,21 @@ class MoveToTargetExample(Scene):
         circle = Circle()
         self.play(ShowCreation(circle))
 
-        # Set target state
+        # 设置目标状态
         circle.generate_target()
         circle.target.shift(RIGHT * 3)
         circle.target.scale(2)
         circle.target.set_color(YELLOW)
 
-        # Animate to target
+        # 动画化到目标
         self.play(MoveToTarget(circle))
         self.wait()
 ```
 
-### Multiple Targets
+### 多个目标
 
 ```python
-# Set up multiple mobjects with targets
+# 设置多个带目标的 mobject
 square = Square()
 triangle = Triangle()
 
@@ -214,7 +214,7 @@ self.play(
 
 ## FadeTransform
 
-Cross-fades between two objects.
+在两个对象之间交叉淡出。
 
 ```python
 class FadeTransformExample(Scene):
@@ -225,73 +225,73 @@ class FadeTransformExample(Scene):
         self.play(Write(text1))
         self.wait()
 
-        # Smooth cross-fade
+        # 平滑交叉淡出
         self.play(FadeTransform(text1, text2))
         self.wait()
 ```
 
 ## Rotate
 
-Rotates a mobject.
+旋转 mobject。
 
 ```python
-# Rotate by angle
+# 按角度旋转
 square = Square()
-self.play(Rotate(square, PI / 2))  # 90 degrees
+self.play(Rotate(square, PI / 2))  # 90度
 
-# Rotate around a point
+# 绕某点旋转
 self.play(Rotate(square, PI, about_point=ORIGIN))
 
-# Rotate around an axis (for 3D)
+# 绕轴旋转（用于3D）
 self.play(Rotate(cube, PI, axis=RIGHT))
 ```
 
-## Rotating (Continuous)
+## Rotating（连续旋转）
 
-Creates a continuous rotation.
+创建连续旋转。
 
 ```python
-# Continuous rotation
+# 连续旋转
 square = Square()
 self.play(Rotating(square, radians=2*PI, run_time=4))
 
-# Infinite rotation with updater
+# 带 updater 的无限旋转
 square.add_updater(lambda m, dt: m.rotate(0.1 * dt))
 self.wait(10)
 ```
 
 ## ScaleInPlace
 
-Scales without changing center position.
+在不改变中心位置的情况下缩放。
 
 ```python
 circle = Circle()
-self.play(ScaleInPlace(circle, 2))  # Double size
+self.play(ScaleInPlace(circle, 2))  # 放大一倍
 
-# Scale around a point
+# 绕某点缩放
 self.play(ScaleInPlace(circle, 0.5, about_point=RIGHT))
 ```
 
 ## ApplyMethod
 
-Animates any mobject method.
+对任何 mobject 方法进行动画化。
 
 ```python
-# Using .animate syntax (preferred)
+# 使用 .animate 语法（推荐）
 self.play(circle.animate.shift(RIGHT))
 self.play(circle.animate.scale(2))
 self.play(circle.animate.set_color(BLUE))
 
-# Old syntax (still works)
+# 旧语法（仍然有效）
 self.play(ApplyMethod(circle.shift, RIGHT))
 self.play(ApplyMethod(circle.scale, 2))
 ```
 
-## Complex Transformations
+## 复杂变换
 
 ### apply_complex_function
 
-Transform using complex number operations.
+使用复数运算进行变换。
 
 ```python
 class ComplexTransform(Scene):
@@ -299,13 +299,13 @@ class ComplexTransform(Scene):
         plane = ComplexPlane()
         plane.add_coordinate_labels(font_size=20)
 
-        # Create shape on complex plane
+        # 在复平面上创建形状
         circle = Circle(radius=1, color=BLUE)
 
         self.add(plane, circle)
         self.wait()
 
-        # Apply complex function (e.g., z^2)
+        # 应用复函数（例如 z^2）
         self.play(
             circle.animate.apply_complex_function(lambda z: z**2),
             run_time=3
@@ -315,10 +315,10 @@ class ComplexTransform(Scene):
 
 ### apply_function
 
-Transform using arbitrary functions.
+使用任意函数进行变换。
 
 ```python
-# Apply custom transformation
+# 应用自定义变换
 grid = NumberPlane()
 
 def wavy_transform(point):
@@ -335,9 +335,9 @@ self.play(
 )
 ```
 
-## Transformation Sequences
+## 变换序列
 
-### Multi-step Transformations
+### 多步骤变换
 
 ```python
 class TransformSequence(Scene):
@@ -352,19 +352,19 @@ class TransformSequence(Scene):
         current = shapes[0]
         self.play(ShowCreation(current))
 
-        # Transform through each shape
+        # 逐个变换每个形状
         for next_shape in shapes[1:]:
             self.play(ReplacementTransform(current, next_shape))
             current = next_shape
             self.wait(0.3)
 ```
 
-### Derivation Transformation
+### 推导变换
 
 ```python
 class DerivationTransform(Scene):
     def construct(self):
-        # Mathematical derivation
+        # 数学推导
         steps = [
             Tex(R"x^2 - 4 = 0"),
             Tex(R"x^2 = 4"),
@@ -382,31 +382,31 @@ class DerivationTransform(Scene):
             self.wait()
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Transform vs ReplacementTransform**:
-   - Use `Transform` to keep the object reference
-   - Use `ReplacementTransform` to swap objects
+1. **Transform vs ReplacementTransform**：
+   - 使用 `Transform` 保持对象引用
+   - 使用 `ReplacementTransform` 交换对象
 
-2. **TransformMatchingTex**:
-   - Use `isolate=` to control matching
-   - Use `key_map=` for explicit mappings
-   - Color consistently for smooth transitions
+2. **TransformMatchingTex**：
+   - 使用 `isolate=` 控制匹配
+   - 使用 `key_map=` 进行显式映射
+   - 颜色一致性确保平滑过渡
 
-3. **Timing**:
-   - Longer `run_time` for complex transformations
-   - Match timing to content importance
+3. **时间控制**：
+   - 复杂变换使用更长的 `run_time`
+   - 时间匹配内容的重要性
 
-4. **.animate syntax**:
-   - Preferred for simple transformations
-   - More readable and concise
+4. **.animate 语法**：
+   - 简单变换的首选
+   - 更可读且简洁
 
-5. **Path arc**:
-   - Add `path_arc=90*DEGREES` for curved transformation paths
+5. **路径弧度**：
+   - 添加 `path_arc=90*DEGREES` 实现曲线变换路径
 
-## Common Patterns
+## 常见模式
 
-### Equation manipulation
+### 方程操作
 
 ```python
 eq = Tex(R"2x + 4 = 10")
@@ -421,7 +421,7 @@ eq3.move_to(eq2)
 self.play(TransformMatchingTex(eq2.copy(), eq3))
 ```
 
-### Shape morphing
+### 形状变形
 
 ```python
 shape = Circle()
@@ -432,7 +432,7 @@ for new_shape in [Square(), Triangle(), Star(), Circle()]:
     self.wait(0.5)
 ```
 
-### Text replacement
+### 文本替换
 
 ```python
 text1 = Text("Before")
@@ -443,17 +443,17 @@ text2.move_to(text1)
 self.play(FadeTransform(text1, text2))
 ```
 
-## Full Example
+## 完整示例
 
 ```python
 class ComprehensiveTransform(Scene):
     def construct(self):
-        # Title
+        # 标题
         title = Text("Transformations", font_size=60)
         title.to_edge(UP)
         self.play(Write(title))
 
-        # Shape transformations
+        # 形状变换
         shape = Square(color=BLUE)
         self.play(ShowCreation(shape))
         self.wait()
@@ -464,7 +464,7 @@ class ComprehensiveTransform(Scene):
         self.play(Transform(shape, Triangle(color=YELLOW)))
         self.wait()
 
-        # Mathematical transformation
+        # 数学变换
         eq1 = Tex(R"a^2 + b^2 = c^2")
         eq1.next_to(title, DOWN, buff=1)
         self.play(
@@ -478,6 +478,6 @@ class ComprehensiveTransform(Scene):
         self.play(TransformMatchingTex(eq1.copy(), eq2))
         self.wait()
 
-        # Clean up
+        # 清理
         self.play(FadeOut(VGroup(title, eq2)))
 ```

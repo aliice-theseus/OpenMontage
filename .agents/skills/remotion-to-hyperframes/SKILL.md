@@ -1,127 +1,127 @@
 ---
 name: remotion-to-hyperframes
-description: 'Port an existing Remotion (React) composition to HyperFrames HTML. Use ONLY when the user explicitly asks to port/convert/migrate/translate a Remotion source. Do NOT use: (a) authoring a new HyperFrames composition; (b) Remotion mentioned in passing; (c) Remotion code shared as reference only; (d) "same video as my Remotion one" without explicit migrate request — treat as fresh build. Doubt → `/general-video`. One-way, Remotion-only: no reverse export (HyperFrames→Remotion or any framework), no non-Remotion source (After Effects, Framer Motion, plain React/CSS) → out of scope, re-create via `/general-video`. Flags unsupported patterns (useState, useEffect, async calculateMetadata, third-party React libs, `@remotion/lambda`) and recommends runtime interop over lossy translation. Unsure whether to port vs. build fresh, or only a passing Remotion mention? → /hyperframes.'
+description: '将现有的 Remotion (React) 合成移植到 HyperFrames HTML。仅在用户明确要求移植/转换/迁移/翻译 Remotion 源码时使用。不要用于：(a) 编写新的 HyperFrames 合成；(b) 顺带提及 Remotion；(c) 仅作为参考分享的 Remotion 代码；(d) "和我 Remotion 一样的视频"但没有明确要求迁移源码 — 视为新建。有疑问 → `/general-video`。单向，仅 Remotion：不支持反向导出（HyperFrames→Remotion 或任何其他框架），非 Remotion 源码（After Effects, Framer Motion, 纯 React/CSS）→ 超出范围，通过 `/general-video` 重建。标记不支持的模式（useState, useEffect, async calculateMetadata, 第三方 React 库, `@remotion/lambda`）并推荐运行时互操作而非有损翻译。不确定是移植还是新建，或只是顺带提及 Remotion？→ /hyperframes。'
 ---
 
-# Remotion to HyperFrames
+# Remotion 到 HyperFrames
 
-> **Confirm the route before you build.** Use this **only** to port an existing **Remotion** (React) composition's source into HyperFrames. Authoring a **new** composition (even one inspired by a Remotion video) → the creation workflows / `/general-video`. **Out of scope** (one-way, Remotion-only): no reverse export (HyperFrames → Remotion or any framework), and a **non-Remotion** source (After Effects, Framer Motion, plain React / CSS) has no Remotion source to translate → re-create via `/general-video`. Unsure, or only a passing Remotion mention? **Read `/hyperframes` first.**
+> **在开始构建之前确认路线。** 仅使用此技能将现有的 **Remotion** (React) 合成源码移植到 HyperFrames。编写 **新** 合成（即使灵感来自 Remotion 视频）→ 使用创作工作流 `/general-video`。**超出范围**（单向，仅 Remotion）：不支持反向导出（HyperFrames → Remotion 或任何其他框架），且 **非 Remotion** 源码（After Effects, Framer Motion, 纯 React/CSS）没有可翻译的 Remotion 源码 → 通过 `/general-video` 重建。不确定，或只是顺带提及 Remotion？**先阅读 `/hyperframes`。**
 
-## Overview
+## 概述
 
-Translate Remotion (React-based) video compositions into HyperFrames (HTML + GSAP) compositions. Most Remotion idioms have direct HyperFrames equivalents — the translation is mechanical for ~80% of typical compositions. This skill encodes the mapping and guards against the lossy 20% by refusing to translate patterns that don't fit HF's seek-driven model and recommending the runtime interop pattern from [PR #214](https://github.com/heygen-com/hyperframes/pull/214) instead.
+将 Remotion（基于 React）视频合成分解为 HyperFrames（HTML + GSAP）合成。大多数 Remotion 惯用用法都有直接的 HyperFrames 对应物 — 对于约 80% 的典型合成，翻译是机械性的。此技能编码了映射关系，并通过拒绝翻译不适合 HF 基于 seek 模型的模式，以及推荐来自 [PR #214](https://github.com/heygen-com/hyperframes/pull/214) 的运行时互操作模式，来防范那 20% 的有损部分。
 
-The skill ships with a **tiered test corpus** (T1–T4, 4 fixtures total) that grades translations against measured SSIM thresholds. Don't translate without running the eval — a translation that "looks right" but renders 0.05 SSIM lower than the validated baseline is silently wrong.
+该技能附带一个 **分层测试语料库**（T1–T4，共 4 个测试用例），根据测量的 SSIM 阈值对翻译进行评分。不要在不运行评估的情况下进行翻译 — 一个"看起来正确"但渲染结果比已验证基线低 0.05 SSIM 的翻译是静默错误的。
 
-## When to use
+## 何时使用
 
-**Use this skill ONLY when the user explicitly asks to migrate from Remotion.** Example trigger phrases:
+**仅在用户明确要求从 Remotion 迁移时使用此技能。** 示例触发短语：
 
-- "port my Remotion project to HyperFrames"
-- "convert this Remotion code to HyperFrames"
-- "migrate from Remotion"
-- "translate this Remotion comp"
-- "rewrite this as HyperFrames HTML"
+- "将我的 Remotion 项目移植到 HyperFrames"
+- "将此 Remotion 代码转换为 HyperFrames"
+- "从 Remotion 迁移"
+- "翻译此 Remotion 合成"
+- "将其重写为 HyperFrames HTML"
 
-**Do NOT use this skill when:**
+**在以下情况下不要使用此技能：**
 
-- (a) The user is authoring a **new** HyperFrames composition, even if they have or are A/B-testing a similar Remotion video.
-- (b) The user mentions Remotion in passing without asking for migration.
-- (c) The user shares Remotion code as reference material rather than asking for a translation.
-- (d) The user asks for "the same video as my Remotion one" without explicitly asking to migrate the source — treat that as a fresh HyperFrames build.
+- (a) 用户正在编写一个 **新** 的 HyperFrames 合成，即使他们有或正在 A/B 测试类似的 Remotion 视频。
+- (b) 用户顺带提及 Remotion 而没有要求迁移。
+- (c) 用户分享 Remotion 代码作为参考材料，而不是要求翻译。
+- (d) 用户要求"和我 Remotion 一样的视频"但没有明确要求迁移源码 — 视为新的 HyperFrames 构建。
 
-**NOT SUPPORTED (decline — this is not what this skill does):**
+**不支持（拒绝 — 这不是此技能的职责）：**
 
-- **The reverse direction.** Exporting a HyperFrames composition back out _to_ Remotion (or to any other framework) is not a workflow — the translation is Remotion → HyperFrames only. Say so plainly.
-- **Non-Remotion sources.** An After Effects project (`.aep`), a Framer Motion / plain-React / CSS animation, or any other tool's source is not a Remotion composition — there is no Remotion source to translate. Re-create it natively via `/general-video`, or decline if HyperFrames can't represent it.
+- **反向方向。** 将 HyperFrames 合成导出回 _到_ Remotion（或任何其他框架）不是一个工作流 — 翻译只能是 Remotion → HyperFrames。直说即可。
+- **非 Remotion 源码。** After Effects 项目（`.aep`）、Framer Motion / 纯 React / CSS 动画或任何其他工具的源码不是 Remotion 合成 — 没有可翻译的 Remotion 源码。通过 `/general-video` 原生重建，如果 HyperFrames 无法表示则拒绝。
 
-When in doubt, default to authoring a native HyperFrames composition with `/general-video` (the general HyperFrames authoring flow) instead.
+如有疑问，默认使用 `/general-video`（通用 HyperFrames 创作流程）编写原生 HyperFrames 合成。
 
-## Workflow
+## 工作流
 
-### Step 1: Lint the source
+### 步骤 1：检查源码
 
-Run [`scripts/lint_source.py`](scripts/lint_source.py) over the Remotion source directory. The lint detects patterns that can't translate cleanly:
+对 Remotion 源码目录运行 [`scripts/lint_source.py`](scripts/lint_source.py)。该检查工具检测无法干净翻译的模式：
 
-- **Blockers** (refuse + recommend interop): `useState`, `useReducer`, `useEffect`/`useLayoutEffect` with non-empty deps, async `calculateMetadata`, third-party React UI libraries (MUI, Chakra, Mantine, antd, shadcn, Radix, NextUI).
-- **Warnings** (translate after dropping the construct): `@remotion/lambda` config, `delayRender`, `useCallback`, `useMemo`, custom hooks.
-- **Info** (translate with note): `staticFile`, `interpolateColors`.
+- **阻断器**（拒绝 + 推荐互操作）：`useState`、`useReducer`、带非空依赖的 `useEffect`/`useLayoutEffect`、异步 `calculateMetadata`、第三方 React UI 库（MUI、Chakra、Mantine、antd、shadcn、Radix、NextUI）。
+- **警告**（丢弃结构后翻译）：`@remotion/lambda` 配置、`delayRender`、`useCallback`、`useMemo`、自定义 hooks。
+- **信息**（带注释翻译）：`staticFile`、`interpolateColors`。
 
-If any blocker fires, **stop**. Read [`references/escape-hatch.md`](references/escape-hatch.md) and surface the recommendation message. Warnings don't stop translation — drop the offending construct in step 3 and note the gap in `TRANSLATION_NOTES.md`. `@remotion/lambda` config is the canonical warning case: the skill drops the import + `renderMediaOnLambda(...)` calls but translates the rest of the composition.
+如果触发了任何阻断器，**停止**。阅读 [`references/escape-hatch.md`](references/escape-hatch.md) 并提供建议消息。警告不会停止翻译 — 在步骤 3 中丢弃有问题的结构并在 `TRANSLATION_NOTES.md` 中记录差距。`@remotion/lambda` 配置是典型的警告案例：该技能丢弃 import + `renderMediaOnLambda(...)` 调用，但翻译合成的其余部分。
 
-### Step 2: Plan the translation
+### 步骤 2：规划翻译
 
-Read [`references/api-map.md`](references/api-map.md) — the index of every Remotion API and its HF equivalent or per-topic reference. Identify which topic references you'll need based on what the source uses:
+阅读 [`references/api-map.md`](references/api-map.md) — 每个 Remotion API 及其 HF 等价物或按主题分类的参考索引。根据源码使用的内容确定需要哪些主题参考：
 
-| Source contains                                                           | Load reference                                |
+| 源码包含                                                               | 加载参考                                    |
 | ------------------------------------------------------------------------- | --------------------------------------------- |
-| `Composition`, `defaultProps`, `schema`, `calculateMetadata`              | [`parameters.md`](references/parameters.md)   |
-| `Sequence`, `Series`, `Loop`, `AbsoluteFill`, `Freeze`                    | [`sequencing.md`](references/sequencing.md)   |
-| `useCurrentFrame`, `interpolate`, `spring`, `Easing`, `interpolateColors` | [`timing.md`](references/timing.md)           |
-| `Audio`, `Video`, `Img`, `IFrame`, `staticFile`, `delayRender`            | [`media.md`](references/media.md)             |
-| `TransitionSeries`, `@remotion/transitions`                               | [`transitions.md`](references/transitions.md) |
+| `Composition`、`defaultProps`、`schema`、`calculateMetadata`              | [`parameters.md`](references/parameters.md)   |
+| `Sequence`、`Series`、`Loop`、`AbsoluteFill`、`Freeze`                    | [`sequencing.md`](references/sequencing.md)   |
+| `useCurrentFrame`、`interpolate`、`spring`、`Easing`、`interpolateColors` | [`timing.md`](references/timing.md)           |
+| `Audio`、`Video`、`Img`、`IFrame`、`staticFile`、`delayRender`            | [`media.md`](references/media.md)             |
+| `TransitionSeries`、`@remotion/transitions`                               | [`transitions.md`](references/transitions.md) |
 | `@remotion/lottie`                                                        | [`lottie.md`](references/lottie.md)           |
-| `@remotion/google-fonts/<Family>`, `Font.loadFont`, `@font-face`          | [`fonts.md`](references/fonts.md)             |
+| `@remotion/google-fonts/<Family>`、`Font.loadFont`、`@font-face`          | [`fonts.md`](references/fonts.md)             |
 
-Don't load all of them — load only what the specific source needs.
+不要全部加载 — 只加载特定源码需要的内容。
 
-### Step 3: Generate the HF composition
+### 步骤 3：生成 HF 合成
 
-Emit `index.html` with:
+生成 `index.html`，包含：
 
-- Root `<div id="stage">` carrying the composition's `data-composition-id`, `data-start="0"`, `data-duration` (in seconds), `data-fps`, `data-width`, `data-height`, plus one `data-*` per scalar prop.
-- A flat list of scene divs with `data-start` / `data-duration` / `data-track-index`.
-- Inline `<style>` for layout; CSS sets the `from` state of every animated property.
-- A single `<script>` tag at the bottom containing one paused `gsap.timeline({paused: true})`. Every Remotion `useCurrentFrame()` derivation becomes a tween on this timeline at the right offset.
-- `window.__timelines["<composition-id>"] = tl;` registers the timeline with HF's runtime.
+- 根 `<div id="stage">`，带上合成的 `data-composition-id`、`data-start="0"`、`data-duration`（秒）、`data-fps`、`data-width`、`data-height`，每个标量 prop 对应一个 `data-*`。
+- 场景 div 的平面列表，带有 `data-start` / `data-duration` / `data-track-index`。
+- 内联 `<style>` 用于布局；CSS 设置每个动画属性的 `from` 状态。
+- 底部的一个 `<script>` 标签，包含一个暂停的 `gsap.timeline({paused: true})`。每个 Remotion `useCurrentFrame()` 推导都成为此时间线上正确偏移处的补间动画。
+- `window.__timelines["<composition-id>"] = tl;` 将时间线注册到 HF 的运行时。
 
-Custom React subcomponents inline as repeated HTML using the prop interface as the template (see [`parameters.md`](references/parameters.md) for the per-instance `data-*` pattern).
+自定义 React 子组件作为重复 HTML 内联，使用 prop 接口作为模板（参见 [`parameters.md`](references/parameters.md) 了解每个实例的 `data-*` 模式）。
 
-### Step 4: Validate
+### 步骤 4：验证
 
-Run the eval harness — [`references/eval.md`](references/eval.md) for the full guide. Quick path:
+运行评估框架 — 完整指南见 [`references/eval.md`](references/eval.md)。快速路径：
 
 ```bash
-# Render Remotion baseline (after npm install in the fixture)
+# 渲染 Remotion 基线（在测试用例中运行 npm install 后）
 cd remotion-src && npx remotion render <CompositionId> out/baseline.mp4
 
-# Render HF translation
+# 渲染 HF 翻译
 cd ../hf-src && npx hyperframes render --skill=remotion-to-hyperframes --output ../hf.mp4
 
-# SSIM diff
+# SSIM 差异比较
 ../../scripts/render_diff.sh ./remotion-src/out/baseline.mp4 ./hf.mp4 ./diff
 ```
 
-Threshold: ~0.02 below `p05` of the source's complexity tier (see `eval.md`'s validated thresholds table). If the diff fails, run [`scripts/frame_strip.sh`](scripts/frame_strip.sh) to see _which_ frames diverged, then re-read the relevant timing/sequencing/media reference.
+阈值：约低于源码复杂度层级 `p05` 的 ~0.02（参见 `eval.md` 的已验证阈值表）。如果差异比较失败，运行 [`scripts/frame_strip.sh`](scripts/frame_strip.sh) 查看 _哪些_ 帧产生了差异，然后重新阅读相关的时间/序列/媒体参考。
 
-**Critical**: both renders must use matching pixel format. Set `Config.setVideoImageFormat("png")` + `Config.setColorSpace("bt709")` in the Remotion source's `remotion.config.ts` — otherwise the diff measures encoder differences (~0.05 SSIM hit), not translation fidelity.
+**关键**：两个渲染必须使用匹配的像素格式。在 Remotion 源码的 `remotion.config.ts` 中设置 `Config.setVideoImageFormat("png")` + `Config.setColorSpace("bt709")` — 否则差异比较会测量编码器差异（约 0.05 SSIM 损失），而非翻译保真度。
 
-### Step 5: Document gaps
+### 步骤 5：记录差距
 
-Anything that didn't translate cleanly (volume ramps dropped, custom presentations approximated, fonts substituted) gets a `TRANSLATION_NOTES.md` written next to the HF output. See [`references/limitations.md`](references/limitations.md) for the format.
+任何未能干净翻译的内容（音量渐变被丢弃、自定义演示被近似、字体被替换）都会在 HF 输出旁边生成 `TRANSLATION_NOTES.md`。格式参见 [`references/limitations.md`](references/limitations.md)。
 
-## What this skill explicitly does NOT do
+## 此技能明确不做的事
 
-- **Translate React state machines.** Compositions that drive animation via `useState` + `useEffect` are not deterministic frame-capture targets in HyperFrames' seek-driven model. Recommend the runtime interop pattern.
-- **Run Remotion's render pipeline alongside HyperFrames.** That's the runtime interop pattern from [PR #214](https://github.com/heygen-com/hyperframes/pull/214) — a separate solution for compositions that fail this skill's lint.
+- **翻译 React 状态机。** 通过 `useState` + `useEffect` 驱动动画的合成在 HyperFrames 基于 seek 的模型中不是确定性的帧捕获目标。建议使用运行时互操作模式。
+- **在 HyperFrames 旁边运行 Remotion 的渲染管线。** 这是来自 [PR #214](https://github.com/heygen-com/hyperframes/pull/214) 的运行时互操作模式 — 一个针对未通过此技能检查的合成的单独解决方案。
 
-(`@remotion/lambda` is _not_ a blocker — Lambda config is deployment, not animation. The skill drops it as a warning and translates the rest. See [`references/escape-hatch.md`](references/escape-hatch.md).)
+（`@remotion/lambda` _不是_ 阻断器 — Lambda 配置是部署，不是动画。该技能将其作为警告丢弃并翻译其余部分。参见 [`references/escape-hatch.md`](references/escape-hatch.md)。）
 
-## How to grade your own translation
+## 如何评估自己的翻译
 
-Run the test corpus orchestrator:
+运行测试语料库协调器：
 
 ```bash
 ./assets/test-corpus/run.sh
 ```
 
-It runs T1, T2, T3 (render + diff) and T4 (lint validation), prints a per-tier pass/fail table, and emits an aggregate JSON report. Use this to verify the skill is working end-to-end on a clean checkout — and as a regression check after editing any reference.
+它运行 T1、T2、T3（渲染 + 差异比较）和 T4（检查验证），打印每层级的通过/失败表格，并输出聚合 JSON 报告。使用此方法验证技能在干净检出时是否端到端正常工作 — 以及在编辑任何参考后作为回归检查。
 
-Validated baseline (as of 2026-04-27):
+已验证基线（截至 2026-04-27）：
 
-| Tier | Composition shape                           | Mean SSIM | Threshold |
+| 层级 | 合成形状                               | 平均 SSIM | 阈值    |
 | ---- | ------------------------------------------- | --------- | --------- |
-| T1   | single-element fade-in                      | 0.974     | 0.95      |
-| T2   | multi-scene + spring + audio + image        | 0.985     | 0.95      |
-| T3   | data-driven, custom subcomponents, count-up | 0.953     | 0.90      |
-| T4   | escape-hatch (8 lint cases)                 | 8/8 pass  | n/a       |
+| T1   | 单元素淡入                                  | 0.974     | 0.95      |
+| T2   | 多场景 + spring + 音频 + 图片               | 0.985     | 0.95      |
+| T3   | 数据驱动、自定义子组件、计数动画              | 0.953     | 0.90      |
+| T4   | 逃生舱（8 个检查用例）                      | 8/8 通过  | 不适用    |

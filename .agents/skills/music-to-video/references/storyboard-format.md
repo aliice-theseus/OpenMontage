@@ -1,94 +1,84 @@
-# STORYBOARD.md format — frames → groups
+# STORYBOARD.md 格式——帧 → 组
 
-`STORYBOARD.md` is the single reviewable plan the user approves at Step 3 and the **manual**
-each frame-worker follows at Step 4. It is **hierarchical**: one block per **frame**, written
-as a `## Frame N — <frame_id>` heading (the parser recognizes `Frame`). **One frame = one
-scene = one composition file.** Inside each frame block are its **groups** (the treatment
-units). The assembler reads the frame level (`duration` → `data-start`, `src`); the worker
-reads its own frame block. A frame's **composition id = its `src` file stem**
-(`compositions/frames/01-f1.html` → `01-f1`), which the worker uses as `data-composition-id`
-and the `window.__timelines` key.
+`STORYBOARD.md` 是用户在步骤 3 批准的单一可审核计划，也是每个 frame-worker 在步骤 4 遵循的**手册**。它是**分层级的**：每帧一个块，写为 `## Frame N — <frame_id>` 标题（解析器识别 `Frame`）。**一帧 = 一个场景 = 一个作品文件。** 在每个帧块内部是其**组**（处理单元）。组装器读取帧级别（`duration` → `data-start`、`src`）；worker 读取自己的帧块。帧的**作品 id = 其 `src` 文件干名**（`compositions/frames/01-f1.html` → `01-f1`），worker 将其用作 `data-composition-id` 和 `window.__timelines` 键。
 
-Step 2 writes the skeleton (frame fields, groups `TBD`); Step 3 fills the groups + brand. It
-is a build spec, not code — the planner writes WHAT, the worker decides HOW. **Never write
-millisecond tweens here.**
+步骤 2 编写骨架（帧字段，组 `TBD`）；步骤 3 填充组 + 品牌。它是一个构建规格，不是代码——规划者写 WHAT，worker 决定 HOW。**永远不要在此编写毫秒级动画。**
 
-## File shape
+## 文件结构
 
-YAML frontmatter (the video-wide spine) + one `## Frame N — <frame_id>` block per frame.
+YAML 前置元数据（视频范围的脊柱）+ 每帧一个 `## Frame N — <frame_id>` 块。
 
 ```markdown
 ---
 compositionId: bgm
-duration_s: 30.0 # == audiomap.audio.duration_sec, exactly
+duration_s: 30.0 # == audiomap.audio.duration_sec，精确
 canvas: { w: 1920, h: 1080, fps: 30 }
-style: # brand spine — from the chosen frame.md preset (Step 3)
-  font: "EB Garamond / Inter / JetBrains Mono" # the preset's typography, verbatim
-  palette: ["#FAF9F5", "#141413", "#CC785C", "#181715"] # ≤4–6 swatches from the preset's colors
-assets: false # false, or a note like "assets/ has 6 user photos"
-build_notes: ["one paused timeline per frame", "no remote assets"]
-avoid: ["generic slideshow", "tiny unreadable hero text"]
+style: # 品牌脊柱——来自所选 frame.md 预设（步骤 3）
+  font: "EB Garamond / Inter / JetBrains Mono" # 预设的排版，逐字
+  palette: ["#FAF9F5", "#141413", "#CC785C", "#181715"] # 来自预设颜色的 ≤4–6 色板
+assets: false # false，或像 "assets/ 有 6 张用户照片" 这样的说明
+build_notes: ["每帧一个暂停的时间线", "无远程资源"]
+avoid: ["通用幻灯片", "小到不可读的英雄文本"]
 ---
 
 ## Frame 1 — f1
 
-- src: compositions/frames/01-f1.html # worker writes here; assembler refs it; stem (01-f1) = composition id
-- duration: 7.198s # = span length; the assembler reads this for cumulative data-start
-- span_sec: [0.0, 7.198] # track seconds; frames tile the track
-- pacing: beat_cut # beat_cut | phrase_flow (from the skeleton; obey it)
+- src: compositions/frames/01-f1.html # worker 写入此处；组装器引用；干名（01-f1）= 作品 id
+- duration: 7.198s # = 跨度长度；组装器读取此值以计算累积的 data-start
+- span_sec: [0.0, 7.198] # 曲目秒数；帧平铺曲目
+- pacing: beat_cut # beat_cut | phrase_flow（来自骨架；遵循它）
 - mood: [hype]
-- feel: accelerating onset stream into a held downbeat
+- feel: 加速的起始流进入一个保持的强拍
 
 ### Groups
 
 - **g1** — template: `intro-kinetic-cascade`
-  - span_sec: [0.0, 4.017] # frame-LOCAL build is 0-based; these are TRACK seconds (worker subtracts frame start)
+  - span_sec: [0.0, 4.017] # 帧本地构建是 0 基的；这些是曲目秒数（worker 减去帧开始）
   - params: { theme: "light", icon: "bolt", phrases: "[…]", climax: "{…}" }
   - role_bindings: { phrase: { times: [0.14, 0.55, 0.87] }, climax: { in: 3.79, iconAt: 4.9 } }
-  - copy: "GROWTH THROUGH CREATIVITY"
+  - copy: "通过创造力成长"
 - **g2** — free_design
   - span_sec: [4.017, 7.198]
-  - free_design: { dominant_system: "per-onset typography", primitives: ["content-swap", "braam-punch"], density_topology: "accumulate" }
-  - anchors: [4.10, 4.80, 5.50, 6.20] # onset seconds the reveals ride (from audiomap)
-  - copy: ["BUILD", "SHIP", "REPEAT"]
+  - free_design: { dominant_system: "每次起始排版", primitives: ["content-swap", "braam-punch"], density_topology: "accumulate" }
+  - anchors: [4.10, 4.80, 5.50, 6.20] # 揭示依托的起始秒数（来自 audiomap）
+  - copy: ["构建", "发布", "重复"]
 
 ## Frame 2 — f2
 
 …
 ```
 
-## Frame block — required fields
+## 帧块——必需字段
 
-| field                             | meaning                                                                                                                        |
+| 字段 | 含义 |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| heading `## Frame N — <frame_id>` | `frame_id` matches the `src` stem; `N` = the 1-based index.                                                                    |
-| `src`                             | `compositions/frames/NN-<frame_id>.html` — where the worker writes; the assembler references it. Stem = `data-composition-id`. |
-| `duration`                        | the frame span length in seconds (e.g. `7.198s`) — **required**; the assembler sums these for cumulative `data-start`.         |
-| `span_sec`                        | `[start, end]` track seconds. `duration = end − start`.                                                                        |
-| `pacing`                          | `beat_cut` \| `phrase_flow` — from the skeleton; the worker must obey (no hard-cut on `phrase_flow`).                          |
-| `mood`, `feel`                    | from the skeleton; tone + the one-line music situation the planner matched against.                                            |
-| `### Groups` list                 | ≥1 group; groups tile the frame span in order.                                                                                 |
+| 标题 `## Frame N — <frame_id>` | `frame_id` 匹配 `src` 干名；`N` = 基于 1 的索引。 |
+| `src` | `compositions/frames/NN-<frame_id>.html`——worker 写入的位置；组装器引用它。干名 = `data-composition-id`。 |
+| `duration` | 帧跨度长度（秒），例如 `7.198s`——**必需**；组装器将这些求和以得到累积的 `data-start`。 |
+| `span_sec` | `[start, end]` 曲目秒数。`duration = end − start`。 |
+| `pacing` | `beat_cut` | `phrase_flow`——来自骨架；worker 必须遵循（`phrase_flow` 上不能硬切）。 |
+| `mood`、`feel` | 来自骨架；语调 + 规划者匹配的一行音乐情况。 |
+| `### Groups` 列表 | ≥1 组；组按顺序平铺帧跨度。 |
 
-## Group entry — exactly one of three kinds
+## 组条目——三种类型之一
 
-Every group is **template** OR **free_design** OR **asset** — never two, never none. All three
-carry `span_sec` (track seconds, tiling the frame) and may carry `copy`.
+每个组是 **template** 或 **free_design** 或 **asset**——从不是两种，从不是无。全部三种都带有 `span_sec`（曲目秒数，平铺帧）并可以带有 `copy`。
 
-- **template** — `template: <catalog id>` + `params` (keys from the catalog entry) + `role_bindings` (real audiomap anchor seconds) + `copy`.
-- **free_design** — `free_design: { dominant_system, primitives: [catalog ids], density_topology }` + `anchors` (real beat / onset seconds) + `copy`.
-- **asset** — `asset: { treatment, clips: [public/…], anchors?, overlay_copy? }`. `treatment` ∈ `beat_cut` (one clip per anchor — only on a `beat_cut` frame) | `ken_burns` (slow push — fits `phrase_flow`) | `bg_under_text` (clip dimmed behind a template / free group). See [`montage.md`](montage.md).
+- **template**——`template: <catalog id>` + `params`（来自目录条目的键）+ `role_bindings`（真实音频锚点秒数）+ `copy`。
+- **free_design**——`free_design: { dominant_system, primitives: [catalog ids], density_topology }` + `anchors`（真实节拍/起始秒数）+ `copy`。
+- **asset**——`asset: { treatment, clips: [public/…], anchors?, overlay_copy? }`。`treatment` ∈ `beat_cut`（每个锚点一个片段——仅当在 `beat_cut` 帧上）| `ken_burns`（慢推——适合 `phrase_flow`）| `bg_under_text`（在模板/自由组后面调暗的片段）。参见 [`montage.md`](montage.md)。
 
-## Rules
+## 规则
 
-- Frames tile the track (gap-free, first at 0, last at `duration_s`); a frame's groups tile its span; no group < ~1 bar; no group boundary inside a `rolls[]` run.
-- `params` keys come from the template's [`template-catalog.md`](template-catalog.md) entry.
-- All anchor seconds are **track seconds from `audiomap.json`** — the worker converts to frame-local by subtracting the frame start.
-- A `phrase_flow` frame MUST NOT use `beat_cut` asset treatment or per-onset hard cuts.
-- The brand `style` is set once; every group's palette draws from it.
-- Reviewable prose-plus-data; keep it scannable. No GSAP, no millisecond timing.
+- 帧平铺曲目（无间隙，第一个在 0，最后一个在 `duration_s`）；帧的组平铺其跨度；不允许组 < 约 1 小节；不允许组边界在 `rolls[]` 运行内部。
+- `params` 键来自模板的 [`template-catalog.md`](template-catalog.md) 条目。
+- 所有锚点秒数是来自 `audiomap.json` 的**曲目秒数**——worker 通过减去帧开始转换为帧本地时间。
+- `phrase_flow` 帧**不能**使用 `beat_cut` 资源处理方式或每次起始硬切。
+- 品牌 `style` 设置一次；每个组的调色板从中提取。
+- 可审核的散文加数据；保持可扫描性。没有 GSAP，没有毫秒级时序。
 
-## Self-check (the planner runs `validate-plan.mjs`)
+## 自我检查（规划者运行 `validate-plan.mjs`）
 
-- frontmatter has `compositionId`, `duration_s` (== audiomap), `canvas`, `style`.
-- every frame has `span_sec` + `src` + positive `duration` + `pacing` + ≥1 group; frames tile the track.
-- every group is exactly one of template / free_design / asset; template ids exist in the catalog; anchors are real audiomap seconds; `phrase_flow` frames have no `beat_cut`.
+- 前置元数据有 `compositionId`、`duration_s`（== audiomap）、`canvas`、`style`。
+- 每个帧有 `span_sec` + `src` + 正 `duration` + `pacing` + ≥1 组；帧平铺曲目。
+- 每个组正好是 template / free_design / asset 之一；模板 id 存在于目录中；锚点是真实的 audiomap 秒数；`phrase_flow` 帧没有 `beat_cut`。

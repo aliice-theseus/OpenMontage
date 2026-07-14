@@ -1,24 +1,23 @@
 ---
 name: character-rigging
-description: Build data-driven 2D character rigs for local animation: parts, pivots, layers, constraints, views, and reusable rig packages.
+description: 构建数据驱动的二维角色绑定系统用于本地动画：部件、枢轴点、图层、约束、视角和可复用的绑定包。
 license: MIT
 ---
 
-# Character Rigging
+# 角色绑定
 
-Use this skill when building OpenMontage `rig_plan` artifacts or renderer input
-for local 2D character animation.
+在构建 OpenMontage `rig_plan` 制品或为本地二维角色动画构建渲染器输入时使用此技能。
 
-## Proven Patterns
+## 成熟模式
 
-- Keep runtime code generic; make each character a data package.
-- Split characters into independently transformable parts.
-- Define pivots in the same coordinate space as the artwork.
-- Store constraints on moving parts to prevent impossible rotations.
-- Keep layer order explicit; do not rely on SVG source order after generation.
-- Start with one view and add views only when the shot list requires them.
+- 保持运行时代码通用化；将每个角色做成一个数据包。
+- 将角色拆分为可独立变换的部件。
+- 在与美术作品相同的坐标空间中定义枢轴点。
+- 在运动部件上存储约束以防止不可能的旋转。
+- 保持图层顺序显式；不要在生成后依赖 SVG 源顺序。
+- 从一个视角开始，仅在镜头列表需要时添加更多视角。
 
-## Rig Package
+## 绑定包
 
 ```json
 {
@@ -36,18 +35,15 @@ for local 2D character animation.
 }
 ```
 
-## Quality Checklist
+## 质量检查清单
 
-- Every moving part has a pivot.
-- Every child part has a parent where hierarchy matters.
-- Mouth shapes are separate assets or separate path groups.
-- Eyes and pupils are separate when gaze needs to change.
-- Props are separate if the character touches or carries them.
+- 每个运动部件都有枢轴点。
+- 在层级关系重要的地方，每个子部件都有父部件。
+- 嘴型是单独的资产或单独的路径组。
+- 当视线需要变化时，眼睛和瞳孔是分开的。
+- 如果角色触摸或携带道具，道具是分离的。
 
-## Sources
+## 参考资料
 
-- SVG transform-origin behavior is browser-defined and can be sensitive to
-  coordinate space; prefer explicit SVG-coordinate pivots when using GSAP
-  `svgOrigin`: https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/
-- Remotion animations must be frame-driven and deterministic via current frame:
-  https://www.remotion.dev/docs/use-current-frame
+- SVG transform-origin 行为由浏览器定义，对坐标空间敏感；使用 GSAP `svgOrigin` 时，优先使用显式的 SVG 坐标枢轴点：https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/
+- Remotion 动画必须通过当前帧实现帧驱动和确定性：https://www.remotion.dev/docs/use-current-frame

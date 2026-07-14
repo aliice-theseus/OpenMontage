@@ -1,6 +1,6 @@
-# Pastel / Soft
+# 粉彩 / 柔和
 
-Fashion, beauty, lifestyle, wellness content.
+时尚、美容、生活方式、健康内容。
 
 ```
 #CDB4DB #FFC8DD #FFAFCC #BDE0FE #A2D2FF

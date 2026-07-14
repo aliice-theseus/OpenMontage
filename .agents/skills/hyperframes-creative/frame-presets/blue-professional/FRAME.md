@@ -2,11 +2,11 @@
 version: alpha
 name: Blue Professional — Frame (video / frame layer)
 description: >
-  Video-first companion to Blue Professional's design.md. The unit is the frame (1920×1080). Atoms
-  are identical and sacred — the warm cream canvas, a single saturated cobalt (#1e2bfa) as the only
-  accent, the three-step gray text ladder, Space Grotesk (display/numerals/chrome) + Inter (body),
-  soft cobalt-tinted cards (4% fill / 20% border / 10–14px radius) with NO shadows, pill chrome, and
-  the cobalt progress bar. Composition + frame scale rewritten. Motion out of scope.
+  Blue Professional 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣 — 暖奶油画布、单一饱和钴蓝 (#1e2bfa) 作为唯一
+  强调色、三步灰文本阶梯、Space Grotesk (展示/数字/铬色) + Inter (正文)、
+  柔和钴蓝着色卡片 (4% 填充 / 20% 边框 / 10-14px 圆角) 无阴影、药丸铬色、
+  钴蓝进度条。构图 + 帧比例已重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -110,29 +110,22 @@ components:
     description: "Persistent progress strip."
 ---
 
-# Blue Professional — Frame (video / frame layer)
+# Blue Professional — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Blue Professional at frame scale is a **consulting-grade system: restraint with one strong
-commitment.** A warm cream canvas and a single saturated cobalt that carries every accent —
-eyebrow, metric, CTA, chart fill, progress bar. No secondary brand color, no pastels, just cream,
-cobalt, and a tight ladder of grays. The register is investment-research / McKinsey briefing:
-measured, data-dense without crowding, executive-readable at distance.
+帧尺度下的 Blue Professional 是一个**咨询级系统：克制中带着一个强有力的承诺。** 暖奶油画布和单一饱和钴蓝色承载每一个强调色——眉标、指标、CTA、图表填充、进度条。无次要品牌颜色，无粉彩，只有奶油色、钴蓝色和紧凑的灰色阶梯。语域是投资研究 / McKinsey 简报：有分寸、数据密集而不拥挤、远距离高管可读。
 
-The voice is two faces in fixed roles: **Space Grotesk** (display, every numeral, all chrome —
-eyebrows uppercase 0.08em) and **Inter** (body, muted gray, line 1.6). Headlines are near-black;
-cobalt is reserved for accent moments. Depth is **soft and tinted** — 4% cobalt card fills with 20%
-cobalt borders and 10–14px radii — never shadowed. The lack of harsh shadows is the premium signal.
+声音是两个固定角色的面孔：**Space Grotesk**（展示、每个数字、所有铬色——眉标大写 0.08em）和 **Inter**（正文、柔和灰、行高 1.6）。标题近黑色；钴蓝色保留给强调时刻。深度是**柔和且着色的**——4% 钴蓝卡片填充带 20% 钴蓝边框和 10-14px 圆角——从不阴影。缺乏生硬阴影是高级信号。
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Warm cream ground** on every frame; **single cobalt** as the only accent.
-- **Space Grotesk** (display/numerals/chrome) + **Inter** (body) — near-black headlines, cobalt numerals.
-- **Tinted cards** — cobalt 4% fill, cobalt 20% 1.5px border, 10–14px radius, **no shadow**.
-- **Pill chrome** (100px) — tag pills + the one solid cobalt CTA; cobalt **progress bar**.
-- **Soft rounded corners everywhere** (no square corners save the progress bar).
-- **Atmosphere** (diagonal panel, dot grid, concentric rings) on cover/closing only.
+- **暖奶油底色**在每一帧上；**单一钴蓝色**作为唯一强调色。
+- **Space Grotesk**（展示/数字/铬色）+ **Inter**（正文）——近黑色标题、钴蓝数字。
+- **着色卡片**——钴蓝 4% 填充、钴蓝 20% 1.5px 边框、10-14px 圆角、**无阴影**。
+- **药丸铬色**（100px）——标签药丸 + 一个实色钴蓝 CTA；钴蓝**进度条**。
+- **柔和圆角无处不在**（除进度条外无方角）。
+- **氛围**（对角面板、点网格、同心环）仅在封面/结尾。
 
 ## The Frame
 

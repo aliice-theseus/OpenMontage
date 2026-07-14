@@ -1,15 +1,15 @@
 ---
-title: Use SWR for Automatic Deduplication
+title: 使用 SWR 进行自动去重
 impact: MEDIUM-HIGH
-impactDescription: automatic deduplication
+impactDescription: 自动去重
 tags: client, swr, deduplication, data-fetching
 ---
 
-## Use SWR for Automatic Deduplication
+## 使用 SWR 进行自动去重
 
-SWR enables request deduplication, caching, and revalidation across component instances.
+SWR 支持跨组件实例的请求去重、缓存和重新验证。
 
-**Incorrect (no deduplication, each instance fetches):**
+**错误做法（无去重，每个实例都单独获取）：**
 
 ```tsx
 function UserList() {
@@ -22,7 +22,7 @@ function UserList() {
 }
 ```
 
-**Correct (multiple instances share one request):**
+**正确做法（多个实例共享一个请求）：**
 
 ```tsx
 import useSWR from 'swr'
@@ -32,7 +32,7 @@ function UserList() {
 }
 ```
 
-**For immutable data:**
+**对于不可变数据：**
 
 ```tsx
 import { useImmutableSWR } from '@/lib/swr'
@@ -42,15 +42,15 @@ function StaticContent() {
 }
 ```
 
-**For mutations:**
+**对于修改操作：**
 
 ```tsx
 import { useSWRMutation } from 'swr/mutation'
 
 function UpdateButton() {
   const { trigger } = useSWRMutation('/api/user', updateUser)
-  return <button onClick={() => trigger()}>Update</button>
+  return <button onClick={() => trigger()}>更新</button>
 }
 ```
 
-Reference: [https://swr.vercel.app](https://swr.vercel.app)
+参考：[https://swr.vercel.app](https://swr.vercel.app)

@@ -1,37 +1,37 @@
-# asset-fusion — category module (search-driven · the net-new IP)
+# asset-fusion — 类别模块（搜索驱动 · 全新 IP）
 
-**A real asset's geometry _becomes_ the chart** — RWA diegetic fusion (the straw becomes a gauge; a glass's liquid becomes a pie). Not in any catalog; the genuinely net-new capability. ~5–8s.
+**真实资产的几何形状_变成_图表** — RWA 叙事融合（吸管变成仪表；玻璃杯中的液体变成饼图）。不在任何目录中；真正全新的能力。约5–8秒。
 
-## Source (Step 2)
+## 素材来源（第2步）
 
-Search or generate one **hero asset** with strong geometric affordance. `asset_needs`: `{ kind: image, query|generate, treatment: cutout|none }`. Freeze it project-local.
+搜索或生成一个具有强几何适配性的**主角资产**。`asset_needs`：`{ kind: image, query|generate, treatment: cutout|none }`。冻结为项目本地路径。
 
-## Plan (Director Part 2) — the fusion logic
+## 规划（Director 第2部分）— 融合逻辑
 
-1. Classify the **data type** (temporal / quantitative / proportion / spatial).
-2. Read the asset's **geometric affordance** — linearity → timeline/gauge · volume/texture → pie · height → bar · container → exploded view.
-3. `element_positions`: **GROUND with the locate protocol — never eyeball pixel coords.** Read **`grounding/PROTOCOL.md`** and run the loop with `node grounding/locate.mjs` (`overlay` → read strips → `region` → read crop → `final` → **`mark` + verify**). Zero keys/deps assumed (node + ffmpeg only); the optional `auto` fast path exists only when `GEMINI_API_KEY` happens to be set. Why: eyeballing put rings off-subject (~16–24% center error on weak vision models); the grid loop pulls it to ~2–4% (measured E2E: eyeball 6.5% → protocol 2.3% avg center error, no case worse).
-4. **Eyedropper palette** from the asset (never generic #FFF/#000).
+1. 分类**数据类型**（时间性/定量/比例/空间）。
+2. 读取资产的**几何适配性** — 线性 → 时间线/仪表 · 体积/纹理 → 饼图 · 高度 → 条形图 · 容器 → 分解视图。
+3. `element_positions`：**使用定位协议确定位置 — 绝不目测像素坐标。** 阅读 **`grounding/PROTOCOL.md`** 并运行循环，使用 `node grounding/locate.mjs`（`overlay` → 读取条带 → `region` → 读取裁剪 → `final` → **`mark` + 验证**）。假设零密钥/依赖（仅 node + ffmpeg）；仅当环境中恰好设置了 `GEMINI_API_KEY` 时，可选的 `auto` 快速路径才存在。原因：目测使环形偏离目标（弱视觉模型约16–24%中心误差）；网格循环将其拉到约2–4%（E2E 测量：目测 6.5% → 协议 2.3% 平均中心误差，无更差案例）。
+4. **从资产取色**（绝不使用通用 #FFF/#000）。
 
-## Highlight + circle recipe (the common case)
+## 高亮 + 圆圈配方（常见情况）
 
-"Ring / spotlight object X in a real image" → use the drop-in template **`samples/asset-fusion/_ref-circle-highlight.html`**: set `CFG.box` (from the locate protocol), `CFG.label`, `CFG.asset`, EVEN `CFG.W/H`, `CFG.mode` (`full` = ring+connector+label+brackets+scanlines, `circle` = ring only). It computes the radial wash, the amber double over-stroke ring, connector, callout, and corner-bracket reticle from the box. The whole pipeline is: locate (PROTOCOL.md) → fill template → render.
+"在真实图像中圈出/聚光灯对象 X" → 使用即用模板 **`samples/asset-fusion/_ref-circle-highlight.html`**：设置 `CFG.box`（来自定位协议）、`CFG.label`、`CFG.asset`、EVEN `CFG.W/H`、`CFG.mode`（`full` = 环 + 连接器 + 标签 + 括号 + 扫描线，`circle` = 仅环）。它从 box 计算径向冲洗、琥珀色双勾边环、连接器、标注和角括号十字线。整个流水线是：定位（PROTOCOL.md）→ 填充模板 → 渲染。
 
-## Render gotchas (codified — skipping these breaks the render)
+## 渲染陷阱（已整理 — 跳过这些会破坏渲染）
 
-- **EVEN width & height** — odd width _or height_ (e.g. 1400×933) → `ffmpeg` encode fails / distorts. Resize the asset/stage to even dims (1400×932).
-- **`data-width`/`data-height` must be STATIC HTML attrs on the stage** — the renderer's StaticGuard reads them at compile time, before JS runs. Setting them via `setAttribute` is too late → render falls back to portrait 1080×1920 and distorts. (The circle-highlight template now hard-codes them; keep them equal to `CFG.W/H`.)
-- **Draw-on (`stroke-dashoffset`) must be `autoAlpha:0`-gated** — `getTotalLength()` can read 0 before layout → dash disabled → a solid line shows at t=0. Gate every draw-on element with `autoAlpha:0` until it draws, and fall back `getTotalLength() || <const>`.
-- **CSS var tween scope** — `gsap.to(":root", {"--x":..})` won't reach an element that has its own inline `--x`; tween the var on the element itself.
-- **No camera push under a fixed overlay** — scaling the image while the ring/wash stay fixed drifts the target out of the ring. Either skip the push or scale the whole scene together.
-- Lossless delivery: `--format mov` (ProRes); `mp4` is lossy.
+- **偶数宽度和高度** — 奇数宽度_或_高度（例如 1400×933）→ `ffmpeg` 编码失败/失真。将资产/舞台调整为偶数尺寸（1400×932）。
+- **`data-width`/`data-height` 必须是舞台上的静态 HTML 属性** — 渲染器的 StaticGuard 在编译时、JS 运行之前读取它们。通过 `setAttribute` 设置它们为时已晚 → 渲染回退到竖屏 1080×1920 并失真。（circle-highlight 模板现在已硬编码它们；保持它们等于 `CFG.W/H`。）
+- **绘制动画（`stroke-dashoffset`）必须由 `autoAlpha:0` 门控** — `getTotalLength()` 可能在布局前读取 0 → dash 被禁用 → t=0 时显示实线。用 `autoAlpha:0` 门控每个绘制元素直到它开始绘制，并回退 `getTotalLength() || <const>`。
+- **CSS 变量补间作用域** — `gsap.to(":root", {"--x":..})` 不会到达具有自己内联 `--x` 的元素；在元素本身上补间变量。
+- **固定覆盖层下无摄像机推进** — 缩放图像而环/冲洗保持固定会导致目标漂移出环。要么跳过推进，要么整体缩放整个场景。
+- 无损交付：`--format mov`（ProRes）；`mp4` 是有损的。
 
-## Vocabulary / leans on
+## 词汇表 / 依赖
 
-- Borrow the annotation kit from registry **`north-korea-locked-down`** (hand-drawn scribble circle draw-on, pop-up label + pointer, editorial wash, camera push).
-- Primitives: gauge fill / marker-rise along the affordance · connector (data → asset point) · diegetic chart fused to the asset's geometry.
-- Adapt the diegetic chart to each asset's affordance (read the geometry, fuse the data into it).
+- 从注册表 **`north-korea-locked-down`** 借用标注工具包（手绘圆圈绘制、弹出标签 + 指针、编辑冲洗、摄像机推进）。
+- 原语：仪表填充/沿适配性标记升起 · 连接器（数据 → 资产点）· 融合到资产几何形状中的叙事图表。
+- 使叙事图表适应每个资产的适配性（读取几何形状，将数据融合到其中）。
 
-## Build (reuse-first + hand-author the affordance)
+## 构建（优先复用 + 手动编写适配器）
 
-**Two layers**: asset (z0, full-bleed) + data graphics (z1+) fused to its geometry, anchored by `element_positions`; connectors/scribble physically tie the data to the asset; asset stays visible. Reference impl: the prototype `fusion-demo/index-annotated.html` (straw → gauge + borrowed annotation kit).
+**两层**：资产（z0，全出血）+ 数据图形（z1+）融合到其几何形状上，由 `element_positions` 锚定；连接器/手绘线将数据物理绑定到资产；资产保持可见。参考实现：原型 `fusion-demo/index-annotated.html`（吸管 → 仪表 + 借用标注工具包）。

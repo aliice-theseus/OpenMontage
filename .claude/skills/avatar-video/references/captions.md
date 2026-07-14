@@ -3,13 +3,13 @@ name: captions
 description: Auto-generated captions and subtitle options for HeyGen videos
 ---
 
-# Video Captions
+# 视频字幕
 
-HeyGen can automatically generate captions (subtitles) for your videos, improving accessibility and engagement.
+HeyGen 可以自动为您的视频生成字幕，提高可访问性和参与度。
 
-## Enabling Captions
+## 启用字幕
 
-Captions can be enabled when generating a video:
+在生成视频时可以启用字幕：
 
 ```typescript
 const videoConfig = {
@@ -32,7 +32,7 @@ const videoConfig = {
 };
 ```
 
-## Caption Configuration Options
+## 字幕配置选项
 
 ```typescript
 interface CaptionConfig {
@@ -53,9 +53,9 @@ interface CaptionConfig {
 }
 ```
 
-## Caption Styles
+## 字幕样式
 
-### Basic Captions
+### 基本字幕
 
 ```typescript
 const config = {
@@ -64,7 +64,7 @@ const config = {
 };
 ```
 
-### Styled Captions
+### 带样式的字幕
 
 ```typescript
 const config = {
@@ -82,9 +82,9 @@ const config = {
 };
 ```
 
-## Multi-Language Captions
+## 多语言字幕
 
-For videos in different languages, captions are generated based on the voice language:
+对于不同语言的视频，字幕根据语音语言生成：
 
 ```typescript
 // Spanish video with Spanish captions
@@ -107,11 +107,11 @@ const spanishConfig = {
 };
 ```
 
-## Working with SRT Files
+## 使用 SRT 文件
 
-### SRT File Format
+### SRT 文件格式
 
-Standard SRT format:
+标准 SRT 格式：
 
 ```srt
 1
@@ -127,9 +127,9 @@ automatic captions generated.
 They sync with the audio.
 ```
 
-### Using Custom SRT
+### 使用自定义 SRT
 
-For video translation, you can provide your own SRT:
+对于视频翻译，您可以提供自己的 SRT：
 
 ```typescript
 const translationConfig = {
@@ -140,11 +140,11 @@ const translationConfig = {
 };
 ```
 
-## Caption Positioning
+## 字幕定位
 
-### Bottom (Default)
+### 底部（默认）
 
-Standard position for most videos:
+大多数视频的标准位置：
 
 ```typescript
 caption: {
@@ -155,9 +155,9 @@ caption: {
 }
 ```
 
-### Top
+### 顶部
 
-For videos where bottom space is occupied:
+适用于底部空间被占用的视频：
 
 ```typescript
 caption: {
@@ -168,15 +168,15 @@ caption: {
 }
 ```
 
-## Accessibility Best Practices
+## 无障碍最佳实践
 
-1. **Always enable captions** - Improves accessibility for deaf/hard-of-hearing viewers
-2. **Use high contrast** - White text on dark background or vice versa
-3. **Readable font size** - At least 24px for standard video, larger for mobile
-4. **Don't cover important content** - Position captions away from key visual elements
-5. **Sync timing** - Ensure captions match audio timing accurately
+1. **始终启用字幕** - 提高对聋哑/听障观众的可访问性
+2. **使用高对比度** - 深色背景上的白色文字，或反之
+3. **可读的字体大小** - 标准视频至少 24px，移动端更大
+4. **不要遮盖重要内容** - 将字幕放置在关键视觉元素之外
+5. **同步时间** - 确保字幕与音频时间精确匹配
 
-## Caption Helper Functions
+## 字幕辅助函数
 
 ```typescript
 interface CaptionStyle {
@@ -226,13 +226,13 @@ function createCaptionConfig(preset: keyof typeof captionPresets) {
 }
 ```
 
-## Social Media Caption Considerations
+## 社交媒体字幕注意事项
 
 ### TikTok / Instagram Reels
 
-- Position captions in center or upper portion
-- Avoid bottom 20% (covered by UI elements)
-- Use larger font sizes for mobile viewing
+- 将字幕定位在中间或上部
+- 避免底部 20%（被 UI 元素覆盖）
+- 移动端观看时使用更大的字体大小
 
 ```typescript
 const socialCaptions = {
@@ -246,24 +246,24 @@ const socialCaptions = {
 
 ### YouTube
 
-- Standard bottom captions work well
-- YouTube also supports closed captions upload
+- 标准底部字幕效果良好
+- YouTube 也支持上传隐藏式字幕
 
 ### LinkedIn
 
-- Captions highly recommended (many watch without sound)
-- Professional styling preferred
+- 强烈推荐使用字幕（许多人无声观看）
+- 首选专业风格
 
-## Limitations
+## 限制
 
-- Caption styles may be limited depending on your subscription tier
-- Some advanced caption features may require the web interface
-- Multi-speaker caption detection may have limited availability
-- Caption accuracy depends on audio quality and speech clarity
+- 字幕样式可能因订阅等级而受限
+- 某些高级字幕功能可能需要使用网页界面
+- 多人说话的字幕检测可能受限
+- 字幕准确性取决于音频质量和语音清晰度
 
-## Integration with Video Translation
+## 与视频翻译集成
 
-When using video translation, captions are automatically handled:
+使用视频翻译时，字幕会自动处理：
 
 ```typescript
 // Video translation includes caption generation
@@ -274,4 +274,4 @@ const translationConfig = {
 };
 ```
 
-See the **video-translate** skill for more details on video translation.
+有关视频翻译的更多详细信息，请参阅 **video-translate** 技能。

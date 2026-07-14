@@ -1,15 +1,14 @@
 ---
-title: Lift State into Provider Components
+title: 将状态提升到 Provider 组件中
 impact: HIGH
-impactDescription: enables state sharing outside component boundaries
+impactDescription: 实现组件边界外的状态共享
 tags: composition, state, context, providers
 ---
 
-## Lift State into Provider Components
+## 将状态提升到 Provider 组件中
 
-Move state management into dedicated provider components. This allows sibling
-components outside the main UI to access and modify state without prop drilling
-or awkward refs.
+将状态管理移到专门的 provider 组件中。这允许主 UI 外部的兄弟组件访问和修改状态，
+而无需属性逐层传递或尴尬的 refs。
 
 **Incorrect (state trapped inside component):**
 

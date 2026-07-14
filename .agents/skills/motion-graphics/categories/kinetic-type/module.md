@@ -1,19 +1,19 @@
-# kinetic-type — category module
+# kinetic-type — 类别模块
 
-Text is the hero; typography + motion carry the message. Usually asset-free (`asset_needs: []`).
+文字是主角；排版 + 动态承载信息。通常无资产（`asset_needs: []`）。
 
-## Plan (Director)
+## 规划（Director）
 
-- **Style first.** If the project has a **`design.md` / `frame.md`** (precedence: `frame.md` → `design.md` → `DESIGN.md`), READ it and use its **exact palette / fonts / constraints** — do not invent. No spec → pick a named style, or ask: mood + light/dark + any brand color/font. (Style is an input the case must exercise; the same shot in two `design.md`s should look different.)
-- Segment the copy into scenes by meaning / breath (EN ~3–7 words; ZH ~4–12 chars). Tag each scene **Hook → Build → Punch → Resolve**.
-- 1–2 `emphasis_words` per scene. Per scene: `emotion` + `motion` (free-form) + `beats`.
+- **先定风格。** 如果项目有 **`design.md`/`frame.md`**（优先级：`frame.md` → `design.md` → `DESIGN.md`），读取它并使用其**精确的调色板/字体/约束** — 不要自行发明。无规格 → 选择一个命名风格，或询问：氛围 + 亮色/暗色 + 任何品牌颜色/字体。（风格是案例必须练习的输入；同一个镜头在两个不同的 `design.md` 下应看起来不同。）
+- 按含义/换气将文案分割成场景（英文约3–7个词；中文约4–12个字）。标记每个场景 **钩子 → 构建 → 重击 → 收束**。
+- 每场景1–2个 `emphasis_words`。每场景：`emotion` + `motion`（自由形式）+ `beats`。
 
-## Vocabulary
+## 词汇表
 
-Motion primitives + registry blocks: **`references/motion-vocabulary.md`** (slide / scale / fade / blur / typewriter / word_reveal / wave / bounce / slam / scale_pulse / shake / glow / color_shift, plus the 18 `caption-*` blocks).
+动态原语 + 注册表块：**`references/motion-vocabulary.md`**（slide / scale / fade / blur / typewriter / word_reveal / wave / bounce / slam / scale_pulse / shake / glow / color_shift，加上18个 `caption-*` 块）。
 
-## Build (reuse-first)
+## 构建（优先复用）
 
-- Prefer a **`caption-*` block** when one fits (`caption-kinetic-slam` / `caption-editorial-emphasis` / …): `npx hyperframes add` + set words / `emphasis_words` / palette / font.
-- Else hand-author: one full-duration `.clip`; a `.group` per scene (flex-centered); words as spans; `gsap.from()` entrances per the scene `motion`; emphasis words → `glow` / `scale_pulse` on the beat; **seek-safe reveal** (`autoAlpha`). Honor `references/builder-contract.md`.
-- Reference impl: prototype `v0-text-motion-demo` + `pipeline-demo`.
+- 当有合适的 **`caption-*` 块**时优先使用（`caption-kinetic-slam`/`caption-editorial-emphasis`/…）：`npx hyperframes add` + 设置文字/`emphasis_words`/调色板/字体。
+- 否则手动编写：一个全时长的 `.clip`；每场景一个 `.group`（flex 居中）；文字作为 span；按场景 `motion` 确定的 `gsap.from()` 入场；强调词 → 在节拍上 `glow`/`scale_pulse`；**seek 安全揭示**（`autoAlpha`）。遵守 `references/builder-contract.md`。
+- 参考实现：原型 `v0-text-motion-demo` + `pipeline-demo`。

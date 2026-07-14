@@ -1,38 +1,38 @@
 ---
-title: Defer Non-Critical Work with requestIdleCallback
+title: 使用 requestIdleCallback 延迟非关键工作
 impact: MEDIUM
-impactDescription: keeps UI responsive during background tasks
+impactDescription: 在后台任务期间保持 UI 响应
 tags: javascript, performance, idle, scheduling, analytics
 ---
 
-## Defer Non-Critical Work with requestIdleCallback
+## 使用 requestIdleCallback 延迟非关键工作
 
-**Impact: MEDIUM (keeps UI responsive during background tasks)**
+**影响：中（MEDIUM）（在后台任务期间保持 UI 响应）**
 
-Use `requestIdleCallback()` to schedule non-critical work during browser idle periods. This keeps the main thread free for user interactions and animations, reducing jank and improving perceived performance.
+使用 `requestIdleCallback()` 在浏览器空闲期间安排非关键工作。这使主线程有空处理用户交互和动画，减少卡顿并改善感知性能。
 
-**Incorrect (blocks main thread during user interaction):**
+**不正确（在用户交互期间阻塞主线程）：**
 
 ```typescript
 function handleSearch(query: string) {
   const results = searchItems(query)
   setResults(results)
 
-  // These block the main thread immediately
+  // 这些立即阻塞主线程
   analytics.track('search', { query })
   saveToRecentSearches(query)
   prefetchTopResults(results.slice(0, 3))
 }
 ```
 
-**Correct (defers non-critical work to idle time):**
+**正确（将非关键工作延迟到空闲时间）：**
 
 ```typescript
 function handleSearch(query: string) {
   const results = searchItems(query)
   setResults(results)
 
-  // Defer non-critical work to idle periods
+  // 将非关键工作延迟到空闲时段
   requestIdleCallback(() => {
     analytics.track('search', { query })
   })
@@ -47,30 +47,30 @@ function handleSearch(query: string) {
 }
 ```
 
-**With timeout for required work:**
+**带超时以确保工作执行：**
 
 ```typescript
-// Ensure analytics fires within 2 seconds even if browser stays busy
+// 确保分析在 2 秒内触发，即使浏览器保持忙碌
 requestIdleCallback(
   () => analytics.track('page_view', { path: location.pathname }),
   { timeout: 2000 }
 )
 ```
 
-**Chunking large tasks:**
+**拆分大型任务：**
 
 ```typescript
 function processLargeDataset(items: Item[]) {
   let index = 0
 
   function processChunk(deadline: IdleDeadline) {
-    // Process items while we have idle time (aim for <50ms chunks)
+    // 在有空闲时间时处理项目（目标 <50ms 每块）
     while (index < items.length && deadline.timeRemaining() > 0) {
       processItem(items[index])
       index++
     }
 
-    // Schedule next chunk if more items remain
+    // 如果还有剩余项目，安排下一块
     if (index < items.length) {
       requestIdleCallback(processChunk)
     }
@@ -80,26 +80,26 @@ function processLargeDataset(items: Item[]) {
 }
 ```
 
-**With fallback for unsupported browsers:**
+**不支持的浏览器的回退：**
 
 ```typescript
 const scheduleIdleWork = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1))
 
 scheduleIdleWork(() => {
-  // Non-critical work
+  // 非关键工作
 })
 ```
 
-**When to use:**
+**何时使用：**
 
-- Analytics and telemetry
-- Saving state to localStorage/IndexedDB
-- Prefetching resources for likely next actions
-- Processing non-urgent data transformations
-- Lazy initialization of non-critical features
+- 分析和遥测
+- 将状态保存到 localStorage/IndexedDB
+- 预取下一步可能用到的资源
+- 处理非紧急的数据转换
+- 非关键功能的惰性初始化
 
-**When NOT to use:**
+**何时不使用：**
 
-- User-initiated actions that need immediate feedback
-- Rendering updates the user is waiting for
-- Time-sensitive operations
+- 需要即时反馈的用户发起操作
+- 用户正在等待的渲染更新
+- 时间敏感的操作

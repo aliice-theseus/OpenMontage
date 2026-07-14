@@ -1,6 +1,6 @@
-# Clean / Corporate
+# 干净 / 企业
 
-Explainers, tutorials, presentations, professional content.
+说明视频、教程、演示、专业内容。
 
 ```
 #FFFCF2 #CCC5B9 #403D39 #252422 #EB5E28

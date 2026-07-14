@@ -1,22 +1,22 @@
 ---
-title: Use defer or async on Script Tags
+title: 在 Script 标签上使用 defer 或 async
 impact: HIGH
-impactDescription: eliminates render-blocking
+impactDescription: 消除渲染阻塞
 tags: rendering, script, defer, async, performance
 ---
 
-## Use defer or async on Script Tags
+## 在 Script 标签上使用 defer 或 async
 
-**Impact: HIGH (eliminates render-blocking)**
+**影响：高（消除渲染阻塞）**
 
-Script tags without `defer` or `async` block HTML parsing while the script downloads and executes. This delays First Contentful Paint and Time to Interactive.
+没有 `defer` 或 `async` 的 script 标签在脚本下载和执行时会阻塞 HTML 解析。这会延迟首次内容绘制（FCP）和交互时间（TTI）。
 
-- **`defer`**: Downloads in parallel, executes after HTML parsing completes, maintains execution order
-- **`async`**: Downloads in parallel, executes immediately when ready, no guaranteed order
+- **`defer`**：并行下载，HTML 解析完成后执行，保持执行顺序
+- **`async`**：并行下载，准备好后立即执行，不保证执行顺序
 
-Use `defer` for scripts that depend on DOM or other scripts. Use `async` for independent scripts like analytics.
+对依赖 DOM 或其他脚本的脚本使用 `defer`。对独立的脚本如分析工具使用 `async`。
 
-**Incorrect (blocks rendering):**
+**错误做法（阻塞渲染）：**
 
 ```tsx
 export default function Document() {
@@ -26,31 +26,31 @@ export default function Document() {
         <script src="https://example.com/analytics.js" />
         <script src="/scripts/utils.js" />
       </head>
-      <body>{/* content */}</body>
+      <body>{/* 内容 */}</body>
     </html>
   )
 }
 ```
 
-**Correct (non-blocking):**
+**正确做法（非阻塞）：**
 
 ```tsx
 export default function Document() {
   return (
     <html>
       <head>
-        {/* Independent script - use async */}
+        {/* 独立脚本 - 使用 async */}
         <script src="https://example.com/analytics.js" async />
-        {/* DOM-dependent script - use defer */}
+        {/* 依赖 DOM 的脚本 - 使用 defer */}
         <script src="/scripts/utils.js" defer />
       </head>
-      <body>{/* content */}</body>
+      <body>{/* 内容 */}</body>
     </html>
   )
 }
 ```
 
-**Note:** In Next.js, prefer the `next/script` component with `strategy` prop instead of raw script tags:
+**注意：** 在 Next.js 中，优先使用 `next/script` 组件配合 `strategy` 属性，而不是原生 script 标签：
 
 ```tsx
 import Script from 'next/script'
@@ -65,4 +65,4 @@ export default function Page() {
 }
 ```
 
-Reference: [MDN - Script element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer)
+参考：[MDN - Script 元素](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#defer)

@@ -1,137 +1,137 @@
 ---
 name: lottie-bodymovin
-description: Use when implementing Disney's 12 animation principles with Lottie animations exported from After Effects
+description: 在实现迪士尼 12 项动画原理时，使用从 After Effects 导出的 Lottie 动画时使用
 ---
 
-# Lottie Animation Principles
+# Lottie 动画原理
 
-Implement all 12 Disney animation principles using Lottie (Bodymovin) for vector animations.
+使用 Lottie（Bodymovin）实现全部 12 项迪士尼动画原理，用于矢量动画。
 
-## 1. Squash and Stretch
+## 1. 挤压与拉伸（Squash and Stretch）
 
-In After Effects before export:
-- Animate Scale X and Y inversely
-- Use expression: `s = transform.scale[1]; [100 + (100-s), s]`
+在导出前的 After Effects 中：
+- 反向动画 Scale X 和 Y
+- 使用表达式：`s = transform.scale[1]; [100 + (100-s), s]`
 
 ```javascript
-// Control at runtime
-lottie.setSpeed(1.5); // affect squash timing
+// 运行时控制
+lottie.setSpeed(1.5); // 影响挤压节奏
 ```
 
-## 2. Anticipation
+## 2. 预备动作（Anticipation）
 
-Structure your AE composition:
-1. **Frames 0-10**: Wind-up pose
-2. **Frames 10-40**: Main action
-3. **Frames 40-50**: Settle
+构建 AE 合成：
+1. **帧 0-10**：蓄力姿态
+2. **帧 10-40**：主要动作
+3. **帧 40-50**：稳定
 
 ```javascript
-// Play anticipation segment
+// 播放预备动作片段
 anim.playSegments([0, 10], true);
 setTimeout(() => anim.playSegments([10, 50], true), 200);
 ```
 
-## 3. Staging
+## 3. 演出布局（Staging）
 
 ```javascript
-// Layer multiple Lotties
+// 分层多个 Lottie 动画
 <div className="scene">
   <Lottie animationData={background} style={{ opacity: 0.6 }} />
   <Lottie animationData={hero} style={{ zIndex: 10 }} />
 </div>
 ```
 
-## 4. Straight Ahead / Pose to Pose
+## 4. 连续动作与关键姿态（Straight Ahead / Pose to Pose）
 
-Pose to pose in AE:
-- Set keyframes at key poses
-- Let AE interpolate between
-- Use Easy Ease for smoothing
+AE 中的关键姿态到关键姿态：
+- 在关键姿态处设置关键帧
+- 让 AE 在中间插值
+- 使用 Easy Ease 进行平滑
 
 ```javascript
-// Jump to specific poses
-anim.goToAndStop(25, true); // frame 25
+// 跳转到特定姿态
+anim.goToAndStop(25, true); // 第 25 帧
 ```
 
-## 5. Follow Through and Overlapping Action
+## 5. 跟随动作与重叠动作（Follow Through and Overlapping Action）
 
-In After Effects:
-- Offset child layer keyframes by 2-4 frames
-- Use parenting with delayed expressions
+在 After Effects 中：
+- 将子图层关键帧偏移 2-4 帧
+- 使用带延迟表达的父子关系
 - `thisComp.layer("Parent").transform.position.valueAtTime(time - 0.05)`
 
-## 6. Slow In and Slow Out
+## 6. 缓入缓出（Slow In and Slow Out）
 
-AE Keyframe settings:
-- Select keyframes > Easy Ease (F9)
-- Use Graph Editor to adjust curves
-- Bezier handles control acceleration
+AE 关键帧设置：
+- 选择关键帧 > Easy Ease (F9)
+- 使用图表编辑器调整曲线
+- 贝塞尔手柄控制加速度
 
 ```javascript
-// Adjust playback speed dynamically
-anim.setSpeed(0.5); // slower
-anim.setSpeed(2); // faster
+// 动态调整播放速度
+anim.setSpeed(0.5); // 更慢
+anim.setSpeed(2); // 更快
 ```
 
-## 7. Arc
+## 7. 弧线运动（Arc）
 
-In After Effects:
-- Use motion paths (position property)
-- Convert keyframes to Bezier
-- Pull handles to create arcs
-- Or use "Auto-Orient to Path"
+在 After Effects 中：
+- 使用运动路径（位置属性）
+- 将关键帧转换为贝塞尔曲线
+- 拉动手柄创建弧线
+- 或使用"自动定向到路径"
 
-## 8. Secondary Action
+## 8. 附属动作（Secondary Action）
 
 ```javascript
-// Trigger secondary animation
+// 触发附属动画
 mainAnim.addEventListener('complete', () => {
   secondaryAnim.play();
 });
 
-// Or sync with frame
+// 或与帧同步
 mainAnim.addEventListener('enterFrame', (e) => {
   if (e.currentTime > 15) particleAnim.play();
 });
 ```
 
-## 9. Timing
+## 9. 时间节奏（Timing）
 
 ```javascript
-anim.setSpeed(0.5);  // half speed - dramatic
-anim.setSpeed(1);    // normal
-anim.setSpeed(2);    // double speed - snappy
+anim.setSpeed(0.5);  // 半速 — 戏剧效果
+anim.setSpeed(1);    // 正常
+anim.setSpeed(2);    // 双速 — 灵敏
 
-// Or control frame rate in AE export
-// 24fps = cinematic, 30fps = smooth, 60fps = fluid
+// 或在 AE 导出中控制帧率
+// 24fps = 电影感, 30fps = 流畅, 60fps = 丝滑
 ```
 
-## 10. Exaggeration
+## 10. 夸张（Exaggeration）
 
-In After Effects:
-- Push scale beyond 100% (120-150%)
-- Overshoot rotation
-- Use Overshoot expression
+在 After Effects 中：
+- 将缩放推到 100% 以上（120-150%）
+- 旋转过冲
+- 使用过冲表达式
 - `amp = 15; freq = 3; decay = 5; n = 0; time_start = key(1).time; if (time > time_start) { n = (time - time_start) / thisComp.frameDuration; amp * Math.sin(freq*n) / Math.exp(decay*n/100); } else { 0; }`
 
-## 11. Solid Drawing
+## 11. 扎实的绘画（Solid Drawing）
 
-In After Effects:
-- Use 3D layers
-- Apply perspective camera
-- Animate Z position and rotation
-- Use depth of field
+在 After Effects 中：
+- 使用 3D 图层
+- 应用透视相机
+- 动画 Z 位置和旋转
+- 使用景深
 
-## 12. Appeal
+## 12. 吸引力（Appeal）
 
-Design principles in AE:
-- Smooth curves over sharp angles
-- Consistent timing patterns
-- Pleasing color palette
-- Clean vector shapes
+AE 中的设计原则：
+- 平滑曲线优于尖锐棱角
+- 一致的节奏模式
+- 愉悦的色彩搭配
+- 简洁的矢量形状
 
 ```javascript
-// React Lottie with hover
+// React Lottie 带悬停效果
 <Lottie
   animationData={data}
   onMouseEnter={() => anim.setDirection(1)}
@@ -139,7 +139,7 @@ Design principles in AE:
 />
 ```
 
-## Lottie Implementation
+## Lottie 实现
 
 ```javascript
 import Lottie from 'lottie-react';
@@ -153,11 +153,11 @@ import animationData from './animation.json';
 />
 ```
 
-## Key Lottie Features
+## Lottie 关键特性
 
-- `playSegments([start, end])` - Play frame range
-- `setSpeed(n)` - Control timing
-- `setDirection(1/-1)` - Forward/reverse
-- `goToAndStop(frame)` - Pose control
-- `addEventListener` - Frame events
-- Interactivity via `lottie-interactivity`
+- `playSegments([start, end])` — 播放帧范围
+- `setSpeed(n)` — 控制节奏
+- `setDirection(1/-1)` — 正向/反向
+- `goToAndStop(frame)` — 姿态控制
+- `addEventListener` — 帧事件
+- 通过 `lottie-interactivity` 实现交互

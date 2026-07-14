@@ -1,1308 +1,1305 @@
-# FLUX Best Practices
+# FLUX 最佳实践
 
-**Version 1.0.0**  
+**版本 1.0.0**  
 Black Forest Labs  
-January 2026
+2026 年 1 月
 
-> **Note:**  
-> This document is for AI agents and LLMs to follow when working with  
-> FLUX image generation prompting and workflows. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency.  
-
----
-
-## Abstract
-
-Comprehensive prompting and workflow guide for BFL FLUX image generation models. Covers all FLUX.2 and FLUX.1 models including text-to-image, image-to-image editing, JSON structured prompting, color specification, typography, and multi-reference editing. Each rule includes detailed explanations, examples of effective vs ineffective approaches, and model-specific guidance.
+> **注意：**  
+> 本文档供 AI 代理和 LLM 在使用 FLUX 图像生成提示和工作流时遵循。  
+> 人类也可能发现它有用，但这里的指导针对自动化和一致性进行了优化。
 
 ---
 
-## Table of Contents
+## 摘要
 
-1. [Core Principles](#1-core-principles) - **CRITICAL**
-   - 1.1 [Core FLUX Prompting Principles](#11-core-flux-prompting-principles)
-2. [Model Selection](#2-model-selection) - **HIGH**
-   - 2.1 [FLUX Model Selection Guide](#21-flux-model-selection-guide)
-   - 2.2 [FLUX.1 Model Family](#22-flux1-model-family)
-   - 2.3 [FLUX.2 Model Family](#23-flux2-model-family)
-3. [Text-to-Image Prompting](#3-text-to-image-prompting) - **HIGH**
-   - 3.1 [Text-to-Image (T2I) Prompting](#31-text-to-image-t2i-prompting)
-4. [Image-to-Image Editing](#4-image-to-image-editing) - **HIGH**
-   - 4.1 [Image-to-Image (I2I) Prompting](#41-image-to-image-i2i-prompting)
-5. [JSON Structured Prompting](#5-json-structured-prompting) - **MEDIUM-HIGH**
-   - 5.1 [JSON Structured Prompting](#51-json-structured-prompting)
-6. [Color Specification](#6-color-specification) - **MEDIUM**
-   - 6.1 [Hex Color Prompting](#61-hex-color-prompting)
-7. [Typography and Text](#7-typography-and-text) - **MEDIUM**
-   - 7.1 [Typography and Text Prompting](#71-typography-and-text-prompting)
-8. [Multi-Reference Editing](#8-multi-reference-editing) - **MEDIUM**
-   - 8.1 [Multi-Reference Image Editing](#81-multi-reference-image-editing)
-9. [Positive Prompt Alternatives](#9-positive-prompt-alternatives) - **MEDIUM**
-   - 9.1 [Negative Prompt Alternatives](#91-negative-prompt-alternatives)
+BFL FLUX 图像生成模型的综合提示和工作流指南。涵盖所有 FLUX.2 和 FLUX.1 模型，包括文生图、图生图编辑、JSON 结构化提示、颜色指定、排版和多参考编辑。每条规则都包含详细说明、有效与无效方法的示例以及模型特定指导。
 
 ---
 
-## 1. Core Principles
+## 目录
 
-**Impact: CRITICAL**
-
-Universal prompting principles that apply to all FLUX models. Master these before diving into specific techniques.
-
-### 1.1 Core FLUX Prompting Principles
-
-**Impact: MEDIUM**
-
-These principles apply to all FLUX models and form the foundation of effective prompting.
-
-FLUX does NOT support negative prompts. Always describe what you WANT, not what you don't want.
-
-Build prompts using this structure for consistent results:
-
-**Wrong Approach:**
-
-```text
-a portrait of a woman, no glasses, no hat, no makeup
-```
-
-**Correct Approach:**
-
-```text
-a portrait of a woman with natural skin, clear face, bare head, visible eyes
-```
-
-**Example:**
-
-```text
-A young woman with flowing auburn hair (subject)
-dancing gracefully in mid-leap (action)
-in the style of classical oil painting (style)
-in a moonlit garden with roses (context)
-soft diffused moonlight with subtle rim lighting (lighting)
-medium shot, shallow depth of field (technical)
-```
-
-More specific prompts yield dramatically better results.
-
-**Vague: Poor Results**
-
-```text
-a cat sitting
-```
-
-**Specific: Excellent Results**
-
-```text
-A fluffy orange tabby cat with bright green eyes sitting regally on a vintage
-velvet armchair, afternoon sunlight streaming through lace curtains, warm
-golden hour lighting, shallow depth of field, shot on medium format film
-```
-
-Write prompts as descriptive prose rather than keyword lists.
-
-**Keyword Style: Less Effective**
-
-```text
-woman, portrait, beautiful, blonde, studio, professional, 8k, detailed
-```
-
-**Prose Style: More Effective**
-
-```text
-A professional studio portrait of a beautiful blonde woman in her thirties,
-captured with soft studio lighting that accentuates her features, rendered
-in stunning detail with natural skin texture and subtle catchlights in her eyes
-```
-
-Always specify lighting - it has the single greatest impact on image quality.
-
-**Natural Lighting:**
-
-- Golden hour - warm, soft, directional
-
-- Overcast - soft, diffused, even
-
-- Harsh midday - high contrast, strong shadows
-
-- Dappled forest light - specular, organic patterns
-
-**Studio Lighting:**
-
-- Softbox - even, professional
-
-- Rim light - edge definition, separation
-
-- Butterfly lighting - beauty, glamour
-
-- Rembrandt lighting - dramatic, classic portraits
-
-**Atmospheric Lighting:**
-
-- Volumetric fog - depth, mystery
-
-- God rays - dramatic, spiritual
-
-- Neon glow - urban, cyberpunk
-
-- Candlelight - warm, intimate
-
-**Mood-Based Lighting:**
-
-- Dramatic shadows - tension, noir
-
-- High key - bright, airy, clean
-
-- Low key - moody, mysterious
-
-- Chiaroscuro - strong contrast, painterly
-
-FLUX prioritizes elements that appear earlier in the prompt. Front-load important elements.
-
-**Less Effective:**
-
-```text
-A forest background with soft lighting where a knight in shining armor stands
-```
-
-**More Effective:**
-
-```text
-A knight in shining armor stands in a forest, soft dappled lighting filtering
-through the canopy
-```
-
-Optimal prompt length is typically 30-80 words (FLUX can handle up to 512 tokens).
-
-- Too short: Lacks direction, generic results
-
-- Too long: Can become unfocused
-
-- Sweet spot: Enough detail to guide, not so much it confuses
-
-Build prompts iteratively:
-
-1. Start with core subject and action
-
-2. Add style and medium
-
-3. Specify lighting and atmosphere
-
-4. Include technical details
-
-5. Refine based on results
-
-Change one element at a time to understand what affects your output.
-
-Reference: [negative-prompt-alternatives.md](negative-prompt-alternatives.md)
+1. [核心原则](#1-核心原则) - **关键**
+   - 1.1 [FLUX 核心提示原则](#11-flux-核心提示原则)
+2. [模型选择](#2-模型选择) - **高**
+   - 2.1 [FLUX 模型选择指南](#21-flux-模型选择指南)
+   - 2.2 [FLUX.1 模型系列](#22-flux1-模型系列)
+   - 2.3 [FLUX.2 模型系列](#23-flux2-模型系列)
+3. [文生图提示](#3-文生图提示) - **高**
+   - 3.1 [文生图（T2I）提示](#31-文生图t2i提示)
+4. [图生图编辑](#4-图生图编辑) - **高**
+   - 4.1 [图生图（I2I）提示](#41-图生图i2i提示)
+5. [JSON 结构化提示](#5-json-结构化提示) - **中高**
+   - 5.1 [JSON 结构化提示](#51-json-结构化提示)
+6. [颜色指定](#6-颜色指定) - **中**
+   - 6.1 [十六进制颜色提示](#61-十六进制颜色提示)
+7. [排版与文本](#7-排版与文本) - **中**
+   - 7.1 [排版与文本提示](#71-排版与文本提示)
+8. [多参考编辑](#8-多参考编辑) - **中**
+   - 8.1 [多参考图像编辑](#81-多参考图像编辑)
+9. [正面提示替代方案](#9-正面提示替代方案) - **中**
+   - 9.1 [负面提示替代方案](#91-负面提示替代方案)
 
 ---
 
-## 2. Model Selection
+## 1. 核心原则
 
-**Impact: HIGH**
+**影响：关键**
 
-Choosing the right FLUX model for your use case. Covers both FLUX.2 (latest) and FLUX.1 (legacy) model families.
+适用于所有 FLUX 模型的通用提示原则。在深入学习具体技术之前掌握这些原则。
 
-### 2.1 FLUX Model Selection Guide
+### 1.1 FLUX 核心提示原则
 
-**Impact: MEDIUM**
+**影响：中**
 
-Decision guide for selecting the optimal FLUX model based on your requirements.
+这些原则适用于所有 FLUX 模型，构成有效提示的基础。
 
-| Priority      | Recommended Model               |
+FLUX 不支持负面提示。始终描述你想要的内容，而不是你不想要的内容。
+
+使用此结构构建提示以获得一致的结果：
+
+**错误方法：**
+
+```text
+一位女性的肖像，不要眼镜，不要帽子，不要化妆
+```
+
+**正确方法：**
+
+```text
+一位女性的肖像，自然肌肤，干净的脸庞，露出的头部，可见的眼睛
+```
+
+**示例：**
+
+```text
+一位年轻女性，飘逸的赤褐色头发（主体）
+优雅地在半空中起舞（动作）
+古典油画风格（风格）
+在月光下的玫瑰花园中（环境）
+柔和的漫射月光，带有微妙的轮廓光（光照）
+中景，浅景深（技术）
+```
+
+更具体的提示能产生显著更好的结果。
+
+**模糊：结果差**
+
+```text
+一只坐着的猫
+```
+
+**具体：结果优秀**
+
+```text
+一只蓬松的橙色虎斑猫，有着明亮的绿色眼睛，庄严地坐在复古
+天鹅绒扶手椅上，午后阳光透过蕾丝窗帘洒入，温暖
+金色时刻的光线，浅景深，中画幅胶片拍摄
+```
+
+将提示写成描述性散文，而非关键词列表。
+
+**关键词风格：效果较差**
+
+```text
+女性，肖像，美丽，金发，摄影棚，专业，8k，细节丰富
+```
+
+**散文风格：效果更好**
+
+```text
+一位三十多岁美丽金发女性的专业摄影棚肖像，
+采用柔和的摄影棚灯光突出她的面部特征，以令人惊叹的细节呈现，
+展现自然肌肤纹理和眼中微妙的眼神光
+```
+
+始终指定光照——它对图像质量的影响最大。
+
+**自然光：**
+
+- 黄金时刻 - 温暖、柔和、有方向性
+
+- 阴天 - 柔和、漫射、均匀
+
+- 正午强光 - 高对比度、强烈阴影
+
+- 斑驳森林光 - 镜面反射、有机图案
+
+**影棚灯光：**
+
+- 柔光箱 - 均匀、专业
+
+- 轮廓光 - 边缘定义、分离
+
+- 蝴蝶光 - 美丽、魅力
+
+- 伦勃朗光 - 戏剧性、经典肖像
+
+**氛围灯光：**
+
+- 体积雾 - 深度、神秘感
+
+- 上帝光 - 戏剧性、神圣感
+
+- 霓虹辉光 - 都市、赛博朋克
+
+- 烛光 - 温暖、亲密
+
+**情绪灯光：**
+
+- 戏剧性阴影 - 紧张、黑色电影
+
+- 高调 - 明亮、通透、干净
+
+- 低调 - 忧郁、神秘
+
+- 明暗对照 - 强烈对比、绘画感
+
+FLUX 会优先处理提示中出现更早的元素。将重要元素前置。
+
+**效果较差：**
+
+```text
+一片森林背景，柔和的光线，一位身穿闪亮盔甲的骑士站在那里
+```
+
+**效果更好：**
+
+```text
+一位身穿闪亮盔甲的骑士站在森林中，柔和的斑驳光线透过树冠
+洒下
+```
+
+最佳提示长度通常为 30-80 个单词（FLUX 最多可处理 512 个 token）。
+
+- 太短：缺乏方向，结果泛化
+
+- 太长：可能变得不聚焦
+
+- 最佳点：足够的细节来引导，但不会多到造成混淆
+
+逐步构建提示：
+
+1. 从核心主体和动作开始
+
+2. 添加风格和媒介
+
+3. 指定光照和氛围
+
+4. 包含技术细节
+
+5. 根据结果优化
+
+一次只改变一个元素，以了解什么影响了你的输出。
+
+参考：[negative-prompt-alternatives.md](negative-prompt-alternatives.md)
+
+---
+
+## 2. 模型选择
+
+**影响：高**
+
+为您的使用场景选择合适的 FLUX 模型。涵盖 FLUX.2（最新）和 FLUX.1（旧版）模型系列。
+
+### 2.1 FLUX 模型选择指南
+
+**影响：中**
+
+根据需求选择最佳 FLUX 模型的决策指南。
+
+| 优先级      | 推荐模型               |
 
 | ------------- | ------------------------------- |
 
-| Speed         | FLUX.2 [klein]                  |
+| 速度         | FLUX.2 [klein]                  |
 
-| Quality       | FLUX.2 [max]                    |
+| 质量         | FLUX.2 [max]                    |
 
-| Balance       | FLUX.2 [pro]                    |
+| 平衡         | FLUX.2 [pro]                    |
 
-| Typography    | FLUX.2 [flex]                   |
+| 排版         | FLUX.2 [flex]                   |
 
-| Image Editing | FLUX.2 [klein], [pro], or [max] |
+| 图像编辑     | FLUX.2 [klein], [pro], 或 [max] |
 
-| Local/Free    | FLUX.2 [dev]                    |
+| 本地/免费    | FLUX.2 [dev]                    |
 
-| Inpainting    | FLUX.1 Fill                     |
+| 内补绘制     | FLUX.1 Fill                     |
 
-**Note:** All FLUX.2 models natively support image-to-image editing via reference images. Simply provide your source image(s) as references and describe the desired changes.
+**注意：** 所有 FLUX.2 模型原生支持通过参考图像进行图生图编辑。只需提供源图像作为参考并描述所需的更改。
 
-**By Speed:**
+**按速度：**
 
-| Model             | Relative Speed | Best For                |
+| 模型             | 相对速度 | 最适合                |
 
 | ----------------- | -------------- | ----------------------- |
 
-| FLUX.2 [klein] 4B | Fastest        | Rapid prototyping       |
+| FLUX.2 [klein] 4B | 最快        | 快速原型制作       |
 
-| FLUX.2 [klein] 9B | Very Fast      | Better quality previews |
+| FLUX.2 [klein] 9B | 非常快      | 更高质量的预览 |
 
-| FLUX.2 [pro]      | Medium         | Production workflows    |
+| FLUX.2 [pro]      | 中等         | 生产工作流    |
 
-| FLUX.2 [flex]     | Medium         | Typography tasks        |
+| FLUX.2 [flex]     | 中等         | 排版任务        |
 
-| FLUX.2 [max]      | Slower         | Final hero images       |
+| FLUX.2 [max]      | 较慢         | 最终主打图像       |
 
-**By Quality:**
+**按质量：**
 
-| Model             | Quality Level | Trade-off                  |
+| 模型             | 质量级别 | 权衡                  |
 
 | ----------------- | ------------- | -------------------------- |
 
-| FLUX.2 [max]      | Highest       | Slowest, most expensive    |
+| FLUX.2 [max]      | 最高       | 最慢、最贵    |
 
-| FLUX.2 [pro]      | High          | Good balance               |
+| FLUX.2 [pro]      | 高          | 良好的平衡               |
 
-| FLUX.2 [flex]     | High (text)   | Specialized for typography |
+| FLUX.2 [flex]     | 高（文本）   | 专为排版优化 |
 
-| FLUX.2 [klein] 9B | Good          | Fast, slightly less detail |
+| FLUX.2 [klein] 9B | 好          | 快速、细节略少 |
 
-| FLUX.2 [klein] 4B | Moderate      | Fastest, preview quality   |
+| FLUX.2 [klein] 4B | 中等      | 最快、预览质量   |
 
-**By Cost:**
+**按成本：**
 
-> **Credit pricing:** 1 credit = $0.01 USD. FLUX.2 uses megapixel-based pricing.
+> **积分定价：** 1 积分 = $0.01 美元。FLUX.2 使用基于百万像素的定价。
 
-| Model             | 1st MP | +MP  | 1MP T2I | 1MP I2I | Volume Recommendation       |
+| 模型             | 首个 MP | +MP  | 1MP T2I | 1MP I2I | 量级建议       |
 
 | ----------------- | ------ | ---- | ------- | ------- | --------------------------- |
 
-| FLUX.2 [klein] 4B | 1.4c   | 0.1c | $0.014  | $0.015  | High volume, previews       |
+| FLUX.2 [klein] 4B | 1.4c   | 0.1c | $0.014  | $0.015  | 大批量、预览       |
 
-| FLUX.2 [klein] 9B | 1.5c   | 0.2c | $0.015  | $0.017  | High volume, better quality |
+| FLUX.2 [klein] 9B | 1.5c   | 0.2c | $0.015  | $0.017  | 大批量、更高质量 |
 
-| FLUX.2 [pro]      | 3c     | 1.5c | $0.03   | $0.045  | Production workloads        |
+| FLUX.2 [pro]      | 3c     | 1.5c | $0.03   | $0.045  | 生产负载        |
 
-| FLUX.2 [max]      | 7c     | 3c   | $0.07   | $0.10   | Hero images, premium        |
+| FLUX.2 [max]      | 7c     | 3c   | $0.07   | $0.10   | 主打图像、高端        |
 
-| FLUX.2 [flex]     | 6c     | 6c   | $0.06   | $0.12   | Typography                  |
+| FLUX.2 [flex]     | 6c     | 6c   | $0.06   | $0.12   | 排版                  |
 
-| FLUX.2 [dev]      | -      | -    | Free    | Free    | Local dev (non-commercial)  |
+| FLUX.2 [dev]      | -      | -    | 免费    | 免费    | 本地开发（非商业）  |
 
-> **Pricing formula:** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)` in cents
+> **定价公式：** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)`（单位：美分）
 
-| Model                | Price/Image | Use Case                |
+| 模型                | 价格/图像 | 使用场景                |
 
 | -------------------- | ----------- | ----------------------- |
 
-| FLUX.1 Kontext [pro] | $0.04       | Context-aware editing   |
+| FLUX.1 Kontext [pro] | $0.04       | 上下文感知编辑   |
 
-| FLUX.1 Kontext [max] | $0.08       | Max quality editing     |
+| FLUX.1 Kontext [max] | $0.08       | 最大质量编辑     |
 
-| FLUX1.1 [pro]        | $0.04       | Standard T2I            |
+| FLUX1.1 [pro]        | $0.04       | 标准 T2I            |
 
-| FLUX1.1 [pro] Ultra  | $0.06       | Ultra high-resolution   |
+| FLUX1.1 [pro] Ultra  | $0.06       | 超高分辨率   |
 
-| FLUX1.1 [pro] Raw    | $0.06       | Candid photography feel |
+| FLUX1.1 [pro] Raw    | $0.06       | 抓拍摄影感觉 |
 
-| FLUX.1 Fill [pro]    | $0.05       | Inpainting              |
+| FLUX.1 Fill [pro]    | $0.05       | 内补绘制              |
 
-| FLUX.1 [pro]         | $0.05       | Original pro model      |
+| FLUX.1 [pro]         | $0.05       | 原始专业模型      |
 
-> Use [bfl.ai/pricing](https://bfl.ai/pricing) calculator for exact costs at different resolutions.
+> 使用 [bfl.ai/pricing](https://bfl.ai/pricing) 计算器了解不同分辨率下的精确成本。
 
-**Creative Exploration / Ideation:**
+**创意探索/构思：**
 
-**Recommended: FLUX.2 [klein]**
+**推荐：FLUX.2 [klein]**
 
-- Fast iterations
+- 快速迭代
 
-- Quick concept testing
+- 快速概念测试
 
-- Mood board generation
+- 情绪板生成
 
-- Exploring prompt variations
+- 探索提示变体
 
-**Production Marketing Assets:**
+**生产营销素材：**
 
-**Recommended: FLUX.2 [pro]**
+**推荐：FLUX.2 [pro]**
 
-- Consistent quality
+- 一致的质量
 
-- Reasonable speed
+- 合理的速度
 
-- Cost-effective at scale
+- 规模化成本效益高
 
-- Reliable for automation
+- 可靠自动化
 
-**Hero Images / Premium Content:**
+**主打图像/高端内容：**
 
-**Recommended: FLUX.2 [max]**
+**推荐：FLUX.2 [max]**
 
-- Maximum detail
+- 最大细节
 
-- Best coherence
+- 最佳连贯性
 
-- Supports grounding search
+- 支持实况搜索
 
-- Worth the premium for key visuals
+- 关键视觉值得高端定价
 
-**Typography / Signage / Posters:**
+**排版/标牌/海报：**
 
-**Recommended: FLUX.2 [flex]**
+**推荐：FLUX.2 [flex]**
 
-- Superior text rendering
+- 卓越的文本渲染
 
-- Adjustable quality settings
+- 可调节质量设置
 
-- Best for readable text
+- 最适合可读文本
 
-- UI mockups and infographics
+- UI 模型和信息图
 
-**Character Consistency:**
+**角色一致性：**
 
-**Recommended: FLUX.2 [max] or [pro]**
+**推荐：FLUX.2 [max] 或 [pro]**
 
-- Multi-reference support (up to 8-10 images)
+- 多参考支持（最多 8-10 张图像）
 
-- Best editing consistency
+- 最佳编辑一致性
 
-- Maintains identity across scenes
+- 跨场景保持身份
 
-- Superior quality over FLUX.1 Kontext
+- 优于 FLUX.1 Kontext 的质量
 
-**Photo Editing / Retouching:**
+**照片编辑/修图：**
 
-**Recommended: FLUX.2 [klein], [pro], or [max]**
+**推荐：FLUX.2 [klein]、[pro] 或 [max]**
 
-- Native image-to-image support via references
+- 通过参考图像原生支持图生图
 
-- Style transfer
+- 风格迁移
 
-- Object modification
+- 物体修改
 
-- Attribute changes
+- 属性更改
 
-- Better results than FLUX.1 Kontext
+- 效果优于 FLUX.1 Kontext
 
-**Real-Time Information:**
+**实时信息：**
 
-**Recommended: FLUX.2 [max]**
+**推荐：FLUX.2 [max]**
 
-- Grounding search feature
+- 实况搜索功能
 
-- Current events
+- 当前事件
 
-- Recent news visualization
+- 近期新闻可视化
 
-- Weather/location data
+- 天气/位置数据
 
-**Local Development / Testing:**
+**本地开发/测试：**
 
-**Recommended: FLUX.2 [dev]**
+**推荐：FLUX.2 [dev]**
 
-- No API costs
+- 无 API 成本
 
-- Full control
+- 完全控制
 
-- Fine-tuning experiments
+- 微调实验
 
-- Offline capability
+- 离线能力
 
-**Editorial with Typography:**
-
-```text
-1. FLUX.2 [max] - Generate base image (highest quality)
-2. FLUX.2 [flex] - Add text overlay pass
-```
-
-**Character-Consistent Series:**
+**带排版的编辑内容：**
 
 ```text
-1. FLUX.2 [max] - Create character reference
-2. FLUX.2 [max]/[pro] - Generate consistent variations using reference images
-3. FLUX.2 [klein] - Quick iteration on variations if needed
+1. FLUX.2 [max] - 生成基础图像（最高质量）
+2. FLUX.2 [flex] - 添加文本叠加层
 ```
 
-**E-commerce Product Pipeline:**
+**角色一致系列：**
 
 ```text
-1. FLUX.2 [pro] - Bulk product generations
-2. FLUX.2 [pro]/[klein] - Product variations (colors, angles) using references
-3. FLUX.2 [flex] - Add promotional text/pricing
+1. FLUX.2 [max] - 创建角色参考
+2. FLUX.2 [max]/[pro] - 使用参考图像生成一致的变体
+3. FLUX.2 [klein] - 必要时快速迭代变体
 ```
 
-**Limited Budget:**
-
-- **High volume**: FLUX.2 [klein] 4B
-
-- **Quality needed**: FLUX.2 [pro] (best value)
-
-**Tight Deadline:**
-
-- **Any task**: FLUX.2 [klein]
-
-- **Quality matters**: FLUX.2 [pro]
-
-**Maximum Quality Required:**
-
-- **Always**: FLUX.2 [max]
-
-**Text Must Be Readable:**
-
-- **Always**: FLUX.2 [flex]
-
-**Editing Existing Images:**
-
-- **Fast edits**: FLUX.2 [klein] with reference images
-
-- **Quality edits**: FLUX.2 [max] or [pro] with reference images
-
-- **Alternative**: FLUX.1 Kontext (FLUX.2 preferred)
-
-**Rate Limit Sensitivity:**
+**电商产品管线：**
 
 ```text
-Speed?      → FLUX.2 [klein]
-Quality?    → FLUX.2 [max]
-Balance?    → FLUX.2 [pro]
-Text?       → FLUX.2 [flex]
-Edit?       → FLUX.2 [klein/pro/max] with reference images
-Free?       → FLUX.2 [dev]
+1. FLUX.2 [pro] - 批量产品生成
+2. FLUX.2 [pro]/[klein] - 产品变体（颜色、角度）使用参考图像
+3. FLUX.2 [flex] - 添加促销文字/定价
 ```
 
-- **Prefer**: FLUX.2 models (24 concurrent limit)
+**预算有限：**
 
-- **Avoid**: FLUX.1 Kontext Max (6 concurrent limit)
+- **大批量**：FLUX.2 [klein] 4B
 
-**Key insight:** All FLUX.2 models support image editing natively via reference images. FLUX.2 is recommended over FLUX.1 Kontext for editing tasks.
+- **需要质量**：FLUX.2 [pro]（性价比最佳）
 
-### 2.2 FLUX.1 Model Family
+**截止日期紧：**
 
-**Impact: MEDIUM**
+- **任何任务**：FLUX.2 [klein]
 
-> **Tip:** FLUX.2 models are the latest generation and recommended for most use cases. FLUX.1 models are still available for specific needs.
+- **质量重要**：FLUX.2 [pro]
 
-Guide to FLUX.1 models and their specialized capabilities.
+**需要最高质量：**
 
-| Model | Purpose | Notes |
+- **始终**：FLUX.2 [max]
+
+**文本必须可读：**
+
+- **始终**：FLUX.2 [flex]
+
+**编辑现有图像：**
+
+- **快速编辑**：使用参考图像的 FLUX.2 [klein]
+
+- **质量编辑**：使用参考图像的 FLUX.2 [max] 或 [pro]
+
+- **替代方案**：FLUX.1 Kontext（推荐 FLUX.2）
+
+**速率限制敏感性：**
+
+```text
+速度？      → FLUX.2 [klein]
+质量？      → FLUX.2 [max]
+平衡？      → FLUX.2 [pro]
+文本？      → FLUX.2 [flex]
+编辑？      → 使用参考图像的 FLUX.2 [klein/pro/max]
+免费？      → FLUX.2 [dev]
+```
+
+- **首选**：FLUX.2 模型（24 并发限制）
+
+- **避免**：FLUX.1 Kontext Max（6 并发限制）
+
+**关键洞察：** 所有 FLUX.2 模型原生支持通过参考图像进行图像编辑。对于编辑任务，推荐使用 FLUX.2 而非 FLUX.1 Kontext。
+
+### 2.2 FLUX.1 模型系列
+
+**影响：中**
+
+> **提示：** FLUX.2 模型是最新一代，推荐用于大多数使用场景。FLUX.1 模型仍可用于特定需求。
+
+FLUX.1 模型及其专业能力指南。
+
+| 模型 | 用途 | 备注 |
 
 |-------|---------|-------|
 
-| FLUX1.1 [pro] | Text-to-image | FLUX.2 [pro] offers improved results |
+| FLUX1.1 [pro] | 文生图 | FLUX.2 [pro] 提供改进的结果 |
 
-| FLUX.1 Kontext | Image-to-image | FLUX.2 with references recommended |
+| FLUX.1 Kontext | 图生图 | 推荐使用 FLUX.2 配合参考图像 |
 
-| FLUX.1 Kontext Max | Image-to-image | FLUX.2 [max] with references recommended |
+| FLUX.1 Kontext Max | 图生图 | 推荐使用 FLUX.2 [max] 配合参考图像 |
 
-| FLUX.1 Fill | Inpainting | Useful for specific inpainting tasks |
+| FLUX.1 Fill | 内补绘制 | 适用于特定的内补绘制任务 |
 
-Fast and reliable text-to-image generation.
+快速可靠的文生图生成。
 
-**Characteristics:**
+**特性：**
 
-- Strong prompt adherence
+- 强提示遵循能力
 
-- Production-grade architecture
+- 生产级架构
 
-- Consistent, reliable results
+- 一致、可靠的结果
 
-- Scalable for high-volume
+- 可大规模扩展
 
-- Pricing: $0.04 per image
+- 价格：每张 $0.04
 
-**Prompting Style:**
+**提示风格：**
 
-Standard descriptive prompts with clear subject and style specification.
+标准的描述性提示，明确的主体和风格指定。
 
-**Example Prompt:**
-
-```text
-A golden retriever puppy playing in autumn leaves, warm afternoon sunlight,
-shallow depth of field with bokeh background, joyful expression, professional
-pet photography style
-```
-
-> **Recommendation:** FLUX.2 models with reference images provide improved editing results.
-
-Context-aware image-to-image editing model for transformations and modifications.
-
-**Characteristics:**
-
-- Understands image context
-
-- Preserves unedited regions
-
-- Style transfer capabilities
-
-- Object modification
-
-- Basic to complex transformations
-
-**Prompting Strategies:**
+**示例提示：**
 
 ```text
-Add the text "OPEN" as a neon sign in the window, red glowing letters
-with slight reflection on the glass, matching the nighttime atmosphere
+一只金毛寻回犬幼犬在秋叶中玩耍，温暖的午后阳光，
+浅景深，散景背景，欢快的表情，专业宠物摄影风格
 ```
 
-Simple, direct instructions work best:
+> **建议：** 使用参考图像的 FLUX.2 模型能提供更好的编辑结果。
 
-Be explicit about what to preserve:
+用于转换和修改的上下文感知图生图编辑模型。
 
-For dramatic changes, be specific about preservation:
+**特性：**
 
-Reference specific artistic movements:
+- 理解图像上下文
 
-Describe text placement and integration:
+- 保留未编辑区域
 
-**Tips for Kontext:**
+- 风格迁移能力
 
-- Be explicit about what should NOT change
+- 物体修改
 
-- Start with simpler edits, build complexity
+- 基础到复杂的转换
 
-- Specify style preservation when needed
-
-- Use for incremental refinement
-
-Advanced multi-reference editing for complex compositions.
-
-**Characteristics:**
-
-- Handles up to 10 reference images
-
-- Best editing consistency across references
-
-- Complex scene composition
-
-- Character consistency maintenance
-
-- Rate limit: 6 concurrent requests
-
-**Multi-Reference Prompting:**
+**提示策略：**
 
 ```text
-Replace the top half of the person in image 1 with the clothing
-from image 2, maintaining the pose and background
+在窗户中添加"营业中"霓虹灯文字，红色发光字母
+在玻璃上有轻微反射，与夜间氛围相称
 ```
 
-Describe relationships between images naturally:
+简单、直接的指令效果最佳：
 
-Reference images by number for precision:
+明确说明要保留的内容：
 
-**Tips for Kontext Max:**
+对于戏剧性变化，需具体说明保留内容：
 
-- Plan your reference images carefully
+参考特定的艺术流派：
 
-- Use natural language for relationships
+描述文本位置和整合方式：
 
-- Specify which elements come from which image
+**Kontext 的提示：**
 
-- Leverage for character consistency across scenes
+- 明确说明哪些内容不应改变
 
-Specialized tool for object removal and area completion.
+- 从简单编辑开始，逐步增加复杂度
 
-**Characteristics:**
+- 必要时指定风格保留
 
-- Clean object removal
+- 用于逐步优化
 
-- Intelligent background completion
+用于复杂构图的高级多参考编辑。
 
-- Texture-aware filling
+**特性：**
 
-- Seamless blending
+- 最多处理 10 张参考图像
 
-**Use Cases:**
+- 跨参考图像的最佳编辑一致性
 
-- Remove unwanted objects from photos
+- 复杂场景构图
 
-- Complete partial images
+- 角色一致性保持
 
-- Replace specific regions
+- 速率限制：6 个并发请求
 
-- Clean up image artifacts
-
-**Prompting for Fill:**
+**多参考提示：**
 
 ```text
-Complete with matching ocean waves and sandy beach
+将图 1 中人物的上半部分替换为图 2 中的服装，
+保持姿势和背景不变
 ```
 
-Describe what should fill the masked area:
+自然地描述图像间的关系：
 
-**Tips for Fill:**
+通过编号精确引用图像：
 
-- Provide context about surrounding areas
+**Kontext Max 的提示：**
 
-- Specify texture and pattern continuation
+- 仔细规划参考图像
 
-- Describe lighting consistency
+- 使用自然语言描述关系
 
-- Use for cleanup and removal tasks
+- 指定哪些元素来自哪张图像
 
-### 2.3 FLUX.2 Model Family
+- 利用它实现跨场景的角色一致性
 
-**Impact: MEDIUM**
+用于物体移除和区域补全的专用工具。
 
-Complete guide to FLUX.2 variants and their optimal prompting strategies.
+**特性：**
 
-> **Key Feature:** All FLUX.2 models natively support both text-to-image generation AND image-to-image editing via reference images. There's no need to use legacy FLUX.1 Kontext models for editing tasks.
+- 干净地移除物体
 
-| Model | Parameters | Best For | Speed | Reference Images |
+- 智能背景补全
+
+- 纹理感知填充
+
+- 无缝融合
+
+**使用场景：**
+
+- 从照片中移除不需要的物体
+
+- 补全部分图像
+
+- 替换特定区域
+
+- 清理图像伪影
+
+**Fill 的提示：**
+
+```text
+用匹配的海浪和沙滩来完成
+```
+
+描述遮罩区域应填充的内容：
+
+**Fill 的提示：**
+
+- 提供周围区域的上下文
+
+- 指定纹理和图案的延续
+
+- 描述光照一致性
+
+- 用于清理和移除任务
+
+### 2.3 FLUX.2 模型系列
+
+**影响：中**
+
+FLUX.2 变体及其最佳提示策略的完整指南。
+
+> **关键特性：** 所有 FLUX.2 模型原生支持文生图生成 AND 通过参考图像进行图生图编辑。无需再使用旧版 FLUX.1 Kontext 模型进行编辑任务。
+
+| 模型 | 参数 | 最适合 | 速度 | 参考图像数 |
 
 |-------|------------|----------|-------|------------------|
 
-| [klein] | 4B/9B | Fast iterations, previews, quick edits | Fastest | Up to 4 |
+| [klein] | 4B/9B | 快速迭代、预览、快速编辑 | 最快 | 最多 4 张 |
 
-| [max] | - | Highest quality generation & editing | Slowest | Up to 8-10 |
+| [max] | - | 最高质量生成与编辑 | 最慢 | 最多 8-10 张 |
 
-| [pro] | - | Production balanced | Medium | Up to 8 |
+| [pro] | - | 生产平衡 | 中等 | 最多 8 张 |
 
-| [flex] | - | Typography, text rendering | Medium | Up to 8 |
+| [flex] | - | 排版、文本渲染 | 中等 | 最多 8 张 |
 
-| [dev] | - | Local development | Varies | Varies |
+| [dev] | - | 本地开发 | 不定 | 不定 |
 
-Best for rapid prototyping, previews, and high-volume generation.
+最适合快速原型制作、预览和大批量生成。
 
-**Characteristics:**
+**特性：**
 
-- 4B or 9B parameter versions available
+- 提供 4B 或 9B 参数版本
 
-- Sub-second generation times
+- 亚秒级生成时间
 
-- Optimized for speed over maximum detail
+- 为速度优化，而非最大细节
 
-- **No prompt upsampling** - be descriptive yourself
+- **无提示上采样** - 需要自己描述
 
-- Supports up to 4 reference images
+- 支持最多 4 张参考图像
 
-**Prompting Style: Narrative Prose:**
+**提示风格：叙事性散文：**
 
-Klein responds best to descriptive, narrative-style prompts with emphasis on lighting and atmosphere.
+Klein 对描述性、叙事风格的提示响应最佳，强调光照和氛围。
 
-**Example Prompt:**
-
-```text
-A cozy coffee shop interior bathed in warm afternoon light, steam rising lazily
-from ceramic cups, worn leather armchairs arranged around small wooden tables,
-bookshelves lining exposed brick walls, the soft atmosphere of a quiet afternoon
-with dust motes floating in sunbeams through tall windows
-```
-
-**Tips for [klein]:**
-
-- Write like a novelist describing a scene
-
-- Front-load your subject (word order critical)
-
-- Emphasize lighting descriptions heavily
-
-- Keep prompts moderately detailed (40-70 words)
-
-Premium model for final production assets and maximum detail.
-
-**Characteristics:**
-
-- Highest detail and coherence
-
-- Best editing consistency
-
-- Vast world knowledge
-
-- Includes grounding search (real-time web data)
-
-- Strongest prompt following
-
-- Supports up to 8 reference images (API), 10 (playground)
-
-**Prompting Style: Technical + Descriptive:**
-
-[max] excels with detailed technical specifications combined with descriptive prose.
-
-**Example Prompt:**
+**示例提示：**
 
 ```text
-Portrait of a weathered fisherman, age 70, deep wrinkles telling stories of
-decades at sea, salt-and-pepper beard with streaks of white, wearing a navy
-cable-knit sweater with visible wool texture. Shot on Hasselblad X2D with
-90mm f/2.8 lens at f/4, golden hour natural light from the left creating
-strong rim lighting, shallow depth of field with soft bokeh from harbor
-lights behind, Kodak Portra 400 color science with natural grain
+一家舒适的咖啡馆内部，沐浴在温暖的午后光线中，蒸汽从陶瓷杯中
+慵懒地升起，破旧的皮革扶手椅围绕着小木桌摆放，
+书架上排列着裸露的砖墙，安静午后的柔和氛围，
+尘埃在透过高窗的阳光中飘浮
 ```
 
-**Tips for [max]:**
+**[klein] 的提示：**
 
-- Include camera and lens specifications for photorealism
+- 像小说家描述场景一样写作
 
-- Specify film stock or digital sensor characteristics
+- 前置主体（词序至关重要）
 
-- Use technical photography terms (aperture, focal length)
+- 大量强调光照描述
 
-- Leverage grounding search for current events: "news photo of [recent event]"
+- 保持提示中等详细程度（40-70 个单词）
 
-Optimal balance of quality and speed for production workflows.
+用于最终生产资产和最大细节的高级模型。
 
-**Characteristics:**
+**特性：**
 
-- Good quality-to-speed ratio
+- 最高的细节和连贯性
 
-- Reliable, consistent output
+- 最佳的编辑一致性
 
-- Suitable for batch processing
+- 丰富的世界知识
 
-- Supports prompt upsampling
+- 包含实况搜索（实时网络数据）
 
-- Supports up to 8 reference images
+- 最强的提示遵循能力
 
-**Prompting Style: Balanced Detail:**
+- 支持最多 8 张（API）/ 10 张（playground）参考图像
 
-Standard detailed prompts work well without excessive technical specification.
+**提示风格：技术 + 描述：**
 
-**Example Prompt:**
+[max] 擅长将详细的技术规格与描述性散文结合。
+
+**示例提示：**
 
 ```text
-A modern minimalist living room with floor-to-ceiling windows overlooking
-a city skyline at dusk, clean white furniture with subtle textures, a single
-statement plant in the corner, warm ambient lighting from hidden sources,
-architectural photography style with clean lines and balanced composition
+一位饱经风霜的渔民肖像，70 岁，深深的皱纹讲述着
+数十年的海上故事，花白的胡须带着白色条纹，穿着海军蓝
+编织毛衣，可见羊毛纹理。使用哈苏 X2D 配
+90mm f/2.8 镜头在 f/4 光圈下拍摄，左侧黄金时刻自然光形成
+强烈的轮廓光，浅景深，背景中港口灯光形成柔和的
+散景，柯达 Portra 400 色彩科学，带有自然颗粒
 ```
 
-**Tips for [pro]:**
+**[max] 的提示：**
 
-- Balance specificity with generation speed
+- 包含相机和镜头规格以获得照片级真实感
 
-- Good for template-based prompt systems
+- 指定胶卷型号或数字传感器特性
 
-- Enable prompt upsampling for enhanced results
+- 使用摄影技术术语（光圈、焦距）
 
-- Consistent quality for production pipelines
+- 利用实况搜索获取当前事件："[近期事件]的新闻照片"
 
-Optimized for text rendering and typographic content.
+质量和速度的最佳平衡，适用于生产工作流。
 
-**Characteristics:**
+**特性：**
 
-- Superior text rendering quality
+- 良好的质量速度比
 
-- Handles multiple text elements
+- 可靠、一致的输出
 
-- Adjustable steps (1-50) and guidance (1.5-10)
+- 适合批量处理
 
-- Best for signage, posters, UI mockups
+- 支持提示上采样
 
-- Supports up to 8 reference images
+- 支持最多 8 张参考图像
 
-**Prompting Style: Typography-Focused:**
+**提示风格：平衡细节：**
 
-Always quote text and specify font characteristics explicitly.
+标准详细提示效果良好，无需过多技术规格。
 
-**Example Prompt:**
+**示例提示：**
 
 ```text
-A modern minimalist poster design with the headline "DESIGN SUMMIT 2025"
-in bold condensed sans-serif typography centered in the upper third,
-subtitle "Innovation Meets Creativity" in lighter weight below,
-date "MARCH 15-17" in small caps at the bottom, all text in white
-on a gradient background transitioning from deep purple #4A0080 to
-coral #FF6B6B, clean geometric accent lines, professional print quality
+一间现代极简主义客厅，落地窗俯瞰
+黄昏的城市天际线，干净的白色家具带有微妙纹理，
+角落有一棵醒目的绿植，来自隐藏光源的温暖环境光，
+建筑摄影风格，线条干净，构图平衡
 ```
 
-**Tips for [flex]:**
+**[pro] 的提示：**
 
-- Always quote exact text: `"Your Text Here"`
+- 平衡具体性与生成速度
 
-- Specify font style: serif, sans-serif, script, display, monospace
+- 适合基于模板的提示系统
 
-- Describe text hierarchy: headline, subhead, body
+- 启用提示上采样以获得增强结果
 
-- Include placement: centered, left-aligned, upper third
+- 生产管线的一致质量
 
-- Adjust steps (higher = better quality) and guidance (higher = stricter)
+为文本渲染和排版内容优化。
 
-For local development, testing, and non-commercial use.
+**特性：**
 
-**Characteristics:**
+- 卓越的文本渲染质量
 
-- Open weights on Hugging Face
+- 处理多个文本元素
 
-- Runs locally (~13GB VRAM recommended)
+- 可调节步数（1-50）和引导尺度（1.5-10）
 
-- Full customization available
+- 最适合标牌、海报、UI 模型
 
-- Free for non-commercial use
+- 支持最多 8 张参考图像
 
-- Base variants available (undistilled) for fine-tuning
+**提示风格：排版聚焦：**
 
-**Prompting Style: Standard:**
+始终引用文本并明确指定字体特性。
 
-Same prompting patterns as [pro] work well.
-
-**Tips for [dev]:**
-
-- Use for development and testing before production
-
-- Experiment with prompt variations
-
-- Good for fine-tuning experiments
-
-- Check license for commercial use restrictions
-
-All FLUX.2 models support image editing via reference images. This replaces the need for legacy FLUX.1 Kontext models.
-
-**How It Works:**
-
-1. Provide your source image(s) as reference images
-
-2. Describe the desired changes in your prompt
-
-3. The model preserves context while applying edits
-
-**Example: Style Transfer:**
+**示例提示：**
 
 ```text
-Reference: [your source image]
-Prompt: Transform this image into a watercolor painting style,
-maintaining the exact composition and subject positioning
+现代极简主义海报设计，标题为"DESIGN SUMMIT 2025"
+采用粗体紧凑无衬线字体，位于上方三分之一处居中，
+副标题"Innovation Meets Creativity"使用较轻的字重在其下方，
+日期"MARCH 15-17"使用小型大写字母在底部，所有文本为白色，
+背景为从深紫色 #4A0080 过渡到
+珊瑚色 #FF6B6B 的渐变，干净的几何装饰线，专业打印品质
 ```
 
-**Example: Object Modification:**
+**[flex] 的提示：**
+
+- 始终引用确切文本：`"Your Text Here"`
+
+- 指定字体风格：serif, sans-serif, script, display, monospace
+
+- 描述文本层级：标题、副标题、正文
+
+- 包含位置：居中、左对齐、上方三分之一
+
+- 调整步数（越高 = 质量越好）和引导尺度（越高 = 更严格）
+
+用于本地开发、测试和非商业用途。
+
+**特性：**
+
+- Hugging Face 上开放权重
+
+- 本地运行（建议约 13GB VRAM）
+
+- 完全可自定义
+
+- 非商业用途免费
+
+- 提供基础变体（未蒸馏）用于微调
+
+**提示风格：标准：**
+
+与 [pro] 相同的提示模式效果良好。
+
+**[dev] 的提示：**
+
+- 用于生产前的开发和测试
+
+- 尝试不同的提示变体
+
+- 适合微调实验
+
+- 检查许可证的商业使用限制
+
+所有 FLUX.2 模型都支持通过参考图像进行图像编辑。这取代了对旧版 FLUX.1 Kontext 模型的需求。
+
+**工作原理：**
+
+1. 提供源图像作为参考图像
+
+2. 在提示中描述所需的更改
+
+3. 模型在应用编辑时保留上下文
+
+**示例：风格迁移：**
 
 ```text
-Reference: [your source image]
-Prompt: Change the car color to red while keeping everything else identical
+参考：[你的源图像]
+提示：将此图像转换为水彩画风格，
+保持完全相同的构图和主体位置
 ```
 
-**Example: Character Consistency:**
+**示例：物体修改：**
 
 ```text
-Reference: [character reference image]
-Prompt: The same person from the reference image walking through
-a busy Tokyo street at night, neon lights reflecting on wet pavement
+参考：[你的源图像]
+提示：将汽车颜色改为红色，其他所有内容保持不变
 ```
 
-**Model Selection for Editing:**
+**示例：角色一致性：**
 
-| Use Case | Recommended Model |
+```text
+参考：[角色参考图像]
+提示：参考图像中的同一个人走在
+繁忙的东京夜晚街道上，霓虹灯在湿漉漉的路面上反射
+```
+
+**编辑用模型选择：**
+
+| 使用场景 | 推荐模型 |
 
 |----------|-------------------|
 
-| Quick iterations/previews | FLUX.2 [klein] |
+| 快速迭代/预览 | FLUX.2 [klein] |
 
-| Production quality edits | FLUX.2 [pro] |
+| 生产质量编辑 | FLUX.2 [pro] |
 
-| Maximum quality/complex edits | FLUX.2 [max] |
+| 最高质量/复杂编辑 | FLUX.2 [max] |
 
-| Text/typography edits | FLUX.2 [flex] |
-
----
-
-## 3. Text-to-Image Prompting
-
-**Impact: HIGH**
-
-Crafting effective prompts for generating images from text descriptions.
-
-### 3.1 Text-to-Image (T2I) Prompting
-
-**Impact: MEDIUM**
-
-Comprehensive guide to crafting effective text-to-image prompts for FLUX models.
-
-**Basic Formula:**
-
-```text
-[Subject] + [Action] + [Style] + [Context] + [Lighting] + [Technical]
-```
-
-**Expanded Framework:**
-
-```text
-[Main Subject] - who/what is the focus
-[Attributes] - characteristics, details, clothing
-[Action/Pose] - what they're doing
-[Environment] - where, setting, background
-[Style/Medium] - artistic approach
-[Lighting] - light source, quality, mood
-[Composition] - framing, camera angle
-[Technical] - camera, lens, film stock
-```
-
-**People/Portraits:**
-
-```text
-A distinguished professor in his 60s with silver hair and round spectacles,
-wearing a tweed jacket with leather elbow patches, deep-set thoughtful eyes,
-slight smile suggesting hidden wisdom
-```
-
-**Animals:**
-
-```text
-A majestic snow leopard with piercing blue-grey eyes, thick spotted fur
-dusted with snowflakes, powerful muscular build, alert posture on a
-rocky outcrop
-```
-
-**Objects/Products:**
-
-```text
-A vintage Leica M3 camera with worn brass edges showing decades of use,
-black leather covering with patina, sitting on weathered wooden table
-```
-
-**Landscapes:**
-
-```text
-A dramatic fjord at dawn, steep granite cliffs rising from mirror-still
-water, wisps of morning mist, distant snow-capped peaks catching first
-golden light
-```
-
-**Architecture:**
-
-```text
-A brutalist concrete apartment building in late afternoon light, geometric
-shadows creating abstract patterns, warm sunlight contrasting with cool
-grey concrete
-```
-
-**Photorealistic:**
-
-```text
-80s film photography, film grain, warm color cast, soft focus, nostalgic
-```
-
-**Artistic Styles:**
-
-```text
-anime style, large expressive eyes, clean linework, cel shading, vibrant palette
-```
-
-**Portrait Lighting:**
-
-```text
-Rembrandt lighting - 45 degree key light creating triangle shadow on cheek
-Butterfly lighting - overhead key creating shadow under nose
-Split lighting - 90 degree side light, half face in shadow
-Loop lighting - slight angle creating small nose shadow
-```
-
-**Natural Lighting:**
-
-```text
-Golden hour - warm, soft, directional light 1 hour before sunset
-Blue hour - cool, ambient light just after sunset
-Overcast - soft, even, diffused lighting
-Harsh midday - strong contrast, defined shadows
-```
-
-**Atmospheric:**
-
-```text
-Volumetric light - visible light rays through fog/dust
-Rim lighting - backlight creating edge glow
-Practical lighting - visible light sources in scene
-Neon glow - colorful artificial urban lighting
-```
-
-**Camera Bodies:**
-
-```text
-Shot on Hasselblad X2D - medium format, exceptional detail
-Shot on Canon 5D Mark IV - professional DSLR quality
-Shot on Leica M10 - rangefinder character, smooth tonality
-Shot on iPhone 15 Pro - computational photography look
-```
-
-**Lens Characteristics:**
-
-```text
-85mm f/1.4 - classic portrait, creamy bokeh
-24mm f/2.8 - wide angle, environmental
-50mm f/1.2 - natural perspective, shallow DOF
-135mm f/2 - compressed perspective, smooth background
-Macro lens - extreme close-up detail
-Tilt-shift lens - miniature effect or architectural correction
-```
-
-**Technical Settings:**
-
-```text
-f/1.4 - extremely shallow depth of field
-f/2.8 - moderate background blur
-f/8 - sharp throughout, landscape
-f/16 - maximum sharpness, long exposure
-ISO 100 - clean, no noise
-ISO 3200 - visible grain, low light
-```
-
-**Framing:**
-
-```text
-extreme close-up - filling frame with detail
-close-up - head and shoulders
-medium shot - waist up
-full shot - entire body
-wide shot - subject in environment
-establishing shot - location focus
-```
-
-**Angles:**
-
-```text
-eye level - natural, relatable
-low angle - powerful, imposing
-high angle - diminished, overview
-Dutch angle - tension, unease
-bird's eye - pattern, layout
-worm's eye - dramatic upward view
-```
-
-**Composition Rules:**
-
-```text
-rule of thirds - subject at intersection points
-centered composition - symmetry, stability
-leading lines - guiding eye to subject
-frame within frame - natural framing elements
-negative space - minimalist, breathing room
-```
-
-**Editorial Portrait:**
-
-```text
-A fashion editorial portrait of a young woman with striking features and
-high cheekbones, wearing an avant-garde geometric collar in silver, dramatic
-side lighting creating strong shadows, shot on Hasselblad with 100mm lens
-at f/2.8, studio background with subtle gradient, high fashion magazine style
-```
-
-**Product Photography:**
-
-```text
-A premium wireless headphone product shot, matte black finish with rose gold
-accents, floating at slight angle against pure white background, soft even
-lighting eliminating harsh shadows, reflection visible on glossy surface below,
-commercial catalog style, ultra sharp focus throughout
-```
-
-**Landscape:**
-
-```text
-A misty morning in ancient redwood forest, towering trees disappearing into
-fog above, ferns covering forest floor in layers of green, single shaft of
-golden sunlight breaking through canopy, shot on large format camera, rich
-detail in bark textures, Ansel Adams inspired black and white with deep tones
-```
-
-**Architectural:**
-
-```text
-Modern minimalist beach house at golden hour, floor-to-ceiling glass walls
-reflecting sunset colors, clean white concrete and natural wood, infinity
-pool merging with ocean horizon, architectural photography style, wide angle
-showing full structure, warm evening light
-```
+| 文本/排版编辑 | FLUX.2 [flex] |
 
 ---
 
-## 4. Image-to-Image Editing
+## 3. 文生图提示
 
-**Impact: HIGH**
+**影响：高**
 
-Techniques for editing and transforming existing images using FLUX.2 models.
+编写有效提示以从文本描述生成图像。
 
-### 4.1 Image-to-Image (I2I) Prompting
+### 3.1 文生图（T2I）提示
 
-**Impact: MEDIUM**
+**影响：中**
 
-Guide to effective image-to-image editing with FLUX models.
+为 FLUX 模型编写有效文生图提示的综合指南。
 
-All FLUX.2 models support image-to-image editing via reference images:
-
-- **FLUX.2 [klein]**: Up to 4 reference images - fast editing
-
-- **FLUX.2 [pro]**: Up to 8 reference images - balanced quality/speed
-
-- **FLUX.2 [max]**: Up to 8-10 reference images - highest quality editing
-
-- **FLUX.2 [flex]**: Up to 8 reference images - best for typography edits
-
-Simply provide your source image as a reference and describe the desired changes. The model understands image context and can modify specific elements while preserving others.
-
-> **Note:** FLUX.2 models are recommended for image editing. They provide better results than the older FLUX.1 Kontext models.
-
-**Preferred: Use URLs directly** - simpler and more convenient than base64.
-
-When you have an image URL, pass it directly to `input_image`:
-
-The API fetches URLs automatically. Both URL and base64 work, but URLs are recommended when available.
-
-**Simple Modifications:**
+**基本公式：**
 
 ```text
-Add snow to the ground
+[主体] + [动作] + [风格] + [环境] + [光照] + [技术参数]
 ```
 
-Direct, single-change instructions:
-
-**Attribute Changes:**
+**扩展框架：**
 
 ```text
-Age the person to appear 20 years older
+[主要主体] - 谁/什么是焦点
+[属性] - 特征、细节、服装
+[动作/姿势] - 他们在做什么
+[环境] - 地点、场景、背景
+[风格/媒介] - 艺术手法
+[光照] - 光源、质量、情绪
+[构图] - 取景、相机角度
+[技术参数] - 相机、镜头、胶卷型号
 ```
 
-Modifying specific characteristics:
-
-**Explicit Preservation:**
+**人物/肖像：**
 
 ```text
-Transform the daytime photo to nighttime, maintaining the exact
-composition, colors of the subject's outfit, and lighting direction
+一位 60 多岁、银发圆眼镜的杰出教授，
+穿着带皮革肘部补丁的粗花呢夹克，深邃沉思的眼睛，
+微微的笑意暗示着隐藏的智慧
 ```
 
-When you need to keep specific elements unchanged:
-
-**Style Preservation:**
+**动物：**
 
 ```text
-Add rain effects to the scene while preserving the painting's
-impressionist brushwork and color palette
+一只雄伟的雪豹，有着锐利的蓝灰色眼睛，厚实的带斑纹皮毛
+上沾着雪花，强壮的肌肉体格，在岩石
+露头上保持警觉姿态
 ```
 
-Preventing unwanted style shifts:
-
-**Environmental Changes:**
+**物体/产品：**
 
 ```text
-Change to spring with cherry blossoms, fresh green leaves,
-soft warm lighting
+一台复古徕卡 M3 相机，黄铜边缘磨损，展现数十年使用痕迹，
+黑色皮革覆面带有包浆，放在风化木桌上
 ```
 
-**Style Transfer:**
+**风景：**
 
 ```text
-Transform into a watercolor painting with soft edges,
-transparent washes, and paper texture visible
+黎明时分的壮丽峡湾，陡峭的花岗岩悬崖从镜面般平静的
+水面升起，缕缕晨雾，远处白雪覆盖的山峰捕捉到第一缕
+金色光芒
 ```
 
-**Subject Modifications:**
+**建筑：**
 
 ```text
-Make the subject appear younger, around 25 years old
+傍晚光线中的粗野主义混凝土公寓楼，几何
+阴影形成抽象图案，温暖阳光与冷灰色混凝土
+形成对比
 ```
 
-**Object Editing:**
+**照片级写实：**
 
 ```text
-Swap the coffee mug for an ornate teacup with floral pattern
+80 年代胶片摄影，胶片颗粒，暖色调，柔焦，怀旧
 ```
 
-**Adding Text:**
+**艺术风格：**
 
 ```text
-Include a wooden sign with hand-painted text "Welcome Home"
-mounted above the door
+动漫风格，大眼睛富有表现力，干净线条，赛璐珞着色，鲜艳调色板
 ```
 
-**Modifying Text:**
+**肖像光照：**
 
 ```text
-Update the poster text to "SUMMER SALE 2025" maintaining the design
+伦勃朗光 - 45 度主光在脸颊上形成三角形阴影
+蝴蝶光 - 头顶主光在鼻子下方形成阴影
+分割光 - 90 度侧光，半张脸在阴影中
+环形光 - 轻微角度形成小鼻影
 ```
 
-For dramatic transformations, consider breaking into steps:
-
-**Step-by-Step Approach:**
+**自然光：**
 
 ```text
-Transform this modern office into a Victorian library with completely
-different furniture, add a fireplace, change the lighting to candlelit,
-and age the photograph
+黄金时刻 - 日落前 1 小时的温暖、柔和、有方向性的光线
+蓝色时刻 - 日落后凉爽的环境光
+阴天 - 柔和、均匀、漫射光
+正午强光 - 强对比度、清晰阴影
 ```
 
-Instead of:
-
-Try sequential edits:
-
-1. `Change the furniture style to Victorian antique pieces`
-
-2. `Add a stone fireplace on the right wall`
-
-3. `Transform lighting to warm candlelit atmosphere`
-
-4. `Apply vintage photograph aesthetic with sepia tones`
-
-**Avoid Vague Instructions:**
+**氛围光：**
 
 ```text
-Bad: Make it look better
-Good: Increase contrast, add warm color grading, sharpen details
+体积光 - 透过雾/尘埃的可见光线
+轮廓光 - 逆光形成边缘发光
+实用光 - 场景中可见的光源
+霓虹辉光 - 多彩的人造都市灯光
 ```
 
-**Be Specific About Scope:**
+**相机机身：**
 
 ```text
-Bad: Change the background
-Good: Replace the office background with a tropical beach at sunset,
-      maintaining the subject's exact position and lighting direction
+哈苏 X2D 拍摄 - 中画幅，卓越细节
+佳能 5D Mark IV 拍摄 - 专业 DSLR 品质
+徕卡 M10 拍摄 - 旁轴特性，平滑色调
+iPhone 15 Pro 拍摄 - 计算摄影效果
 ```
 
-**Explicit Style Preservation:**
+**镜头特性：**
 
 ```text
-Bad: Make it nighttime
-Good: Transform to nighttime while maintaining the photorealistic style,
-      add appropriate artificial lighting sources
+85mm f/1.4 - 经典肖像，奶油般散景
+24mm f/2.8 - 广角，环境感
+50mm f/1.2 - 自然透视，浅景深
+135mm f/2 - 压缩透视，平滑背景
+微距镜头 - 极端特写细节
+移轴镜头 - 微缩效果或建筑校正
 ```
 
-1. **Start Simple** - Begin with single-element changes
+**技术设置：**
 
-2. **Be Explicit** - State what should change AND what should stay
+```text
+f/1.4 - 极浅景深
+f/2.8 - 适中背景虚化
+f/8 - 全程锐利，风景
+f/16 - 最大锐度，长时间曝光
+ISO 100 - 干净，无噪点
+ISO 3200 - 可见颗粒，弱光
+```
 
-3. **Reference Context** - Mention existing elements when relevant
+**取景：**
 
-4. **Iterate** - Refine through multiple small edits rather than one large one
+```text
+极端特写 - 用细节填满画面
+特写 - 头部和肩部
+中景 - 腰部以上
+全景 - 整个身体
+广角 - 环境中的主体
+定场镜头 - 地点焦点
+```
 
-5. **Preserve Deliberately** - Always specify style/composition preservation needs
+**角度：**
+
+```text
+平视 - 自然、亲切
+低角度 - 强大、威严
+高角度 - 弱化、俯瞰
+荷兰角 - 紧张、不安
+俯视 - 图案、布局
+仰视 - 戏剧性的向上视角
+```
+
+**构图规则：**
+
+```text
+三分法 - 主体在交叉点
+居中构图 - 对称、稳定
+引导线 - 引导视线到主体
+画中画 - 自然取景元素
+负空间 - 极简、呼吸空间
+```
+
+**编辑肖像：**
+
+```text
+时尚编辑肖像，一位年轻女性，五官鲜明、
+颧骨高，穿着银色前卫几何领，戏剧性
+侧光形成强烈阴影，哈苏相机配 100mm 镜头
+在 f/2.8 下拍摄，影棚背景带微妙渐变，高端时尚杂志风格
+```
+
+**产品摄影：**
+
+```text
+高端无线耳机产品拍摄，哑光黑色饰面配玫瑰金
+装饰，略微倾斜悬浮在纯白背景上，柔和均匀
+光线消除强烈阴影，下方光泽表面可见反射，
+商业目录风格，全程超锐利对焦
+```
+
+**风景：**
+
+```text
+古老红木森林中的雾晨，参天大树消失在
+上方的雾气中，蕨类植物层层覆盖森林地面，
+一束金色阳光穿透树冠，大画幅相机拍摄，丰富
+树皮质感细节，安塞尔·亚当斯风格黑白摄影，色调深沉
+```
+
+**建筑：**
+
+```text
+现代极简海滩别墅，金色时刻，落地玻璃墙
+反射日落色彩，干净的白色混凝土和天然木材，无边际
+泳池与海洋地平线融为一体，建筑摄影风格，广角
+展示完整结构，温暖的傍晚光线
+```
 
 ---
 
-## 5. JSON Structured Prompting
+## 4. 图生图编辑
 
-**Impact: MEDIUM-HIGH**
+**影响：高**
 
-Using structured JSON for complex multi-element scene composition.
+使用 FLUX.2 模型编辑和转换现有图像的技术。
 
-### 5.1 JSON Structured Prompting
+### 4.1 图生图（I2I）提示
 
-**Impact: MEDIUM**
+**影响：中**
 
-For complex scenes with multiple elements, spatial relationships, or production automation, use JSON-structured prompts.
+使用 FLUX 模型进行有效图生图编辑的指南。
 
-- Multiple characters with distinct attributes
+所有 FLUX.2 模型都支持通过参考图像进行图生图编辑：
 
-- Precise spatial positioning
+- **FLUX.2 [klein]**：最多 4 张参考图像 - 快速编辑
 
-- Complex scene composition
+- **FLUX.2 [pro]**：最多 8 张参考图像 - 平衡质量/速度
 
-- Reproducible, template-based prompts
+- **FLUX.2 [max]**：最多 8-10 张参考图像 - 最高质量编辑
 
-- Programmatic prompt generation
+- **FLUX.2 [flex]**：最多 8 张参考图像 - 最适合排版编辑
 
-- Production workflows with variable substitution
+只需提供源图像作为参考，并描述所需的更改。模型能理解图像上下文，可以在保留其他元素的同时修改特定元素。
 
-Flatten your JSON into flowing prose for the actual prompt:
+> **注意：** 推荐使用 FLUX.2 模型进行图像编辑。它们比旧的 FLUX.1 Kontext 模型提供更好的结果。
 
-**From JSON:**
+**推荐：直接使用 URL** - 比 base64 更简单、更方便。
+
+当你有图像 URL 时，直接传给 `input_image`：
+
+API 会自动获取 URL。URL 和 base64 都可用，但推荐使用 URL。
+
+**简单修改：**
+
+```text
+在地面上添加雪
+```
+
+直接、单一更改的指令：
+
+**属性更改：**
+
+```text
+让这个人看起来老 20 岁
+```
+
+修改特定特征：
+
+**显式保留：**
+
+```text
+将白天的照片转换为夜晚，保持完全相同的
+构图、主体服装的颜色和光照方向
+```
+
+当需要保持特定元素不变时：
+
+**风格保留：**
+
+```text
+为场景添加下雨效果，同时保留画作的
+印象派笔触和调色板
+```
+
+防止不想要的风格偏移：
+
+**环境更改：**
+
+```text
+转换为春季，有樱花、鲜绿的叶子、
+柔和温暖的光线
+```
+
+**风格迁移：**
+
+```text
+转换为水彩画，柔和的边缘、
+透明的水洗和可见的纸张纹理
+```
+
+**主体修改：**
+
+```text
+让主体看起来更年轻，大约 25 岁
+```
+
+**物体编辑：**
+
+```text
+将咖啡杯替换为带有花卉图案的精美茶杯
+```
+
+**添加文本：**
+
+```text
+在门上方安装一个木制标牌，手绘文字"欢迎回家"
+```
+
+**修改文本：**
+
+```text
+将海报文字更新为"夏日大促 2025"，保持设计不变
+```
+
+对于戏剧性的变换，考虑分解为步骤：
+
+**分步方法：**
+
+```text
+将此现代办公室改造成维多利亚图书馆，家具完全
+不同，添加壁炉，将灯光改为烛光，
+并让照片老化
+```
+
+不要这样：
+
+尝试顺序编辑：
+
+1. `将家具风格改为维多利亚古董家具`
+
+2. `在右侧墙壁添加石制壁炉`
+
+3. `将灯光转换为温暖的烛光氛围`
+
+4. `应用复古照片美学，搭配棕褐色调`
+
+**避免模糊指令：**
+
+```text
+差：让它看起来更好
+好：增加对比度，添加暖色调色彩分级，锐化细节
+```
+
+**具体说明范围：**
+
+```text
+差：更换背景
+好：将办公室背景替换为日落时的热带海滩，
+      保持主体的确切位置和光照方向
+```
+
+**显式风格保留：**
+
+```text
+差：改成夜晚
+好：转换为夜晚，同时保持照片级写实风格，
+      添加适当的人工光源
+```
+
+1. **从简单开始** - 从单一元素更改开始
+
+2. **明确表述** - 说明哪些应该改变 AND 哪些应该保持不变
+
+3. **参考上下文** - 相关时提及现有元素
+
+4. **迭代进行** - 通过多次小编辑优化，而非一次大改
+
+5. **刻意保留** - 始终指定风格/构图的保留需求
+
+---
+
+## 5. JSON 结构化提示
+
+**影响：中高**
+
+使用结构化 JSON 进行复杂的多元素场景构图。
+
+### 5.1 JSON 结构化提示
+
+**影响：中**
+
+对于包含多个元素、空间关系或生产自动化的复杂场景，使用 JSON 结构化提示。
+
+- 多个角色具有不同属性
+
+- 精确的空间定位
+
+- 复杂场景构图
+
+- 可重现的、基于模板的提示
+
+- 程序化提示生成
+
+- 带变量替换的生产工作流
+
+将 JSON 展平为流畅的散文作为实际提示：
+
+**从 JSON：**
 
 ```json
 {
   "subjects": [
     {
       "type": "person",
-      "description": "elderly craftsman with weathered hands",
-      "position": "seated at workbench",
-      "action": "carefully carving wood"
+      "description": "双手粗糙的老工匠",
+      "position": "坐在工作台前",
+      "action": "仔细雕刻木头"
     }
   ],
-  "scene": { "setting": "traditional workshop", "time": "morning" },
-  "technical": { "lighting": "natural window light from right" }
+  "scene": { "setting": "传统工坊", "time": "morning" },
+  "technical": { "lighting": "来自右侧的自然窗光" }
 }
 ```
 
-**To Prompt:**
+**转换为提示：**
 
 ```json
 {
@@ -1330,872 +1327,872 @@ Flatten your JSON into flowing prose for the actual prompt:
 }
 ```
 
-Use JSON structure for template-based generation:
+使用 JSON 结构进行基于模板的生成：
 
-Define explicit spatial relationships:
+定义清晰的空间关系：
 
-1. **Use IDs for References** - Give subjects IDs when they interact
+1. **为引用使用 ID** - 主体交互时给它们分配 ID
 
-2. **Separate Concerns** - Keep scene, subjects, style, and technical distinct
+2. **分离关注点** - 保持场景、主体、风格和技术参数分离
 
-3. **Be Consistent** - Use the same terminology throughout
+3. **保持一致** - 全程使用相同的术语
 
-4. **Include All Details** - Don't assume, specify everything
+4. **包含所有细节** - 不要假设，指定一切
 
-5. **Flatten for Execution** - Convert to natural language before sending to model
+5. **展平以执行** - 在发送给模型前转换为自然语言
 
-6. **Version Templates** - Track template versions for reproducibility
-
----
-
-## 6. Color Specification
-
-**Impact: MEDIUM**
-
-Precise color control using hex codes for brand-accurate generations.
-
-### 6.1 Hex Color Prompting
-
-**Impact: MEDIUM**
-
-FLUX supports hex color codes (#RRGGBB) for precise color specification, essential for brand consistency and exact color matching.
-
-Include hex codes directly in your prompt with descriptive names:
-
-Use these keywords to indicate color specification:
-
-**1. Always Pair with Description:**
-
-```text
-Good: #FF6B6B (coral pink)
-Bad: #FF6B6B
-```
-
-Never use hex codes alone - include the color name:
-
-**2. Associate with Specific Objects:**
-
-```text
-A product shot featuring a smartphone with a #1DA1F2 (Twitter blue) case,
-resting on a #14171A (near black) matte surface
-```
-
-Clearly connect colors to their targets:
-
-**3. Limit Color Palette:**
-
-```text
-Color palette for the scene: #2ECC71 (emerald green), #3498DB (sky blue),
-#F1C40F (sunflower yellow), #FFFFFF (pure white)
-```
-
-3-5 colors typically work best. Too many can confuse the model:
-
-**Brand Colors:**
-
-```text
-Corporate office reception with brand colors prominently featured:
-walls in #0066CC (company blue), accent furniture in #FF6600 (company orange),
-logo displayed in #FFFFFF (white) against the blue backdrop
-```
-
-**Interior Design:**
-
-```text
-Scandinavian minimalist bedroom with #F5F5F5 (warm white) walls,
-#8B4513 (saddle brown) wooden headboard and nightstands,
-#708090 (slate gray) linen bedding, and #DAA520 (goldenrod) accent lamp
-```
-
-**Fashion:**
-
-```text
-Editorial fashion photo: model wearing #000000 (black) cashmere turtleneck,
-#FF4500 (orange-red) wide-leg wool pants, #C0C0C0 (silver) geometric earrings,
-against a #F0F0F0 (light gray) studio backdrop
-```
-
-**Product Design:**
-
-```text
-Premium headphones product shot: #1C1C1E (space gray) aluminum body,
-#F5F5F7 (silver) mesh ear cups, #FF9500 (iOS orange) accent ring around controls
-```
-
-**Digital Art:**
-
-```text
-Synthwave cityscape: #FF00FF (magenta) and #00FFFF (cyan) neon signs,
-#1A1A2E (deep navy) night sky, #E94560 (hot pink) setting sun on horizon,
-#16213E (dark blue) building silhouettes, rain-slicked streets reflecting lights
-```
-
-**Data Visualization:**
-
-```text
-Sunset sky gradient from #FF6B6B (coral) at horizon through
-#FFA07A (light salmon) to #87CEEB (sky blue) at top
-```
-
-Specify gradients with start and end colors:
-
-**Complementary: Opposite on color wheel**
-
-```text
-Scene using complementary colors: #3498DB (blue) dominant with
-#E67E22 (orange) accents for visual pop
-```
-
-**Analogous: Adjacent colors**
-
-```text
-Harmonious palette using analogous colors: #9B59B6 (purple),
-#8E44AD (deep purple), #3498DB (blue) - flowing naturally together
-```
-
-**Triadic: Evenly spaced**
-
-```text
-Vibrant triadic scheme: #E74C3C (red), #F1C40F (yellow),
-#3498DB (blue) - balanced and dynamic
-```
-
-**Monochromatic: Single hue variations**
-
-```text
-# Social Media
-Twitter/X Blue: #1DA1F2
-Facebook Blue: #1877F2
-Instagram Gradient: #833AB4 to #FD1D1D
-LinkedIn Blue: #0A66C2
-
-# Tech
-Apple Gray: #1C1C1E
-Google Blue: #4285F4
-Microsoft Blue: #00A4EF
-Amazon Orange: #FF9900
-
-# Design
-Figma Purple: #A259FF
-Dribbble Pink: #EA4C89
-Behance Blue: #1769FF
-```
-
-For reference only - always verify current brand guidelines:
-
-**Color Not Accurate:**
-
-- Add the color name alongside hex
-
-- Specify the exact object the color applies to
-
-- Use fewer total colors in the prompt
-
-**Color Bleeding:**
-
-- Clearly delineate which objects get which colors
-
-- Use spatial descriptions: "the LEFT chair in #color"
-
-**Muddy Colors:**
-
-- Check hex code accuracy
-
-- Specify lighting that won't shift colors
-
-- Use "maintaining exact color #XXXXXX" for emphasis
+6. **版本化模板** - 跟踪模板版本以实现可重现性
 
 ---
 
-## 7. Typography and Text
+## 6. 颜色指定
 
-**Impact: MEDIUM**
+**影响：中**
 
-Rendering text and typography within generated images.
+使用十六进制代码进行精确的颜色控制，实现品牌准确的生成。
 
-### 7.1 Typography and Text Prompting
+### 6.1 十六进制颜色提示
 
-**Impact: MEDIUM**
+**影响：中**
 
-Guide to rendering text in FLUX images. Use FLUX.2 [flex] for best typography results.
+FLUX 支持十六进制颜色代码（#RRGGBB）进行精确颜色指定，对于品牌一致性和精确颜色匹配至关重要。
 
-Always quote the exact text you want rendered:
+直接在提示中包含十六进制代码并附带描述性名称：
 
-**1. Use Quotation Marks:**
+使用这些关键词来指示颜色指定：
 
-```text
-Correct: A poster with "HELLO WORLD" in bold letters
-Wrong: A poster with HELLO WORLD in bold letters
-```
-
-**2. Specify Font Style:**
+**1. 始终搭配描述：**
 
 ```text
-"ADVENTURE" in bold sans-serif typography
-"Welcome" in elegant cursive script
-"CHAPTER ONE" in classic serif typeface
-"CODE" in monospace terminal font
-"SALE!" in decorative display lettering
+好：#FF6B6B（珊瑚粉）
+差：#FF6B6B
 ```
 
-**3. Describe Size Hierarchy:**
+切勿单独使用十六进制代码——包含颜色名称：
+
+**2. 关联到特定物体：**
 
 ```text
-Large headline "BREAKING NEWS" above smaller subtext "Details inside"
+产品照片，展示一款带有 #1DA1F2（Twitter 蓝）保护壳的智能手机，
+放在 #14171A（近黑色）哑光表面上
 ```
 
-**4. Indicate Placement:**
+清晰地将颜色连接到其目标对象：
+
+**3. 限制颜色数量：**
 
 ```text
-"OPEN" sign centered in storefront window
-"EXIT" text positioned above doorway
-"Page 1" in bottom right corner
+场景配色方案：#2ECC71（翡翠绿）、#3498DB（天蓝）、
+#F1C40F（向日葵黄）、#FFFFFF（纯白）
 ```
 
-**5. Front-Load Text:**
+3-5 种颜色效果最佳。太多会混淆模型：
+
+**品牌颜色：**
 
 ```text
-Good: A sign reading "FRESH BREAD" in a bakery window...
-Less Good: A bakery window with a sign that says "FRESH BREAD"...
+企业前台接待区，突出展示品牌颜色：
+墙壁 #0066CC（公司蓝）、装饰家具 #FF6600（公司橙）、
+标志以 #FFFFFF（白色）显示在蓝色背景上
 ```
 
-Place text descriptions early in the prompt for better accuracy:
-
-**Sans-Serif (Modern/Clean):**
+**室内设计：**
 
 ```text
-"MINIMAL" in clean geometric sans-serif, Swiss modernist style
-"TECH SUMMIT" in bold condensed grotesque typeface
-"future" in thin uppercase sans-serif, contemporary design
+斯堪的纳维亚极简主义卧室，#F5F5F5（暖白）墙壁、
+#8B4513（马鞍棕）木制床头板和床头柜、
+#708090（石板灰）亚麻床上用品、#DAA520（金菊黄）装饰灯
 ```
 
-**Serif: Classic/Elegant**
+**时尚：**
 
 ```text
-"The New Yorker" in traditional serif typeface, editorial masthead
-"LUXURY" in high-contrast Didone serif with thin/thick strokes
-"Wisdom" in old-style serif with subtle bracketed serifs
+时尚编辑照片：模特穿着 #000000（黑色）羊绒高领毛衣、
+#FF4500（橙红色）阔腿羊毛裤、#C0C0C0（银色）几何耳环、
+背景为 #F0F0F0（浅灰色）影棚背景
 ```
 
-**Script/Cursive (Decorative):**
+**产品设计：**
 
 ```text
-"With Love" in flowing calligraphic script with flourishes
-"Signature" in connected brush script, casual elegance
-"Romance" in formal copperplate script, wedding invitation style
+高端耳机产品照片：#1C1C1E（太空灰）铝制机身、
+#F5F5F7（银色）网眼耳罩、#FF9500（iOS 橙）控制环装饰
 ```
 
-**Display/Decorative:**
+**数字艺术：**
 
 ```text
-"ROCK CONCERT" in distressed vintage concert poster lettering
-"CIRCUS" in ornate Victorian display type with decorative elements
-"RETRO" in 1970s rounded bubble letters
+合成波城市景观：#FF00FF（品红）和 #00FFFF（青色）霓虹灯、
+#1A1A2E（深海军蓝）夜空、在地平线上的 #E94560（亮粉红）落日、
+#16213E（深蓝）建筑剪影、雨湿街道反射灯光
 ```
 
-**Handwritten:**
+**数据可视化：**
 
 ```text
-"Note to self" in casual handwritten style, slightly imperfect
-"Thanks!" in quick marker pen handwriting
-"ideas" in sketchy pencil handwriting
+日落天空渐变从地平线处的 #FF6B6B（珊瑚色）经过
+#FFA07A（浅鲑鱼色）到顶部的 #87CEEB（天蓝色）
 ```
 
-**Monospace:**
+使用起始和结束颜色指定渐变：
+
+**互补色：色轮上相对**
 
 ```text
-"CODE_COMPLETE" in terminal monospace, developer aesthetic
-"SYSTEM" in typewriter monospace, vintage tech
-"DEBUG" in LCD-style digital monospace
+使用互补色的场景：主色调 #3498DB（蓝色）搭配
+#E67E22（橙色）装饰，形成视觉冲击
 ```
 
-**Neon Signs:**
+**类似色：相邻颜色**
 
 ```text
-Glowing neon sign spelling "OPEN 24/7" in pink neon tubes with
-blue outline, slight glow and reflection, night scene
+使用类似色的和谐调色板：#9B59B6（紫色）、
+#8E44AD（深紫色）、#3498DB（蓝色）——自然融合在一起
 ```
 
-**Metallic/3D:**
+**三等分色：均匀分布**
 
 ```text
-"GOLD" in three-dimensional metallic gold letters with realistic
-reflections and subtle shadows, luxury aesthetic
+鲜艳的三等分配色方案：#E74C3C（红色）、#F1C40F（黄色）、
+#3498DB（蓝色）——平衡且充满活力
 ```
 
-**Embossed/Debossed:**
+**单色：单一色调变化**
 
 ```text
-"PREMIUM" embossed into leather surface, subtle shadows showing
-the raised letterforms
+# 社交媒体
+Twitter/X 蓝：#1DA1F2
+Facebook 蓝：#1877F2
+Instagram 渐变：#833AB4 至 #FD1D1D
+LinkedIn 蓝：#0A66C2
+
+# 科技
+Apple 灰：#1C1C1E
+Google 蓝：#4285F4
+Microsoft 蓝：#00A4EF
+Amazon 橙：#FF9900
+
+# 设计
+Figma 紫：#A259FF
+Dribbble 粉：#EA4C89
+Behance 蓝：#1769FF
 ```
 
-**Outlined:**
+仅供参考——始终验证当前品牌指南：
 
-```text
-"MODERN" in outline-only letters, no fill, thin white stroke
-on dark background
-```
+**颜色不准确：**
 
-**Gradient Text:**
+- 在十六进制代码旁添加颜色名称
 
-```text
-"SUMMER" with gradient fill from #FF6B6B (coral) at top to
-#4ECDC4 (teal) at bottom
-```
+- 指定颜色应用到的确切物体
 
-**Poster Design:**
+- 减少提示中的颜色总数
 
-```text
-Event poster with "SUMMER FEST 2025" as large headline in bold
-condensed sans-serif at top, "JULY 15-17" as medium subheading
-in regular weight, "Central Park, NYC" as small body text at
-bottom, all in white text on #FF6B35 (sunset orange) background
-```
+**颜色扩散：**
 
-**Book Cover:**
+- 清晰界定哪些物体使用哪些颜色
 
-```text
-Book cover design: "THE GREAT GATSBY" in elegant art deco gold
-lettering centered in upper third, author name "F. SCOTT FITZGERALD"
-in smaller gold caps below, #1A1A2E (midnight blue) background
-with geometric gold accents
-```
+- 使用空间描述："左边的椅子用 #color"
 
-**Magazine Cover:**
+**颜色浑浊：**
 
-```text
-Fashion magazine cover with "VOGUE" in classic serif masthead at top,
-cover line "SPRING COLLECTION" in bold sans-serif, "The New Rules of Style"
-in lighter weight italic, all in white against dramatic portrait
-```
+- 检查十六进制代码的准确性
 
-**Signage:**
+- 指定不会影响颜色的光照
 
-```text
-Vintage diner sign: "MEL'S DINER" in red neon script lettering,
-"OPEN" below in separate green neon block letters, chrome border,
-1950s Americana aesthetic
-```
-
-**Business Card:**
-
-```text
-Minimalist business card with "JOHN SMITH" in medium weight sans-serif,
-"Creative Director" in lighter weight below, contact details in small
-type at bottom, #2C3E50 (dark blue) text on white background
-```
-
-**Centered Composition:**
-
-```text
-Centered text layout: "WELCOME" in large caps at center,
-perfectly balanced with equal margins
-```
-
-**Left-Aligned:**
-
-```text
-Left-aligned text block: "Company Name" as header,
-"Tagline goes here" below, flush left alignment
-```
-
-**Text on Path:**
-
-```text
-"GOING IN CIRCLES" text following a circular path around
-the center of the design
-```
-
-**Text Overlay:**
-
-```text
-"ADVENTURE AWAITS" in bold white text overlaid on landscape
-photograph, positioned in lower third with slight shadow for readability
-```
-
-**Steps Parameter:**
-
-- Higher steps (30-50) = better text quality
-
-- Lower steps (10-20) = faster, lower quality
-
-**Guidance Parameter:**
-
-- Higher guidance (6-10) = stricter prompt following
-
-- Lower guidance (1.5-4) = more creative interpretation
-
-**Recommended Settings:**
-
-```text
-For clean typography: steps=50, guidance=7
-For artistic text: steps=30, guidance=4
-```
-
-**Misspelled Words:**
-
-- Keep text short (1-4 words work best)
-
-- Use common words when possible
-
-- Repeat the exact text in the prompt
-
-**Illegible Text:**
-
-- Specify larger text size
-
-- Use simpler fonts (sans-serif)
-
-- Ensure high contrast with background
-
-- Use [flex] model
-
-**Wrong Font Style:**
-
-```text
-Instead of: "text in a nice font"
-Use: "text in bold geometric sans-serif similar to Futura"
-```
-
-Be more specific:
-
-**Text Not Appearing:**
-
-- Front-load text description in prompt
-
-- Put text in quotes
-
-- Specify exact placement
-
-- Reduce other prompt complexity
+- 使用"保持精确颜色 #XXXXXX"来强调
 
 ---
 
-## 8. Multi-Reference Editing
+## 7. 排版与文本
 
-**Impact: MEDIUM**
+**影响：中**
 
-Combining multiple reference images for style transfer and composition.
+在生成的图像中渲染文本和排版。
 
-### 8.1 Multi-Reference Image Editing
+### 7.1 排版与文本提示
 
-**Impact: MEDIUM**
+**影响：中**
 
-Guide to using multiple reference images for character consistency, style transfer, and complex compositions.
+在 FLUX 图像中渲染文本的指南。使用 FLUX.2 [flex] 获得最佳排版效果。
 
-FLUX.2 models support multiple reference images for advanced editing:
+始终使用引号包裹你想要渲染的确切文本：
 
-- **FLUX.2 [klein]**: Up to 4 reference images - fast editing
-
-- **FLUX.2 [pro]**: Up to 8 via API - balanced quality/speed
-
-- **FLUX.2 [max]**: Up to 8 via API, 10 in playground - highest quality
-
-- **FLUX.2 [flex]**: Up to 8 via API - best for typography
-
-> **Note:** FLUX.2 models are recommended over FLUX.1 Kontext Max for better results.
-
-**Preferred: Use URLs directly** - simpler and more convenient than base64.
-
-Pass image URLs directly to `input_image`, `input_image_2`, etc.:
-
-The API fetches URLs automatically. Both URL and base64 work, but URLs are recommended when available.
-
-**Natural Language Description:**
+**1. 使用引号：**
 
 ```text
-The person from image 1 is sitting at the cafe table from image 2,
-wearing the outfit from image 3, with the warm lighting style of image 4
+正确：海报上写着"HELLO WORLD"的粗体字
+错误：海报上写着 HELLO WORLD 的粗体字
 ```
 
-Describe relationships between images naturally:
-
-**Explicit Indexing:**
+**2. 指定字体风格：**
 
 ```text
-Combine the face from image 1 with the hairstyle from image 2
-on the body pose from image 3
+"ADVENTURE" 粗体无衬线字体
+"欢迎光临" 优雅草书字体
+"第一章" 经典衬线字体
+"代码" 等宽终端字体
+"大促！" 装饰性展示字体
 ```
 
-Reference images by number for precision:
-
-**Character Consistency:**
+**3. 描述尺寸层级：**
 
 ```text
-The same person from image 1, now seated at a desk in a modern office,
-same clothing and hairstyle, different environment
+大标题"BREAKING NEWS"上方，小字副标题"详情内览"在下方
 ```
 
-Maintain the same character across multiple scenes:
-
-For sequential consistency:
-
-**Style Transfer:**
+**4. 指示位置：**
 
 ```text
-Apply the color grading and mood from image 2 to the scene in image 1
+"OPEN" 招牌居中在商店橱窗
+"EXIT" 文字位于门上方
+"第1页" 在右下角
 ```
 
-Apply the style of one image to another:
+**5. 前置文本：**
 
-**Pose Guidance:**
+将文字描述放在提示早期以获更好准确性：
 
 ```text
-The person from image 1 in the exact pose shown in image 2,
-placed in the environment from image 3
+好：面包店橱窗中的"FRESH BREAD"招牌...
+欠佳：面包店橱窗里有一个写着"FRESH BREAD"的招牌...
 ```
 
-Use a reference for body positioning:
-
-**Object Composition:**
+**无衬线（现代/干净）：**
 
 ```text
-Place the product from image 1 on the table setting from image 2,
-using the lighting style from image 3
+"MINIMAL" 干净几何无衬线，瑞士现代主义风格
+"TECH SUMMIT" 粗体紧凑怪诞字体
+"future" 细体大写无衬线，当代设计
 ```
 
-Combine elements from multiple images:
-
-**Background Replacement:**
+**衬线（经典/优雅）：**
 
 ```text
-Keep the subject from image 1 exactly as shown, replace the background
-with the beach scene from image 2, match the lighting naturally
+"The New Yorker" 传统衬线字体，编辑刊头
+"LUXURY" 高对比度 Didone 衬线，细/粗笔画
+"Wisdom" 旧风格衬线，微妙的托架衬线
 ```
 
-**Two Characters:**
+**手写体/草书（装饰性）：**
 
 ```text
-Image 1 (person A) and image 2 (person B) having a conversation
-at a coffee shop table, person A on the left gesturing, person B
-on the right listening intently
+"With Love" 流畅的书法手写体，带有花饰
+"Signature" 连笔刷字，休闲优雅
+"Romance" 正式铜板字体，婚礼请柬风格
 ```
 
-**Group Composition:**
+**展示/装饰性：**
 
 ```text
-The three people from images 1, 2, and 3 standing together for a
-group photo, arranged left to right in that order, friendly poses,
-outdoor park setting
+"ROCK CONCERT" 做旧复古演唱会海报字体
+"CIRCUS" 华丽维多利亚展示字体，带装饰元素
+"RETRO" 1970 年代圆润气泡字母
 ```
 
-**Selective Attribute Transfer:**
+**手写：**
 
 ```text
-The face and expression from image 1, the hairstyle from image 2,
-wearing the outfit from image 3, in the pose from image 4
+"给自己的便条" 休闲手写风格，略微不完美
+"谢谢！" 快速马克笔手写
+"想法" 草草铅笔手写
 ```
 
-**Partial Transfer:**
+**等宽：**
 
 ```text
-Arrange the scene using the layout shown in the collage input:
-- Person from image 1 in the left position
-- Object from image 2 in the center position
-- Background element from image 3 filling the right side
+"CODE_COMPLETE" 终端等宽字体，开发者美学
+"SYSTEM" 打字机等宽字体，复古科技
+"DEBUG" LCD 风格数字等宽字体
 ```
 
-Use a collage input for layout guidance:
-
-**1. Clear Image Roles:**
+**霓虹灯：**
 
 ```text
-Image 1: face/identity reference
-Image 2: pose/body reference
-Image 3: style/aesthetic reference
-Image 4: environment/background reference
+发光的霓虹灯拼出"24/7 营业"用粉色霓虹管，
+蓝色轮廓，微微发光和反射，夜晚场景
 ```
 
-Specify what each reference provides:
-
-**2. Quality References:**
-
-- Use high-quality, clear reference images
-
-- Ensure good lighting in references
-
-- Avoid heavily processed or filtered images
-
-**3. Consistent Lighting:**
+**金属/3D：**
 
 ```text
-...ensure the lighting direction matches across all elements,
-with main light source from the upper left
+"GOLD" 三维金属金色字母，逼真的
+反射和微妙的阴影，奢华美学
 ```
 
-When combining elements:
-
-**4. Resolution Awareness:**
-
-For [pro] API with 9MP total limit:
-
-- At 1MP output: up to 8 reference images comfortably
-
-- Calculate: input images + output = total MP
-
-**5. Explicit Relationships:**
+**浮雕/凹印：**
 
 ```text
-Create a scene combining:
-- The woman from image 1 (keep exact face, expression, hair)
-- Wearing the vintage dress from image 2 (exact pattern and cut)
-- In the pose from image 3 (seated position, arm placement)
-- Set in the library from image 4 (bookshelves, furniture)
-- Using the warm lighting style from image 5 (golden hour quality)
-
-Position her in the center of frame, medium shot, looking slightly
-to the right with a thoughtful expression.
+"PREMIUM" 压印在皮革表面，微妙的阴影显示
+凸起的字形
 ```
 
-Don't assume - specify exactly how elements relate:
+**轮廓：**
 
-**Elements Not Transferring:**
+```text
+"MODERN" 仅轮廓字母，无填充，细白描边
+在深色背景上
+```
 
-- Be more specific about which element from which image
+**渐变文字：**
 
-- Use explicit indexing ("from image 1")
+```text
+"SUMMER" 渐变填充，从顶部的 #FF6B6B（珊瑚色）
+到底部的 #4ECDC4（青色）
+```
 
-- Reduce the number of references and complexity
+**海报设计：**
 
-**Inconsistent Blending:**
+```text
+活动海报，顶部有"SUMMER FEST 2025"大标题，用粗体
+紧凑无衬线字体，"JULY 15-17"中号副标题
+用常规字重，"Central Park, NYC"小号正文在
+底部，所有文本为白色，在 #FF6B35（日落橙）背景上
+```
 
-- Specify lighting consistency
+**书籍封面：**
 
-- Describe how elements should interact
+```text
+书籍封面设计："THE GREAT GATSBY"用优雅的艺术装饰风格金色
+字体，居中在上方三分之一处，作者名"F. SCOTT FITZGERALD"
+用较小的金色大写字母在下方，#1A1A2E（午夜蓝）背景
+搭配几何金色装饰
+```
 
-- Use style references to unify the composition
+**杂志封面：**
 
-**Identity Drift:**
+```text
+时尚杂志封面，顶部"VOGUE"经典衬线刊头，
+封面行"SPRING COLLECTION"粗体无衬线，"The New Rules of Style"
+更轻字重斜体，全部白色，映衬戏剧性肖像
+```
 
-- Emphasize key identifying features
+**标牌：**
 
-- Use phrases like "maintaining exact likeness"
+```text
+复古餐厅招牌："MEL'S DINER"红色霓虹手写字体，
+"OPEN"在下方，分开的绿色霓虹块状字母，镀铬边框，
+1950 年代美国风情美学
+```
 
-- Provide multiple angles of the same subject if available
+**名片：**
+
+```text
+极简名片，"JOHN SMITH"中粗无衬线字体，
+"Creative Director"更轻字重在下方，联系方式用小
+字体在底部，#2C3E50（深蓝）文字在白色背景上
+```
+
+**居中构图：**
+
+```text
+居中文字布局："WELCOME"大号大写字母在中央，
+完美平衡，边距相等
+```
+
+**左对齐：**
+
+```text
+左对齐文本块："Company Name"作为标题，
+"Tagline goes here"在下方，左对齐齐行
+```
+
+**路径文字：**
+
+```text
+"GOING IN CIRCLES"文字沿圆形路径围绕
+设计中心排列
+```
+
+**文字叠加：**
+
+```text
+"ADVENTURE AWAITS"粗体白色文字叠加在风景
+照片上，位于下方三分之一处，略带阴影以提高可读性
+```
+
+**步数参数：**
+
+- 较高步数（30-50）= 更好的文字质量
+
+- 较低步数（10-20）= 更快、较低质量
+
+**引导尺度参数：**
+
+- 较高引导尺度（6-10）= 更严格的提示遵循
+
+- 较低引导尺度（1.5-4）= 更具创意的解释
+
+**推荐设置：**
+
+```text
+对于清晰的排版：steps=50, guidance=7
+对于艺术文字：steps=30, guidance=4
+```
+
+**拼写错误的单词：**
+
+- 保持文字简短（1-4 个单词效果最佳）
+
+- 尽可能使用常见单词
+
+- 在提示中重复确切的文字
+
+**文字不清晰：**
+
+- 指定更大的文字尺寸
+
+- 使用更简单的字体（无衬线）
+
+- 确保与背景的高对比度
+
+- 使用 [flex] 模型
+
+**字体风格错误：**
+
+```text
+不要："用好看的字体写的文字"
+要用："用类似于 Futura 的粗体几何无衬线字体写的文字"
+```
+
+更加具体：
+
+**文字未出现：**
+
+- 在提示中前置文字描述
+
+- 将文字放在引号中
+
+- 指定确切位置
+
+- 减少其他提示的复杂性
 
 ---
 
-## 9. Positive Prompt Alternatives
+## 8. 多参考编辑
 
-**Impact: MEDIUM**
+**影响：中**
 
-Strategies for achieving results without negative prompts, which FLUX does not support.
+组合多个参考图像进行风格迁移和构图。
 
-### 9.1 Negative Prompt Alternatives
+### 8.1 多参考图像编辑
 
-**Impact: MEDIUM**
+**影响：中**
 
-FLUX does not support negative prompts. This guide provides positive alternatives for common negative prompt patterns.
+使用多个参考图像实现角色一致性、风格迁移和复杂构图的指南。
 
-Negative prompts can actually make models focus MORE on unwanted elements. Instead, describe exactly what you DO want - this gives clearer direction and better results.
+FLUX.2 模型支持多个参考图像进行高级编辑：
 
-For any unwanted element:
+- **FLUX.2 [klein]**：最多 4 张参考图像 - 快速编辑
 
-1. Identify what you don't want
+- **FLUX.2 [pro]**：通过 API 最多 8 张 - 平衡质量/速度
 
-2. Ask: "What would be there instead?"
+- **FLUX.2 [max]**：通过 API 最多 8 张，playground 中 10 张 - 最高质量
 
-3. Describe the positive alternative
+- **FLUX.2 [flex]**：通过 API 最多 8 张 - 最适合排版
 
-**People/Crowds:**
+> **注意：** 推荐使用 FLUX.2 模型而非 FLUX.1 Kontext Max，以获得更好的结果。
 
-| Instead of | Use |
+**推荐：直接使用 URL** - 比 base64 更简单、更方便。
+
+直接将图像 URL 传递给 `input_image`、`input_image_2` 等：
+
+API 会自动获取 URL。URL 和 base64 都可用，但推荐使用 URL。
+
+**自然语言描述：**
+
+```text
+图 1 中的人坐在图 2 的咖啡馆桌旁，
+穿着图 3 的服装，具有图 4 的温暖光照风格
+```
+
+自然地描述图像间的关系：
+
+**显式索引：**
+
+```text
+将图 1 的脸部与图 2 的发型结合
+放在图 3 的身体姿势上
+```
+
+通过编号精确引用图像：
+
+**角色一致性：**
+
+```text
+图 1 中的同一个人，现在坐在现代办公室的办公桌前，
+相同的服装和发型，不同的环境
+```
+
+跨多个场景保持相同的角色：
+
+为了实现连续一致性：
+
+**风格迁移：**
+
+```text
+将图 2 的色彩分级和情绪应用到图 1 的场景中
+```
+
+将一张图像的风格应用到另一张：
+
+**姿势引导：**
+
+```text
+图 1 中的人以图 2 中展示的精确姿势，
+放置在图 3 的环境中
+```
+
+使用参考图像进行身体定位：
+
+**物体构图：**
+
+```text
+将图 1 的产品放在图 2 的餐桌布置上，
+使用图 3 的光照风格
+```
+
+组合多张图像的元素：
+
+**背景替换：**
+
+```text
+保持图 1 的主体完全不变，将背景替换为
+图 2 的海滩场景，自然地匹配光照
+```
+
+**双角色：**
+
+```text
+图 1（人物 A）和图 2（人物 B）在咖啡厅桌旁交谈，
+人物 A 在左侧做手势，人物 B
+在右侧专注倾听
+```
+
+**群组构图：**
+
+```text
+图 1、2 和 3 中的三个人站在一起拍摄
+合影，按从左到右的顺序排列，友好的姿势，
+户外公园场景
+```
+
+**选择性属性迁移：**
+
+```text
+图 1 的脸部和表情，图 2 的发型，
+穿着图 3 的服装，摆着图 4 的姿势
+```
+
+**部分迁移：**
+
+```text
+使用拼贴输入中显示的布局来排列场景：
+- 图 1 中的人在左侧位置
+- 图 2 中的物体在中心位置
+- 图 3 中的背景元素填充右侧
+```
+
+使用拼贴输入进行布局引导：
+
+**1. 清晰的图像角色：**
+
+```text
+图 1：脸部/身份参考
+图 2：姿势/身体参考
+图 3：风格/美学参考
+图 4：环境/背景参考
+```
+
+指定每个参考图像提供的内容：
+
+**2. 高质量参考：**
+
+- 使用高质量、清晰的参考图像
+
+- 确保参考图像中的光照良好
+
+- 避免重度处理或滤镜过的图像
+
+**3. 一致的光照：**
+
+```text
+...确保所有元素的光照方向匹配，
+主光源来自左上方
+```
+
+组合元素时：
+
+**4. 分辨率意识：**
+
+对于总限制为 9MP 的 [pro] API：
+
+- 在 1MP 输出时：可舒适使用最多 8 张参考图像
+
+- 计算：输入图像 + 输出 = 总 MP
+
+**5. 明确的关系：**
+
+```text
+创建一个场景，组合：
+- 图 1 中的女性（保持确切的脸部、表情、头发）
+- 穿着图 2 中的复古连衣裙（确切的图案和剪裁）
+- 采用图 3 中的姿势（坐姿、手臂位置）
+- 设置在图 4 的图书馆中（书架、家具）
+- 使用图 5 的温暖光照风格（黄金时刻效果）
+
+将她置于画面中央，中景，微微
+向右看，带着若有所思的表情。
+```
+
+不要假设——明确指定元素之间的关系：
+
+**元素未迁移：**
+
+- 更具体地说明哪个元素来自哪张图像
+
+- 使用显式索引（"来自图 1"）
+
+- 减少参考图像数量和复杂度
+
+**融合不一致：**
+
+- 指定光照一致性
+
+- 描述元素应如何交互
+
+- 使用风格参考来统一构图
+
+**身份漂移：**
+
+- 强调关键识别特征
+
+- 使用"保持精确相似度"等短语
+
+- 如有条件，提供同一主体的多个角度
+
+---
+
+## 9. 正面提示替代方案
+
+**影响：中**
+
+无需负面提示即可实现结果的策略——FLUX 不支持负面提示。
+
+### 9.1 负面提示替代方案
+
+**影响：中**
+
+FLUX 不支持负面提示。本指南为常见的负面提示模式提供正面替代方案。
+
+负面提示实际上可能会让模型更加关注不想要的元素。相反，准确描述你确实想要的内容——这能提供更清晰的方向和更好的结果。
+
+对于任何不想要的元素：
+
+1. 识别你不想要什么
+
+2. 问："那里应该有什么？"
+
+3. 描述正面的替代方案
+
+**人物/人群：**
+
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no people" | "empty", "deserted", "solitary", "abandoned" |
+| "没有人" | "空荡的"、"荒凉的"、"独自的"、"废弃的" |
 
-| "no crowds" | "quiet", "peaceful", "secluded", "private" |
+| "没有人群" | "安静的"、"宁静的"、"僻静的"、"私密的" |
 
-| "without background people" | "isolated subject", "clean background", "solo figure" |
+| "没有背景人物" | "孤立的主体"、"干净的背景"、"独影" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: A beach scene, no people
 Good: A deserted beach at dawn, pristine untouched sand, solitary seagull
 ```
 
-**Skin/Appearance:**
+**皮肤/外貌：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no makeup" | "natural skin", "bare face", "fresh-faced" |
+| "不化妆" | "自然肌肤"、"素颜"、"清新面容" |
 
-| "no blemishes" | "clear skin", "smooth complexion", "healthy glow" |
+| "没有瑕疵" | "干净肌肤"、"光滑肤质"、"健康光泽" |
 
-| "no wrinkles" | "youthful skin", "smooth features" |
+| "没有皱纹" | "年轻肌肤"、"光滑特征" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Portrait of woman, no makeup, no blemishes
 Good: Portrait of a woman with natural clear skin, fresh-faced with a healthy glow
 ```
 
-**Accessories:**
+**配饰：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no glasses" | "visible eyes", "unobstructed gaze", "clear eye contact" |
+| "不戴眼镜" | "可见的眼睛"、"无遮挡的目光"、"清晰的眼神接触" |
 
-| "no hat" | "bare head", "visible hair", "uncovered head" |
+| "不戴帽子" | "露出的头部"、"可见的头发"、"未遮盖的头部" |
 
-| "no jewelry" | "minimal accessories", "understated", "unadorned" |
+| "没有首饰" | "极简配饰"、"低调"、"不加装饰" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Man portrait, no glasses, no hat
 Good: Portrait of a man with clear direct gaze, wind-swept visible hair
 ```
 
-**Colors:**
+**颜色：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no color" | "monochrome", "black and white", "grayscale" |
+| "没有颜色" | "单色"、"黑白"、"灰度" |
 
-| "not colorful" | "muted tones", "subdued palette", "desaturated" |
+| "不鲜艳" | "柔和色调"、"低调调色板"、"去饱和" |
 
-| "no bright colors" | "neutral tones", "earth tones", "soft pastels" |
+| "没有亮色" | "中性色调"、"大地色"、"柔和粉色" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Landscape photo, no bright colors
 Good: Landscape in muted earth tones, soft morning light, desaturated palette
 ```
 
-**Text/Watermarks:**
+**文本/水印：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no text" | "clean surfaces", "unmarked", "text-free" |
+| "没有文字" | "干净的表面"、"无标记"、"无文字" |
 
-| "no watermark" | "pristine image", "clean composition" |
+| "没有水印" | "原始图像"、"干净的构图" |
 
-| "no logos" | "unbranded", "plain", "logo-free surface" |
+| "没有标志" | "无品牌"、"素面"、"无标志表面" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Product photo, no watermark, no text
 Good: Clean product photography with pristine unmarked surfaces, minimal unbranded design
 ```
 
-**Style/Era:**
+**风格/时代：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "not modern" | "traditional", "classical", "vintage", "historical" |
+| "不现代" | "传统的"、"古典的"、"复古的"、"历史的" |
 
-| "no CGI look" | "photorealistic", "authentic", "natural", "organic" |
+| "没有CGI感" | "照片级写实的"、"真实的"、"自然的"、"有机的" |
 
-| "not cartoonish" | "realistic", "lifelike", "naturalistic" |
+| "不像卡通" | "写实的"、"逼真的"、"自然主义的" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Building design, not modern, no futuristic elements
 Good: Traditional Victorian architecture with classical ornate details and period-accurate features
 ```
 
-**Quality/Artifacts:**
+**质量/伪影：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no blur" | "sharp focus", "crisp details", "tack-sharp" |
+| "不模糊" | "锐利对焦"、"清晰细节"、"极致锐利" |
 
-| "no noise" | "clean image", "smooth gradients", "low ISO" |
+| "没有噪点" | "干净的图像"、"平滑渐变"、"低 ISO" |
 
-| "no artifacts" | "pristine quality", "clean render", "flawless" |
+| "没有伪影" | "原始质量"、"干净渲染"、"完美无瑕" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Portrait, no blur, no noise
 Good: Tack-sharp portrait with pristine image quality, smooth skin tones, crisp details
 ```
 
-**Objects:**
+**物体：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no cars" | "pedestrian area", "car-free zone", "walking street" |
+| "没有汽车" | "步行区"、"无车区域"、"步行街" |
 
-| "no buildings" | "open landscape", "natural scenery", "wilderness" |
+| "没有建筑" | "开阔景观"、"自然风景"、"荒野" |
 
-| "no furniture" | "empty room", "bare space", "minimalist interior" |
+| "没有家具" | "空房间"、"空旷空间"、"极简内饰" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Street scene, no cars, no modern buildings
 Good: Historic cobblestone walking street lined with traditional stone buildings from the 1800s
 ```
 
-**Weather/Environment:**
+**天气/环境：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no rain" | "clear sky", "dry weather", "sunny day" |
+| "没有雨" | "晴朗天空"、"干燥天气"、"晴天" |
 
-| "no clouds" | "clear blue sky", "cloudless", "perfect visibility" |
+| "没有云" | "晴朗蓝天"、"无云"、"极佳能见度" |
 
-| "not dark" | "well-lit", "bright", "daylight", "illuminated" |
+| "不暗" | "光线充足"、"明亮"、"白天"、"照亮" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Outdoor portrait, no rain, no clouds, not dark
 Good: Outdoor portrait under clear blue sky on a bright sunny day, perfect natural lighting
 ```
 
-**Composition:**
+**构图：**
 
-| Instead of | Use |
+| 替代前 | 使用 |
 
 |-----------|-----|
 
-| "no distractions" | "clean composition", "focused framing", "minimal elements" |
+| "没有干扰" | "干净的构图"、"聚焦的取景"、"极简元素" |
 
-| "nothing in background" | "solid background", "isolated subject", "clean backdrop" |
+| "背景什么都没有" | "纯色背景"、"孤立的主体"、"干净的背景" |
 
-| "no clutter" | "organized", "tidy", "minimal", "streamlined" |
+| "不杂乱" | "整洁的"、"有序的"、"极简的"、"精简的" |
 
-**Example:**
+**示例：**
 
 ```text
 Bad: Product shot, no distractions, nothing in background
 Good: Product on clean white seamless backdrop, isolated subject, minimal focused composition
 ```
 
-**Original Negative-Heavy Prompt:**
+**原始充满负面提示的提示词：**
 
 ```text
 Portrait of a woman, no glasses, no makeup, no wrinkles, no blemishes,
 no bright colors, no distracting background, no harsh lighting
 ```
 
-**Positive Rewrite:**
+**正面重写：**
 
 ```text
 Portrait of a youthful woman with clear natural skin and visible bright eyes,
@@ -2203,14 +2200,14 @@ fresh-faced with a healthy glow, wearing muted earth tones against a soft
 blurred neutral background, gentle diffused lighting creating soft shadows
 ```
 
-**Original Negative-Heavy Prompt:**
+**原始充满负面提示的提示词：**
 
 ```text
 Landscape photo, no people, no buildings, no power lines, no modern elements,
 no overcast sky, no dead trees
 ```
 
-**Positive Rewrite:**
+**正面重写：**
 
 ```text
 Pristine wilderness landscape with lush green living forest, clear blue sky,
@@ -2218,29 +2215,29 @@ untouched natural scenery stretching to the horizon, peaceful solitude with
 only birdsong and wind, golden hour sunlight filtering through healthy foliage
 ```
 
-| Unwanted | Positive Alternative |
+| 不想要的 | 正面替代 |
 
 |----------|---------------------|
 
-| No people | Empty, solitary, deserted |
+| 没有人 | 空荡的、独自的、荒凉的 |
 
-| No makeup | Natural, fresh-faced, bare |
+| 不化妆 | 自然的、清新面容、素颜 |
 
-| No text | Clean, unmarked, pristine |
+| 没有文字 | 干净的、无标记、原始的 |
 
-| No blur | Sharp, crisp, tack-sharp |
+| 不模糊 | 锐利的、清晰的、极致锐利 |
 
-| No modern | Traditional, vintage, classical |
+| 不现代 | 传统的、复古的、古典的 |
 
-| No dark | Bright, well-lit, luminous |
+| 不暗 | 明亮的、光线充足的、发光的 |
 
-| No busy | Minimal, clean, focused |
+| 不杂乱 | 极简的、干净的、聚焦的 |
 
-| No artificial | Natural, organic, authentic |
+| 不人工 | 自然的、有机的、真实的 |
 
 ---
 
-## References
+## 参考
 
 1. [https://docs.bfl.ai](https://docs.bfl.ai)
 2. [https://bfl.ai](https://bfl.ai)

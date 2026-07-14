@@ -1,45 +1,45 @@
-# Scene Director - Podcast Repurpose Pipeline
+# 场景导演 - 播客二次利用流水线
 
-## When To Use
+## 何时使用
 
-You are deciding how each podcast deliverable should look based on the actual source mode. This is where you prevent "fake richness" and choose honest, effective treatments.
+你正在根据实际的源模式决定每个播客交付物的视觉效果。这是你防止"虚假丰富"并选择诚实、有效处理方案的地方。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Highlight set and source truth |
-| Tools | `frame_sampler` | Optional visual inspection for video-podcast sources |
-| Playbook | Active style playbook | Brand consistency |
+| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact 验证 |
+| 前置 artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 精彩片段集和源真相 |
+| 工具 | `frame_sampler` | 可选的视频播客源视觉检查 |
+| Playbook | 活动样式 playbook | 品牌一致性 |
 
-## Process
+## 流程
 
-### 1. Pick The Right Treatment Per Deliverable
+### 1. 为每个交付物选择合适的处理方案
 
-Prefer a source-faithful hierarchy:
+优先遵循忠于源素材的层级：
 
-- if video podcast footage exists, use speaker-led scenes first,
-- if only audio exists, use audiogram or quote-led layouts,
-- if branding assets are limited, keep the visual system simple and repeatable.
+- 如果有视频播客素材，优先使用以说话人为主的场景，
+- 如果只有音频，使用 audiogram 或以引用为主的布局，
+- 如果品牌素材有限，保持视觉系统简单且可复用。
 
-### 2. Avoid Pretend Complexity
+### 2. 避免虚假复杂性
 
-Do not plan a full episode with endless generated topic art unless the budget and tools support it. A clean branded companion layout is better than a noisy, underpowered pseudo-production.
+除非预算和工具支持，否则不要规划带有无尽生成话题美术资源的全剧集制作。一个简洁品牌化的伴随布局比嘈杂、动力不足的伪制作更好。
 
-### 3. Define Scene Families
+### 3. 定义场景族
 
-Useful schema scene types:
+有用的 schema 场景类型：
 
-- `talking_head` for source video speaker shots
-- `text_card` for quote cards and chapter cards
-- `generated` for optional topic art
-- `diagram` for the rare cases where the discussion needs a graphic
-- `transition` for chapter moves
+- `talking_head` 用于源视频的说话人镜头
+- `text_card` 用于引用卡和章节卡
+- `generated` 用于可选的话题美术资源
+- `diagram` 用于极少数需要图示的讨论场景
+- `transition` 用于章节切换
 
-### 4. Use Metadata For Layout Strategy
+### 4. 使用 Metadata 进行布局策略
 
-Recommended `scene_plan.metadata` keys:
+推荐的 `scene_plan.metadata` 键：
 
 - `deliverable_layouts`
 - `speaker_card_rules`
@@ -47,24 +47,24 @@ Recommended `scene_plan.metadata` keys:
 - `audiogram_rules`
 - `full_episode_companion_rules`
 
-### 5. Plan Safe Zones And Attribution
+### 5. 规划安全区域和归属信息
 
-Every layout should clearly preserve:
+每个布局都应清晰保留：
 
-- speaker attribution,
-- subtitle zone,
-- show branding,
-- CTA or episode reference area if needed.
+- 说话人归属，
+- 字幕区域，
+- 节目品牌标识，
+- 如有需要，CTA 或剧集引用区域。
 
-### 6. Quality Gate
+### 6. 质量门禁
 
-- each deliverable has a treatment that matches the actual source,
-- source video is used when it exists instead of being hidden behind generic graphics,
-- audio-only assets remain visually simple and readable,
-- long-form companion visuals are achievable.
+- 每个交付物都有与实际源素材匹配的处理方案，
+- 源视频存在时应当被使用，而非隐藏在通用图形背后，
+- 纯音频素材保持视觉简洁且可读，
+- 长格式伴随视觉效果是可实现的。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Planning speaker-centric layouts for audio-only episodes.
-- Turning every clip into the same waveform-plus-logo composition.
-- Using generated graphics to cover weak editorial choices.
+- 为纯音频剧集规划以说话人为中心的布局。
+- 将每个片段都变成相同的波形加徽标构图。
+- 使用生成的图形来掩盖薄弱的编辑选择。

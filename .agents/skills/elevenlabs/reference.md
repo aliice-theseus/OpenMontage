@@ -1,44 +1,44 @@
-# ElevenLabs API Reference
+# ElevenLabs API 参考
 
-Detailed API documentation for ElevenLabs audio generation services.
+ElevenLabs 音频生成服务的详细 API 文档。
 
-## Authentication
+## 认证
 
 ```python
 from elevenlabs.client import ElevenLabs
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 ```
 
-## Text-to-Speech Models
+## 文本转语音模型
 
-| Model ID | Description | Languages | Latency |
-|----------|-------------|-----------|---------|
-| `eleven_flash_v2_5` | Ultra-low latency streaming | 32 | ~75ms |
-| `eleven_multilingual_v2` | Highest quality | 32 | Standard |
-| `eleven_turbo_v2_5` | Fast, good quality | 32 | Low |
-| `eleven_v3` | Best emotional range (alpha) | 32+ | Higher |
+| 模型 ID | 描述 | 语言数 | 延迟 |
+|----------|-------------|-----------|-------|
+| `eleven_flash_v2_5` | 超低延迟流式传输 | 32 | ~75ms |
+| `eleven_multilingual_v2` | 最高质量 | 32 | 标准 |
+| `eleven_turbo_v2_5` | 快速，质量好 | 32 | 低 |
+| `eleven_v3` | 最佳情感范围（alpha） | 32+ | 较高 |
 
-## Voice Settings
+## 语音设置
 
-| Parameter | Range | Default | Effect |
+| 参数 | 范围 | 默认值 | 效果 |
 |-----------|-------|---------|--------|
-| `stability` | 0.0-1.0 | 0.5 | Lower = more expressive/variable |
-| `similarity_boost` | 0.0-1.0 | 0.75 | Higher = closer to original voice |
-| `style` | 0.0-1.0 | 0.0 | Style exaggeration (v2 models) |
-| `speed` | 0.5-2.0 | 1.0 | Playback speed multiplier |
+| `stability` | 0.0-1.0 | 0.5 | 越低越有表现力/变化 |
+| `similarity_boost` | 0.0-1.0 | 0.75 | 越高越接近原声 |
+| `style` | 0.0-1.0 | 0.0 | 风格夸张（v2 模型）|
+| `speed` | 0.5-2.0 | 1.0 | 播放速度倍数 |
 
-## Output Formats
+## 输出格式
 
-| Format Code | Sample Rate | Bitrate | Tier Required |
+| 格式代码 | 采样率 | 比特率 | 所需层级 |
 |-------------|-------------|---------|---------------|
-| `mp3_44100_128` | 44.1kHz | 128kbps | Free (default) |
+| `mp3_44100_128` | 44.1kHz | 128kbps | 免费（默认）|
 | `mp3_44100_192` | 44.1kHz | 192kbps | Creator+ |
 | `pcm_44100` | 44.1kHz | - | Pro+ |
-| `ulaw_8000` | 8kHz | - | Free (telephony) |
+| `ulaw_8000` | 8kHz | - | 免费（电话）|
 
-## Long-form Audio (Stitching)
+## 长音频（拼接）
 
-For continuity across multiple generations:
+为多个生成之间的连续性：
 
 ```python
 result1 = client.text_to_speech.convert_with_timestamps(
@@ -56,96 +56,96 @@ result2 = client.text_to_speech.convert(
 )
 ```
 
-## Professional Voice Cloning (PVC)
+## 专业语音克隆 (PVC)
 
-Requires Creator plan+. Creates a fine-tuned model (3-6 hours training).
+需要 Creator 计划+。创建一个微调模型（3-6 小时训练）。
 
-**Requirements:**
-- 30 min minimum, 2-3 hours optimal audio
-- Professional XLR mic recommended
-- Pop filter, ~20cm distance
-- Peak levels: -6dB to -3dB
-- Consistent performance style
+**要求：**
+- 至少 30 分钟，最佳 2-3 小时音频
+- 推荐专业 XLR 麦克风
+- 防喷罩，约 20cm 距离
+- 峰值电平：-6dB 到 -3dB
+- 一致的表演风格
 
-**Workflow:**
+**工作流：**
 
 ```python
-# 1. Create PVC with samples
+# 1. 使用样本创建 PVC
 pvc = client.voices.create_professional_voice_clone(
     name="My Pro Voice",
     files=["recording1.mp3", "recording2.mp3", ...],
 )
 
-# 2. Get verification captcha
+# 2. 获取验证验证码
 captcha = client.voices.get_pvc_verification_captcha(voice_id=pvc.voice_id)
-# Read the captcha text aloud and record
+# 朗读验证码文本并录制
 
-# 3. Submit verification
+# 3. 提交验证
 client.voices.verify_pvc(
     voice_id=pvc.voice_id,
     recording=open("captcha_reading.mp3", "rb")
 )
 
-# 4. Start training
+# 4. 开始训练
 client.voices.start_pvc_training(voice_id=pvc.voice_id)
 ```
 
-## Sound Effects Parameters
+## 音效参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必需 | 描述 |
 |-----------|------|----------|-------------|
-| `text` | string | Yes | Description of sound effect |
-| `duration_seconds` | float | No | 1-22 seconds (auto if omitted) |
-| `prompt_influence` | float | No | 0.0-1.0 (default 0.3) |
+| `text` | string | 是 | 音效描述 |
+| `duration_seconds` | float | 否 | 1-22 秒（省略时自动）|
+| `prompt_influence` | float | 否 | 0.0-1.0（默认 0.3）|
 
-**Billing:** 100 chars/generation (auto) or 25 chars/second (fixed duration)
+**计费：** 100 字符/生成（自动）或 25 字符/秒（固定时长）
 
-**Example prompts:**
-- Environmental: "Rain on a tin roof, steady and rhythmic"
-- Action: "Sword being drawn from sheath, metallic ring"
-- Mechanical: "Old car engine struggling to start then roaring to life"
+**示例提示：**
+- 环境："Rain on a tin roof, steady and rhythmic"
+- 动作："Sword being drawn from sheath, metallic ring"
+- 机械："Old car engine struggling to start then roaring to life"
 
-## Music Parameters
+## 音乐参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必需 | 描述 |
 |-----------|------|----------|-------------|
-| `prompt` | string | Yes* | Natural language music description |
-| `composition_plan` | object | Yes* | Detailed composition structure |
-| `duration_ms` | int | No | 10000-300000 (10s-5min) |
-| `instrumental` | bool | No | Force instrumental output |
+| `prompt` | string | 是* | 自然语言音乐描述 |
+| `composition_plan` | object | 是* | 详细创作结构 |
+| `duration_ms` | int | 否 | 10000-300000（10秒-5分钟）|
+| `instrumental` | bool | 否 | 强制器乐输出 |
 
-*Either `prompt` or `composition_plan` required, not both.
+*需要 `prompt` 或 `composition_plan` 之一，不能同时提供。
 
-**Effective prompts include:**
-1. Genre/Style: "indie rock", "lo-fi hip hop", "orchestral"
-2. Mood: "uplifting", "melancholic", "tense"
-3. Instruments: "acoustic guitar", "synth pads", "strings"
-4. Tempo/Energy: "slow", "upbeat", "driving"
-5. Context: "for a travel vlog", "podcast intro"
+**有效的提示包括：**
+1. 类型/风格："indie rock"、"lo-fi hip hop"、"orchestral"
+2. 情绪："uplifting"、"melancholic"、"tense"
+3. 乐器："acoustic guitar"、"synth pads"、"strings"
+4. 节奏/能量："slow"、"upbeat"、"driving"
+5. 场景："for a travel vlog"、"podcast intro"
 
-## Rate Limits by Tier
+## 按层级的速率限制
 
-| Tier | TTS Concurrent | SFX Concurrent | Music Concurrent |
+| 层级 | TTS 并发 | SFX 并发 | 音乐并发 |
 |------|---------------|----------------|------------------|
-| Free | 2 | 2 | 1 |
+| 免费 | 2 | 2 | 1 |
 | Starter | 3 | 3 | 2 |
 | Creator | 5 | 5 | 3 |
 | Pro | 10 | 10 | 5 |
 | Scale | 15 | 15 | 10 |
 
-## Voice Management
+## 语音管理
 
 ```python
-# List voices
+# 列出语音
 voices = client.voices.get_all()
 for voice in voices.voices:
     print(f"{voice.name}: {voice.voice_id}")
 
-# Delete voice
+# 删除语音
 client.voices.delete(voice_id="your_voice_id")
 ```
 
-## Error Handling
+## 错误处理
 
 ```python
 from elevenlabs.core.api_error import ApiError
@@ -159,9 +159,9 @@ except ApiError as e:
         print("Invalid API key")
 ```
 
-| Code | Meaning | Action |
+| 编码 | 含义 | 操作 |
 |------|---------|--------|
-| 401 | Invalid API key | Check API key |
-| 403 | Feature not available | Upgrade tier |
-| 422 | Invalid parameters | Check request body |
-| 429 | Rate limited | Wait and retry |
+| 401 | 无效的 API 密钥 | 检查 API 密钥 |
+| 403 | 功能不可用 | 升级层级 |
+| 422 | 无效参数 | 检查请求体 |
+| 429 | 速率受限 | 等待重试 |

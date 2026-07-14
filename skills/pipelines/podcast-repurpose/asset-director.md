@@ -1,59 +1,59 @@
-# Asset Director - Podcast Repurpose Pipeline
+# 素材导演 - 播客二次利用流水线
 
-## When To Use
+## 何时使用
 
-This stage builds the reusable kit for podcast-derived video assets: subtitles, speaker cards, quote cards, optional topic art, and optional music support.
+此阶段为播客衍生的视频素材构建可复用的工具包：字幕、说话人卡片、引用卡片、可选话题美术资源和可选音乐支持。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/asset_manifest.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Deliverable plan and transcript truth |
-| Tools | `subtitle_gen`, `image_selector`, `diagram_gen`, `music_gen`, `audio_enhance` | Asset generation |
-| Playbook | Active style playbook | Brand consistency |
+| Schema | `schemas/artifacts/asset_manifest.schema.json` | Artifact 验证 |
+| 前置 artifacts | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 交付物方案和转录文本真相 |
+| 工具 | `subtitle_gen`, `image_selector`, `diagram_gen`, `music_gen`, `audio_enhance` | 素材生成 |
+| Playbook | 活动样式 playbook | 品牌一致性 |
 
-## Process
+## 流程
 
-### 1. Start With Mandatory Assets
+### 1. 从必需素材开始
 
-Highest priority:
+最高优先级：
 
-- subtitles for every clip,
-- clean audio where needed,
-- speaker attribution assets if multiple speakers appear,
-- quote-card templates for quote-led outputs.
+- 每个片段的字幕，
+- 需要时的干净音频，
+- 如果出现多个说话人，准备说话人归属素材，
+- 引用主导的输出所需的引用卡模板。
 
-### 1b. Hero Scene Sample (Mandatory)
+### 1b. 主角场景示例（必选）
 
-Before batch asset generation:
-1. Identify the hero clip (the most important or impactful clip in the batch)
-2. Generate ONE sample asset for that clip (subtitle style, speaker card, or quote card)
-3. Present it: "This is the visual direction for the most important clip. Does this match what you're imagining? I'll generate the rest in this style."
-4. Wait for approval before proceeding to batch generation
+在批量素材生成之前：
+1. 确定主角片段（批次中最重要或最有影响力的片段）
+2. 为该片段生成**一个**示例素材（字幕样式、说话人卡或引用卡）
+3. 展示它："这是最重要片段的视觉方向。这符合你的想象吗？我将按此风格生成其余部分。"
+4. 在继续批量生成之前等待批准
 
-This prevents the most expensive mistake: generating 10+ assets in a direction the user doesn't like.
+这可以防止最昂贵的错误：按照用户不喜欢的风格生成 10+ 个素材。
 
-### 2. Treat Topic Graphics As Optional
+### 2. 将话题图形视为可选
 
-Generated graphics should support the batch, not dominate it. Use them only when:
+生成的图形应支持批次，而非主导它。仅在以下情况下使用它们：
 
-- the topic truly benefits from a clarifying image,
-- the episode companion needs chapter separation,
-- the budget can support consistent outputs.
+- 话题确实需要澄清性的图片来增强效果，
+- 剧集伴随视频需要章节分隔，
+- 预算可以支持一致的输出。
 
-### 3. Use Templates, Not Reinvention
+### 3. 使用模板，而非重新发明
 
-Prefer reusable templates for:
+优先使用可复用模板用于：
 
-- speaker cards,
-- quote cards,
-- end cards,
-- brand containers.
+- 说话人卡片，
+- 引用卡片，
+- 结尾卡片，
+- 品牌容器。
 
-### 4. Store Rich Asset Truth In Metadata
+### 4. 在 Metadata 中存储丰富的素材真相
 
-Recommended metadata keys:
+推荐的 metadata 键：
 
 - `speaker_assets`
 - `subtitle_assets`
@@ -61,45 +61,45 @@ Recommended metadata keys:
 - `topic_graphics`
 - `music_assets`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- all clips have subtitle assets,
-- speaker identity is visually consistent,
-- quote-card text remains mobile-readable,
-- optional generated art stays within budget and style constraints.
+- 所有片段都有字幕素材，
+- 说话人身份在视觉上保持一致，
+- 引用卡文字在移动设备上清晰可读，
+- 可选的美术资源在预算和样式约束范围内。
 
-### Mid-Production Fact Verification
+### 制作中期的事实核查
 
-If you encounter uncertainty during asset generation:
-- Use `web_search` to verify visual accuracy of subjects (e.g. what does this building actually look like?)
-- Use `web_search` to find reference images before generating illustrations
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在素材生成过程中遇到不确定性：
+- 使用 `web_search` 验证主题的视觉准确性（例如，这座建筑实际上是什么样子？）
+- 使用 `web_search` 在生成插画前查找参考图片
+- 在决策日志中记录验证信息：`category="visual_accuracy_check"`
 
-Visual accuracy matters. If the script mentions a specific place, person, or object,
-verify what it actually looks like before generating images. Don't rely on
-the AI model's training data — it may be wrong or outdated.
+视觉准确性很重要。如果脚本提到特定的地点、人物或物体，
+在生成图像之前验证其实际外观。不要依赖
+AI 模型的训练数据 — 它可能是错误或过时的。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Spending budget on optional art before subtitles and attribution assets are complete.
-- Creating inconsistent speaker cards across the same episode.
-- Overproducing topic graphics for long-form companion videos.
+- 在字幕和归属素材完成之前将预算花费在可选美术资源上。
+- 在同一剧集中创建不一致的说话人卡片。
+- 为长格式伴随视频过度制作话题图形。
 
 
-## When You Do Not Know How
+## 当你不知道如何操作时
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+如果你遇到不确定的生成技术、供应商行为或提示词模式：
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+1. **搜索网络**获取当前最佳实践 — 模型和 API 频繁变化，agent 的训练数据可能已过时
+2. **检查 `.agents/skills/`** 中现有的 Layer 3 知识（供应商特定的提示词指南、API 模式）
+3. **如果两者都无效**，在 `projects/<project-name>/skills/<name>.md` 编写项目范围的 skill，记录你学到的内容
+4. **在 skill 中引用源 URL** 以便知识可追溯
+5. **记录到决策日志**：`category: "capability_extension"`, `subject: "learned technique: <name>"`
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
+以下方面尤其重要：
+- **视频生成提示词** — 模型对随每个版本变化的特定词汇表有不同响应
+- **图像模型参数** — FLUX、DALL-E、Imagen 的最佳设置各有不同且不断演变
+- **音频供应商特性** — 语音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式** — 随着框架发展，新的合成技术不断涌现
 
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时的知识。如有疑问，先搜索。

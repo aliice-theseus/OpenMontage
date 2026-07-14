@@ -1,127 +1,101 @@
-# Transition Catalog
+# 过渡目录
 
-Hard rules, scene template, and routing to implementation code. Read the reference file for the transition type you need — don't load all of them.
+硬规则、场景模板和实现代码的路由。读取你需要的过渡类型的参考文件 — 不要全部加载。
 
-## Contents
+## 内容
 
-- Hard rules for CSS transitions
-- Shader transitions
-- Scene template
-- CSS transition examples
-- Shader transition routing
+- CSS 过渡的硬规则
+- 着色器过渡
+- 场景模板
+- CSS 过渡示例
+- 着色器过渡路由
 
-## Hard Rules (CSS)
+## CSS 的硬规则
 
-These cause real bugs if violated.
+这些如果违反会导致真实错误。
 
-**Scene visibility:** Scene 1 visible by default (no `opacity: 0`). Scenes 2+ have `opacity: 0` on the CONTAINER div. GSAP reveals them. No visibility shim (`timedEls`).
+**场景可见性：** 场景 1 默认可见（无 `opacity: 0`）。场景 2+ 在 CONTAINER div 上有 `opacity: 0`。GSAP 揭示它们。无可见性垫片（`timedEls`）。
 
-**Fonts:** Just write the `font-family` you want — the compiler embeds supported fonts automatically via `@font-face` with inline data URIs. No need for `<link>` tags or `@import`. Works in all contexts including sandboxed iframes.
+**字体：** 只需写你想要的 `font-family` — 编译器通过 `@font-face` 自动嵌入支持的字体，使用内联数据 URI。无需 `<link>` 标签或 `@import`。在所有上下文中工作，包括沙箱 iframe。
 
-**Element structure:** No `class="clip"` on scene divs in standalone compositions. Only the root div gets `data-composition-id`/`data-start`/`data-duration`.
+**元素结构：** 独立组合中场景 div 上无 `class="clip"`。只有根 div 获得 `data-composition-id`/`data-start`/`data-duration`。
 
-**Overlay elements:** Staggered blocks = full-screen 1920x1080, NOT thin strips. Glitch RGB overlays = normal blending at 35% opacity, NOT `mix-blend-mode: multiply` (invisible on dark backgrounds). Light leak overlays = larger than the frame (2400px+), never a visible shape. Overexposure = use `filter: brightness()` on the scene, not just a white overlay.
+**叠加元素：** 错开块 = 全屏 1920x1080，非细条。故障 RGB 叠加 = 35% 不透明度的正常混合，非 `mix-blend-mode: multiply`（在暗背景上不可见）。漏光叠加 = 大于画面（2400px+），从不是可见形状。过曝光 = 在场景上使用 `filter: brightness()`，而非仅白色叠加。
 
-**VHS tape:** Clone actual scene content with `cloneNode(true)`, NOT colored bars. Each strip: wider than frame (2020px at left:-50px). Red+blue chromatic copies at z-index above main strip. Seeded PRNG for deterministic random offsets.
+**VHS 磁带：** 用 `cloneNode(true)` 克隆实际场景内容，非彩色条。每个条：宽于画面（2020px 在 left:-50px）。红+蓝色差副本在 z-index 高于主条。种子化 PRNG 用于确定性随机偏移。
 
-**Z-index:** Gravity drop, zoom out, diagonal split need outgoing scene ON TOP (`zIndex: 10`) so it exits while revealing the new scene behind (`zIndex: 1`).
+**Z-index：** 重力掉落、缩小、对角分割需要退出场景在最上面（`zIndex: 10`），使其退出同时揭示后面的新场景（`zIndex: 1`）。
 
-**Page burn:** Content burns with the page — no falling debris. Hide scene1 via `tl.set` at burn end, NEVER `onComplete` (not reversible). `onUpdate` must restore `clipPath: "none"` when `wp <= 0` for rewind support. Incoming scene fades from black at 90% through burn.
+**页面灼烧：** 内容随页面灼烧 — 无坠落碎片。通过 `tl.set` 在灼烧结束时隐藏 scene1，永远不要 `onComplete`（不可逆）。`onUpdate` 必须在 `wp <= 0` 时恢复 `clipPath: "none"` 以支持倒带。进入场景在灼烧 90% 时从黑色淡入。
 
-**Clock wipe:** 9-point polygon with intermediate edge positions. Step through 4 quadrants with separate tweens.
+**时钟擦拭：** 带中间边缘位置的 9 点多边形。用单独的补间遍历 4 个象限。
 
-**Grid dissolve:** Cycle 5 palette colors per cell, not monochrome.
+**网格溶解：** 每单元格循环 5 种调色板颜色，非单色。
 
-**Blinds count by energy:** Calm: 4h/6v. Medium: 6-8h/8v. High: 12-16h/16v.
+**百叶窗数量按能量：** 平静：4h/6v。中等：6-8h/8v。高：12-16h/16v。
 
-**Don't use:** Star iris (polygon interpolation broken), tilt-shift (no selective CSS blur), lens flare (visible shape, not optical), hinge/door (distorts too fast).
+**不要使用：** 星形虹膜（多边形插值损坏）、移轴（无选择性 CSS 模糊）、镜头光晕（可见形状，非光学）、铰链/门（扭曲太快）。
 
-## Shader Transitions
+## 着色器过渡
 
-Shader setup, WebGL init, capture, and fragment shaders are handled by `@hyperframes/shader-transitions` (`packages/shader-transitions/`). Read the package source for API details. Compositions using shaders must follow the shader-compatible CSS rules in `overview.md` (this directory).
+着色器设置、WebGL 初始化、捕获和片段着色器由 `@hyperframes/shader-transitions`（`packages/shader-transitions/`）处理。读取包源获取 API 细节。使用着色器的组合必须遵循 `overview.md`（此目录）中的着色器兼容 CSS 规则。
 
-## Scene Template
+## 场景模板
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: #000;
-        font-family: "YOUR FONT", sans-serif; /* compiler embeds supported fonts automatically */
-      }
-      .scene {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-      }
-      #scene1 {
-        z-index: 1;
-        background: #color;
-      }
-      #scene2 {
-        z-index: 2;
-        background: #color;
-        opacity: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-width="1920"
-      data-height="1080"
-      data-start="0"
-      data-duration="TOTAL"
-    >
-      <div id="scene1" class="scene"><!-- visible --></div>
-      <div id="scene2" class="scene"><!-- hidden --></div>
-    </div>
-    <script>
-      window.__timelines = window.__timelines || {};
-      var tl = gsap.timeline({ paused: true });
-      // Transition code here
-      window.__timelines["main"] = tl;
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000;
+      font-family: "YOUR FONT", sans-serif; /* 编译器自动嵌入支持的字体 */ }
+    .scene { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; overflow: hidden; }
+    #scene1 { z-index: 1; background: #color; }
+    #scene2 { z-index: 2; background: #color; opacity: 0; }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-width="1920" data-height="1080"
+       data-start="0" data-duration="TOTAL">
+    <div id="scene1" class="scene"><!-- visible --></div>
+    <div id="scene2" class="scene"><!-- hidden --></div>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+    // 过渡代码在此
+    window.__timelines["main"] = tl;
+  </script>
+</body>
 </html>
 ```
 
-Every transition follows: position new scene → animate outgoing → swap → animate incoming → clean up overlays.
+每个过渡遵循：定位新场景 → 动画退出 → 交换 → 动画进入 → 清理叠加。
 
-## CSS Transitions
+## CSS 过渡
 
-All code examples use `old` for the outgoing scene-inner selector and `new` for the incoming, with `T` as the transition start time. Read the reference file for the type you need.
+所有代码示例使用 `old` 表示退出场景内部选择器，`new` 表示进入场景，`T` 表示过渡开始时间。读取你需要的类型的参考文件。
 
-| Type           | Transitions                                          | Reference                        |
-| -------------- | ---------------------------------------------------- | -------------------------------- |
-| Push           | Push slide, vertical push, elastic push, squeeze     | `transitions/css-push.md`        |
-| Radial / Shape | Circle iris, diamond iris, diagonal split            | `transitions/css-radial.md`      |
-| 3D             | 3D card flip                                         | `transitions/css-3d.md`          |
-| Scale / Zoom   | Zoom through, zoom out                               | `transitions/css-scale.md`       |
-| Dissolve       | Crossfade, blur crossfade, focus pull, color dip     | `transitions/css-dissolve.md`    |
-| Cover          | Staggered blocks, horizontal blinds, vertical blinds | `transitions/css-cover.md`       |
-| Light          | Light leak, overexposure burn, film burn             | `transitions/css-light.md`       |
-| Distortion     | Glitch, chromatic aberration, ripple, VHS tape       | `transitions/css-distortion.md`  |
-| Mechanical     | Shutter, clock wipe                                  | `transitions/css-mechanical.md`  |
-| Grid           | Grid dissolve                                        | `transitions/css-grid.md`        |
-| Other          | Gravity drop, morph circle                           | `transitions/css-other.md`       |
-| Blur           | Blur through, directional blur                       | `transitions/css-blur.md`        |
-| Destruction    | Page burn                                            | `transitions/css-destruction.md` |
+| 类型           | 过渡                                            | 参考                              |
+| -------------- | ----------------------------------------------- | --------------------------------- |
+| 推动           | 推动滑动、垂直推动、弹性推动、挤压              | `transitions/css-push.md`         |
+| 径向/形状      | 圆形虹膜、菱形虹膜、对角分割                    | `transitions/css-radial.md`       |
+| 3D             | 3D 卡片翻转                                     | `transitions/css-3d.md`           |
+| 缩放/缩放      | 缩放穿过、缩小                                  | `transitions/css-scale.md`        |
+| 溶解           | 交叉淡入淡出、模糊交叉淡入淡出、焦距拉动、浸入  | `transitions/css-dissolve.md`     |
+| 覆盖           | 错开块、水平百叶窗、垂直百叶窗                  | `transitions/css-cover.md`        |
+| 光             | 漏光、过曝光灼烧、胶片灼烧                      | `transitions/css-light.md`        |
+| 扭曲           | 故障、色差、涟漪、VHS 磁带                      | `transitions/css-distortion.md`   |
+| 机械           | 快门、时钟擦拭                                  | `transitions/css-mechanical.md`   |
+| 网格           | 网格溶解                                        | `transitions/css-grid.md`         |
+| 其他           | 重力掉落、变形圆                                | `transitions/css-other.md`        |
+| 模糊           | 模糊穿过、方向模糊                              | `transitions/css-blur.md`         |
+| 破坏           | 页面灼烧                                        | `transitions/css-destruction.md`  |
 
-## Shader Transitions
+## 着色器过渡
 
-WebGL shader transitions are provided by `@hyperframes/shader-transitions` (`packages/shader-transitions/`). The package handles setup, capture, WebGL init, render loop, and GSAP integration. Read the package source for available shaders and API — do not copy raw GLSL manually.
+WebGL 着色器过渡由 `@hyperframes/shader-transitions`（`packages/shader-transitions/`）提供。包处理设置、捕获、WebGL 初始化、渲染循环和 GSAP 集成。读取包源以获取可用着色器和 API — 不要手动复制原始 GLSL。
 
-The built-ins are not a ceiling. For an effect no built-in covers, you can write custom GLSL from scratch, adapt shader code found online (ShaderToy, GLSL Sandbox, GitHub), or build a custom CSS transition that fits no existing category — combine clip-path, transforms, and filters in new ways. If the storyboard calls for an effect that doesn't exist yet, build it; the framework renders anything a browser can run.
+内置着色器不是上限。对于没有内置覆盖的效果，你可以从头编写自定义 GLSL，适配在线找到的着色器代码（ShaderToy、GLSL Sandbox、GitHub），或构建适合没有现有类别的自定义 CSS 过渡 — 以新方式组合 clip-path、变换和滤镜。如果故事板呼唤一个尚不存在的效果，构建它；框架渲染任何浏览器能运行的内容。

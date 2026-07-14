@@ -1,111 +1,111 @@
 ---
-name: "Saul Bass Cinematic Titles"
+name: "Saul Bass 电影片头风格"
 version: "1.0"
 tags:
-  - iconic design
-  - cinematic
-author: "Visual Style Gallery"
+  - 标志性设计
+  - 电影感
+author: "视觉风格图库"
 created: "2026-03-12"
 
 style_prompt_short: >
-  Bold graphic cinema. Stark silhouettes, torn paper edges,
-  dramatic contrast. Hitchcock-era title sequences brought to life.
+  大胆的图形电影。鲜明的剪影、撕裂的纸张边缘、
+  戏剧性的对比。希区柯克时代的片头序列重现生机。
 
 style_prompt_full: >
-  Saul Bass cinematic title sequence style. Bold, graphic, dramatic.
-  High contrast black and white with single accent color (orange-red
-  #FF4500 or yellow #FFD700). Stark silhouettes and bold shapes.
-  Torn paper edges and cut-out aesthetics. Hand-made feeling despite
-  geometric precision. Dramatic reveals and transformations. Type
-  integrated with image, not floating above it. Vertigo spirals,
-  Anatomy of a Murder paper cut-outs, The Man with the Golden Arm
-  typography. Strong diagonals. Motion is theatrical — elements
-  reveal, rotate, transform. Jazz-influenced rhythm. No photorealism,
-  no soft edges, no gradients.
+  Saul Bass 电影片头序列风格。大胆、图形化、戏剧化。
+  高对比度黑白搭配单一强调色（橙红色
+  #FF4500 或黄色 #FFD700）。鲜明的剪影和大胆的形状。
+  撕裂纸张边缘和剪裁美学。尽管几何精确，
+  却带有手工制作的感觉。戏剧性的揭示和变换。文字
+  与图像融合，而非浮于其上。迷魂记螺旋、
+  谋杀解剖的纸板剪裁、金臂人的
+  字体设计。强烈的对角线。动效具有戏剧性——元素
+  揭示、旋转、变换。受爵士乐影响的节奏。无照片写实，
+  无柔和边缘，无渐变。
 
 colors:
   primary:
-    - name: "Deep Black"
+    - name: "深黑"
       hex: "#000000"
-      role: "silhouettes, dramatic ground"
-    - name: "Stark White"
+      role: "剪影，戏剧性底色"
+    - name: "亮白"
       hex: "#FFFFFF"
-      role: "negative space, contrast"
+      role: "负空间，对比"
   accent:
-    - name: "Saul Bass Orange"
+    - name: "Saul Bass 橙"
       hex: "#FF4500"
-      role: "single dramatic accent"
-    - name: "Golden Yellow"
+      role: "单一戏剧性强调色"
+    - name: "金黄"
       hex: "#FFD700"
-      role: "alternate accent (choose one per project)"
+      role: "备用强调色（每个项目选一种）"
   neutral:
-    - name: "Warm Gray"
+    - name: "暖灰"
       hex: "#8B8680"
-      role: "subtle texture, aged paper feel"
+      role: "微妙纹理，做旧纸张质感"
 
 typography:
   display:
-    family: "Bold geometric sans-serif or hand-drawn"
+    family: "粗体几何无衬线或手绘"
     weight: "black"
-    style: "often custom, integrated with imagery"
+    style: "通常为定制，与图像融合"
   body:
-    family: "Simple sans-serif"
+    family: "简洁无衬线"
     weight: "medium"
-    style: "supporting credits only"
+    style: "仅用于辅助演职员表"
   caption:
-    family: "Same as display"
+    family: "与展示字体相同"
     weight: "bold"
-    style: "integrated into composition"
+    style: "融入构图"
   rules:
-    - "Type is part of the image, not separate"
-    - "Custom or modified letterforms encouraged"
-    - "Strong weight contrast"
-    - "Type can be fragmented, torn, or transformed"
+    - "文字是图像的一部分，而非独立元素"
+    - "鼓励使用定制或修改的字体"
+    - "强烈的字重对比"
+    - "文字可以碎片化、撕裂或变形"
 
 layout:
-  grid: "Compositional, not strict columns"
-  alignment: "Centered or dramatically diagonal"
-  aspect_ratio: "2.39:1 (cinematic) or 16:9"
+  grid: "构图性，非严格列网格"
+  alignment: "居中或戏剧性对角线"
+  aspect_ratio: "2.39:1（宽银幕）或 16:9"
   notes:
-    - "Full-bleed compositions"
-    - "Silhouettes as primary visual element"
-    - "Torn paper edges, cut-out aesthetics"
-    - "Strong diagonals create tension"
+    - "满版构图"
+    - "剪影作为主要视觉元素"
+    - "撕裂纸张边缘，剪裁美学"
+    - "强烈的对角线营造张力"
 
 motion:
   transitions:
-    - "dramatic reveals"
-    - "rotating spirals (Vertigo)"
-    - "paper cut-out animations"
-    - "silhouette transformations"
+    - "戏剧性揭示"
+    - "旋转螺旋（迷魂记）"
+    - "纸板剪裁动画"
+    - "剪影变换"
   animation_style: >
-    Theatrical reveals. Elements transform and rotate with purpose.
-    Paper cut-out aesthetic — things assemble and disassemble.
-    Jazz-influenced timing: syncopated, surprising, rhythmic.
-  pacing: "Dramatic, building tension, punctuated moments"
+    戏剧化的揭示。元素有目的地变换和旋转。
+    纸板剪裁美学——事物组合与分解。
+    受爵士乐影响的节奏：切分、惊喜、有韵律。
+  pacing: "戏剧性，营造张力，重点时刻"
   audio_cues:
-    - "jazz scores"
-    - "orchestral tension"
-    - "Bernard Herrmann influence"
+    - "爵士配乐"
+    - "管弦乐的紧张感"
+    - "Bernard Herrmann 影响"
 
 mood:
   keywords:
-    - "dramatic"
-    - "bold"
-    - "cinematic"
-    - "graphic"
-    - "timeless"
-    - "mysterious"
-  era: "1950s–1960s Hollywood (timeless)"
-  cultural_reference: "Saul Bass, Vertigo, Anatomy of a Murder, The Man with the Golden Arm, Psycho"
+    - "戏剧性"
+    - "大胆"
+    - "电影感"
+    - "图形化"
+    - "永恒"
+    - "神秘"
+  era: "1950s–1960s 好莱坞（永恒）"
+  cultural_reference: "Saul Bass, 迷魂记, 谋杀解剖, 金臂人, 惊魂记"
   avoid:
-    - "photorealistic imagery"
-    - "soft gradients"
-    - "multiple accent colors"
-    - "generic stock footage"
-    - "3D effects"
-    - "lens flares"
-    - "modern UI patterns"
+    - "照片写实图像"
+    - "柔和渐变"
+    - "多种强调色"
+    - "通用素材片段"
+    - "3D 效果"
+    - "镜头光晕"
+    - "现代 UI 模式"
 
 assets:
   reference_images: []
@@ -119,29 +119,29 @@ x_heygen:
   orientation: "landscape"
 ---
 
-## Design Principles
+## 设计原则
 
-The title sequence is cinema itself, not a preamble.
-Every frame could be a poster.
-Silhouette reveals character without showing it.
-Geometry creates emotion.
+片头序列本身就是电影，而非前奏。
+每一帧都可以是一张海报。
+剪影无需展示即可揭示角色。
+几何创造情感。
 
-## Connectors
+## 连接器
 
-### HeyGen Video Agent
-Use `style_prompt_full` verbatim. Emphasize: silhouettes, bold shapes,
-dramatic reveals. Paper cut-out aesthetic. Jazz-influenced timing.
-No avatars — pure graphic cinema.
+### HeyGen 视频代理
+逐字使用 `style_prompt_full`。强调：剪影、大胆的形状、
+戏剧性揭示。纸板剪裁美学。受爵士乐影响的节奏。
+无虚拟形象——纯图形电影。
 
-### HTML Slides
-Black backgrounds with stark white and single accent. Full-bleed silhouettes.
-Dramatic type that integrates with imagery. Strong diagonal compositions.
+### HTML 幻灯片
+黑色背景搭配亮白和单一强调色。满版剪影。
+与图像融为一体的戏剧性字体。强烈的对角线构图。
 
 ### paper.design
-Bold shapes over photorealism. Silhouettes as primary elements.
-Type and image as unified composition. Torn paper edge effects.
+大胆形状优先于照片写实。剪影作为主要元素。
+文字与图像作为统一构图。撕裂纸张边缘效果。
 
 ### Figma
-Color styles: `brand/deep-black`, `brand/stark-white`, `accent/bass-orange`.
-Create silhouette shapes as reusable components.
-Custom type treatments over standard text styles.
+颜色样式：`brand/deep-black`、`brand/stark-white`、`accent/bass-orange`。
+将剪影形状创建为可复用组件。
+自定义字体处理而非标准文本样式。

@@ -1,17 +1,17 @@
 ---
 name: timing
-description: Rate functions, easing, run_time, and animation timing control
+description: 速率函数、缓动、run_time 和动画时间控制
 metadata:
   tags: timing, rate_func, easing, smooth, linear, run_time
 ---
 
-# Animation Timing
+# 动画时间控制
 
-Control the speed and feel of animations with timing parameters.
+使用时间参数控制动画的速度和感觉。
 
 ## run_time
 
-Controls how long an animation takes in seconds.
+控制动画的持续时间（秒）。
 
 ```python
 from manim import *
@@ -20,21 +20,21 @@ class RunTimeExample(Scene):
     def construct(self):
         circle = Circle()
 
-        # Default (1 second)
+        # 默认（1秒）
         self.play(Create(circle))
 
-        # Longer animation
+        # 更长的动画
         self.play(circle.animate.shift(RIGHT), run_time=3)
 
-        # Quick animation
+        # 快速动画
         self.play(circle.animate.set_color(RED), run_time=0.5)
 ```
 
-## Rate Functions
+## 速率函数
 
-Rate functions control how the animation progresses over time (easing).
+速率函数控制动画随时间进展的方式（缓动）。
 
-### Using Rate Functions
+### 使用速率函数
 
 ```python
 self.play(
@@ -43,55 +43,55 @@ self.play(
 )
 ```
 
-### Common Rate Functions
+### 常用速率函数
 
 ```python
-# Smooth start and end (default for most animations)
+# 平滑开始和结束（大多数动画的默认值）
 smooth
 
-# Constant speed
+# 恒定速度
 linear
 
-# Start slow, end fast
+# 慢开始，快结束
 rush_into
 
-# Start fast, end slow
+# 快开始，慢结束
 rush_from
 
-# Go there and back
+# 去并返回
 there_and_back
 
-# Go there and back with pause
+# 去并返回，带停顿
 there_and_back_with_pause
 
-# Double smooth (extra smooth)
+# 双重平滑（额外平滑）
 double_smooth
 
-# Stay put (useful for delays in AnimationGroup)
+# 保持不动（在 AnimationGroup 中用于延迟）
 lingering
 ```
 
-### Ease Functions (CSS-like)
+### 缓动函数（类似 CSS）
 
 ```python
-# Ease in (start slow)
+# 缓入（慢开始）
 ease_in_sine
 ease_in_quad
 ease_in_cubic
 ease_in_expo
 ease_in_circ
-ease_in_back    # Slight overshoot at start
+ease_in_back    # 开始时轻微过冲
 
-# Ease out (end slow)
+# 缓出（慢结束）
 ease_out_sine
 ease_out_quad
 ease_out_cubic
 ease_out_expo
 ease_out_circ
-ease_out_back   # Slight overshoot at end
-ease_out_bounce # Bouncy ending
+ease_out_back   # 结束时轻微过冲
+ease_out_bounce # 弹跳结束
 
-# Ease in-out (slow at both ends)
+# 缓入-缓出（两端都慢）
 ease_in_out_sine
 ease_in_out_quad
 ease_in_out_cubic
@@ -100,7 +100,7 @@ ease_in_out_circ
 ease_in_out_back
 ```
 
-## Visual Comparison
+## 视觉比较
 
 ```python
 class RateFuncComparison(Scene):
@@ -125,7 +125,7 @@ class RateFuncComparison(Scene):
         ], run_time=3)
 ```
 
-## Combining run_time and rate_func
+## 组合 run_time 和 rate_func
 
 ```python
 self.play(
@@ -137,7 +137,7 @@ self.play(
 
 ## there_and_back
 
-Animation goes forward then reverses.
+动画向前然后反向。
 
 ```python
 class ThereAndBackExample(Scene):
@@ -145,7 +145,7 @@ class ThereAndBackExample(Scene):
         square = Square()
         self.add(square)
 
-        # Moves right then back to start
+        # 向右移动然后回到起点
         self.play(
             square.animate.shift(RIGHT * 2),
             rate_func=there_and_back,
@@ -153,13 +153,13 @@ class ThereAndBackExample(Scene):
         )
 ```
 
-## Custom Rate Functions
+## 自定义速率函数
 
-Create your own rate function (takes t from 0 to 1, returns progress 0 to 1):
+创建自己的速率函数（t 从 0 到 1，返回进度 0 到 1）：
 
 ```python
 def my_rate_func(t):
-    # Quadratic ease
+    # 二次缓动
     return t ** 2
 
 self.play(
@@ -168,34 +168,34 @@ self.play(
 )
 ```
 
-## wait() Timing
+## wait() 时间
 
 ```python
-# Wait for default time (1 second)
+# 等待默认时间（1秒）
 self.wait()
 
-# Wait for specific duration
-self.wait(2)    # 2 seconds
-self.wait(0.5)  # Half second
+# 等待指定时长
+self.wait(2)    # 2秒
+self.wait(0.5)  # 半秒
 ```
 
-## Animation Speed Multiplier
+## 动画速度倍数
 
-Using `run_time` on AnimationGroup affects all children:
+在 AnimationGroup 上使用 `run_time` 会影响所有子动画：
 
 ```python
 self.play(AnimationGroup(
     Create(circle),
     Create(square),
     lag_ratio=0.5
-), run_time=3)  # Total duration is 3 seconds
+), run_time=3)  # 总持续时间为3秒
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use smooth for most animations** - Looks natural
-2. **Use linear for constant motion** - Mechanical/precise movement
-3. **Use ease_out_bounce for playful effects** - Attention-grabbing
-4. **Keep run_time between 0.5-3 seconds** - Maintain viewer attention
-5. **Use there_and_back for emphasis** - Show something temporarily
-6. **Match rate_func to content** - Smooth for elegant, bouncy for fun
+1. **大多数动画使用 smooth** - 看起来自然
+2. **恒定运动使用 linear** - 机械/精确移动
+3. **俏皮效果使用 ease_out_bounce** - 吸引注意力
+4. **保持 run_time 在 0.5-3 秒之间** - 保持观众注意力
+5. **强调使用 there_and_back** - 临时展示某物
+6. **rate_func 匹配内容** - 优雅用 smooth，有趣用 bouncy

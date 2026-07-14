@@ -1,6 +1,6 @@
-# Nature / Earth
+# 自然 / 大地
 
-Sustainability, outdoor, organic, wellness content.
+可持续、户外、有机、健康内容。
 
 ```
 #606C38 #283618 #FEFAE0 #DDA15E #BC6C25

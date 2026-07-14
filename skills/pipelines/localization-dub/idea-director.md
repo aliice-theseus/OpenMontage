@@ -1,58 +1,58 @@
-# Idea Director - Localization Dub Pipeline
+# 创意导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Use this pipeline when the user has a source video and wants translated deliverables: subtitles, dubbed audio, or localized videos in one or more target languages.
+当用户拥有源视频并希望获得翻译后的交付物时使用此流水线：字幕、配音音频或一种或多种目标语言的本地化视频。
 
-Your first responsibility is to define what kind of localization is actually required, because subtitle-only, dubbed-audio, and lip-synced translation are different jobs.
+你的首要职责是确定实际需要的本地化类型，因为纯字幕、配音音频和唇形同步翻译是三种不同的工作。
 
-## Runtime Selection (MANDATORY — present the constraint, don't silently pick)
+## 运行时选择（强制 — 呈现约束条件，不要默默选择）
 
-Lock `render_runtime = "remotion"` (composed deliverables with per-locale caption burn / lip-sync) or `"ffmpeg"` (pure subtitle-burn over source with no composition). **HyperFrames is NOT a valid runtime on this pipeline in Phase 1** — localization depends on Remotion's caption stack and, for dubbed-with-lip-sync, on the Remotion TalkingHead pipeline.
+锁定 `render_runtime = "remotion"`（按语言组合交付物，含按地区字幕烧录/唇形同步）或 `"ffmpeg"`（在源视频上直接烧录纯字幕，无需合成）。**HyperFrames 在第一阶段不是此流水线的有效运行时** — 本地化依赖于 Remotion 的字幕栈，而对于带唇形同步的配音，则依赖于 Remotion TalkingHead 流水线。
 
-Per AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)": do NOT silently default to remotion. Tell the user: "HyperFrames is available, but localization-dub depends on Remotion caption + TalkingHead parity that isn't there yet in Phase 1 — remotion is the only viable choice". Record a `render_runtime_selection` decision with hyperframes `rejected_because: "caption + lip-sync parity deferred on localization-dub"`.
+根据 AGENT_GUIDE.md → "呈现两种合成运行时（硬性规则）"：不要默默地默认使用 remotion。告知用户："HyperFrames 可用，但 localization-dub 依赖于 Remotion 的字幕 + TalkingHead 对等功能，第一阶段尚未就绪 — remotion 是唯一可行的选择"。记录一个 `render_runtime_selection` 决策，其中 hyperframes 的 `rejected_because: "caption + lip-sync parity deferred on localization-dub"`。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/localization-dubbing-best-practices.md`
 - `skills/creative/short-form.md`
 - `skills/creative/long-form.md`
 
-## Process
+## 流程
 
-### 1. Define The Localization Scope
+### 1. 定义本地化范围
 
-Capture:
+需捕获的信息：
 
-- source language,
-- target languages,
-- review owner,
-- whether glossary or legal review is required,
-- whether the user needs subtitles, dubbed audio, lip-sync, or a mix.
+- 源语言
+- 目标语言
+- 审核负责人
+- 是否需要词汇表或法务审核
+- 用户需要的是字幕、配音音频、唇形同步还是混合形式
 
-### 2. Classify The Source
+### 2. 对源视频进行分类
 
-Record the source mode:
+记录源模式：
 
-- `single_speaker`
-- `multi_speaker`
-- `voiceover_led`
-- `speaker_led_on_camera`
+- `single_speaker`（单人主讲）
+- `multi_speaker`（多人主讲）
+- `voiceover_led`（画外音主导）
+- `speaker_led_on_camera`（出镜主讲）
 
-Also record whether on-screen text or motion graphics will need manual replacement or coverage.
+同时记录屏幕文字或动态图形是否需要手动替换或覆盖处理。
 
-### 3. Pick Deliverables That Match Reality
+### 3. 选择符合实际的交付物
 
-Possible deliverables:
+可能的交付物：
 
-- subtitle package only,
-- dubbed video without lip sync,
-- lip-synced localized video,
-- per-language export bundle.
+- 仅字幕包
+- 无唇形同步的配音视频
+- 唇形同步的本地化视频
+- 按语言导出的捆绑包
 
-### 4. Build The Brief
+### 4. 构建需求简报
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `source_language`
 - `target_languages`
@@ -62,15 +62,15 @@ Recommended metadata keys:
 - `review_requirements`
 - `timing_risks`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- localization scope is explicit,
-- target outputs are realistic,
-- glossary and review requirements are captured,
-- risk increases from speaker count or visible mouths are surfaced.
+- 本地化范围明确
+- 目标输出符合实际
+- 词汇表和审核需求已捕获
+- 发言人数量或可见嘴部带来的风险已揭示
 
-## Common Pitfalls
+## 常见陷阱
 
-- Calling every translation request a dubbing request.
-- Ignoring glossary control until after audio is generated.
-- Promising lip sync on visually difficult source footage without warning.
+- 将所有翻译需求都称为配音需求
+- 在音频生成前忽略词汇表控制
+- 在视觉困难的源素材上承诺唇形同步而不事先警告

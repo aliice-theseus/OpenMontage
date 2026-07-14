@@ -1,68 +1,68 @@
-# Compose Director - Avatar Spokesperson Pipeline
+# 合成总监 - 虚拟形象发言人管线
 
-## When To Use
+## 使用时机
 
-Render the final spokesperson outputs. The bar is simple: the presenter must look stable, speech must be clear, and subtitles or support cards must not crowd the frame.
+渲染最终的发言人输出。标准很简单：主持人必须看起来稳定，语音必须清晰，字幕或辅助卡片不能拥挤画面。
 
-## Runtime Routing (HARD CONSTRAINT — Remotion only)
+## 运行时路由（硬性约束 — 仅限 Remotion）
 
-Phase 1 deferred from HyperFrames. `edit_decisions.render_runtime` must be `"remotion"`. This pipeline depends on the Remotion `TalkingHead` composition and `remotion_caption_burn` — both have no HyperFrames parity in Phase 1.
+Phase 1 从 HyperFrames 延迟处理。`edit_decisions.render_runtime` 必须为 `"remotion"`。此管线依赖 Remotion 的 `TalkingHead` 合成组件和 `remotion_caption_burn` — 两者在 Phase 1 中均未与 HyperFrames 实现功能对等。
 
-- If `edit_decisions.render_runtime == "hyperframes"`, stop. Re-open the idea stage and surface the constraint. Silent rewrite is a governance violation.
-- Per AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)": the lock to remotion is NOT an excuse to skip the conversation. The user deserves to know that HyperFrames exists as a runtime and why it isn't viable for avatar-spokesperson. Log a `render_runtime_selection` decision with hyperframes `rejected_because: "TalkingHead + caption parity deferred on avatar-spokesperson"`.
-- Pass `proposal_packet`/`brief` to `video_compose.execute()` for in-tool runtime-swap detection.
+- 如果 `edit_decisions.render_runtime == "hyperframes"`，停止。重新打开 idea 阶段并暴露该约束。静默改写是治理违规。
+- 根据 AGENT_GUIDE.md → "展示两种合成运行时（硬性规则）"：锁定 remotion 不是跳过对话的借口。用户有权知道 HyperFrames 作为运行时的存在，以及为什么它不适用于 avatar-spokesperson。记录 `render_runtime_selection` 决策，hyperframes 设为 `rejected_because: "TalkingHead + caption parity deferred on avatar-spokesperson"`。
+- 将 `proposal_packet`/`brief` 传递给 `video_compose.execute()` 以实现在工具内检测运行时切换。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/render_report.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["edit"]["edit_decisions"]`, `state.artifacts["assets"]["asset_manifest"]` | What to render |
-| Tools | `video_compose`, `audio_mixer`, `video_stitch`, `audio_enhance` | Render and audio finishing |
-| Playbook | Active style playbook | Typography and layout rules |
+| 模式 | `schemas/artifacts/render_report.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["edit"]["edit_decisions"]`、`state.artifacts["assets"]["asset_manifest"]` | 要渲染的内容 |
+| 工具 | `video_compose`、`audio_mixer`、`video_stitch`、`audio_enhance` | 渲染和音频后期处理 |
+| 剧本 | 当前风格剧本 | 排版和布局规则 |
 
-## Process
+## 流程
 
-### 1. Render The Hero Cut First
+### 1. 先渲染主角版本
 
-Prefer one strong master before derivatives. Compose:
+在衍生版本之前，优先制作一个强力的母版。合成内容包括：
 
-- presenter video,
-- subtitles,
-- lower-thirds,
-- CTA cards,
-- mixed narration.
+- 主持人视频，
+- 字幕，
+- 下方三分之一，
+- CTA 卡片，
+- 混合旁白。
 
-### 2. Keep The Frame Clean
+### 2. 保持画面整洁
 
-Subtitle and CTA placement matter more here than flashy transitions. Leave the face and mouth region unobstructed.
+字幕和 CTA 的放置比花哨的转场更重要。确保面部和嘴部区域不被遮挡。
 
-### 3. Verify Mouth Timing And Audio
+### 3. 验证口型时序和音频
 
-If the avatar path used lip sync or audio-driven talking head, check:
+如果虚拟形象路径使用了唇形同步或音频驱动说话头像，请检查：
 
-- mouth timing,
-- face artifacts,
-- drift on long sections,
-- audio clarity.
+- 口型时序，
+- 面部伪影，
+- 长段落的漂移，
+- 音频清晰度。
 
-### 4. Verify Every Output
+### 4. 验证每个输出
 
-Record important findings in:
+在以下位置记录重要发现：
 
 - `render_report.verification_notes`
 - `render_report.warnings`
 - `render_report.metadata.variant_notes`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the output file is valid,
-- speech is clear,
-- subtitles stay readable,
-- the presenter remains visually stable.
+- 输出文件有效，
+- 语音清晰，
+- 字幕保持可读，
+- 主持人保持视觉稳定。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Letting subtitles cover the chin or mouth area.
-- Shipping a long lip-sync render without spot-checking drift.
-- Making derivative crops that cut off the presenter or CTA.
+- 让字幕遮挡下巴或嘴部区域。
+- 未抽查漂移就发布长段唇形同步渲染。
+- 制作切掉主持人或 CTA 的衍生裁切版本。

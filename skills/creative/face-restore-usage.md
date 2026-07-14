@@ -1,96 +1,96 @@
-# Face Restoration Usage for OpenMontage
+# OpenMontage 面部修复使用指南
 
-> Sources: CodeFormer paper (Zhou et al. 2022), GFPGAN documentation, Real-ESRGAN upsampling docs,
-> existing Layer 2 skill at `skills/creative/enhancement-strategy.md`
+> 来源：CodeFormer 论文 (Zhou et al. 2022)、GFPGAN 文档、Real-ESRGAN 放大文档、
+> 现有 Layer 2 技能位于 `skills/creative/enhancement-strategy.md`
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-DEFAULT MODEL:    CodeFormer with fidelity 0.5
-ALTERNATIVE:      GFPGAN (faster, less controllable)
-FIDELITY RANGE:   0 = max quality enhancement, 1 = max faithfulness to input
-BG UPSAMPLER:     Enable to also upscale the background (Real-ESRGAN)
-PROCESSING ORDER: face_restore BEFORE face_enhance — restore first, polish second
+默认模型：        CodeFormer，保真度 0.5
+替代方案：        GFPGAN（更快，可控性较低）
+保真度范围：      0 = 最大质量增强，1 = 最大输入忠实度
+背景放大器：      启用后同时放大背景（Real-ESRGAN）
+处理顺序：        face_restore 在 face_enhance 之前 — 先修复，后美化
 ```
 
-## CRITICAL DISTINCTION — face_restore vs face_enhance
+## 关键区分 — face_restore vs face_enhance
 
-| Tool | What It Does | When to Use |
-|------|-------------|-------------|
-| `face_enhance` | FFmpeg filter chains — skin smoothing, color balance, sharpening | Good-quality footage that needs polish |
-| `face_restore` | AI model reconstruction — rebuilds degraded face detail | Bad-quality footage with blur, compression, low-res faces |
+| 工具 | 功能 | 使用场景 |
+|------|------|----------|
+| `face_enhance` | FFmpeg 滤镜链 — 皮肤平滑、色彩平衡、锐化 | 质量好但需要美化的素材 |
+| `face_restore` | AI 模型重建 — 重建退化的面部细节 | 存在模糊、压缩、低分辨率面部的差质量素材 |
 
-**Decision rule:** If the face is recognizable and just needs polish, use `face_enhance`. If the face is degraded, blurry, or compressed beyond recognition, use `face_restore`.
+**决策规则：** 如果面部可识别且只需要美化，使用 `face_enhance`。如果面部退化、模糊或压缩到不可识别，使用 `face_restore`。
 
-## Model Selection
+## 模型选择
 
-| Model | Strengths | Fidelity Control | Speed |
-|-------|----------|------------------|-------|
-| CodeFormer | Better quality, identity preservation, controllable | Yes (0-1 slider) | Slower |
-| GFPGAN | Good baseline, simpler | No | Faster |
+| 模型 | 优势 | 保真度控制 | 速度 |
+|------|------|-----------|------|
+| CodeFormer | 更高质量、身份保留、可控 | 是（0-1滑块） | 较慢 |
+| GFPGAN | 良好的基线、更简单 | 否 | 更快 |
 
-### Fidelity Tuning (CodeFormer Only)
+### 保真度调节（仅 CodeFormer）
 
-| Fidelity | Effect | Use Case |
-|----------|--------|----------|
-| 0.0 | Maximum enhancement — best visual quality but may alter identity | Unrecognizable faces, artistic use |
-| 0.3 | Strong restoration — good for very degraded faces | Old footage, heavy compression artifacts |
-| 0.5 | Balanced (default) — restoration + identity preservation | General-purpose restoration |
-| 0.7 | Conservative — mild cleanup, strong identity preservation | Webcam footage, light degradation |
-| 1.0 | Minimal change — essentially passthrough | Testing, comparison baseline |
+| 保真度 | 效果 | 使用场景 |
+|--------|------|----------|
+| 0.0 | 最大增强 — 最佳视觉质量但可能改变身份 | 无法识别的面部、艺术用途 |
+| 0.3 | 强力修复 — 适用于严重退化的面部 | 老素材、严重压缩伪影 |
+| 0.5 | 平衡（默认） — 修复 + 身份保留 | 通用修复 |
+| 0.7 | 保守 — 轻度清理，强力身份保留 | 网络摄像头素材、轻度退化 |
+| 1.0 | 最小变化 — 本质上直通 | 测试、比较基线 |
 
-## Common Workflows
+## 常见工作流程
 
-### 1. Old Footage Restoration
+### 1. 老素材修复
 
 ```
 face_restore (fidelity 0.3) → color_grade → compose
 ```
 
-Heavy restoration for archival/vintage footage where faces are significantly degraded.
+对档案/老旧素材中面部明显退化的重度修复。
 
-### 2. Webcam Cleanup
+### 2. 网络摄像头清理
 
 ```
 face_restore (fidelity 0.7) → face_enhance (talking_head_standard) → compose
 ```
 
-Light restoration followed by polish — best for modern but low-quality webcam footage.
+轻度修复后美化 — 最适合现代但低质量的网络摄像头素材。
 
-### 3. Low-Res Face + Background Upscale
+### 3. 低分辨率面部 + 背景放大
 
 ```
 face_restore (bg_upsampler=true) → compose
 ```
 
-Single-step restoration when both face and background need improvement.
+当面部和背景都需要改进时的单步修复。
 
-### 4. Archival Photo for Talking Head
+### 4. 用于说话人头像的档案照片
 
 ```
-face_restore → talking_head tool (SadTalker)
+face_restore → talking_head 工具（SadTalker）
 ```
 
-Restore the source face image before feeding into the talking-head animation pipeline.
+在输入到说话人头像动画流程之前修复源面部图像。
 
-## Quality Checklist
+## 质量检查清单
 
-Before accepting face_restore output, verify:
+在接受 face_restore 输出前验证：
 
-- [ ] Restored face is sharper and cleaner than input
-- [ ] Identity is preserved — the person is still recognizable
-- [ ] No hallucinated features (extra eyes, wrong skin texture, teeth artifacts)
-- [ ] Skin texture looks natural, not plastic/over-smoothed
-- [ ] Consistent across frames (for video) — no flickering between restored/unrestored quality
+- [ ] 修复后的面部比输入更清晰、更干净
+- [ ] 身份保留 — 该人仍然可识别
+- [ ] 无幻觉特征（额外眼睛、错误皮肤纹理、牙齿伪影）
+- [ ] 皮肤纹理看起来自然，不塑料/不过度平滑
+- [ ] 帧间一致（视频） — 修复/未修复质量之间无闪烁
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When using the `face_restore` tool:
+使用 `face_restore` 工具时：
 
-1. **Use face_restore BEFORE face_enhance** in the processing chain — restore first, polish second
-2. **Start with fidelity 0.5** and adjust based on visual inspection
-3. **For talking-head pipelines with poor source footage**, apply face_restore in the assets stage
-4. **Enable `bg_upsampler` only when both face AND background need improvement**
-5. **NEVER use face_restore on already-good footage** — it can introduce subtle artifacts
-6. **Compare input and output side-by-side** — the face should be recognizably the same person
-7. **For video, extract key frames and test face_restore settings** before processing full video
+1. **在处理链中 face_restore 在 face_enhance 之前使用** — 先修复，后美化
+2. **从保真度0.5开始**，根据视觉检查调整
+3. **对于源素材较差的说话人头像流程**，在资产阶段应用 face_restore
+4. **仅当面部 AND 背景都需要改进时启用 `bg_upsampler`**
+5. **绝不对已经良好的素材使用 face_restore** — 它可能引入细微伪影
+6. **并排比较输入和输出** — 面部应可识别为同一个人
+7. **对于视频，在处理完整视频前提取关键帧并测试 face_restore 设置**

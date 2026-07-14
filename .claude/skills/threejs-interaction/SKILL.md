@@ -1,21 +1,21 @@
 ---
 name: threejs-interaction
-description: Three.js interaction - raycasting, controls, mouse/touch input, object selection. Use when handling user input, implementing click detection, adding camera controls, or creating interactive 3D experiences.
+description: Three.js 交互 — 光线投射、控制器、鼠标/触摸输入、对象选择。在处理用户输入、实现点击检测、添加摄像机控制器或创建交互式 3D 体验时使用。
 ---
 
-# Three.js Interaction
+# Three.js 交互
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-// Camera controls
+// 摄像机控制器
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// Raycasting for click detection
+// 用于点击检测的光线投射
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -27,55 +27,55 @@ function onClick(event) {
   const intersects = raycaster.intersectObjects(scene.children);
 
   if (intersects.length > 0) {
-    console.log("Clicked:", intersects[0].object);
+    console.log("点击了:", intersects[0].object);
   }
 }
 
 window.addEventListener("click", onClick);
 ```
 
-## Raycaster
+## 光线投射
 
-### Basic Raycasting
+### 基础光线投射
 
 ```javascript
 const raycaster = new THREE.Raycaster();
 
-// From camera (mouse picking)
+// 从摄像机发射（鼠标拾取）
 raycaster.setFromCamera(mousePosition, camera);
 
-// From any origin and direction
-raycaster.set(origin, direction); // origin: Vector3, direction: normalized Vector3
+// 从任意原点和方向发射
+raycaster.set(origin, direction); // origin: Vector3, direction: 归一化的 Vector3
 
-// Get intersections
+// 获取交点
 const intersects = raycaster.intersectObjects(objects, recursive);
 
-// intersects array contains:
+// intersects 数组包含：
 // {
-//   distance: number,          // Distance from ray origin
-//   point: Vector3,            // Intersection point in world coords
-//   face: Face3,               // Intersected face
-//   faceIndex: number,         // Face index
-//   object: Object3D,          // Intersected object
-//   uv: Vector2,               // UV coordinates at intersection
-//   uv1: Vector2,              // Second UV channel
-//   normal: Vector3,           // Interpolated face normal
-//   instanceId: number         // For InstancedMesh
+//   distance: number,          // 从射线原点的距离
+//   point: Vector3,            // 世界坐标中的交点
+//   face: Face3,               // 相交的面
+//   faceIndex: number,         // 面索引
+//   object: Object3D,          // 相交的对象
+//   uv: Vector2,               // 交点处的 UV 坐标
+//   uv1: Vector2,              // 第二 UV 通道
+//   normal: Vector3,           // 插值面法线
+//   instanceId: number         // 用于 InstancedMesh
 // }
 ```
 
-### Mouse Position Conversion
+### 鼠标位置转换
 
 ```javascript
 const mouse = new THREE.Vector2();
 
 function updateMouse(event) {
-  // For full window
+  // 针对全窗口
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-// For specific canvas element
+// 针对特定 canvas 元素
 function updateMouseCanvas(event, canvas) {
   const rect = canvas.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -83,7 +83,7 @@ function updateMouseCanvas(event, canvas) {
 }
 ```
 
-### Touch Support
+### 触摸支持
 
 ```javascript
 function onTouchStart(event) {
@@ -106,88 +106,88 @@ function onTouchStart(event) {
 renderer.domElement.addEventListener("touchstart", onTouchStart);
 ```
 
-### Raycaster Options
+### 光线投射选项
 
 ```javascript
 const raycaster = new THREE.Raycaster();
 
-// Near/far clipping (default: 0, Infinity)
+// 近/远裁剪（默认：0, Infinity）
 raycaster.near = 0;
 raycaster.far = 100;
 
-// Line/Points precision
+// 线条/点云精度
 raycaster.params.Line.threshold = 0.1;
 raycaster.params.Points.threshold = 0.1;
 
-// Layers (only intersect objects on specific layers)
+// 图层（仅检测特定图层上的对象）
 raycaster.layers.set(1);
 ```
 
-### Efficient Raycasting
+### 高效光线投射
 
 ```javascript
-// Only check specific objects
+// 仅检查特定对象
 const clickables = [mesh1, mesh2, mesh3];
 const intersects = raycaster.intersectObjects(clickables, false);
 
-// Use layers for filtering
-mesh1.layers.set(1); // Clickable layer
+// 使用图层进行过滤
+mesh1.layers.set(1); // 可点击图层
 raycaster.layers.set(1);
 
-// Throttle raycast for hover effects
+// 节流光线投射以实现悬停效果
 let lastRaycast = 0;
 function onMouseMove(event) {
   const now = Date.now();
-  if (now - lastRaycast < 50) return; // 20fps max
+  if (now - lastRaycast < 50) return; // 最大 20fps
   lastRaycast = now;
 
-  // Raycast here
+  // 在此进行光线投射
 }
 ```
 
-## Camera Controls
+## 摄像机控制器
 
-### OrbitControls
+### OrbitControls（轨道控制器）
 
 ```javascript
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// Damping (smooth movement)
+// 阻尼（平滑运动）
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
-// Rotation limits
-controls.minPolarAngle = 0; // Top
-controls.maxPolarAngle = Math.PI / 2; // Horizon
-controls.minAzimuthAngle = -Math.PI / 4; // Left
-controls.maxAzimuthAngle = Math.PI / 4; // Right
+// 旋转限制
+controls.minPolarAngle = 0; // 顶部
+controls.maxPolarAngle = Math.PI / 2; // 地平线
+controls.minAzimuthAngle = -Math.PI / 4; // 左
+controls.maxAzimuthAngle = Math.PI / 4; // 右
 
-// Zoom limits
+// 缩放限制
 controls.minDistance = 2;
 controls.maxDistance = 50;
 
-// Enable/disable features
+// 启用/禁用功能
 controls.enableRotate = true;
 controls.enableZoom = true;
 controls.enablePan = true;
 
-// Auto-rotate
+// 自动旋转
 controls.autoRotate = true;
 controls.autoRotateSpeed = 2.0;
 
-// Target (orbit point)
+// 目标点（轨道中心）
 controls.target.set(0, 1, 0);
 
-// Update in animation loop
+// 在动画循环中更新
 function animate() {
-  controls.update(); // Required for damping and auto-rotate
+  controls.update(); // 阻尼和自动旋转需要
   renderer.render(scene, camera);
 }
 ```
 
-### FlyControls
+### FlyControls（飞行控制器）
 
 ```javascript
 import { FlyControls } from "three/addons/controls/FlyControls.js";
@@ -197,14 +197,14 @@ controls.movementSpeed = 10;
 controls.rollSpeed = Math.PI / 24;
 controls.dragToLook = true;
 
-// Update with delta
+// 使用 delta 更新
 function animate() {
   controls.update(clock.getDelta());
   renderer.render(scene, camera);
 }
 ```
 
-### FirstPersonControls
+### FirstPersonControls（第一人称控制器）
 
 ```javascript
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
@@ -222,27 +222,27 @@ function animate() {
 }
 ```
 
-### PointerLockControls
+### PointerLockControls（指针锁定控制器）
 
 ```javascript
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 
 const controls = new PointerLockControls(camera, document.body);
 
-// Lock pointer on click
+// 点击锁定指针
 document.addEventListener("click", () => {
   controls.lock();
 });
 
 controls.addEventListener("lock", () => {
-  console.log("Pointer locked");
+  console.log("指针已锁定");
 });
 
 controls.addEventListener("unlock", () => {
-  console.log("Pointer unlocked");
+  console.log("指针已解锁");
 });
 
-// Movement
+// 移动
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const moveForward = false;
@@ -265,14 +265,14 @@ function animate() {
     direction.normalize();
 
     velocity.z -= direction.z * 0.1;
-    velocity.z *= 0.9; // Friction
+    velocity.z *= 0.9; // 摩擦力
 
     controls.moveForward(-velocity.z);
   }
 }
 ```
 
-### TrackballControls
+### TrackballControls（轨迹球控制器）
 
 ```javascript
 import { TrackballControls } from "three/addons/controls/TrackballControls.js";
@@ -288,7 +288,7 @@ function animate() {
 }
 ```
 
-### MapControls
+### MapControls（地图控制器）
 
 ```javascript
 import { MapControls } from "three/addons/controls/MapControls.js";
@@ -300,9 +300,9 @@ controls.screenSpacePanning = false;
 controls.maxPolarAngle = Math.PI / 2;
 ```
 
-## TransformControls
+## TransformControls（变换控制器）
 
-Gizmo for moving/rotating/scaling objects.
+用于移动/旋转/缩放对象的操纵器。
 
 ```javascript
 import { TransformControls } from "three/addons/controls/TransformControls.js";
@@ -310,21 +310,21 @@ import { TransformControls } from "three/addons/controls/TransformControls.js";
 const transformControls = new TransformControls(camera, renderer.domElement);
 scene.add(transformControls);
 
-// Attach to object
+// 附加到对象
 transformControls.attach(selectedMesh);
 
-// Switch modes
+// 切换模式
 transformControls.setMode("translate"); // 'translate', 'rotate', 'scale'
 
-// Change space
+// 更改空间
 transformControls.setSpace("local"); // 'local', 'world'
 
-// Size
+// 大小
 transformControls.setSize(1);
 
-// Events
+// 事件
 transformControls.addEventListener("dragging-changed", (event) => {
-  // Disable orbit controls while dragging
+  // 拖动时禁用轨道控制器
   orbitControls.enabled = !event.value;
 });
 
@@ -332,7 +332,7 @@ transformControls.addEventListener("change", () => {
   renderer.render(scene, camera);
 });
 
-// Keyboard shortcuts
+// 键盘快捷键
 window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "g":
@@ -351,9 +351,9 @@ window.addEventListener("keydown", (event) => {
 });
 ```
 
-## DragControls
+## DragControls（拖拽控制器）
 
-Drag objects directly.
+直接拖拽对象。
 
 ```javascript
 import { DragControls } from "three/addons/controls/DragControls.js";
@@ -371,7 +371,7 @@ dragControls.addEventListener("dragstart", (event) => {
 });
 
 dragControls.addEventListener("drag", (event) => {
-  // Constrain to ground plane
+  // 约束到地平面
   event.object.position.y = 0;
 });
 
@@ -381,9 +381,9 @@ dragControls.addEventListener("dragend", (event) => {
 });
 ```
 
-## Selection System
+## 选择系统
 
-### Click to Select
+### 点击选择
 
 ```javascript
 const raycaster = new THREE.Raycaster();
@@ -397,12 +397,12 @@ function onMouseDown(event) {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(selectableObjects);
 
-  // Deselect previous
+  // 取消选择之前的
   if (selectedObject) {
     selectedObject.material.emissive.set(0x000000);
   }
 
-  // Select new
+  // 选择新的
   if (intersects.length > 0) {
     selectedObject = intersects[0].object;
     selectedObject.material.emissive.set(0x444444);
@@ -412,14 +412,14 @@ function onMouseDown(event) {
 }
 ```
 
-### Box Selection
+### 框选
 
 ```javascript
 import { SelectionBox } from "three/addons/interactive/SelectionBox.js";
 import { SelectionHelper } from "three/addons/interactive/SelectionHelper.js";
 
 const selectionBox = new SelectionBox(camera, scene);
-const selectionHelper = new SelectionHelper(renderer, "selectBox"); // CSS class
+const selectionHelper = new SelectionHelper(renderer, "selectBox"); // CSS 类
 
 document.addEventListener("pointerdown", (event) => {
   selectionBox.startPoint.set(
@@ -447,11 +447,11 @@ document.addEventListener("pointerup", (event) => {
   );
 
   const selected = selectionBox.select();
-  console.log("Selected objects:", selected);
+  console.log("选中的对象:", selected);
 });
 ```
 
-### Hover Effects
+### 悬停效果
 
 ```javascript
 const raycaster = new THREE.Raycaster();
@@ -465,13 +465,13 @@ function onMouseMove(event) {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(hoverableObjects);
 
-  // Reset previous hover
+  // 重置之前的悬停
   if (hoveredObject) {
     hoveredObject.material.color.set(hoveredObject.userData.originalColor);
     document.body.style.cursor = "default";
   }
 
-  // Apply new hover
+  // 应用新的悬停
   if (intersects.length > 0) {
     hoveredObject = intersects[0].object;
     if (!hoveredObject.userData.originalColor) {
@@ -488,7 +488,7 @@ function onMouseMove(event) {
 window.addEventListener("mousemove", onMouseMove);
 ```
 
-## Keyboard Input
+## 键盘输入
 
 ```javascript
 const keys = {};
@@ -513,9 +513,9 @@ function update() {
 }
 ```
 
-## World-Screen Coordinate Conversion
+## 世界-屏幕坐标转换
 
-### World to Screen
+### 世界坐标到屏幕坐标
 
 ```javascript
 function worldToScreen(position, camera) {
@@ -528,13 +528,13 @@ function worldToScreen(position, camera) {
   };
 }
 
-// Position HTML element over 3D object
+// 在 3D 对象上定位 HTML 元素
 const screenPos = worldToScreen(mesh.position, camera);
 element.style.left = screenPos.x + "px";
 element.style.top = screenPos.y + "px";
 ```
 
-### Screen to World
+### 屏幕坐标到世界坐标
 
 ```javascript
 function screenToWorld(screenX, screenY, camera, targetZ = 0) {
@@ -553,7 +553,7 @@ function screenToWorld(screenX, screenY, camera, targetZ = 0) {
 }
 ```
 
-### Ray-Plane Intersection
+### 射线-平面交点
 
 ```javascript
 function getRayPlaneIntersection(mouse, camera, plane) {
@@ -566,12 +566,12 @@ function getRayPlaneIntersection(mouse, camera, plane) {
   return intersection;
 }
 
-// Ground plane
+// 地平面
 const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 const worldPos = getRayPlaneIntersection(mouse, camera, groundPlane);
 ```
 
-## Event Handling Best Practices
+## 事件处理最佳实践
 
 ```javascript
 class InteractionManager {
@@ -623,27 +623,27 @@ class InteractionManager {
   }
 
   dispose() {
-    // Remove event listeners
+    // 移除事件监听器
   }
 }
 
-// Usage
+// 使用
 const interaction = new InteractionManager(camera, renderer, scene);
 interaction.addClickable(mesh, (intersect) => {
-  console.log("Clicked at:", intersect.point);
+  console.log("点击位置:", intersect.point);
 });
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Limit raycasts**: Throttle mousemove handlers
-2. **Use layers**: Filter raycast targets
-3. **Simple collision meshes**: Use invisible simpler geometry for raycasting
-4. **Disable controls when not needed**: `controls.enabled = false`
-5. **Batch updates**: Group interaction checks
+1. **限制光线投射次数**：节流 mouse move 处理函数
+2. **使用图层**：过滤光线投射目标
+3. **简化的碰撞网格**：使用不可见的简化几何体进行光线投射
+4. **不需要时禁用控制器**：`controls.enabled = false`
+5. **批量更新**：分组交互检查
 
 ```javascript
-// Use simpler geometry for raycasting
+// 使用更简单的几何体进行光线投射
 const complexMesh = loadedModel;
 const collisionMesh = new THREE.Mesh(
   new THREE.BoxGeometry(1, 1, 1),
@@ -653,8 +653,8 @@ collisionMesh.userData.target = complexMesh;
 clickables.push(collisionMesh);
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-fundamentals` - Camera and scene setup
-- `threejs-animation` - Animating interactions
-- `threejs-shaders` - Visual feedback effects
+- `threejs-fundamentals` — 摄像机和场景设置
+- `threejs-animation` — 动画交互
+- `threejs-shaders` — 视觉反馈效果

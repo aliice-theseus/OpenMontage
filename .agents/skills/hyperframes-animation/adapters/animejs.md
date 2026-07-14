@@ -1,23 +1,23 @@
 ---
 name: hyperframes-animejs
-description: Anime.js adapter patterns for HyperFrames. Use when writing Anime.js animations or timelines inside HyperFrames compositions, registering animations on window.__hfAnime, making Anime.js seek-driven and deterministic, or translating Anime.js examples into render-safe HyperFrames HTML.
+description: Anime.js 适配器模式，用于 HyperFrames。在 HyperFrames 组合中编写 Anime.js 动画或时间线、在 window.__hfAnime 上注册动画、使 Anime.js 可 seek 驱动且确定性、或将 Anime.js 示例转换为可安全渲染的 HyperFrames HTML 时使用。
 ---
 
-# Anime.js for HyperFrames
+# Anime.js 用于 HyperFrames
 
-HyperFrames can seek Anime.js instances through its `animejs` runtime adapter. The composition owns the animation objects; HyperFrames owns the clock.
+HyperFrames 可以通过其 `animejs` 运行时适配器定位 Anime.js 实例。组合拥有动画对象；HyperFrames 拥有时钟。
 
-## Contract
+## 约定
 
-- Create animations or timelines synchronously during composition initialization.
-- Set `autoplay: false` so Anime.js does not advance on its own clock.
-- Register every returned animation or timeline on `window.__hfAnime`.
-- Use finite durations and loop counts.
-- Avoid callbacks that mutate DOM based on wall-clock time, network state, or unseeded randomness.
+- 在组合初始化期间**同步**创建动画或时间线。
+- 设置 `autoplay: false` 使 Anime.js 不按其自己的时钟推进。
+- 在 `window.__hfAnime` 上注册每个返回的动画或时间线。
+- 使用有限的时长和循环次数。
+- 避免基于挂钟时间、网络状态或非种子化随机性改变 DOM 的回调。
 
-The adapter seeks every registered instance with `instance.seek(timeMs)`, where `timeMs` is HyperFrames time in milliseconds.
+适配器使用 `instance.seek(timeMs)` 定位每个注册的实例，其中 `timeMs` 是以毫秒为单位的 HyperFrames 时间。
 
-## Basic Pattern
+## 基本模式
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/animejs@4.0.2/lib/anime.iife.min.js"></script>
@@ -37,7 +37,7 @@ The adapter seeks every registered instance with `instance.seek(timeMs)`, where 
 </script>
 ```
 
-## Timeline Pattern
+## 时间线模式
 
 ```html
 <script>
@@ -65,9 +65,9 @@ The adapter seeks every registered instance with `instance.seek(timeMs)`, where 
 </script>
 ```
 
-## Module Builds
+## 模块构建
 
-If you use an ES module build, the adapter does not care how the instance was created. It only needs the returned object to expose `seek()`, `pause()`, and preferably `play()`:
+如果你使用 ES 模块构建，适配器不关心实例是如何创建的。它只需要返回的对象暴露 `seek()`、`pause()` 和（可选）`play()`：
 
 ```html
 <script type="module">
@@ -84,31 +84,31 @@ If you use an ES module build, the adapter does not care how the instance was cr
 </script>
 ```
 
-## Good Uses
+## 适用场景
 
-- Small SVG and DOM flourishes where Anime.js syntax is compact.
-- Imported Anime.js examples that can be made seek-driven.
-- Multiple independent micro-animations pushed into the same registry.
+- 小型 SVG 和 DOM 点缀，Anime.js 语法更简洁。
+- 可以改为 seek 驱动的导入的 Anime.js 示例。
+- 推入同一注册表的多个独立微动画。
 
-Use GSAP for complex scene sequencing unless the user specifically asks for Anime.js. GSAP is still the primary HyperFrames authoring path.
+除非用户特别要求 Anime.js，否则复杂场景排序请使用 GSAP。GSAP 仍然是 HyperFrames 主要的创作路径。
 
-## Avoid
+## 避免
 
-- Leaving `autoplay` at the Anime.js default.
-- Depending on `anime.running` auto-discovery instead of explicit `window.__hfAnime.push(...)`.
-- Infinite loops. Compute a finite repeat count from the composition duration.
-- Building animations in timers, promises, event handlers, or after async asset loads.
+- 将 `autoplay` 保留为 Anime.js 默认值。
+- 依赖 `anime.running` 自动发现而非显式的 `window.__hfAnime.push(...)`。
+- 无限循环。从组合时长计算有限的重复次数。
+- 在定时器、Promise、事件处理程序或异步资源加载后构建动画。
 
-## Validation
+## 验证
 
-After editing a composition that uses Anime.js:
+编辑使用 Anime.js 的组合后：
 
 ```bash
 npx hyperframes lint
 npx hyperframes validate
 ```
 
-## Credits And References
+## 参考与致谢
 
-- HyperFrames adapter source: `packages/core/src/runtime/adapters/animejs.ts`.
-- Anime.js documentation for `autoplay`, `pause()`, and `seek()`: https://animejs.com/documentation/
+- HyperFrames 适配器源码：`packages/core/src/runtime/adapters/animejs.ts`。
+- Anime.js 关于 `autoplay`、`pause()` 和 `seek()` 的文档：https://animejs.com/documentation/

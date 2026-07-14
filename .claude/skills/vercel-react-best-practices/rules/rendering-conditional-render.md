@@ -1,15 +1,15 @@
 ---
-title: Use Explicit Conditional Rendering
+title: 使用显式条件渲染
 impact: LOW
-impactDescription: prevents rendering 0 or NaN
+impactDescription: 防止渲染 0 或 NaN
 tags: rendering, conditional, jsx, falsy-values
 ---
 
-## Use Explicit Conditional Rendering
+## 使用显式条件渲染
 
-Use explicit ternary operators (`? :`) instead of `&&` for conditional rendering when the condition can be `0`, `NaN`, or other falsy values that render.
+当条件可能为 `0`、`NaN` 或其他会被渲染的假值时，使用显式的三元运算符（`? :`）而不是 `&&` 进行条件渲染。
 
-**Incorrect (renders "0" when count is 0):**
+**错误做法（当 count 为 0 时渲染"0"）：**
 
 ```tsx
 function Badge({ count }: { count: number }) {
@@ -20,11 +20,11 @@ function Badge({ count }: { count: number }) {
   )
 }
 
-// When count = 0, renders: <div>0</div>
-// When count = 5, renders: <div><span class="badge">5</span></div>
+// 当 count = 0 时，渲染：<div>0</div>
+// 当 count = 5 时，渲染：<div><span class="badge">5</span></div>
 ```
 
-**Correct (renders nothing when count is 0):**
+**正确做法（当 count 为 0 时不渲染内容）：**
 
 ```tsx
 function Badge({ count }: { count: number }) {
@@ -35,6 +35,6 @@ function Badge({ count }: { count: number }) {
   )
 }
 
-// When count = 0, renders: <div></div>
-// When count = 5, renders: <div><span class="badge">5</span></div>
+// 当 count = 0 时，渲染：<div></div>
+// 当 count = 5 时，渲染：<div><span class="badge">5</span></div>
 ```

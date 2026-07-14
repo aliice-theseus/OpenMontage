@@ -1,23 +1,23 @@
 ---
 name: hyperframes-three
-description: Three.js and WebGL adapter patterns for HyperFrames. Use when creating deterministic Three.js scenes, WebGL canvas layers, AnimationMixer timelines, camera motion, shader-driven visuals, or canvas renders that respond to HyperFrames hf-seek events.
+description: Three.js 和 WebGL 适配器模式，用于 HyperFrames。在编写确定性 Three.js 场景、WebGL canvas 图层、AnimationMixer 时间线、摄像机运动、着色器驱动的视觉效果或响应 HyperFrames hf-seek 事件的 canvas 渲染时使用。
 ---
 
-# Three.js for HyperFrames
+# Three.js 用于 HyperFrames
 
-HyperFrames supports Three.js through its `three` runtime adapter. The adapter does not own your scene. It publishes HyperFrames time and dispatches a seek event so your composition can render the exact frame.
+HyperFrames 通过其 `three` 运行时适配器支持 Three.js。适配器不管理你的场景。它发布 HyperFrames 时间并派发 seek 事件，让你的组合能够渲染确切的帧。
 
-## Contract
+## 约定
 
-- Create the scene, camera, renderer, materials, and assets synchronously when possible.
-- Render from HyperFrames time, not wall-clock time.
-- Listen for the `hf-seek` event and render exactly that time.
-- Load models, textures, and HDRIs before render-critical seeking. Do not fetch them at seek time.
-- Avoid `requestAnimationFrame` or `renderer.setAnimationLoop` as the source of truth for render-critical motion.
+- 尽可能**同步**创建场景、摄像机、渲染器、材质和资源。
+- 从 HyperFrames 时间渲染，而非挂钟时间。
+- 监听 `hf-seek` 事件并在确切时间渲染。
+- 在渲染关键定位之前加载模型、纹理和 HDRIs。不要在定位时获取它们。
+- 避免将 `requestAnimationFrame` 或 `renderer.setAnimationLoop` 作为渲染关键运动的真相源。
 
-The adapter sets `window.__hfThreeTime` and dispatches `new CustomEvent("hf-seek", { detail: { time } })` on each seek.
+适配器设置 `window.__hfThreeTime` 并在每次 seek 时派发 `new CustomEvent("hf-seek", { detail: { time } })`。
 
-## Basic Pattern
+## 基本模式
 
 ```html
 <canvas id="three-layer"></canvas>
@@ -26,7 +26,7 @@ The adapter sets `window.__hfThreeTime` and dispatches `new CustomEvent("hf-seek
 
   const canvas = document.getElementById("three-layer");
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  // Match these to your composition's frame size.
+  // 匹配组合的帧尺寸。
   renderer.setSize(1920, 1080, false);
   renderer.setPixelRatio(1);
 
@@ -63,9 +63,9 @@ The adapter sets `window.__hfThreeTime` and dispatches `new CustomEvent("hf-seek
 }
 ```
 
-## Loading Addons (`GLTFLoader`, `OrbitControls`, etc.)
+## 加载扩展（`GLTFLoader`、`OrbitControls` 等）
 
-For anything under `three/addons/`, use an importmap so bare specifiers resolve. The HyperFrames lint recognizes both this form and the inline `+esm` import above — pick whichever your composition needs.
+对于 `three/addons/` 下的任何内容，使用 importmap 使裸说明符能够解析。HyperFrames lint 能同时识别此形式和上述内联 `+esm` 导入——根据你的组合需要选择。
 
 ```html
 <script type="importmap">
@@ -84,11 +84,11 @@ For anything under `three/addons/`, use an importmap so bare specifiers resolve.
 </script>
 ```
 
-Pin the `three` version in both entries to the same value. Mixing versions across the map and bare imports causes silent breakage.
+在两个条目中将 `three` 版本锁定为相同值。在地图和裸导入之间混用版本会导致静默故障。
 
-## AnimationMixer Pattern
+## AnimationMixer 模式
 
-For GLTF or authored clip animation, seek the mixer directly:
+对于 GLTF 或创作的剪辑动画，直接定位 mixer：
 
 ```js
 function renderAt(time) {
@@ -97,33 +97,33 @@ function renderAt(time) {
 }
 ```
 
-If several mixers exist, seek all of them from the same `time`.
+如果有多个 mixer，从同一个 `time` 定位所有 mixer。
 
-## Good Uses
+## 适用场景
 
-- Deterministic 3D objects, product spins, particles with seeded data, and shader plates.
-- Camera moves derived from `time`.
-- GLTF animation clips when assets are local and loaded before validation completes.
+- 确定性 3D 对象、产品旋转、使用种子数据的粒子以及着色器平板。
+- 从 `time` 导出的摄像机运动。
+- 当资产是本地的且在验证完成前已加载的 GLTF 动画剪辑。
 
-## Avoid
+## 避免
 
-- Using `Date.now()`, `performance.now()`, or clock deltas to update scene state.
-- Leaving render-critical work inside a free-running animation loop.
-- Loading remote models or textures at render time.
-- Device-pixel-ratio dependent output. Pin renderer size and pixel ratio for video renders.
-- Post-processing passes that depend on previous frame history unless you can reconstruct state from time.
+- 使用 `Date.now()`、`performance.now()` 或时钟增量来更新场景状态。
+- 将渲染关键工作留在自由运行的动画循环中。
+- 在渲染时加载远程模型或纹理。
+- 依赖设备像素比率的输出。固定渲染器尺寸和像素比率以进行视频渲染。
+- 依赖前一帧历史的后处理通道，除非你能从时间重建状态。
 
-## Validation
+## 验证
 
-After editing a Three.js composition:
+编辑 Three.js 组合后：
 
 ```bash
 npx hyperframes lint
 npx hyperframes validate
 ```
 
-## Credits And References
+## 参考与致谢
 
-- HyperFrames adapter source: `packages/core/src/runtime/adapters/three.ts`.
-- Three.js `WebGLRenderer` docs: https://threejs.org/docs/pages/WebGLRenderer.html
-- Three.js `AnimationMixer.setTime()` docs: https://threejs.org/docs/pages/AnimationMixer.html
+- HyperFrames 适配器源码：`packages/core/src/runtime/adapters/three.ts`。
+- Three.js `WebGLRenderer` 文档：https://threejs.org/docs/pages/WebGLRenderer.html
+- Three.js `AnimationMixer.setTime()` 文档：https://threejs.org/docs/pages/AnimationMixer.html

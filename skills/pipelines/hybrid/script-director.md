@@ -1,70 +1,70 @@
-# Script Director - Hybrid Pipeline
+# 编剧导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-This stage maps the story across source-led beats and support-led beats. You are deciding where the source carries the message and where support assets clarify it.
+此阶段将故事映射到源主导片段和支持主导片段中。你需要决定哪些部分由源素材承载信息，哪些部分由支持素材来阐明。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["idea"]["brief"]` | Anchor medium and deliverable mix |
-| Tools | `transcriber`, `scene_detect`, `audio_enhance` | Optional source analysis |
+| Schema | `schemas/artifacts/script.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["idea"]["brief"]` | 锚定媒介和交付物组合 |
+| 工具 | `transcriber`, `scene_detect`, `audio_enhance` | 可选的源素材分析 |
 
-## Process
+## 流程
 
-### 1. Mark Source-Led Versus Support-Led Beats
+### 1. 标记源主导与支持主导片段
 
-For each section, state whether it is:
+对于每个段落，说明其由以下哪种方式承载：
 
-- carried by source dialogue or footage,
-- carried by narration,
-- carried by diagrams or overlays,
-- carried by text only.
+- 源素材对话或视频片段承载，
+- 旁白承载，
+- 图表或叠加层承载，
+- 纯文本承载。
 
-### 2. Use Source Speech When It Is Better Than Rewriting
+### 2. 源素材语音优于重写
 
-If the supplied footage already contains strong lines, use `transcriber` and keep the authenticity. Do not replace good source material with unnecessary narration.
+如果提供的视频片段已包含强有力的台词，使用 `transcriber` 并保留其真实性。不要用不必要的旁白替换好的源素材。
 
-### 3. Use Support Only To Clarify
+### 3. 支持素材仅用于阐明
 
-Support-led beats should answer:
+支持主导的片段应回答以下问题：
 
-- what is not visible,
-- what needs summarizing,
-- what needs emphasis,
-- what changes for a different platform.
+- 什么内容不可见，
+- 什么内容需要总结，
+- 什么内容需要强调，
+- 针对不同平台需要做什么更改。
 
-### 4. Use Metadata For Structure
+### 4. 使用元数据构建结构
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `anchor_sections`
 - `support_sections`
 - `narration_sections`
 - `required_support_assets`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- source-led beats are clearly marked,
-- support-led beats are justified,
-- the script does not depend on fake or unavailable assets without saying so,
-- the structure can produce the intended deliverables.
+- 源主导片段已清晰标记，
+- 支持主导片段有合理依据，
+- 剧本不依赖虚假或不可用的素材（除非已明确说明），
+- 该结构能够产出预期的交付物。
 
-### Mid-Production Fact Verification
+### 中期制作事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在剧本编写过程中遇到不确定的情况：
+- 使用 `web_search` 在将事实性声明写入剧本之前进行核实
+- 使用 `web_search` 查找参考图像以确保视觉准确性
+- 在决策日志中记录核查信息：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+剧本中的每个事实性声明都应能追溯到 `research_brief`。
+如果提出了研究中未包含的声明，请进行额外研究并添加来源。不要编造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Rewriting strong source dialogue into weaker narration.
-- Adding diagrams or cards where the footage already explains the point.
-- Hiding unsupported requirements until asset generation.
+- 将强有力的源素材对话重写为较弱的旁白。
+- 在视频片段已能说明问题的情况下添加图表或卡片。
+- 隐藏未经验证的需求直到生成阶段才暴露。
+

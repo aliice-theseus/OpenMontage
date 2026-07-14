@@ -1,29 +1,29 @@
 ---
 name: webhooks
-description: Registering webhook endpoints and event types for HeyGen
+description: 注册 webhook 端点和事件类型用于 HeyGen
 ---
 
 # Webhooks
 
-Webhooks allow HeyGen to notify your application when events occur, such as video completion. This is more efficient than polling for status updates.
+Webhooks 允许 HeyGen 在事件发生时通知您的应用程序，例如视频完成。这比轮询状态更新更高效。
 
-## Overview
+## 概述
 
-Instead of repeatedly checking video status, webhooks push notifications to your server when:
-- Video generation completes
-- Video generation fails
-- Translation completes
-- Avatar training completes
-- Other async operations finish
+Webhook 不是重复检查视频状态，而是将通知推送到您的服务器，当：
+- 视频生成完成
+- 视频生成失败
+- 翻译完成
+- 虚拟角色训练完成
+- 其他异步操作完成
 
-## Setting Up a Webhook Endpoint
+## 设置 Webhook 端点
 
-Your webhook endpoint should:
-1. Accept POST requests
-2. Return 200 status quickly
-3. Handle events asynchronously
+您的 webhook 端点应：
+1. 接受 POST 请求
+2. 快速返回 200 状态
+3. 异步处理事件
 
-### Express.js Example
+### Express.js 示例
 
 ```typescript
 import express from "express";
@@ -32,12 +32,12 @@ import crypto from "crypto";
 const app = express();
 app.use(express.json());
 
-// Webhook endpoint
+// Webhook 端点
 app.post("/webhook/heygen", async (req, res) => {
-  // Acknowledge receipt immediately
+  // 立即确认接收
   res.status(200).send("OK");
 
-  // Process event asynchronously
+  // 异步处理事件
   processWebhookEvent(req.body).catch(console.error);
 });
 
@@ -64,7 +64,7 @@ app.listen(3000, () => {
 });
 ```
 
-### Python Flask Example
+### Python Flask 示例
 
 ```python
 from flask import Flask, request, jsonify
@@ -76,10 +76,10 @@ app = Flask(__name__)
 def heygen_webhook():
     event = request.json
 
-    # Acknowledge immediately
+    # 立即确认
     response = jsonify({"status": "received"})
 
-    # Process asynchronously
+    # 异步处理
     thread = threading.Thread(
         target=process_webhook_event,
         args=(event,)
@@ -103,20 +103,20 @@ if __name__ == "__main__":
     app.run(port=3000)
 ```
 
-## Webhook Event Types
+## Webhook 事件类型
 
-| Event Type | Description |
+| 事件类型 | 描述 |
 |------------|-------------|
-| `avatar_video.success` | Video generation completed |
-| `avatar_video.fail` | Video generation failed |
-| `video_translate.success` | Translation completed |
-| `video_translate.fail` | Translation failed |
-| `instant_avatar.success` | Instant avatar created |
-| `instant_avatar.fail` | Instant avatar creation failed |
+| `avatar_video.success` | 视频生成完成 |
+| `avatar_video.fail` | 视频生成失败 |
+| `video_translate.success` | 翻译完成 |
+| `video_translate.fail` | 翻译失败 |
+| `instant_avatar.success` | 即时虚拟角色创建完成 |
+| `instant_avatar.fail` | 即时虚拟角色创建失败 |
 
-## Event Payload Structure
+## 事件负载结构
 
-### Video Success Event
+### 视频成功事件
 
 ```typescript
 interface VideoSuccessEvent {
@@ -144,7 +144,7 @@ interface VideoSuccessEvent {
 }
 ```
 
-### Video Failure Event
+### 视频失败事件
 
 ```typescript
 interface VideoFailureEvent {
@@ -168,19 +168,19 @@ interface VideoFailureEvent {
 }
 ```
 
-## Registering a Webhook URL
+## 注册 Webhook URL
 
-Configure your webhook URL through the HeyGen dashboard or API:
+通过 HeyGen 仪表板或 API 配置您的 webhook URL：
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必需 | 描述 |
 |-------|------|:---:|-------------|
-| `url` | string | ✓ | Your webhook endpoint URL |
-| `events` | array | ✓ | Event types to subscribe to |
-| `secret` | string | | Shared secret for signature verification |
+| `url` | string | ✓ | 您的 webhook 端点 URL |
+| `events` | array | ✓ | 要订阅的事件类型 |
+| `secret` | string | | 用于签名验证的共享密钥 |
 
-### Via API
+### 通过 API
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/webhook/endpoint.add" \
@@ -196,8 +196,8 @@ curl -X POST "https://api.heygen.com/v1/webhook/endpoint.add" \
 
 ```typescript
 interface WebhookConfig {
-  url: string;                                 // Required
-  events: string[];                            // Required
+  url: string;                                 // 必需
+  events: string[];                            // 必需
   secret?: string;
 }
 
@@ -219,38 +219,38 @@ async function registerWebhook(config: WebhookConfig): Promise<void> {
 }
 ```
 
-## Using Callback IDs
+## 使用回调 ID
 
-Track which video triggered a webhook with callback IDs:
+使用回调 ID 跟踪哪个视频触发了 webhook：
 
-### Include Callback ID in Video Generation
+### 在视频生成中包括回调 ID
 
 ```typescript
 const videoConfig = {
   video_inputs: [...],
-  callback_id: "order_12345", // Your custom identifier
+  callback_id: "order_12345", // 您的自定义标识符
 };
 ```
 
-### Handle in Webhook
+### 在 Webhook 中处理
 
 ```typescript
 async function handleVideoSuccess(event: VideoSuccessEvent) {
   const { video_id, video_url, callback_id } = event.event_data;
 
   if (callback_id) {
-    // Look up your original request
+    // 查找您的原始请求
     const order = await getOrderByCallbackId(callback_id);
     await updateOrderWithVideo(order.id, video_url);
   }
 }
 ```
 
-## Webhook Security
+## Webhook 安全
 
-### Verify Webhook Signatures
+### 验证 Webhook 签名
 
-If HeyGen provides signature verification:
+如果 HeyGen 提供签名验证：
 
 ```typescript
 import crypto from "crypto";
@@ -271,7 +271,7 @@ function verifyWebhookSignature(
   );
 }
 
-// In your webhook handler
+// 在您的 webhook 处理程序中
 app.post("/webhook/heygen", (req, res) => {
   const signature = req.headers["x-heygen-signature"] as string;
   const payload = JSON.stringify(req.body);
@@ -280,20 +280,20 @@ app.post("/webhook/heygen", (req, res) => {
     return res.status(401).send("Invalid signature");
   }
 
-  // Process event...
+  // 处理事件...
 });
 ```
 
-### Validate Event Origin
+### 验证事件来源
 
 ```typescript
 function isValidHeygenEvent(event: any): boolean {
-  // Check required fields
+  // 检查必需字段
   if (!event.event_type || !event.event_data) {
     return false;
   }
 
-  // Check event type is known
+  // 检查事件类型是否已知
   const validEventTypes = [
     "avatar_video.success",
     "avatar_video.fail",
@@ -305,9 +305,9 @@ function isValidHeygenEvent(event: any): boolean {
 }
 ```
 
-## Handling Webhook Failures
+## 处理 Webhook 失败
 
-Implement retry logic and error handling:
+实施重试逻辑和错误处理：
 
 ```typescript
 async function processWebhookEvent(event: HeyGenWebhookEvent) {
@@ -321,43 +321,43 @@ async function processWebhookEvent(event: HeyGenWebhookEvent) {
       console.error(`Attempt ${attempt} failed:`, error);
 
       if (attempt < maxRetries) {
-        // Exponential backoff
+        // 指数退避
         await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 1000));
       }
     }
   }
 
-  // Store failed event for manual review
+  // 存储失败事件以供人工审查
   await storeFailedEvent(event);
 }
 ```
 
-## Webhook vs Polling Comparison
+## Webhook vs 轮询比较
 
-| Aspect | Webhook | Polling |
+| 方面 | Webhook | 轮询 |
 |--------|---------|---------|
-| Latency | Immediate | Depends on interval |
-| Efficiency | High (push) | Low (repeated requests) |
-| Complexity | Requires endpoint | Simpler to implement |
-| Reliability | Needs retry handling | Guaranteed delivery |
-| Cost | Lower API usage | Higher API usage |
+| 延迟 | 即时 | 取决于间隔 |
+| 效率 | 高（推送） | 低（重复请求） |
+| 复杂度 | 需要端点 | 实现更简单 |
+| 可靠性 | 需要重试处理 | 保证传递 |
+| 成本 | API 使用较低 | API 使用较高 |
 
-## Testing Webhooks
+## 测试 Webhook
 
-### Local Development with ngrok
+### 本地开发使用 ngrok
 
 ```bash
-# Start ngrok tunnel
+# 启动 ngrok 隧道
 ngrok http 3000
 
-# Use ngrok URL as webhook endpoint
+# 使用 ngrok URL 作为 webhook 端点
 # https://abc123.ngrok.io/webhook/heygen
 ```
 
-### Webhook Testing Tool
+### Webhook 测试工具
 
 ```typescript
-// Test webhook locally
+// 本地测试 webhook
 async function simulateWebhook(event: HeyGenWebhookEvent) {
   const response = await fetch("http://localhost:3000/webhook/heygen", {
     method: "POST",
@@ -368,7 +368,7 @@ async function simulateWebhook(event: HeyGenWebhookEvent) {
   console.log(`Response: ${response.status}`);
 }
 
-// Simulate success event
+// 模拟成功事件
 await simulateWebhook({
   event_type: "avatar_video.success",
   event_data: {
@@ -381,13 +381,13 @@ await simulateWebhook({
 });
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Respond quickly** - Return 200 within 5 seconds, process async
-2. **Handle duplicates** - Same event may be sent multiple times
-3. **Implement retries** - Handle temporary processing failures
-4. **Log everything** - Store webhook payloads for debugging
-5. **Use callback IDs** - Track requests through the system
-6. **Secure endpoints** - Verify signatures, use HTTPS
-7. **Monitor health** - Track webhook success rates
-8. **Queue processing** - Use job queues for heavy processing
+1. **快速响应** - 在 5 秒内返回 200，异步处理
+2. **处理重复** - 同一事件可能多次发送
+3. **实施重试** - 处理临时处理失败
+4. **记录所有内容** - 存储 webhook 负载以供调试
+5. **使用回调 ID** - 在系统中跟踪请求
+6. **保护端点** - 验证签名，使用 HTTPS
+7. **监控健康** - 跟踪 webhook 成功率
+8. **队列处理** - 对繁重处理使用任务队列

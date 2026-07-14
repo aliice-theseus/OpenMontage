@@ -1,29 +1,29 @@
-# Outbound Calls
+# 外呼电话
 
-Make outbound phone calls using your ElevenLabs agent via Twilio integration.
+通过 Twilio 集成使用您的 ElevenLabs 代理拨打外呼电话。
 
-## Prerequisites
+## 先决条件
 
-1. A configured ElevenLabs agent
-2. A Twilio phone number linked to your agent (obtain `agent_phone_number_id` from ElevenLabs dashboard)
-3. Your ElevenLabs API key
+1. 已配置的 ElevenLabs 代理
+2. 关联到您代理的 Twilio 电话号码（从 ElevenLabs 控制面板获取 `agent_phone_number_id`）
+3. 您的 ElevenLabs API 密钥
 
-## Basic Usage
+## 基本用法
 
-See the [main agents skill](../SKILL.md#outbound-calls) for basic Python, JavaScript, and cURL examples.
+基本的 Python、JavaScript 和 cURL 示例请参阅 [主代理技能](../SKILL.md#outbound-calls)。
 
-## Request Parameters
+## 请求参数
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `agent_id` | string | Yes | The ID of your ElevenLabs agent |
-| `agent_phone_number_id` | string | Yes | The ID of the Twilio phone number linked to your agent |
-| `to_number` | string | Yes | The destination phone number (E.164 format) |
-| `conversation_initiation_client_data` | object | No | Override conversation settings for this call |
-| `call_recording_enabled` | boolean | No | Whether to let Twilio record the call |
-| `telephony_call_config` | object | No | Telephony call settings like ringing timeout |
+| 参数                                  | 类型    | 必需 | 描述                                             |
+|---------------------------------------|---------|------|--------------------------------------------------|
+| `agent_id`                            | string  | 是   | 您的 ElevenLabs 代理 ID                          |
+| `agent_phone_number_id`               | string  | 是   | 关联到您代理的 Twilio 电话号码 ID                |
+| `to_number`                           | string  | 是   | 目标电话号码（E.164 格式）                       |
+| `conversation_initiation_client_data` | object  | 否   | 为此通话覆盖对话设置                             |
+| `call_recording_enabled`              | boolean | 否   | 是否让 Twilio 录制通话                           |
+| `telephony_call_config`               | object  | 否   | 电话呼叫设置如响铃超时                          |
 
-## Response
+## 响应
 
 ```json
 {
@@ -34,16 +34,16 @@ See the [main agents skill](../SKILL.md#outbound-calls) for basic Python, JavaSc
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `success` | boolean | Whether the call was initiated successfully |
-| `message` | string | Status message |
-| `conversation_id` | string | ElevenLabs conversation ID for tracking |
-| `callSid` | string | Twilio Call SID for reference |
+| 字段              | 类型    | 描述                             |
+|-------------------|---------|----------------------------------|
+| `success`         | boolean | 通话是否成功发起                 |
+| `message`         | string  | 状态消息                         |
+| `conversation_id` | string  | 用于跟踪的 ElevenLabs 对话 ID    |
+| `callSid`         | string  | 用于参考的 Twilio 通话 SID       |
 
-## Customizing the Call
+## 自定义通话
 
-Override agent settings for a specific call using `conversation_initiation_client_data`:
+使用 `conversation_initiation_client_data` 覆盖特定通话的代理设置：
 
 ### Python
 
@@ -97,49 +97,49 @@ const response = await client.conversationalAi.twilio.outboundCall({
 });
 ```
 
-## Configuration Overrides
+## 配置覆盖
 
-### Agent Settings
+### 代理设置
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `first_message` | string | Custom greeting for this call |
-| `language` | string | Language code (e.g., "en", "es", "fr") |
-| `prompt` | object | Override agent prompt and LLM settings |
+| 选项           | 类型    | 描述                                   |
+|----------------|---------|----------------------------------------|
+| `first_message`| string  | 此通话的自定义问候语                   |
+| `language`     | string  | 语言代码（如 "en"、"es"、"fr"）        |
+| `prompt`       | object  | 覆盖代理提示和 LLM 设置                |
 
-### TTS Settings
+### TTS 设置
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `voice_id` | string | Voice ID to use for this call |
-| `stability` | number | Voice stability (0.0-1.0) |
-| `similarity_boost` | number | Voice similarity boost (0.0-1.0) |
-| `speed` | number | Speech speed multiplier |
+| 选项               | 类型    | 描述                     |
+|--------------------|---------|--------------------------|
+| `voice_id`         | string  | 此通话使用的语音 ID      |
+| `stability`        | number  | 语音稳定性（0.0-1.0）   |
+| `similarity_boost` | number  | 语音相似度提升（0.0-1.0）|
+| `speed`            | number  | 语速倍数                 |
 
-### Telephony Call Configuration
+### 电话呼叫配置
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `ringing_timeout_secs` | integer | How long to ring the recipient before giving up (default: `60`) |
+| 选项                   | 类型    | 描述                                          |
+|------------------------|---------|-----------------------------------------------|
+| `ringing_timeout_secs` | integer | 响铃多久后放弃接通（默认：`60`）              |
 
-### Dynamic Variables
+### 动态变量
 
-Pass custom data to your agent's prompt using `dynamic_variables`. Reference them in your agent's prompt with `{{variable_name}}` syntax.
+使用 `dynamic_variables` 将自定义数据传递给代理的提示。在代理提示中使用 `{{variable_name}}` 语法引用它们。
 
-When assigning dynamic variables, you can use the `sanitize` option to remove sensitive values from tool responses before they are sent to the LLM and transcript, while still allowing variable assignment:
+分配动态变量时，您可以使用 `sanitize` 选项在工具响应发送到 LLM 和转录之前移除敏感值，同时仍允许变量赋值：
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `sanitize` | boolean | `false` | If true, the assignment's value is removed from tool responses before sending to LLM/transcript but still processed for variable assignment |
+| 字段       | 类型    | 默认值  | 描述                                                         |
+|------------|---------|---------|--------------------------------------------------------------|
+| `sanitize` | boolean | `false` | 如果为 true，在发送到 LLM/转录之前从工具响应中移除赋值值，但仍处理变量赋值 |
 
-## Complete Example
+## 完整示例
 
 ```python
 from elevenlabs import ElevenLabs
 
 client = ElevenLabs()
 
-# Make personalized outbound calls
+# 拨打个性化外呼电话
 customers = [
     {"name": "Alice", "phone": "+1234567890", "balance": "$150.00"},
     {"name": "Bob", "phone": "+0987654321", "balance": "$75.50"},

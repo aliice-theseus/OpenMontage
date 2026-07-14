@@ -1,50 +1,51 @@
-# Publish Director - Hybrid Pipeline
+# 发布导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-Package the hybrid outputs so the hero cut and its derivatives stay organized and the source/support mix remains clear.
+打包混合输出产物，使主剪版本及其衍生版本保持有序，源素材/支持素材的混合关系保持清晰。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["compose"]["render_report"]`, `state.artifacts["idea"]["brief"]`, `state.artifacts["script"]["script"]` | Final outputs and hybrid framing |
-| Playbook | Active style playbook | Tone consistency |
+| Schema | `schemas/artifacts/publish_log.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["compose"]["render_report"]`, `state.artifacts["idea"]["brief"]`, `state.artifacts["script"]["script"]` | 最终输出和混合框架 |
+| Playbook | 当前样式 playbook | 风格一致性 |
 
-## Process
+## 流程
 
-### 1. Distinguish Master And Variants
+### 1. 区分主版本和衍生版本
 
-Group outputs as:
+将输出产物分组为：
 
-- master cut,
-- short-form derivatives,
-- format variants,
-- chaptered or contextual variants.
+- 主剪版本，
+- 短视频衍生版本，
+- 格式变体，
+- 分章节或上下文的变体。
 
-### 2. Preserve Source Truth In Packaging
+### 2. 在打包中保留源素材真值
 
-If the project uses interview footage, screen recording, or product footage as its anchor, the metadata should reflect that instead of packaging it like a pure generated piece.
+如果项目使用访谈视频、屏幕录制或产品视频作为锚定内容，元数据应反映这一事实，而不是将其像纯粹的生成内容一样打包。
 
-### 3. Store Cross-Output Notes
+### 3. 存储跨输出产物说明
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `master_output`
 - `derivative_outputs`
 - `source_mix_notes`
 - `platform_copy_map`
 
-### 4. Quality Gate
+### 4. 质量门禁
 
-- master and variants are clearly labeled,
-- metadata matches the true source mix,
-- export folders are organized by purpose,
-- the package is ready to use without manual cleanup.
+- 主版本和变体已清晰标记，
+- 元数据匹配真实的源素材混合情况，
+- 导出文件夹按用途组织，
+- 打包产物无需手动清理即可使用。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Hiding which output is the hero cut.
-- Packaging a source-led project like a generic generated asset.
-- Losing platform-specific copy and labeling across variants.
+- 隐藏哪个输出是主剪版本。
+- 将源主导项目打包成普通的生成素材。
+- 在跨变体时丢失平台特定的文案和标签。
+

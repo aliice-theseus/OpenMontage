@@ -1,24 +1,24 @@
 ---
-title: Hoist Static I/O to Module Level
+title: 将静态 I/O 提升到模块级别
 impact: HIGH
-impactDescription: avoids repeated file/network I/O per request
+impactDescription: 避免每次请求重复的文件/网络 I/O
 tags: server, io, performance, next.js, route-handlers, og-image
 ---
 
-## Hoist Static I/O to Module Level
+## 将静态 I/O 提升到模块级别
 
-**Impact: HIGH (avoids repeated file/network I/O per request)**
+**影响：高（避免每次请求重复的文件/网络 I/O）**
 
-When loading static assets (fonts, logos, images, config files) in route handlers or server functions, hoist the I/O operation to module level. Module-level code runs once when the module is first imported, not on every request. This eliminates redundant file system reads or network fetches that would otherwise run on every invocation.
+在路由处理函数或服务端函数中加载静态资源（字体、logo、图片、配置文件）时，将 I/O 操作提升到模块级别。模块级代码在模块首次导入时运行一次，而不是每次请求都运行。这消除了否则每次调用都会运行的重复文件系统读取或网络获取。
 
-**Incorrect: reads font file on every request**
+**错误做法：每次请求都读取字体文件**
 
 ```typescript
 // app/api/og/route.tsx
 import { ImageResponse } from 'next/og'
 
 export async function GET(request: Request) {
-  // Runs on EVERY request - expensive!
+  // 每次请求都运行 - 昂贵！
   const fontData = await fetch(
     new URL('./fonts/Inter.ttf', import.meta.url)
   ).then(res => res.arrayBuffer())
@@ -37,13 +37,13 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct: loads once at module initialization**
+**正确做法：在模块初始化时加载一次**
 
 ```typescript
 // app/api/og/route.tsx
 import { ImageResponse } from 'next/og'
 
-// Module-level: runs ONCE when module is first imported
+// 模块级别：在模块首次导入时运行一次
 const fontData = fetch(
   new URL('./fonts/Inter.ttf', import.meta.url)
 ).then(res => res.arrayBuffer())
@@ -53,7 +53,7 @@ const logoData = fetch(
 ).then(res => res.arrayBuffer())
 
 export async function GET(request: Request) {
-  // Await the already-started promises
+  // await 已经启动的 promises
   const [font, logo] = await Promise.all([fontData, logoData])
 
   return new ImageResponse(
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Alternative: synchronous file reads with Node.js fs**
+**替代方案：使用 Node.js fs 同步读取**
 
 ```typescript
 // app/api/og/route.tsx
@@ -74,7 +74,7 @@ import { ImageResponse } from 'next/og'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-// Synchronous read at module level - blocks only during module init
+// 模块级别同步读取 - 仅在模块初始化时阻塞
 const fontData = readFileSync(
   join(process.cwd(), 'public/fonts/Inter.ttf')
 )
@@ -94,10 +94,10 @@ export async function GET(request: Request) {
 }
 ```
 
-**General Node.js example: loading config or templates**
+**通用 Node.js 示例：加载配置或模板**
 
 ```typescript
-// Incorrect: reads config on every call
+// 错误做法：每次调用读取配置
 export async function processRequest(data: Data) {
   const config = JSON.parse(
     await fs.readFile('./config.json', 'utf-8')
@@ -107,7 +107,7 @@ export async function processRequest(data: Data) {
   return render(template, data, config)
 }
 
-// Correct: loads once at module level
+// 正确做法：在模块级别加载一次
 const configPromise = fs.readFile('./config.json', 'utf-8')
   .then(JSON.parse)
 const templatePromise = fs.readFile('./template.html', 'utf-8')
@@ -122,21 +122,21 @@ export async function processRequest(data: Data) {
 }
 ```
 
-**When to use this pattern:**
+**何时使用此模式：**
 
-- Loading fonts for OG image generation
-- Loading static logos, icons, or watermarks
-- Reading configuration files that don't change at runtime
-- Loading email templates or other static templates
-- Any static asset that's the same across all requests
+- 为 OG 图片生成加载字体
+- 加载静态 logo、图标或水印
+- 读取运行时不会更改的配置文件
+- 加载邮件模板或其他静态模板
+- 所有请求相同的任何静态资源
 
-**When NOT to use this pattern:**
+**何时不使用此模式：**
 
-- Assets that vary per request or user
-- Files that may change during runtime (use caching with TTL instead)
-- Large files that would consume too much memory if kept loaded
-- Sensitive data that shouldn't persist in memory
+- 因请求或用户而异的资源
+- 运行时可能更改的文件（改用带 TTL 的缓存）
+- 如果保持加载状态会消耗过多内存的大文件
+- 不应持久化在内存中的敏感数据
 
-**With Vercel's [Fluid Compute](https://vercel.com/docs/fluid-compute):** Module-level caching is especially effective because multiple concurrent requests share the same function instance. The static assets stay loaded in memory across requests without cold start penalties.
+**使用 Vercel 的 [Fluid Compute](https://vercel.com/docs/fluid-compute)：** 模块级缓存特别有效，因为多个并发请求可以共享同一个函数实例。静态资产在请求之间保持加载在内存中，没有冷启动惩罚。
 
-**In traditional serverless:** Each cold start re-executes module-level code, but subsequent warm invocations reuse the loaded assets until the instance is recycled.
+**在传统 Serverless 中：** 每次冷启动重新执行模块级代码，但后续的热调用会复用已加载的资源，直到实例被回收。

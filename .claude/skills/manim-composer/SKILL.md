@@ -8,131 +8,131 @@ description: |
   Use this BEFORE writing any Manim code. This skill plans the video; use manimce-best-practices or manimgl-best-practices for implementation.
 ---
 
-## Workflow
+## 工作流程
 
-### Phase 1: Understand the Concept
+### 阶段 1：理解概念
 
-1. **Research the topic** deeply before asking questions
-   - Use web search to understand the core concepts
-   - Identify the key insights that make this topic interesting
-   - Find the "aha moment" - what makes this click for learners
-   - Note common misconceptions to address
+1. **深入研究主题**后再提问
+   - 使用网络搜索理解核心概念
+   - 确定使该主题有趣的关键见解
+   - 找到"顿悟时刻"——是什么让学习者恍然大悟
+   - 记录需要解决的常见误解
 
-2. **Identify the narrative hook**
-   - What question does this video answer?
-   - Why should the viewer care?
-   - What's the surprising or counterintuitive element?
+2. **确定叙事钩子**
+   - 这个视频回答什么问题？
+   - 观众为什么要在意？
+   - 什么元素令人惊讶或反直觉？
 
-### Phase 2: Clarify with User
+### 阶段 2：与用户澄清
 
-Ask targeted questions (not all at once - adapt based on responses):
+提出针对性的问题（不要一次全部提出——根据回答调整）：
 
-**Audience & Scope**
-- What math/science background should I assume? (e.g., "knows calculus" or "high school algebra")
-- Target video length? (short: 5-10min, medium: 15-20min, long: 30min+)
-- Should this be self-contained or part of a series?
+**受众与范围**
+- 我应该假设什么样的数学/科学背景？（例如"懂微积分"或"高中代数"）
+- 目标视频长度？（短：5-10 分钟，中：15-20 分钟，长：30 分钟以上）
+- 应该独立成篇还是作为系列的一部分？
 
-**Focus & Depth**
-- Any specific aspects to emphasize or skip?
-- Proof-heavy or intuition-focused?
-- Real-world applications to include?
+**重点与深度**
+- 是否有需要强调或跳过的特定方面？
+- 侧重证明还是侧重直觉？
+- 是否包含实际应用？
 
-**Style Preferences**
-- Color scheme preferences?
-- Narration style? (casual, formal, playful)
-- Any specific visual metaphors you have in mind?
+**风格偏好**
+- 配色方案偏好？
+- 旁白风格？（休闲、正式、有趣）
+- 有没有想到的特定视觉隐喻？
 
-### Phase 3: Create scenes.md
+### 阶段 3：创建 scenes.md
 
-Output a comprehensive `scenes.md` file with this structure:
+输出一个结构完整的 `scenes.md` 文件：
 
 ```markdown
-# [Video Title]
+# [视频标题]
 
-## Overview
-- **Topic**: [Core concept]
-- **Hook**: [Opening question/mystery]
-- **Target Audience**: [Prerequisites]
-- **Estimated Length**: [X minutes]
-- **Key Insight**: [The "aha moment"]
+## 概述
+- **主题**：[核心概念]
+- **钩子**：[开场问题/谜团]
+- **目标受众**：[先决条件]
+- **预计时长**：[X 分钟]
+- **关键见解**：[顿悟时刻]
 
-## Narrative Arc
-[2-3 sentences describing the journey from confusion to understanding]
-
----
-
-## Scene 1: [Scene Name]
-**Duration**: ~X seconds
-**Purpose**: [What this scene accomplishes]
-
-### Visual Elements
-- [List of mobjects needed]
-- [Animations to use]
-- [Camera movements]
-
-### Content
-[Detailed description of what happens, what's shown, what's explained]
-
-### Narration Notes
-[Key points to convey, tone, pacing notes]
-
-### Technical Notes
-- [Specific Manim classes/methods to use]
-- [Any tricky implementations to note]
+## 叙事弧线
+[用 2-3 句话描述从困惑到理解的旅程]
 
 ---
 
-## Scene 2: [Scene Name]
+## 场景 1：[场景名称]
+**时长**：约 X 秒
+**目的**：[此场景达到的目的]
+
+### 视觉元素
+- [所需 mobject 列表]
+- [要使用的动画]
+- [摄像机移动]
+
+### 内容
+[详细描述发生了什么、展示了什么、解释了什么]
+
+### 旁白说明
+[要传达的关键点、语气、节奏说明]
+
+### 技术说明
+- [要使用的特定 Manim 类/方法]
+- [任何需要注意的技巧性实现]
+
+---
+
+## 场景 2：[场景名称]
 ...
 
 ---
 
-## Transitions & Flow
-[Notes on how scenes connect, recurring visual motifs]
+## 过渡与流程
+[关于场景如何连接、重复出现的视觉主题的说明]
 
-## Color Palette
-- Primary: [color] - used for [purpose]
-- Secondary: [color] - used for [purpose]
-- Accent: [color] - used for [purpose]
-- Background: [color]
+## 调色板
+- 主色：[颜色] - 用于[用途]
+- 辅色：[颜色] - 用于[用途]
+- 强调色：[颜色] - 用于[用途]
+- 背景色：[颜色]
 
-## Mathematical Content
-[List of equations, formulas, or mathematical objects that need to be rendered]
+## 数学内容
+[需要渲染的方程、公式或数学对象列表]
 
-## Implementation Order
-[Suggested order for implementing scenes, noting dependencies]
+## 实现顺序
+[建议的场景实现顺序，注明依赖关系]
 ```
 
-## 3b1b Style Principles
+## 3b1b 风格原则
 
-Apply these principles when composing scenes:
+在编写场景时应用以下原则：
 
-### Visual Storytelling
-- **Show, don't just tell** - Every concept needs a visual representation
-- **Progressive revelation** - Build complexity gradually, don't show everything at once
-- **Visual continuity** - Transform objects rather than replacing them when possible
+### 视觉叙事
+- **展示，而非仅仅讲述** - 每个概念都需要视觉表现
+- **渐进揭示** - 逐步构建复杂度，不要一次性展示所有内容
+- **视觉连续性** - 尽可能变换对象而不是替换它们
 
-### Pacing & Rhythm
-- **Pause for insight** - Give viewers time to absorb key moments
-- **Vary the pace** - Mix quick sequences with slower explanations
-- **End scenes with resolution** - Each scene should feel complete
+### 节奏与韵律
+- **为顿悟留白** - 给观众时间吸收关键时刻
+- **变化节奏** - 混合快速序列和较慢的解释
+- **场景以解决收尾** - 每个场景应感觉完整
 
-### Mathematical Beauty
-- **Emphasize elegance** - Highlight when math is surprisingly simple or beautiful
-- **Connect representations** - Show the same concept multiple ways (algebraic, geometric, intuitive)
-- **Embrace abstraction gradually** - Start concrete, then generalize
+### 数学之美
+- **强调优雅** - 突出数学令人惊讶地简单或优美的部分
+- **连接表达方式** - 以多种方式展示同一概念（代数、几何、直觉）
+- **逐步拥抱抽象** - 从具体开始，然后概括
 
-### Engagement Techniques
-- **Pose questions** - Make viewers curious before revealing answers
-- **Acknowledge difficulty** - "This might seem confusing at first..."
-- **Celebrate insight** - Make the "aha moment" feel earned
+### 参与技巧
+- **提出问题** - 在揭示答案前激发观众的好奇心
+- **承认难度** - "乍看可能令人困惑..."
+- **庆祝洞察** - 让"顿悟时刻"感觉是应得的
 
-## References
+## 参考
 
-- [references/narrative-patterns.md](references/narrative-patterns.md) - Common 3b1b narrative structures
-- [references/visual-techniques.md](references/visual-techniques.md) - Effective visualization patterns
-- [references/scene-examples.md](references/scene-examples.md) - Example scenes.md excerpts
+- [references/narrative-patterns.md](references/narrative-patterns.md) - 常见 3b1b 叙事结构
+- [references/visual-techniques.md](references/visual-techniques.md) - 高效可视化模式
+- [references/scene-examples.md](references/scene-examples.md) - 示例 scenes.md 节选
 
-## Templates
+## 模板
 
-- [templates/scenes-template.md](templates/scenes-template.md) - Blank scenes.md template
+- [templates/scenes-template.md](templates/scenes-template.md) - 空白 scenes.md 模板

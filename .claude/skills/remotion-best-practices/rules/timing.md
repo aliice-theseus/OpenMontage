@@ -1,34 +1,34 @@
 ---
 name: timing
-description: Interpolation curves in Remotion - linear, easing, spring animations
+description: Remotion 插值曲线 - 线性、缓动、弹簧动画
 metadata:
   tags: spring, bounce, easing, interpolation
 ---
 
-A simple linear interpolation is done using the `interpolate` function.
+使用 `interpolate` 函数进行简单的线性插值。
 
-```ts title="Going from 0 to 1 over 100 frames"
+```ts title="从 0 到 1，跨 100 帧"
 import { interpolate } from "remotion";
 
 const opacity = interpolate(frame, [0, 100], [0, 1]);
 ```
 
-By default, the values are not clamped, so the value can go outside the range [0, 1].  
-Here is how they can be clamped:
+默认情况下，值不会被限制，因此值可能超出 [0, 1] 范围。  
+以下是如何限制它们：
 
-```ts title="Going from 0 to 1 over 100 frames with extrapolation"
+```ts title="从 0 到 1，跨 100 帧，带外推限制"
 const opacity = interpolate(frame, [0, 100], [0, 1], {
   extrapolateRight: "clamp",
   extrapolateLeft: "clamp",
 });
 ```
 
-## Spring animations
+## 弹簧动画
 
-Spring animations have a more natural motion.  
-They go from 0 to 1 over time.
+弹簧动画具有更自然的运动。  
+它们随时间从 0 到 1 变化。
 
-```ts title="Spring animation from 0 to 1 over 100 frames"
+```ts title="弹簧动画从 0 到 1，跨 100 帧"
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 
 const frame = useCurrentFrame();
@@ -40,12 +40,12 @@ const scale = spring({
 });
 ```
 
-### Physical properties
+### 物理属性
 
-The default configuration is: `mass: 1, damping: 10, stiffness: 100`.  
-This leads to the animation having a bit of bounce before it settles.
+默认配置为：`mass: 1, damping: 10, stiffness: 100`。  
+这会导致动画在稳定前有一些弹跳。
 
-The config can be overwritten like this:
+可以这样覆盖配置：
 
 ```ts
 const scale = spring({
@@ -55,21 +55,21 @@ const scale = spring({
 });
 ```
 
-The recommended configuration for a natural motion without a bounce is: `{ damping: 200 }`.
+推荐的无弹跳自然运动配置为：`{ damping: 200 }`。
 
-Here are some common configurations:
+以下是一些常用配置：
 
 ```tsx
-const smooth = { damping: 200 }; // Smooth, no bounce (subtle reveals)
-const snappy = { damping: 20, stiffness: 200 }; // Snappy, minimal bounce (UI elements)
-const bouncy = { damping: 8 }; // Bouncy entrance (playful animations)
-const heavy = { damping: 15, stiffness: 80, mass: 2 }; // Heavy, slow, small bounce
+const smooth = { damping: 200 }; // 流畅，无弹跳（微妙显现）
+const snappy = { damping: 20, stiffness: 200 }; // 灵敏，最小弹跳（UI 元素）
+const bouncy = { damping: 8 }; // 弹跳进入（趣味动画）
+const heavy = { damping: 15, stiffness: 80, mass: 2 }; // 沉重、缓慢、小弹跳
 ```
 
-### Delay
+### 延迟
 
-The animation starts immediately by default.  
-Use the `delay` parameter to delay the animation by a number of frames.
+默认情况下动画立即开始。  
+使用 `delay` 参数将动画延迟若干帧。
 
 ```tsx
 const entrance = spring({
@@ -79,10 +79,10 @@ const entrance = spring({
 });
 ```
 
-### Duration
+### 时长
 
-A `spring()` has a natural duration based on the physical properties.  
-To stretch the animation to a specific duration, use the `durationInFrames` parameter.
+`spring()` 根据物理属性有一个自然时长。  
+要将动画拉伸到指定的时长，使用 `durationInFrames` 参数。
 
 ```tsx
 const spring = spring({
@@ -92,9 +92,9 @@ const spring = spring({
 });
 ```
 
-### Combining spring() with interpolate()
+### 组合 spring() 与 interpolate()
 
-Map spring output (0-1) to custom ranges:
+将弹簧输出（0-1）映射到自定义范围：
 
 ```tsx
 const springProgress = spring({
@@ -102,15 +102,15 @@ const springProgress = spring({
   fps,
 });
 
-// Map to rotation
+// 映射到旋转
 const rotation = interpolate(springProgress, [0, 1], [0, 360]);
 
 <div style={{ rotate: rotation + "deg" }} />;
 ```
 
-### Adding springs
+### 弹簧叠加
 
-Springs return just numbers, so math can be performed:
+弹簧只返回数值，因此可以进行数学运算：
 
 ```tsx
 const frame = useCurrentFrame();
@@ -130,9 +130,9 @@ const outAnimation = spring({
 const scale = inAnimation - outAnimation;
 ```
 
-## Easing
+## 缓动
 
-Easing can be added to the `interpolate` function:
+缓动可以添加到 `interpolate` 函数中：
 
 ```ts
 import { interpolate, Easing } from "remotion";
@@ -144,21 +144,21 @@ const value1 = interpolate(frame, [0, 100], [0, 1], {
 });
 ```
 
-The default easing is `Easing.linear`.  
-There are various other convexities:
+默认缓动为 `Easing.linear`。  
+还有各种其他凸性：
 
-- `Easing.in` for starting slow and accelerating
-- `Easing.out` for starting fast and slowing down
+- `Easing.in` 慢速开始然后加速
+- `Easing.out` 快速开始然后减速
 - `Easing.inOut`
 
-and curves (sorted from most linear to most curved):
+以及曲线（从最线性到最弯曲排序）：
 
 - `Easing.quad`
 - `Easing.sin`
 - `Easing.exp`
 - `Easing.circle`
 
-Convexities and curves need be combined for an easing function:
+凸性和曲线需要组合成缓动函数：
 
 ```ts
 const value1 = interpolate(frame, [0, 100], [0, 1], {
@@ -168,7 +168,7 @@ const value1 = interpolate(frame, [0, 100], [0, 1], {
 });
 ```
 
-Cubic bezier curves are also supported:
+也支持三次贝塞尔曲线：
 
 ```ts
 const value1 = interpolate(frame, [0, 100], [0, 1], {

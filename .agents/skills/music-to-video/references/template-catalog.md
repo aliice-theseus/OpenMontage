@@ -1,106 +1,85 @@
-# Template catalog — the selection menu (Step 3)
+# 模板目录——选择菜单（步骤 3）
 
-Reverse-engineered, asset-free **group templates**. This file is the **only** thing the
-planner reads to pick one — you do **not** open the template's `index.html` to choose. One
-template realizes **one group** of a frame (a frame may stack several groups; the brand spine
-unifies them).
+逆向工程、无需资源的**组模板**。此文件是规划者选择时读取的**唯一**内容——你**不**打开模板的 `index.html` 来选择。一个模板实现一帧的**一个组**（一帧可以堆叠多个组；品牌脊柱统一它们）。
 
-**How to pick.** For each group, read its frame's `pacing` + `mood` + the one-line music
-situation from the skeleton, then scan **Reach for it when** + **Best span** below and take the
-closest fit. If nothing fits, **free-compose** from
-[`motion-primitive-catalog.md`](motion-primitive-catalog.md) — that is a first-class choice, not a
-failure.
+**如何选择。** 对于每个组，读取其帧的 `pacing` + `mood` + 来自骨架的一行音乐情况，然后扫描下面的**适合时机** + **最佳跨度**并取最接近的匹配。如果没有匹配，从 [`motion-primitive-catalog.md`](motion-primitive-catalog.md) **自由组合**——那是一等选择，不是失败。
 
-**Brand comes from `frame.md`, not the template.** Templates ship their own demo palette
-(`theme` / `palette` / color params). Fill those params from the project's `frame.md` (the
-chosen preset's colors + fonts) so every group reads as one piece — the template supplies the
-**motion + layout**, the preset supplies the **look**.
+**品牌来自 `frame.md`，不是模板。** 模板自带其演示调色板（`theme` / `palette` / 颜色参数）。从项目的 `frame.md`（所选预设的颜色 + 字体）填充这些参数，使每个组读起来像是一体的——模板提供**动效 + 布局**，预设提供**外观**。
 
-**Params** are listed so you can fill content slots in the storyboard. Exact semantics +
-defaults live in each template's `index.html` (`data-composition-variables`) — the frame-worker
-reads those at build time; you only name the values.
+**参数**被列出以便你可以在故事板中填充内容槽。精确语义 + 默认值存在于每个模板的 `index.html`（`data-composition-variables`）中——frame-worker 在构建时读取它们；你只命名值。
 
-Pacing tag: every template below is **beat_cut** except `held-message-living-field`
-(**phrase_flow**). Never put a beat_cut template on a phrase_flow frame.
+节奏标签：下面的每个模板都是 **beat_cut** 除了 `held-message-living-field`（**phrase_flow**）。永远不要将 beat_cut 模板放在 phrase_flow 帧上。
 
-## Group duration discipline
+## 组时长纪律
 
-Template choice is per **group**, not per frame. A frame longer than a template's **Best span**
-should usually split into multiple groups at real audiomap anchors (`SURGE`, `DROP`, roll edge,
-hard_stop, phrase edge) instead of stretching one template across the whole frame.
+模板选择是每个**组**的，而不是每个帧的。比模板的**最佳跨度**长的帧通常应该在真实的音频锚点（SURGE、DROP、滚动边沿、hard_stop、乐句边沿）处拆分为多个组，而不是将一个模板拉伸跨过整个帧。
 
-- **Best span** below is the active treatment span: the part where the template's system is doing
-  meaningful motion. A short readable hold at the end is fine; a long empty tail means pick another
-  group.
-- **Frames over ~6s** usually need 2+ groups. Beat-cut exceptions are rich programs with real
-  sub-phases (`poster-tile-mosaic`, sometimes `card-flyby`); phrase-flow exceptions use
-  `held-message-living-field`.
-- **Roll templates are one-roll tools.** If a frame has two rolls or a drop between rolls, split it
-  into two groups.
-- Do not extend by slowing every tween. Preserve the template's motion feel, then fill extra time
-  with a hold / palette change / new group.
+- 下面的**最佳跨度**是活跃处理跨度：模板系统在做有意义的动效的部分。末尾的短可读保持没问题；长空尾巴意味着选择另一个组。
+- **约 6s 以上的帧**通常需要 2+ 个组。节拍剪切例外是富程序具有实子阶段（`poster-tile-mosaic`，有时 `card-flyby`）；乐句流例外使用 `held-message-living-field`。
+- **滚动模板是一次性工具。** 如果一帧有两个滚动段或滚动段之间的一个下降，将其拆分为两个组。
+- 不要通过减慢每个动画来扩展。保持模板的动效感觉，然后用保持/调色板变化/新组填充额外时间。
 
 ---
 
 ### card-flyby
 
-- **What** — a depth column of cards rolls forward through perspective; each landing beat tumbles the next card into the front slot with a solid colored wipe, the old front falls toward camera, dwells shrink card-to-card so the deck accelerates into a held final card.
-- **Reach for it when** — a stream of discrete onsets that **accelerate** (gaps shrinking / a build into a downbeat) and you want to flash a **sequence of items** — titles, projects, posters, tiles — one per hit, climaxing on a held card.
-- **Best span** — **4-6.5s** for 4-7 landings plus a short final hold; split at the next downbeat if it wants to run **>7s**.
-- **Params** — `theme`, `bgColor`, `cards`, `landings`, `yaw`
+- **什么**——深度卡片列通过透视向前滚动；每个落地节拍将下一张卡片翻转到前槽，带纯色擦除，前卡片朝相机落下，停留时间卡片间缩小，使牌组加速进入一个保持的最终卡片。
+- **适合时机**——离散起始点**加速**（间隙缩小/构建进入一个强拍）的流，你想要闪烁一个**项目序列**——标题、项目、海报、瓷砖——每次命中一个，在高潮时以保持的卡片结束。
+- **最佳跨度**——**4-6.5s** 用于 4-7 次落地加一个短最终保持；如果想运行 **>7s**，在下一个强拍处拆分。
+- **参数**——`theme`、`bgColor`、`cards`、`landings`、`yaw`
 
 ### held-message-living-field · phrase_flow
 
-- **What** — a readable mark (logo / word / title) held dead still over a soft, color-shifting blurred field; only the field breathes.
-- **Reach for it when** — a **calm / sparse** stretch with an onset desert — energy present but few or no onsets (a held pad or riser); you have one word or mark to hold and let breathe.
-- **Best span** — **6-16s**; this is the long-group exception. Under 4s feels underdeveloped; over ~20s needs a state change or another group.
-- **Params** — `markText`, `titleText`, `tagText`, `palette`, `flowSpeed`, `duration`
-
-### held-text-strobe-burst
-
-- **What** — a dead-still word whose letters flip through texture-filled frames (texture-clipped fill + per-frame tint + bg color) every ~3 frames, in short bursts pinned to a roll.
-- **Reach for it when** — a **dense, hard-hitting roll / fill** and a single word you want to strobe through textures for a few bars. (Ships texture-mask PNGs under `assets/`.)
-- **Best span** — **1.2-3.5s**; strobe fatigue starts fast, so cap at ~4s and cut to a cleaner system.
-- **Params** — `markText`, `fontStyle`, `markScale`, `idleColor`, `idleInk`, `frames`, `strobePlan`, `decor`, `duration`
-
-### intro-kinetic-cascade
-
-- **What** — a line laid out as a sequence of big editorial **phrases** (each a stacked poster with one enlarged hero word), revealed word-by-word on its anchors, hard cut between phrases, climaxing on a phrase that slides in with a swappable ringing **icon** (bell / cursor / sparkle / emoji / SVG).
-- **Reach for it when** — an **intro / opening statement**: a short line to land word-by-word as big type, climaxing on one keyword + an icon. Medium-or-more energy, steady grid.
-- **Best span** — **3.5-7s** for 2-4 phrase beats; if the statement needs more time, make the next clause a new group.
-- **Params** — `theme`, `icon`, `phrases`, `climax`
-
-### logo-split-lockup-pulse
-
-- **What** — a two-part mark joined at center splits left↔right to open a gap, grows a center word-lockup one word per onset (key word lands on the downbeat surge), snap-closes on a hit, then pulses with the beat.
-- **Reach for it when** — a short **logo / brand sting** (not a typed sentence): fast dense onsets + a sustained roll bed to pulse on, with a left/right bracketing mark.
-- **Best span** — **2-4s**; at **>4.5s** it reads like a sting stretched too long. Follow with a separate held-lockup / next idea group.
-- **Params** — `bgColor`, `markColor`, `textColor`, `leftMark`, `rightMark`, `word1`, `word2`, `word3`, `word4`
-
-### poster-tile-mosaic
-
-- **What** — a packed **mosaic** of different-sized colored tiles that tessellate to fill the frame (no overlap), driven by interchangeable beat-synced operations: staggered enter/exit, locked global recolor, snake-fill + overlay.
-- **Reach for it when** — many discrete, individually-placeable onsets (a hit for every tile move) with distinct sub-phases you want articulated differently (accumulate → recolor-on-roll → fill-then-drop). A dense section best held as **one** rich tile program rather than split.
-- **Best span** — **4-7s**, up to **8s** only when the program has clear sub-phases. If the music changes regime, split even if the tile system could continue.
-- **Params** — `bgColor`, `tiles`, `bands`, `gap`, `showText`, `labels`, `program`
-
-### roll-flipbook-word-cycle
-
-- **What** — a hi-hat roll drives a centred word that flips every 16th-note through a word list; optionally the flicker resolves and locks into a final phrase.
-- **Reach for it when** — a **fast sustained-fill roll** (hundreds of hits/min, ~16th-note) with no single readable message — fill the roll with a rapidly-cycling word flipbook.
-- **Best span** — **1.2-3.8s**, one roll into one resolve. Two rolls, or a drop between rolls, means two groups.
-- **Params** — `bgColor`, `textColor`, `accentColor`, `flipWords`, `resolveText`, `periodChar`
-
-### split-anchor-word-slot
-
-- **What** — a held left anchor column of fixed-word rows beside a torn-paper word-slot box on the right, driven by beat-synced operators: anchor lock-in, slot word-group cycle (in/out + per-line color), full-scene background flip, per-beat jitter, box-zoom exit wipe. Row count + number of flips are data.
-- **Reach for it when** — a short section with a **held idea** (a brand / name to anchor on the left) **and** a stream of onsets popping separate words on the right, plus a dense run to ride a shake on and a strong downbeat to wipe out into.
-- **Best span** — **3-6s**; above ~6.5s the fixed anchor goes stale unless the right slot enters a new group/program.
-- **Params** — `bgColor`, `anchors`, `theme`, `showText`, `program`
+- **什么**——一个可读的标记（Logo / 词 / 标题）在柔和、颜色变化的模糊场上死静保持；只有场呼吸。
+- **适合时机**——一个**平静/稀疏**的延伸段，有起始沙漠——能量存在但很少或没有起始点（保持的垫音或上升器）；你有一个词或标记要保持并让它呼吸。
+- **最佳跨度**——**6-16s**；这是长组例外。4s 以下感觉不成熟；超过约 20s 需要状态变化或另一个组。
+- **参数**——`markText`、`titleText`、`tagText`、`palette`、`flowSpeed`、`duration`
 
 ### typewriter-phrase-keyword-shuffle
 
-- **What** — words type in one-per-onset to spell a phrase, then one keyword cycles typefaces on the beat while everything else holds dead still.
-- **Reach for it when** — a steady grid with a **continuous onset stream** (no desert): a phrase to type out, then a keyword to shuffle. The inverse of `held-message-living-field` (which wants an onset desert).
-- **Best span** — **2.5-5s**; if the phrase cannot type and shuffle inside ~5s, reduce words or split the sentence across groups.
-- **Params** — `bgColor`, `textColor`, `accentColor`, `lead1`, `lead2`, `lead3`, `keyword`, `periodChar`
+- **什么**——词以每次起始一个的方式打字拼出一个短语，然后一个关键词在节拍上循环字体，其他一切死静保持。
+- **适合时机**——一个稳定的网格有**连续的起始流**（无沙漠）：要打出的一个短语，然后一个要 shuffle 的关键词。与 `held-message-living-field` 相反（它想要起始沙漠）。
+- **最佳跨度**——**2.5-5s**；如果短语不能在约 5s 内打字和 shuffle，减少单词或将句子跨组拆分。
+- **参数**——`bgColor`、`textColor`、`accentColor`、`lead1`、`lead2`、`lead3`、`keyword`、`periodChar`
+
+### intro-kinetic-cascade
+
+- **什么**——一行被布局为大编辑**短语**的序列（每个是带一个放大英雄词的堆叠海报），在其锚点上逐词揭示，短语之间硬切，以一个带有可替换响铃**图标**（钟/光标/闪光/表情/SVG）滑入的短语高潮结束。
+- **适合时机**——一个**介绍/开场陈述**：要逐词落地为大字体的短句，以一个关键词 + 图标高潮。中或以上能量，稳定网格。
+- **最佳跨度**——**3.5-7s** 用于 2-4 个短语节拍；如果陈述需要更多时间，使下一个子句成为一个新组。
+- **参数**——`theme`、`icon`、`phrases`、`climax`
+
+### poster-tile-mosaic
+
+- **什么**——一个密集的**马赛克**，由不同大小的彩色瓦片拼贴填满画面（无重叠），由可互换的节拍同步操作驱动：交错进入/退出、锁定全局重新着色、蛇形填充 + 叠加。
+- **适合时机**——许多离散、可单独放置的起始点（每个瓦片移动一次命中）具有你想要不同述说的不同子阶段（累积 → 滚动段上重新着色 → 填充然后下降）。一个最好作为**一个**丰富的瓦片程序保持的密集段落，而不是拆分。
+- **最佳跨度**——**4-7s**，仅当程序有清晰的子阶段时可达 **8s**。如果音乐改变状态，即使瓦片系统可以继续也拆分。
+- **参数**——`bgColor`、`tiles`、`bands`、`gap`、`showText`、`labels`、`program`
+
+### roll-flipbook-word-cycle
+
+- **什么**——一个 hi-hat 滚动段驱动一个居中词，每 16 分音符通过一个词列表翻转；可选地闪烁解析并锁入一个最终短语。
+- **适合时机**——一个**快速持续填充滚动段**（数百次命中/分钟，约 16 分音符），没有单一可读信息——用快速循环的单词翻页书填充滚动段。
+- **最佳跨度**——**1.2-3.8s**，一个滚动段加一个解析。两个滚动段，或滚动段间一个下降，意味着两个组。
+- **参数**——`bgColor`、`textColor`、`accentColor`、`flipWords`、`resolveText`、`periodChar`
+
+### split-anchor-word-slot
+
+- **什么**——左侧一个保持的固定词行锚数列，右侧一个撕裂纸词槽框，由节拍同步操作符驱动：锚锁定、槽词组循环（进入/退出 + 每行颜色）、全场景背景翻转、每节拍抖动、框缩放退出擦除。行数 + 翻转次数是数据。
+- **适合时机**——一个带**保持想法**的短段落（左侧要锚定的品牌/名称）**以及**右侧弹出单独词的起始流，加上一个密集的运行以在其上乘抖动和一个强的强拍以擦除退出。
+- **最佳跨度**——**3-6s**；超过约 6.5s 固定锚会过时，除非右槽进入新组/程序。
+- **参数**——`bgColor`、`anchors`、`theme`、`showText`、`program`
+
+### held-text-strobe-burst
+
+- **什么**——一个死静的词，其字母每约 3 帧通过纹理填充帧（纹理裁剪填充 + 每帧色调 + 背景颜色）翻转，在短爆发中固定到滚动段。
+- **适合时机**——一个**密集、强烈撞击的滚动段/填充**和一个你希望通过纹理频闪几小节的词。（附带 `assets/` 下的纹理遮罩 PNG。）
+- **最佳跨度**——**1.2-3.5s**；频闪疲劳开始得快，所以在约 4s 封顶并切换到更干净的系统。
+- **参数**——`markText`、`fontStyle`、`markScale`、`idleColor`、`idleInk`、`frames`、`strobePlan`、`decor`、`duration`
+
+### logo-split-lockup-pulse
+
+- **什么**——一个在中心连接的两部分标记左↔右分开打开一个间隙，每个起始词生长一个中心词组（关键词在强拍激增上落地），在一次命中上 snapped 关闭，然后随节拍脉动。
+- **适合时机**——一个短**Logo / 品牌提示**（不是打字的句子）：快速密集起始点 + 一个持续的滚动段床来脉动，带一个左/右括号标记。
+- **最佳跨度**——**2-4s**；在 **>4.5s** 时读起来像拉伸太长的提示。之后跟一个独立的保持词组/下一个想法组。
+- **参数**——`bgColor`、`markColor`、`textColor`、`leftMark`、`rightMark`、`word1`、`word2`、`word3`、`word4`

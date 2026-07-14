@@ -1,50 +1,50 @@
-# Client Tools
+# 客户端工具
 
-Extend your agent with custom capabilities. Tools let the agent take actions beyond just talking.
+使用自定义功能扩展您的代理。工具让代理执行超越单纯对话的操作。
 
-## Tool Types
+## 工具类型
 
-| Type | Execution | Use Case |
+| 类型 | 执行方式 | 用途 |
 |------|-----------|----------|
-| **Webhook** | Server-side via HTTP | Database queries, API calls, secure operations |
-| **Client** | Browser-side JavaScript | UI updates, local storage, navigation |
-| **System** | Built-in ElevenLabs | End call, transfer, standard actions |
+| **Webhook** | 服务端通过 HTTP | 数据库查询、API 调用、安全操作 |
+| **客户端** | 浏览器端 JavaScript | UI 更新、本地存储、导航 |
+| **系统** | ElevenLabs 内置 | 结束通话、转接、标准操作 |
 
-## Where Tools Live
+## 工具位置
 
-Tools are defined inside `conversation_config.agent.prompt`. Webhook and client tools go in the `tools` array. System tools go in `built_in_tools`:
+工具在 `conversation_config.agent.prompt` 内定义。Webhook 和客户端工具放在 `tools` 数组中。系统工具放在 `built_in_tools` 中：
 
 ```python
 conversation_config={
     "agent": {
         "prompt": {
-            "prompt": "You are helpful.",
+            "prompt": "你很有帮助。",
             "llm": "gemini-2.0-flash",
-            "tools": [...],            # Webhook and client tools
-            "built_in_tools": {...}     # System tools (end_call, transfer, etc.)
+            "tools": [...],            # Webhook 和客户端工具
+            "built_in_tools": {...}     # 系统工具（end_call、transfer 等）
         }
     }
 }
 ```
 
-## Webhook Tools
+## Webhook 工具
 
-Execute server-side logic when the agent needs external data or actions.
+当代理需要外部数据或操作时执行服务端逻辑。
 
-### Basic Webhook
+### 基础 Webhook
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="Weather Assistant",
+    name="天气助手",
     conversation_config={
         "agent": {
             "prompt": {
-                "prompt": "You are a helpful assistant that can check the weather.",
+                "prompt": "你是一个可以查询天气的有用助手。",
                 "llm": "gemini-2.0-flash",
                 "tools": [{
                     "type": "webhook",
                     "name": "get_weather",
-                    "description": "Get current weather for a city. Use when user asks about weather.",
+                    "description": "获取城市的当前天气。当用户询问天气时使用。",
                     "api_schema": {
                         "url": "https://api.example.com/weather",
                         "method": "POST",
@@ -56,12 +56,12 @@ agent = client.conversational_ai.agents.create(
                             "properties": {
                                 "city": {
                                     "type": "string",
-                                    "description": "City name, e.g., 'San Francisco'"
+                                    "description": "城市名称，例如'上海'"
                                 },
                                 "units": {
                                     "type": "string",
                                     "enum": ["celsius", "fahrenheit"],
-                                    "description": "Temperature units"
+                                    "description": "温度单位"
                                 }
                             },
                             "required": ["city"]
@@ -75,33 +75,33 @@ agent = client.conversational_ai.agents.create(
 )
 ```
 
-### Webhook Request Format
+### Webhook 请求格式
 
-When the agent calls a webhook tool, ElevenLabs sends:
+当代理调用 webhook 工具时，ElevenLabs 发送：
 
 ```json
 {
   "tool_call_id": "call_abc123",
   "tool_name": "get_weather",
   "parameters": {
-    "city": "San Francisco",
+    "city": "旧金山",
     "units": "fahrenheit"
   },
   "conversation_id": "conv_xyz789"
 }
 ```
 
-### Webhook Response Format
+### Webhook 响应格式
 
-Your server should respond with:
+您的服务器应响应：
 
 ```json
 {
-  "result": "The weather in San Francisco is 68°F and sunny."
+  "result": "旧金山天气 68°F，晴天。"
 }
 ```
 
-Or for structured data:
+或者结构化数据：
 
 ```json
 {
@@ -113,14 +113,14 @@ Or for structured data:
 }
 ```
 
-### Webhook with Authentication
+### 带认证的 Webhook
 
 ```python
-# Inside conversation_config.agent.prompt.tools:
+# 在 conversation_config.agent.prompt.tools 内部：
 {
     "type": "webhook",
     "name": "lookup_order",
-    "description": "Look up order status by order ID",
+    "description": "按订单 ID 查询订单状态",
     "response_timeout_secs": 10,
     "api_schema": {
         "url": "https://api.mystore.com/orders/lookup",
@@ -134,7 +134,7 @@ Or for structured data:
             "properties": {
                 "order_id": {
                     "type": "string",
-                    "description": "Order ID (e.g., ORD-12345)"
+                    "description": "订单 ID（例如 ORD-12345）"
                 }
             },
             "required": ["order_id"]
@@ -143,11 +143,7 @@ Or for structured data:
 }
 ```
 
-Use workspace environment variables to keep a single server tool configuration working across
-staging and production. `{{system_env__label}}` works in server tool URLs, secret environment
-variables can populate `request_headers`, and auth-connection environment variables can populate
-`api_schema.auth_connection`. The same environment-variable resolution model also applies to MCP
-server connections.
+使用工作区环境变量让单个服务端工具配置在暂存和生产环境中都能工作。`{{system_env__label}}` 在服务端工具 URL 中使用，密钥环境变量可以填充 `request_headers`，认证连接环境变量可以填充 `api_schema.auth_connection`。相同的环境变量解析模型也适用于 MCP 服务器连接。
 
 ```json
 {
@@ -162,43 +158,40 @@ server connections.
 }
 ```
 
-Workspace auth connections support OAuth2 client credentials, OAuth2 JWT, private key JWT,
-basic auth, bearer auth, and custom header auth.
+工作区认证连接支持 OAuth2 客户端凭据、OAuth2 JWT、私钥 JWT、基本认证、Bearer 认证和自定义请求头认证。
 
-System dynamic variables are also available in tool parameters and headers. Use
-`{{system__conversation_history}}` when a webhook or sub-agent needs the full conversation
-context as a lazily evaluated JSON history object with user, agent, and tool entries.
+工具参数和请求头中也可使用系统动态变量。当 webhook 或子代理需要完整对话上下文（包含用户、代理和工具条目的延迟评估 JSON 历史对象）时，使用 `{{system__conversation_history}}`。
 
-### Webhook Tool Options
+### Webhook 工具选项
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `response_timeout_secs` | int | `20` | Timeout in seconds (5-120) |
-| `disable_interruptions` | bool | `false` | Prevent user interruptions during tool execution |
-| `execution_mode` | string | `"immediate"` | `immediate`, `post_tool_speech`, or `async` |
-| `tool_call_sound` | string | - | Sound during execution: `typing`, `elevator1`-`elevator4` |
-| `force_pre_tool_speech` | bool | `false` | Force agent to speak before executing tool |
-| `tool_error_handling_mode` | string | `"auto"` | `auto`, `summarized`, `passthrough`, or `hide` |
+| `response_timeout_secs` | int | `20` | 超时秒数（5-120） |
+| `disable_interruptions` | bool | `false` | 工具执行期间防止用户打断 |
+| `execution_mode` | string | `"immediate"` | `immediate`、`post_tool_speech` 或 `async` |
+| `tool_call_sound` | string | - | 执行期间的声音：`typing`、`elevator1`-`elevator4` |
+| `force_pre_tool_speech` | bool | `false` | 强制代理在执行工具前说话 |
+| `tool_error_handling_mode` | string | `"auto"` | `auto`、`summarized`、`passthrough` 或 `hide` |
 
-**Note:** The default `api_schema.method` is `GET`. Always set `"method": "POST"` explicitly for webhook tools that send request bodies.
+**注意：** 默认的 `api_schema.method` 是 `GET`。对于发送请求体的 webhook 工具，始终显式设置 `"method": "POST"`。
 
-### Server Implementation (Node.js)
+### 服务端实现（Node.js）
 
 ```javascript
 app.post("/webhook/get_weather", async (req, res) => {
   const { parameters, conversation_id } = req.body;
   const { city, units = "fahrenheit" } = parameters;
 
-  // Fetch weather from your data source
+  // 从数据源获取天气
   const weather = await weatherService.get(city, units);
 
   res.json({
-    result: `It's ${weather.temp}°${units === "celsius" ? "C" : "F"} and ${weather.condition} in ${city}.`,
+    result: `天气 ${weather.temp}°${units === "celsius" ? "C" : "F"}，${weather.condition}，在 ${city}。`,
   });
 });
 ```
 
-### Server Implementation (Python)
+### 服务端实现（Python）
 
 ```python
 @app.post("/webhook/get_weather")
@@ -207,21 +200,21 @@ async def get_weather(request: Request):
     city = data["parameters"]["city"]
     units = data["parameters"].get("units", "fahrenheit")
 
-    # Fetch weather from your data source
+    # 从数据源获取天气
     weather = weather_service.get(city, units)
 
     return {
-        "result": f"It's {weather['temp']}°{'C' if units == 'celsius' else 'F'} and {weather['condition']} in {city}."
+        "result": f"天气 {weather['temp']}°{'C' if units == 'celsius' else 'F'}，{weather['condition']}，在 {city}。"
     }
 ```
 
-## Client Tools
+## 客户端工具
 
-Execute JavaScript in the user's browser. Useful for UI updates, navigation, or accessing browser APIs.
+在用户浏览器中执行 JavaScript。用于 UI 更新、导航或访问浏览器 API。
 
-### Defining Client Tools
+### 定义客户端工具
 
-Client tools are registered when starting a conversation:
+客户端工具在启动对话时注册：
 
 ```javascript
 import { Conversation } from "@elevenlabs/client";
@@ -230,21 +223,21 @@ const conversation = await Conversation.startSession({
   agentId: "your-agent-id",
   clientTools: {
     show_product: async ({ productId }) => {
-      // Update UI to show product
+      // 更新 UI 显示产品
       const modal = document.getElementById("product-modal");
       modal.innerHTML = await fetchProductCard(productId);
       modal.showModal();
-      return { success: true, message: "Showing product" };
+      return { success: true, message: "正在显示产品" };
     },
 
     navigate_to: async ({ page }) => {
-      // Navigate to a page
+      // 导航到页面
       window.location.href = `/${page}`;
       return { success: true };
     },
 
     save_preference: async ({ key, value }) => {
-      // Store in localStorage
+      // 存储到 localStorage
       localStorage.setItem(key, value);
       return { saved: true };
     },
@@ -252,31 +245,31 @@ const conversation = await Conversation.startSession({
 });
 ```
 
-### Registering Client Tools with Agent
+### 向代理注册客户端工具
 
-Tell the agent about available client tools in `conversation_config.agent.prompt.tools`:
+在 `conversation_config.agent.prompt.tools` 中告知代理可用的客户端工具：
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="Shopping Assistant",
+    name="购物助手",
     conversation_config={
         "agent": {
             "prompt": {
-                "prompt": """You are a shopping assistant.
-When users want to see a product, use show_product.
-When users want to go somewhere, use navigate_to.""",
+                "prompt": """你是一个购物助手。
+当用户想看产品时，使用 show_product。
+当用户想去某个页面时，使用 navigate_to。""",
                 "llm": "gemini-2.0-flash",
                 "tools": [
                     {
                         "type": "client",
                         "name": "show_product",
-                        "description": "Display a product card to the user",
+                        "description": "向用户显示产品卡片",
                         "parameters": {
                             "type": "object",
                             "properties": {
                                 "productId": {
                                     "type": "string",
-                                    "description": "Product ID to display"
+                                    "description": "要显示的产品 ID"
                                 }
                             },
                             "required": ["productId"]
@@ -285,14 +278,14 @@ When users want to go somewhere, use navigate_to.""",
                     {
                         "type": "client",
                         "name": "navigate_to",
-                        "description": "Navigate user to a different page",
+                        "description": "导航用户到不同页面",
                         "parameters": {
                             "type": "object",
                             "properties": {
                                 "page": {
                                     "type": "string",
                                     "enum": ["cart", "checkout", "account", "home"],
-                                    "description": "Page to navigate to"
+                                    "description": "要导航到的页面"
                                 }
                             },
                             "required": ["page"]
@@ -306,15 +299,15 @@ When users want to go somewhere, use navigate_to.""",
 )
 ```
 
-### Client Tool Options
+### 客户端工具选项
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `expects_response` | bool | `false` | Whether the tool returns data to the agent |
+| `expects_response` | bool | `false` | 工具是否向代理返回数据 |
 
-### Client Tool Return Values
+### 客户端工具返回值
 
-Return data that the agent can use in conversation:
+返回代理可以在对话中使用的数据：
 
 ```javascript
 clientTools: {
@@ -329,11 +322,11 @@ clientTools: {
 }
 ```
 
-The agent receives this data and can say: "You have 3 items in your cart totaling $45.99."
+代理收到此数据后可以说："您的购物车中有 3 件商品，总计 $45.99。"
 
-## System Tools (built_in_tools)
+## 系统工具（built_in_tools）
 
-Built-in tools provided by ElevenLabs. These are configured in `conversation_config.agent.prompt.built_in_tools` (not in the `tools` array):
+ElevenLabs 提供的内置工具。这些在 `conversation_config.agent.prompt.built_in_tools` 中配置（不在 `tools` 数组中）：
 
 ```python
 "built_in_tools": {
@@ -347,11 +340,11 @@ Built-in tools provided by ElevenLabs. These are configured in `conversation_con
 }
 ```
 
-Current API schemas also expose `agent_prompt_change`, `memory_entry_create`, `memory_entry_delete`, `memory_entry_search`, and `memory_entry_update` in `built_in_tools`.
+当前 API 模式还在 `built_in_tools` 中暴露了 `agent_prompt_change`、`memory_entry_create`、`memory_entry_delete`、`memory_entry_search` 和 `memory_entry_update`。
 
 ### end_call
 
-Ends the current conversation:
+结束当前对话：
 
 ```python
 "built_in_tools": {
@@ -359,18 +352,18 @@ Ends the current conversation:
 }
 ```
 
-The agent can say "Goodbye!" and then end the call programmatically.
+代理可以说"再见！"然后以编程方式结束通话。
 
 ### transfer_to_number
 
-Transfer to a phone number (requires telephony integration):
+转接到电话号码（需要电话集成）：
 
 ```python
 "built_in_tools": {
     "transfer_to_number": {
         "transfers": [{
             "transfer_destination": {"type": "phone", "phone_number": "+1234567890"},
-            "condition": "User asks to speak with a human agent"
+            "condition": "用户要求与人工代理通话"
         }]
     }
 }
@@ -378,36 +371,36 @@ Transfer to a phone number (requires telephony integration):
 
 ### transfer_to_agent
 
-Transfer to another ElevenLabs agent:
+转接到另一个 ElevenLabs 代理：
 
 ```python
 "built_in_tools": {
     "transfer_to_agent": {
         "transfers": [{
             "agent_id": "other-agent-id",
-            "condition": "User asks about sales"
+            "condition": "用户询问销售"
         }]
     }
 }
 ```
 
-## Best Practices
+## 最佳实践
 
-### Tool Descriptions
+### 工具描述
 
-Write clear descriptions so the LLM knows when to use tools:
+编写清晰的描述，让 LLM 知道何时使用工具：
 
 ```python
-# Good - specific and actionable
-"description": "Look up order status. Use when customer asks about their order, delivery, or shipping."
+# 好——具体且可操作
+"description": "查询订单状态。当客户询问订单、配送或物流时使用。"
 
-# Bad - vague
-"description": "Order tool"
+# 差——模糊
+"description": "订单工具"
 ```
 
-### Parameter Descriptions
+### 参数描述
 
-Help the LLM extract correct values:
+帮助 LLM 提取正确的值：
 
 ```python
 "parameters": {
@@ -415,31 +408,31 @@ Help the LLM extract correct values:
     "properties": {
         "order_id": {
             "type": "string",
-            "description": "Order ID in format ORD-XXXXX (e.g., ORD-12345)"
+            "description": "订单 ID，格式 ORD-XXXXX（例如 ORD-12345）"
         },
         "email": {
             "type": "string",
-            "description": "Customer email address for verification"
+            "description": "用于验证的客户邮箱地址"
         }
     }
 }
 ```
 
-### Error Handling
+### 错误处理
 
-Configure how tool errors are shared with the agent using `tool_error_handling_mode`:
+使用 `tool_error_handling_mode` 配置工具错误如何与代理共享：
 
-| Mode | Behavior |
+| 模式 | 行为 |
 |------|----------|
-| `auto` | ElevenLabs automatically decides how to handle errors |
-| `summarized` | Errors are summarized before being sent to the agent |
-| `passthrough` | Full error details are passed to the agent |
-| `hide` | Errors are hidden from the agent |
+| `auto` | ElevenLabs 自动决定如何处理错误 |
+| `summarized` | 错误在被发送给代理之前被总结 |
+| `passthrough` | 完整错误详情传递给代理 |
+| `hide` | 错误对代理隐藏 |
 
-Return helpful error messages:
+返回有帮助的错误消息：
 
 ```javascript
-// Server webhook
+// 服务端 webhook
 app.post("/webhook/lookup_order", async (req, res) => {
   const { order_id } = req.body.parameters;
 
@@ -449,7 +442,7 @@ app.post("/webhook/lookup_order", async (req, res) => {
     return res.json({
       result: {
         error: true,
-        message: `Order ${order_id} not found. Please verify the order ID.`,
+        message: `订单 ${order_id} 未找到。请确认订单 ID。`,
       },
     });
   }
@@ -458,15 +451,15 @@ app.post("/webhook/lookup_order", async (req, res) => {
 });
 ```
 
-### Timeouts
+### 超时
 
-Set reasonable timeouts for webhooks using `response_timeout_secs` (5-120 seconds, default 20):
+使用 `response_timeout_secs`（5-120 秒，默认 20）为 webhook 设置合理的超时：
 
 ```python
 {
     "type": "webhook",
     "name": "slow_operation",
-    "description": "Run a slow operation",
+    "description": "运行一个慢操作",
     "response_timeout_secs": 30,
     "api_schema": {
         "url": "https://api.example.com/slow-operation",
@@ -475,32 +468,32 @@ Set reasonable timeouts for webhooks using `response_timeout_secs` (5-120 second
 }
 ```
 
-## Complete Example
+## 完整示例
 
 ```python
 agent = client.conversational_ai.agents.create(
-    name="E-commerce Assistant",
+    name="电商助手",
     conversation_config={
         "agent": {
-            "first_message": "Hi! How can I help you today?",
+            "first_message": "您好！今天有什么可以帮助您的？",
             "language": "en",
             "prompt": {
-                "prompt": """You are an e-commerce support assistant.
+                "prompt": """你是一个电商支持助手。
 
-Available actions:
-- lookup_order: Check order status
-- show_product: Display products to customer
-- end_call: End conversation politely
-- transfer_to_number: Transfer to human support
+可用操作：
+- lookup_order：查询订单状态
+- show_product：向客户展示产品
+- end_call：礼貌结束对话
+- transfer_to_number：转接到人工支持
 
-Always verify order ID before lookup. Offer transfer for complex issues.""",
+查询前务必验证订单 ID。复杂问题提供转接选项。""",
                 "llm": "gemini-2.0-flash",
                 "tools": [
-                    # Webhook: Server-side order lookup
+                    # Webhook：服务端订单查询
                     {
                         "type": "webhook",
                         "name": "lookup_order",
-                        "description": "Look up order status by order ID or email",
+                        "description": "按订单 ID 或邮箱查询订单状态",
                         "api_schema": {
                             "url": "https://api.mystore.com/orders/lookup",
                             "method": "POST",
@@ -514,11 +507,11 @@ Always verify order ID before lookup. Offer transfer for complex issues.""",
                             }
                         }
                     },
-                    # Client: Browser-side product display
+                    # 客户端：浏览器端产品展示
                     {
                         "type": "client",
                         "name": "show_product",
-                        "description": "Display product details to the customer",
+                        "description": "向客户展示产品详情",
                         "parameters": {
                             "type": "object",
                             "properties": {
@@ -533,7 +526,7 @@ Always verify order ID before lookup. Offer transfer for complex issues.""",
                     "transfer_to_number": {
                         "transfers": [{
                             "transfer_destination": {"type": "phone", "phone_number": "+1234567890"},
-                            "condition": "User asks for human support"
+                            "condition": "用户要求人工支持"
                         }]
                     }
                 }

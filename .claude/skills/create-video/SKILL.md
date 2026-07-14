@@ -12,89 +12,89 @@ metadata:
     primaryEnv: HEYGEN_API_KEY
 ---
 
-# Create Video
+# 创建视频
 
-Generate complete videos from a text prompt. Describe what you want and the AI handles script writing, avatar selection, visuals, voiceover, pacing, and captions automatically.
+从文本提示生成完整视频。描述您想要的内容，AI 会自动处理脚本编写、虚拟形象选择、视觉效果、配音、节奏和字幕。
 
-## Authentication
+## 认证
 
-All requests require the `X-Api-Key` header. Set the `HEYGEN_API_KEY` environment variable.
+所有请求都需要 `X-Api-Key` 请求头。请设置 `HEYGEN_API_KEY` 环境变量。
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/video_agent/generate" \
   -H "X-Api-Key: $HEYGEN_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Create a 60-second product demo video."}'
+  -d '{"prompt": "创建一段60秒的产品演示视频。"}'
 ```
 
-## Tool Selection
+## 工具选择
 
-If HeyGen MCP tools are available (`mcp__heygen__*`), **prefer them** over direct HTTP API calls — they handle authentication and request formatting automatically.
+如果有 HeyGen MCP 工具可用（`mcp__heygen__*`），**优先使用它们**而非直接 HTTP API 调用——它们会自动处理认证和请求格式化。
 
-| Task | MCP Tool | Fallback (Direct API) |
+| 任务 | MCP 工具 | 回退方案（直接 API） |
 |------|----------|----------------------|
-| Generate video from prompt | `mcp__heygen__generate_video_agent` | `POST /v1/video_agent/generate` |
-| Check video status / get URL | `mcp__heygen__get_video` | `GET /v2/videos/{video_id}` |
-| List account videos | `mcp__heygen__list_videos` | `GET /v2/videos` |
-| Delete a video | `mcp__heygen__delete_video` | `DELETE /v2/videos/{video_id}` |
+| 从提示词生成视频 | `mcp__heygen__generate_video_agent` | `POST /v1/video_agent/generate` |
+| 检查视频状态/获取 URL | `mcp__heygen__get_video` | `GET /v2/videos/{video_id}` |
+| 列出账户视频 | `mcp__heygen__list_videos` | `GET /v2/videos` |
+| 删除视频 | `mcp__heygen__delete_video` | `DELETE /v2/videos/{video_id}` |
 
-If no HeyGen MCP tools are available, use direct HTTP API calls as documented in the reference files.
+如果没有 HeyGen MCP 工具可用，则按照参考文件中记录的方案使用直接 HTTP API 调用。
 
-## Default Workflow
+## 默认工作流程
 
-Always use [prompt-optimizer.md](references/prompt-optimizer.md) guidelines to structure prompts with scenes, timing, and visual styles.
+始终使用 [prompt-optimizer.md](references/prompt-optimizer.md) 的指南来构建包含场景、时间和视觉风格的提示词。
 
-**With MCP tools:**
-1. Write an optimized prompt using [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md)
-2. Call `mcp__heygen__generate_video_agent` with prompt and config (duration_sec, orientation, avatar_id)
-3. Call `mcp__heygen__get_video` with the returned video_id to poll status and get the download URL
+**使用 MCP 工具：**
+1. 使用 [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) 编写优化后的提示词
+2. 使用提示词和配置（duration_sec、orientation、avatar_id）调用 `mcp__heygen__generate_video_agent`
+3. 使用返回的 video_id 调用 `mcp__heygen__get_video` 轮询状态并获取下载 URL
 
-**Without MCP tools (direct API):**
-1. Write an optimized prompt using [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md)
-2. `POST /v1/video_agent/generate` — see [video-agent.md](references/video-agent.md)
-3. `GET /v2/videos/<id>` — see [video-status.md](references/video-status.md)
+**不使用 MCP 工具（直接 API）：**
+1. 使用 [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) 编写优化后的提示词
+2. `POST /v1/video_agent/generate` — 参见 [video-agent.md](references/video-agent.md)
+3. `GET /v2/videos/<id>` — 参见 [video-status.md](references/video-status.md)
 
-## Quick Reference
+## 快速参考
 
-| Task | MCP Tool | Read |
+| 任务 | MCP 工具 | 参考文档 |
 |------|----------|------|
-| Generate video from prompt | `mcp__heygen__generate_video_agent` | [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) → [video-agent.md](references/video-agent.md) |
-| Check video status / get download URL | `mcp__heygen__get_video` | [video-status.md](references/video-status.md) |
-| Upload reference files for prompt | — | [assets.md](references/assets.md) |
+| 从提示词生成视频 | `mcp__heygen__generate_video_agent` | [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) → [video-agent.md](references/video-agent.md) |
+| 检查视频状态/获取下载 URL | `mcp__heygen__get_video` | [video-status.md](references/video-status.md) |
+| 上传提示词的参考文件 | — | [assets.md](references/assets.md) |
 
-## When to Use This Skill vs Avatar Video
+## 何时使用此技能 vs Avatar Video
 
-This skill is for **prompt-based video creation** — describe what you want, and the AI handles the rest.
+此技能适用于**基于提示词的视频创建**——描述您想要的内容，AI 负责其余部分。
 
-If the user needs **precise control** over specific avatars, exact scripts, per-scene voice/background configuration, or multi-scene composition, use the **avatar-video** skill instead.
+如果用户需要**精确控制**特定虚拟形象、精确脚本、逐场景语音/背景配置或多场景组合，请改用 **avatar-video** 技能。
 
-| User Says | This Skill | Avatar Video Skill |
+| 用户表述 | 此技能 | Avatar Video 技能 |
 |-----------|:----------:|:------------------:|
-| "Make me a video about X" | ✓ | |
-| "Create a product demo" | ✓ | |
-| "I want avatar Y to say exactly Z" | | ✓ |
-| "Multi-scene video with different backgrounds" | | ✓ |
-| "Transparent WebM for compositing" | | ✓ |
+| "帮我做一个关于 X 的视频" | ✓ | |
+| "创建一个产品演示" | ✓ | |
+| "我想要虚拟形象 Y 精确地说 Z" | | ✓ |
+| "多场景不同背景的视频" | | ✓ |
+| "用于合成的透明 WebM" | | ✓ |
 
-## Reference Files
+## 参考文件
 
-### Core Workflow
-- [references/prompt-optimizer.md](references/prompt-optimizer.md) - Writing effective prompts (core workflow + rules)
-- [references/visual-styles.md](references/visual-styles.md) - 20 named visual styles with full specs
-- [references/prompt-examples.md](references/prompt-examples.md) - Full production prompt example + ready-to-use templates
-- [references/video-agent.md](references/video-agent.md) - Video Agent API endpoint details
+### 核心工作流
+- [references/prompt-optimizer.md](references/prompt-optimizer.md) - 编写有效的提示词（核心工作流 + 规则）
+- [references/visual-styles.md](references/visual-styles.md) - 20 种命名视觉风格的完整规格
+- [references/prompt-examples.md](references/prompt-examples.md) - 完整生产级提示词示例 + 即用模板
+- [references/video-agent.md](references/video-agent.md) - Video Agent API 端点详情
 
-### Foundation
-- [references/video-status.md](references/video-status.md) - Polling patterns and download URLs
-- [references/webhooks.md](references/webhooks.md) - Webhook endpoints and events
-- [references/assets.md](references/assets.md) - Uploading images, videos, audio as references
-- [references/dimensions.md](references/dimensions.md) - Resolution and aspect ratios
-- [references/quota.md](references/quota.md) - Credit system and usage limits
+### 基础
+- [references/video-status.md](references/video-status.md) - 轮询模式和下载 URL
+- [references/webhooks.md](references/webhooks.md) - Webhook 端点和事件
+- [references/assets.md](references/assets.md) - 上传图片、视频、音频作为参考
+- [references/dimensions.md](references/dimensions.md) - 分辨率和宽高比
+- [references/quota.md](references/quota.md) - 积分系统和用量限制
 
-## Best Practices
+## 最佳实践
 
-1. **Optimize your prompt** — The difference between mediocre and professional results depends entirely on prompt quality. Always use the prompt optimizer
-2. **Specify duration** — Use `config.duration_sec` for predictable length
-3. **Lock avatar if needed** — Use `config.avatar_id` for consistency across videos
-4. **Upload reference files** — Help the agent understand your brand/product
-5. **Iterate on prompts** — Refine based on results; Video Agent is great for quick iterations
+1. **优化提示词** — 平庸与专业效果之间的差距完全取决于提示词质量。始终使用提示词优化器
+2. **指定时长** — 使用 `config.duration_sec` 获得可预测的视频长度
+3. **必要时锁定虚拟形象** — 使用 `config.avatar_id` 确保视频间的一致性
+4. **上传参考文件** — 帮助 AI 理解您的品牌/产品
+5. **迭代优化提示词** — 根据结果进行调整；Video Agent 非常适合快速迭代

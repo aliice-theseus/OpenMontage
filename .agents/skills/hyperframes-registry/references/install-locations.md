@@ -1,22 +1,22 @@
-# Install Locations
+# 安装位置
 
-## Default paths
+## 默认路径
 
-| Item type | Default install path                  | Configured by                       |
+| 项目类型 | 默认安装路径 | 由……配置 |
 | --------- | ------------------------------------- | ----------------------------------- |
-| Block     | `compositions/<name>.html`            | `hyperframes.json#paths.blocks`     |
-| Component | `compositions/components/<name>.html` | `hyperframes.json#paths.components` |
+| 块 | `compositions/<name>.html` | `hyperframes.json#paths.blocks` |
+| 组件 | `compositions/components/<name>.html` | `hyperframes.json#paths.components` |
 
-## How path remapping works
+## 路径重映射的工作原理
 
-The `target` field in each item's `registry-item.json` specifies a default install path. The `add` command remaps the prefix based on `hyperframes.json#paths`:
+每个项的 `registry-item.json` 中的 `target` 字段指定了默认安装路径。`add` 命令基于 `hyperframes.json#paths` 重映射前缀：
 
-- Block targets starting with `compositions/` get remapped to `<paths.blocks>/`
-- Component targets starting with `compositions/components/` get remapped to `<paths.components>/`
+- 以 `compositions/` 开头的块目标被重映射到 `<paths.blocks>/`
+- 以 `compositions/components/` 开头的组件目标被重映射到 `<paths.components>/`
 
 ## hyperframes.json
 
-Created automatically by `hyperframes init`. If it doesn't exist when you run `add`, the CLI creates it with defaults:
+由 `hyperframes init` 自动创建。如果在运行 `add` 时不存在，CLI 会使用默认值创建：
 
 ```json
 {
@@ -30,9 +30,9 @@ Created automatically by `hyperframes init`. If it doesn't exist when you run `a
 }
 ```
 
-## Custom layouts
+## 自定义布局
 
-To install blocks into a `scenes/` directory instead of `compositions/`:
+要将块安装到 `scenes/` 目录而不是 `compositions/`：
 
 ```json
 {
@@ -42,4 +42,4 @@ To install blocks into a `scenes/` directory instead of `compositions/`:
 }
 ```
 
-Then `hyperframes add data-chart` writes to `scenes/data-chart.html` instead of `compositions/data-chart.html`. The snippet output reflects the remapped path.
+然后 `hyperframes add data-chart` 写入 `scenes/data-chart.html` 而不是 `compositions/data-chart.html`。片段输出反映重映射后的路径。

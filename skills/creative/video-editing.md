@@ -1,61 +1,60 @@
-# Video Editing Skill
+# 视频剪辑技能
 
-## When to Use
+## 何时使用
 
-Apply this skill when making editorial decisions for talking-head content:
-where to cut, what to remove, how to pace, and how to structure the final edit.
+在需要对说话人头像内容做出剪辑决策时应用此技能：在哪里剪切、删除什么、如何控制节奏以及如何构建最终剪辑。
 
-## Tools
+## 工具
 
-| Tool | Role |
+| 工具 | 作用 |
 |------|------|
-| `transcriber` | Analyze speech for filler words, dead air, false starts |
-| `video_trimmer` | Execute cuts and speed adjustments |
-| `frame_sampler` | Sample frames to evaluate visual quality at potential cut points |
-| `video_compose` | Assemble the final edit |
+| `transcriber` | 分析语音中的填充词、死寂、错误开头 |
+| `video_trimmer` | 执行剪切和速度调整 |
+| `frame_sampler` | 采样帧以评估潜在剪切点的视觉质量 |
+| `video_compose` | 组装最终剪辑 |
 
-## Editing Principles for Talking Heads
+## 说话人头像的剪辑原则
 
-### What to Cut
+### 要删除的内容
 
-1. **Filler words:** "um", "uh", "like", "you know" — cut at word boundaries using word timestamps.
-2. **False starts:** When the speaker restarts a sentence, keep only the final take.
-3. **Dead air:** Silence longer than 1.5 seconds should be trimmed to ~0.5 seconds.
-4. **Off-topic tangents:** If the speaker wanders, cut to the next relevant segment.
-5. **Repeated points:** Keep the best delivery, remove redundant takes.
+1. **填充词：** "嗯"、"呃"、"就像"、"你知道的" — 在词边界使用词时间戳剪切。
+2. **错误开头：** 当说话者重新开始一个句子时，只保留最终版本。
+3. **死寂：** 长于1.5秒的静默应修剪至约0.5秒。
+4. **跑题内容：** 如果说话者偏离主题，剪切到下一个相关段落。
+5. **重复观点：** 保留最佳表述，删除冗余版本。
 
-### What NOT to Cut
+### 不要删除的内容
 
-- **Breath pauses:** Natural 0.3-0.8 second pauses between sentences. These sound natural.
-- **Emphasis pauses:** Intentional pauses for dramatic effect.
-- **Reactions and transitions:** Verbal bridges like "So..." or "Now..." that provide flow.
+- **呼吸停顿：** 句子之间自然的0.3-0.8秒停顿。这些听起来自然。
+- **强调停顿：** 为产生戏剧效果而有意为之的停顿。
+- **反应和过渡：** 如"所以…"或"现在…"这样的语言桥梁，提供流畅性。
 
-### Cut Technique
+### 剪切技巧
 
-- **J-cut:** Audio from the next segment starts ~0.5s before the visual cut. Makes transitions feel smooth.
-- **L-cut:** Audio from the current segment continues ~0.5s after the visual cut. Maintains continuity.
-- **Hard cut:** Instant transition. Use at major topic changes.
+- **J-cut：** 下一个段落的音频在视觉剪切前约0.5秒开始。使转场感觉流畅。
+- **L-cut：** 当前段落的音频在视觉剪切后继续约0.5秒。保持连续性。
+- **硬切：** 即时转场。用于主要话题变化。
 
-### Pacing
+### 节奏控制
 
-- **Short-form (< 60s):** Aggressive cuts. Minimal dead air. High energy.
-- **Medium-form (1-10 min):** Balanced. Keep natural pauses for breathing room.
-- **Long-form (> 10 min):** Let scenes breathe. Only cut obvious problems.
+- **短视频（< 60秒）：** 激进的剪切。最少的死寂。高能量。
+- **中视频（1-10分钟）：** 平衡。为呼吸空间保留自然停顿。
+- **长视频（> 10分钟）：** 让场景有呼吸空间。只剪掉明显的问题。
 
-## Edit Decision Structure
+## 剪辑决策结构
 
-The `edit_decisions` artifact should include:
+`edit_decisions` 制品应包括：
 
-- **cuts:** Ordered list of segments to keep (source, in/out points, speed)
-- **overlays:** Timed overlay placements (images, diagrams, lower thirds)
-- **subtitles:** Subtitle configuration (enabled, style, source file)
-- **music:** Background music settings (asset, volume, ducking, fades)
-- **transitions:** Transition type and timing between cuts
+- **cuts：** 要保留的片段的有序列表（来源、入/出点、速度）
+- **overlays：** 定时叠加放置（图片、图表、下方标题）
+- **subtitles：** 字幕配置（启用、样式、源文件）
+- **music：** 背景音乐设置（素材、音量、闪避、淡入淡出）
+- **transitions：** 剪切之间的转场类型和时机
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] No visible jump cuts (smooth transitions between segments)
-- [ ] Audio doesn't pop or click at cut points
-- [ ] Pacing matches the content energy and target platform
-- [ ] Speaker's face is never covered by overlays
-- [ ] All cuts are at word boundaries (not mid-word)
+- [ ] 无可见跳跃剪切（段落间平滑转场）
+- [ ] 音频在剪切点无爆音或咔嗒声
+- [ ] 节奏匹配内容能量和目标平台
+- [ ] 说话者面部永不被叠加覆盖
+- [ ] 所有剪切在词边界（非词中）

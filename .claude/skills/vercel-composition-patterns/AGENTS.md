@@ -1,58 +1,60 @@
-# React Composition Patterns
+# React 组合模式
 
-**Version 1.0.0**  
+**版本 1.0.0**  
 Engineering  
-January 2026
+2026 年 1 月
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring React codebases using composition. Humans  
-> may also find it useful, but guidance here is optimized for automation  
-> and consistency by AI-assisted workflows.
-
----
-
-## Abstract
-
-Composition patterns for building flexible, maintainable React components. Avoid boolean prop proliferation by using compound components, lifting state, and composing internals. These patterns make codebases easier for both humans and AI agents to work with as they scale.
+> **注意：**  
+> 本文档主要供 AI 代理和 LLM 在使用组合模式维护、
+> 生成或重构 React 代码库时遵循。人类
+> 也可能发现它有用，但这里的指导针对 AI 辅助工作流的自动化
+> 和一致性进行了优化。
 
 ---
 
-## Table of Contents
+## 摘要
 
-1. [Component Architecture](#1-component-architecture) — **HIGH**
-   - 1.1 [Avoid Boolean Prop Proliferation](#11-avoid-boolean-prop-proliferation)
-   - 1.2 [Use Compound Components](#12-use-compound-components)
-2. [State Management](#2-state-management) — **MEDIUM**
-   - 2.1 [Decouple State Management from UI](#21-decouple-state-management-from-ui)
-   - 2.2 [Define Generic Context Interfaces for Dependency Injection](#22-define-generic-context-interfaces-for-dependency-injection)
-   - 2.3 [Lift State into Provider Components](#23-lift-state-into-provider-components)
-3. [Implementation Patterns](#3-implementation-patterns) — **MEDIUM**
-   - 3.1 [Create Explicit Component Variants](#31-create-explicit-component-variants)
-   - 3.2 [Prefer Composing Children Over Render Props](#32-prefer-composing-children-over-render-props)
-4. [React 19 APIs](#4-react-19-apis) — **MEDIUM**
-   - 4.1 [React 19 API Changes](#41-react-19-api-changes)
+用于构建灵活、可维护的 React 组件的组合模式。通过使用
+复合组件、状态提升和内部组合来避免布尔属性泛滥。
+这些模式使代码库在规模化时对人和 AI 代理都更易于协作。
 
 ---
 
-## 1. Component Architecture
+## 目录
 
-**Impact: HIGH**
+1. [组件架构](#1-组件架构) — **高**
+   - 1.1 [避免布尔属性泛滥](#11-避免布尔属性泛滥)
+   - 1.2 [使用复合组件](#12-使用复合组件)
+2. [状态管理](#2-状态管理) — **中**
+   - 2.1 [将状态管理与 UI 解耦](#21-将状态管理与-ui-解耦)
+   - 2.2 [定义通用 Context 接口以实现依赖注入](#22-定义通用-context-接口以实现依赖注入)
+   - 2.3 [将状态提升到 Provider 组件中](#23-将状态提升到-provider-组件中)
+3. [实现模式](#3-实现模式) — **中**
+   - 3.1 [创建显式组件变体](#31-创建显式组件变体)
+   - 3.2 [优先使用 Children 而非渲染属性](#32-优先使用-children-而非渲染属性)
+4. [React 19 API](#4-react-19-api) — **中**
+   - 4.1 [React 19 API 变化](#41-react-19-api-变化)
 
-Fundamental patterns for structuring components to avoid prop
-proliferation and enable flexible composition.
+---
 
-### 1.1 Avoid Boolean Prop Proliferation
+## 1. 组件架构
 
-**Impact: CRITICAL (prevents unmaintainable component variants)**
+**影响：高**
 
-Don't add boolean props like `isThread`, `isEditing`, `isDMThread` to customize
+构建组件的基本模式，以避免属性
+泛滥并实现灵活的组合。
 
-component behavior. Each boolean doubles possible states and creates
+### 1.1 避免布尔属性泛滥
 
-unmaintainable conditional logic. Use composition instead.
+**影响：关键（防止不可维护的组件变体）**
 
-**Incorrect: boolean props create exponential complexity**
+不要像 `isThread`、`isEditing`、`isDMThread` 这样添加布尔属性来自定义
+
+组件行为。每个布尔属性都会使可能的状态翻倍，并产生
+
+不可维护的条件逻辑。请使用组合代替。
+
+**错误：布尔属性产生指数级复杂性**
 
 ```tsx
 function Composer({
@@ -86,7 +88,7 @@ function Composer({
 }
 ```
 
-**Correct: composition eliminates conditionals**
+**正确：组合消除条件判断**
 
 ```tsx
 // Channel composer
@@ -137,21 +139,21 @@ function EditComposer() {
 }
 ```
 
-Each variant is explicit about what it renders. We can share internals without
+每个变体明确地说明了它渲染什么。我们可以在不共享
 
-sharing a single monolithic parent.
+单个单体父组件的情况下共享内部组件。
 
-### 1.2 Use Compound Components
+### 1.2 使用复合组件
 
-**Impact: HIGH (enables flexible composition without prop drilling)**
+**影响：高（实现灵活的组合，无需属性钻取）**
 
-Structure complex components as compound components with a shared context. Each
+将复杂组件结构化为具有共享 context 的复合组件。每个
 
-subcomponent accesses shared state via context, not props. Consumers compose the
+子组件通过 context 而非属性访问共享状态。消费者组合
 
-pieces they need.
+他们需要的部分。
 
-**Incorrect: monolithic component with render props**
+**错误：带渲染属性的单体组件**
 
 ```tsx
 function Composer({
@@ -181,7 +183,7 @@ function Composer({
 }
 ```
 
-**Correct: compound components with shared context**
+**正确：带共享 context 的复合组件**
 
 ```tsx
 const ComposerContext = createContext<ComposerContextValue | null>(null)
@@ -217,10 +219,10 @@ function ComposerSubmit() {
   const {
     actions: { submit },
   } = use(ComposerContext)
-  return <Button onPress={submit}>Send</Button>
+  return <Button onPress={submit}>发送</Button>
 }
 
-// Export as compound component
+// 作为复合组件导出
 const Composer = {
   Provider: ComposerProvider,
   Frame: ComposerFrame,
@@ -234,7 +236,7 @@ const Composer = {
 }
 ```
 
-**Usage:**
+**用法：**
 
 ```tsx
 <Composer.Provider state={state} actions={actions} meta={meta}>
@@ -249,28 +251,27 @@ const Composer = {
 </Composer.Provider>
 ```
 
-Consumers explicitly compose exactly what they need. No hidden conditionals. And the state, actions and meta are dependency-injected by a parent provider, allowing multiple usages of the same component structure.
+消费者明确地组合他们需要的内容。没有隐藏的条件判断。而且 state、actions 和 meta 由父级 Provider 进行依赖注入，允许同一组件结构的多次使用。
 
 ---
 
-## 2. State Management
+## 2. 状态管理
 
-**Impact: MEDIUM**
+**影响：中**
 
-Patterns for lifting state and managing shared context across
-composed components.
+在组合组件中提升状态和管理共享 context 的模式。
 
-### 2.1 Decouple State Management from UI
+### 2.1 将状态管理与 UI 解耦
 
-**Impact: MEDIUM (enables swapping state implementations without changing UI)**
+**影响：中（无需更改 UI 即可切换状态实现）**
 
-The provider component should be the only place that knows how state is managed.
+Provider 组件应该是唯一知道状态管理方式的地方。
 
-UI components consume the context interface—they don't know if state comes from
+UI 组件消费 context 接口——它们不知道状态来自
 
-useState, Zustand, or a server sync.
+useState、Zustand 还是服务器同步。
 
-**Incorrect: UI coupled to state implementation**
+**错误：UI 耦合到状态实现**
 
 ```tsx
 function ChannelComposer({ channelId }: { channelId: string }) {
@@ -290,7 +291,7 @@ function ChannelComposer({ channelId }: { channelId: string }) {
 }
 ```
 
-**Correct: state management isolated in provider**
+**正确：状态管理隔离在 Provider 中**
 
 ```tsx
 // Provider handles all state management details
@@ -338,7 +339,7 @@ function Channel({ channelId }: { channelId: string }) {
 }
 ```
 
-**Different providers, same UI:**
+**不同的 Provider，相同的 UI：**
 
 ```tsx
 // Local state for ephemeral forms
@@ -368,27 +369,27 @@ function ChannelProvider({ channelId, children }) {
 }
 ```
 
-The same `Composer.Input` component works with both providers because it only
+同一个 `Composer.Input` 组件可以同时与两个 Provider 一起工作，因为它只
 
-depends on the context interface, not the implementation.
+依赖于 context 接口，而非实现。
 
-### 2.2 Define Generic Context Interfaces for Dependency Injection
+### 2.2 定义通用 Context 接口以实现依赖注入
 
-**Impact: HIGH (enables dependency-injectable state across use-cases)**
+**影响：高（实现跨用例的可依赖注入状态）**
 
-Define a **generic interface** for your component context with three parts:
+为你的组件 context 定义一个**通用接口**，包含三个部分：
 
-`state`, `actions`, and `meta`. This interface is a contract that any provider
+`state`、`actions` 和 `meta`。这个接口是一个契约，任何 Provider
 
-can implement—enabling the same UI components to work with completely different
+都可以实现——使同一组 UI 组件能够与完全不同的
 
-state implementations.
+状态实现一起工作。
 
-**Core principle:** Lift state, compose internals, make state
+**核心原则：** 提升状态，组合内部组件，使状态
 
-dependency-injectable.
+可依赖注入。
 
-**Incorrect: UI coupled to specific state implementation**
+**错误：UI 耦合到特定状态实现**
 
 ```tsx
 function ComposerInput() {
@@ -398,7 +399,7 @@ function ComposerInput() {
 }
 ```
 
-**Correct: generic interface enables dependency injection**
+**正确：通用接口启用依赖注入**
 
 ```tsx
 // Define a GENERIC interface that any provider can implement
@@ -426,7 +427,7 @@ interface ComposerContextValue {
 const ComposerContext = createContext<ComposerContextValue | null>(null)
 ```
 
-**UI components consume the interface, not the implementation:**
+**UI 组件消费接口，而非实现：**
 
 ```tsx
 function ComposerInput() {
@@ -447,7 +448,7 @@ function ComposerInput() {
 }
 ```
 
-**Different providers implement the same interface:**
+**不同的 Provider 实现相同的接口：**
 
 ```tsx
 // Provider A: Local state for ephemeral forms
@@ -488,7 +489,7 @@ function ChannelProvider({ channelId, children }: Props) {
 }
 ```
 
-**The same composed UI works with both:**
+**相同组合的 UI 可与两者一起使用：**
 
 ```tsx
 // Works with ForwardMessageProvider (local state)
@@ -508,26 +509,26 @@ function ChannelProvider({ channelId, children }: Props) {
 </ChannelProvider>
 ```
 
-**Custom UI outside the component can access state and actions:**
+**组件外部的自定义 UI 可以访问状态和操作：**
 
 ```tsx
 function ForwardMessageDialog() {
   return (
     <ForwardMessageProvider>
       <Dialog>
-        {/* The composer UI */}
+        {/* 编辑器 UI */}
         <Composer.Frame>
-          <Composer.Input placeholder="Add a message, if you'd like." />
+          <Composer.Input placeholder="如果你愿意，可以添加一条消息。" />
           <Composer.Footer>
             <Composer.Formatting />
             <Composer.Emojis />
           </Composer.Footer>
         </Composer.Frame>
 
-        {/* Custom UI OUTSIDE the composer, but INSIDE the provider */}
+        {/* 编辑器外部的自定义 UI，但在 Provider 内部 */}
         <MessagePreview />
 
-        {/* Actions at the bottom of the dialog */}
+        {/* 对话框底部的操作 */}
         <DialogActions>
           <CancelButton />
           <ForwardButton />
@@ -537,48 +538,48 @@ function ForwardMessageDialog() {
   )
 }
 
-// This button lives OUTSIDE Composer.Frame but can still submit based on its context!
+// 此按钮位于 Composer.Frame 外部，但仍可基于其 context 提交！
 function ForwardButton() {
   const {
     actions: { submit },
   } = use(ComposerContext)
-  return <Button onPress={submit}>Forward</Button>
+  return <Button onPress={submit}>转发</Button>
 }
 
-// This preview lives OUTSIDE Composer.Frame but can read composer's state!
+// 此预览位于 Composer.Frame 外部，但可以读取编辑器的状态！
 function MessagePreview() {
   const { state } = use(ComposerContext)
   return <Preview message={state.input} attachments={state.attachments} />
 }
 ```
 
-The provider boundary is what matters—not the visual nesting. Components that
+Provider 边界才是重要的——而不是视觉嵌套。需要
 
-need shared state don't have to be inside the `Composer.Frame`. They just need
+共享状态的组件不必位于 `Composer.Frame` 内部。它们只需要
 
-to be within the provider.
+在 Provider 内部即可。
 
-The `ForwardButton` and `MessagePreview` are not visually inside the composer
+`ForwardButton` 和 `MessagePreview` 不在视觉上位于编辑器
 
-box, but they can still access its state and actions. This is the power of
+框内，但它们仍然可以访问其状态和操作。这就是
 
-lifting state into providers.
+将状态提升到 Provider 中的力量。
 
-The UI is reusable bits you compose together. The state is dependency-injected
+UI 是你组合在一起的可复用片段。状态由 Provider
 
-by the provider. Swap the provider, keep the UI.
+进行依赖注入。切换 Provider，保留 UI。
 
-### 2.3 Lift State into Provider Components
+### 2.3 将状态提升到 Provider 组件中
 
-**Impact: HIGH (enables state sharing outside component boundaries)**
+**影响：高（实现在组件边界之外共享状态）**
 
-Move state management into dedicated provider components. This allows sibling
+将状态管理移到专用的 Provider 组件中。这允许主 UI
 
-components outside the main UI to access and modify state without prop drilling
+之外的兄弟组件在不进行属性钻取或使用笨重的 ref 的情况下
 
-or awkward refs.
+访问和修改状态。
 
-**Incorrect: state trapped inside component**
+**错误：状态困在组件内部**
 
 ```tsx
 function ForwardMessageComposer() {
@@ -608,7 +609,7 @@ function ForwardMessageDialog() {
 }
 ```
 
-**Incorrect: useEffect to sync state up**
+**错误：使用 useEffect 同步状态向上**
 
 ```tsx
 function ForwardMessageDialog() {
@@ -629,7 +630,7 @@ function ForwardMessageComposer({ onInputChange }) {
 }
 ```
 
-**Incorrect: reading state from ref on submit**
+**错误：提交时从 ref 读取状态**
 
 ```tsx
 function ForwardMessageDialog() {
@@ -643,7 +644,7 @@ function ForwardMessageDialog() {
 }
 ```
 
-**Correct: state lifted to provider**
+**正确：状态提升到 Provider**
 
 ```tsx
 function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
@@ -697,24 +698,23 @@ nested inside each other—they just need to be within the same provider.
 
 ---
 
-## 3. Implementation Patterns
+## 3. 实现模式
 
-**Impact: MEDIUM**
+**影响：中**
 
-Specific techniques for implementing compound components and
-context providers.
+实现复合组件和 context Provider 的具体技术。
 
-### 3.1 Create Explicit Component Variants
+### 3.1 创建显式组件变体
 
-**Impact: MEDIUM (self-documenting code, no hidden conditionals)**
+**影响：中（自文档化的代码，无隐藏条件）**
 
-Instead of one component with many boolean props, create explicit variant
+不要创建一个带有许多布尔属性的组件，而是创建显式的变体
 
-components. Each variant composes the pieces it needs. The code documents
+组件。每个变体组合它所需的部分。代码文档化了
 
-itself.
+自身。
 
-**Incorrect: one component, many modes**
+**错误：一个组件，多种模式**
 
 ```tsx
 // What does this component actually render?
@@ -727,7 +727,7 @@ itself.
 />
 ```
 
-**Correct: explicit variants**
+**正确：显式变体**
 
 ```tsx
 // Immediately clear what this renders
@@ -740,11 +740,11 @@ itself.
 <ForwardMessageComposer messageId="123" />
 ```
 
-Each implementation is unique, explicit and self-contained. Yet they can each
+每个实现都是独特、明确且自包含的。但它们每个都可以
 
-use shared parts.
+使用共享部分。
 
-**Implementation:**
+**实现：**
 
 ```tsx
 function ThreadComposer({ channelId }: { channelId: string }) {
@@ -795,27 +795,25 @@ function ForwardMessageComposer({ messageId }: { messageId: string }) {
 }
 ```
 
-Each variant is explicit about:
+每个变体明确说明：
 
-- What provider/state it uses
+- 它使用什么 Provider/状态
 
-- What UI elements it includes
+- 它包含哪些 UI 元素
 
-- What actions are available
+- 哪些操作可用
 
-No boolean prop combinations to reason about. No impossible states.
+无需推理布尔属性的组合。没有不可能的状态。
 
-### 3.2 Prefer Composing Children Over Render Props
+### 3.2 优先使用 Children 而非渲染属性
 
-**Impact: MEDIUM (cleaner composition, better readability)**
+**影响：中（更清晰的组合，更好的可读性）**
 
-Use `children` for composition instead of `renderX` props. Children are more
+使用 `children` 进行组合，而不是 `renderX` 属性。Children 更易读、
 
-readable, compose naturally, and don't require understanding callback
+组合更自然，且不需要理解回调签名。
 
-signatures.
-
-**Incorrect: render props**
+**错误：渲染属性**
 
 ```tsx
 function Composer({
@@ -852,7 +850,7 @@ return (
 )
 ```
 
-**Correct: compound components with children**
+**正确：带 children 的复合组件**
 
 ```tsx
 function ComposerFrame({ children }: { children: React.ReactNode }) {
@@ -877,37 +875,37 @@ return (
 )
 ```
 
-**When render props are appropriate:**
+**何时渲染属性合适：**
 
 ```tsx
-// Render props work well when you need to pass data back
+// 当需要向子组件传递数据时，渲染属性效果很好
 <List
   data={items}
   renderItem={({ item, index }) => <Item item={item} index={index} />}
 />
 ```
 
-Use render props when the parent needs to provide data or state to the child.
+当父组件需要向子组件提供数据或状态时，使用渲染属性。
 
-Use children when composing static structure.
+当组合静态结构时，使用 children。
 
 ---
 
-## 4. React 19 APIs
+## 4. React 19 API
 
-**Impact: MEDIUM**
+**影响：中**
 
-React 19+ only. Don't use `forwardRef`; use `use()` instead of `useContext()`.
+仅 React 19+。不要使用 `forwardRef`；使用 `use()` 替代 `useContext()`。
 
-### 4.1 React 19 API Changes
+### 4.1 React 19 API 变化
 
-**Impact: MEDIUM (cleaner component definitions and context usage)**
+**影响：中（更清晰的组件定义和 context 使用）**
 
-> **⚠️ React 19+ only.** Skip this if you're on React 18 or earlier.
+> **⚠️ 仅 React 19+。** 如果使用 React 18 或更早版本，请跳过本节。
 
-In React 19, `ref` is now a regular prop (no `forwardRef` wrapper needed), and `use()` replaces `useContext()`.
+在 React 19 中，`ref` 现在是一个常规属性（不再需要 `forwardRef` 包装），并且 `use()` 替代了 `useContext()`。
 
-**Incorrect: forwardRef in React 19**
+**错误：在 React 19 中使用 forwardRef**
 
 ```tsx
 const ComposerInput = forwardRef<TextInput, Props>((props, ref) => {
@@ -915,7 +913,7 @@ const ComposerInput = forwardRef<TextInput, Props>((props, ref) => {
 })
 ```
 
-**Correct: ref as a regular prop**
+**正确：ref 作为常规属性**
 
 ```tsx
 function ComposerInput({ ref, ...props }: Props & { ref?: React.Ref<TextInput> }) {
@@ -923,23 +921,23 @@ function ComposerInput({ ref, ...props }: Props & { ref?: React.Ref<TextInput> }
 }
 ```
 
-**Incorrect: useContext in React 19**
+**错误：在 React 19 中使用 useContext**
 
 ```tsx
 const value = useContext(MyContext)
 ```
 
-**Correct: use instead of useContext**
+**正确：使用 use 替代 useContext**
 
 ```tsx
 const value = use(MyContext)
 ```
 
-`use()` can also be called conditionally, unlike `useContext()`.
+`use()` 还可以有条件地调用，而 `useContext()` 不行。
 
 ---
 
-## References
+## 参考
 
 1. [https://react.dev](https://react.dev)
 2. [https://react.dev/learn/passing-data-deeply-with-context](https://react.dev/learn/passing-data-deeply-with-context)

@@ -1,50 +1,50 @@
-# Colors in ManimGL
+# ManimGL 中的颜色
 
-ManimGL provides extensive color support with built-in color constants, gradients, and color manipulation utilities.
+ManimGL 提供广泛的颜色支持，包括内置颜色常量、渐变和颜色操作工具。
 
-## Color Constants
+## 颜色常量
 
-### Basic Colors
+### 基本颜色
 
 ```python
-# Primary colors
+# 主要颜色
 RED, GREEN, BLUE
 YELLOW, CYAN, MAGENTA
 
-# Grayscale
+# 灰度
 WHITE, GREY, GRAY, BLACK
 
-# Common colors
+# 常见颜色
 ORANGE, PURPLE, PINK, BROWN
 MAROON, TEAL, GOLD
 ```
 
-### Color Variations
+### 颜色变体
 
-ManimGL provides color gradients with letter suffixes:
+ManimGL 提供带字母后缀的颜色渐变：
 
 ```python
-# Blue variations (darkest to lightest)
-BLUE_E  # Darkest blue
+# 蓝色变体（从最深到最浅）
+BLUE_E  # 最深蓝
 BLUE_D
 BLUE_C
 BLUE_B
-BLUE_A  # Lightest blue
+BLUE_A  # 最浅蓝
 
-# Similarly for other colors:
+# 其他颜色同理：
 RED_E, RED_D, RED_C, RED_B, RED_A
 GREEN_E, GREEN_D, GREEN_C, GREEN_B, GREEN_A
 YELLOW_E, YELLOW_D, YELLOW_C, YELLOW_B, YELLOW_A
 ```
 
-### Usage Example
+### 使用示例
 
 ```python
 from manimlib import *
 
 class ColorExample(Scene):
     def construct(self):
-        # Create circles with different color variations
+        # 使用不同颜色变体创建圆
         circles = VGroup(*[
             Circle(radius=0.5, color=color)
             for color in [BLUE_E, BLUE_D, BLUE_C, BLUE_B, BLUE_A]
@@ -53,24 +53,24 @@ class ColorExample(Scene):
         self.add(circles)
 ```
 
-## Setting Colors
+## 设置颜色
 
-### Basic Color Setting
+### 基本颜色设置
 
 ```python
-# At creation
+# 创建时设置
 circle = Circle(color=BLUE)
 
-# After creation
+# 创建后设置
 square = Square()
 square.set_color(RED)
 
-# Multiple mobjects
+# 多个对象
 group = VGroup(Circle(), Square(), Triangle())
 group.set_color(GREEN)
 ```
 
-### Animated Color Changes
+### 动画化颜色变化
 
 ```python
 class ColorAnimation(Scene):
@@ -78,39 +78,39 @@ class ColorAnimation(Scene):
         circle = Circle(color=BLUE)
         self.add(circle)
 
-        # Animate color change
+        # 动画化颜色变化
         self.play(circle.animate.set_color(RED))
         self.wait()
 
-        # Another change
+        # 再次变化
         self.play(circle.animate.set_color(YELLOW))
         self.wait()
 ```
 
-## Gradients
+## 渐变
 
 ### set_submobject_colors_by_gradient
 
 ```python
-# Apply gradient to submobjects
+# 对子对象应用渐变
 text = Text("Gradient Text")
 text.set_submobject_colors_by_gradient(BLUE, GREEN, YELLOW)
 
-# Multiple objects with gradient
+# 多个对象的渐变
 squares = VGroup(*[Square() for _ in range(10)])
 squares.arrange(RIGHT)
 squares.set_submobject_colors_by_gradient(RED, BLUE)
 ```
 
-### Color Interpolation
+### 颜色插值
 
 ```python
 from manimlib.utils.color import interpolate_color
 
-# Create color between two colors
-mid_color = interpolate_color(RED, BLUE, 0.5)  # Purple
+# 创建两色之间的颜色
+mid_color = interpolate_color(RED, BLUE, 0.5)  # 紫色
 
-# Create gradient programmatically
+# 编程方式创建渐变
 n_colors = 10
 gradient = [
     interpolate_color(RED, BLUE, alpha)
@@ -118,14 +118,14 @@ gradient = [
 ]
 ```
 
-## Advanced Color Techniques
+## 高级颜色技术
 
 ### set_color_by_code (GLSL)
 
-ManimGL allows dynamic coloring using GLSL code:
+ManimGL 允许使用 GLSL 代码进行动态着色：
 
 ```python
-# Color based on position
+# 基于位置着色
 square = Square()
 square.set_color_by_code("""
     color.r = x;
@@ -137,7 +137,7 @@ square.set_color_by_code("""
 ### set_color_by_xyz_func
 
 ```python
-# Color based on 3D position
+# 基于 3D 位置着色
 surface = Sphere(radius=2)
 surface.set_color_by_xyz_func(
     glsl_snippet="float value = sqrt(x*x + y*y + z*z); return value;",
@@ -147,54 +147,54 @@ surface.set_color_by_xyz_func(
 )
 ```
 
-## Color for Text and LaTeX
+## 文本和 LaTeX 着色
 
-### Coloring Text Parts
+### 为文本部分着色
 
 ```python
-# Color specific words
+# 为特定单词着色
 text = Text(
     "Red, Green, and Blue",
     t2c={"Red": RED, "Green": GREEN, "Blue": BLUE}
 )
 ```
 
-### Coloring LaTeX
+### 为 LaTeX 着色
 
 ```python
-# Color math symbols
+# 为数学符号着色
 equation = Tex(
     R"E = mc^2",
     t2c={"E": BLUE, "m": GREEN, "c": YELLOW}
 )
 
-# Color by tex substring
+# 通过 tex 子串着色
 formula = Tex(R"\int_0^1 x^2 dx")
 formula.set_color_by_tex("x", BLUE)
 formula.set_color_by_tex(R"\int", RED)
 ```
 
-## RGB and Hex Colors
+## RGB 和十六进制颜色
 
-### Using RGB Values
+### 使用 RGB 值
 
 ```python
 from manimlib.utils.color import rgb_to_color
 
-# RGB values (0-1 range)
+# RGB 值（0-1 范围）
 custom_color = rgb_to_color([0.5, 0.3, 0.8])
 circle = Circle(color=custom_color)
 
-# RGB from 0-255 range (convert to 0-1)
+# 从 0-255 范围转换为 0-1
 custom_color = rgb_to_color([128/255, 77/255, 204/255])
 ```
 
-### Using Hex Colors
+### 使用十六进制颜色
 
 ```python
 from manimlib.utils.color import hex_to_rgb, rgb_to_color
 
-# Hex color
+# 十六进制颜色
 hex_color = "#FF5733"
 rgb = hex_to_rgb(hex_color)
 color = rgb_to_color(rgb)
@@ -202,61 +202,61 @@ color = rgb_to_color(rgb)
 circle = Circle(color=color)
 ```
 
-## Opacity and Transparency
+## 不透明度和透明度
 
-### Setting Opacity
+### 设置不透明度
 
 ```python
-# Transparent circle
+# 透明圆
 circle = Circle(color=BLUE, fill_opacity=0.5)
 
-# Change opacity
+# 改变不透明度
 circle.set_opacity(0.7)
 
-# Fill vs Stroke opacity
+# 填充 vs 描边不透明度
 square = Square()
 square.set_fill(BLUE, opacity=0.5)
 square.set_stroke(WHITE, width=4, opacity=1.0)
 ```
 
-## Color Utilities
+## 颜色工具
 
-### Getting Color from Mobject
+### 从 Mobject 获取颜色
 
 ```python
 circle = Circle(color=BLUE)
 
-# Get color
+# 获取颜色
 color = circle.get_color()
 
-# Get fill color
+# 获取填充颜色
 fill_color = circle.get_fill_color()
 
-# Get stroke color
+# 获取描边颜色
 stroke_color = circle.get_stroke_color()
 ```
 
-### Color Matching
+### 颜色匹配
 
 ```python
-# Match color from another mobject
+# 匹配另一个 mobject 的颜色
 circle = Circle(color=BLUE)
 square = Square()
 square.match_color(circle)
 
-# Match fill color
+# 匹配填充颜色
 square.match_fill(circle)
 
-# Match stroke
+# 匹配描边
 square.match_stroke(circle)
 ```
 
-## Color Schemes
+## 配色方案
 
-### Creating Consistent Color Palettes
+### 创建一致的调色板
 
 ```python
-# Define color scheme
+# 定义配色方案
 COLOR_SCHEME = {
     "background": "#1e1e1e",
     "primary": BLUE_C,
@@ -266,7 +266,7 @@ COLOR_SCHEME = {
     "highlight": RED_C
 }
 
-# Use in scene
+# 在场景中使用
 class StyledScene(Scene):
     def construct(self):
         title = Text("Title", color=COLOR_SCHEME["primary"])
@@ -276,49 +276,49 @@ class StyledScene(Scene):
         self.add(title, subtitle, highlight)
 ```
 
-### 3Blue1Brown Color Scheme
+### 3Blue1Brown 配色方案
 
 ```python
-# Grant's typical colors
+# Grant 的常用颜色
 BLUE_3B1B = BLUE_C
 GREEN_3B1B = GREEN_C
 YELLOW_3B1B = YELLOW_C
 RED_3B1B = RED_C
 
-# Background
+# 背景
 BACKGROUND_COLOR = "#0a0a0a"
 ```
 
-## Gloss and Visual Properties
+## 光泽和视觉属性
 
-### Adding Gloss (for 3D)
+### 添加光泽（用于 3D）
 
 ```python
-# Add glossy appearance
+# 添加光泽外观
 sphere = Sphere(radius=2, color=BLUE)
-sphere.set_gloss(0.8)  # 0 to 1
+sphere.set_gloss(0.8)  # 0 到 1
 
-# Get gloss value
+# 获取光泽值
 gloss = sphere.get_gloss()
 ```
 
-### Shadow
+### 阴影
 
 ```python
-# Add shadow (for 3D)
+# 添加阴影（用于 3D）
 cube = Cube(color=RED)
-cube.set_shadow(0.5)  # 0 to 1
+cube.set_shadow(0.5)  # 0 到 1
 
-# Get shadow value
+# 获取阴影值
 shadow = cube.get_shadow()
 ```
 
-## Full Color Example
+## 完整颜色示例
 
 ```python
 class ComprehensiveColorExample(Scene):
     def construct(self):
-        # Color variations showcase
+        # 颜色变体展示
         blue_shades = VGroup(*[
             Circle(radius=0.4, color=color)
             for color in [BLUE_E, BLUE_D, BLUE_C, BLUE_B, BLUE_A]
@@ -326,12 +326,12 @@ class ComprehensiveColorExample(Scene):
         blue_shades.arrange(RIGHT, buff=0.3)
         blue_shades.to_edge(UP, buff=1)
 
-        # Gradient
+        # 渐变
         squares = VGroup(*[Square(side_length=0.6) for _ in range(8)])
         squares.arrange(RIGHT, buff=0.2)
         squares.set_submobject_colors_by_gradient(RED, YELLOW, GREEN, BLUE)
 
-        # Custom RGB color
+        # 自定义 RGB 颜色
         custom_circle = Circle(
             radius=1,
             color=rgb_to_color([0.8, 0.2, 0.6]),
@@ -339,7 +339,7 @@ class ComprehensiveColorExample(Scene):
         )
         custom_circle.shift(DOWN * 2)
 
-        # Colored text
+        # 彩色文本
         text = Text(
             "Colorful Text",
             font_size=48,
@@ -347,7 +347,7 @@ class ComprehensiveColorExample(Scene):
         )
         text.next_to(custom_circle, UP, buff=0.5)
 
-        # Add everything
+        # 添加所有内容
         self.play(
             FadeIn(blue_shades, lag_ratio=0.1),
             FadeIn(squares, lag_ratio=0.1),
@@ -356,7 +356,7 @@ class ComprehensiveColorExample(Scene):
         )
         self.wait()
 
-        # Animate color changes
+        # 动画化颜色变化
         self.play(
             squares.animate.set_submobject_colors_by_gradient(PURPLE, ORANGE),
             custom_circle.animate.set_color(TEAL)
@@ -364,19 +364,19 @@ class ComprehensiveColorExample(Scene):
         self.wait()
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use named constants**: Prefer `BLUE` over RGB values for readability
-2. **Consistent color schemes**: Define color palettes for coherent visuals
-3. **Gradients for emphasis**: Use gradients to show progression or relationships
-4. **Opacity for layering**: Use transparency to show overlapping elements
-5. **Color accessibility**: Ensure sufficient contrast for visibility
-6. **t2c for LaTeX**: Color math expressions to highlight important parts
-7. **Don't overdo it**: Too many colors can be distracting
+1. **使用命名常量**：优先使用 `BLUE` 而不是 RGB 值以提高可读性
+2. **一致的配色方案**：定义调色板以实现连贯的视觉效果
+3. **用渐变来强调**：使用渐变显示进程或关系
+4. **用透明度进行分层**：使用透明显示重叠元素
+5. **颜色无障碍**：确保足够的对比度以保证可见性
+6. **LaTeX 使用 t2c**：为数学表达式着色以突出重要部分
+7. **不要过度**：过多颜色可能分散注意力
 
-## Common Patterns
+## 常见模式
 
-### Rainbow gradient
+### 彩虹渐变
 
 ```python
 def rainbow_gradient(mobjects):
@@ -384,7 +384,7 @@ def rainbow_gradient(mobjects):
     VGroup(*mobjects).set_submobject_colors_by_gradient(*colors)
 ```
 
-### Fade to color animation
+### 渐变色动画
 
 ```python
 self.play(
@@ -393,7 +393,7 @@ self.play(
 )
 ```
 
-### Color cycling
+### 颜色循环
 
 ```python
 colors = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]

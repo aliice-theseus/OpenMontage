@@ -1,96 +1,71 @@
-# Compose Director - Documentary Montage Pipeline
+# 合成导演 - 纪录片蒙太奇流水线
 
-## When To Use
+## 使用时机
 
-The timeline exists. Every cut has an in/out, transitions are
-chosen, the music bed is locked. You now have to render the piece
-and apply the register-smoothing pass (uniform crop + LUT + audio
-mix) that makes a mixed-era corpus feel like one film.
+时间线已存在。每个剪辑都有入/出点，过渡已选择，音乐基底已锁定。你现在必须渲染作品并应用基调平滑处理（统一的裁切 + LUT + 音频混音），使混合年代的语料库感觉像一部电影。
 
-The output is a single mp4 plus a `render_report` artifact.
+输出是一个单独的 mp4 加上一个 `render_report` 工件。
 
-## Runtime Routing (HARD CONSTRAINT)
+## 运行时路由（硬约束）
 
-This pipeline currently REQUIRES `render_runtime="remotion"`. The end-tag stack (ProRes 4444 overlay composited on final scenes, or concat fallback) depends on Remotion's `CinematicRenderer` composition and its alpha-preserving render path. HyperFrames end-tag parity is explicitly Wave 3 / deferred work (see `skills/core/hyperframes.md` → "What stays Remotion-only in Phase 1").
+本流水线当前**需要** `render_runtime="remotion"`。尾标堆栈（ProRes 4444 叠加合成到最终场景上，或 concat 回退）依赖于 Remotion 的 `CinematicRenderer` 合成及其保留 alpha 的渲染路径。HyperFrames 的尾标对等功能明确属于 Wave 3 / 推迟工作（参见 `skills/core/hyperframes.md` → "Phase 1 中哪些保持 Remotion 独占"）。
 
-- If `edit_decisions.render_runtime` is anything other than `remotion`, stop. This is a CRITICAL governance violation. Surface the conflict to the user, route the decision back to proposal to re-lock `render_runtime="remotion"`, log a `render_runtime_selection` correction in decision_log, and resume.
-- Never silently proceed by rewriting render_runtime in edit_decisions. The documentary promise (motion-led, mood-driven, uniform grade) is preserved by the Remotion stack, and that promise is what the user approved.
-- Pass `proposal_packet` to `video_compose.execute()` so the in-tool `runtime_swap_detected` check actively confirms the runtime stayed `remotion` end-to-end. A `skipped` check on this pipeline means you forgot to pass the proposal artifact.
+- 如果 `edit_decisions.render_runtime` 不是 `remotion`，停止。这是一个**关键治理违规**。向用户展示冲突，将决策路由回提案以重新锁定 `render_runtime="remotion"`，在 decision_log 中记录 `render_runtime_selection` 修正，然后继续。
+- 永远不要通过重写 edit_decisions 中的 render_runtime 来悄悄继续。纪录片承诺（运动驱动、情绪驱动、统一调色）由 Remotion 堆栈维护，而这个承诺是用户批准的。
+- 将 `proposal_packet` 传递给 `video_compose.execute()`，以便工具内的 `runtime_swap_detected` 检查能主动确认运行时从头到尾保持 `remotion`。在本流水线上跳过此检查意味着你忘记传递提案工件。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/render_report.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["edit"]["edit_decisions"]` | Cuts, transitions, music, metadata hints |
-| Prior artifact | `state.artifacts["assets"]["asset_manifest"]` | File paths, durations, providers |
-| Tool | `video_compose` (Remotion-first + FFmpeg fallback) | Primary render engine |
-| Tool | `audio_mixer` | Music fade, silence window, L-cuts |
-| Tool (optional) | `color_grade` | Uniform LUT across mixed-era clips |
-| Tool (optional) | `video_trimmer`, `video_stitch` | Lower-level helpers if needed |
+| 模式 | `schemas/artifacts/render_report.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["edit"]["edit_decisions"]` | 剪辑、过渡、音乐、元数据提示 |
+| 前置工件 | `state.artifacts["assets"]["asset_manifest"]` | 文件路径、时长、提供者 |
+| 工具 | `video_compose`（Remotion 优先 + FFmpeg 回退） | 主要渲染引擎 |
+| 工具 | `audio_mixer` | 音乐淡入淡出、静音窗口、L-cut |
+| 工具（可选） | `color_grade` | 跨混合年代剪辑的统一 LUT |
+| 工具（可选） | `video_trimmer`、`video_stitch` | 需要时的底层辅助工具 |
 
-## Mental Model
+## 思维模型
 
-Most pipelines treat compose as a boring export step. For
-documentary montage it is a creative step: the last pass where grade
-and mix reconcile footage from radically different sources into one
-piece.
+大多数流水线将合成视为一个枯燥的导出步骤。对于纪录片蒙太奇，它是一个创意步骤：调色和混音将来自完全不同来源的素材调和成一部作品的最后一次处理。
 
-Three things must happen here that cannot happen earlier:
+有三件事必须在这里完成，不能提前：
 
-1. **Uniform aspect and letterbox.** Pexels 1920x1080, Prelinger
-   640x480 4:3, NASA 1280x720 all need to land on one canvas.
-2. **Uniform color grade.** A single LUT across the whole timeline
-   is what makes the 1962 home movie sit next to the 2023 kitchen
-   without jumping out.
-3. **Audio mix.** Music level, silence window, L-cut ambient
-   carries, final fade — done in one pass with the timeline in hand.
+1. **统一宽高比和信箱模式。** Pexels 1920x1080、Prelinger 640x480 4:3、NASA 1280x720 都需要落在一个画布上。
+2. **统一色彩调色。** 在整条时间线上应用一个统一的 LUT，这是让 1962 年的家庭影片与 2023 年的厨房片段相邻而不显突兀的关键。
+3. **音频混音。** 音乐电平、静音窗口、L-cut 环境音延续、最终淡出 — 在拥有时间线的情况下一次性完成。
 
-## Process
+## 流程
 
-### 0. Hard Requirement Check
+### 0. 硬性需求检查
 
-Read `brief` and `edit_decisions.metadata` for any hard requirements.
-If the brief said "no narration" and a narration track somehow
-appeared in the edit, STOP and ask. Do not render over a contract
-violation.
+读取 `brief` 和 `edit_decisions.metadata` 中的任何硬性需求。如果概要要求"无旁白"但旁白轨道以某种方式出现在剪辑中，**停止**并询问。不要在违反合同的情况下渲染。
 
-Also confirm that `edit_decisions.renderer_family` is locked to
-`documentary-montage` and that the chosen render engine preserves that
-decision. For this repo's governance model, `video_compose` is
-Remotion-first on `operation="render"`, even for footage-led pieces.
+同时确认 `edit_decisions.renderer_family` 锁定为 `documentary-montage`，并且所选渲染引擎保留了该决策。对于此仓库的治理模型，`video_compose` 在 `operation="render"` 时是 Remotion 优先的，即使是素材主导的作品。
 
-- If Remotion is available, use the normal `render` path and keep the
-  approved renderer family.
-- If Remotion is unavailable, do NOT quietly drop to FFmpeg. Surface
-  the engine change and get approval before using a lower-level
-  FFmpeg-only path.
+- 如果 Remotion 可用，使用正常的 `render` 路径并保持已批准的渲染器家族。
+- 如果 Remotion 不可用，不要悄悄降级到 FFmpeg。在切换引擎之前上报并获得批准。
 
-### 1. Resolve The Canvas
+### 1. 确定画布
 
-Read `brief.target_platform`:
+读取 `brief.target_platform`：
 
-| Target | Canvas | Letterbox |
+| 目标平台 | 画布 | 信箱模式 |
 |--------|--------|-----------|
-| `social_short` (Instagram/TikTok) | 1080x1920 (9:16) | Top/bottom crop; center-anchor each clip |
-| `youtube` / `generic` | 1920x1080 (16:9) | None; optionally 2.35:1 top/bottom bars for cinematic feel |
-| `linkedin` | 1920x1080 (16:9) | None |
+| `social_short`（Instagram/TikTok） | 1080x1920（9:16） | 顶部/底部裁切；每个剪辑居中锚定 |
+| `youtube` / `generic` | 1920x1080（16:9） | 无；可选择 2.35:1 顶部/底部黑条以获得电影感 |
+| `linkedin` | 1920x1080（16:9） | 无 |
 
-Every clip in the timeline must be scaled/cropped to this canvas.
-For `social_short`, this usually means center-cropping 16:9 footage.
-For `youtube` with the cinematic 2.35:1 bar treatment, pad 140px
-black top and bottom on a 1920x1080 canvas.
+时间线上的每个剪辑必须缩放/裁切到该画布。对于 `social_short`，这通常意味着对 16:9 素材进行中心裁切。对于 `youtube` 并带有电影感 2.35:1 黑条处理，在 1920x1080 画布上添加 140px 顶部和底部黑色填充。
 
-Commit this in `render_report.metadata.canvas` and
-`render_report.metadata.letterbox`.
+将此提交到 `render_report.metadata.canvas` 和 `render_report.metadata.letterbox`。
 
-### 2. Build The Concat Plan For `video_compose`
+### 2. 为 `video_compose` 构建串联计划
 
-The edit artifact gives you a list of cuts with in/out, transitions,
-and source asset_ids. Walk the asset_manifest to resolve each
-asset_id to a real file path. Then build the render plan.
+剪辑工件给你一个带有入/出点、过渡和来源 asset_id 的剪辑列表。遍历 asset_manifest 将每个 asset_id 解析为真实文件路径。然后构建渲染计划。
 
-For a pipeline this simple, the cleanest path is:
+对于如此简单的流水线，最清晰的路径是：
 
 ```python
 video_compose.execute({
@@ -101,63 +76,47 @@ video_compose.execute({
 })
 ```
 
-The exact field names come from the live `video_compose` schema at
-render time — consult the tool's `agent_skills` if available before
-writing the call. Do not invent parameters.
+确切的字段名来自渲染时的实时 `video_compose` 模式 — 在写调用之前，如果可用，先查阅工具的 `agent_skills`。不要发明参数。
 
-`edit_decisions_with_renderer_family` means the normal edit artifact
-with `renderer_family = "documentary-montage"` preserved intact.
+`edit_decisions_with_renderer_family` 意味着正常的编辑工件，其中 `renderer_family = "documentary-montage"` 保持不变。
 
-### 3. Apply Grade Via LUT, Not Per Clip
+### 3. 通过 LUT 而非逐剪辑应用调色
 
-Read `edit_decisions.metadata.grade_profile`. Map it to a LUT file:
+读取 `edit_decisions.metadata.grade_profile`。映射到 LUT 文件：
 
-| Profile | LUT | Suits |
+| 配置 | LUT | 适合 |
 |---------|-----|-------|
-| `warm_film_100` | vintage film warmth, slight lift | elegiac, dreamlike |
-| `cool_archive_60` | cool highlights, crushed blacks | urgent, wry |
-| `neutral_doc_20` | barely-there neutral balance | reverent |
-| `bleach_bypass_80` | desaturated, high contrast | wry, documentary-harsh |
+| `warm_film_100` | 复古胶片温暖感，轻微提亮 | 挽歌式、梦幻式 |
+| `cool_archive_60` | 冷色高光、压暗暗部 | 紧迫式、诙谐式 |
+| `neutral_doc_20` | 几乎不可察觉的中性平衡 | 敬畏式 |
+| `bleach_bypass_80` | 去饱和、高对比度 | 诙谐式、纪录片式硬朗 |
 
-If the profile isn't in the styles library, use `neutral_doc_20` and
-note it in `warnings`. Do not try to auto-grade — the LUT is the
-whole point of the register-smoothing pass.
+如果配置不在样式库中，使用 `neutral_doc_20` 并在 `warnings` 中注明。不要尝试自动调色 — LUT 是整个基调平滑处理的关键。
 
-Apply the LUT at the composition level, not per clip. One LUT, one
-timeline, one consistent look. This is what makes a 1962 Prelinger
-clip and a 2023 Pexels clip feel like the same film.
+在合成级别应用 LUT，而不是逐剪辑。一个 LUT，一条时间线，一个一致的观感。这就是让 1962 年的 Prelinger 剪辑和 2023 年的 Pexels 剪辑感觉像同一部电影的原因。
 
-### 4. Mix The Audio Once, In Compose
+### 4. 在合成中一次性混音音频
 
-The edit artifact already decided volumes, fades, silence windows,
-and L-cut sfx layers. Your job is to execute them faithfully:
+编辑工件已经决定了音量、淡入淡出、静音窗口和 L-cut 音效层。你的任务是忠实执行它们：
 
-- Music bed at `edit_decisions.audio.music.volume` (default 0.7).
-- Fade in per `fade_in_seconds`, fade out per `fade_out_seconds`.
-- Silence window = ducked to 0.0 for the window's duration, ramp
-  back up with a 0.2s hold-off.
-- L-cut SFX layers = mix at 0.5-0.7 volume, under music.
-- No narration unless explicitly present in `edit_decisions.audio.narration`.
+- 音乐基底音量 `edit_decisions.audio.music.volume`（默认 0.7）。
+- 按 `fade_in_seconds` 淡入，按 `fade_out_seconds` 淡出。
+- 静音窗口 = 在窗口持续时间内衰减到 0.0，以 0.2 秒的保持时间渐回。
+- L-cut 音效层 = 以 0.5-0.7 音量混音，在音乐下方。
+- 除非 `edit_decisions.audio.narration` 中明确存在旁白，否则没有旁白。
 
-**Music is MANDATORY.** If the edit has no music entry, check the brief:
+**音乐是强制要求的。** 如果剪辑没有音乐条目，检查概要：
 
-- `brief.metadata.music_plan.source == "none"` with an `opt_out_reason` →
-  the user explicitly opted out. Render silent and note it in
-  `render_report.warnings`.
-- Anything else → STOP. This is a contract violation. Surface it to
-  the user before rendering. A silent render on a music-mandatory brief
-  is the loudest failure mode in this pipeline.
+- `brief.metadata.music_plan.source == "none"` 附带 `opt_out_reason` → 用户明确选择不使用。渲染静音并在 `render_report.warnings` 中注明。
+- 其他情况 → **停止。** 这是合同违规。在渲染前向用户上报。在音乐强制要求的概要上渲染静音是本流水线中最响亮的失败模式。
 
-Do NOT add ambient noise "to fill the gap".
+不要添加环境噪音"来填补空白"。
 
-### 4b. Render The End-Tag Via Remotion
+### 4b. 通过 Remotion 渲染尾标
 
-The end-tag is rendered **separately** from the FFmpeg body via
-Remotion. This keeps the two render engines (FFmpeg for footage,
-Remotion for typography) cleanly separated. The compositing method
-depends on `brief.metadata.end_tag_plan.mode`.
+尾标通过 Remotion **单独**渲染，与 FFmpeg 主体分开。这使两个渲染引擎（FFmpeg 负责素材，Remotion 负责排版）保持清晰分离。合成方法取决于 `brief.metadata.end_tag_plan.mode`。
 
-Read `brief.metadata.end_tag_plan`:
+读取 `brief.metadata.end_tag_plan`：
 
 ```json
 {
@@ -170,18 +129,15 @@ Read `brief.metadata.end_tag_plan`:
 }
 ```
 
-#### Path A — Overlay Mode (default)
+#### 路径 A — 叠加模式（默认）
 
-The tag fades in over the final scenes of the body footage. This is
-the default and produces a more cinematic result — the typography
-appears on top of live footage rather than cutting to a black card.
+标签在主体素材的最后场景上淡入。这是默认模式，产生更电影感的结果 — 排版出现在现场素材之上，而不是切换到黑卡。
 
-**Execution:**
+**执行方法：**
 
-1. Compose the body via FFmpeg (cuts + LUT + music + silence window).
-   Save as `projects/<name>/renders/body.mp4`. Note the body fps.
-2. Compute `durationInFrames = round(duration_seconds × body_fps)`.
-3. Render the end-tag with alpha via Remotion CLI:
+1. 通过 FFmpeg 合成主体（剪辑 + LUT + 音乐 + 静音窗口）。保存为 `projects/<name>/renders/body.mp4`。注意主体 fps。
+2. 计算 `durationInFrames = round(duration_seconds × body_fps)`。
+3. 通过 Remotion CLI 渲染带 alpha 的尾标：
    ```bash
    npx remotion render src/index.tsx EndTagOverlay \
      projects/<name>/renders/end_tag_overlay.mov \
@@ -190,14 +146,11 @@ appears on top of live footage rather than cutting to a black card.
      --props='{"text":"...","palette":"...","overlay":true,
                "fadeInSeconds":1.0,"holdSeconds":3.0,"fadeOutSeconds":1.5}'
    ```
-   Use the `EndTagOverlay` composition with `overlay: true`. This
-   produces a ProRes 4444 MOV with a real alpha channel
-   (pix_fmt=yuva444p12le). Canvas must match body canvas.
-4. Compute the overlay offset:
-   - Read `edit_decisions.end_tag.offset_seconds` if present.
-   - Otherwise auto-compute: `offset = body_duration - tag_duration`.
-     The tag's fade-out should align with the body's closing fade-out.
-5. Composite via FFmpeg overlay with `-itsoffset`:
+   使用 `overlay: true` 的 `EndTagOverlay` 合成。这将生成带有真实 alpha 通道的 ProRes 4444 MOV（pix_fmt=yuva444p12le）。画布必须与主体画布匹配。
+4. 计算叠加偏移：
+   - 如果存在，读取 `edit_decisions.end_tag.offset_seconds`。
+   - 否则自动计算：`offset = body_duration - tag_duration`。标签的淡出应与主体的关闭淡出对齐。
+5. 通过 FFmpeg overlay 和 `-itsoffset` 合成：
    ```bash
    ffmpeg -y \
      -i body.mp4 \
@@ -208,88 +161,71 @@ appears on top of live footage rather than cutting to a black card.
      -c:a aac -b:a 192k \
      projects/<name>/renders/final.mp4
    ```
-   `eof_action=pass` means the body video continues after the overlay
-   ends. The overlay's own alpha handles the fade-in/hold/fade-out.
+   `eof_action=pass` 意味着主体视频在叠加结束后继续。叠加自身的 alpha 处理淡入/停留/淡出。
 
-**Verification:** Extract a frame from the overlay region (e.g.
-`offset + 2s`) and confirm text is visible over footage, not over
-black. If the frame shows a black background behind the text, the
-alpha channel was lost — re-render with `--image-format=png`.
+**验证：** 从叠加区域提取一帧（例如 `offset + 2s`）并确认文字在素材上可见，而不是在黑色上。如果帧显示文字后面有黑色背景，则 alpha 通道丢失 — 使用 `--image-format=png` 重新渲染。
 
-#### Path B — Concat Mode
+#### 路径 B — 拼接模式
 
-Classic tail-card: opaque black card appended after the body. Use
-this only when `end_tag_plan.mode == "concat"`.
+经典尾卡：在主体后附加不透明黑卡。仅在 `end_tag_plan.mode == "concat"` 时使用。
 
-**Execution:**
+**执行方法：**
 
-1. Compose the body as above.
-2. Render the end-tag as opaque MP4:
+1. 如上合成主体。
+2. 渲染尾标为不透明 MP4：
    ```bash
    npx remotion render src/index.tsx EndTag \
      projects/<name>/renders/end_tag.mp4 \
      --props='{"text":"...","palette":"...","durationInFrames":132}'
    ```
-   (5.5s at 24fps = 132 frames). Canvas must match body canvas.
-3. Concat body + end_tag:
+   （5.5 秒在 24fps 下 = 132 帧）。画布必须与主体画布匹配。
+3. 拼接主体 + 尾标：
    ```bash
    ffmpeg -f concat -safe 0 -i list.txt -c copy final.mp4
    ```
-   Or re-encode if codecs don't match.
+   如果编码器不匹配则重新编码。
 
-#### Common Rules (Both Modes)
+#### 通用规则（两种模式）
 
-**End-tag is MANDATORY.** The ONLY way to skip it is an explicit user
-opt-out recorded as `end_tag_plan: null` with an `end_tag_opt_out_reason`.
-If the brief has an end-tag plan but you skipped rendering it, that is
-a contract violation. Stop and surface before finalizing.
+**尾标是强制要求的。** 跳过它的唯一方式是用户明确选择不使用，记录为 `end_tag_plan: null` 并附带 `end_tag_opt_out_reason`。如果概要中有尾标计划但你跳过了渲染，那是合同违规。在最终确定前停止并上报。
 
-Record in `render_report`:
+在 `render_report` 中记录：
 - `end_tag_rendered: true | false`
 - `end_tag_mode: "overlay" | "concat"`
-- `end_tag_path: "projects/<name>/renders/end_tag_overlay.mov"` (or `.mp4` for concat)
-- `end_tag_offset_seconds: <number>` (overlay mode only)
-- `end_tag_text: "..."` (for audit trail)
+- `end_tag_path: "projects/<name>/renders/end_tag_overlay.mov"`（或 `.mp4` 用于 concat）
+- `end_tag_offset_seconds: <number>`（仅叠加模式）
+- `end_tag_text: "..."`（用于审计追踪）
 
-If the brief says "no music" and the edit correctly has no music
-entry AND `music_plan.source == "none"` with an opt-out reason, render
-silent. Do NOT add ambient noise "to fill the gap".
+如果概要说"不要音乐"且剪辑正确没有音乐条目且 `music_plan.source == "none"` 带有 opt-out 原因，渲染静音。不要添加环境噪音"来填补空白"。
 
-### 5. Render At Documentary Spec
+### 5. 以纪录片规格渲染
 
-Recommended encoder settings for doc montage:
+纪录片蒙太奇的推荐编码器设置：
 
-| Field | Value | Why |
+| 字段 | 值 | 原因 |
 |-------|-------|-----|
-| Codec | `libx264` (H.264) | Universal, small |
-| Pixel format | `yuv420p` | Universal compatibility |
-| CRF | `18` | Visually lossless for final deliverables |
-| FPS | `24` | Cinematic. Do NOT upconvert 24->30. |
-| Audio codec | `aac` | Universal |
-| Audio bitrate | `192k` | Music-bed friendly |
+| 编码器 | `libx264`（H.264） | 通用、小巧 |
+| 像素格式 | `yuv420p` | 通用兼容性 |
+| CRF | `18` | 最终交付物视觉无损 |
+| FPS | `24` | 电影感。不要将 24 升频到 30。 |
+| 音频编码器 | `aac` | 通用 |
+| 音频比特率 | `192k` | 音乐基底友好 |
 
-If the source clips are 30fps and the canvas is 24fps, let the render
-pipeline drop frames evenly — don't blend. Motion interpolation on
-mixed-source footage looks awful.
+如果源剪辑是 30fps 而画布是 24fps，让渲染管道均匀丢帧 — 不要混合。混合来源素材上的运动插值看起来很糟糕。
 
-### 6. Post-Render Verification
+### 6. 渲染后验证
 
-After the render succeeds, actually probe the output file and check:
+渲染成功后，实际探测输出文件并检查：
 
-- **Duration.** Should match `sum(out - in for cut in cuts) + fade
-  in/out` within ±0.5s.
-- **Resolution.** Should match the canvas.
-- **Audio presence.** If music was in the plan, the output must
-  have an audio stream. If silence was planned, confirm.
-- **First and last frame.** Open the file, seek to 0s and to
-  duration-0.1s. The first frame should be a fade-in. The last
-  frame should be (or be fading to) black.
-- **Silence window.** Seek to the silence_window start. Audio level
-  should drop visibly in the waveform.
+- **时长。** 应在 `sum(out - in for cut in cuts) + 淡入/淡出` 的 ±0.5 秒内。
+- **分辨率。** 应与画布匹配。
+- **音频存在。** 如果计划中有音乐，输出必须有音频流。如果计划静音，确认。
+- **第一帧和最后一帧。** 打开文件，跳转到 0 秒和 duration-0.1 秒。第一帧应为淡入。最后一帧应为黑色（或正在淡出到黑色）。
+- **静音窗口。** 跳转到静音窗口开始。音频电平应在波形中明显下降。
 
-Record verifications in `render_report.verification_notes`.
+在 `render_report.verification_notes` 中记录验证。
 
-### 7. Emit The Render Report
+### 7. 输出渲染报告
 
 ```json
 {
@@ -310,10 +246,10 @@ Record verifications in `render_report.verification_notes`.
   "render_time_seconds": 42.3,
   "warnings": [],
   "verification_notes": [
-    "Duration within +0.2s of planned",
-    "First frame is black fade-in as specified",
-    "Silence window 54-56s confirmed (music -60dB)",
-    "Last frame fades to black at 89.0s"
+    "时长在计划值的 +0.2 秒内",
+    "第一帧为指定的黑色淡入",
+    "静音窗口 54-56 秒已确认（音乐 -60dB）",
+    "最后一帧在 89.0 秒淡出到黑色"
   ],
   "render_grammar": "documentary-montage",
   "metadata": {
@@ -326,58 +262,36 @@ Record verifications in `render_report.verification_notes`.
 }
 ```
 
-### 8. Quality Gate
+### 8. 质量门
 
-- Output file exists and plays.
-- Duration within ±1s of `brief.duration_seconds` (body + end-tag inclusive).
-- Resolution matches `target_platform` canvas.
-- LUT was applied (or a warning logged).
-- **Music is present** unless `brief.metadata.music_plan.source == "none"` with an explicit opt-out reason.
-- **End-tag MP4 was rendered and concatenated** unless `brief.metadata.end_tag_plan` is null with an explicit opt-out reason. Last frame of final MP4 must be the end-tag card in that case.
-- First and last frames verified.
-- Silence window (if any) verified in the waveform.
-- No narration unless brief-approved.
-- `render_report.warnings` lists every substitution.
-- `render_report.metadata.music_mixed = true` and `render_report.metadata.end_tag_rendered = true` (or explicit opt-out recorded).
+- 输出文件存在且可播放。
+- 时长在 `brief.duration_seconds` 的 ±1 秒内（主体 + 尾标合计）。
+- 分辨率与 `target_platform` 画布匹配。
+- LUT 已应用（或记录警告）。
+- **音乐存在**，除非 `brief.metadata.music_plan.source == "none"` 带有明确的 opt-out 原因。
+- **尾标 MP4 已渲染并拼接**，除非 `brief.metadata.end_tag_plan` 为 null 带有明确的 opt-out 原因。最终 MP4 的最后一帧必须是该情况下的尾标卡片。
+- 第一帧和最后一帧已验证。
+- 静音窗口（如有）已在波形中验证。
+- 没有未经概要批准的旁白。
+- `render_report.warnings` 列出每一次替代。
+- `render_report.metadata.music_mixed = true` 且 `render_report.metadata.end_tag_rendered = true`（或记录了明确的 opt-out）。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Letting mixed-era clips render un-graded.** The piece will look
-  like a PowerPoint slideshow of internet clips. The LUT is
-  non-negotiable.
-- **Upscaling to match the canvas instead of letterboxing.**
-  Prelinger 640x480 upscaled to 1920x1080 looks pixelated and wrong.
-  Center it with letterbox bars, or embrace the squared crop as a
-  design choice.
-- **Narration or ambient SFX added "to fill the gap".** Major
-  change, needs user approval.
-- **Per-clip color grading.** One LUT across the whole piece. Do
-  not try to balance each clip individually — it takes 10x the time
-  and makes the register LESS consistent, not more.
-- **Quiet FFmpeg downgrade.** If Remotion is blocked and you route to
-  FFmpeg without surfacing it, you've changed the approved render path.
-  Stop and surface that downgrade before rendering.
-- **Overriding edit decisions at render time.** If you find yourself
-  adjusting volumes, fades, or trims in the render call, you're
-  editing during compose. Go back to the edit stage, fix the
-  decisions, re-emit the artifact, then re-render.
-- **Skipping verification.** A render that "succeeded" but is
-  actually silent, or fades wrong, or clips the last hero frame, is
-  worse than a failure. Open the file.
+- **让混合年代的剪辑未加调色就渲染。** 作品看起来会像互联网剪辑的 PowerPoint 幻灯片。LUT 是不可协商的。
+- **通过升频而不是信箱模式来匹配画布。** Prelinger 640x480 升频到 1920x1080 看起来像素化和错误。用信箱黑条居中它，或者将方形裁切作为一种设计选择。
+- **添加旁白或环境音效"来填补空白"。** 重大变更，需要用户批准。
+- **逐剪辑调色。** 整个作品一个 LUT。不要尝试单独平衡每个剪辑 — 花费 10 倍的时间，使基调更不一致，而不是更多。
+- **悄悄降级到 FFmpeg。** 如果 Remotion 被阻止而你路由到 FFmpeg 却没有上报，你就改变了批准的渲染路径。在渲染前停止并上报该降级。
+- **在渲染时覆盖编辑决策。** 如果你发现在渲染调用中调整音量、淡入淡出或修剪，你就是在合成过程中编辑。回到剪辑阶段，修复决策，重新输出工件，然后重新渲染。
+- **跳过验证。** 一个"成功"但实际上是静音、或淡出错误、或剪掉了最后英雄帧的渲染，比失败更糟糕。打开文件。
 
-## When The Render Fails
+## 当渲染失败时
 
-If `video_compose` returns an error:
+如果 `video_compose` 返回错误：
 
-1. Check the error category per the Decision Communication Contract
-   (auth / provider / tool bug / plan quality).
-2. If it's a path error, validate every asset_id → path resolution
-   in the asset manifest. A single missing file fails the whole render.
-3. If it's a codec error, the input clips may have exotic containers
-   (Archive.org sometimes serves Matroska). Try running each input
-   through `video_trimmer` first to normalize to mp4/h264.
-4. If it's a memory or timeout error, split the render into halves
-   with `video_stitch` at the end.
-5. Surface to the user before swapping to a lower-fidelity path.
-   This pipeline is footage-led; there is no generated-stills
-   fallback.
+1. 根据决策沟通合同检查错误类别（认证/提供者/工具缺陷/计划质量）。
+2. 如果是路径错误，验证资产清单中的每个 asset_id → 路径解析。一个文件缺失就会导致整个渲染失败。
+3. 如果是编码器错误，输入剪辑可能包含不常见的容器（Archive.org 有时提供 Matroska）。先尝试通过 `video_trimmer` 运行每个输入以标准化为 mp4/h264。
+4. 如果是内存或超时错误，将渲染分成两半，最后用 `video_stitch` 合并。
+5. 在切换到低保真路径之前向用户上报。本流水线是素材主导的，没有生成静态图片的回退方案。

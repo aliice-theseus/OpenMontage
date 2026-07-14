@@ -1,65 +1,65 @@
-# Idea Director — Talking Head Pipeline
+# 创意导演 —  Talking Head 流水线
 
-## When to Use
+## 使用时机
 
-You are starting a talking-head video project. You have raw footage of a person speaking. Your job is to analyze the footage, understand what it contains, and build a brief that captures the content's essence and production goals.
+你正在启动一个 talking-head 视频项目。你拥有一个人说话时的原始素材。你的任务是分析素材，理解其内容，并构建一个捕获内容本质和制作目标的简报。
 
-Unlike the explainer pipeline (which starts from a topic), you start from existing footage. The brief documents what you're working with and what the final video should look like.
+与讲解类流水线（从主题开始）不同，你是从已有的素材开始。简报记录了你在处理什么以及最终视频应该是什么样子。
 
-## Runtime Selection (MANDATORY — present the constraint, don't silently pick)
+## 运行时选择（必须——展示约束条件，不要默默选择）
 
-Lock `render_runtime = "remotion"` (preferred — uses `TalkingHead` + `remotion_caption_burn`) or `"ffmpeg"` (for source-footage concat with no composition). **HyperFrames is NOT a valid runtime on this pipeline in Phase 1** — the TalkingHead composition and word-level caption burn have no HyperFrames parity yet.
+锁定 `render_runtime = "remotion"`（推荐——使用 `TalkingHead` + `remotion_caption_burn`）或 `"ffmpeg"`（用于仅拼接源素材，无合成）。**HyperFrames 在 Phase 1 中不是此流水线的有效运行时**——TalkingHead 合成和字级字幕烧录尚未有 HyperFrames 的对应实现。
 
-Per AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)": do NOT silently default to remotion. Tell the user: "HyperFrames is available, but talking-head depends on the Remotion TalkingHead composition, so remotion is the only viable composition choice (or ffmpeg for a raw cut) — OK to proceed?" Record a `render_runtime_selection` decision with hyperframes as a rejected option (`rejected_because: "TalkingHead + caption parity deferred on talking-head"`).
+根据 AGENT_GUIDE.md → "展示两种合成运行时（硬性规则）"：不要默默默认使用 remotion。告知用户："HyperFrames 是可用的，但 talking-head 依赖于 Remotion TalkingHead 合成，因此 remotion 是唯一可行的合成选择（或者 ffmpeg 用于原始剪辑）——是否继续？" 记录一个 `render_runtime_selection` 决策，其中 hyperframes 为被拒绝选项（`rejected_because: "TalkingHead + 字幕对等在 talking-head 上推迟"`）。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/brief.schema.json` | Artifact validation |
-| Inputs | Raw footage file path | Source material |
-| Tools | `ffprobe` (via shell) | Footage metadata extraction |
+| 模式 | `schemas/artifacts/brief.schema.json` | 产物校验 |
+| 输入 | 原始素材文件路径 | 源材料 |
+| 工具 | `ffprobe`（通过 shell） | 素材元数据提取 |
 
-## Process
+## 流程
 
-### Step 1: Inspect the Footage
+### 步骤 1: 检查素材
 
-Use ffprobe to extract metadata:
-- Duration
-- Resolution
-- Frame rate
-- Audio channels and codec
-- File size
+使用 ffprobe 提取元数据：
+- 时长
+- 分辨率
+- 帧率
+- 音频通道和编码格式
+- 文件大小
 
-This tells you what you're working with — quality, length, format.
+这告诉你要处理的内容——质量、长度、格式。
 
-### Step 2: Quick Content Assessment
+### 步骤 2: 快速内容评估
 
-Watch/scan the footage mentally (or sample frames if frame_sampler is available):
-- What is the person talking about?
-- How long is the raw footage?
-- What's the intended platform? (Ask the user if unclear)
-- Is there good audio? Background noise?
+在头脑中观看/扫描素材（或如果 frame_sampler 可用则采样帧）：
+- 这个人正在讲什么？
+- 原始素材有多长？
+- 目标平台是什么？（如果不清楚，询问用户）
+- 音频质量好吗？有背景噪音吗？
 
-### Step 3: Build the Brief
+### 步骤 3: 构建简报
 
-Create a brief artifact documenting:
-- **Title**: Descriptive title based on footage content
-- **Hook**: What makes this worth watching?
-- **Key points**: Main topics covered in the footage
-- **Tone**: Match the speaker's actual tone (casual, professional, educational)
-- **Style**: Derive the overlay/look direction from the footage, speaker persona, audience, and platform. `clean-professional` is a safe fallback, not the default answer to every talking-head brief.
-- **Target platform**: Where this will be published
-- **Target duration**: May be shorter than raw footage (trimmed)
+创建简报产物，记录：
+- **标题**：基于素材内容的描述性标题
+- **钩子**：什么让这个值得观看？
+- **关键点**：素材中涵盖的主要话题
+- **语调**：与演讲者的实际语调匹配（随意、专业、教育性）
+- **风格**：从素材、演讲者形象、观众和平台推导出叠加/视觉方向。`clean-professional` 是安全的回退选项，但不是每个 talking-head 简报的默认答案。
+- **目标平台**：将在哪里发布
+- **目标时长**：可能比原始素材短（需修剪）
 
-### Step 4: Self-Evaluate
+### 步骤 4: 自我评估
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Accuracy** | Does the brief reflect what's actually in the footage? |
-| **Completeness** | Are all required brief fields present? |
-| **Platform fit** | Is the target platform appropriate for this content? |
+| **准确性** | 简报是否反映了素材中的实际内容？ |
+| **完整性** | 是否所有必需的简报字段都存在？ |
+| **平台匹配** | 目标平台是否适合此内容？ |
 
-### Step 5: Submit
+### 步骤 5: 提交
 
-Validate the brief against the schema and persist via checkpoint.
+根据模式校验简报，并通过检查点持久化。

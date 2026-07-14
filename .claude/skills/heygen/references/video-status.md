@@ -1,17 +1,17 @@
 ---
 name: video-status
-description: Polling patterns, status types, and retrieving download URLs for HeyGen videos
+description: HeyGen 视频的轮询模式、状态类型和获取下载 URL
 ---
 
-# Video Status and Polling
+# 视频状态和轮询
 
-After generating a video, you need to poll for status until the video is complete. HeyGen processes videos asynchronously.
+生成视频后，你需要轮询状态直到视频完成。HeyGen 异步处理视频。
 
-## MCP Tool (Preferred)
+## MCP 工具（推荐）
 
-If the HeyGen MCP server is connected, use `mcp__heygen__get_video` with the `videoId` parameter. It returns status, video_url, thumbnail_url, duration, title, gif_url, captioned_video_url, and other metadata in a single call.
+如果已连接 HeyGen MCP 服务器，使用带 `videoId` 参数的 `mcp__heygen__get_video`。它一次调用返回状态、video_url、thumbnail_url、duration、title、gif_url、captioned_video_url 和其他元数据。
 
-## Checking Video Status (Direct API)
+## 检查视频状态（直接 API）
 
 ### curl
 
@@ -79,35 +79,36 @@ def get_video_status(video_id: str) -> dict:
     return data["data"]
 ```
 
-## Video Status Types
+## 视频状态类型
 
-| Status | Description |
+| 状态 | 描述 |
 |--------|-------------|
-| `pending` | Video is queued for processing |
-| `processing` | Video is being generated |
-| `completed` | Video is ready for download |
-| `failed` | Video generation failed |
+| `pending` | 视频已排队等待处理 |
+| `processing` | 视频正在生成中 |
+| `completed` | 视频已就绪，可下载 |
+| `failed` | 视频生成失败 |
 
-## Expected Generation Times
+## 预计生成时间
 
-Video generation typically takes **5-15 minutes**, but can exceed 20 minutes during peak load or for longer scripts.
+视频生成通常需要 **5-15 分钟**，但在高峰期或脚本较长时可能超过 20 分钟。
 
-| Factor | Impact |
+| 因素 | 影响 |
 |--------|--------|
-| Script length | Longer scripts = significantly longer processing |
-| Resolution | 1080p takes longer than 720p |
-| Avatar complexity | Some avatars render faster |
-| Queue load | Peak hours may cause 15-20+ minute waits |
-| Multiple scenes | Each scene adds processing time |
+| 脚本长度 | 脚本越长 = 处理时间显著增加 |
+| 分辨率 | 1080p 比 720p 耗时更长 |
+| 头像复杂度 | 某些头像渲染更快 |
+| 队列负载 | 高峰时段可能导致 15-20+ 分钟的等待 |
+| 多个场景 | 每个场景增加处理时间 |
 
-**Recommendations**:
-- Set timeout to **15-20 minutes** (900,000-1,200,000 ms) for safety
-- For scripts > 2 minutes of speech, expect 15+ minutes
-- Consider async patterns (save video_id, check later) for long videos
+**建议：**
+- 安全起见，设置 **15-20 分钟**（900,000-1,200,000 毫秒）的超时
+- 对于超过 2 分钟语音的脚本，预计 15+ 分钟
+- 对于长视频，考虑异步模式（保存 video_id，稍后检查）
+- 对于生产系统，webhook 比轮询更高效
 
-## Response Format
+## 响应格式
 
-### Completed Video
+### 完成的视频
 
 ```json
 {
@@ -130,7 +131,7 @@ Video generation typically takes **5-15 minutes**, but can exceed 20 minutes dur
 }
 ```
 
-### Failed Video
+### 失败的视频
 
 ```json
 {
@@ -144,15 +145,15 @@ Video generation typically takes **5-15 minutes**, but can exceed 20 minutes dur
 }
 ```
 
-## Polling Implementation
+## 轮询实现
 
-### Basic Polling
+### 基本轮询
 
 ```typescript
 async function waitForVideo(
   videoId: string,
-  maxWaitMs = 600000, // 10 minutes
-  pollIntervalMs = 5000 // 5 seconds
+  maxWaitMs = 600000, // 10 分钟
+  pollIntervalMs = 5000 // 5 秒
 ): Promise<string> {
   const startTime = Date.now();
 
@@ -163,7 +164,7 @@ async function waitForVideo(
       case "completed":
         return status.video_url!;
       case "failed":
-        throw new Error(status.failure_message || "Video generation failed");
+        throw new Error(status.failure_message || "视频生成失败");
       case "pending":
       case "processing":
         await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
@@ -171,11 +172,11 @@ async function waitForVideo(
     }
   }
 
-  throw new Error("Video generation timed out");
+  throw new Error("视频生成超时");
 }
 ```
 
-### Polling with Progress Callback
+### 带进度回调的轮询
 
 ```typescript
 type ProgressCallback = (status: string, elapsed: number) => void;
@@ -198,25 +199,25 @@ async function waitForVideoWithProgress(
       case "completed":
         return status.video_url!;
       case "failed":
-        throw new Error(status.failure_message || "Video generation failed");
+        throw new Error(status.failure_message || "视频生成失败");
       default:
         await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
     }
   }
 
-  throw new Error("Video generation timed out");
+  throw new Error("视频生成超时");
 }
 
-// Usage
+// 使用示例
 const videoUrl = await waitForVideoWithProgress(
   videoId,
   (status, elapsed) => {
-    console.log(`Status: ${status}, Elapsed: ${Math.round(elapsed / 1000)}s`);
+    console.log(`状态: ${status}, 已耗时: ${Math.round(elapsed / 1000)}s`);
   }
 );
 ```
 
-### Python Polling
+### Python 轮询
 
 ```python
 import time
@@ -241,25 +242,25 @@ def wait_for_video(
         if status == "completed":
             return status_data["video_url"]
         elif status == "failed":
-            raise Exception(status_data.get("failure_message", "Video generation failed"))
+            raise Exception(status_data.get("failure_message", "视频生成失败"))
 
         time.sleep(poll_interval)
 
-    raise Exception("Video generation timed out")
+    raise Exception("视频生成超时")
 
 
-# Usage
+# 使用示例
 def progress_callback(status: str, elapsed: int):
-    print(f"Status: {status}, Elapsed: {elapsed}s")
+    print(f"状态: {status}, 已耗时: {elapsed}s")
 
 video_url = wait_for_video(video_id, on_progress=progress_callback)
 ```
 
-## Downloading the Video
+## 下载视频
 
-Once the video is complete, download it. **Important**: The video URL may not be immediately available after status shows "completed". Use retry logic with backoff.
+视频完成后，下载它。**重要提示：** 视频 URL 可能在状态显示为 "completed" 后不会立即可用。使用带退避的重试逻辑。
 
-### TypeScript (with retry)
+### TypeScript（带重试）
 
 ```typescript
 import fs from "fs";
@@ -283,21 +284,21 @@ async function downloadVideoWithRetry(
 
       const arrayBuffer = await response.arrayBuffer();
       fs.writeFileSync(path.resolve(outputPath), Buffer.from(arrayBuffer));
-      console.log(`Video downloaded to ${outputPath}`);
+      console.log(`视频已下载到 ${outputPath}`);
       return;
     } catch (error) {
       lastError = error as Error;
-      const delay = initialDelayMs * Math.pow(2, attempt); // Exponential backoff
-      console.log(`Download attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+      const delay = initialDelayMs * Math.pow(2, attempt); // 指数退避
+      console.log(`下载尝试 ${attempt + 1} 失败，${delay}ms 后重试...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 
-  throw new Error(`Failed to download after ${maxRetries} attempts: ${lastError?.message}`);
+  throw new Error(`经过 ${maxRetries} 次尝试后下载失败: ${lastError?.message}`);
 }
 ```
 
-### Python (with retry)
+### Python（带重试）
 
 ```python
 import requests
@@ -320,37 +321,37 @@ def download_video_with_retry(
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
 
-            print(f"Video downloaded to {output_path}")
+            print(f"视频已下载到 {output_path}")
             return
         except Exception as e:
             last_error = e
-            delay = initial_delay * (2 ** attempt)  # Exponential backoff
-            print(f"Download attempt {attempt + 1} failed, retrying in {delay}s...")
+            delay = initial_delay * (2 ** attempt)  # 指数退避
+            print(f"下载尝试 {attempt + 1} 失败，{delay}s 后重试...")
             time.sleep(delay)
 
-    raise Exception(f"Failed to download after {max_retries} attempts: {last_error}")
+    raise Exception(f"经过 {max_retries} 次尝试后下载失败: {last_error}")
 ```
 
-### Simple Download (no retry)
+### 简单下载（无重试）
 
-For quick scripts where you'll retry manually:
+用于快捷脚本，你将手动重试：
 
 ```typescript
 async function downloadVideo(videoUrl: string, outputPath = "./output/video.mp4") {
   const response = await fetch(videoUrl);
   if (!response.ok) {
-    throw new Error(`Failed to download: ${response.status}`);
+    throw new Error(`下载失败: ${response.status}`);
   }
   const arrayBuffer = await response.arrayBuffer();
   fs.writeFileSync(path.resolve(outputPath), Buffer.from(arrayBuffer));
 }
 ```
 
-## Complete Workflow Example
+## 完整工作流示例
 
 ```typescript
 async function generateAndDownloadVideo(config: VideoConfig): Promise<string> {
-  // 1. Generate video
+  // 1. 生成视频
   const generateResponse = await fetch(
     "https://api.heygen.com/v2/video/generate",
     {
@@ -365,17 +366,17 @@ async function generateAndDownloadVideo(config: VideoConfig): Promise<string> {
 
   const { data: generateData } = await generateResponse.json();
   const videoId = generateData.video_id;
-  console.log(`Video ID: ${videoId}`);
+  console.log(`视频 ID: ${videoId}`);
 
-  // 2. Poll for completion
+  // 2. 轮询完成状态
   const videoUrl = await waitForVideoWithProgress(
     videoId,
     (status, elapsed) => {
-      console.log(`[${Math.round(elapsed / 1000)}s] Status: ${status}`);
+      console.log(`[${Math.round(elapsed / 1000)}s] 状态: ${status}`);
     }
   );
 
-  // 3. Download
+  // 3. 下载
   const outputPath = `./output/${videoId}.mp4`;
   await downloadVideo(videoUrl, outputPath);
 
@@ -383,11 +384,11 @@ async function generateAndDownloadVideo(config: VideoConfig): Promise<string> {
 }
 ```
 
-## Resumable Status Checking
+## 可恢复的状态检查
 
-For long-running generations, save the video_id and check status later rather than keeping a process waiting.
+对于长时间运行的生成任务，保存 video_id 稍后检查状态，而不是让进程一直等待。
 
-### Save State After Generation
+### 生成后保存状态
 
 ```typescript
 interface PendingVideo {
@@ -409,21 +410,21 @@ async function startVideoGeneration(config: VideoGenerateRequest): Promise<Pendi
     voiceId: config.video_inputs[0].voice.voice_id!,
   };
 
-  // Save to file for later retrieval
+  // 保存到文件供稍后检索
   fs.writeFileSync("pending-video.json", JSON.stringify(pending, null, 2));
-  console.log(`Video generation started. ID: ${videoId}`);
-  console.log("Check status later with: checkVideoStatus()");
+  console.log(`视频生成已启动。ID: ${videoId}`);
+  console.log("稍后使用 checkVideoStatus() 检查状态");
 
   return pending;
 }
 ```
 
-### Check Status Later
+### 稍后检查状态
 
 ```typescript
 async function checkVideoStatus(): Promise<void> {
   if (!fs.existsSync("pending-video.json")) {
-    console.log("No pending video found");
+    console.log("没有找到待处理视频");
     return;
   }
 
@@ -432,17 +433,18 @@ async function checkVideoStatus(): Promise<void> {
   );
 
   const elapsed = Date.now() - new Date(pending.createdAt).getTime();
-  console.log(`Checking video ${pending.videoId} (started ${Math.round(elapsed / 60000)} min ago)...`);
+  console.log(`检查视频 ${pending.videoId}（${
+    Math.round(elapsed / 60000)} 分钟前启动）...`);
 
   const status = await getVideoStatus(pending.videoId);
 
   switch (status.status) {
     case "completed":
-      console.log(`Video ready: ${status.video_url}`);
-      console.log(`Duration: ${status.duration}s`);
-      // Clean up pending file
+      console.log(`视频就绪: ${status.video_url}`);
+      console.log(`时长: ${status.duration}s`);
+      // 清理待处理文件
       fs.unlinkSync("pending-video.json");
-      // Save result
+      // 保存结果
       fs.writeFileSync("video-result.json", JSON.stringify({
         ...pending,
         videoUrl: status.video_url,
@@ -454,49 +456,49 @@ async function checkVideoStatus(): Promise<void> {
       }, null, 2));
       break;
     case "failed":
-      console.error(`Video failed: ${status.failure_message}`);
+      console.error(`视频失败: ${status.failure_message}`);
       fs.unlinkSync("pending-video.json");
       break;
     default:
-      console.log(`Status: ${status.status} - check again in a few minutes`);
+      console.log(`状态: ${status.status} - 几分钟后再次检查`);
   }
 }
 ```
 
-### CLI-Friendly Pattern
+### CLI 友好模式
 
 ```typescript
-// generate-video.ts - Start generation and exit
+// generate-video.ts - 启动生成并退出
 async function main() {
   const pending = await startVideoGeneration(config);
-  console.log(`\nVideo ID saved. Run 'npx tsx check-status.ts' to check progress.`);
-  process.exit(0); // Exit immediately, don't wait
+  console.log(`\n视频 ID 已保存。运行 'npx tsx check-status.ts' 检查进度。`);
+  process.exit(0); // 立即退出，不等待
 }
 
-// check-status.ts - Check and optionally wait
+// check-status.ts - 检查并可选择等待
 async function main() {
   const args = process.argv.slice(2);
   const shouldWait = args.includes("--wait");
 
   if (shouldWait) {
-    // Poll until complete (with 20 min timeout)
+    // 轮询直到完成（20 分钟超时）
     const result = await waitForVideo(pending.videoId, apiKey, onProgress, 1200000);
-    console.log(`Done: ${result.video_url}`);
+    console.log(`完成: ${result.video_url}`);
   } else {
-    // Just check once and report
+    // 只检查一次并报告
     await checkVideoStatus();
   }
 }
 ```
 
-## Alternative: Using Webhooks
+## 替代方案：使用 Webhooks
 
-Instead of polling, you can use webhooks to receive notifications when videos complete. See [webhooks.md](webhooks.md) for details. Webhooks are ideal for production systems where you don't want to maintain polling connections.
+除了轮询，你可以使用 webhook 在视频完成时接收通知。详见 [webhooks.md](webhooks.md)。对于不希望保持轮询连接的生产系统，Webhook 是理想选择。
 
-## Best Practices
+## 最佳实践
 
-1. **Use exponential backoff** - Increase poll intervals for long-running jobs
-2. **Set reasonable timeouts** - Most videos complete within 10 minutes
-3. **Handle failures gracefully** - Check error messages for actionable feedback
-4. **Consider webhooks** - For production systems, webhooks are more efficient than polling
-5. **Cache video URLs** - Downloaded video URLs are valid for a limited time
+1. **使用指数退避** - 对长时间运行的任务增加轮询间隔
+2. **设置合理的超时时间** - 大多数视频在 10 分钟内完成
+3. **优雅处理失败** - 检查错误消息以获取可操作反馈
+4. **考虑 webhook** - 对于生产系统，webhook 比轮询更高效
+5. **缓存视频 URL** - 下载的视频 URL 在有限时间内有效

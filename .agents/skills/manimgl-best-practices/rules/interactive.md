@@ -1,48 +1,48 @@
-# ManimGL Interactive Development
+# ManimGL 交互式开发
 
-ManimGL's killer feature is interactive development mode, allowing you to iterate rapidly without re-rendering the entire scene.
+ManimGL 的杀手级功能是交互式开发模式，允许您快速迭代而无需重新渲染整个场景。
 
-## Starting Interactive Mode
+## 启动交互式模式
 
-Use the `-se` (skip and embed) flag with a line number:
+使用 `-se`（跳过并嵌入）标志后跟行号：
 
 ```bash
-# Enter interactive mode at line 20
+# 在第 20 行进入交互式模式
 manimgl scene.py MyScene -se 20
 
-# Enter at the beginning
+# 从开头进入
 manimgl scene.py MyScene -se 1
 ```
 
-The scene runs up to that line, then drops into an IPython shell.
+场景运行到该行，然后进入 IPython shell。
 
 ## checkpoint_paste()
 
-The core workflow function. Copy code to your clipboard, then:
+核心工作流函数。将代码复制到剪贴板，然后：
 
 ```python
-# Run code from clipboard with full animations
+# 从剪贴板运行代码，带完整动画
 checkpoint_paste()
 
-# Run instantly without animations (for quick iteration)
+# 立即运行而不带动画（用于快速迭代）
 checkpoint_paste(skip=True)
 
-# Record animations while running
+# 运行时录制动画
 checkpoint_paste(record=True)
 ```
 
-### Typical Workflow
+### 典型工作流
 
-1. Write your scene with placeholder line
-2. Run with `-se` at that line
-3. Copy animation code to clipboard
-4. Call `checkpoint_paste()` to test
-5. Iterate until satisfied
-6. Move code into the actual file
+1. 编写带占位行的场景
+2. 使用 `-se` 在该行运行
+3. 将动画代码复制到剪贴板
+4. 调用 `checkpoint_paste()` 测试
+5. 迭代直到满意
+6. 将代码移入实际文件
 
 ## self.embed()
 
-Drop into IPython shell programmatically:
+通过编程方式进入 IPython shell：
 
 ```python
 class MyScene(InteractiveScene):
@@ -50,110 +50,110 @@ class MyScene(InteractiveScene):
         circle = Circle()
         self.play(ShowCreation(circle))
 
-        self.embed()  # Pause here, enter shell
+        self.embed()  # 在此暂停，进入 shell
 
-        # Code below runs after you exit the shell
+        # 退出 shell 后执行下面的代码
         self.play(FadeOut(circle))
 ```
 
-In the shell, you have full access to:
-- `self` - the scene
-- All mobjects in scope
-- All ManimGL functions
+在 shell 中，您可以完全访问：
+- `self`——场景对象
+- 作用域中的所有 mobject
+- 所有 ManimGL 函数
 
-## Interactive Shell Commands
+## 交互式 Shell 命令
 
-Once in the shell:
+一旦进入 shell：
 
 ```python
-# Inspect current mobjects
+# 检查当前 mobject
 self.mobjects
 
-# Add something new
+# 添加新对象
 square = Square()
 self.play(ShowCreation(square))
 
-# Clear and try again
+# 清除并重试
 self.clear()
 
-# Exit shell and continue scene
+# 退出 shell 并继续场景
 exit()
-# or Ctrl+D
+# 或 Ctrl+D
 ```
 
-## Quick Iteration Pattern
+## 快速迭代模式
 
 ```python
 class DevelopScene(InteractiveScene):
     def construct(self):
-        # Setup that doesn't change often
+        # 不常更改的设置
         axes = Axes()
         self.add(axes)
 
-        # Breakpoint for development
+        # 开发断点
         self.embed()
 
-        # Code you're iterating on goes here
-        # (Or use checkpoint_paste() in the shell)
+        # 正在迭代的代码放在这里
+        # （或在 shell 中使用 checkpoint_paste()）
 ```
 
-## Recording Mode
+## 录制模式
 
-When you want to capture what you're doing interactively:
+当您想捕获交互式操作时：
 
 ```python
-# Start recording
+# 开始录制
 checkpoint_paste(record=True)
 
-# All animations are now recorded
-# When done, video is saved
+# 所有动画现在被录制
+# 完成后，视频被保存
 ```
 
-## Useful Shell Variables
+## 有用的 Shell 变量
 
 ```python
-# Current frame (camera)
+# 当前帧（相机）
 self.frame
 
-# All mobjects
+# 所有 mobject
 self.mobjects
 
-# Specific mobjects by type
+# 按类型筛选特定 mobject
 [m for m in self.mobjects if isinstance(m, Circle)]
 
-# Frame center
+# 帧中心
 self.frame.get_center()
 ```
 
-## Debugging Tips
+## 调试技巧
 
 ```python
-# Print mobject info
+# 打印 mobject 信息
 print(circle.get_center())
 print(circle.get_height())
 print(circle.get_color())
 
-# Highlight a mobject
+# 高亮 mobject
 circle.set_color(YELLOW)
 self.wait(0.1)
 
-# Check what's in the scene
+# 检查场景中的内容
 print(len(self.mobjects))
 ```
 
-## Exit and Continue
+## 退出并继续
 
 ```python
-# After interactive session, continue scene
-exit()  # or Ctrl+D
+# 交互式会话后，继续场景
+exit()  # 或 Ctrl+D
 
-# The scene continues from where it left off
+# 场景从离开处继续
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use `-se` during development** - Much faster than re-rendering
-2. **Keep setup code before the embed** - Reuse state
-3. **Use `checkpoint_paste(skip=True)`** - For quick tests
-4. **Use `checkpoint_paste(record=True)`** - When you've got it right
-5. **Organize code into functions** - Easier to paste and test
+1. **开发时使用 `-se`**——比重渲染快得多
+2. **将设置代码放在 embed 之前**——复用状态
+3. **使用 `checkpoint_paste(skip=True)`**——用于快速测试
+4. **使用 `checkpoint_paste(record=True)`**——当您做对了时
+5. **将代码组织为函数**——更容易粘贴和测试

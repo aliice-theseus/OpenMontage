@@ -1,236 +1,188 @@
-# Scene Director - Documentary Montage Pipeline
+# 场景导演 - 纪录片蒙太奇流水线
 
-## When To Use
+## 使用时机
 
-The brief exists. You now have to turn a thematic question into a
-concrete list of SLOTS the retrieval layer can fill. Each slot is an
-intention ("a silhouette at a doorway at dusk") plus the queries that
-will find it in the real world (Pexels/Archive.org/NASA/Wikimedia/Unsplash).
+概要已经存在。你现在必须将一个主题性问题转化为一个具体的**槽位**列表，供检索层填充。每个槽位是一个意图（"黄昏时门口的剪影"）加上能在现实世界中找到它的查询（Pexels/Archive.org/NASA/Wikimedia/Unsplash）。
 
-This is the most creative stage in the pipeline. Retrieval is only as
-good as the slot descriptions you write.
+这是流水线中最具创意的阶段。检索的质量取决于你写的槽位描述。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifact | `state.artifacts["idea"]["brief"]` | Thematic question, tone, duration, shape |
-| Reference | `skills/pipelines/documentary-montage/executive-producer.md` | Cross-stage rules |
-| Tools | none yet — this stage is pure planning | — |
+| 模式 | `schemas/artifacts/scene_plan.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["idea"]["brief"]` | 主题性问题、基调、时长、结构 |
+| 参考 | `skills/pipelines/documentary-montage/executive-producer.md` | 跨阶段规则 |
+| 工具 | 暂时没有 — 此阶段纯属规划 | — |
 
-## Mental Model
+## 思维模型
 
-The scene director's job is NOT "pick clips". It is "describe what the
-clips need to be plainly enough that CLIP can find them".
+场景导演的工作**不是**"挑选剪辑片段"。而是"足够清晰地描述剪辑片段需要是什么样子，让 CLIP 能够找到它们"。
 
-Think like a location scout, not a stock librarian.
+像外景勘察员一样思考，而不是素材库管理员。
 
-- A stock librarian says: *"rain in the city montage, 15 clips"*.
-- A location scout says: *"rain streaking sideways across a bus
-  window at blue hour, passengers' faces in soft focus, traffic
-  lights bleeding red and green through the glass"*.
+- 素材库管理员说：*"城市蒙太奇中的雨，15 个剪辑片段"*。
+- 外景勘察员说：*"蓝色时刻，雨斜着划过公交车窗，乘客面部柔和虚化，交通灯透过玻璃渗出血红和翠绿的光"*。
 
-The second one is what CLIP can actually rank. The first one is a
-category label CLIP will match weakly and indiscriminately.
+第二种是 CLIP 真正能排序的。第一种是一个分类标签，CLIP 会弱匹配且不加区分。
 
-## Process
+## 流程
 
-### 1. Turn The Shape Into A Beat Count
+### 1. 将结构转化为节拍数量
 
-Read the brief's `duration_seconds` and `shape`. Derive the number of
-slots. Use these defaults unless the tone says otherwise:
+读取概要的 `duration_seconds` 和 `shape`。推导出槽位数量。除非基调另有要求，使用以下默认值：
 
-| Tone | Average hold | Slots per 60s |
+| 基调 | 平均停留 | 每 60 秒槽位数 |
 |------|--------------|---------------|
-| elegiac | 4.0s | ~15 |
-| reverent | 3.5s | ~17 |
-| dreamlike | 3.0s | ~20 |
-| wry | 2.0s | ~30 |
-| urgent | 1.2s | ~50 |
+| 挽歌式 | 4.0 秒 | ~15 |
+| 敬畏式 | 3.5 秒 | ~17 |
+| 梦幻式 | 3.0 秒 | ~20 |
+| 诙谐式 | 2.0 秒 | ~30 |
+| 紧迫式 | 1.2 秒 | ~50 |
 
-Then plan the arc according to shape:
+然后根据结构规划弧线：
 
-- **list**: N uniform slots, no inflection.
-- **before/after**: N/2 before slots + 1 pivot slot + N/2 after slots.
-- **three-act**: setup (30%) → turn (40%) → release (30%).
-- **single-image expansion**: 1 anchor image + N variations around it.
+- **列表式**：N 个均匀槽位，无转折。
+- **前后对比式**：N/2 个前置槽位 + 1 个枢轴槽位 + N/2 个后置槽位。
+- **三幕式**：建立（30%）→ 转折（40%）→ 释放（30%）。
+- **单图扩展式**：1 个锚点图像 + N 个围绕它的变体。
 
-Write the beat count down before writing any slot.
+在写任何槽位之前先写下班数。
 
-### 2. Decompose The Thematic Question Into Concrete Beats
+### 2. 将主题性问题分解为具体的节拍
 
-Take the ONE thematic question from the brief and answer it in
-sensory language. Not themes — textures.
+从概要中提取**一个**主题性问题，用感官语言回答。不是主题 — 而是质感。
 
-**Example — "What does rain show you about a city?"**
+**示例 — "雨水向你展示了一座城市的什么？"**
 
-Bad decomposition (abstract, unsearchable):
+不好的分解（抽象，不可搜索）：
 
-- "establishing the mood of the city"
-- "the feeling of being caught in weather"
-- "the universality of rain"
+- "建立城市的情绪"
+- "被困在天气中的感觉"
+- "雨的普遍性"
 
-Good decomposition (concrete, searchable):
+好的分解（具体，可搜索）：
 
-- a single raindrop hitting dry asphalt in slow motion
-- an umbrella opening in a doorway, a hand visible
-- neon signs reflected upside-down in a puddle
-- rain streaking across a bus window, passengers soft
-- a taxi roof light pushing through heavy rain, long lens
-- a storm drain swallowing leaves and water, overhead
-- a street vendor pulling plastic over a produce cart
-- steam rising off wet cobblestones under tungsten streetlight
-- a child's rubber boot stamping into a puddle
-- a lit apartment window seen through sheets of rain
+- 单个雨滴慢动作撞击干燥的沥青
+- 门口打开的雨伞，一只手可见
+- 霓虹灯招牌倒映在水坑中，上下颠倒
+- 雨水划过公交车窗，乘客柔和虚化
+- 出租车顶灯穿透大雨，长焦镜头
+- 排水沟吞没落叶和水，俯拍
+- 街头小贩在水果摊上拉塑料布
+- 钨丝路灯下湿漉漉的鹅卵石上升起的蒸汽
+- 孩子的橡胶靴踩进水坑
+- 透过雨幕看到的亮着灯的公寓窗户
 
-Each of those is a SHOT. Each is CLIP-rankable. Each is also *a
-different angle on the same idea*, which is what gives a list-shaped
-montage its weight.
+以上每一个都是一个**镜头**。每一个都是 CLIP 可排序的。每一个也是**同一个想法的不同角度**，这正是让列表式蒙太奇具有分量的原因。
 
-### 3. Write The Slot Description
+### 3. 写槽位描述
 
-Every slot carries a `description` field. This is the text CLIP will
-embed and rank against. Write it like a good stock-footage tag string
-— nouns and adjectives, no verbs of intention, no emotion words.
+每个槽位携带一个 `description` 字段。这是 CLIP 将嵌入并排序的文本。写得像好的素材片段标签字符串 — 名词和形容词，没有意图动词，没有情感词汇。
 
-**Template:**
+**模板：**
 
 ```
-<subject>, <action/pose>, <environment>, <lighting>, <era/texture hint>
+<主体>, <动作/姿态>, <环境>, <光线>, <年代/质感提示>
 ```
 
-**Good:**
+**好的：**
 
-- `"a single raindrop hitting dry asphalt, close up, slow motion,
-  warm streetlamp glow"`
-- `"empty city sidewalk at night after rain, reflected neon,
-  handheld, 1970s grain"`
-- `"an umbrella opening in a doorway, hand visible, diffused
-  afternoon light, shallow focus"`
+- `"单个雨滴撞击干燥沥青，特写，慢动作，温暖的路灯辉光"`
+- `"雨后夜晚空无一人的城市人行道，倒映的霓虹灯，手持拍摄，1970 年代颗粒感"`
+- `"门口打开的雨伞，手可见，散射的午后光线，浅景深"`
 
-**Bad:**
+**不好的：**
 
-- `"the feeling of arriving home"` — emotion word, no subject
-- `"a warm welcoming moment"` — adjective soup, no image
-- `"someone going through a door in a symbolic way"` — intent, no shot
+- `"回家的感觉"` — 情感词，没有主体
+- `"一个温暖欢迎的时刻"` — 形容词堆砌，没有图像
+- `"有人以象征性方式穿过一扇门"` — 意图，没有镜头
 
-Rule of thumb: if you can't imagine a specific photograph from the
-description, CLIP can't either.
+经验法则：如果你无法从描述中想象出一张具体的照片，CLIP 也不能。
 
-### 4. Write 2-3 Queries Per Slot
+### 4. 每个槽位写 2-3 个查询
 
-The slot description is what CLIP ranks against. The queries are what
-the `corpus_builder` uses to populate the candidate pool. These are
-different jobs, so write them differently.
+槽位描述是 CLIP 排序的依据。查询是 `corpus_builder` 用来填充候选池的。这是不同的工作，所以用不同的方式写。
 
-Give each slot a `queries` array with 2-3 entries:
+给每个槽位一个包含 2-3 条目的 `queries` 数组：
 
-1. **Literal query** — the most direct stock-search phrase. This is
-   what a Pexels user would type. `"raindrop on asphalt slow motion"`.
-2. **Lateral query** — the same idea from a different angle or scale.
-   `"wet pavement close up"`.
-3. **Association query** (optional, for hero slots) — an adjacent
-   concept that might surface texture clips the literal query misses.
-   `"first rain city street"`.
+1. **字面查询** — 最直接的素材搜索短语。Pexels 用户会输入的内容。`"raindrop on asphalt slow motion"`。
+2. **侧面查询** — 从不同角度或尺度的同一个想法。`"wet pavement close up"`。
+3. **联想查询**（可选，用于英雄槽位）— 一个相邻的概念，可能发现字面查询遗漏的质感剪辑。`"first rain city street"`。
 
-Short queries beat long queries for stock search engines. 2-5 words
-each. No filler words.
+对于素材搜索引擎来说，短查询优于长查询。每个 2-5 个词。没有填充词。
 
-### 5. Target Sources Per Slot (Era-Aware)
+### 5. 按槽位定位来源（年代感知）
 
-Read `brief.era_mix`. Assign each slot one or more `preferred_sources`
-based on what footage lives where:
+读取 `brief.era_mix`。根据素材所在位置为每个槽位分配一个或多个 `preferred_sources`：
 
-| Source | Strengths | Use when |
+| 来源 | 优势 | 使用时机 |
 |--------|-----------|----------|
-| `pexels` | Modern HD footage, clean shots, people, cities, nature | Default for modern/any era |
-| `pixabay_video` | Large community library, nature, people, technology, lifestyle | Gap-fills when Pexels misses; broad general footage |
-| `coverr` | Curated cinematic B-roll, nature, urban, abstract backgrounds | High-quality establishing shots, mood-setters, modern lifestyle |
-| `mixkit` | Curated HD/4K by Envato, nature, business, technology | Premium-feel B-roll, clean nature footage, no attribution needed |
-| `archive_org` | Prelinger home movies, mid-century educational film, 1940s-1980s texture | Vintage, wry, dreamlike, anything nostalgic |
-| `nara` | U.S. National Archives — WWII, Cold War, Apollo, civil rights, presidential | Historical American documentary, military, government, space race |
-| `loc` | Library of Congress — early cinema, newsreels, cultural recordings | Pre-1928 public domain footage, American history, folk traditions |
-| `pond5_pd` | Pond5 Public Domain — WWI/WWII, early cinema, historical speeches | Archival/vintage footage, Méliès, Edison, newsreels |
-| `videvo` | 90K+ free clips, nature, aerial, city, abstract, time-lapses | Large free library, complements Pexels with different contributors |
-| `nasa` | Earth-from-orbit, astronomy, flight, scale imagery | Reverent, anything about scale, space, planet, flight |
-| `esa` | European space missions, Hubble/Webb imagery, Earth observation | European space content, complements NASA for non-U.S. missions |
-| `jaxa` | Japanese space missions, Hayabusa, ISS Kibo module, H-IIA rockets | Asian space content, unique angle on space exploration |
-| `noaa` | Deep-sea ROV footage, marine life, coral reefs, weather, hurricanes | Ocean/underwater, unique deep-sea content, weather phenomena |
-| `dareful` | Boutique 4K nature — mountains, forests, waterfalls, time-lapses | High-quality nature B-roll, consistent visual style, aerial shots |
-| `wikimedia` | Commons photos and CC video, civic/documentary/public-event coverage | Public spaces, landmarks, protests, city texture, educational footage |
-| `unsplash` | Polished editorial stills, lifestyle, product-adjacent photography | Modern still-image support shots when motion footage is thin |
+| `pexels` | 现代高清素材、干净的镜头、人物、城市、自然 | 现代/任何年代的默认选择 |
+| `pixabay_video` | 大型社区库、自然、人物、技术、生活方式 | Pexels 缺失时的补充；广泛的通用素材 |
+| `coverr` | 精选电影感 B-roll、自然、城市、抽象背景 | 高质量定场镜头、情绪营造、现代生活方式 |
+| `mixkit` | Envato 精选高清/4K 素材、自然、商业、技术 | 高级感 B-roll、干净的自然素材、无需署名 |
+| `archive_org` | Prelinger 家庭影片、20 世纪中期教育电影、1940s-1980s 质感 | 复古、诙谐、梦幻、任何怀旧内容 |
+| `nara` | 美国国家档案馆 — 二战、冷战、阿波罗、民权、总统 | 美国历史纪录片、军事、政府、太空竞赛 |
+| `loc` | 美国国会图书馆 — 早期电影、新闻短片、文化录音 | 1928 年前公有领域素材、美国历史、民间传统 |
+| `pond5_pd` | Pond5 公有领域 — 一战/二战、早期电影、历史演讲 | 档案/复古素材、梅里爱、爱迪生、新闻短片 |
+| `videvo` | 9 万+ 免费剪辑、自然、航拍、城市、抽象、延时摄影 | 大型免费库，以不同贡献者补充 Pexels |
+| `nasa` | 地球轨道视图、天文学、飞行、宏大尺度影像 | 敬畏式、任何关于尺度、太空、星球、飞行的内容 |
+| `esa` | 欧洲太空任务、哈勃/韦伯望远镜影像、地球观测 | 欧洲太空内容，为非美国任务补充 NASA |
+| `jaxa` | 日本太空任务、隼鸟号、ISS 希望号实验舱、H-IIA 火箭 | 亚洲太空内容，太空探索的独特视角 |
+| `noaa` | 深海 ROV 素材、海洋生物、珊瑚礁、天气、飓风 | 海洋/水下、独特的深海内容、天气现象 |
+| `dareful` | 精品 4K 自然 — 山脉、森林、瀑布、延时摄影 | 高质量自然 B-roll、一致的视觉风格、航拍镜头 |
+| `wikimedia` | 共享资源的照片和 CC 视频、公民/纪录片/公共事件报道 | 公共空间、地标、抗议、城市质感、教育素材 |
+| `unsplash` | 精修社论风格照片、生活方式、产品相关摄影 | 当运动素材不足时的现代静态支撑镜头 |
 
-If `era_mix = "vintage"`, bias slots toward `archive_org` and write
-queries in period-appropriate vocabulary ("commuter", "housewife",
-"suburb" not "influencer", "wfh", "coworking").
+如果 `era_mix = "vintage"`，将槽位偏向 `archive_org`，并使用符合时代特征的词汇编写查询（"通勤者"、"家庭主妇"、"郊区"而不是"网红"、"在家办公"、"共享办公"）。
 
-If `era_mix = "any"`, mix sources per slot — the scene director
-decides which slot gets which source based on the beat's meaning.
+如果 `era_mix = "any"`，按槽位混合来源 — 场景导演根据节拍的含义决定哪个槽位使用哪个来源。
 
-#### Children's / Fairy-Tale Content
+#### 儿童/童话内容
 
-When the brief's `tone` or `target_audience` indicates children's
-content (fairy tale, bedtime story, kids' explainer, animated story),
-**switch the visual strategy from real footage to AI-generated fantasy
-clips on Pixabay**.
+当概要的 `tone` 或 `target_audience` 指示为儿童内容（童话、睡前故事、儿童解说片、动画故事）时，**将视觉策略从真实素材切换到 Pixabay 上的 AI 生成幻想剪辑**。
 
-Pixabay's community library contains thousands of AI-generated fantasy
-animations (glowing forests, enchanted landscapes, magical creatures)
-that dramatically outperform real footage for children's engagement.
+Pixabay 的社区库包含数千个 AI 生成的幻想动画（发光森林、魔法景观、神奇生物），在儿童参与度上显著优于真实素材。
 
-**Query rewriting rules for children's content:**
+**儿童内容的查询重写规则：**
 
-| Slot intent | Real-footage query | Fantasy rewrite |
+| 槽位意图 | 真实素材查询 | 幻想重写 |
 |-------------|-------------------|-----------------|
-| Garden / nature | `garden flowers morning` | `enchanted fairy tale garden glowing magical` |
-| Insects / creatures | `caterpillar leaf close up` | `fairy tale caterpillar magical forest glowing` |
-| Transformation / cocoon | `chrysalis butterfly cocoon` | `magical chrysalis enchanted tree glowing` |
-| Butterfly / flight | `butterfly flying sky` | `fantasy butterfly glowing magical wings` |
-| Sunset / landscape | `sunset landscape golden` | `enchanted fantasy landscape magical sunset` |
-| Rain / weather | `rain leaves gentle` | `fairy tale rain magical forest enchanted` |
-| Night sky / stars | `milky way timelapse` | `fantasy night sky magical stars enchanted` |
-| Ocean / water | `river water golden` | `magical underwater world fairy tale` |
-| Mountains / aerial | `mountain peaks golden` | `fantasy mountain castle fairy tale magical` |
-| Forest / trees | `forest path morning` | `fairy tale mushroom forest glowing enchanted` |
+| 花园/自然 | `garden flowers morning` | `enchanted fairy tale garden glowing magical` |
+| 昆虫/生物 | `caterpillar leaf close up` | `fairy tale caterpillar magical forest glowing` |
+| 蜕变/茧 | `chrysalis butterfly cocoon` | `magical chrysalis enchanted tree glowing` |
+| 蝴蝶/飞行 | `butterfly flying sky` | `fantasy butterfly glowing magical wings` |
+| 日落/风景 | `sunset landscape golden` | `enchanted fantasy landscape magical sunset` |
+| 雨/天气 | `rain leaves gentle` | `fairy tale rain magical forest enchanted` |
+| 夜空/星星 | `milky way timelapse` | `fantasy night sky magical stars enchanted` |
+| 海洋/水 | `river water golden` | `magical underwater world fairy tale` |
+| 山脉/航拍 | `mountain peaks golden` | `fantasy mountain castle fairy tale magical` |
+| 森林/树木 | `forest path morning` | `fairy tale mushroom forest glowing enchanted` |
 
-**Source routing:** Set `preferred_sources: ["pixabay_video"]` for ALL
-slots. Pixabay is the only free source with a deep AI-generated fantasy
-library. Do not mix real footage with fantasy — the style clash breaks
-immersion for children.
+**来源路由：** 为所有槽位设置 `preferred_sources: ["pixabay_video"]`。Pixabay 是唯一拥有深度 AI 生成幻想库的免费来源。不要将真实素材与幻想混合 — 风格冲突会破坏儿童的沉浸感。
 
-**Keywords that surface AI fantasy content:** `fairy tale`, `fantasy`,
-`enchanted`, `magical`, `glowing`, `dreamy`, `mystical`, `fairy`,
-`enchanted forest`, `magical world`.
+**可找到 AI 幻想内容的关键词：** `fairy tale`、`fantasy`、`enchanted`、`magical`、`glowing`、`dreamy`、`mystical`、`fairy`、`enchanted forest`、`magical world`。
 
-### 6. Mark Hero Slots
+### 6. 标记英雄槽位
 
-Every montage has 2-3 slots the whole piece depends on: the opening
-image, the turn, the final image. Mark these with `hero: true` in the
-slot metadata.
+每个蒙太奇有 2-3 个整个作品依赖的槽位：开场画面、转折点、最终画面。在槽位元数据中用 `hero: true` 标记。
 
-Hero slots get:
+英雄槽位获得：
 
-- longer holds (2-4s instead of the tone's default),
-- bigger candidate pools at asset time (k=30 instead of k=10),
-- more queries (3 instead of 2).
+- 更长的停留（2-4 秒而不是基调的默认值）
+- 在资产阶段更大的候选池（k=30 而不是 k=10）
+- 更多查询（3 个而不是 2 个）
 
-### 7. Leave Headroom For The Asset Stage
+### 7. 为资产阶段留出余地
 
-Don't over-specify. The asset director's job is to rank candidates
-against your description. If you nail down the description AND the
-exact clip, you've done the asset director's job badly and pre-empted
-its creative choices.
+不要过度指定。资产导演的工作是根据你的描述对候选者排序。如果你同时确定了描述和具体剪辑片段，你就既做坏了资产导演的工作，又抢占了它的创意选择。
 
-Rule: describe the slot the way you would describe it to a research
-assistant over the phone — specific enough to recognise, loose enough
-to surprise you.
+规则：像在电话中向研究助理描述槽位那样描述它 — 足够具体以被识别，又足够宽松以带来惊喜。
 
-### 8. Record The Shot List
+### 8. 记录镜头列表
 
-Use the `scene_plan.schema.json` artifact with one `scene` per slot.
-For this pipeline, put documentary-montage-specific fields inside
-`metadata` on each scene. The canonical shape:
+使用 `scene_plan.schema.json` 工件，每个槽位一个 `scene`。对于本流水线，将纪录片蒙太奇特有的字段放在每个场景的 `metadata` 内。规范结构：
 
 ```json
 {
@@ -239,14 +191,14 @@ For this pipeline, put documentary-montage-specific fields inside
     {
       "id": "slot_01",
       "type": "broll",
-      "description": "a single raindrop hitting dry asphalt, close up, slow motion, warm streetlamp glow",
+      "description": "单个雨滴撞击干燥沥青，特写，慢动作，温暖的路灯辉光",
       "start_seconds": 0.0,
       "end_seconds": 3.5,
       "narrative_role": "establish_context",
       "hero_moment": true,
       "texture_keywords": ["wet", "slow motion", "streetlamp"],
       "required_assets": [
-        { "type": "video", "description": "raindrop on asphalt", "source": "source" }
+        { "type": "video", "description": "沥青上的雨滴", "source": "source" }
       ]
     }
   ],
@@ -254,11 +206,11 @@ For this pipeline, put documentary-montage-specific fields inside
     "pipeline": "documentary-montage",
     "shape": "list",
     "tone": "elegiac",
-    "thematic_question": "What does rain show you about a city?",
+    "thematic_question": "雨水向你展示了一座城市的什么？",
     "slots": [
       {
         "id": "slot_01",
-        "description": "a single raindrop hitting dry asphalt, close up, slow motion, warm streetlamp glow",
+        "description": "单个雨滴撞击干燥沥青，特写，慢动作，温暖的路灯辉光",
         "hero": true,
         "preferred_sources": ["pexels", "archive_org"],
         "queries": [
@@ -275,75 +227,57 @@ For this pipeline, put documentary-montage-specific fields inside
 }
 ```
 
-The `scenes[]` array satisfies the schema. The `metadata.slots[]`
-array is what the asset director actually reads — it carries the
-retrieval-specific fields (`queries`, `preferred_sources`, `hero`,
-`era_hint`) that `scene_plan.schema.json` doesn't know about.
+`scenes[]` 数组满足模式要求。`metadata.slots[]` 数组是资产导演实际读取的内容 — 它携带检索特定字段（`queries`、`preferred_sources`、`hero`、`era_hint`），这些字段是 `scene_plan.schema.json` 所不知道的。
 
-### 9. Quality Gate
+### 9. 质量门
 
-- Slot count matches the beat-count math from step 1.
-- Every slot `description` follows the noun-and-adjective template —
-  no emotion words, no verbs of intention.
-- Every slot has 2-3 short queries (5 words or fewer each).
-- At least 2 slots are marked `hero`.
-- Sum of `target_hold_seconds` is within ±10% of `brief.duration_seconds`.
-- If `era_mix = "vintage"`, at least 60% of slots list `archive_org`
-  in `preferred_sources`.
-- `metadata.thematic_question` echoes the brief verbatim (sanity check
-  that you didn't drift).
+- 槽位数与步骤 1 中的节拍计数匹配。
+- 每个槽位的 `description` 遵循名词和形容词模板 — 没有情感词，没有意图动词。
+- 每个槽位有 2-3 个短查询（每个不超过 5 个词）。
+- 至少 2 个槽位标记为 `hero`。
+- `target_hold_seconds` 总和在 `brief.duration_seconds` 的 ±10% 以内。
+- 如果 `era_mix = "vintage"`，至少 60% 的槽位在 `preferred_sources` 中列出 `archive_org`。
+- `metadata.thematic_question` 与概要逐字一致（确认你没有偏离的合理性检查）。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Writing slot descriptions as intentions instead of images.** "A
-  moment of hesitation before entering" is a screenplay direction, not
-  a CLIP query. "A woman standing still on a porch, hand near the
-  knob" is.
-- **Category queries.** `"home"` and `"family"` match everything and
-  nothing. Push for concrete nouns: door, mat, key, hall, shoe.
-- **One-query slots.** The second query is cheap insurance — if the
-  first query returns junk, the corpus still has something usable.
-- **Forgetting duration math.** 90 elegiac seconds is ~15 holds of
-  ~6s. If you wrote 40 slots, you've drafted an urgent piece by
-  accident.
-- **Skipping `era_hint` on a vintage brief.** Pexels will flood the
-  corpus with 2020s HD footage and bury the Prelinger material.
-- **Letting the thematic question drift.** If the brief says "coming
-  home" and your slot list has three shots of airplanes, the piece
-  will be about travel, not home. Re-read the brief after drafting.
+- **将槽位描述写成意图而不是画面。** "进入前的犹豫时刻"是剧本指导，不是 CLIP 查询。"一个女人静静站在门廊上，手靠近门把手"才是。
+- **分类查询。** `"home"` 和 `"family"` 匹配一切而又什么都不匹配。推动使用具体名词：门、垫子、钥匙、大厅、鞋。
+- **单查询槽位。** 第二个查询是廉价的保险 — 如果第一个查询返回垃圾，语料库仍然有可用的内容。
+- **忘记时长计算。** 90 秒挽歌式大约是 ~15 个 ~6 秒的停留。如果你写了 40 个槽位，你就不小心设计了一个紧迫式的作品。
+- **在复古概要把上跳过 `era_hint`。** Pexels 会用 2020 年代的高清素材淹没语料库并掩埋 Prelinger 素材。
+- **让主题性问题漂移。** 如果概要说的是"回家"，而你的槽位列表有三个飞机镜头，作品将变成关于旅行而不是回家。起草后重新阅读概要。
 
-## Worked Example — "A Minute in the Rain"
+## 工作示例 — "雨中一分钟"
 
-- Duration: 90s, elegiac tone → ~15 slots at ~6s each.
-- Shape: list (catalogue of weather + city).
-- Thematic question: "What does rain show you about a city?"
+- 时长：90 秒，挽歌式基调 → ~15 个槽位，每个 ~6 秒。
+- 结构：列表式（天气 + 城市的目录）。
+- 主题性问题："雨水向你展示了一座城市的什么？"
 
-Sketch of slots (abbreviated):
+槽位草图（简写）：
 
-1. **hero** single raindrop hitting dry asphalt, slow motion
-2. umbrella opening in a doorway, diffused afternoon light
-3. neon sign reflected upside-down in a puddle, handheld
-4. rain streaking across a bus window, passengers soft focus
-5. a taxi roof light pushing through heavy rain, long lens
-6. storm drain swallowing leaves and water, overhead
-7. a street vendor pulling plastic over a produce cart
-8. wet cobblestone alley, steam rising, tungsten streetlamp
-9. rooftop antennae against a grey sky, wide shot
-10. a child's rubber boot stamping a puddle, low angle
-11. **hero** a lit apartment window seen through sheets of rain
-12. windshield wipers at night, colored city lights beyond
-13. rain beading on a parked bicycle seat, macro
-14. footprints filling with water on a tiled station floor
-15. **hero** first patch of blue sky breaking through grey clouds
+1. **英雄** 单个雨滴慢动作撞击干燥沥青
+2. 门口打开的雨伞，散射的午后光线
+3. 霓虹灯招牌倒映在水坑中，手持拍摄
+4. 雨水划过公交车窗，乘客柔和虚化
+5. 出租车顶灯穿透大雨，长焦镜头
+6. 排水沟吞没落叶和水，俯拍
+7. 街头小贩在水果摊上拉塑料布
+8. 湿漉漉的鹅卵石小巷，蒸汽上升，钨丝路灯
+9. 灰色天空下的屋顶天线，广角
+10. 孩子的橡胶靴踩水坑，低角度
+11. **英雄** 透过雨幕看到的亮着灯的公寓窗户
+12. 夜晚的雨刷，远处城市彩灯
+13. 雨珠凝结在停放的自行车座上，微距
+14. 火车站瓷砖地板上积水的脚印
+15. **英雄** 第一片蓝天突破灰色云层
 
-Each slot gets:
+每个槽位获得：
 
-- `description` in the noun-and-adjective template,
-- 2-3 short queries (e.g. slot 5: `"taxi heavy rain", "yellow cab
-  wet street night", "city traffic downpour"`),
-- `preferred_sources` (slots 1-6 → pexels+archive_org, slot 8 →
-  archive_org for period texture, slot 11 → pexels),
-- `hero: true` on slots 1, 11, 15,
-- `target_hold_seconds` summing to ~90.
+- 名词和形容词模板的 `description`
+- 2-3 个短查询（例如槽位 5：`"taxi heavy rain"`、`"yellow cab wet street night"`、`"city traffic downpour"`）
+- `preferred_sources`（槽位 1-6 → pexels+archive_org，槽位 8 → archive_org 以获得时代质感，槽位 11 → pexels）
+- 槽位 1、11、15 上设置 `hero: true`
+- `target_hold_seconds` 总和约为 ~90
 
-This is the artifact the asset director will run retrieval against.
+这是资产导演将执行检索的工件。

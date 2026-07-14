@@ -1,12 +1,12 @@
-# Animation Groups in ManimGL
+# ManimGL 中的动画组
 
-Animation groups allow you to coordinate multiple animations, running them simultaneously, sequentially, or with staggered timing.
+动画组允许您协调多个动画，同时、顺序或以交错时间运行它们。
 
 ## AnimationGroup
 
-Runs multiple animations together.
+同时运行多个动画。
 
-### Basic Usage
+### 基本用法
 
 ```python
 from manimlib import *
@@ -18,7 +18,7 @@ class GroupExample(Scene):
         circle.shift(LEFT * 2)
         square.shift(RIGHT * 2)
 
-        # Run both animations simultaneously
+        # 同时运行两个动画
         self.play(AnimationGroup(
             ShowCreation(circle),
             ShowCreation(square)
@@ -26,10 +26,10 @@ class GroupExample(Scene):
         self.wait()
 ```
 
-### Shorthand Syntax
+### 简写语法
 
 ```python
-# Equivalent to AnimationGroup
+# 等同于 AnimationGroup
 self.play(
     ShowCreation(circle),
     ShowCreation(square)
@@ -38,9 +38,9 @@ self.play(
 
 ## LaggedStart
 
-Starts animations with a staggered delay.
+以交错延迟启动动画。
 
-### Basic LaggedStart
+### 基本 LaggedStart
 
 ```python
 class LaggedStartExample(Scene):
@@ -50,36 +50,36 @@ class LaggedStartExample(Scene):
             for i in range(-3, 4)
         ])
 
-        # Staggered creation
+        # 交错创建
         self.play(LaggedStart(
             *[ShowCreation(c) for c in circles],
-            lag_ratio=0.2,  # Delay ratio between animations
+            lag_ratio=0.2,  # 动画之间的延迟比例
             run_time=3
         ))
         self.wait()
 ```
 
-### lag_ratio Parameter
+### lag_ratio 参数
 
 ```python
-# lag_ratio controls the delay
-# 0 = all at once (like AnimationGroup)
-# 1 = completely sequential (like Succession)
-# 0.5 = overlapping animations
+# lag_ratio 控制延迟
+# 0 = 全部同时（像 AnimationGroup）
+# 1 = 完全顺序（像 Succession）
+# 0.5 = 重叠动画
 
-# Subtle overlap
+# 微妙重叠
 self.play(LaggedStart(*animations, lag_ratio=0.1))
 
-# More pronounced stagger
+# 更明显的交错
 self.play(LaggedStart(*animations, lag_ratio=0.5))
 
-# Nearly sequential
+# 近乎顺序
 self.play(LaggedStart(*animations, lag_ratio=0.9))
 ```
 
 ## Succession
 
-Runs animations one after another.
+一个接一个地运行动画。
 
 ```python
 class SuccessionExample(Scene):
@@ -90,7 +90,7 @@ class SuccessionExample(Scene):
             Triangle().shift(RIGHT * 2)
         )
 
-        # One after another (no overlap)
+        # 一个接一个（无重叠）
         self.play(Succession(
             ShowCreation(shapes[0]),
             ShowCreation(shapes[1]),
@@ -99,36 +99,36 @@ class SuccessionExample(Scene):
         self.wait()
 ```
 
-### Succession vs Sequential play() Calls
+### Succession vs 连续的 play() 调用
 
 ```python
-# Using Succession (all in one play call)
+# 使用 Succession（在一个 play 调用中完成全部）
 self.play(Succession(
     animation1,
     animation2,
     animation3
 ))
 
-# Equivalent to separate play calls
+# 等同于分开的 play 调用
 self.play(animation1)
 self.play(animation2)
 self.play(animation3)
 ```
 
-## Combining Animation Groups
+## 组合动画组
 
-### Nested Groups
+### 嵌套组
 
 ```python
 class NestedGroups(Scene):
     def construct(self):
-        # Top row
+        # 顶行
         top = VGroup(*[Circle().shift(i*RIGHT) for i in range(-2, 3)])
 
-        # Bottom row
+        # 底行
         bottom = VGroup(*[Square().shift(i*RIGHT + 2*DOWN) for i in range(-2, 3)])
 
-        # Stagger within each row, but rows appear simultaneously
+        # 每行内部交错，但两行同时出现
         self.play(
             LaggedStart(*[ShowCreation(c) for c in top], lag_ratio=0.2),
             LaggedStart(*[ShowCreation(s) for s in bottom], lag_ratio=0.2),
@@ -136,10 +136,10 @@ class NestedGroups(Scene):
         self.wait()
 ```
 
-### Sequential Groups
+### 顺序组
 
 ```python
-# First group, then second group
+# 先第一组，然后第二组
 self.play(Succession(
     LaggedStart(*[ShowCreation(t) for t in top], lag_ratio=0.2),
     LaggedStart(*[ShowCreation(b) for b in bottom], lag_ratio=0.2)
@@ -148,7 +148,7 @@ self.play(Succession(
 
 ## LaggedStartMap
 
-Applies an animation constructor to mobjects with lag.
+将动画构造函数应用于多个 mobject，带交错效果。
 
 ```python
 class LaggedStartMapExample(Scene):
@@ -159,7 +159,7 @@ class LaggedStartMapExample(Scene):
             for j in range(-2, 3)
         ])
 
-        # Apply FadeIn to all dots with lag
+        # 对所有点应用 FadeIn，带交错效果
         self.play(LaggedStartMap(
             FadeIn, dots,
             lag_ratio=0.05
@@ -167,19 +167,19 @@ class LaggedStartMapExample(Scene):
         self.wait()
 ```
 
-## Timing Control
+## 时间控制
 
-### run_time for Groups
+### 组的 run_time
 
 ```python
-# Total time for all animations
+# 所有动画的总时间
 self.play(LaggedStart(
     *animations,
     lag_ratio=0.2,
-    run_time=5  # Total duration
+    run_time=5  # 总持续时间
 ))
 
-# Each animation's individual timing
+# 每个动画的单独时间
 self.play(LaggedStart(
     ShowCreation(circle, run_time=2),
     ShowCreation(square, run_time=1),
@@ -187,16 +187,16 @@ self.play(LaggedStart(
 ))
 ```
 
-### rate_func with Groups
+### 组的 rate_func
 
 ```python
-# Apply rate function to entire group
+# 将速率函数应用于整个组
 self.play(
     LaggedStart(*animations, lag_ratio=0.2),
     rate_func=smooth
 )
 
-# Different rate functions for each
+# 每个动画使用不同的速率函数
 self.play(
     ShowCreation(circle, rate_func=linear),
     ShowCreation(square, rate_func=rush_into),
@@ -204,9 +204,9 @@ self.play(
 )
 ```
 
-## Practical Examples
+## 实际示例
 
-### Text Appearance
+### 文本出现
 
 ```python
 class TextReveal(Scene):
@@ -215,19 +215,19 @@ class TextReveal(Scene):
         subtitle = Text("With smooth appearance", font_size=40)
         subtitle.next_to(title, DOWN)
 
-        # Title letters appear one by one
+        # 标题字母逐个出现
         self.play(LaggedStart(
             *[FadeIn(char, shift=UP) for char in title],
             lag_ratio=0.05
         ))
         self.wait(0.3)
 
-        # Subtitle fades in
+        # 副标题淡入
         self.play(FadeIn(subtitle, shift=DOWN))
         self.wait()
 ```
 
-### Grid Animation
+### 网格动画
 
 ```python
 class GridAnimation(Scene):
@@ -238,7 +238,7 @@ class GridAnimation(Scene):
             for j in range(-2, 3)
         ])
 
-        # Ripple effect
+        # 涟漪效果
         self.play(LaggedStart(
             *[ShowCreation(square) for square in grid],
             lag_ratio=0.02,
@@ -247,7 +247,7 @@ class GridAnimation(Scene):
         self.wait()
 ```
 
-### Wave Effect
+### 波浪效果
 
 ```python
 class WaveEffect(Scene):
@@ -257,7 +257,7 @@ class WaveEffect(Scene):
             for i in range(-10, 11)
         ])
 
-        # Wave up and down
+        # 上下起伏
         def wave_animation(dot, delay):
             return Succession(
                 Wait(delay),
@@ -273,7 +273,7 @@ class WaveEffect(Scene):
         self.wait()
 ```
 
-### Cascade Effect
+### 级联效果
 
 ```python
 class CascadeEffect(Scene):
@@ -283,7 +283,7 @@ class CascadeEffect(Scene):
             for i in range(-2, 3)
         ])
 
-        # Cascade from top to bottom
+        # 从上到下级联
         self.play(LaggedStart(
             *[
                 AnimationGroup(
@@ -297,9 +297,9 @@ class CascadeEffect(Scene):
         self.wait()
 ```
 
-## Simultaneous Transformations
+## 同时变换
 
-### Multiple Object Transformations
+### 多对象变换
 
 ```python
 class SimultaneousTransforms(Scene):
@@ -317,7 +317,7 @@ class SimultaneousTransforms(Scene):
         ))
         self.wait()
 
-        # Transform all simultaneously with different targets
+        # 同时变换所有对象，不同目标
         targets = [
             Square().shift(LEFT * 3),
             Circle().shift(LEFT),
@@ -332,33 +332,33 @@ class SimultaneousTransforms(Scene):
         self.wait()
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use LaggedStart for visual rhythm**: Creates more dynamic animations
-2. **lag_ratio tuning**:
-   - 0.1-0.3 for subtle effects
-   - 0.5 for balanced overlap
-   - 0.8-1.0 for nearly sequential
-3. **Nested groups**: Combine for complex choreography
-4. **Total run_time**: Set on the group for consistent timing
-5. **Don't overuse**: Too many lagged animations can be distracting
+1. **使用 LaggedStart 创造视觉节奏**：产生更动态的动画
+2. **lag_ratio 调优**：
+   - 0.1-0.3 用于微妙效果
+   - 0.5 用于平衡重叠
+   - 0.8-1.0 用于近乎顺序
+3. **嵌套组**：组合实现复杂编排
+4. **总 run_time**：在组上设置以确保一致的时间
+5. **不要过度使用**：过多的交错动画可能分散注意力
 
-## Common Patterns
+## 常见模式
 
-### Fade out everything
+### 淡出所有内容
 
 ```python
-# Fade out all objects with lag
+# 交错淡出所有对象
 self.play(LaggedStart(
     *[FadeOut(mob) for mob in self.mobjects],
     lag_ratio=0.1
 ))
 ```
 
-### Build complex figure
+### 构建复杂图形
 
 ```python
-# Build parts sequentially
+# 按顺序构建各部分
 self.play(Succession(
     ShowCreation(axes),
     ShowCreation(graph),
@@ -367,10 +367,10 @@ self.play(Succession(
 ))
 ```
 
-### Reveal diagram
+### 展示图表
 
 ```python
-# Reveal components with rhythm
+# 有节奏地展示组件
 components = [background, main_shape, decorations, labels]
 self.play(LaggedStart(
     *[FadeIn(c, scale=0.8) for c in components],
@@ -378,10 +378,10 @@ self.play(LaggedStart(
 ))
 ```
 
-### Synchronized movement
+### 同步移动
 
 ```python
-# Move multiple objects together
+# 一起移动多个对象
 objects = VGroup(circle, square, triangle)
 self.play(*[
     obj.animate.shift(RIGHT * 2)
@@ -389,18 +389,18 @@ self.play(*[
 ])
 ```
 
-## Full Example
+## 完整示例
 
 ```python
 class ComprehensiveGrouping(Scene):
     def construct(self):
-        # Title
+        # 标题
         title = Text("Animation Groups", font_size=60)
         title.to_edge(UP)
         self.play(Write(title))
         self.wait()
 
-        # Create grid of dots
+        # 创建点阵
         dots = VGroup(*[
             Dot(color=interpolate_color(BLUE, RED, i/20))
             .shift([
@@ -411,7 +411,7 @@ class ComprehensiveGrouping(Scene):
             for i in range(21)
         ])
 
-        # Lagged appearance
+        # 交错出现
         self.play(LaggedStart(
             *[FadeIn(dot, scale=0.5) for dot in dots],
             lag_ratio=0.05,
@@ -419,43 +419,43 @@ class ComprehensiveGrouping(Scene):
         ))
         self.wait()
 
-        # Synchronized color change
+        # 同步颜色变化
         self.play(*[
             dot.animate.set_color(YELLOW)
             for dot in dots
         ])
         self.wait()
 
-        # Cascade disappearance
+        # 级联消失
         self.play(LaggedStart(
             *[FadeOut(dot, shift=DOWN) for dot in dots],
             lag_ratio=0.05,
             run_time=2
         ))
 
-        # Clean up
+        # 清理
         self.play(FadeOut(title))
         self.wait()
 ```
 
-## Debugging Groups
+## 调试组
 
-### Print timing information
+### 打印时间信息
 
 ```python
-# Check total duration
+# 检查总持续时间
 group = LaggedStart(*animations, lag_ratio=0.2)
 print(f"Group duration: {group.get_run_time()}")
 
-# Visualize timing
+# 可视化时间
 for i, anim in enumerate(animations):
     print(f"Animation {i}: starts at {i * 0.2 * group.get_run_time()}")
 ```
 
-### Test lag_ratio values
+### 测试 lag_ratio 值
 
 ```python
-# Try different values to find the right feel
+# 尝试不同值以找到合适的感觉
 for lag in [0.1, 0.3, 0.5, 0.7]:
     self.play(LaggedStart(*animations, lag_ratio=lag))
     self.wait()

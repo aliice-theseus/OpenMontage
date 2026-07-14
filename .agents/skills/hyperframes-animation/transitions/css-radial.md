@@ -1,8 +1,8 @@
-## Radial / Shape
+## 径向 / 形状
 
-### Circle Iris
+### 圆形虹膜
 
-Expanding circle from center reveals new scene.
+从中心扩展的圆揭示新场景。
 
 ```js
 tl.set(new, { opacity: 1 }, T);
@@ -12,9 +12,9 @@ tl.fromTo(new,
 tl.set(old, { opacity: 0 }, T + 0.5);
 ```
 
-### Diamond Iris
+### 菱形虹膜
 
-Expanding diamond shape from center.
+从中心扩展的菱形。
 
 ```js
 tl.set(new, { opacity: 1 }, T);
@@ -24,14 +24,17 @@ tl.fromTo(new,
 tl.set(old, { opacity: 0 }, T + 0.5);
 ```
 
-### Diagonal Split
+### 对角分割
 
-Old scene shrinks to a triangle in one corner.
+旧场景缩小到一个角的三角形。
 
 ```js
 tl.set(new, { opacity: 1, zIndex: 1 }, T);
-tl.set(old, { zIndex: 10, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }, T);
-tl.to(old, { clipPath: "polygon(60% 0%, 100% 0%, 100% 40%, 60% 0%)", duration: 0.5, ease: "power3.inOut" }, T);
-tl.set(old, { opacity: 0, zIndex: "auto", clipPath: "none" }, T + 0.5);
-tl.set(new, { zIndex: "auto" }, T + 0.5);
+tl.set(old, { zIndex: 10, transformOrigin: "top right" }, T);
+tl.to(old,
+  { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 0.05, ease: "none" }, T);
+tl.to(old,
+  { clipPath: "polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%)", duration: 0.4, ease: "power3.in" }, T + 0.05);
+tl.set(old, { opacity: 0, clipPath: "none", zIndex: "auto" }, T + 0.45);
+tl.set(new, { zIndex: "auto" }, T + 0.45);
 ```

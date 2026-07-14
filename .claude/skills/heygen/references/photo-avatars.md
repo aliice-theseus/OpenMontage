@@ -1,19 +1,19 @@
 ---
 name: photo-avatars
-description: Creating avatars from photos (talking photos) for HeyGen
+description: 从照片创建 HeyGen 头像（说话照片）
 ---
 
-# Photo Avatars (Talking Photos)
+# 照片头像（说话照片）
 
-Photo avatars allow you to animate a static photo and make it speak. This is useful for creating personalized video content from portraits, headshots, or any suitable image.
+照片头像允许你动画化静态照片，使其开口说话。这对于从肖像、头像或任何合适的图像创建个性化视频内容非常有用。
 
-## Creating a Photo Avatar from an Uploaded Image
+## 从已上传的图片创建照片头像
 
-The workflow is: **Upload Image → Create Avatar Group → Use in Video**
+工作流是：**上传图片 → 创建头像组 → 在视频中使用**
 
-### Step 1: Upload the Image
+### 步骤 1：上传图片
 
-Upload a portrait photo using the asset upload endpoint. The response includes an `image_key` which you'll use in the next step.
+使用资源上传端点上传肖像照片。响应中包含一个 `image_key`，你将在下一步中使用它。
 
 ```bash
 curl -X POST "https://upload.heygen.com/v1/asset" \
@@ -22,7 +22,7 @@ curl -X POST "https://upload.heygen.com/v1/asset" \
   --data-binary '@./portrait.jpg'
 ```
 
-Response:
+响应：
 ```json
 {
   "code": 100,
@@ -36,15 +36,15 @@ Response:
 }
 ```
 
-> **Important:** Save the `image_key` field (not the `id`). The `image_key` is the S3 path used to create the photo avatar.
+> **重要：** 保存 `image_key` 字段（而不是 `id`）。`image_key` 是用于创建照片头像的 S3 路径。
 
-See [assets.md](assets.md) for full upload details.
+完整上传详情参见 [assets.md](assets.md)。
 
-### Step 2: Create Photo Avatar Group
+### 步骤 2：创建照片头像组
 
-Use the `image_key` from the upload response to create a photo avatar group. This processes the image and creates a usable photo avatar.
+使用上传响应中的 `image_key` 创建照片头像组。这将处理图片并创建一个可用的照片头像。
 
-**Endpoint:** `POST https://api.heygen.com/v2/photo_avatar/avatar_group/create`
+**端点：** `POST https://api.heygen.com/v2/photo_avatar/avatar_group/create`
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/photo_avatar/avatar_group/create" \
@@ -56,13 +56,13 @@ curl -X POST "https://api.heygen.com/v2/photo_avatar/avatar_group/create" \
   }'
 ```
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必需 | 描述 |
 |-------|------|:---:|-------------|
-| `image_key` | string | ✓ | S3 image key from upload response |
-| `name` | string | ✓ | Display name for the avatar |
-| `generation_id` | string | | If using AI-generated photo (see below) |
+| `image_key` | string | ✓ | 上传响应中的 S3 图片密钥 |
+| `name` | string | ✓ | 头像的显示名称 |
+| `generation_id` | string | | 如果使用 AI 生成的照片（见下文） |
 
-Response:
+响应：
 ```json
 {
   "error": null,
@@ -79,24 +79,24 @@ Response:
 }
 ```
 
-The `id` (same as `group_id`) is your `talking_photo_id` for video generation.
+`id`（与 `group_id` 相同）就是你在视频生成中使用的 `talking_photo_id`。
 
-### Step 3: Wait for Processing
+### 步骤 3：等待处理
 
-The photo avatar starts with `status: "pending"` and transitions to `"completed"` within seconds. Poll the status endpoint:
+照片头像以 `status: "pending"` 开始，并在几秒内转换为 `"completed"`。轮询状态端点：
 
-**Endpoint:** `GET https://api.heygen.com/v2/photo_avatar/{id}`
+**端点：** `GET https://api.heygen.com/v2/photo_avatar/{id}`
 
 ```bash
 curl "https://api.heygen.com/v2/photo_avatar/045c260bc0364727b2cbe50442c3a5bf" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-Wait until `status` is `"completed"` before using in video generation.
+等到 `status` 变为 `"completed"` 后再在视频生成中使用。
 
-### Step 4: Use in Video Generation
+### 步骤 4：在视频生成中使用
 
-Use the photo avatar `id` as `talking_photo_id`:
+将照片头像 `id` 作为 `talking_photo_id` 使用：
 
 ```typescript
 const videoConfig = {
@@ -117,7 +117,7 @@ const videoConfig = {
 };
 ```
 
-## TypeScript: Complete Workflow
+## TypeScript：完整工作流
 
 ```typescript
 import fs from "fs";
@@ -149,7 +149,7 @@ async function createPhotoAvatar(
   imagePath: string,
   name: string
 ): Promise<string> {
-  // 1. Upload image
+  // 1. 上传图片
   const resolvedPath = path.resolve(imagePath);
   const fileBuffer = fs.readFileSync(resolvedPath);
   const uploadResponse = await fetch("https://upload.heygen.com/v1/asset", {
@@ -163,12 +163,12 @@ async function createPhotoAvatar(
 
   const uploadJson: AssetUploadResponse = await uploadResponse.json();
   if (uploadJson.code !== 100) {
-    throw new Error("Upload failed");
+    throw new Error("上传失败");
   }
 
   const imageKey = uploadJson.data.image_key;
 
-  // 2. Create avatar group
+  // 2. 创建头像组
   const createResponse = await fetch(
     "https://api.heygen.com/v2/photo_avatar/avatar_group/create",
     {
@@ -188,7 +188,7 @@ async function createPhotoAvatar(
 
   const photoAvatarId = createJson.data.id;
 
-  // 3. Wait for processing
+  // 3. 等待处理
   await waitForPhotoAvatar(photoAvatarId);
 
   return photoAvatarId;
@@ -205,13 +205,13 @@ async function waitForPhotoAvatar(id: string): Promise<void> {
 
     if (json.data.status === "completed") return;
     if (json.data.status === "failed") {
-      throw new Error("Photo avatar processing failed");
+      throw new Error("照片头像处理失败");
     }
 
     await new Promise((r) => setTimeout(r, 2000));
   }
 
-  throw new Error("Photo avatar processing timed out");
+  throw new Error("照片头像处理超时");
 }
 
 async function createVideoFromPhoto(
@@ -219,10 +219,10 @@ async function createVideoFromPhoto(
   script: string,
   voiceId: string
 ): Promise<string> {
-  // 1. Create photo avatar
-  const talkingPhotoId = await createPhotoAvatar(photoPath, "Video Avatar");
+  // 1. 创建照片头像
+  const talkingPhotoId = await createPhotoAvatar(photoPath, "视频头像");
 
-  // 2. Generate video
+  // 2. 生成视频
   const response = await fetch("https://api.heygen.com/v2/video/generate", {
     method: "POST",
     headers: {
@@ -252,7 +252,7 @@ async function createVideoFromPhoto(
 }
 ```
 
-## Python: Complete Workflow
+## Python：完整工作流
 
 ```python
 import requests
@@ -262,7 +262,7 @@ import time
 def create_photo_avatar(image_path: str, name: str) -> str:
     api_key = os.environ["HEYGEN_API_KEY"]
 
-    # 1. Upload image
+    # 1. 上传图片
     with open(image_path, "rb") as f:
         upload_resp = requests.post(
             "https://upload.heygen.com/v1/asset",
@@ -275,11 +275,11 @@ def create_photo_avatar(image_path: str, name: str) -> str:
 
     upload_data = upload_resp.json()
     if upload_data.get("code") != 100:
-        raise Exception("Upload failed")
+        raise Exception("上传失败")
 
     image_key = upload_data["data"]["image_key"]
 
-    # 2. Create avatar group
+    # 2. 创建头像组
     create_resp = requests.post(
         "https://api.heygen.com/v2/photo_avatar/avatar_group/create",
         headers={
@@ -295,7 +295,7 @@ def create_photo_avatar(image_path: str, name: str) -> str:
 
     photo_avatar_id = create_data["data"]["id"]
 
-    # 3. Wait for processing
+    # 3. 等待处理
     for _ in range(30):
         status_resp = requests.get(
             f"https://api.heygen.com/v2/photo_avatar/{photo_avatar_id}",
@@ -305,24 +305,24 @@ def create_photo_avatar(image_path: str, name: str) -> str:
         if status == "completed":
             return photo_avatar_id
         if status == "failed":
-            raise Exception("Photo avatar processing failed")
+            raise Exception("照片头像处理失败")
         time.sleep(2)
 
-    raise Exception("Photo avatar processing timed out")
+    raise Exception("照片头像处理超时")
 ```
 
-## Listing Existing Talking Photos
+## 列出现有说话照片
 
-Retrieve all talking photos in your account:
+检索你账户中的所有说话照片：
 
-**Endpoint:** `GET https://api.heygen.com/v1/talking_photo.list`
+**端点：** `GET https://api.heygen.com/v1/talking_photo.list`
 
 ```bash
 curl "https://api.heygen.com/v1/talking_photo.list" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-Response:
+响应：
 ```json
 {
   "code": 100,
@@ -336,13 +336,13 @@ Response:
 }
 ```
 
-Each `id` can be used as `talking_photo_id` in video generation.
+每个 `id` 都可以在视频生成中用作 `talking_photo_id`。
 
-## Adding Photos to an Existing Group
+## 向现有组添加照片
 
-Add additional photo looks to an existing avatar group:
+向现有的头像组添加额外的照片造型：
 
-**Endpoint:** `POST https://api.heygen.com/v2/photo_avatar/avatar_group/add`
+**端点：** `POST https://api.heygen.com/v2/photo_avatar/avatar_group/add`
 
 ```typescript
 async function addPhotosToGroup(
@@ -373,11 +373,11 @@ async function addPhotosToGroup(
 }
 ```
 
-## Training a Photo Avatar Group
+## 训练照片头像组
 
-Train the avatar group for improved animation quality:
+训练头像组以获得更好的动画质量：
 
-**Endpoint:** `POST https://api.heygen.com/v2/photo_avatar/train`
+**端点：** `POST https://api.heygen.com/v2/photo_avatar/train`
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/photo_avatar/train" \
@@ -386,15 +386,15 @@ curl -X POST "https://api.heygen.com/v2/photo_avatar/train" \
   -d '{"group_id": "045c260bc0364727b2cbe50442c3a5bf"}'
 ```
 
-Check training status:
+检查训练状态：
 
-**Endpoint:** `GET https://api.heygen.com/v2/photo_avatar/train/status/{group_id}`
+**端点：** `GET https://api.heygen.com/v2/photo_avatar/train/status/{group_id}`
 
-## Avatar IV Video Generation
+## Avatar IV 视频生成
 
-Avatar IV is HeyGen's latest photo avatar technology with improved quality and natural motion. It generates a video directly from an uploaded image, bypassing the avatar group creation step.
+Avatar IV 是 HeyGen 最新的照片头像技术，具有更高质量和自然动作。它直接从上传的图片生成视频，跳过头像组创建步骤。
 
-**Endpoint:** `POST https://api.heygen.com/v2/video/av4/generate`
+**端点：** `POST https://api.heygen.com/v2/video/av4/generate`
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/video/av4/generate" \
@@ -409,16 +409,16 @@ curl -X POST "https://api.heygen.com/v2/video/av4/generate" \
   }'
 ```
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必需 | 描述 |
 |-------|------|:---:|-------------|
-| `image_key` | string | ✓ | S3 image key from asset upload |
-| `script` | string | ✓ | Text for the avatar to speak |
-| `voice_id` | string | ✓ | Voice to use |
-| `video_orientation` | string | | `"portrait"`, `"landscape"`, or `"square"` |
-| `video_title` | string | | Title for the video |
-| `fit` | string | | `"cover"` or `"contain"` |
-| `custom_motion_prompt` | string | | Motion/expression description |
-| `enhance_custom_motion_prompt` | boolean | | Enhance the motion prompt with AI |
+| `image_key` | string | ✓ | 资源上传中的 S3 图片密钥 |
+| `script` | string | ✓ | 头像要说的文本 |
+| `voice_id` | string | ✓ | 使用的语音 |
+| `video_orientation` | string | | `"portrait"`、`"landscape"` 或 `"square"` |
+| `video_title` | string | | 视频标题 |
+| `fit` | string | | `"cover"` 或 `"contain"` |
+| `custom_motion_prompt` | string | | 动作/表情描述 |
+| `enhance_custom_motion_prompt` | boolean | | 使用 AI 增强动作提示词 |
 
 ### TypeScript
 
@@ -466,54 +466,54 @@ async function generateAvatarIVVideo(
 }
 ```
 
-### Avatar IV Options
+### Avatar IV 选项
 
-| Orientation | Dimensions | Use Case |
+| 方向 | 尺寸 | 使用场景 |
 |-------------|------------|----------|
-| `portrait` | 720x1280 | TikTok, Stories |
-| `landscape` | 1280x720 | YouTube, Web |
-| `square` | 720x720 | Instagram Feed |
+| `portrait` | 720x1280 | TikTok、Stories |
+| `landscape` | 1280x720 | YouTube、Web |
+| `square` | 720x720 | Instagram 信息流 |
 
-| Fit | Description |
+| 适应方式 | 描述 |
 |-----|-------------|
-| `cover` | Fill the frame, may crop edges |
-| `contain` | Fit entire image, may show background |
+| `cover` | 填满画面，可能裁剪边缘 |
+| `contain` | 适配完整图像，可能显示背景 |
 
-### Custom Motion Prompts
+### 自定义动作提示词
 
 ```typescript
 const videoId = await generateAvatarIVVideo({
   image_key: "image/.../original.jpg",
-  script: "Let me tell you about our product.",
+  script: "让我向您介绍我们的产品。",
   voice_id: "1bd001e7e50f421d891986aad5158bc8",
-  custom_motion_prompt: "nodding head and smiling",
+  custom_motion_prompt: "点头并微笑",
   enhance_custom_motion_prompt: true,
 });
 ```
 
-## Generating AI Photo Avatars
+## 生成 AI 照片头像
 
-Generate synthetic photo avatars from text descriptions instead of uploading a photo.
+从文本描述生成合成照片头像，而不是上传照片。
 
-**Endpoint:** `POST https://api.heygen.com/v2/photo_avatar/photo/generate`
+**端点：** `POST https://api.heygen.com/v2/photo_avatar/photo/generate`
 
-> **IMPORTANT: All 8 fields are REQUIRED.** The API will reject requests missing any field.
-> When a user asks to "generate an AI avatar of a professional man", you need to ask for or select values for ALL fields below.
+> **重要：所有 8 个字段都是必需的。** 如果缺少任何字段，API 将拒绝请求。
+> 当用户要求"生成一个职业男性的 AI 头像"时，你需要询问或选择以下所有字段的值。
 
-### Required Fields (ALL must be provided)
+### 必需字段（必须全部提供）
 
-| Field | Type | Allowed Values |
+| 字段 | 类型 | 允许的值 |
 |-------|------|----------------|
-| `name` | string | Name for the generated avatar |
-| `age` | enum | `"Young Adult"`, `"Early Middle Age"`, `"Late Middle Age"`, `"Senior"`, `"Unspecified"` |
-| `gender` | enum | `"Woman"`, `"Man"`, `"Unspecified"` |
-| `ethnicity` | enum | `"White"`, `"Black"`, `"Asian American"`, `"East Asian"`, `"South East Asian"`, `"South Asian"`, `"Middle Eastern"`, `"Pacific"`, `"Hispanic"`, `"Unspecified"` |
-| `orientation` | enum | `"square"`, `"horizontal"`, `"vertical"` |
-| `pose` | enum | `"half_body"`, `"close_up"`, `"full_body"` |
-| `style` | enum | `"Realistic"`, `"Pixar"`, `"Cinematic"`, `"Vintage"`, `"Noir"`, `"Cyberpunk"`, `"Unspecified"` |
-| `appearance` | string | Text prompt describing appearance (clothing, mood, lighting, etc). Max 1000 chars |
+| `name` | string | 生成头像的名称 |
+| `age` | enum | `"Young Adult"`、`"Early Middle Age"`、`"Late Middle Age"`、`"Senior"`、`"Unspecified"` |
+| `gender` | enum | `"Woman"`、`"Man"`、`"Unspecified"` |
+| `ethnicity` | enum | `"White"`、`"Black"`、`"Asian American"`、`"East Asian"`、`"South East Asian"`、`"South Asian"`、`"Middle Eastern"`、`"Pacific"`、`"Hispanic"`、`"Unspecified"` |
+| `orientation` | enum | `"square"`、`"horizontal"`、`"vertical"` |
+| `pose` | enum | `"half_body"`、`"close_up"`、`"full_body"` |
+| `style` | enum | `"Realistic"`、`"Pixar"`、`"Cinematic"`、`"Vintage"`、`"Noir"`、`"Cyberpunk"`、`"Unspecified"` |
+| `appearance` | string | 描述外观的文本提示词（服装、情绪、灯光等）。最大 1000 字符 |
 
-### curl Example
+### curl 示例
 
 ```bash
 curl -X POST "https://api.heygen.com/v2/photo_avatar/photo/generate" \
@@ -531,7 +531,7 @@ curl -X POST "https://api.heygen.com/v2/photo_avatar/photo/generate" \
   }'
 ```
 
-Response:
+响应：
 ```json
 {
   "error": null,
@@ -541,11 +541,11 @@ Response:
 }
 ```
 
-### Check Generation Status
+### 检查生成状态
 
-**Endpoint:** `GET https://api.heygen.com/v2/photo_avatar/generation/{generation_id}`
+**端点：** `GET https://api.heygen.com/v2/photo_avatar/generation/{generation_id}`
 
-The response includes multiple generated images to choose from:
+响应包含多张生成的图片供选择：
 
 ```json
 {
@@ -619,7 +619,7 @@ async function generatePhotoAvatar(
   const json: GeneratePhotoAvatarResponse = await response.json();
 
   if (json.error) {
-    throw new Error(`Photo avatar generation failed: ${json.error}`);
+    throw new Error(`照片头像生成失败: ${json.error}`);
   }
 
   return json.data.generation_id;
@@ -643,24 +643,24 @@ async function waitForPhotoGeneration(
     }
 
     if (json.data.status === "failed") {
-      throw new Error(json.data.msg ?? "Photo generation failed");
+      throw new Error(json.data.msg ?? "照片生成失败");
     }
 
     await new Promise((r) => setTimeout(r, 5000));
   }
 
-  throw new Error("Photo generation timed out");
+  throw new Error("照片生成超时");
 }
 ```
 
-### AI Photo → Avatar Group → Video
+### AI 照片 → 头像组 → 视频
 
-Use a generated AI photo to create an avatar group, then generate a video:
+使用生成的 AI 照片创建头像组，然后生成视频：
 
 ```typescript
-// 1. Generate AI photo
+// 1. 生成 AI 照片
 const generationId = await generatePhotoAvatar({
-  name: "Product Demo Host",
+  name: "产品演示主持人",
   age: "Young Adult",
   gender: "Woman",
   ethnicity: "Unspecified",
@@ -670,11 +670,11 @@ const generationId = await generatePhotoAvatar({
   appearance: "Professional woman, navy blazer, friendly smile, soft lighting",
 });
 
-// 2. Wait for generation and pick first result
+// 2. 等待生成并选择第一个结果
 const imageKeys = await waitForPhotoGeneration(generationId);
 const selectedImageKey = imageKeys[0];
 
-// 3. Create avatar group from the AI photo
+// 3. 从 AI 照片创建头像组
 const createResponse = await fetch(
   "https://api.heygen.com/v2/photo_avatar/avatar_group/create",
   {
@@ -685,7 +685,7 @@ const createResponse = await fetch(
     },
     body: JSON.stringify({
       image_key: selectedImageKey,
-      name: "Product Demo Host",
+      name: "产品演示主持人",
       generation_id: generationId,
     }),
   }
@@ -694,7 +694,7 @@ const createResponse = await fetch(
 const { data } = await createResponse.json();
 const talkingPhotoId = data.id;
 
-// 4. Generate video (after status is "completed")
+// 4. 生成视频（状态变为 "completed" 后）
 const videoId = await generateVideo({
   video_inputs: [{
     character: {
@@ -703,7 +703,7 @@ const videoId = await generateVideo({
     },
     voice: {
       type: "text",
-      input_text: "Welcome to our product demo!",
+      input_text: "欢迎来到我们的产品演示！",
       voice_id: "1bd001e7e50f421d891986aad5158bc8",
     },
   }],
@@ -711,41 +711,41 @@ const videoId = await generateVideo({
 });
 ```
 
-### Pre-Generation Checklist
+### 生成前清单
 
-Before calling the AI generation API, ensure you have values for ALL fields:
+在调用 AI 生成 API 之前，确保你拥有所有字段的值：
 
-| # | Field | Question to Ask / Default |
+| # | 字段 | 需要询问的问题 / 默认值 |
 |---|-------|---------------------------|
-| 1 | `name` | What should we call this avatar? |
-| 2 | `age` | Young Adult / Early Middle Age / Late Middle Age / Senior? |
-| 3 | `gender` | Woman / Man? |
-| 4 | `ethnicity` | Which ethnicity? (see enum values above) |
-| 5 | `orientation` | horizontal (landscape) / vertical (portrait) / square? |
-| 6 | `pose` | half_body (recommended) / close_up / full_body? |
-| 7 | `style` | Realistic (recommended) / Cinematic / other? |
-| 8 | `appearance` | Describe clothing, expression, lighting, background |
+| 1 | `name` | 我们应该如何称呼这个头像？ |
+| 2 | `age` | 青年 / 壮年早期 / 壮年晚期 / 老年？ |
+| 3 | `gender` | 女性 / 男性？ |
+| 4 | `ethnicity` | 哪个民族？（参见上面的枚举值） |
+| 5 | `orientation` | 横向（横屏）/ 纵向（竖屏）/ 方形？ |
+| 6 | `pose` | 半身（推荐）/ 特写 / 全身？ |
+| 7 | `style` | 写实（推荐）/ 电影感 / 其他？ |
+| 8 | `appearance` | 描述服装、表情、灯光、背景 |
 
-**If the user only provides a vague request** like "create a professional looking man", ask them to specify the missing fields OR make reasonable defaults (e.g., "Early Middle Age", "Realistic" style, "half_body" pose, "horizontal" orientation).
+**如果用户只提供了模糊的请求**，比如"创建一个看起来专业的男性"，请让他们指定缺失的字段，或者使用合理的默认值（例如"壮年早期"、"写实"风格、"半身"姿势、"横向"方向）。
 
-### Appearance Prompt Tips
+### 外观提示词技巧
 
-The `appearance` field is a text prompt - be descriptive:
+`appearance` 字段是一个文本提示词——要描述详细：
 
-**Good prompts:**
-- "Professional woman with shoulder-length brown hair, wearing a light blue button-down shirt, warm friendly smile, soft studio lighting, clean white background"
-- "Young man with short black hair, casual tech startup style, wearing a dark hoodie, confident expression, modern office background with plants"
+**好的提示词：**
+- "披肩棕色长发的职业女性，穿着浅蓝色纽扣衬衫，温暖友好的微笑，柔和的摄影室灯光，干净的白色背景"
+- "黑色短发的年轻男性，休闲科技创业风格，穿着深色连帽衫，自信的表情，带植物的现代办公室背景"
 
-**Avoid:**
-- Vague descriptions: "a nice person"
-- Conflicting attributes
-- Requesting specific real people
+**避免：**
+- 模糊的描述："一个好人"
+- 冲突的属性
+- 请求特定的真实人物
 
-## Managing Photo Avatars
+## 管理照片头像
 
-### Get Photo Avatar Details
+### 获取照片头像详情
 
-**Endpoint:** `GET https://api.heygen.com/v2/photo_avatar/{id}`
+**端点：** `GET https://api.heygen.com/v2/photo_avatar/{id}`
 
 ```typescript
 async function getPhotoAvatar(id: string): Promise<PhotoAvatarResponse> {
@@ -757,9 +757,9 @@ async function getPhotoAvatar(id: string): Promise<PhotoAvatarResponse> {
 }
 ```
 
-### Delete Photo Avatar
+### 删除照片头像
 
-**Endpoint:** `DELETE https://api.heygen.com/v2/photo_avatar/{id}`
+**端点：** `DELETE https://api.heygen.com/v2/photo_avatar/{id}`
 
 ```typescript
 async function deletePhotoAvatar(id: string): Promise<void> {
@@ -772,14 +772,14 @@ async function deletePhotoAvatar(id: string): Promise<void> {
   );
 
   if (!response.ok) {
-    throw new Error("Failed to delete photo avatar");
+    throw new Error("删除照片头像失败");
   }
 }
 ```
 
-### Delete Photo Avatar Group
+### 删除照片头像组
 
-**Endpoint:** `DELETE https://api.heygen.com/v2/photo_avatar_group/{group_id}`
+**端点：** `DELETE https://api.heygen.com/v2/photo_avatar_group/{group_id}`
 
 ```typescript
 async function deletePhotoAvatarGroup(groupId: string): Promise<void> {
@@ -792,62 +792,62 @@ async function deletePhotoAvatarGroup(groupId: string): Promise<void> {
   );
 
   if (!response.ok) {
-    throw new Error("Failed to delete photo avatar group");
+    throw new Error("删除照片头像组失败");
   }
 }
 ```
 
-## API Reference
+## API 参考
 
-| Endpoint | Method | Description |
+| 端点 | 方法 | 描述 |
 |----------|--------|-------------|
-| `upload.heygen.com/v1/asset` | POST | Upload image (returns `image_key`) |
-| `/v2/photo_avatar/avatar_group/create` | POST | Create photo avatar from `image_key` |
-| `/v2/photo_avatar/avatar_group/add` | POST | Add photos to existing group |
-| `/v2/photo_avatar/train` | POST | Train avatar group |
-| `/v2/photo_avatar/train/status/{group_id}` | GET | Check training status |
-| `/v2/photo_avatar/{id}` | GET | Get photo avatar details/status |
-| `/v2/photo_avatar/{id}` | DELETE | Delete photo avatar |
-| `/v2/photo_avatar_group/{id}` | DELETE | Delete avatar group |
-| `/v2/photo_avatar/photo/generate` | POST | Generate AI photo from text |
-| `/v2/photo_avatar/generation/{id}` | GET | Check AI generation status |
-| `/v2/video/av4/generate` | POST | Avatar IV video from `image_key` |
-| `/v1/talking_photo.list` | GET | List all existing talking photos |
-| `/v2/video/generate` | POST | Generate video with `talking_photo_id` |
+| `upload.heygen.com/v1/asset` | POST | 上传图片（返回 `image_key`） |
+| `/v2/photo_avatar/avatar_group/create` | POST | 从 `image_key` 创建照片头像 |
+| `/v2/photo_avatar/avatar_group/add` | POST | 向现有组添加照片 |
+| `/v2/photo_avatar/train` | POST | 训练头像组 |
+| `/v2/photo_avatar/train/status/{group_id}` | GET | 检查训练状态 |
+| `/v2/photo_avatar/{id}` | GET | 获取照片头像详情/状态 |
+| `/v2/photo_avatar/{id}` | DELETE | 删除照片头像 |
+| `/v2/photo_avatar_group/{id}` | DELETE | 删除头像组 |
+| `/v2/photo_avatar/photo/generate` | POST | 从文本生成 AI 照片 |
+| `/v2/photo_avatar/generation/{id}` | GET | 检查 AI 生成状态 |
+| `/v2/video/av4/generate` | POST | 从 `image_key` 生成 Avatar IV 视频 |
+| `/v1/talking_photo.list` | GET | 列出所有现有说话照片 |
+| `/v2/video/generate` | POST | 使用 `talking_photo_id` 生成视频 |
 
-## Photo Requirements
+## 照片要求
 
-### Technical Requirements
+### 技术要求
 
-| Aspect | Requirement |
+| 方面 | 要求 |
 |--------|-------------|
-| Format | JPEG, PNG |
-| Resolution | Minimum 512x512px |
-| File size | Under 10MB |
-| Face visibility | Clear, front-facing |
+| 格式 | JPEG、PNG |
+| 分辨率 | 最小 512x512px |
+| 文件大小 | 10MB 以下 |
+| 面部可见性 | 清晰、正面 |
 
-### Quality Guidelines
+### 质量指南
 
-1. **Lighting** - Even, natural lighting on face
-2. **Expression** - Neutral or slight smile
-3. **Background** - Simple, uncluttered
-4. **Face position** - Centered, not cut off
-5. **Clarity** - Sharp, in focus
-6. **Angle** - Straight-on or slight angle
+1. **光线** - 面部均匀、自然的光线
+2. **表情** - 中性或轻微微笑
+3. **背景** - 简单、整洁
+4. **面部位置** - 居中，不被裁剪
+5. **清晰度** - 锐利、对焦清晰
+6. **角度** - 正面或轻微角度
 
-## Best Practices
+## 最佳实践
 
-1. **Use high-quality photos** - Better input = better output
-2. **Front-facing portraits** - Work best for animation
-3. **Neutral expressions** - Allow for more natural animation
-4. **Use Avatar IV for best quality** - Latest generation technology
-5. **Train avatar groups** - Improves animation quality
-6. **Reuse photo avatar IDs** - Once created, use the same `talking_photo_id` across multiple videos
+1. **使用高质量照片** - 更好的输入 = 更好的输出
+2. **正面肖像** - 最适合动画化
+3. **中性表情** - 允许更自然的动画
+4. **使用 Avatar IV 获得最佳质量** - 最新一代技术
+5. **训练头像组** - 提高动画质量
+6. **复用照片头像 ID** - 一旦创建，可在多个视频中使用相同的 `talking_photo_id`
 
-## Limitations
+## 限制
 
-- Photo quality significantly affects output
-- Side-profile photos have limited support
-- Full-body photos may not animate properly
-- Some expressions may look unnatural
-- Processing time varies by complexity
+- 照片质量显著影响输出
+- 侧面轮廓照片支持有限
+- 全身照片可能无法正常动画化
+- 某些表情可能看起来不自然
+- 处理时间因复杂度而异

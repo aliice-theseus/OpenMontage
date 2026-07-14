@@ -1,18 +1,18 @@
 ---
 name: gsap-timeline
-description: Official GSAP skill for timelines — gsap.timeline(), position parameter, nesting, playback. Use when sequencing animations, choreographing keyframes, or when the user asks about animation sequencing, timelines, or animation order (in GSAP or when recommending a library that supports timelines).
+description: GSAP 时间线的官方技能 — gsap.timeline()、位置参数、嵌套、播放控制。在排序动画、编排关键帧，或用户询问动画排序、时间线或动画顺序时使用（GSAP 中或推荐支持时间线的库时）。
 license: MIT
 ---
 
-# GSAP Timeline
+# GSAP 时间线
 
-## When to Use This Skill
+## 何时使用此技能
 
-Apply when building multi-step animations, coordinating several tweens in sequence or parallel, or when the user asks about timelines, sequencing, or keyframe-style animation in GSAP.
+在构建多步骤动画、协调多个补间的序列或并行执行，或用户询问 GSAP 中的时间线、排序或关键帧风格动画时应用。
 
-**Related skills:** For single tweens and eases use **gsap-core**; for scroll-driven timelines use **gsap-scrolltrigger**; for React use **gsap-react**.
+**相关技能：** 单个补间和缓动使用 **gsap-core**；滚动驱动时间线使用 **gsap-scrolltrigger**；React 使用 **gsap-react**。
 
-## Creating a Timeline
+## 创建时间线
 
 ```javascript
 const tl = gsap.timeline();
@@ -21,58 +21,58 @@ tl.to(".a", { x: 100, duration: 1 })
   .to(".c", { opacity: 0, duration: 0.3 });
 ```
 
-By default, tweens are **appended** one after another. Use the **position parameter** to place tweens at specific times or relative to other tweens.
+默认情况下，补间**依次追加**。使用**位置参数**将补间放置在特定时间或相对于其他补间的的位置。
 
-## Position Parameter
+## 位置参数
 
-Third argument (or position property in vars) controls placement:
+第三个参数（或 vars 中的 position 属性）控制放置位置：
 
-- **Absolute**: `1` — start at 1 second.
-- **Relative (default)**: `"+=0.5"` — 0.5s after end; `"-=0.2"` — 0.2s before end.
-- **Label**: `"labelName"` — at that label; `"labelName+=0.3"` — 0.3s after label.
-- **Placement**: `"<"` — start when recently-added animation starts; `">"` — start when recently-added animation ends (default); `"<0.2"` — 0.2s after recently-added animation start.
+- **绝对位置**：`1` — 从 1 秒开始。
+- **相对位置（默认）**：`"+=0.5"` — 在上一个结束后 0.5 秒；`"-=0.2"` — 在上一个结束前 0.2 秒。
+- **标签**：`"labelName"` — 在该标签处；`"labelName+=0.3"` — 在标签后 0.3 秒。
+- **放置位置**：`"<"` — 与最近添加的动画同时开始；`">"` — 在最近添加的动画结束时开始（默认）；`"<0.2"` — 在最近添加的动画开始后 0.2 秒。
 
-Examples:
+示例：
 
 ```javascript
-tl.to(".a", { x: 100 }, 0);           // at 0
-tl.to(".b", { y: 50 }, "+=0.5");      // 0.5s after last end
-tl.to(".c", { opacity: 0 }, "<");     // same start as previous
-tl.to(".d", { scale: 2 }, "<0.2");    // 0.2s after previous start
+tl.to(".a", { x: 100 }, 0);           // 在 0 处
+tl.to(".b", { y: 50 }, "+=0.5");      // 在上一个结束后 0.5 秒
+tl.to(".c", { opacity: 0 }, "<");     // 与上一个同时开始
+tl.to(".d", { scale: 2 }, "<0.2");    // 在上一个开始后 0.2 秒
 ```
 
-## Timeline Defaults
+## 时间线默认值
 
-Pass defaults into the timeline so all child tweens inherit:
+将默认值传入时间线，以便所有子补间继承：
 
 ```javascript
 const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "power2.out" } });
-tl.to(".a", { x: 100 }).to(".b", { y: 50 }); // both use 0.5s and power2.out
+tl.to(".a", { x: 100 }).to(".b", { y: 50 }); // 两者都使用 0.5s 和 power2.out
 ```
 
-## Timeline Options (constructor)
+## 时间线选项（构造函数）
 
-- **paused: true** — create paused; call `.play()` to start.
-- **repeat**, **yoyo** — same as tweens; apply to whole timeline.
-- **onComplete**, **onStart**, **onUpdate** — timeline-level callbacks.
-- **defaults** — vars merged into every child tween.
+- **paused: true** — 创建时暂停；调用 `.play()` 开始。
+- **repeat**、**yoyo** — 与补间相同；应用于整个时间线。
+- **onComplete**、**onStart**、**onUpdate** — 时间线级别的回调。
+- **defaults** — 合并到每个子补间中的 vars。
 
-## Labels
+## 标签
 
-Add and use labels for readable, maintainable sequencing:
+添加和使用标签以实现可读、可维护的序列：
 
 ```javascript
 tl.addLabel("intro", 0);
 tl.to(".a", { x: 100 }, "intro");
 tl.addLabel("outro", "+=0.5");
 tl.to(".b", { opacity: 0 }, "outro");
-tl.play("outro");  // start from "outro"
-tl.tweenFromTo("intro", "outro"); // pauses the timeline and returns a new Tween that animates the timeline's playhead from intro to outro with no ease.
+tl.play("outro");  // 从 "outro" 开始播放
+tl.tweenFromTo("intro", "outro"); // 暂停时间线并返回一个新的 Tween，使时间线的播放头从 intro 到 outro 无缓动地动画
 ```
 
-## Nesting Timelines
+## 嵌套时间线
 
-Timelines can contain other timelines.
+时间线可以包含其他时间线。
 
 ```javascript
 const master = gsap.timeline();
@@ -82,26 +82,26 @@ master.add(child, 0);
 master.to(".c", { opacity: 0 }, "+=0.2");
 ```
 
-## Controlling Playback
+## 控制播放
 
 - **tl.play()** / **tl.pause()**
-- **tl.reverse()** / **tl.progress(1)** then **tl.reverse()**
-- **tl.restart()** — from start.
-- **tl.time(2)** — seek to 2 seconds.
-- **tl.progress(0.5)** — seek to 50%.
-- **tl.kill()** — kill timeline and (by default) its children.
+- **tl.reverse()** / **tl.progress(1)** 然后 **tl.reverse()**
+- **tl.restart()** — 从头开始。
+- **tl.time(2)** — 定位到 2 秒。
+- **tl.progress(0.5)** — 定位到 50%。
+- **tl.kill()** — 杀死时间线和（默认）其子元素。
 
-## Official GSAP Best practices
+## 官方 GSAP 最佳实践
 
-- ✅ Prefer timelines for sequencing
-- ✅ Use the **position parameter** (third argument) to place tweens at specific times or relative to labels.
-- ✅ Add **labels** with `addLabel()` for readable, maintainable sequencing.
-- ✅ Pass **defaults** into the timeline constructor so child tweens inherit duration, ease, etc.
-- ✅ Put ScrollTrigger on the timeline (or top-level tween), not on tweens inside a timeline.
+- ✅ 优先使用时间线进行序列编排
+- ✅ 使用**位置参数**（第三个参数）将补间放在特定时间或相对于标签的位置
+- ✅ 使用 `addLabel()` 添加**标签**以实现可读、可维护的序列编排
+- ✅ 将 **defaults** 传入时间线构造函数，使子补间继承 duration、ease 等
+- ✅ 将 ScrollTrigger 放在时间线（或顶层补间）上，而不是放在时间线内部的补间上
 
-## Do Not
+## 禁止
 
-- ❌ Chain animations with **delay** when a **timeline** can sequence them; prefer `gsap.timeline()` and the position parameter for multi-step animation.
-- ❌ Forget to pass **defaults** (e.g. `defaults: { duration: 0.5, ease: "power2.out" }`) when many child tweens share the same duration or ease.
-- ❌ Forget that **duration** on the timeline constructor is not the same as tween duration; timeline “duration” is determined by its children.
-- ❌ Nest animations that contain a ScrollTrigger; ScrollTriggers should only be on top-level Tweens/Timelines.
+- ❌ 当**时间线**可以对它们进行排序时，使用 **delay** 链式动画；对于多步骤动画，优先使用 `gsap.timeline()` 和位置参数
+- ❌ 当许多子补间共享相同的 duration 或 ease 时，忘记传递 **defaults**（例如 `defaults: { duration: 0.5, ease: "power2.out" }`）
+- ❌ 忘记时间线构造函数上的 **duration** 与补间 duration 不同；时间线的"duration"由其子元素决定
+- ❌ 嵌套包含 ScrollTrigger 的动画；ScrollTrigger 只应位于顶层补间/时间线上

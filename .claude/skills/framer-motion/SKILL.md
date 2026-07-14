@@ -1,13 +1,13 @@
 ---
 name: framer-motion
-description: Use when implementing Disney's 12 animation principles with Framer Motion in React applications
+description: 在 React 应用中使用 Framer Motion 实现迪士尼 12 项动画原则时使用
 ---
 
-# Framer Motion Animation Principles
+# Framer Motion 动画原则
 
-Implement all 12 Disney animation principles using Framer Motion's declarative React API.
+使用 Framer Motion 的声明式 React API 实现所有 12 项迪士尼动画原则。
 
-## 1. Squash and Stretch
+## 1. 挤压与拉伸（Squash and Stretch）
 
 ```jsx
 <motion.div
@@ -16,7 +16,7 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
 />
 ```
 
-## 2. Anticipation
+## 2. 预备动作（Anticipation）
 
 ```jsx
 <motion.div
@@ -31,14 +31,14 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
 />
 ```
 
-## 3. Staging
+## 3. 演出布局（Staging）
 
 ```jsx
-<motion.div animate={{ filter: "blur(3px)", opacity: 0.6 }} /> {/* bg */}
-<motion.div animate={{ scale: 1.1, zIndex: 10 }} /> {/* hero */}
+<motion.div animate={{ filter: "blur(3px)", opacity: 0.6 }} /> {/* 背景 */}
+<motion.div animate={{ scale: 1.1, zIndex: 10 }} /> {/* 主角 */}
 ```
 
-## 4. Straight Ahead / Pose to Pose
+## 4. 连续动作与关键姿势（Straight Ahead / Pose to Pose）
 
 ```jsx
 <motion.div
@@ -50,22 +50,22 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
 />
 ```
 
-## 5. Follow Through and Overlapping Action
+## 5. 跟随与重叠动作（Follow Through and Overlapping Action）
 
 ```jsx
 <motion.div animate={{ x: 200 }} transition={{ duration: 0.5 }}>
   <motion.span
     animate={{ x: 200 }}
-    transition={{ duration: 0.5, delay: 0.05 }} // hair
+    transition={{ duration: 0.5, delay: 0.05 }} // 头发
   />
   <motion.span
     animate={{ x: 200 }}
-    transition={{ duration: 0.6, delay: 0.1 }} // cape
+    transition={{ duration: 0.6, delay: 0.1 }} // 披风
   />
 </motion.div>
 ```
 
-## 6. Slow In and Slow Out
+## 6. 慢入慢出（Slow In and Slow Out）
 
 ```jsx
 <motion.div
@@ -75,10 +75,10 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
     ease: [0.42, 0, 0.58, 1] // easeInOut cubic-bezier
   }}
 />
-// Or use: "easeIn", "easeOut", "easeInOut"
+// 或使用: "easeIn", "easeOut", "easeInOut"
 ```
 
-## 7. Arc
+## 7. 弧线运动（Arc）
 
 ```jsx
 <motion.div
@@ -90,7 +90,7 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
 />
 ```
 
-## 8. Secondary Action
+## 8. 次要动作（Secondary Action）
 
 ```jsx
 <motion.button
@@ -101,12 +101,12 @@ Implement all 12 Disney animation principles using Framer Motion's declarative R
     animate={{ rotate: [0, 10, -10, 0] }}
     transition={{ duration: 0.3 }}
   >
-    Icon
+    图标
   </motion.span>
 </motion.button>
 ```
 
-## 9. Timing
+## 9. 时间节奏（Timing）
 
 ```jsx
 const timings = {
@@ -117,7 +117,7 @@ const timings = {
 };
 ```
 
-## 10. Exaggeration
+## 10. 夸张表现（Exaggeration）
 
 ```jsx
 <motion.div
@@ -125,12 +125,12 @@ const timings = {
   transition={{
     type: "spring",
     stiffness: 200,
-    damping: 10 // low damping = overshoot
+    damping: 10 // 低阻尼 = 过量冲
   }}
 />
 ```
 
-## 11. Solid Drawing
+## 11. 扎实绘画（Solid Drawing）
 
 ```jsx
 <motion.div
@@ -140,7 +140,7 @@ const timings = {
 />
 ```
 
-## 12. Appeal
+## 12. 吸引力（Appeal）
 
 ```jsx
 <motion.div
@@ -152,7 +152,7 @@ const timings = {
 />
 ```
 
-## Stagger Children
+## 子元素交错（Stagger Children）
 
 ```jsx
 const container = {
@@ -168,12 +168,12 @@ const container = {
 </motion.ul>
 ```
 
-## Key Framer Motion Features
+## 关键 Framer Motion 功能
 
-- `animate` - Target state
-- `variants` - Named animation states
-- `whileHover` / `whileTap` - Gesture animations
-- `transition` - Timing and easing
-- `AnimatePresence` - Exit animations
-- `useAnimation` - Programmatic control
-- `layout` - Auto-animate layout changes
+- `animate` - 目标状态
+- `variants` - 命名动画状态
+- `whileHover` / `whileTap` - 手势动画
+- `transition` - 时间和缓动
+- `AnimatePresence` - 退出动画
+- `useAnimation` - 编程控制
+- `layout` - 自动动画布局变化

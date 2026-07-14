@@ -1,31 +1,31 @@
 ---
 name: video-download
 description: |
-  Download video and audio from YouTube and 1000+ sites using yt-dlp. No API keys needed.
-  Use when: (1) Downloading a video from YouTube or other sites, (2) Extracting audio from a video URL,
-  (3) Downloading subtitles/captions from a video, (4) Getting video metadata without downloading.
+  使用 yt-dlp 从 YouTube 和 1000+ 站点下载视频和音频。无需 API 密钥。
+  在以下情况下使用：(1) 从 YouTube 或其他站点下载视频，(2) 从视频 URL 中提取音频，
+  (3) 从视频下载字幕/标题，(4) 在不下载的情况下获取视频元数据。
 ---
 
 # video-download
 
-Download video and audio from URLs using yt-dlp directly. No wrapper scripts needed.
+使用 yt-dlp 直接从 URL 下载视频和音频。无需包装脚本。
 
-## Prerequisites
+## 前提条件
 
-- **yt-dlp**: `brew install yt-dlp` or `pip install yt-dlp`
-- **ffmpeg**: `brew install ffmpeg` or `apt install ffmpeg` (required for merging video+audio streams)
+- **yt-dlp**：`brew install yt-dlp` 或 `pip install yt-dlp`
+- **ffmpeg**：`brew install ffmpeg` 或 `apt install ffmpeg`（合并视频+音频流需要）
 
-Update yt-dlp periodically to keep up with site changes: `yt-dlp -U` or `pip install -U yt-dlp`.
+定期更新 yt-dlp 以跟上站点变化：`yt-dlp -U` 或 `pip install -U yt-dlp`。
 
-## Commands
+## 命令
 
-### Download best quality
+### 下载最佳质量
 
 ```bash
 yt-dlp "URL" -o "%(title)s.%(ext)s" --merge-output-format mp4
 ```
 
-### Download specific resolution
+### 下载特定分辨率
 
 ```bash
 # 720p
@@ -35,78 +35,78 @@ yt-dlp "URL" -f "bestvideo[height<=720]+bestaudio/best[height<=720]" --merge-out
 yt-dlp "URL" -f "bestvideo[height<=1080]+bestaudio/best[height<=1080]" --merge-output-format mp4
 ```
 
-### Audio only
+### 仅音频
 
 ```bash
 yt-dlp "URL" -x --audio-format mp3 --audio-quality 0
 ```
 
-### Download subtitles
+### 下载字幕
 
 ```bash
-# Download video with English subtitles
+# 下载带有英文字幕的视频
 yt-dlp "URL" --write-subs --sub-langs en --merge-output-format mp4
 
-# Download video with multiple subtitle languages
+# 下载带有多种语言字幕的视频
 yt-dlp "URL" --write-subs --sub-langs "en,es,fr" --merge-output-format mp4
 
-# Download only subtitles (no video)
+# 仅下载字幕（无视频）
 yt-dlp "URL" --write-subs --sub-langs en --skip-download
 ```
 
-### Get metadata (no download)
+### 获取元数据（不下载）
 
 ```bash
 yt-dlp "URL" --dump-json --no-download
 ```
 
-### List available formats
+### 列出可用格式
 
 ```bash
 yt-dlp "URL" -F
 ```
 
-### Specify output directory
+### 指定输出目录
 
 ```bash
 yt-dlp "URL" -o "./downloads/%(title)s.%(ext)s" --merge-output-format mp4
 ```
 
-## Quality Presets
+## 质量预设
 
-| Quality | Format flag |
+| 质量 | 格式标志 |
 |---------|-------------|
-| Best | `-f "bestvideo+bestaudio/best"` (default) |
+| 最佳 | `-f "bestvideo+bestaudio/best"`（默认） |
 | 1080p | `-f "bestvideo[height<=1080]+bestaudio/best[height<=1080]"` |
 | 720p | `-f "bestvideo[height<=720]+bestaudio/best[height<=720]"` |
 | 480p | `-f "bestvideo[height<=480]+bestaudio/best[height<=480]"` |
-| Worst | `-f "worstvideo+worstaudio/worst"` |
+| 最差 | `-f "worstvideo+worstaudio/worst"` |
 
-## Output Template Variables
+## 输出模板变量
 
-Common variables for `-o` templates:
+`-o` 模板的常用变量：
 
-| Variable | Description |
+| 变量 | 描述 |
 |----------|-------------|
-| `%(title)s` | Video title |
-| `%(ext)s` | File extension |
-| `%(id)s` | Video ID |
-| `%(uploader)s` | Channel/uploader name |
-| `%(upload_date)s` | Upload date (YYYYMMDD) |
-| `%(duration)s` | Duration in seconds |
-| `%(resolution)s` | Video resolution |
+| `%(title)s` | 视频标题 |
+| `%(ext)s` | 文件扩展名 |
+| `%(id)s` | 视频 ID |
+| `%(uploader)s` | 频道/上传者名称 |
+| `%(upload_date)s` | 上传日期（YYYYMMDD） |
+| `%(duration)s` | 时长（秒） |
+| `%(resolution)s` | 视频分辨率 |
 
-## Tips
+## 技巧
 
-- Always use `--merge-output-format mp4` to avoid ending up with `.webm` or `.mkv` files.
-- Use `--no-download` with `--dump-json` for metadata-only queries -- no files written to disk.
-- If a download fails with HTTP errors, update yt-dlp first (`yt-dlp -U`).
-- Use `-f "bestvideo[height<=720]+bestaudio"` to save bandwidth when full resolution is not needed.
-- yt-dlp automatically handles rate limiting and retries.
-- The `--dump-json` output includes `title`, `duration`, `uploader`, `view_count`, `description`, `formats`, `subtitles`, and much more.
+- 始终使用 `--merge-output-format mp4` 以避免生成 `.webm` 或 `.mkv` 文件。
+- 使用 `--no-download` 配合 `--dump-json` 进行仅元数据查询 — 不向磁盘写入文件。
+- 如果下载因 HTTP 错误失败，首先更新 yt-dlp（`yt-dlp -U`）。
+- 当不需要全分辨率时，使用 `-f "bestvideo[height<=720]+bestaudio"` 节省带宽。
+- yt-dlp 自动处理限速和重试。
+- `--dump-json` 输出包括 `title`、`duration`、`uploader`、`view_count`、`description`、`formats`、`subtitles` 等更多信息。
 
-## Troubleshooting
+## 故障排除
 
-- **"yt-dlp: command not found"**: Install it (`pip install yt-dlp`) and ensure your PATH includes pip's bin directory.
-- **"ffmpeg: command not found"**: Install ffmpeg. Without it, downloads fail when video and audio are separate streams (common on YouTube for HD).
-- **Downloads fail or return errors**: Run `yt-dlp -U` to update. Sites change frequently and yt-dlp ships fixes regularly.
+- **"yt-dlp: command not found"**：安装它（`pip install yt-dlp`）并确保 PATH 包含 pip 的 bin 目录。
+- **"ffmpeg: command not found"**：安装 ffmpeg。没有它，当视频和音频是分离流时（YouTube HD 常见）下载会失败。
+- **下载失败或返回错误**：运行 `yt-dlp -U` 更新。站点变化频繁，yt-dlp 定期发布修复。

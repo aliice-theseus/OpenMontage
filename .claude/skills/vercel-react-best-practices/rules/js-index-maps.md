@@ -1,15 +1,15 @@
 ---
-title: Build Index Maps for Repeated Lookups
+title: 为重复查找构建索引映射
 impact: LOW-MEDIUM
-impactDescription: 1M ops to 2K ops
+impactDescription: 从 1M 操作降至 2K 操作
 tags: javascript, map, indexing, optimization, performance
 ---
 
-## Build Index Maps for Repeated Lookups
+## 为重复查找构建索引映射
 
-Multiple `.find()` calls by the same key should use a Map.
+对同一键的多个 `.find()` 调用应使用 Map。
 
-**Incorrect (O(n) per lookup):**
+**错误做法（每次查找 O(n)）：**
 
 ```typescript
 function processOrders(orders: Order[], users: User[]) {
@@ -20,7 +20,7 @@ function processOrders(orders: Order[], users: User[]) {
 }
 ```
 
-**Correct (O(1) per lookup):**
+**正确做法（每次查找 O(1)）：**
 
 ```typescript
 function processOrders(orders: Order[], users: User[]) {
@@ -33,5 +33,5 @@ function processOrders(orders: Order[], users: User[]) {
 }
 ```
 
-Build map once (O(n)), then all lookups are O(1).
-For 1000 orders × 1000 users: 1M ops → 2K ops.
+Map 构建一次（O(n)），之后所有查找都是 O(1)。
+对于 1000 个订单 × 1000 个用户：从 1M 操作降至 2K 操作。

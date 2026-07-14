@@ -1,17 +1,17 @@
 ---
-title: Lift State into Provider Components
+title: 将状态提升到 Provider 组件中
 impact: HIGH
-impactDescription: enables state sharing outside component boundaries
+impactDescription: 实现在组件边界之外共享状态
 tags: composition, state, context, providers
 ---
 
-## Lift State into Provider Components
+## 将状态提升到 Provider 组件中
 
-Move state management into dedicated provider components. This allows sibling
-components outside the main UI to access and modify state without prop drilling
-or awkward refs.
+将状态管理移到专用的 Provider 组件中。这允许主 UI
+之外的兄弟组件在不进行属性钻取或使用笨重的 ref 的情况下
+访问和修改状态。
 
-**Incorrect (state trapped inside component):**
+**错误（状态困在组件内部）：**
 
 ```tsx
 function ForwardMessageComposer() {
@@ -26,22 +26,22 @@ function ForwardMessageComposer() {
   )
 }
 
-// Problem: How does this button access composer state?
+// 问题：这个按钮如何访问编辑器状态？
 function ForwardMessageDialog() {
   return (
     <Dialog>
       <ForwardMessageComposer />
-      <MessagePreview /> {/* Needs composer state */}
+      <MessagePreview /> {/* 需要编辑器状态 */}
       <DialogActions>
         <CancelButton />
-        <ForwardButton /> {/* Needs to call submit */}
+        <ForwardButton /> {/* 需要调用 submit */}
       </DialogActions>
     </Dialog>
   )
 }
 ```
 
-**Incorrect (useEffect to sync state up):**
+**错误（使用 useEffect 同步状态向上）：**
 
 ```tsx
 function ForwardMessageDialog() {
@@ -57,12 +57,12 @@ function ForwardMessageDialog() {
 function ForwardMessageComposer({ onInputChange }) {
   const [state, setState] = useState(initialState)
   useEffect(() => {
-    onInputChange(state.input) // Sync on every change 😬
+    onInputChange(state.input) // 每次变化都同步 😬
   }, [state.input])
 }
 ```
 
-**Incorrect (reading state from ref on submit):**
+**错误（提交时从 ref 读取状态）：**
 
 ```tsx
 function ForwardMessageDialog() {
@@ -76,7 +76,7 @@ function ForwardMessageDialog() {
 }
 ```
 
-**Correct (state lifted to provider):**
+**正确（状态提升到 Provider）：**
 
 ```tsx
 function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
@@ -100,10 +100,10 @@ function ForwardMessageDialog() {
     <ForwardMessageProvider>
       <Dialog>
         <ForwardMessageComposer />
-        <MessagePreview /> {/* Custom components can access state and actions */}
+        <MessagePreview /> {/* 自定义组件可以访问状态和操作 */}
         <DialogActions>
           <CancelButton />
-          <ForwardButton /> {/* Custom components can access state and actions */}
+          <ForwardButton /> {/* 自定义组件可以访问状态和操作 */}
         </DialogActions>
       </Dialog>
     </ForwardMessageProvider>
@@ -112,14 +112,13 @@ function ForwardMessageDialog() {
 
 function ForwardButton() {
   const { actions } = use(Composer.Context)
-  return <Button onPress={actions.submit}>Forward</Button>
+  return <Button onPress={actions.submit}>转发</Button>
 }
 ```
 
-The ForwardButton lives outside the Composer.Frame but still has access to the
-submit action because it's within the provider. Even though it's a one-off
-component, it can still access the composer's state and actions from outside the
-UI itself.
+ForwardButton 位于 Composer.Frame 外部，但仍然可以访问
+submit 操作，因为它位于 Provider 内部。即使它是一个一次性
+组件，它仍然可以从 UI 本身外部访问编辑器的状态和操作。
 
-**Key insight:** Components that need shared state don't have to be visually
-nested inside each other—they just need to be within the same provider.
+**关键洞察：** 需要共享状态的组件不必在视觉上
+相互嵌套——它们只需要在同一个 Provider 内部即可。

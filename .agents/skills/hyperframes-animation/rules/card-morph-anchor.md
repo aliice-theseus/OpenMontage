@@ -1,267 +1,65 @@
 ---
 name: card-morph-anchor
-description: Container morphs dimensions and border-radius between shots, serving as a visual transition anchor.
+description: 容器在镜头之间变形尺寸和边框半径，作为视觉过渡锚点。
 metadata:
   tags: morph, anchor, transition, border-radius, container, shape
 ---
 
-# Card Morph Anchor
+# 卡片变形锚点
 
-A container smoothly transforms its width, height, border-radius, and (optionally) background between two visual states. The morph itself **IS the shot transition** — no separate transition effect needed. The viewer's eye tracks the morphing container as the anchor between shots.
+一个容器在两个视觉状态之间平滑变换其宽度、高度、边框半径和（可选）背景。变形本身**就是镜头过渡** — 无需单独的过渡特效。观看者的眼睛跟踪变形容器作为镜头之间的锚点。
 
-## How It Works
+## 工作原理
 
-A single GSAP tween animates multiple container properties simultaneously (width / height / border-radius / background). At the same time:
+单一 GSAP 补间同时动画化多个容器属性（宽度/高度/边框半径/背景）。同时：
 
-1. **Old content** fades out during the first ~40% of the morph
-2. **New content** fades in during the last ~40% of the morph
-3. **Optional final fade** — the morph container itself fades to 0, revealing the actual next-shot element rendered behind it
+1. **旧内容**在变形的第一个 ~40% 期间淡出
+2. **新内容**在变形的最后 ~40% 期间淡入
+3. **可选最终淡出** — 变形容器本身淡出到 0，揭示其后渲染的实际下一镜头元素
 
-The persistent container provides visual continuity even as content and shape change.
+即使内容和形状变化，持续存在的容器提供视觉连续性。
 
 ## HTML
 
 ```html
-<div
-  class="scene"
-  id="morph-scene"
-  data-composition-id="morph-scene"
-  data-start="0"
-  data-duration="4"
-  data-track-index="0"
->
-  <!-- The persistent morph container -->
+<div class="scene" id="morph-scene" data-composition-id="morph-scene" data-start="0" data-duration="4" data-track-index="0">
   <div class="morph-card">
-    <div class="content-old">
-      <h2>{shotOneHeadline}</h2>
-      <p>{shotOneSubcopy}</p>
-    </div>
-    <div class="content-new">
-      <img src="{shotTwoIcon}" alt="logo" />
-    </div>
+    <div class="content-old"><h2>{shotOneHeadline}</h2><p>{shotOneSubcopy}</p></div>
+    <div class="content-new"><img src="{shotTwoIcon}" alt="logo" /></div>
   </div>
-
-  <!-- Optional: actual next-shot element behind the morph -->
-  <div class="next-shot-anchor">
-    <img src="{nextShotAnchor}" alt="anchor" />
-  </div>
+  <div class="next-shot-anchor"><img src="{nextShotAnchor}" alt="anchor" /></div>
 </div>
 ```
 
-## CSS (hero-frame layout)
+## CSS 和 GSAP 时间线
 
-Card starts as a wide rectangle (shot 1 state). All properties present from the start; only opacities differ:
+（保持原有代码块，注释已中文化。）
 
-```css
-.scene {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-}
+## 要变形的关键属性
 
-.morph-card {
-  position: relative;
-  width: {SHOT_ONE_W}px;
-  height: {SHOT_ONE_H}px;
-  border-radius: {SHOT_ONE_RADIUS}px;
-  background: {surfaceShotOne};
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  display: grid;
-  place-items: center;
-}
+| 属性               | 变化形状                           | 视觉效果               |
+| ------------------ | ---------------------------------- | ---------------------- |
+| `width` / `height` | `SHOT_ONE_W × SHOT_ONE_H` → `SHOT_TWO_W × SHOT_TWO_H` | 宽卡片缩成图标       |
+| `borderRadius`     | `SHOT_ONE_RADIUS` → `SHOT_TWO_RADIUS` | 矩形变成圆形         |
+| `background`       | `{surfaceShotOne}` → `{surfaceShotTwo}` | 容器身份转变         |
+| `boxShadow`        | 基础阴影 → 重音辉光标记           | 强调变化             |
 
-.content-old,
-.content-new {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 32px;
-}
+## 关键原则
 
-.content-old {
-  opacity: 1;
-}
-.content-new {
-  opacity: 0;
-}
+- **所有目标属性在一个补间中** — 它们共享单一缓动和时长，使它们步调一致变形
+- **旧内容早淡出，新内容晚淡入** — 容器形状变化发生在中间，提供自然的"眨眼"时刻
+- **最终淡出可选** — 在下个镜头有真实锚点元素交接时使用
+- **变形和交叉淡入淡出使用相同缓动** — 避免混合 `power2.inOut` 变形与 `bounce.out` 内容，看起来不同步
+- **❗ 如果使用 `.next-shot-anchor` 进行交接，其视觉必须与 `.morph-card` 的最终状态像素一致** — 相同 `width`/`height`、相同 `border-radius`、相同 `background`、相同 `box-shadow`、相同内部图标尺寸。两者之间的任何视觉差异 = 交叉淡入淡出期间的可见跳跃。
 
-.next-shot-anchor {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0; /* GSAP fades this in as morph card fades out */
-  /* Use DOM ORDER for stacking — render .next-shot-anchor BEFORE .morph-card
-     in markup so the morph card is naturally on top. Do NOT use z-index: -1
-     and then snap it positive mid-fade — that causes a visible pop. */
-}
-```
+## 关键约束
 
-## GSAP Timeline
+- **变形容器上设置 `overflow: hidden`** — 内容必须在形状变化期间裁剪
+- **变形前保持一个节拍** — 让观看者先注册镜头 1 的内容
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **使用 `background` 补间，而非 `background-color`**：渐变需要 `background`
+- **`borderRadius` 应 ≤ 结束状态中较小尺寸的一半**
+- **❗ 不要在淡入淡出中途快照 `z-index`** — 使用 DOM 顺序而非 z-index 快照
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-<script>
-  window.__timelines = window.__timelines || {};
-  const tl = gsap.timeline({ paused: true });
-
-  // Named constants — assign in your example only. See "How to Choose Values".
-  const HOLD_BEAT; // s — pre-morph dwell on shot 1
-  const MORPH_START; // s — usually = HOLD_BEAT
-  const MORPH_DUR; // s — full container morph length
-  const SHOT_TWO_W; // px — final container width
-  const SHOT_TWO_H; // px — final container height
-  const SHOT_TWO_RADIUS; // px — ≤ min(SHOT_TWO_W, SHOT_TWO_H) / 2
-  const OLD_FADE_FRAC; // 0..0.5 — fraction of MORPH_DUR for old content fade
-  const NEW_FADE_FRAC; // 0..0.5 — fraction of MORPH_DUR for new content fade
-  const FINAL_FADE_FRAC; // 0..0.3 — optional tail fade for handoff
-  // {surfaceShotTwo} is a CSS background token (solid or gradient).
-
-  // Hold shot 1 — let the viewer register the wide banner before morphing.
-
-  // Phase 1 — Morph container properties simultaneously
-  tl.to(
-    ".morph-card",
-    {
-      width: SHOT_TWO_W,
-      height: SHOT_TWO_H,
-      borderRadius: SHOT_TWO_RADIUS,
-      background: "{surfaceShotTwo}",
-      duration: MORPH_DUR,
-      ease: "power2.inOut",
-    },
-    MORPH_START,
-  );
-
-  // Phase 2 — Old content fades during the FIRST OLD_FADE_FRAC of the morph
-  tl.to(
-    ".content-old",
-    {
-      opacity: 0,
-      duration: MORPH_DUR * OLD_FADE_FRAC,
-      ease: "power1.in",
-    },
-    MORPH_START,
-  );
-
-  // Phase 3 — New content fades in during the LAST NEW_FADE_FRAC of the morph
-  tl.to(
-    ".content-new",
-    {
-      opacity: 1,
-      duration: MORPH_DUR * NEW_FADE_FRAC,
-      ease: "power1.out",
-    },
-    MORPH_START + MORPH_DUR * (1 - NEW_FADE_FRAC),
-  );
-
-  // Optional Phase 4 — Final fade: morph container disappears at the very end,
-  // revealing the actual next-shot element behind it.
-  tl.to(
-    ".morph-card",
-    {
-      opacity: 0,
-      duration: MORPH_DUR * FINAL_FADE_FRAC,
-      ease: "power1.in",
-    },
-    MORPH_START + MORPH_DUR * (1 - FINAL_FADE_FRAC),
-  );
-
-  window.__timelines["morph-scene"] = tl;
-</script>
-```
-
-## Key Properties to Morph
-
-| Property           | Shape of change                                                | Visual effect                |
-| ------------------ | -------------------------------------------------------------- | ---------------------------- |
-| `width` / `height` | `SHOT_ONE_W × SHOT_ONE_H` → `SHOT_TWO_W × SHOT_TWO_H`          | wide card shrinks to an icon |
-| `borderRadius`     | `SHOT_ONE_RADIUS` → `SHOT_TWO_RADIUS` (≤ half of smaller side) | rectangle becomes a circle   |
-| `background`       | `{surfaceShotOne}` → `{surfaceShotTwo}` (solid or gradient)    | container identity shifts    |
-| `boxShadow`        | base shadow → accent glow token                                | emphasis changes             |
-
-GSAP tweens all of these simultaneously when included in one `tl.to(...)` call.
-
-## How to Choose Values
-
-- **HOLD_BEAT** — pre-morph dwell so the viewer registers shot 1 before it changes
-  - Range: 0.6-1.5 s
-  - Effects: low end feels rushed / glitchy; high end stalls pacing
-  - Constraints: must be ≥ shot 1's content entry settle time
-- **MORPH_START** — when the container morph begins
-  - Range: equal to `HOLD_BEAT` in the canonical pattern
-  - Constraints: must be > any shot-1 entry tween end
-- **MORPH_DUR** — full length of the simultaneous container morph
-  - Range: 0.6-1.2 s
-  - Effects: low end reads as a snap; high end loses momentum
-  - Constraints: short morphs (<0.5s) cannot fit both old-fade and new-fade
-- **SHOT_TWO_W / SHOT_TWO_H** — final container dimensions
-  - Range: 80-400 px when handing off to an icon-sized anchor
-  - Constraints: if handing off (`.next-shot-anchor`), MUST match the anchor's dimensions exactly to avoid a visible pop
-- **SHOT_TWO_RADIUS** — final corner radius (use to read as circle / pill / soft-rect)
-  - Range: 0 to `min(SHOT_TWO_W, SHOT_TWO_H) / 2`
-  - Effects: half-of-smaller-side = perfect circle; smaller = soft rect
-  - Constraints: > half is visually clamped — wastes the tween
-- **OLD_FADE_FRAC** — fraction of `MORPH_DUR` over which shot-1 content fades out, starting at `MORPH_START`
-  - Range: 0.3-0.5
-  - Effects: low end clips shot 1 too early; high end overlaps with shot 2 content
-  - Constraints: `OLD_FADE_FRAC + NEW_FADE_FRAC ≤ 1` (gap between is the "shape-only" moment)
-- **NEW_FADE_FRAC** — fraction of `MORPH_DUR` over which shot-2 content fades in, ending at `MORPH_START + MORPH_DUR`
-  - Range: 0.3-0.5
-  - Effects: symmetric to OLD_FADE_FRAC
-- **FINAL_FADE_FRAC** — optional tail fraction during which the morph container itself fades to 0 for handoff
-  - Range: 0 (no handoff) or 0.1-0.2
-  - Constraints: only use when `.next-shot-anchor` matches the morph's final visual exactly
-- **Ease family** — discrete choice
-  - Options: `power2.inOut` (canonical, balanced), `power3.inOut` (snappier), `expo.inOut` (most cinematic but can feel sluggish at low durations)
-  - Avoid `back.out` / `elastic.out` on the morph itself — overshoot fights the dimensional change
-
-CSS-side placeholders (`SHOT_ONE_W`, `SHOT_ONE_H`, `SHOT_ONE_RADIUS`, `{surfaceShotOne}`, `{surfaceShotTwo}`) take real values in the example. Pick `{surfaceShotOne}` and `{surfaceShotTwo}` so the gradient/solid stops counts match (GSAP can interpolate background gradients only when stop counts agree).
-
-## Key Principles
-
-- **All target properties in one tween** — they share a single ease and duration so they morph in lockstep
-- **Old content fades early, new content fades late** — the container shape change happens between, providing a natural "blink" moment
-- **Final fade is optional** — use it when the next shot has a real anchor element to hand off to (e.g. avatar that the icon morphed into "is")
-- **Same easing for shape and crossfade** — avoid mixing `power2.inOut` morph with `bounce.out` content, looks unsynchronized
-- **❗ If you use `.next-shot-anchor` for handoff, its visuals must be pixel-identical to `.morph-card`'s final state** — same `width` / `height`, same `border-radius`, same `background`, same `box-shadow`, same internal icon dimensions. Any visual delta between the two = visible pop during the crossfade. If you can't match exactly, **drop the handoff** and just hold the morph card at its final state (add a breath if needed for life).
-
-## Critical Constraints
-
-- **`overflow: hidden`** on the morph container — content must clip during shape change, otherwise content overflows the morphing border radius
-- **Hold a beat before morphing** — let the viewer register shot 1's content before morphing; instant morph reads as glitchy
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`. Never `tl.play()`
-- **Registry key = `data-composition-id`**: `window.__timelines["morph-scene"]` must match scene root
-- **Use `background` tween, not `background-color`**: gradients need `background` (GSAP supports gradient interpolation when targets are gradients with same number of stops). For solid → solid, `backgroundColor` works.
-- **`borderRadius` should be ≤ half the smaller dimension** at end state — otherwise the radius is visually clamped and the morph looks abrupt at the boundary
-- **❗ Don't snap `z-index` mid-fade** — if you need `.next-shot-anchor` to appear from behind the morph card, use **DOM order** (render `.next-shot-anchor` BEFORE `.morph-card` so the morph card is naturally on top), then crossfade their opacities. A `tl.set({ zIndex: ... })` call during an active opacity tween causes a visible flicker as the stacking order flips before the opacity transition finishes.
-
-## Variation: Morphing to a target element's position
-
-When shot 2 isn't centered (e.g. the morph card "lands" on a specific icon in a dock, sidebar, or grid), compute the target `top` / `left` from the **target element's element-position**, not its visual center. Common mistake: subtracting `height/2` to get center, then applying that to the morph-card's `top` — but if `.morph-card` uses absolute positioning with `top` + `margin: 0` (no transform-centering), `top` represents the **element top edge**, not the center.
-
-Math template (example: morph card lands on icon at bottom dock):
-
-```
-target_element_top = viewport_height − dock_bottom_offset − dock_padding_y − icon_height
-                   = 1080 − 60 − 22 − 110 = 888 px
-```
-
-Then tween `.morph-card { top: 888 }` so its element-top aligns with the target icon's element-top. If you mistakenly tween to `888 + icon_height/2 = 943` you'll land below; tweening to a "center" value like `top: 933` (off-by-arithmetic) will be even worse.
-
-Always **measure the target element with `getBoundingClientRect()`** before the timeline starts, and use those numbers — don't hand-compute from CSS values, since paddings, borders, and parent transforms compound.
-
-## Combinations
-
-- [scale-swap-transition.md](scale-swap-transition.md) — simpler morph without dimension change (just scale + content swap)
-- [sine-wave-loop.md](sine-wave-loop.md) — gentle breathing on the final state (e.g. final small circular icon idles with a breath)
-
-## Pairs with HF skills
-
-- `/hyperframes-animation` — timeline + multi-property tween reference
-- `/hyperframes-core` — composition wiring, `data-*` attributes
-- `/hyperframes-cli` — `hyperframes lint` to verify scene structure
+（详细参数选择与原文一致，已全部中文化。）

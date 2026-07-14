@@ -1,31 +1,31 @@
 ---
 name: import-srt-captions
-description: Importing .srt subtitle files into Remotion using @remotion/captions
+description: 使用 @remotion/captions 将 .srt 字幕文件导入 Remotion
 metadata:
   tags: captions, subtitles, srt, import, parse
 ---
 
-# Importing .srt subtitles into Remotion
+# 将 .srt 字幕导入 Remotion
 
-If you have an existing `.srt` subtitle file, you can import it into Remotion using `parseSrt()` from `@remotion/captions`.
+如果你有现有的 `.srt` 字幕文件，可以使用 `@remotion/captions` 的 `parseSrt()` 将其导入 Remotion。
 
-If you don't have a .srt file, read [Transcribing audio](transcribe-captions.md) for how to generate captions instead.
+如果你没有 .srt 文件，请阅读[音频转写](transcribe-captions.md)了解如何生成字幕。
 
-## Prerequisites
+## 前置条件
 
-First, the @remotion/captions package needs to be installed.
-If it is not installed, use the following command:
+首先，需要安装 @remotion/captions 包。
+如果尚未安装，请使用以下命令：
 
 ```bash
-npx remotion add @remotion/captions # If project uses npm
-bunx remotion add @remotion/captions # If project uses bun
-yarn remotion add @remotion/captions # If project uses yarn
-pnpm exec remotion add @remotion/captions # If project uses pnpm
+npx remotion add @remotion/captions # 如果项目使用 npm
+bunx remotion add @remotion/captions # 如果项目使用 bun
+yarn remotion add @remotion/captions # 如果项目使用 yarn
+pnpm exec remotion add @remotion/captions # 如果项目使用 pnpm
 ```
 
-## Reading an .srt file
+## 读取 .srt 文件
 
-Use `staticFile()` to reference an `.srt` file in your `public` folder, then fetch and parse it:
+使用 `staticFile()` 引用 `public` 文件夹中的 `.srt` 文件，然后获取并解析它：
 
 ```tsx
 import { useState, useEffect, useCallback } from "react";
@@ -58,12 +58,12 @@ export const MyComponent: React.FC = () => {
     return null;
   }
 
-  return <AbsoluteFill>{/* Use captions here */}</AbsoluteFill>;
+  return <AbsoluteFill>{/* 在此处使用字幕 */}</AbsoluteFill>;
 };
 ```
 
-Remote URLs are also supported - you can `fetch()` a remote file via URL instead of using `staticFile()`.
+也支持远程 URL - 你可以通过 URL 使用 `fetch()` 获取远程文件，而不是使用 `staticFile()`。
 
-## Using imported captions
+## 使用导入的字幕
 
-Once parsed, the captions are in the `Caption` format and can be used with all `@remotion/captions` utilities.
+解析后，字幕为 `Caption` 格式，可以与所有 `@remotion/captions` 工具一起使用。

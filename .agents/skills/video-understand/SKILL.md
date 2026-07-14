@@ -1,73 +1,73 @@
 ---
 name: video-understand
 description: |
-  Understand video content locally using ffmpeg frame extraction and Whisper transcription. No API keys needed.
-  Use when: (1) Understanding what a video contains, (2) Transcribing video audio locally,
-  (3) Extracting key frames for visual analysis, (4) Getting video content without API keys.
+  使用 ffmpeg 帧提取和 Whisper 转录在本地理解视频内容。无需 API 密钥。
+  在以下情况使用：(1) 理解视频包含什么内容，(2) 在本地转录视频音频，
+  (3) 提取关键帧进行视觉分析，(4) 无需 API 密钥获取视频内容。
 ---
 
 # video-understand
 
-Understand video content locally using ffmpeg for frame extraction and Whisper for transcription. Fully offline, no API keys required.
+使用 ffmpeg 进行帧提取和 Whisper 进行转录，在本地理解视频内容。完全离线，无需 API 密钥。
 
-## Prerequisites
+## 先决条件
 
-- `ffmpeg` + `ffprobe` (required): `brew install ffmpeg`
-- `openai-whisper` (optional, for transcription): `pip install openai-whisper`
+- `ffmpeg` + `ffprobe`（必需）：`brew install ffmpeg`
+- `openai-whisper`（可选，用于转录）：`pip install openai-whisper`
 
-## Commands
+## 命令
 
 ```bash
-# Scene detection + transcribe (default)
+# 场景检测 + 转录（默认）
 python3 skills/video-understand/scripts/understand_video.py video.mp4
 
-# Keyframe extraction
+# 关键帧提取
 python3 skills/video-understand/scripts/understand_video.py video.mp4 -m keyframe
 
-# Regular interval extraction
+# 常规间隔提取
 python3 skills/video-understand/scripts/understand_video.py video.mp4 -m interval
 
-# Limit frames extracted
+# 限制提取帧数
 python3 skills/video-understand/scripts/understand_video.py video.mp4 --max-frames 10
 
-# Use a larger Whisper model
+# 使用更大的 Whisper 模型
 python3 skills/video-understand/scripts/understand_video.py video.mp4 --whisper-model small
 
-# Frames only, skip transcription
+# 仅帧，跳过转录
 python3 skills/video-understand/scripts/understand_video.py video.mp4 --no-transcribe
 
-# Quiet mode (JSON only, no progress)
+# 安静模式（仅 JSON，无进度）
 python3 skills/video-understand/scripts/understand_video.py video.mp4 -q
 
-# Output to file
+# 输出到文件
 python3 skills/video-understand/scripts/understand_video.py video.mp4 -o result.json
 ```
 
-## CLI Options
+## CLI 选项
 
-| Flag | Description |
+| 标志 | 描述 |
 |------|-------------|
-| `video` | Input video file (positional, required) |
-| `-m, --mode` | Extraction mode: `scene` (default), `keyframe`, `interval` |
-| `--max-frames` | Maximum frames to keep (default: 20) |
-| `--whisper-model` | Whisper model size: tiny, base, small, medium, large (default: base) |
-| `--no-transcribe` | Skip audio transcription, extract frames only |
-| `-o, --output` | Write result JSON to file instead of stdout |
-| `-q, --quiet` | Suppress progress messages, output only JSON |
+| `video` | 输入视频文件（位置参数，必需）|
+| `-m, --mode` | 提取模式：`scene`（默认）、`keyframe`、`interval` |
+| `--max-frames` | 最大保留帧数（默认：20） |
+| `--whisper-model` | Whisper 模型大小：tiny、base、small、medium、large（默认：base）|
+| `--no-transcribe` | 跳过音频转录，仅提取帧 |
+| `-o, --output` | 将结果 JSON 写入文件而非 stdout |
+| `-q, --quiet` | 抑制进度消息，仅输出 JSON |
 
-## Extraction Modes
+## 提取模式
 
-| Mode | How it works | Best for |
+| 模式 | 工作原理 | 最佳用途 |
 |------|-------------|----------|
-| `scene` | Detects scene changes via ffmpeg `select='gt(scene,0.3)'` | Most videos, varied content |
-| `keyframe` | Extracts I-frames (codec keyframes) | Encoded video with natural keyframe placement |
-| `interval` | Evenly spaced frames based on duration and max-frames | Fixed sampling, predictable output |
+| `scene` | 通过 ffmpeg `select='gt(scene,0.3)'` 检测场景变化 | 大多数视频，内容多样化 |
+| `keyframe` | 提取 I 帧（编解码器关键帧）| 具有自然关键帧位置的编码视频 |
+| `interval` | 基于时长和最大帧数均匀间隔的帧 | 固定采样，可预测输出 |
 
-If `scene` mode detects no scene changes, it automatically falls back to `interval` mode.
+如果 `scene` 模式未检测到场景变化，它会自动回退到 `interval` 模式。
 
-## Output
+## 输出
 
-The script outputs JSON to stdout (or file with `-o`). See `references/output-format.md` for the full schema.
+脚本输出 JSON 到 stdout（或使用 `-o` 输出到文件）。完整模式请参阅 `references/output-format.md`。
 
 ```json
 {
@@ -83,12 +83,12 @@ The script outputs JSON to stdout (or file with `-o`). See `references/output-fo
     {"start": 0.0, "end": 2.5, "text": "Hello and welcome..."}
   ],
   "text": "Full transcript...",
-  "note": "Use the Read tool to view frame images for visual understanding."
+  "note": "使用 Read 工具查看帧图像以进行视觉理解。"
 }
 ```
 
-Use the Read tool on frame image paths to visually inspect extracted frames.
+使用 Read 工具查看帧图像路径，以视觉检查提取的帧。
 
-## References
+## 参考文档
 
-- `references/output-format.md` -- Full JSON output schema documentation
+- `references/output-format.md` — 完整 JSON 输出模式文档

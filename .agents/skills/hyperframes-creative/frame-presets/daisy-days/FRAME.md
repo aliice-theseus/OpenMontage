@@ -2,11 +2,11 @@
 version: alpha
 name: Daisy Days — Frame (video / frame layer)
 description: >
-  Video-first companion to Daisy Days' design.md. The unit is the frame (1920×1080). Atoms are
-  identical and sacred — the sunny-garden pastel palette (cream + turquoise/pink/butter/mint/
-  lavender/peach/sky + coral accent), charcoal 3px outlines, hard offset shadows (6/4px, no blur),
-  the Fredoka + Quicksand pairing, generous radii, headline text-shadow on color, dot bullets, and
-  the hand-drawn SVG ornament layer. Composition + frame scale rewritten. Motion out of scope.
+  Daisy Days 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)。原子
+  相同且神圣 — 阳光花园粉彩调色板（奶油 + 蓝绿/粉/黄油/薄荷/
+  薰衣草/桃/天蓝 + 珊瑚强调）、炭笔 3px 轮廓、硬偏移阴影（6/4px、无模糊）、
+  Fredoka + Quicksand 搭配、大圆角、颜色上的标题文字阴影、点项目符号和
+  手绘 SVG 装饰层。构图 + 帧比例已重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -97,16 +97,11 @@ components:
     description: "Makes the headline read 'outlined' like the shapes."
 ---
 
-# Daisy Days — Frame (video / frame layer)
+# Daisy Days — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Daisy Days at frame scale is a **cheerful, childlike system** — picture-book illustration meets
-sticker-sheet kawaii. Every shape carries a **3px charcoal outline**, every elevated element a
-**solid hard offset shadow** (no blur), every surface a sunny-garden pastel. The voice is one
-pairing: **Fredoka One** (chunky rounded, single weight) for every headline, **Quicksand** for
-every body and meta line. The signature is the **hand-drawn SVG ornament layer** — daisies, stars,
-suns, clouds, rainbows clustering at corners and cropping past the edge.
+帧尺度下的 Daisy Days 是一个**快乐、童真的系统** — 图画书插画遇上贴纸 kawaii。每个形状都带有**3px 炭笔轮廓**、每个抬升元素都带有**实色硬偏移阴影**（无模糊）、每个表面都是阳光花园粉彩。声音是一个搭配：**Fredoka One**（粗圆、单一字重）用于每个标题、**Quicksand** 用于每个正文和元行。标志是**手绘 SVG 装饰层** — 雏菊、星星、太阳、云、彩虹聚集在角落并裁剪出边缘。
 
 The palette is **multi-pastel with one warm pop**: cream canvas, seven pastel surfaces, and
 `{colors.coral}` reserved for small high-attention markers only. Headlines on a saturated surface
@@ -114,161 +109,148 @@ get a 3px charcoal text-shadow (so they read "outlined" like the shapes) and swi
 headlines on cream sit flat in charcoal. Depth is 2D and graphic — thick outline + hard offset =
 sticker-on-paper.
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Cream default + rotating pastel surfaces**; `{colors.coral}` is a marker accent, never a surface.
-- **Fredoka One** headlines + **Quicksand 500/600** body — strict by role, never crossed.
-- **3px charcoal outline + hard offset shadow** (6/4px, zero blur) on every elevated shape.
-- **Generous radii** — 20px cards, 28px featured, pill badges, full-circle markers; no square corners.
-- **Headline text-shadow on saturated surfaces** (white text); flat charcoal on cream.
-- **Dot bullets** (outlined butter discs, never glyphs) + a **3–7 ornament wreath** per frame.
+- **奶油默认 + 旋转粉彩表面**；`{colors.coral}` 是标记强调色，从不作为表面。
+- **Fredoka One** 标题 + **Quicksand 500/600** 正文 — 严格按角色，从不混用。
+- **3px 炭笔轮廓 + 硬偏移阴影**（6/4px，零模糊）在每个抬升形状上。
+- **大方的圆角** — 20px 卡片、28px 特色、药丸徽章、圆形标记；无方角。
+- **饱和表面上的标题文字阴影**（白色文字）；奶油上平贴炭笔色。
+- **圆点项目符号**（描边奶油圆盘，从不使用字符）+ 每帧一个 **3–7 个装饰花环**。
 
-## The Frame
+## 帧
 
-### Frame Craft Bar
+### 帧工艺条
 
-Three eyeball tests gate every frame before any structural check:
+三项目测检查在任何结构检查前把关每帧：
 
-- **Squint** — one Fredoka headline or content card dominates at 3–6× its neighbor.
-- **Silence** — **one content container per frame** surrounded by an ornament wreath; the **info-card grid is the one dense exception**. Empty corners read as broken.
-- **Restraint** — cream or **one** pastel surface; coral is a small-marker accent (never a surface); charcoal borders + hard offset shadows only; no ninth color.
-- **Reference** — aim at a **children's picture-book / sticker-sheet kawaii zine**; failure looks like a **flat, square-cornered, blurred-shadow corporate slide**.
+- **眯眼测试** — 一个 Fredoka 标题或内容卡片以 3–6 倍于其邻元素占主导。
+- **留白测试** — **每帧一个内容容器**，被装饰花环包围；**信息卡片网格是唯一密集的例外**。空角落看起来不完整。
+- **克制测试** — 奶油或**一种**粉彩表面；coral 是小标记强调色（从不作为表面）；仅炭笔边框 + 硬偏移阴影；无第九种颜色。
+- **参照测试** — 瞄准**儿童画本 / 贴纸 kawaii 杂志**；失败看起来像**平面、方角、模糊阴影的企业幻灯片**。
 
-- **Primary:** 1920×1080 (16:9). Display authored in **`cqw`** (`px ÷ 1920 × 100 = cqw`).
-- **Vertical:** 1080×1920 (9:16). **Square:** 1080×1080 (1:1).
-- **Safe area:** `pad-slide` ~3cqw; ornaments deliberately bleed past the edge.
+- **主尺寸：** 1920×1080 (16:9)。展示以 **`cqw`** 为单位编写（`px ÷ 1920 × 100 = cqw`）。
+- **竖版：** 1080×1920 (9:16)。**方版：** 1080×1080 (1:1)。
+- **安全区域：** `pad-slide` ~3cqw；装饰元素故意出血边缘。
 
-**The container law (load-bearing).** Every frame ground sets `container-type: size`; ALL
-frame-relative units are `cqw`/`cqh` against it — never `vw`. Borders stay 3px/2px; radii stay
-20/28/50px; shadow offsets scale in `cqw` so the sticker offset holds proportionally.
+**容器法则（承重规则）。** 每个帧背景设置 `container-type: size`；所有帧相对单位都是 `cqw`/`cqh` 以它为基准 — 从不用 `vw`。边框保持 3px/2px；圆角保持 20/28/50px；阴影偏移量以 `cqw` 为单位从而保持贴纸偏移的比例。
 
-## Colors
+## 颜色
 
-Tokens identical to the source. Default ground `{colors.cream}`; rotate saturated pastels
-(turquoise / soft-pink / butter / mint / lavender / peach / sky) for tonal mood. **Cards are white**
-on any surface. **Borders + shadows are always `{colors.text-dark}` charcoal** — never colored,
-never blurred, never `rgba` (save the soft text-shadow variant). `{colors.coral}` is the lone
-high-saturation accent — small markers (step circles, dots, headers) **only**, never a surface.
-Body is charcoal/muted; pastels carry **no semantic meaning**. No ninth color.
+色值令牌与源文件一致。默认背景 `{colors.cream}`；旋转饱和粉彩（蓝绿 / 柔粉 / 奶油 / 薄荷 / 紫芙 / 桃 / 天蓝）获取色调情感。**卡片在任何表面上都是白色**。**边框 + 阴影始终是 `{colors.text-dark}` 炭笔色** — 从不彩色、从不模糊、从不用 `rgba`（除了柔和文字阴影变体）。`{colors.coral}` 是唯一的高饱和强调色 — 仅用于小标记（步骤圆圈、圆点、标题），从不作为表面。正文为炭笔色/低饱和；粉彩色承载**无语义含义**。无第九种颜色。
 
-## Typography
+## 排版
 
-Two ramps. The **reading ramp** (Quicksand 500 body 0.95cqw, 600 emphasis, meta) carries copy; the
-**display ramp** (Fredoka One `label-display` 1.3cqw → `display` 6.5cqw, single weight) carries
-every headline, title, quote, and marker numeral.
+两个阶梯。**阅读阶梯**（Quicksand 500 正文 0.95cqw、600 强调、元数据）承载文案；**展示阶梯**（Fredoka One `label-display` 1.3cqw → `display` 6.5cqw，单一字重）承载每个标题、标题、引用和标记数字。
 
-- **Legibility floor:** any load-bearing line ≥ **1.4cqw**; meta is chrome only.
-- **Fit-to-measure:** size the headline to its length. Cap the block at **≤ 78cqw**; ≤3 words → `display`; 4–6 → `headline`; 7+ → `title`.
-- **Fredoka One for all display, Quicksand for all body — never crossed.** Fredoka is single-weight (no italic, no underline, no alt weights); Quicksand stays 500/600/700. Fredoka tracking 0.02em; Quicksand body never uppercase.
+- **可读性底线：** 任何承重行 ≥ **1.4cqw**；元数据仅为铬色。
+- **按篇幅调整：** 根据标题的长度调整字号。将标题块限制在 **≤ 78cqw**；≤3 词 → `display`；4–6 → `headline`；7+ → `title`。
+- **Fredoka One 用于所有展示，Quicksand 用于所有正文 — 从不混用。** Fredoka 是单一字重（无斜体、无下划线、无替代字重）；Quicksand 保持 500/600/700。Fredoka 字距 0.02em；Quicksand 正文从不大写。
 
-## Depth & Surface
+## 深度与表面
 
-2D graphic depth — hard offset shadow, solid charcoal, zero blur, bottom-right:
+2D 图形深度 — 硬偏移阴影、实心炭笔色、零模糊、右下角：
 
-- **`shadows.default` 6px** cards, frames, badges, chart containers.
-- **`shadows.small` 4px** small cards, step circles, avatars.
-- **Text-headline shadow** — 3px charcoal on Fredoka headlines over saturated surfaces (20% soft variant on pink/mint); cream headlines flat.
-- **Outline + offset** together are the sticker-on-paper signature.
+- **`shadows.default` 6px** 卡片、框架、徽章、图表容器。
+- **`shadows.small` 4px** 小卡片、步骤圆圈、头像。
+- **文字标题阴影** — 饱和表面上的 Fredoka 标题上 3px 炭笔阴影（20% 柔和变体在粉色/薄荷上）；奶油标题平贴。
+- **轮廓 + 偏移** 共同构成贴纸在纸上的标志性效果。
 
-**Ceiling:** no blurred shadow, no `rgba` (except the soft text-shadow), no gradient, no glow; an element either casts a hard charcoal offset or none.
+**天花板规则：** 无模糊阴影、无 `rgba`（除了柔和文字阴影）、无渐变、无发光；元素要么投射硬炭笔偏移，要么无阴影。
 
-## Shapes
+## 形状
 
-- **20px** cards, **28px** featured, **50px** pill (badges, counter), **50%** all circles, **4px** legend swatch. Zero square corners — every region is rounded.
+- **20px** 卡片、**28px** 特色、**50px** 药丸（徽章、计数器）、**50%** 所有圆形、**4px** 图例色块。零方角 — 每个区域都是圆角的。
 
-## Components
+## 组件
 
-- **card / framed-header** — the white-fill bordered containers (one shadow). **badge-pill** — butter section tag.
-- **circle-marker** family (bullet 20 / icon 44 / dot 48 / step 90) + **bullet-dot** — outlined pastel discs, Fredoka numerals.
-- **ornament** — the hand-drawn SVG sticker layer (3–7 per frame). **quote-mark** — soft-pink Fredoka anchor. **text-headline-shadow** — the on-color headline treatment.
+- **card / framed-header** — 白色填充的带边框容器（一个阴影）。**badge-pill** — 奶油色节目标签。
+- **circle-marker** 家族（bullet 20 / icon 44 / dot 48 / step 90）+ **bullet-dot** — 描边粉彩圆盘，Fredoka 数字。
+- **ornament** — 手绘 SVG 贴纸层（3–7 个每帧）。**quote-mark** — 柔粉色 Fredoka 锚点。**text-headline-shadow** — 在色标题处理。
 
-## Frame Treatments
+## 帧处理方案
 
-> Recipe: ground · container · composes · focal · chrome · accent · silence · Fixed/Free · density.
-> One content container per frame + a 3–7 ornament wreath; empty corners read as broken.
+> 配方：背景 · 容器 · 组成 · 焦点 · 铬色 · 强调 · 留白 · 固定/自由 · 密度。
+> 每帧一个内容容器 + 3–7 个装饰花环；空角落视为不完整。
 
-### 1 · Cover (identity · move: ornament wreath · saturated · centered)
+### 1 · 封面（标识 · 动势：装饰花环 · 饱和 · 居中）
 
-**Ground** a saturated pastel (e.g. `{colors.turquoise}`). **Composes** badge-pill, display, body sub, 3–7 ornaments, counter. **Focal** a 1–2 line Fredoka `display` in **white with the 3px charcoal text-shadow**, centered, under a butter badge-pill. **Chrome** counter pill. **Accent** the ornament wreath (daisies + stars at corners, cropping past edges). **Silence** content centered; ornaments fill the edges. **Fixed** text-shadow on color, 3px outlines, charcoal shadows. **Free** surface color, ornament mix/positions, copy. **Density** full-but-not-crowded.
+**背景** 饱和粉彩（如 `{colors.turquoise}`）。**组成** badge-pill、display、body sub、3–7 ornaments、counter。**焦点** 1–2 行 Fredoka `display`，**白色带 3px 炭笔文字阴影**，居中，在奶油 badge-pill 之下。**铬色** counter 药丸。**强调** 装饰花环（角落的雏菊 + 星星，裁剪出边缘）。**留白** 内容居中；装饰元素填满边缘。**固定** 饱和上文字阴影、3px 轮廓、炭笔阴影。**自由** 表面颜色、装饰元素组合/位置、文案。**密度** 丰满但不拥挤。
 
-### 2 · Info Cards (catalog · move: 3-up white cards · cream · the dense frame)
+### 2 · 信息卡片（目录 · 动势：3列白卡 · 奶油 · 密集帧）
 
-**Ground** `{colors.cream}`, `pad-slide`. **Composes** headline (flat charcoal), 3× card (circle-icon + Fredoka title + Quicksand body), a couple ornaments. **Focal** three white 3px-bordered cards with 6px shadows. **Chrome** flat headline. **Accent** the pastel circle-icons (rotate turquoise/coral/lavender). **Silence** tight — the density exception (fewer ornaments here). **Fixed** white cards, 3px + 6px, 20px radius. **Free** card content, icon hues. **Density** dense-exception.
+**背景** `{colors.cream}`，`pad-slide`。**组成** headline（平贴炭笔色）、3× card（圆形图标 + Fredoka 标题 + Quicksand 正文），几个装饰元素。**焦点** 三个白色 3px 边框卡片，带 6px 阴影。**铬色** 平贴标题。**强调** 粉彩圆形图标（旋转蓝绿/coral/紫芙）。**留白** 紧凑 — 密度例外（此处装饰元素较少）。**固定** 白色卡片、3px + 6px、20px 圆角。**自由** 卡片内容、图标色调。**密度** 密集例外。
 
-### 3 · Process Steps (sequence · move: rotating circle markers · peach · centered)
+### 3 · 流程步骤（序列 · 动势：旋转圆形标记 · 桃色 · 居中）
 
-**Ground** `{colors.peach}` (or another pastel). **Composes** headline (white + text-shadow), 3–4 step circles + `→` arrows, ornaments. **Focal** a row of 90px outlined step circles, fills **rotating coral → mint → sky → lavender**, Fredoka white numerals, linked by Fredoka arrows. **Chrome** white headline with text-shadow. **Accent** the rotating circle fills. **Silence** moderate. **Fixed** 3px circles + small shadow, rotating fills, arrow glyphs. **Free** step count, labels. **Density** standard.
+**背景** `{colors.peach}`（或其他粉彩）。**组成** headline（白色 + 文字阴影）、3–4 个步骤圆圈 + `→` 箭头、装饰元素。**焦点** 一行 90px 描边步骤圆圈，填充**旋转 coral → mint → sky → lavender**，Fredoka 白色数字，由 Fredoka 箭头连接。**铬色** 白色标题带文字阴影。**强调** 旋转圆圈填充。**留白** 适中。**固定** 3px 圆圈 + 小阴影、旋转填充、箭头字形。**自由** 步骤数、标签。**密度** 标准。
 
-### 4 · Quote (quote · move: quote-mark anchor · soft-pink · centered)
+### 4 · 引用（引用 · 动势：引用标记锚点 · 柔粉 · 居中）
 
-**Ground** `{colors.soft-pink}`. **Composes** a white quote card (28px radius, 6px shadow), quote-mark, Fredoka quote, Quicksand attribution, ornaments. **Focal** a Fredoka `quote` in charcoal inside the white card, under an oversized soft-pink quote-mark. **Chrome** Quicksand 700 attribution. **Accent** the quote-mark + a star or two. **Silence** card centered, ornaments at corners. **Fixed** quote-mark anchor, white card. **Free** quote, attribution. **Density** moderate.
+**背景** `{colors.soft-pink}`。**组成** 白色引用卡片（28px 圆角、6px 阴影）、quote-mark、Fredoka 引用、Quicksand 署名、装饰元素。**焦点** 白色卡片内的 Fredoka `quote` 炭笔色，在超大柔粉 quote-mark 之下。**铬色** Quicksand 700 署名。**强调** quote-mark + 一两颗星星。**留白** 卡片居中，装饰元素在角落。**固定** quote-mark 锚点、白色卡片。**自由** 引用、署名。**密度** 适中。
 
-### 5 · Framed Section (feature · move: cap+body card · cream)
+### 5 · 框架节（特色 · 动势：帽体+正文卡片 · 奶油）
 
-**Ground** `{colors.cream}`. **Composes** framed-header (pastel cap + white body), bullet-dot list, ornaments. **Focal** a framed-header — a pastel cap strip (Fredoka title, optional text-shadow) above a white body with a butter-dot bullet list. **Accent** the cap color + bullet dots. **Silence** moderate. **Fixed** one continuous 3px border + one shadow, butter dot bullets. **Free** cap color, list. **Density** standard.
+**背景** `{colors.cream}`。**组成** framed-header（粉彩帽体 + 白色正文）、bullet-dot 列表、装饰元素。**焦点** 框架标题 — 粉彩帽体条（Fredoka 标题，可选文字阴影）在白色正文之上，带奶油点项目符号列表。**强调** 帽体颜色 + bullet dots。**留白** 适中。**固定** 一个连续 3px 边框 + 一个阴影、奶油点项目符号。**自由** 帽体颜色、列表。**密度** 标准。
 
-### 6 · Closing (closer · move: ornament wreath · saturated · centered)
+### 6 · 结束（收尾 · 动势：装饰花环 · 饱和 · 居中）
 
-**Ground** a saturated pastel (e.g. `{colors.lavender}`). **Composes** badge-pill, display (white + text-shadow), 3–7 ornaments. **Focal** a Fredoka `display` sign-off in white with the charcoal text-shadow, centered. **Accent** the ornament wreath. **Silence** content centered. **Fixed** text-shadow on color, ornaments fill corners. **Free** sign-off, surface, ornaments. **Density** full.
+**背景** 饱和粉彩（如 `{colors.lavender}`）。**组成** badge-pill、display（白色 + 文字阴影）、3–7 个装饰元素。**焦点** 白色 Fredoka `display` 结尾语，带炭笔文字阴影，居中。**强调** 装饰花环。**留白** 内容居中。**固定** 饱和上文字阴影，装饰元素填满角落。**自由** 结尾语、表面、装饰元素。**密度** 丰满。
 
-## Composition Rules
+## 构图规则
 
-### Do
+### 应做
 
-- Pair **Fredoka One headlines + Quicksand body** strictly by role.
-- Outline every shape **3px charcoal + a hard offset shadow** (6/4px, no blur); white card fills on any surface.
-- Give Fredoka headlines on **saturated surfaces a 3px charcoal text-shadow + white text**; flat charcoal on cream.
-- Use **outlined butter-disc bullets** (never glyphs); cluster **3–7 hand-drawn ornaments** per frame (corners, cropping past edges).
-- Keep **one content container per frame**; rotate marker colors (coral → mint → sky → lavender → butter); reserve coral for small markers.
-- Center most frames; lean cream for content-dense frames, saturated for cover/closer/quote.
+- 严格按角色搭配 **Fredoka One 标题 + Quicksand 正文**。
+- 每个形状描边 **3px 炭笔 + 硬偏移阴影**（6/4px，无模糊）；白色卡片在任何表面上填充。
+- 给饱和表面上的 Fredoka 标题加上 **3px 炭笔文字阴影 + 白色文字**；奶油上平贴炭笔色。
+- 使用 **描边奶油圆盘项目符号**（从不使用字符）；每帧聚集 **3–7 个手绘装饰元素**（角落，裁剪出边缘）。
+- 保持 **每帧一个内容容器**；旋转标记颜色（coral → mint → sky → lavender → butter）；coral 仅用于小标记。
+- 大部分帧居中；内容密集帧偏向奶油，封面/结束/引用偏向饱和。
 
-### Don't
+### 避免
 
-- No square corners; no blurred or `rgba` shadows (save the soft text-shadow).
-- No colored borders (charcoal only); no coral surface; no ninth color.
-- No third font; no Quicksand headline or Fredoka body; no italic/underline Fredoka; no uppercase Quicksand body.
-- No glyph bullets; no empty corners (ornaments fill them); no two competing content panels.
-- Don't blow a headline edge-to-edge — fit to measure.
+- 无方角；无模糊或 `rgba` 阴影（除柔和文字阴影外）。
+- 无彩色边框（仅炭笔色）；无 coral 表面；无第九种颜色。
+- 无第三种字体；无 Quicksand 标题或 Fredoka 正文；无斜体/下划线 Fredoka；无大写 Quicksand 正文。
+- 无字符项目符号；无空角落（装饰元素填充它们）；无两个竞争的内容面板。
+- 不要让标题撑满到边缘 — 按篇幅调整。
 
-## Aspect-Ratio Behavior
+## 宽高比行为
 
-| Treatment      | 16:9                       | 9:16                             | 1:1        |
+| 处理方案      | 16:9                       | 9:16                             | 1:1        |
 | -------------- | -------------------------- | -------------------------------- | ---------- |
-| Cover          | centered, corner ornaments | centered, taller, more ornaments | centered   |
-| Info Cards     | 3 across                   | stacked                          | 2+1        |
-| Process Steps  | horizontal + arrows        | vertical, arrows rotate down     | 2×2        |
-| Quote          | centered card              | centered, taller                 | centered   |
-| Framed Section | cap + body                 | cap + body taller                | cap + body |
-| Closing        | centered, wreath           | centered, wreath                 | centered   |
+| 封面          | 居中，角落装饰 | 居中加高，更多装饰 | 居中   |
+| 信息卡片     | 3 列并排                   | 堆叠                          | 2+1        |
+| 流程步骤  | 水平 + 箭头        | 垂直，箭头旋转向下     | 2×2        |
+| 引用          | 居中卡片              | 居中加高                 | 居中   |
+| 框架节 | 帽体 + 正文                 | 帽体 + 正文加高                | 帽体 + 正文 |
+| 结束        | 居中，花环           | 居中，花环                 | 居中   |
 
-`pad-slide` holds on the short edge; re-step display above the 1.4cqw floor. On tighter ratios keep
-the ornament count toward the upper end (5–7) so corners never read empty.
+`pad-slide` 在短边上保持；将展示字号调整在 1.4cqw 底线之上。在更紧凑的比例下，保持装饰元素数量较高（5–7），以便角落从不看起来空白。
 
-## Approved Real Entities
+## 批准的真实实体
 
-No real customers, logos, or vendors are defined in the source — render any such mark as a
-placeholder. Ornaments and pastels are content-agnostic; counters/badges carry per-deck text.
+源文件中未定义真实客户、标志或供应商 — 任何此类标记均渲染为占位符。装饰元素和粉彩色与内容无关；计数器/徽章承载每套占卡的文本。
 
-## Numerals & Claims (hard rule)
+## 数字与断言（硬性规则）
 
-Never invent figures, dates, or counts at frame scale. Render slots as `— figure —`, `{metric}`,
-`N`. Step numbers and any chart values carry placeholders until the script supplies them; the slide
-counter is decorative chrome.
+绝不在帧尺度上编造数字、日期或计数。将插槽渲染为 `— figure —`、`{metric}`、`N`。步骤号和图表值均使用占位符，直到脚本提供；幻灯片计数器是装饰性铬色。
 
-## Pre-Render Self-Audit
+## 渲染前自查
 
-- **Squint** — one Fredoka headline or content card dominates per frame.
-- **Silence** — one container per frame surrounded by an ornament wreath; only the info-card grid runs dense.
-- **Color** — cream or one pastel surface; coral markers only; charcoal borders/shadows; no ninth hue.
-- **Type** — Fredoka headlines (text-shadow + white on saturated, flat charcoal on cream), Quicksand body; ≥1.4cqw floor.
-- **Depth** — 3px outline + hard offset (no blur, no rgba save soft text-shadow); rounded corners only.
-- **Ornaments** — 3–7 per frame, cropping past edges; no empty corners. **Bullets** — outlined discs, never glyphs.
-- **Fabrication** — every numeral traces to the script, else placeholder.
+- **眯眼测试** — 每帧一个 Fredoka 标题或内容卡片占主导。
+- **留白测试** — 每帧一个容器，被装饰花环包围；仅信息卡片网格运行密集。
+- **颜色** — 奶油或一种粉彩表面；coral 标记仅用；炭笔边框/阴影；无第九色调。
+- **字体** — Fredoka 标题（饱和上文字阴影 + 白色，奶油上平贴炭笔色），Quicksand 正文；≥1.4cqw 底线。
+- **深度** — 3px 轮廓 + 硬偏移（无模糊，无 rgba 除柔和文字阴影）；仅圆角。
+- **装饰元素** — 3–7 个每帧，裁剪出边缘；无空角落。**项目符号** — 描边圆盘，从不使用字符。
+- **虚构** — 每个数字来源于脚本，否则为占位符。
 
-## Known Gaps
+## 已知差距
 
-- **Motion intentionally out of scope.** frame.md specifies composition only; the source uses scroll-snap nav, no transition spec.
-- **Fonts:** the source names _Fredoka One_; Google now serves the **Fredoka** variable family — request `Fredoka:wght@500;600;700` and set display weight 600 (visually equal to Fredoka One), with `Fredoka One` kept first in the stack for environments that still serve it. Quicksand loads normally. CJK: ZCOOL XiaoWei (display) / Yozai (body).
-- **9:16 / 1:1 are guidance**; keep ornament count high so corners stay filled per ratio.
-- Ornaments (daisy/star/sun/cloud/rainbow), markers, and framed headers are CSS/SVG-only; recoloring SVG ornaments requires editing their stroke values.
-- **Contrast:** keep `{colors.text-muted}` off pastel surfaces (cream/white cards only); small text on saturated grounds should be charcoal or white.
+- **运动设计有意不在范围之内。** frame.md 仅指定构图；源文件使用 scroll-snap 导航，无过渡规范。
+- **字体：** 源文件命名为 _Fredoka One_；Google 现在提供 **Fredoka** 变量家族 — 请求 `Fredoka:wght@500;600;700` 并设置展示字重为 600（视觉上等同于 Fredoka One），`Fredoka One` 保持在堆栈的第一位以兼容仍提供它的环境。Quicksand 正常加载。CJK：ZCOOL XiaoWei（展示）/ Yozai（正文）。
+- **9:16 / 1:1 为指导性**；保持装饰元素数量较高以便角落按比例始终被填满。
+- 装饰元素（雏菊/星星/太阳/云/彩虹）、标记和框架标题为纯 CSS/SVG；重新上色 SVG 装饰元素需要编辑其描边值。
+- **对比度：** 保持 `{colors.text-muted}` 不要出现在粉彩表面上（仅奶油/白色卡片）；饱和背景上的小字应为炭笔色或白色。

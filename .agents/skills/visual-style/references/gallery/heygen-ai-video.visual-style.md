@@ -1,122 +1,122 @@
 ---
-name: "HeyGen AI Video Platform"
+name: "HeyGen AI 视频平台"
 version: "1.0"
 tags:
-  - ai
-  - video
-  - tech
-  - modern
-author: "Extracted"
+  - AI
+  - 视频
+  - 科技
+  - 现代
+author: "提取"
 source_url: "https://heygen.com"
 created: "2026-03-12"
 
 style_prompt_short: >
-  Vibrant AI-forward design. Cyan-to-pink gradient energy on clean white.
-  Approachable tech that feels premium without being cold.
+  充满活力的 AI 前沿设计。青色到粉色渐变能量在干净的白色上。
+  平易近人的科技感，高级但不冷淡。
 
 style_prompt_full: >
-  Modern AI video platform aesthetic inspired by HeyGen. Clean white
-  backgrounds with generous whitespace. Signature cyan-pink gradient
-  (#00C3FF to #95AAFE to #FEA5FE) as the hero visual element. Primary
-  accent is Hey Blue (#00C3FF) for CTAs and interactive elements. Prism
-  Pink (#F3A6FF) as secondary accent for emphasis and warmth. Typography
-  uses geometric sans-serifs (ABC Solar, TT Norms Pro, or similar) with
-  clear hierarchy. Large rounded corners (12-48px) on cards and buttons.
-  Smooth fade-in animations and subtle hover transitions. Tech-forward
-  but approachable — innovation meets accessibility. Avoid harsh corporate
-  blue, avoid dark mode unless specifically requested, avoid overly
-  complex gradients or 3D effects.
+  受 HeyGen 启发的现代 AI 视频平台美学。干净的白色
+  背景配宽敞留白。标志性的青粉渐变（#00C3FF 到 #95AAFE 到 #FEA5FE）
+  作为主角视觉元素。主要强调色是 Hey Blue (#00C3FF)，
+  用于行动号召和交互元素。Prism Pink (#F3A6FF)
+  作为次要强调色，用于强调和温暖感。排版
+  使用几何无衬线字体（ABC Solar、TT Norms Pro 或类似字体），
+  具有清晰层级。卡片和按钮的大圆角（12-48px）。
+  平滑的淡入动画和微妙的悬停过渡。科技前沿
+  但平易近人 — 创新遇上可访问性。避免刺眼的企业蓝、
+  除非特别要求否则避免暗色模式、避免过于
+  复杂的渐变或 3D 效果。
 
 colors:
   primary:
-    - name: "Pure White"
+    - name: "纯白"
       hex: "#FFFFFF"
-      role: "primary background, clean canvas"
-    - name: "Carbon"
+      role: "主要背景，干净画布"
+    - name: "碳黑"
       hex: "#333333"
-      role: "primary text, headings"
+      role: "主要文字，标题"
   accent:
     - name: "Hey Blue"
       hex: "#00C3FF"
-      role: "CTAs, links, primary brand accent"
+      role: "行动号召、链接、主要品牌强调"
     - name: "Prism Pink"
       hex: "#F3A6FF"
-      role: "secondary accent, gradient endpoint, emphasis"
+      role: "次要强调，渐变端点，强调"
     - name: "Gen Green"
       hex: "#35C838"
-      role: "success states, positive feedback"
+      role: "成功状态，正面反馈"
   neutral:
-    - name: "Mist"
+    - name: "薄雾"
       hex: "#F2F2F2"
-      role: "section backgrounds, cards"
-    - name: "Cloud"
+      role: "章节背景，卡片"
+    - name: "云"
       hex: "#D9D9D9"
-      role: "borders, dividers"
-    - name: "Deep Teal"
+      role: "边框，分割线"
+    - name: "深青"
       hex: "#033337"
-      role: "dark backgrounds, footer, contrast sections"
+      role: "深色背景，页脚，对比章节"
 
 typography:
   display:
     family: "ABC Solar, TT Norms Pro, system-ui"
     weight: "700-800"
-    style: "large, confident, generous tracking"
+    style: "大号，自信，宽松字距"
   body:
     family: "TT Norms Pro, system-ui, sans-serif"
     weight: "400-500"
-    style: "comfortable reading, 18px base"
+    style: "舒适阅读，18px 基础"
   caption:
     family: "TT Norms Pro, system-ui, sans-serif"
     weight: "500"
-    style: "14-15px, medium weight for labels"
+    style: "14-15px，中等字重用于标签"
   rules:
-    - "Size scale: 80px → 60px → 44px → 32px → 24px → 18px → 14px"
-    - "Generous line heights for readability"
-    - "Medium weight (500-600) for UI elements"
-    - "Bold (700-800) for headlines only"
+    - "大小比例：80px → 60px → 44px → 32px → 24px → 18px → 14px"
+    - "宽行高以确保可读性"
+    - "UI 元素用中等字重（500-600）"
+    - "粗体（700-800）仅用于标题"
 
 layout:
-  grid: "12 columns, max-width 1200px, flex-based"
-  alignment: "Center-aligned sections, left-aligned content"
-  aspect_ratio: "16:9 for video content, varied for features"
+  grid: "12 列，最大宽度 1200px，基于 flex"
+  alignment: "居中章节，左对齐内容"
+  aspect_ratio: "视频内容 16:9，功能展示多变"
   notes:
-    - "4px base spacing unit (8, 16, 24, 32, 40, 60, 80px scale)"
-    - "Large rounded corners: 12px cards, 20px buttons, 48px hero elements"
-    - "Generous padding: 16-24px internal, 60-120px section gaps"
-    - "Cards with subtle borders, minimal shadows"
+    - "4px 基础间距单位（8, 16, 24, 32, 40, 60, 80px 比例）"
+    - "大圆角：卡片 12px，按钮 20px，主角元素 48px"
+    - "宽敞内边距：内部 16-24px，章节间距 60-120px"
+    - "卡片带微妙边框，最小阴影"
 
 motion:
   transitions:
-    - "fadeInUp (300ms) for content reveals"
-    - "slideDown (250ms) for dropdowns"
-    - "smooth hover transitions (150-200ms)"
+    - "fadeInUp（300ms）内容揭示"
+    - "slideDown（250ms）下拉菜单"
+    - "平滑悬停过渡（150-200ms）"
   animation_style: >
-    Smooth and modern. Elements fade and slide in gracefully.
-    Subtle scale effects on hover. Nothing bouncy or playful —
-    confident and professional with a touch of polish.
-  pacing: "Quick, responsive, modern feel"
+    平滑而现代。元素优雅地淡入和滑入。
+    悬停时微妙的缩放效果。无弹跳或俏皮 —
+    自信且专业，带有一丝精致。
+  pacing: "快速、响应式、现代感"
   audio_cues:
-    - "electronic ambient"
-    - "modern corporate"
-    - "upbeat but professional"
+    - "电子环境音"
+    - "现代企业风"
+    - "积极但专业"
 
 mood:
   keywords:
-    - "innovative"
-    - "approachable"
-    - "premium"
-    - "modern"
-    - "creative"
-    - "tech-forward"
-  era: "2020s AI/SaaS"
-  cultural_reference: "Modern AI tools, creative tech platforms, Figma/Notion energy"
+    - "创新"
+    - "平易近人"
+    - "高级"
+    - "现代"
+    - "创意"
+    - "科技前沿"
+  era: "2020 年代 AI/SaaS"
+  cultural_reference: "现代 AI 工具，创意科技平台，Figma/Notion 能量"
   avoid:
-    - "harsh corporate blue"
-    - "dark, heavy interfaces"
-    - "overly complex 3D effects"
-    - "stock photography feel"
-    - "cluttered layouts"
-    - "small, cramped typography"
+    - "刺眼的企业蓝"
+    - "深色沉重界面"
+    - "过于复杂的 3D 效果"
+    - "图库摄影感"
+    - "杂乱布局"
+    - "小而拥挤的排版"
 
 assets:
   reference_images: []
@@ -132,37 +132,37 @@ x_heygen:
 
 ## Design Principles
 
-AI should feel accessible, not intimidating.
-White space communicates premium quality.
-The cyan-pink gradient is the hero — use it sparingly but boldly.
-Every interaction should feel smooth and responsive.
+AI 应感觉可访问，而非令人生畏。
+留白传达高品质。
+青粉渐变是主角 — 克制但大胆地使用它。
+每次交互都应感觉平滑且响应迅速。
 
 ## Extraction Notes
 
-Extracted from https://heygen.com on 2026-03-12.
-Primary colors sampled from CSS variables and brand guidelines.
-Typography identified via computed styles (ABC Solar, TT Norms Pro).
-Gradient extracted from hero sections and brand elements.
-Spacing system follows 4px base unit pattern.
+于 2026-03-12 从 https://heygen.com 提取。
+主色从 CSS 变量和品牌指南采样。
+通过计算样式识别排版（ABC Solar、TT Norms Pro）。
+渐变从主角区域和品牌元素提取。
+间距系统遵循 4px 基础单位模式。
 
 ## Connectors
 
 ### HeyGen Video Agent
-Use the signature gradient as background or overlay element.
-Hey Blue for text emphasis and CTAs. Clean white backgrounds.
-Modern, confident pacing. Approachable AI energy.
+将标志性渐变用作背景或覆盖元素。
+Hey Blue 用于文字强调和行动号召。干净的白色背景。
+现代、自信的节奏。平易近人的 AI 能量。
 
 ### HTML Slides
-White backgrounds with gradient accent strips or hero elements.
-Large rounded corners on cards. Generous whitespace.
-Hey Blue for interactive elements, Prism Pink for highlights.
+白色背景配渐变强调条或主角元素。
+卡片上的大圆角。宽敞的留白。
+Hey Blue 用于交互元素，Prism Pink 用于高亮。
 
 ### paper.design
-Clean layouts with the gradient as a bold accent element.
-Large typography with clear hierarchy. Rounded card patterns.
-Avoid heavy shadows — use subtle borders instead.
+用渐变作为大胆强调元素的干净布局。
+具有清晰层级的大号排版。圆角卡片模式。
+避免沉重阴影 — 改用微妙边框。
 
 ### Figma
-Color styles: `brand/hey-blue`, `brand/prism-pink`, `brand/gradient`.
-Text styles following the 80-60-44-32-24-18-14px scale.
-Component variants with large border-radius (12-48px).
+颜色样式：`brand/hey-blue`、`brand/prism-pink`、`brand/gradient`。
+遵循 80-60-44-32-24-18-14px 比例的文本样式。
+大边框半径（12-48px）的组件变体。

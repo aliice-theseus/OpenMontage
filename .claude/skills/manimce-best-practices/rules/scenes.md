@@ -1,17 +1,17 @@
 ---
 name: scenes
-description: Scene structure, construct method, and scene types in Manim
+description: 场景结构、construct 方法和 Manim 中的场景类型
 metadata:
   tags: scene, construct, setup, render, ThreeDScene, MovingCameraScene
 ---
 
-# Scenes in Manim
+# Manim 中的场景
 
-A Scene is the canvas where all animations take place. Every Manim animation is defined within a Scene class.
+Scene 是所有动画发生的画布。每个 Manim 动画都在 Scene 类中定义。
 
-## Basic Scene Structure
+## 基本场景结构
 
-All animation code resides within the `construct()` method of a Scene subclass.
+所有动画代码都位于 Scene 子类的 `construct()` 方法中。
 
 ```python
 from manim import *
@@ -23,13 +23,13 @@ class MyScene(Scene):
         self.wait(1)
 ```
 
-## Scene Lifecycle Methods
+## 场景生命周期方法
 
 ### construct()
-The main method where you define your animation. Called automatically when rendering.
+定义动画的主要方法。渲染时自动调用。
 
 ### setup()
-Called before `construct()`. Use for initialization that should happen before animation logic.
+在 `construct()` 之前调用。用于应在动画逻辑之前进行的初始化。
 
 ```python
 class MyScene(Scene):
@@ -41,52 +41,52 @@ class MyScene(Scene):
         self.play(Create(circle))
 ```
 
-## Scene Methods
+## 场景方法
 
-### Adding and Removing Objects
+### 添加和移除对象
 
 ```python
-# Add without animation (instant)
+# 无动画添加（即时）
 self.add(mobject)
 self.add(mobject1, mobject2, mobject3)
 
-# Remove without animation
+# 无动画移除
 self.remove(mobject)
 
-# Clear all mobjects
+# 清除所有 mobjects
 self.clear()
 ```
 
-### Playing Animations
+### 播放动画
 
 ```python
-# Play a single animation
+# 播放单个动画
 self.play(Create(circle))
 
-# Play multiple animations simultaneously
+# 同时播放多个动画
 self.play(Create(circle), FadeIn(square))
 
-# With run_time
+# 带 run_time
 self.play(Create(circle), run_time=2)
 ```
 
-### Waiting
+### 等待
 
 ```python
-# Wait for 1 second (default)
+# 等待 1 秒（默认）
 self.wait()
 
-# Wait for specific duration
+# 等待指定时长
 self.wait(2)
 ```
 
-## Scene Types
+## 场景类型
 
-### Scene (Default)
-Standard 2D scene for most animations.
+### Scene（默认）
+适用于大多数动画的标准 2D 场景。
 
 ### ThreeDScene
-For 3D animations with camera orientation control.
+用于具有相机方向控制的 3D 动画。
 
 ```python
 class My3DScene(ThreeDScene):
@@ -98,7 +98,7 @@ class My3DScene(ThreeDScene):
 ```
 
 ### MovingCameraScene
-For animations that require camera movement (zoom, pan).
+用于需要相机移动（缩放、平移）的动画。
 
 ```python
 class ZoomScene(MovingCameraScene):
@@ -108,14 +108,14 @@ class ZoomScene(MovingCameraScene):
         self.play(self.camera.frame.animate.scale(0.5).move_to(circle))
 ```
 
-## Multiple Scenes in One File
+## 一个文件中的多个场景
 
-Render specific scene:
+渲染指定场景：
 ```bash
 manim -pql file.py Scene1
 ```
 
-Render all scenes:
+渲染所有场景：
 ```bash
 manim -pql -a file.py
 ```

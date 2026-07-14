@@ -1,17 +1,17 @@
-# logo-reveal — category module
+# logo-reveal — 类别模块
 
-A **logo sting / brand lockup**. The logo is user-supplied (`asset_needs` = one logo `source`, not a search). ~3–5s. Often `export: alpha-overlay` (sting to drop on other footage).
+**标志片头/品牌组合。** 标志由用户提供（`asset_needs` = 一个标志 `source`，不是搜索）。约3–5秒。通常 `export: alpha-overlay`（片头作为覆盖层叠加到其他素材上）。
 
-## Plan (Director)
+## 规划（Director）
 
-`content`: `{ logo: <asset path>, tagline, url }`. Envelope: brand palette (or eyedropper from the logo), elegant pacing.
+`content`：`{ logo: <asset path>, tagline, url }`。概要：品牌调色板（或从标志取色），优雅节奏。
 
-## Vocabulary / leans on
+## 词汇表 / 依赖
 
-- Block: **`logo-outro`** (piece-by-piece assembly + glow bloom + tagline fade + URL pill).
-- Rules: `rules/svg-path-draw` (draw-on for vector logos) · `rules/scale-swap-transition` · `rules/3d-text-depth-layers`.
-- Primitives: draw-on / mask-reveal / particle-assemble · `glow` bloom · `underline_sweep` · hold.
+- 块：**`logo-outro`**（逐片组装 + 辉光泛光 + 标语淡入 + URL 药丸）。
+- 规则：`rules/svg-path-draw`（矢量标志的绘制动画）· `rules/scale-swap-transition` · `rules/3d-text-depth-layers`。
+- 原语：绘制/遮罩揭示/粒子组装 · `glow` 泛光 · `underline_sweep` · 保持。
 
-## Build (reuse-first)
+## 构建（优先复用）
 
-Reuse `logo-outro` + swap logo / tagline / url / palette; **or** hand-author: place the logo at its hero frame (CSS), reveal via draw-on (SVG `stroke-dashoffset`) or mask/scale, add a glow bloom + accent underline sweep, hold. For an SVG logo, prefer draw-on; for a raster logo, mask/scale + glow. Transparent bg when exporting as an overlay.
+复用 `logo-outro` + 替换标志/标语/URL/调色板；**或**手动编写：将标志放置在其主角帧（CSS），通过绘制动画（SVG `stroke-dashoffset`）或遮罩/缩放揭示，添加辉光泛光 + 强调下划线扫过，保持。对于 SVG 标志，优先使用绘制动画；对于栅格标志，使用遮罩/缩放 + 辉光。作为覆盖层导出时使用透明背景。

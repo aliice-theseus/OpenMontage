@@ -1,90 +1,90 @@
 ---
-name: "Style Name"
+name: "风格名称"
 version: "1.0"
 tags:
-  - tag1
-  - tag2
-author: "Your Name"
+  - 标签1
+  - 标签2
+author: "您的名字"
 source_url: ""
 created: "YYYY-MM-DD"
 
 style_prompt_short: >
-  One to two sentences capturing the visual essence of this style.
-  This is the elevator pitch.
+  捕捉此风格视觉精髓的一到两句话。
+  这是电梯演讲。
 
 style_prompt_full: >
-  Detailed generation prompt. Include specific hex colors, font names,
-  layout structure, motion patterns, and overall mood. This is THE most
-  important field — any AI tool should be able to read this and generate
-  consistent visuals. Be specific about what TO do and what NOT to do.
-  Include hex codes inline (like #FF5500) so tools can extract them.
+  详细的生成提示。包括具体的十六进制颜色、字体名称、
+  布局结构、动效模式和整体氛围。这是最重要的
+  字段 — 任何 AI 工具都应能读取此内容并生成
+  一致的视觉效果。具体说明要做什么和不要做什么。
+  包括内联的十六进制码（如 #FF5500），以便工具可以提取它们。
 
 colors:
   primary:
-    - name: "Descriptive Color Name"
+    - name: "描述性颜色名称"
       hex: "#000000"
-      role: "dominant background, structural elements"
-    - name: "Descriptive Color Name"
+      role: "主导背景、结构元素"
+    - name: "描述性颜色名称"
       hex: "#FFFFFF"
-      role: "primary text, negative space"
+      role: "主要文字、留白空间"
   accent:
-    - name: "Accent Color Name"
+    - name: "强调色名称"
       hex: "#FF5500"
-      role: "CTAs, emphasis, key highlights"
+      role: "行动号召、强调、关键高亮"
   neutral:
-    - name: "Neutral Color Name"
+    - name: "中性色名称"
       hex: "#888888"
-      role: "supporting text, borders, secondary elements"
+      role: "辅助文字、边框、次级元素"
 
 typography:
   display:
-    family: "Font Family Name"
+    family: "字体族名称"
     weight: "bold"
-    style: "uppercase, tight tracking"
+    style: "大写，紧凑字距"
   body:
-    family: "Font Family Name"
+    family: "字体族名称"
     weight: "regular"
-    style: "sentence case, comfortable line height"
+    style: "句首大写，舒适行高"
   caption:
-    family: "Font Family Name"
+    family: "字体族名称"
     weight: "medium"
-    style: "small, uppercase for labels"
+    style: "小号，标签大写"
   rules:
-    - "Typography rule or constraint"
-    - "Another typography guideline"
-    - "Font usage restriction"
+    - "排版规则或约束"
+    - "另一条排版指南"
+    - "字体使用限制"
 
 layout:
-  grid: "Grid system description (e.g., 12 columns, 8px base unit)"
-  alignment: "Alignment approach (e.g., flush left, centered hero)"
-  aspect_ratio: "Default aspect ratio (e.g., 16:9, 4:3)"
+  grid: "网格系统描述（例如 12 列，8px 基础单位）"
+  alignment: "对齐方式（例如左对齐，居中主角）"
+  aspect_ratio: "默认宽高比（例如 16:9、4:3）"
   notes:
-    - "Additional layout guideline"
-    - "Spacing or composition note"
+    - "额外布局指南"
+    - "间距或构图说明"
 
 motion:
   transitions:
-    - "transition type 1"
-    - "transition type 2"
+    - "过渡类型 1"
+    - "过渡类型 2"
   animation_style: >
-    Description of how elements move and animate. Include easing,
-    timing, and overall feel.
-  pacing: "Overall rhythm description"
+    元素如何移动和动画的描述。包括缓动、
+    时间和整体感觉。
+  pacing: "整体节奏描述"
   audio_cues:
-    - "sound design note"
+    - "声音设计说明"
 
 mood:
   keywords:
-    - "mood word 1"
-    - "mood word 2"
-    - "mood word 3"
-    - "mood word 4"
-  era: "Time period reference (e.g., 1990s, contemporary)"
-  cultural_reference: "Designers, movements, or works that inspire this style"
+    - "氛围词 1"
+    - "氛围词 2"
+    - "氛围词 3"
+    - "氛围词 4"
+  era: "时代参考（例如 1990 年代，当代）"
+  cultural_reference: "激发此风格的设计师、运动或作品"
   avoid:
-    - "thing to explicitly avoid"
-    - "another anti-pattern"
-    - "design element that doesn't fit"
+    - "明确避免的内容"
+    - "另一个反模式"
+    - "不适配的设计元素"
 
 assets:
   reference_images: []
@@ -103,26 +103,26 @@ x_figma:
 
 ## Design Principles
 
-Freeform section for design philosophy and guiding principles.
-What beliefs drive this visual system?
-What trade-offs does it make intentionally?
+用于设计哲学和指导原则的自由格式章节。
+什么信念驱动这个视觉系统？
+它有意做出了哪些权衡？
 
 ## Connectors
 
 ### HeyGen Video Agent
-Notes on how to apply this style to HeyGen Video Agent.
-What to emphasize in the prompt, what motion patterns to use.
+关于如何将此风格应用于 HeyGen Video Agent 的说明。
+在提示中强调什么、使用什么动效模式。
 
 ### HTML Slides
-Notes on CSS mapping, layout approach, font loading.
+关于 CSS 映射、布局方法、字体加载的说明。
 
 ### paper.design
-Notes on document setup, grid configuration, AI guidance.
+关于文档设置、网格配置、AI 指导的说明。
 
 ### Figma
-Notes on style generation, component patterns, design tokens.
+关于样式生成、组件模式、设计令牌的说明。
 
 ## Extraction Notes
 
-If this style was extracted from a source, document it here.
-Include the source URL, extraction date, and any notable decisions.
+如果此风格是从某个来源提取的，请在此记录。
+包括来源 URL、提取日期和任何值得注意的决策。

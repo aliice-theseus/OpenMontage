@@ -1,46 +1,46 @@
-# Edit Director - Localization Dub Pipeline
+# 剪辑导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Translate the scene plan and localized asset kit into concrete timeline decisions for each language output. The goal is to preserve the source structure where possible without pretending all languages land on the same timing.
+将场景规划和本地化资产套件转化为每个语言输出的具体时间线决策。目标是在可能的情况下保留源结构，同时不假装所有语言都能在相同的时序上对齐。
 
-## Process
+## 流程
 
-### 1. Preserve Structure By Default
+### 1. 默认保留结构
 
-Keep the original scene order and major timing unless the translated audio clearly requires extension, compression, or coverage.
+保持原始场景顺序和主要时序，除非翻译后的音频明确需要扩展、压缩或覆盖处理。
 
-### 2. Apply The Chosen Dub Mode
+### 2. 应用选定的配音模式
 
-Per deliverable, decide where to:
+针对每个交付物，决定在何处：
 
-- keep original picture with new subtitles,
-- replace only the audio,
-- use lip-sync output,
-- cover mismatch with graphics or B-roll.
+- 保留原始画面并添加新字幕
+- 仅替换音频
+- 使用唇形同步输出
+- 使用图形或 B-roll 覆盖不匹配的部分
 
-### 3. Keep Language Variants Organized
+### 3. 保持语言变体有序组织
 
-Separate timeline decisions by locale so versioning stays clear all the way into compose and publish.
+按地区分离时间线决策，使版本管理在所有后续阶段（合成和发布）保持清晰。
 
-### 4. Use Metadata For Variant Control
+### 4. 使用元数据进行变体控制
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `locale_timeline_map`
 - `timing_adjustments`
 - `coverage_sections`
 - `subtitle_strategy_by_locale`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- language variants are explicit,
-- timing changes are recorded,
-- coverage decisions are deliberate,
-- the original structure is only changed where necessary.
+- 语言变体明确
+- 时序变更已记录
+- 覆盖决策经过深思熟虑
+- 仅在必要时更改原始结构
 
-## Common Pitfalls
+## 常见陷阱
 
-- Forcing every language to match source timing exactly.
-- Mixing locale-specific notes into one ambiguous edit list.
-- Hiding sections where the dub treatment is visually weak.
+- 强制每语言精确匹配源视频时序
+- 将各地区特有的标注混入一个模糊的编辑列表
+- 隐藏配音处理视觉上较弱的段落

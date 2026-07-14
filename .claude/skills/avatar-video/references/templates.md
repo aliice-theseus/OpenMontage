@@ -3,11 +3,11 @@ name: templates
 description: Template listing and variable replacement for HeyGen videos
 ---
 
-# Video Templates
+# 视频模板
 
-HeyGen templates allow you to create reusable video structures with variable placeholders, enabling personalized video generation at scale.
+HeyGen 模板允许您创建带有变量占位符的可重用视频结构，实现大规模个性化视频生成。
 
-## Listing Templates
+## 列出模板
 
 ### curl
 
@@ -76,7 +76,7 @@ def list_templates() -> list:
     return data["data"]["templates"]
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -113,7 +113,7 @@ def list_templates() -> list:
 }
 ```
 
-## Getting Template Details
+## 获取模板详情
 
 ### curl
 
@@ -141,19 +141,19 @@ async function getTemplate(templateId: string): Promise<Template> {
 }
 ```
 
-## Generating Video from Template
+## 从模板生成视频
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `variables` | object | ✓ | Key-value pairs matching template variables |
-| `test` | boolean | | Test mode (watermarked, no credits) |
-| `title` | string | | Video name for organization |
-| `callback_id` | string | | Custom ID for webhook tracking |
-| `callback_url` | string | | URL for completion notification |
+| `variables` | object | ✓ | 与模板变量匹配的键值对 |
+| `test` | boolean | | 测试模式（含水印，不消耗积分） |
+| `title` | string | | 视频名称，用于组织管理 |
+| `callback_id` | string | | 用于 webhook 跟踪的自定义 ID |
+| `callback_url` | string | | 完成通知的 URL |
 
-**Note:** The `variables` object keys must match the template's defined variable names. Check template details to see which variables are defined.
+**注意：** `variables` 对象的键必须与模板定义的变量名称匹配。检查模板详情以查看定义了哪些变量。
 
 ### curl
 
@@ -239,11 +239,11 @@ def generate_from_template(template_id: str, variables: dict, test: bool = False
     return data["data"]["video_id"]
 ```
 
-## Variable Types
+## 变量类型
 
-### Text Variables
+### 文本变量
 
-For dynamic text content:
+用于动态文本内容：
 
 ```typescript
 const variables = {
@@ -254,9 +254,9 @@ const variables = {
 };
 ```
 
-### Image Variables
+### 图片变量
 
-For dynamic images (backgrounds, product shots):
+用于动态图片（背景、产品照片）：
 
 ```typescript
 const variables = {
@@ -266,9 +266,9 @@ const variables = {
 };
 ```
 
-### Audio Variables
+### 音频变量
 
-For custom audio content:
+用于自定义音频内容：
 
 ```typescript
 const variables = {
@@ -277,9 +277,9 @@ const variables = {
 };
 ```
 
-## Batch Video Generation
+## 批量视频生成
 
-Generate multiple personalized videos from a template:
+从模板生成多个个性化视频：
 
 ```typescript
 interface PersonalizationData {
@@ -331,9 +331,9 @@ const recipients = [
 const videoIds = await batchGenerateVideos("template_abc123", recipients);
 ```
 
-## Template Validation
+## 模板验证
 
-Validate variables before generating:
+在生成前验证变量：
 
 ```typescript
 function validateTemplateVariables(
@@ -377,7 +377,7 @@ function validateTemplateVariables(
 }
 ```
 
-## Complete Template Workflow
+## 完整模板工作流程
 
 ```typescript
 async function createPersonalizedVideo(
@@ -414,20 +414,20 @@ const videoUrl = await createPersonalizedVideo("template_abc123", {
 });
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Design for flexibility** - Create templates with generic placeholders
-2. **Set reasonable limits** - Define max lengths for text variables
-3. **Validate inputs** - Check variable values before generating
-4. **Use test mode** - Test with `test: true` to verify before production
-5. **Implement rate limiting** - Add delays for batch generation
-6. **Cache template data** - Reduce API calls by caching template details
-7. **Error handling** - Gracefully handle generation failures
+1. **设计灵活性** - 使用通用占位符创建模板
+2. **设置合理限制** - 为文本变量定义最大长度
+3. **验证输入** - 在生成前检查变量值
+4. **使用测试模式** - 使用 `test: true` 测试以在生产前验证
+5. **实施速率限制** - 为批量生成添加延迟
+6. **缓存模板数据** - 通过缓存模板详情减少 API 调用
+7. **错误处理** - 优雅地处理生成失败
 
-## Use Cases
+## 用例
 
-- **Sales outreach** - Personalized prospect videos
-- **Customer onboarding** - Welcome videos with customer name
-- **Product updates** - Announcements with dynamic content
-- **Training** - Customized training modules
-- **Marketing campaigns** - Targeted promotional videos
+- **销售外联** - 个性化潜在客户视频
+- **客户引导** - 带有客户姓名的欢迎视频
+- **产品更新** - 带有动态内容的公告
+- **培训** - 定制化的培训模块
+- **营销活动** - 定向推广视频

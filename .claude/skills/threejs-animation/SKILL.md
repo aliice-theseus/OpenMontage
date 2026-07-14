@@ -1,16 +1,16 @@
 ---
 name: threejs-animation
-description: Three.js animation - keyframe animation, skeletal animation, morph targets, animation mixing. Use when animating objects, playing GLTF animations, creating procedural motion, or blending animations.
+description: Three.js 动画 — 关键帧动画、骨骼动画、形态目标、动画混合。在动画化对象、播放 GLTF 动画、创建程序化运动或混合动画时使用。
 ---
 
-# Three.js Animation
+# Three.js 动画
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
 
-// Simple procedural animation
+// 简单的程序化动画
 const clock = new THREE.Clock();
 
 function animate() {
@@ -26,25 +26,25 @@ function animate() {
 animate();
 ```
 
-## Animation System Overview
+## 动画系统概览
 
-Three.js animation system has three main components:
+Three.js 动画系统有三个主要组件：
 
-1. **AnimationClip** - Container for keyframe data
-2. **AnimationMixer** - Plays animations on a root object
-3. **AnimationAction** - Controls playback of a clip
+1. **AnimationClip** — 关键帧数据的容器
+2. **AnimationMixer** — 在根对象上播放动画
+3. **AnimationAction** — 控制片段播放
 
 ## AnimationClip
 
-Stores keyframe animation data.
+存储关键帧动画数据。
 
 ```javascript
-// Create animation clip
-const times = [0, 1, 2]; // Keyframe times (seconds)
-const values = [0, 1, 0]; // Values at each keyframe
+// 创建动画片段
+const times = [0, 1, 2]; // 关键帧时间（秒）
+const values = [0, 1, 0]; // 每个关键帧的值
 
 const track = new THREE.NumberKeyframeTrack(
-  ".position[y]", // Property path
+  ".position[y]", // 属性路径
   times,
   values,
 );
@@ -52,27 +52,21 @@ const track = new THREE.NumberKeyframeTrack(
 const clip = new THREE.AnimationClip("bounce", 2, [track]);
 ```
 
-### KeyframeTrack Types
+### KeyframeTrack 类型
 
 ```javascript
-// Number track (single value)
+// 数值轨道（单个值）
 new THREE.NumberKeyframeTrack(".opacity", times, [1, 0]);
 new THREE.NumberKeyframeTrack(".material.opacity", times, [1, 0]);
 
-// Vector track (position, scale)
+// 向量轨道（位置、缩放）
 new THREE.VectorKeyframeTrack(".position", times, [
-  0,
-  0,
-  0, // t=0
-  1,
-  2,
-  0, // t=1
-  0,
-  0,
-  0, // t=2
+  0, 0, 0, // t=0
+  1, 2, 0, // t=1
+  0, 0, 0, // t=2
 ]);
 
-// Quaternion track (rotation)
+// 四元数轨道（旋转）
 const q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0));
 const q2 = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI, 0));
 new THREE.QuaternionKeyframeTrack(
@@ -81,23 +75,17 @@ new THREE.QuaternionKeyframeTrack(
   [q1.x, q1.y, q1.z, q1.w, q2.x, q2.y, q2.z, q2.w],
 );
 
-// Color track
+// 颜色轨道
 new THREE.ColorKeyframeTrack(".material.color", times, [
-  1,
-  0,
-  0, // red
-  0,
-  1,
-  0, // green
-  0,
-  0,
-  1, // blue
+  1, 0, 0, // 红色
+  0, 1, 0, // 绿色
+  0, 0, 1, // 蓝色
 ]);
 
-// Boolean track
+// 布尔轨道
 new THREE.BooleanKeyframeTrack(".visible", [0, 0.5, 1], [true, false, true]);
 
-// String track (for morph targets)
+// 字符串轨道（用于形态目标）
 new THREE.StringKeyframeTrack(
   ".morphTargetInfluences[smile]",
   [0, 1],
@@ -105,113 +93,113 @@ new THREE.StringKeyframeTrack(
 );
 ```
 
-### Interpolation Modes
+### 插值模式
 
 ```javascript
 const track = new THREE.VectorKeyframeTrack(".position", times, values);
 
-// Interpolation
-track.setInterpolation(THREE.InterpolateLinear); // Default
-track.setInterpolation(THREE.InterpolateSmooth); // Cubic spline
-track.setInterpolation(THREE.InterpolateDiscrete); // Step function
+// 插值
+track.setInterpolation(THREE.InterpolateLinear); // 默认
+track.setInterpolation(THREE.InterpolateSmooth); // 三次样条
+track.setInterpolation(THREE.InterpolateDiscrete); // 阶跃函数
 ```
 
 ## AnimationMixer
 
-Plays animations on an object and its descendants.
+在对象及其后代上播放动画。
 
 ```javascript
 const mixer = new THREE.AnimationMixer(model);
 
-// Create action from clip
+// 从片段创建动作
 const action = mixer.clipAction(clip);
 action.play();
 
-// Update in animation loop
+// 在动画循环中更新
 function animate() {
   const delta = clock.getDelta();
-  mixer.update(delta); // Required!
+  mixer.update(delta); // 必须调用！
 
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
 ```
 
-### Mixer Events
+### Mixer 事件
 
 ```javascript
 mixer.addEventListener("finished", (e) => {
-  console.log("Animation finished:", e.action.getClip().name);
+  console.log("动画完成:", e.action.getClip().name);
 });
 
 mixer.addEventListener("loop", (e) => {
-  console.log("Animation looped:", e.action.getClip().name);
+  console.log("动画循环:", e.action.getClip().name);
 });
 ```
 
 ## AnimationAction
 
-Controls playback of an animation clip.
+控制动画片段的播放。
 
 ```javascript
 const action = mixer.clipAction(clip);
 
-// Playback control
+// 播放控制
 action.play();
 action.stop();
 action.reset();
 action.halt(fadeOutDuration);
 
-// Playback state
+// 播放状态
 action.isRunning();
 action.isScheduled();
 
-// Time control
-action.time = 0.5; // Current time
-action.timeScale = 1; // Playback speed (negative = reverse)
+// 时间控制
+action.time = 0.5; // 当前时间
+action.timeScale = 1; // 播放速度（负值 = 反向）
 action.paused = false;
 
-// Weight (for blending)
-action.weight = 1; // 0-1, contribution to final pose
+// 权重（用于混合）
+action.weight = 1; // 0-1，对最终姿势的贡献
 action.setEffectiveWeight(1);
 
-// Loop modes
-action.loop = THREE.LoopRepeat; // Default: loop forever
-action.loop = THREE.LoopOnce; // Play once and stop
-action.loop = THREE.LoopPingPong; // Alternate forward/backward
-action.repetitions = 3; // Number of loops (Infinity default)
+// 循环模式
+action.loop = THREE.LoopRepeat; // 默认：无限循环
+action.loop = THREE.LoopOnce; // 播放一次后停止
+action.loop = THREE.LoopPingPong; // 交替正向/反向
+action.repetitions = 3; // 循环次数（默认 Infinity）
 
-// Clamping
-action.clampWhenFinished = true; // Hold last frame when done
+// 夹持
+action.clampWhenFinished = true; // 完成后保持最后一帧
 
-// Blending
+// 混合
 action.blendMode = THREE.NormalAnimationBlendMode;
 action.blendMode = THREE.AdditiveAnimationBlendMode;
 ```
 
-### Fade In/Out
+### 淡入/淡出
 
 ```javascript
-// Fade in
+// 淡入
 action.reset().fadeIn(0.5).play();
 
-// Fade out
+// 淡出
 action.fadeOut(0.5);
 
-// Crossfade between animations
+// 动画间交叉淡入淡出
 const action1 = mixer.clipAction(clip1);
 const action2 = mixer.clipAction(clip2);
 
 action1.play();
 
-// Later, crossfade to action2
+// 之后，交叉淡出到 action2
 action1.crossFadeTo(action2, 0.5, true);
 action2.play();
 ```
 
-## Loading GLTF Animations
+## 加载 GLTF 动画
 
-Most common source of skeletal animations.
+骨骼动画最常见的来源。
 
 ```javascript
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -221,33 +209,33 @@ loader.load("model.glb", (gltf) => {
   const model = gltf.scene;
   scene.add(model);
 
-  // Create mixer
+  // 创建混合器
   const mixer = new THREE.AnimationMixer(model);
 
-  // Get all clips
+  // 获取所有片段
   const clips = gltf.animations;
   console.log(
-    "Available animations:",
+    "可用动画:",
     clips.map((c) => c.name),
   );
 
-  // Play first animation
+  // 播放第一个动画
   if (clips.length > 0) {
     const action = mixer.clipAction(clips[0]);
     action.play();
   }
 
-  // Play specific animation by name
+  // 按名称播放指定动画
   const walkClip = THREE.AnimationClip.findByName(clips, "Walk");
   if (walkClip) {
     mixer.clipAction(walkClip).play();
   }
 
-  // Store mixer for update loop
+  // 存储混合器以便在更新循环中使用
   window.mixer = mixer;
 });
 
-// Animation loop
+// 动画循环
 function animate() {
   const delta = clock.getDelta();
   if (window.mixer) window.mixer.update(delta);
@@ -257,90 +245,90 @@ function animate() {
 }
 ```
 
-## Skeletal Animation
+## 骨骼动画
 
-### Skeleton and Bones
+### 骨骼和骨架
 
 ```javascript
-// Access skeleton from skinned mesh
+// 从蒙皮网格访问骨架
 const skinnedMesh = model.getObjectByProperty("type", "SkinnedMesh");
 const skeleton = skinnedMesh.skeleton;
 
-// Access bones
+// 访问骨骼
 skeleton.bones.forEach((bone) => {
   console.log(bone.name, bone.position, bone.rotation);
 });
 
-// Find specific bone by name
+// 按名称查找特定骨骼
 const headBone = skeleton.bones.find((b) => b.name === "Head");
-if (headBone) headBone.rotation.y = Math.PI / 4; // Turn head
+if (headBone) headBone.rotation.y = Math.PI / 4; // 转头
 
-// Skeleton helper
+// 骨骼辅助器
 const helper = new THREE.SkeletonHelper(model);
 scene.add(helper);
 ```
 
-### Programmatic Bone Animation
+### 程序化骨骼动画
 
 ```javascript
 function animate() {
   const time = clock.getElapsedTime();
 
-  // Animate bone
+  // 动画化骨骼
   const headBone = skeleton.bones.find((b) => b.name === "Head");
   if (headBone) {
     headBone.rotation.y = Math.sin(time) * 0.3;
   }
 
-  // Update mixer if also playing clips
+  // 如果同时播放片段，更新混合器
   mixer.update(clock.getDelta());
 }
 ```
 
-### Bone Attachments
+### 骨骼附加物
 
 ```javascript
-// Attach object to bone
+// 将对象附加到骨骼
 const weapon = new THREE.Mesh(weaponGeometry, weaponMaterial);
 const handBone = skeleton.bones.find((b) => b.name === "RightHand");
 if (handBone) handBone.add(weapon);
 
-// Offset attachment
+// 偏移附加物
 weapon.position.set(0, 0, 0.5);
 weapon.rotation.set(0, Math.PI / 2, 0);
 ```
 
-## Morph Targets
+## 形态目标
 
-Blend between different mesh shapes.
+在不同网格形状之间混合。
 
 ```javascript
-// Morph targets are stored in geometry
+// 形态目标存储在几何体中
 const geometry = mesh.geometry;
-console.log("Morph attributes:", Object.keys(geometry.morphAttributes));
+console.log("形态属性:", Object.keys(geometry.morphAttributes));
 
-// Access morph target influences
-mesh.morphTargetInfluences; // Array of weights
-mesh.morphTargetDictionary; // Name -> index mapping
+// 访问形态目标影响
+mesh.morphTargetInfluences; // 权重数组
+mesh.morphTargetDictionary; // 名称 -> 索引映射
 
-// Set morph target by index
+// 按索引设置形态目标
 mesh.morphTargetInfluences[0] = 0.5;
 
-// Set by name
+// 按名称设置
 const smileIndex = mesh.morphTargetDictionary["smile"];
 mesh.morphTargetInfluences[smileIndex] = 1;
 ```
 
-### Animating Morph Targets
+### 动画化形态目标
 
 ```javascript
-// Procedural
+// 程序化
 function animate() {
   const t = clock.getElapsedTime();
   mesh.morphTargetInfluences[0] = (Math.sin(t) + 1) / 2;
 }
 
-// With keyframe animation
+// 使用关键帧动画
 const track = new THREE.NumberKeyframeTrack(
   ".morphTargetInfluences[smile]",
   [0, 0.5, 1],
@@ -350,27 +338,27 @@ const clip = new THREE.AnimationClip("smile", 1, [track]);
 mixer.clipAction(clip).play();
 ```
 
-## Animation Blending
+## 动画混合
 
-Mix multiple animations together.
+将多个动画混合在一起。
 
 ```javascript
-// Setup actions
+// 设置动作
 const idleAction = mixer.clipAction(idleClip);
 const walkAction = mixer.clipAction(walkClip);
 const runAction = mixer.clipAction(runClip);
 
-// Play all with different weights
+// 使用不同权重播放所有动作
 idleAction.play();
 walkAction.play();
 runAction.play();
 
-// Set initial weights
+// 设置初始权重
 idleAction.setEffectiveWeight(1);
 walkAction.setEffectiveWeight(0);
 runAction.setEffectiveWeight(0);
 
-// Blend based on speed
+// 根据速度混合
 function updateAnimations(speed) {
   if (speed < 0.1) {
     idleAction.setEffectiveWeight(1);
@@ -390,56 +378,56 @@ function updateAnimations(speed) {
 }
 ```
 
-### Additive Blending
+### 加法混合
 
 ```javascript
-// Base pose
+// 基础姿势
 const baseAction = mixer.clipAction(baseClip);
 baseAction.play();
 
-// Additive layer (e.g., breathing)
+// 加法图层（例如呼吸）
 const additiveAction = mixer.clipAction(additiveClip);
 additiveAction.blendMode = THREE.AdditiveAnimationBlendMode;
 additiveAction.play();
 
-// Convert clip to additive
+// 将片段转换为加法模式
 THREE.AnimationUtils.makeClipAdditive(additiveClip);
 ```
 
-## Animation Utilities
+## 动画工具
 
 ```javascript
 import * as THREE from "three";
 
-// Find clip by name
+// 按名称查找片段
 const clip = THREE.AnimationClip.findByName(clips, "Walk");
 
-// Create subclip
+// 创建子片段
 const subclip = THREE.AnimationUtils.subclip(clip, "subclip", 0, 30, 30);
 
-// Convert to additive
+// 转换为加法模式
 THREE.AnimationUtils.makeClipAdditive(clip);
 THREE.AnimationUtils.makeClipAdditive(clip, 0, referenceClip);
 
-// Clone clip
+// 克隆片段
 const clone = clip.clone();
 
-// Get clip duration
+// 获取片段时长
 clip.duration;
 
-// Optimize clip (remove redundant keyframes)
+// 优化片段（移除冗余关键帧）
 clip.optimize();
 
-// Reset clip to first frame
+// 将片段重置到第一帧
 clip.resetDuration();
 ```
 
-## Procedural Animation Patterns
+## 程序化动画模式
 
-### Smooth Damping
+### 平滑阻尼
 
 ```javascript
-// Smooth follow/lerp
+// 平滑跟随/线性插值
 const target = new THREE.Vector3();
 const current = new THREE.Vector3();
 const velocity = new THREE.Vector3();
@@ -463,7 +451,7 @@ function animate() {
 }
 ```
 
-### Spring Physics
+### 弹簧物理
 
 ```javascript
 class Spring {
@@ -492,50 +480,50 @@ function animate() {
 }
 ```
 
-### Oscillation
+### 振荡
 
 ```javascript
 function animate() {
   const t = clock.getElapsedTime();
 
-  // Sine wave
+  // 正弦波
   mesh.position.y = Math.sin(t * 2) * 0.5;
 
-  // Bouncing
+  // 弹跳
   mesh.position.y = Math.abs(Math.sin(t * 3)) * 2;
 
-  // Circular motion
+  // 圆周运动
   mesh.position.x = Math.cos(t) * 2;
   mesh.position.z = Math.sin(t) * 2;
 
-  // Figure 8
+  // 8 字形
   mesh.position.x = Math.sin(t) * 2;
   mesh.position.z = Math.sin(t * 2) * 1;
 }
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Share clips**: Same AnimationClip can be used on multiple mixers
-2. **Optimize clips**: Call `clip.optimize()` to remove redundant keyframes
-3. **Disable when off-screen**: Stop mixer updates for invisible objects
-4. **Use LOD for animations**: Simpler rigs for distant characters
-5. **Limit active mixers**: Each mixer.update() has a cost
+1. **共享片段**：同一 AnimationClip 可用于多个混合器
+2. **优化片段**：调用 `clip.optimize()` 移除冗余关键帧
+3. **离屏时禁用**：对不可见对象停止混合器更新
+4. **对动画使用 LOD**：远处角色使用更简单的骨骼
+5. **限制活跃混合器数量**：每个 mixer.update() 都有成本
 
 ```javascript
-// Pause animation when not visible
+// 不可见时暂停动画
 mesh.onBeforeRender = () => {
   action.paused = false;
 };
 
 mesh.onAfterRender = () => {
-  // Check if will be visible next frame
+  // 检查下一帧是否可见
   if (!isInFrustum(mesh)) {
     action.paused = true;
   }
 };
 
-// Cache clips
+// 缓存片段
 const clipCache = new Map();
 function getClip(name) {
   if (!clipCache.has(name)) {
@@ -545,8 +533,8 @@ function getClip(name) {
 }
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-loaders` - Loading animated GLTF models
-- `threejs-fundamentals` - Clock and animation loop
-- `threejs-shaders` - Vertex animation in shaders
+- `threejs-loaders` — 加载动画 GLTF 模型
+- `threejs-fundamentals` — 时钟和动画循环
+- `threejs-shaders` — 着色器中的顶点动画

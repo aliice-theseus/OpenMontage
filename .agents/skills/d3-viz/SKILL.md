@@ -1,75 +1,75 @@
 ---
 name: d3-viz
-description: Creating interactive data visualisations using d3.js. This skill should be used when creating custom charts, graphs, network diagrams, geographic visualisations, or any complex SVG-based data visualisation that requires fine-grained control over visual elements, transitions, or interactions. Use this for bespoke visualisations beyond standard charting libraries, whether in React, Vue, Svelte, vanilla JavaScript, or any other environment.
+description: 使用 d3.js 创建交互式数据可视化。此技能应在创建自定义图表、图形、网络图、地理可视化或任何需要对视觉元素、过渡或交互进行精细控制的复杂基于 SVG 的数据可视化时使用。用于超越标准图表库的定制可视化，无论是在 React、Vue、Svelte、原生 JavaScript 还是任何其他环境中。
 ---
 
-# D3.js Visualisation
+# D3.js 可视化
 
-## Overview
+## 概述
 
-This skill provides guidance for creating sophisticated, interactive data visualisations using d3.js. D3.js (Data-Driven Documents) excels at binding data to DOM elements and applying data-driven transformations to create custom, publication-quality visualisations with precise control over every visual element. The techniques work across any JavaScript environment, including vanilla JavaScript, React, Vue, Svelte, and other frameworks.
+此技能为使用 d3.js 创建复杂的交互式数据可视化提供指导。D3.js（数据驱动文档）擅长将数据绑定到 DOM 元素并应用数据驱动的变换，以创建定制的、出版质量的可视化，对每个视觉元素进行精确控制。这些技术适用于任何 JavaScript 环境，包括原生 JavaScript、React、Vue、Svelte 和其他框架。
 
-## When to use d3.js
+## 何时使用 d3.js
 
-**Use d3.js for:**
-- Custom visualisations requiring unique visual encodings or layouts
-- Interactive explorations with complex pan, zoom, or brush behaviours
-- Network/graph visualisations (force-directed layouts, tree diagrams, hierarchies, chord diagrams)
-- Geographic visualisations with custom projections
-- Visualisations requiring smooth, choreographed transitions
-- Publication-quality graphics with fine-grained styling control
-- Novel chart types not available in standard libraries
+**使用 d3.js 的场景：**
+- 需要独特视觉编码或布局的自定义可视化
+- 具有复杂平移、缩放或刷选行为的交互式探索
+- 网络/图形可视化（力导向布局、树图、层次结构、弦图）
+- 具有自定义投影的地理可视化
+- 需要平滑编排过渡的可视化
+- 具有精细样式控制的出版质量图形
+- 标准库中没有的新颖图表类型
 
-**Consider alternatives for:**
-- 3D visualisations - use Three.js instead
+**考虑替代方案的场景：**
+- 3D 可视化 - 改用 Three.js
 
-## Core workflow
+## 核心工作流程
 
-### 1. Set up d3.js
+### 1. 设置 d3.js
 
-Import d3 at the top of your script:
+在脚本顶部导入 d3：
 
 ```javascript
 import * as d3 from 'd3';
 ```
 
-Or use the CDN version (7.x):
+或使用 CDN 版本（7.x）：
 
 ```html
 <script src="https://d3js.org/d3.v7.min.js"></script>
 ```
 
-All modules (scales, axes, shapes, transitions, etc.) are accessible through the `d3` namespace.
+所有模块（比例尺、坐标轴、形状、过渡等）都可通过 `d3` 命名空间访问。
 
-### 2. Choose the integration pattern
+### 2. 选择集成模式
 
-**Pattern A: Direct DOM manipulation (recommended for most cases)**
-Use d3 to select DOM elements and manipulate them imperatively. This works in any JavaScript environment:
+**模式 A：直接 DOM 操作（大多数情况推荐）**
+使用 d3 选择 DOM 元素并命令式地进行操作。这适用于任何 JavaScript 环境：
 
 ```javascript
 function drawChart(data) {
   if (!data || data.length === 0) return;
 
-  const svg = d3.select('#chart'); // Select by ID, class, or DOM element
+  const svg = d3.select('#chart'); // 按 ID、类或 DOM 元素选择
 
-  // Clear previous content
+  // 清除先前内容
   svg.selectAll("*").remove();
 
-  // Set up dimensions
+  // 设置尺寸
   const width = 800;
   const height = 400;
   const margin = { top: 20, right: 30, bottom: 40, left: 50 };
 
-  // Create scales, axes, and draw visualisation
-  // ... d3 code here ...
+  // 创建比例尺、坐标轴并绘制可视化
+  // ... d3 代码 ...
 }
 
-// Call when data changes
+// 数据变化时调用
 drawChart(myData);
 ```
 
-**Pattern B: Declarative rendering (for frameworks with templating)**
-Use d3 for data calculations (scales, layouts) but render elements via your framework:
+**模式 B：声明式渲染（适用于带模板的框架）**
+使用 d3 进行数据计算（比例尺、布局），但通过框架渲染元素：
 
 ```javascript
 function getChartElements(data) {
@@ -85,45 +85,45 @@ function getChartElements(data) {
   }));
 }
 
-// In React: {getChartElements(data).map((d, i) => <rect key={i} {...d} fill="steelblue" />)}
-// In Vue: v-for directive over the returned array
-// In vanilla JS: Create elements manually from the returned data
+// 在 React 中：{getChartElements(data).map((d, i) => <rect key={i} {...d} fill="steelblue" />)}
+// 在 Vue 中：返回的数组上使用 v-for 指令
+// 在原生 JS 中：从返回的数据手动创建元素
 ```
 
-Use Pattern A for complex visualisations with transitions, interactions, or when leveraging d3's full capabilities. Use Pattern B for simpler visualisations or when your framework prefers declarative rendering.
+对于带有过渡、交互的复杂可视化，或利用 d3 全部功能时使用模式 A。对于更简单的可视化或框架偏好声明式渲染时使用模式 B。
 
-### 3. Structure the visualisation code
+### 3. 组织可视化代码
 
-Follow this standard structure in your drawing function:
+在绘图函数中遵循此标准结构：
 
 ```javascript
 function drawVisualization(data) {
   if (!data || data.length === 0) return;
 
-  const svg = d3.select('#chart'); // Or pass a selector/element
-  svg.selectAll("*").remove(); // Clear previous render
+  const svg = d3.select('#chart'); // 或传递选择器/元素
+  svg.selectAll("*").remove(); // 清除先前渲染
 
-  // 1. Define dimensions
+  // 1. 定义尺寸
   const width = 800;
   const height = 400;
   const margin = { top: 20, right: 30, bottom: 40, left: 50 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
-  // 2. Create main group with margins
+  // 2. 创建带边距的主组
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // 3. Create scales
+  // 3. 创建比例尺
   const xScale = d3.scaleLinear()
     .domain([0, d3.max(data, d => d.x)])
     .range([0, innerWidth]);
 
   const yScale = d3.scaleLinear()
     .domain([0, d3.max(data, d => d.y)])
-    .range([innerHeight, 0]); // Note: inverted for SVG coordinates
+    .range([innerHeight, 0]); // 注意：SVG 坐标反转
 
-  // 4. Create and append axes
+  // 4. 创建并追加坐标轴
   const xAxis = d3.axisBottom(xScale);
   const yAxis = d3.axisLeft(yScale);
 
@@ -134,7 +134,7 @@ function drawVisualization(data) {
   g.append("g")
     .call(yAxis);
 
-  // 5. Bind data and create visual elements
+  // 5. 绑定数据并创建视觉元素
   g.selectAll("circle")
     .data(data)
     .join("circle")
@@ -144,13 +144,13 @@ function drawVisualization(data) {
     .attr("fill", "steelblue");
 }
 
-// Call when data changes
+// 数据变化时调用
 drawVisualization(myData);
 ```
 
-### 4. Implement responsive sizing
+### 4. 实现响应式尺寸
 
-Make visualisations responsive to container size:
+使可视化响应容器大小：
 
 ```javascript
 function setupResponsiveChart(containerId, data) {
@@ -161,26 +161,26 @@ function setupResponsiveChart(containerId, data) {
     const { width, height } = container.getBoundingClientRect();
     svg.attr('width', width).attr('height', height);
 
-    // Redraw visualisation with new dimensions
+    // 使用新尺寸重绘可视化
     drawChart(data, svg, width, height);
   }
 
-  // Update on initial load
+  // 初始加载时更新
   updateChart();
 
-  // Update on window resize
+  // 窗口大小变化时更新
   window.addEventListener('resize', updateChart);
 
-  // Return cleanup function
+  // 返回清理函数
   return () => window.removeEventListener('resize', updateChart);
 }
 
-// Usage:
+// 用法：
 // const cleanup = setupResponsiveChart('chart-container', myData);
-// cleanup(); // Call when component unmounts or element removed
+// cleanup(); // 组件卸载或元素移除时调用
 ```
 
-Or use ResizeObserver for more direct container monitoring:
+或使用 ResizeObserver 进行更直接的容器监控：
 
 ```javascript
 function setupResponsiveChartWithObserver(svgElement, data) {
@@ -190,7 +190,7 @@ function setupResponsiveChartWithObserver(svgElement, data) {
       .attr('width', width)
       .attr('height', height);
 
-    // Redraw visualisation
+    // 重绘可视化
     drawChart(data, d3.select(svgElement), width, height);
   });
 
@@ -199,9 +199,9 @@ function setupResponsiveChartWithObserver(svgElement, data) {
 }
 ```
 
-## Common visualisation patterns
+## 常见可视化模式
 
-### Bar chart
+### 条形图
 
 ```javascript
 function drawBarChart(data, svgElement) {
@@ -245,17 +245,17 @@ function drawBarChart(data, svgElement) {
     .attr("fill", "steelblue");
 }
 
-// Usage:
+// 用法：
 // drawBarChart(myData, document.getElementById('chart'));
 ```
 
-### Line chart
+### 折线图
 
 ```javascript
 const line = d3.line()
   .x(d => xScale(d.date))
   .y(d => yScale(d.value))
-  .curve(d3.curveMonotoneX); // Smooth curve
+  .curve(d3.curveMonotoneX); // 平滑曲线
 
 g.append("path")
   .datum(data)
@@ -265,7 +265,7 @@ g.append("path")
   .attr("d", line);
 ```
 
-### Scatter plot
+### 散点图
 
 ```javascript
 g.selectAll("circle")
@@ -273,19 +273,19 @@ g.selectAll("circle")
   .join("circle")
   .attr("cx", d => xScale(d.x))
   .attr("cy", d => yScale(d.y))
-  .attr("r", d => sizeScale(d.size)) // Optional: size encoding
-  .attr("fill", d => colourScale(d.category)) // Optional: colour encoding
+  .attr("r", d => sizeScale(d.size)) // 可选：大小编码
+  .attr("fill", d => colourScale(d.category)) // 可选：颜色编码
   .attr("opacity", 0.7);
 ```
 
-### Chord diagram
+### 弦图
 
-A chord diagram shows relationships between entities in a circular layout, with ribbons representing flows between them:
+弦图在圆形布局中显示实体之间的关系，用带表示它们之间的流动：
 
 ```javascript
 function drawChordDiagram(data) {
-  // data format: array of objects with source, target, and value
-  // Example: [{ source: 'A', target: 'B', value: 10 }, ...]
+  // data 格式：包含 source、target 和 value 的对象数组
+  // 示例：[{ source: 'A', target: 'B', value: 10 }, ...]
 
   if (!data || data.length === 0) return;
 
@@ -297,7 +297,7 @@ function drawChordDiagram(data) {
   const innerRadius = Math.min(width, height) * 0.3;
   const outerRadius = innerRadius + 30;
 
-  // Create matrix from data
+  // 从数据创建矩阵
   const nodes = Array.from(new Set(data.flatMap(d => [d.source, d.target])));
   const matrix = Array.from({ length: nodes.length }, () => Array(nodes.length).fill(0));
 
@@ -308,7 +308,7 @@ function drawChordDiagram(data) {
     matrix[j][i] += d.value;
   });
 
-  // Create chord layout
+  // 创建弦布局
   const chord = d3.chord()
     .padAngle(0.05)
     .sortSubgroups(d3.descending);
@@ -329,7 +329,7 @@ function drawChordDiagram(data) {
 
   const chords = chord(matrix);
 
-  // Draw ribbons
+  // 绘制带
   g.append("g")
     .attr("fill-opacity", 0.67)
     .selectAll("path")
@@ -339,7 +339,7 @@ function drawChordDiagram(data) {
     .attr("fill", d => colourScale(nodes[d.source.index]))
     .attr("stroke", d => d3.rgb(colourScale(nodes[d.source.index])).darker());
 
-  // Draw groups (arcs)
+  // 绘制组（弧）
   const group = g.append("g")
     .selectAll("g")
     .data(chords.groups)
@@ -350,7 +350,7 @@ function drawChordDiagram(data) {
     .attr("fill", d => colourScale(nodes[d.index]))
     .attr("stroke", d => d3.rgb(colourScale(nodes[d.index])).darker());
 
-  // Add labels
+  // 添加标签
   group.append("text")
     .each(d => { d.angle = (d.startAngle + d.endAngle) / 2; })
     .attr("dy", "0.31em")
@@ -361,14 +361,14 @@ function drawChordDiagram(data) {
 }
 ```
 
-### Heatmap
+### 热图
 
-A heatmap uses colour to encode values in a two-dimensional grid, useful for showing patterns across categories:
+热图使用颜色在二维网格中编码值，用于显示跨类别的模式：
 
 ```javascript
 function drawHeatmap(data) {
-  // data format: array of objects with row, column, and value
-  // Example: [{ row: 'A', column: 'X', value: 10 }, ...]
+  // data 格式：包含 row、column 和 value 的对象数组
+  // 示例：[{ row: 'A', column: 'X', value: 10 }, ...]
 
   if (!data || data.length === 0) return;
 
@@ -381,14 +381,14 @@ function drawHeatmap(data) {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
-  // Get unique rows and columns
+  // 获取唯一的行和列
   const rows = Array.from(new Set(data.map(d => d.row)));
   const columns = Array.from(new Set(data.map(d => d.column)));
 
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Create scales
+  // 创建比例尺
   const xScale = d3.scaleBand()
     .domain(columns)
     .range([0, innerWidth])
@@ -399,11 +399,11 @@ function drawHeatmap(data) {
     .range([0, innerHeight])
     .padding(0.01);
 
-  // Colour scale for values
+  // 值的颜色比例尺
   const colourScale = d3.scaleSequential(d3.interpolateYlOrRd)
     .domain([0, d3.max(data, d => d.value)]);
 
-  // Draw rectangles
+  // 绘制矩形
   g.selectAll("rect")
     .data(data)
     .join("rect")
@@ -413,7 +413,7 @@ function drawHeatmap(data) {
     .attr("height", yScale.bandwidth())
     .attr("fill", d => colourScale(d.value));
 
-  // Add x-axis labels
+  // 添加 x 轴标签
   svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .selectAll("text")
@@ -425,7 +425,7 @@ function drawHeatmap(data) {
     .text(d => d)
     .style("font-size", "12px");
 
-  // Add y-axis labels
+  // 添加 y 轴标签
   svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .selectAll("text")
@@ -438,7 +438,7 @@ function drawHeatmap(data) {
     .text(d => d)
     .style("font-size", "12px");
 
-  // Add colour legend
+  // 添加颜色图例
   const legendWidth = 20;
   const legendHeight = 200;
   const legend = svg.append("g")
@@ -451,7 +451,7 @@ function drawHeatmap(data) {
   const legendAxis = d3.axisRight(legendScale)
     .ticks(5);
 
-  // Draw colour gradient in legend
+  // 在图例中绘制颜色渐变
   for (let i = 0; i < legendHeight; i++) {
     legend.append("rect")
       .attr("y", i)
@@ -466,7 +466,7 @@ function drawHeatmap(data) {
 }
 ```
 
-### Pie chart
+### 饼图
 
 ```javascript
 const pie = d3.pie()
@@ -491,7 +491,7 @@ g.selectAll("path")
   .attr("stroke-width", 2);
 ```
 
-### Force-directed network
+### 力导向网络
 
 ```javascript
 const simulation = d3.forceSimulation(nodes)
@@ -545,12 +545,12 @@ function dragended(event) {
 }
 ```
 
-## Adding interactivity
+## 添加交互性
 
-### Tooltips
+### 工具提示
 
 ```javascript
-// Create tooltip div (outside SVG)
+// 创建工具提示 div（在 SVG 外部）
 const tooltip = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("position", "absolute")
@@ -561,7 +561,7 @@ const tooltip = d3.select("body").append("div")
   .style("border-radius", "4px")
   .style("pointer-events", "none");
 
-// Add to elements
+// 添加到元素
 circles
   .on("mouseover", function(event, d) {
     d3.select(this).attr("opacity", 1);
@@ -580,7 +580,7 @@ circles
   });
 ```
 
-### Zoom and pan
+### 缩放和平移
 
 ```javascript
 const zoom = d3.zoom()
@@ -592,35 +592,35 @@ const zoom = d3.zoom()
 svg.call(zoom);
 ```
 
-### Click interactions
+### 点击交互
 
 ```javascript
 circles
   .on("click", function(event, d) {
-    // Handle click (dispatch event, update app state, etc.)
+    // 处理点击（分发事件、更新应用状态等）
     console.log("Clicked:", d);
 
-    // Visual feedback
+    // 视觉反馈
     d3.selectAll("circle").attr("fill", "steelblue");
     d3.select(this).attr("fill", "orange");
 
-    // Optional: dispatch custom event for your framework/app to listen to
+    // 可选：为框架/应用分发自定义事件
     // window.dispatchEvent(new CustomEvent('chartClick', { detail: d }));
   });
 ```
 
-## Transitions and animations
+## 过渡与动画
 
-Add smooth transitions to visual changes:
+为视觉变化添加平滑过渡：
 
 ```javascript
-// Basic transition
+// 基本过渡
 circles
   .transition()
   .duration(750)
   .attr("r", 10);
 
-// Chained transitions
+// 链式过渡
 circles
   .transition()
   .duration(500)
@@ -629,14 +629,14 @@ circles
   .duration(500)
   .attr("r", 15);
 
-// Staggered transitions
+// 交错过渡
 circles
   .transition()
   .delay((d, i) => i * 50)
   .duration(500)
   .attr("cy", d => yScale(d.value));
 
-// Custom easing
+// 自定义缓动
 circles
   .transition()
   .duration(1000)
@@ -644,119 +644,119 @@ circles
   .attr("r", 10);
 ```
 
-## Scales reference
+## 比例尺参考
 
-### Quantitative scales
+### 定量比例尺
 
 ```javascript
-// Linear scale
+// 线性比例尺
 const xScale = d3.scaleLinear()
   .domain([0, 100])
   .range([0, 500]);
 
-// Log scale (for exponential data)
+// 对数比例尺（用于指数数据）
 const logScale = d3.scaleLog()
   .domain([1, 1000])
   .range([0, 500]);
 
-// Power scale
+// 幂比例尺
 const powScale = d3.scalePow()
   .exponent(2)
   .domain([0, 100])
   .range([0, 500]);
 
-// Time scale
+// 时间比例尺
 const timeScale = d3.scaleTime()
   .domain([new Date(2020, 0, 1), new Date(2024, 0, 1)])
   .range([0, 500]);
 ```
 
-### Ordinal scales
+### 序数比例尺
 
 ```javascript
-// Band scale (for bar charts)
+// 带比例尺（用于条形图）
 const bandScale = d3.scaleBand()
   .domain(['A', 'B', 'C', 'D'])
   .range([0, 400])
   .padding(0.1);
 
-// Point scale (for line/scatter categories)
+// 点比例尺（用于折线/散点类别）
 const pointScale = d3.scalePoint()
   .domain(['A', 'B', 'C', 'D'])
   .range([0, 400]);
 
-// Ordinal scale (for colours)
+// 序数比例尺（用于颜色）
 const colourScale = d3.scaleOrdinal(d3.schemeCategory10);
 ```
 
-### Sequential scales
+### 序列比例尺
 
 ```javascript
-// Sequential colour scale
+// 序列颜色比例尺
 const colourScale = d3.scaleSequential(d3.interpolateBlues)
   .domain([0, 100]);
 
-// Diverging colour scale
+// 发散颜色比例尺
 const divScale = d3.scaleDiverging(d3.interpolateRdBu)
   .domain([-10, 0, 10]);
 ```
 
-## Best practices
+## 最佳实践
 
-### Data preparation
+### 数据准备
 
-Always validate and prepare data before visualisation:
+在可视化之前始终验证和准备数据：
 
 ```javascript
-// Filter invalid values
+// 过滤无效值
 const cleanData = data.filter(d => d.value != null && !isNaN(d.value));
 
-// Sort data if order matters
+// 如果顺序重要则排序
 const sortedData = [...data].sort((a, b) => b.value - a.value);
 
-// Parse dates
+// 解析日期
 const parsedData = data.map(d => ({
   ...d,
   date: d3.timeParse("%Y-%m-%d")(d.date)
 }));
 ```
 
-### Performance optimisation
+### 性能优化
 
-For large datasets (>1000 elements):
+对于大数据集（>1000 个元素）：
 
 ```javascript
-// Use canvas instead of SVG for many elements
-// Use quadtree for collision detection
-// Simplify paths with d3.line().curve(d3.curveStep)
-// Implement virtual scrolling for large lists
-// Use requestAnimationFrame for custom animations
+// 对许多元素使用 Canvas 而非 SVG
+// 使用四叉树进行碰撞检测
+// 使用 d3.line().curve(d3.curveStep) 简化路径
+// 对大型列表实现虚拟滚动
+// 对自定义动画使用 requestAnimationFrame
 ```
 
-### Accessibility
+### 可访问性
 
-Make visualisations accessible:
+使可视化可访问：
 
 ```javascript
-// Add ARIA labels
+// 添加 ARIA 标签
 svg.attr("role", "img")
    .attr("aria-label", "Bar chart showing quarterly revenue");
 
-// Add title and description
+// 添加标题和描述
 svg.append("title").text("Quarterly Revenue 2024");
 svg.append("desc").text("Bar chart showing revenue growth across four quarters");
 
-// Ensure sufficient colour contrast
-// Provide keyboard navigation for interactive elements
-// Include data table alternative
+// 确保足够的颜色对比度
+// 为交互式元素提供键盘导航
+// 包含数据表格替代方案
 ```
 
-### Styling
+### 样式
 
-Use consistent, professional styling:
+使用一致的专业样式：
 
 ```javascript
-// Define colour palettes upfront
+// 预先定义调色板
 const colours = {
   primary: '#4A90E2',
   secondary: '#7B68EE',
@@ -765,56 +765,56 @@ const colours = {
   gridLines: '#E0E0E0'
 };
 
-// Apply consistent typography
+// 应用一致的排版
 svg.selectAll("text")
   .style("font-family", "Inter, sans-serif")
   .style("font-size", "12px");
 
-// Use subtle grid lines
+// 使用微妙的网格线
 g.selectAll(".tick line")
   .attr("stroke", colours.gridLines)
   .attr("stroke-dasharray", "2,2");
 ```
 
-## Common issues and solutions
+## 常见问题与解决方案
 
-**Issue**: Axes not appearing
-- Ensure scales have valid domains (check for NaN values)
-- Verify axis is appended to correct group
-- Check transform translations are correct
+**问题**：坐标轴不显示
+- 确保比例尺有有效定义域（检查 NaN 值）
+- 验证坐标轴已追加到正确的组
+- 检查变换平移是否正确
 
-**Issue**: Transitions not working
-- Call `.transition()` before attribute changes
-- Ensure elements have unique keys for proper data binding
-- Check that useEffect dependencies include all changing data
+**问题**：过渡不起作用
+- 在属性更改之前调用 `.transition()`
+- 确保元素有唯一键以进行正确的数据绑定
+- 检查 useEffect 依赖项是否包含所有变化的数据
 
-**Issue**: Responsive sizing not working
-- Use ResizeObserver or window resize listener
-- Update dimensions in state to trigger re-render
-- Ensure SVG has width/height attributes or viewBox
+**问题**：响应式尺寸不起作用
+- 使用 ResizeObserver 或窗口 resize 监听器
+- 在状态中更新尺寸以触发重新渲染
+- 确保 SVG 具有 width/height 属性或 viewBox
 
-**Issue**: Performance problems
-- Limit number of DOM elements (consider canvas for >1000 items)
-- Debounce resize handlers
-- Use `.join()` instead of separate enter/update/exit selections
-- Avoid unnecessary re-renders by checking dependencies
+**问题**：性能问题
+- 限制 DOM 元素数量（对于 >1000 项考虑 canvas）
+- 防抖 resize 处理器
+- 使用 `.join()` 代替单独的 enter/update/exit 选择
+- 通过检查依赖项避免不必要的重新渲染
 
-## Resources
+## 资源
 
 ### references/
-Contains detailed reference materials:
-- `d3-patterns.md` - Comprehensive collection of visualisation patterns and code examples
-- `scale-reference.md` - Complete guide to d3 scales with examples
-- `colour-schemes.md` - D3 colour schemes and palette recommendations
+包含详细参考资料：
+- `d3-patterns.md` - 可视化模式和代码示例的综合集合
+- `scale-reference.md` - d3 比例尺的完整指南及示例
+- `colour-schemes.md` - D3 颜色方案和调色板推荐
 
 ### assets/
 
-Contains boilerplate templates:
+包含样板模板：
 
-- `chart-template.js` - Starter template for basic chart
-- `interactive-template.js` - Template with tooltips, zoom, and interactions
-- `sample-data.json` - Example datasets for testing
+- `chart-template.js` - 基本图表的入门模板
+- `interactive-template.js` - 带工具提示、缩放和交互的模板
+- `sample-data.json` - 用于测试的示例数据集
 
-These templates work with vanilla JavaScript, React, Vue, Svelte, or any other JavaScript environment. Adapt them as needed for your specific framework.
+这些模板适用于原生 JavaScript、React、Vue、Svelte 或任何其他 JavaScript 环境。根据您的具体框架进行调整。
 
-To use these resources, read the relevant files when detailed guidance is needed for specific visualisation types or patterns.
+要使用这些资源，在需要特定可视化类型或模式的详细指导时阅读相关文件。

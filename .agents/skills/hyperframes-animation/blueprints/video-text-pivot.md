@@ -1,30 +1,30 @@
-# video-text-pivot — Video → Text Pivot
+# video-text-pivot — 视频转文本枢轴
 
-**intent**: A product video holds center and claims attention, then slides aside to hand its weight to a hero stat in the space it vacates, then both clear and kinetic text types into the center — accent words carrying the meaning the video used to carry — sealed by a gradient pill. The arc is "show → yield → pivot → stamp," and each handoff pairs an exit with a same-anchor entrance so two beats read, not four.
+**意图**：一个产品视频占据中心并吸引注意力，然后滑向一侧，将其重量转移给空出的空间中的一个主角统计数字，然后两者都清除，动感文本在中心逐字打出——重音词承载了视频曾经承载的意义——最后用一个渐变胶囊封口。整个弧线是"展示→让位→枢轴→盖章"，每次交接都配对一个退出和一个同锚点入场，使两个节拍读起来像四个中的两个。
 
-**roles served**
+**服务角色**
 
-- Product_Intro (from `metric-video-text-pivot`): when the open is "see the feature" then "see the impact" and the `[product video]` must stay visible through the stat reveal — it slides, it doesn't cut.
-- Key_Feature: a feature clip that yields to a frame-filling metric and a typographic impact line.
+- Product_Intro（来自 `metric-video-text-pivot`）：当开场是"看功能"然后"看影响"，且 `[product video]` 必须在统计展示期间保持可见——它滑动，不切断。
+- Key_Feature：一个功能剪辑，让位给一个充满画面的度量和排版冲击行。
 
-**duration**: 6–8s
+**时长**：6–8 秒
 
-**shot structure** (a `[bg]` canvas; one `[product video]` as a real muted `.mp4` clip, a hero stat, then kinetic text — each pair shares a screen anchor so the handoff reads as a weight-transfer)
+**镜头结构**（一个 `[bg]` canvas；一个真实的静音 `.mp4` 剪辑 `[product video]`、一个主角统计数字、然后是动感文本——每对共享一个屏幕锚点，使交接读作重量转移）
 
-- **Scene 1 (0.0–~1.6s) — the video shows.** The `[product video]` lands centered on a smooth scale-up and breathes (a small y-bob), claiming full attention. Camera static.
-- **Scene 2 (~1.6–3.2s) — yield + stat (signature move).** The video SLIDES aside (x + scale down) **into the very space** the `[hero stat]` now fills as the stat pops in with 3D-depth type — one weight-transfer reading as a single event, not two. The stat breathes within this window.
-- **Scene 3 (~3.2–5.0s) — pivot to text.** Both video and stat clear out and kinetic `[impact text]` TYPES into the vacated center, character by character; its `[accent words]` carry the meaning the video used to carry.
-- **Scene 4 (~5.0–end) — stamp.** A gradient `[pill]` snaps shut around the closing line (`scaleX` 0→1), its glow halo resolving a beat behind so the silhouette reads before the bloom — sealing the statement as one graphic. Holds.
+- **场景 1（0.0–~1.6 秒）——视频展示。** `[product video]` 通过平滑放大居中着陆并呼吸（小幅 y 摆动），吸引全部注意力。摄像机静止。
+- **场景 2（~1.6–3.2 秒）——让位 + 统计（标志性动作）。** 视频**滑开**（x 平移 + 缩小）**正好进入** `[hero stat]` 现在填充的空间，同时统计数字以 3D 深度字体弹出——一次重量转移读作一个事件，而非两个。统计数字在该窗口内呼吸。
+- **场景 3（~3.2–5.0 秒）——枢轴转文本。** 视频和统计数字都清除，动感 `[impact text]` 在空出的中心逐字打出；其 `[accent words]` 承载了视频曾经承载的意义。
+- **场景 4（~5.0 秒–结束）——盖章。** 一个渐变 `[pill]` 在结束语周围合拢（`scaleX` 0→1），其辉光光环延迟一个节拍解析，使轮廓在辉光之前可读——像一个图形一样封住陈述。保持。
 
-**motion vocabulary**: video scale-in + small breath; weight-transfer slide (video x + scale-down handing off to the stat at the same anchor); 3D-depth stat type; character-stream typing; gradient pill scaleX-snap; glow-halo bloom trailing the silhouette.
+**动词语汇**：视频放大 + 小幅呼吸；重量转移滑动（视频 x 平移 + 缩小转移到同一锚点的统计数字）；3D 深度统计字体；字符流打字；渐变胶囊 scaleX 快照；辉光光环跟随轮廓。
 
-**rule mapping**
+**规则映射**
 
-- video entrance (smooth) and the weight-transfer slide → `gsap-effects` (scale/opacity then x + scale on a long-tail `power3`); the video itself is a muted `<video class="clip">` direct child of the root
-- hero stat's frame-filling 3D type → `3d-text-depth-layers` (static-depth variation — layers built at setup, no cascade fighting the entry)
-- the same-anchor video-exit ↔ stat-entry handoff (if treated as a morph) → `scale-swap-transition` (shared center)
-- character-by-character impact typing through segmented spans → `dynamic-content-sequencing` (clean character stream) or `discrete-text-sequence`
-- pill `scaleX` snap + trailing glow halo → `gsap-effects` (scaleX) + `ambient-glow-bloom` (the halo, resolving a beat behind)
-- video / stat breath within their windows → `sine-wave-loop` (low-amplitude register — subtle jitter, gated to each element's window, never a forever loop)
+- 视频入场（平滑）和重量转移滑动 → `gsap-effects`（缩放/不透明度，然后 x + 缩放使用长尾 `power3`）；视频本身是根元素的直接子元素，一个静音的 `<video class="clip">`
+- 主角统计数字的充满画面 3D 字体 → `3d-text-depth-layers`（静态深度变体——设置时构建图层，无级联干扰入场）
+- 同锚点视频退出 ↔ 统计入场的交接（如果视为变形）→ `scale-swap-transition`（共享中心）
+- 通过分段 span 逐字打出影响文本 → `dynamic-content-sequencing`（干净字符流）或 `discrete-text-sequence`
+- 胶囊 `scaleX` 快照 + 尾随辉光光环 → `gsap-effects`（scaleX）+ `ambient-glow-bloom`（光环，延迟一个节拍解析）
+- 视频/统计数字在其窗口内呼吸 → `sine-wave-loop`（低振幅寄存器——细微抖动，限制在每个元素的窗口，从不永久循环）
 
-**camera modifier**: camera-static — all motion is element-space (the video translates), so the "pivot" is the elements moving, not a camera.
+**摄像机修饰**：摄像机静止——所有运动都是元素空间（视频平移），因此"枢轴"是元素移动，而非摄像机。

@@ -1,52 +1,52 @@
-# Publish Director — Talking Head Pipeline
+# 发布导演 —  Talking Head 流水线
 
-## When to Use
+## 使用时机
 
-You have a render report with the final video. Your job is to prepare metadata, thumbnails, and an export package for publishing.
+你已获得包含最终视频的渲染报告。你的任务是准备元数据、缩略图和用于发布的导出包。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | Render report, Brief | Video file and context |
+| 模式 | `schemas/artifacts/publish_log.schema.json` | 产物校验 |
+| 前置产物 | 渲染报告、简报 | 视频文件和上下文 |
 
-## Process
+## 流程
 
-### Step 1: Generate Metadata
+### 步骤 1: 生成元数据
 
-Create platform-specific metadata:
-- **Title**: Based on the brief's title and hook
-- **Description**: Summary of the content with relevant keywords
-- **Tags**: Derived from brief's key_points
-- **Chapters**: From script section timestamps
+创建平台特定的元数据：
+- **标题**：基于简报的标题和钩子
+- **描述**：内容摘要，包含相关关键词
+- **标签**：从简报的 key_points 提取
+- **章节**：来自脚本章节的时间戳
 
-### Step 2: Thumbnail Concept
+### 步骤 2: 缩略图概念
 
-Describe or generate a thumbnail:
-- Extract a compelling frame from the footage (if frame_sampler available)
-- Add text overlay concept (title or key stat)
+描述或生成缩略图：
+- 从素材中提取有吸引力的帧（如果 frame_sampler 可用）
+- 添加文字叠加概念（标题或关键统计数据）
 
-### Step 3: Package Export
+### 步骤 3: 打包导出
 
-Create the export directory:
-- Video file
-- Metadata JSON
-- Description text file
-- Chapter markers
-- Thumbnail concept
+创建导出目录：
+- 视频文件
+- 元数据 JSON
+- 描述文本文件
+- 章节标记
+- 缩略图概念
 
-### Step 4: Build Publish Log
+### 步骤 4: 构建发布日志
 
-Document the publish event with platform, status (draft), and export path.
+记录发布事件，包含平台、状态（草稿）和导出路径。
 
-### Step 5: Self-Evaluate
+### 步骤 5: 自我评估
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Metadata quality** | Is the title compelling and description informative? |
-| **Completeness** | Is the export package complete? |
+| **元数据质量** | 标题是否吸引人，描述是否信息丰富？ |
+| **完整性** | 导出包是否完整？ |
 
-### Step 6: Submit
+### 步骤 6: 提交
 
-Validate the publish_log against the schema and persist via checkpoint.
+根据模式校验发布日志，并通过检查点持久化。

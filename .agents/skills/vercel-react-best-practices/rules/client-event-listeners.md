@@ -1,15 +1,15 @@
 ---
-title: Deduplicate Global Event Listeners
+title: 去重全局事件监听器
 impact: LOW
-impactDescription: single listener for N components
+impactDescription: N 个组件共享一个监听器
 tags: client, swr, event-listeners, subscription
 ---
 
-## Deduplicate Global Event Listeners
+## 去重全局事件监听器
 
-Use `useSWRSubscription()` to share global event listeners across component instances.
+使用 `useSWRSubscription()` 在组件实例之间共享全局事件监听器。
 
-**Incorrect (N instances = N listeners):**
+**不正确（N 个实例 = N 个监听器）：**
 
 ```tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
@@ -25,18 +25,18 @@ function useKeyboardShortcut(key: string, callback: () => void) {
 }
 ```
 
-When using the `useKeyboardShortcut` hook multiple times, each instance will register a new listener.
+多次使用 `useKeyboardShortcut` 钩子时，每个实例都会注册一个新的监听器。
 
-**Correct (N instances = 1 listener):**
+**正确（N 个实例 = 1 个监听器）：**
 
 ```tsx
 import useSWRSubscription from 'swr/subscription'
 
-// Module-level Map to track callbacks per key
+// 模块级 Map 用于追踪每个键的回调
 const keyCallbacks = new Map<string, Set<() => void>>()
 
 function useKeyboardShortcut(key: string, callback: () => void) {
-  // Register this callback in the Map
+  // 在 Map 中注册此回调
   useEffect(() => {
     if (!keyCallbacks.has(key)) {
       keyCallbacks.set(key, new Set())
@@ -66,7 +66,7 @@ function useKeyboardShortcut(key: string, callback: () => void) {
 }
 
 function Profile() {
-  // Multiple shortcuts will share the same listener
+  // 多个快捷键将共享同一个监听器
   useKeyboardShortcut('p', () => { /* ... */ }) 
   useKeyboardShortcut('k', () => { /* ... */ })
   // ...

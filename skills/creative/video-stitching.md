@@ -1,267 +1,256 @@
-# Video Stitching Strategy Skill
+# 视频拼接策略技能
 
-## When to Use
+## 何时使用
 
-Apply this skill when assembling multiple video clips into a unified output:
-sequential narrative assembly, multi-take compilation, AI-generated clip chaining
-(e.g., LTX-2 produces max ~8s per clip), or spatial compositions like side-by-side
-comparisons and picture-in-picture commentary.
+当将多个视频片段组装成统一输出时应用此技能：顺序叙事组合、多镜头编译、AI生成片段链接（例如，LTX-2每个片段最多约8秒），或空间构图如并排比较和画中画解说。
 
-## Tools
+## 工具
 
-| Tool | Role |
+| 工具 | 作用 |
 |------|------|
-| `video_trimmer` | Cut segments to precise in/out points, concatenate clips (`concat` operation) |
-| `video_compose` | Full composition with overlays, subtitles, audio mixing, spatial layouts |
-| `frame_sampler` | Inspect frames at stitch boundaries for visual continuity |
-| `audio_mixer` | Mix, duck, and crossfade audio tracks across stitch points |
-| `scene_detect` | Find natural scene boundaries in source footage |
+| `video_trimmer` | 剪辑片段到精确入/出点，连接片段（`concat` 操作） |
+| `video_compose` | 完整合成，包含叠加、字幕、混音、空间布局 |
+| `frame_sampler` | 检查拼接边界处的帧以获得视觉连续性 |
+| `audio_mixer` | 在拼接点混合、闪避和交叉淡入淡出音频轨道 |
+| `scene_detect` | 在源素材中查找自然场景边界 |
 
-## When to Stitch — Decision Tree
-
-```
-Do you have multiple clips that need to become one video?
-├── YES: Are they sequential (play one after another)?
-│   ├── YES: Are they from the same shoot / same scene?
-│   │   ├── YES → Multi-take assembly (pick best takes, stitch)
-│   │   └── NO → Sequential narrative (match cuts, handle transitions)
-│   └── NO: Do clips need to appear simultaneously on screen?
-│       ├── YES → Spatial composition (side-by-side, PIP, stack)
-│       └── MIXED → Hybrid (sequential with spatial inserts)
-├── AI-generated clips (LTX-2, CogVideo)?
-│   └── YES → AI clip chaining (handle 8s boundaries, maintain continuity)
-└── NO → No stitching needed. Use video_trimmer for single-clip edits.
-```
-
-## Stitch Strategies
-
-### 1. Sequential Stitching
-
-Clips play one after another in timeline order. This is the most common strategy.
-
-**When:** Narrative videos, multi-section explainers, compiled takes.
-
-**Process:**
-1. Order clips by narrative sequence (not filename)
-2. Trim each clip to precise in/out points via `video_trimmer` (operation: `cut`)
-3. Select transition type for each junction (see Transition Selection below)
-4. Concatenate via `video_trimmer` (operation: `concat`) for hard cuts, or `video_compose` for transitions requiring filters
-5. Verify audio continuity across all stitch points
-
-**Audio continuity rules:**
-- Match audio levels across clips before stitching (normalize to -16 LUFS)
-- If background music spans multiple clips, mix it as a single track via `audio_mixer` and mux post-concat
-- Never let music cut abruptly at a stitch point — crossfade or duck instead
-
-### 2. Spatial Stitching
-
-Multiple clips visible simultaneously on screen.
-
-**When:** Reactions, comparisons, commentary, multi-angle coverage.
-
-| Layout | FFmpeg Filter | Use Case |
-|--------|---------------|----------|
-| Side-by-side (duet) | `hstack` or `xstack` | Reaction videos, before/after |
-| Vertical stack | `vstack` or `xstack` | Comparison (top vs bottom) |
-| Picture-in-picture (PIP) | `overlay=x:y` via `video_compose` | Commentary, webcam + screen |
-| Grid (2x2, 3x3) | `xstack` with layout string | Multi-angle, compilation |
-
-**Spatial layout decision tree:**
-```
-What relationship do the clips have?
-├── Reaction / response → Side-by-side (duet), main clip 70% width
-├── Before / after → Side-by-side, equal 50/50 split
-├── Comparison (A vs B) → Vertical stack or side-by-side depending on aspect ratio
-├── Commentary over content → PIP, speaker in corner (20-25% frame size)
-├── Multi-angle same event → Grid layout, synced to same timecode
-└── Screen recording + face → PIP, face cam in bottom-right corner
-```
-
-**PIP placement rules:**
-- Default position: bottom-right with 20px padding
-- Size: 20-25% of frame width for commentary, 30-35% for equal importance
-- Always ensure PIP does not cover critical content (subtitles, key visuals)
-- Add a 2px border or subtle shadow to separate PIP from background
-
-### 3. AI Clip Chaining (LTX-2 / CogVideo)
-
-AI video generators produce short clips (LTX-2: ~8 seconds max). Stitching them
-into longer sequences requires special care to maintain visual continuity.
-
-**Process:**
-1. Generate clips with overlapping prompts — last frame description of clip N should match first frame description of clip N+1
-2. Use `frame_sampler` to extract the last frame of clip N and first frame of clip N+1
-3. Visually inspect the pair for continuity breaks (color shift, subject position, background change)
-4. If discontinuity is minor → use a 0.5-1.0s crossfade to smooth the junction
-5. If discontinuity is major → insert a fade-through-black (0.5s out + 0.5s in) to signal scene transition
-6. After stitching, apply a global color grade to unify the visual tone across clips
-
-**AI clip chaining pitfalls:**
-- AI clips may have inconsistent FPS — normalize all clips to the same FPS before stitching
-- Color temperature often shifts between generations — apply consistent color grade post-stitch
-- Motion direction may not match — review last/first frames for jarring movement reversals
-- Audio (if any) will not be continuous — strip AI audio and use a single music/narration track
-
-### 4. Hybrid Stitching
-
-Sequential flow with spatial inserts at specific moments.
-
-**When:** Explainer that switches to side-by-side for comparisons, tutorial that
-shows PIP during demonstrations, documentary with occasional split-screen.
-
-**Process:**
-1. Plan the timeline: mark which segments are sequential and which are spatial
-2. Render each spatial segment as a standalone composed clip via `video_compose` (overlay operation)
-3. Treat the rendered spatial clips as regular clips in the sequential stitch
-4. Concatenate everything in order using the sequential stitching process
-
-## Transition Selection
-
-### Decision Tree
+## 何时拼接 — 决策树
 
 ```
-What is the relationship between clip N and clip N+1?
-│
-├── Same scene, continuous action?
-│   └── HARD CUT (0ms)
-│
-├── Same topic, different angle or take?
-│   └── HARD CUT (0ms) — use J-cut or L-cut for audio smoothing
-│
-├── Topic change or new section?
-│   └── CROSSFADE (0.5-1.0s)
-│
-├── Time passage or mood shift?
-│   └── CROSSFADE (1.0-1.5s)
-│
-├── Major section break (intro→body, body→outro)?
-│   └── FADE THROUGH BLACK (0.5-1.0s)
-│
-├── Dialogue transition between speakers?
-│   └── L-CUT or J-CUT (audio leads or trails by 0.3-0.5s)
-│
-└── AI clip boundary (LTX-2 chain)?
-    ├── Continuity is good → HARD CUT or short CROSSFADE (0.3-0.5s)
-    └── Continuity is broken → FADE THROUGH BLACK (0.5s)
+你有多个需要合成一个视频的片段吗？
+├── 是：它们是按顺序播放的吗（一个接一个）？
+│   ├── 是：它们来自同一次拍摄/同一个场景吗？
+│   │   ├── 是 → 多镜头组装（选择最佳镜头，拼接）
+│   │   └── 否 → 顺序叙事（匹配剪辑，处理转场）
+│   └── 否：片段需要同时在屏幕上显示吗？
+│       ├── 是 → 空间构图（并排、画中画、堆叠）
+│       └── 混合 → 混合型（带空间插入的顺序排列）
+├── 是 AI 生成片段（LTX-2, CogVideo）？
+│   └── 是 → AI 片段链接（处理8秒边界，保持连续性）
+└── 否 → 不需要拼接。单片段编辑使用 video_trimmer。
 ```
 
-### Transition Reference
+## 拼接策略
 
-| Transition | Duration | Implementation | Best For |
-|-----------|----------|----------------|----------|
-| Hard cut | 0ms | `video_trimmer` concat (codec: copy) | Same scene, fast pace, continuation |
-| Crossfade | 0.5-1.5s | `video_compose` with `xfade` filter | Topic change, time passage, mood shift |
-| Fade through black | 0.5-1.0s each | `video_compose`: fade out → black → fade in | Major section break, intro/outro |
-| L-cut | 0.3-0.5s | Audio from clip N continues into clip N+1's video | Smooth dialogue exit, lingering emotion |
-| J-cut | 0.3-0.5s | Audio from clip N+1 starts under clip N's video | Dialogue anticipation, building tension |
+### 1. 顺序拼接
 
-### Transition Duration by Content Pace
+片段按时间线顺序一个接一个播放。这是最常见的策略。
 
-| Pacing | Crossfade | Fade Through Black |
-|--------|-----------|-------------------|
-| Fast (short-form, < 60s) | 0.3-0.5s | 0.3-0.5s |
-| Medium (1-10 min) | 0.5-1.0s | 0.5-0.8s |
-| Slow (documentary, > 10 min) | 1.0-1.5s | 0.8-1.0s |
+**适用场景：** 叙事视频、多节讲解、编译镜头。
 
-## Audio Coordination
+**流程：**
+1. 按叙事顺序（而非文件名）排列片段
+2. 通过 `video_trimmer`（操作：`cut`）将每个片段修剪到精确入/出点
+3. 为每个接合处选择转场类型（见下方转场选择）
+4. 硬切使用 `video_trimmer`（操作：`concat`）连接，需要滤镜的转场使用 `video_compose`
+5. 验证所有拼接点的音频连续性
 
-### Audio at Stitch Points
+**音频连续性规则：**
+- 拼接前匹配各片段的音频电平（标准化至 -16 LUFS）
+- 如果背景音乐跨越多个片段，通过 `audio_mixer` 将其混音为单轨，并在连接后混入
+- 切勿让音乐在拼接点突然切断 — 应使用交叉淡入淡出或闪避
 
+### 2. 空间拼接
+
+多个片段同时在屏幕上可见。
+
+**适用场景：** 反应视频、比较、解说、多角度覆盖。
+
+| 布局 | FFmpeg 滤镜 | 使用场景 |
+|------|-------------|----------|
+| 并排（双画面） | `hstack` 或 `xstack` | 反应视频、前后对比 |
+| 垂直堆叠 | `vstack` 或 `xstack` | 比较（上下） |
+| 画中画（PIP） | `overlay=x:y` 通过 `video_compose` | 解说、网络摄像头+屏幕 |
+| 网格（2x2, 3x3） | `xstack` 加布局字符串 | 多角度、汇编 |
+
+**空间布局决策树：**
 ```
-What audio exists at the stitch boundary?
-│
-├── Both clips have narration/dialogue?
-│   ├── Hard cut → Ensure no audio pop (cut at zero-crossing or apply 5ms fade)
-│   ├── Crossfade → Duck outgoing audio -6dB during overlap, bring in incoming
-│   └── L-cut/J-cut → Blend: outgoing audio fades -∞dB over 0.3-0.5s
-│
-├── Music spans the stitch?
-│   ├── Same track continues → Do not re-encode audio; use stream copy
-│   ├── Track changes → Crossfade music 1.0-2.0s centered on the cut point
-│   └── Music + narration → Duck music -12dB under narration at all times
-│
-├── One clip has audio, the other is silent?
-│   └── Add a 0.3s fade-in/fade-out to avoid abrupt silence transitions
-│
-└── No audio on either clip?
-    └── No audio coordination needed. Add music/narration as a single track post-stitch.
-```
-
-### Audio Level Targets
-
-| Content Type | Target LUFS | Headroom |
-|-------------|-------------|----------|
-| Narration / dialogue | -16 LUFS | -1 dB true peak |
-| Background music (under narration) | -28 to -24 LUFS | -1 dB true peak |
-| Music only (no narration) | -14 LUFS | -1 dB true peak |
-| Sound effects | -20 LUFS | -1 dB true peak |
-
-## Quality Checklist
-
-Before declaring a stitch complete, verify every item:
-
-- [ ] **Resolution match:** All input clips have the same resolution (or are scaled to match before stitching)
-- [ ] **FPS match:** All input clips share the same frame rate (or are conformed with `fps` filter)
-- [ ] **Aspect ratio consistency:** No mixed 16:9 / 9:16 / 4:3 unless intentional spatial layout
-- [ ] **Color consistency:** No visible color temperature or exposure jumps at stitch boundaries
-- [ ] **Audio level consistency:** All clips normalized to target LUFS before stitching
-- [ ] **No audio pops or clicks:** Stitch points have micro-fades or are at zero-crossings
-- [ ] **Transition appropriateness:** Transition type matches the content relationship (see decision tree)
-- [ ] **Total duration check:** Final output duration matches expected sum (accounting for transition overlaps)
-- [ ] **Codec consistency:** All clips use the same codec to allow stream copy; re-encode only if necessary
-- [ ] **Playback test:** Scrub through every stitch point in the output and confirm smooth playback
-
-## Common Pitfalls
-
-### Codec Mismatch Causing Full Re-encode
-
-**Problem:** Mixing clips encoded with different codecs (e.g., H.264 + H.265) or different
-encoding parameters forces FFmpeg to re-encode everything during concat.
-
-**Solution:** Before stitching, probe all clips with `ffprobe`. If codecs differ, re-encode
-the minority clips to match the majority codec. This is faster than re-encoding everything.
-
-```
-Check: ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate -of csv=p=0 input.mp4
+片段之间有什么关系？
+├── 反应/回应 → 并排（双画面），主片段占70%宽度
+├── 前/后对比 → 并排，50/50等分
+├── 比较（A vs B）→ 根据宽高比选择垂直堆叠或并排
+├── 内容解说 → 画中画，说话者在角落（占画面20-25%）
+├── 同一事件多角度 → 网格布局，同步到相同时间码
+└── 屏幕录制+面部 → 画中画，面部摄像头在右下角
 ```
 
-### Audio Drift in Long Stitches
+**画中画放置规则：**
+- 默认位置：右下角，20px边距
+- 大小：解说用占画面宽度20-25%，同等重要时30-35%
+- 始终确保画中画不覆盖关键内容（字幕、关键视觉元素）
+- 添加2px边框或微妙阴影以区分画中画与背景
 
-**Problem:** When concatenating many short clips (10+), tiny timing mismatches accumulate,
-causing audio to drift out of sync by the end.
+### 3. AI 片段链接（LTX-2 / CogVideo）
 
-**Solution:**
-1. Re-encode each clip with constant frame rate before concatenation (`-vsync cfr`)
-2. If using a separate audio track, align it to the final video's duration post-stitch
-3. For AI clip chains, use `-async 1` to resync audio on concatenation
+AI视频生成器产生短视频片段（LTX-2：最长约8秒）。将它们拼接成更长的序列需要特别注意以保持视觉连续性。
 
-### Aspect Ratio Mixing
+**流程：**
+1. 使用重叠提示生成片段 — 片段N的最后一帧描述应与片段N+1的第一帧描述匹配
+2. 使用 `frame_sampler` 提取片段N的最后一帧和片段N+1的第一帧
+3. 目视检查配对是否存在连续性中断（颜色偏移、主体位置、背景变化）
+4. 如果差异较小 → 使用0.5-1.0秒交叉淡入淡出平滑接合处
+5. 如果差异较大 → 插入黑色淡入淡出（0.5秒淡出 + 0.5秒淡入）以标志场景转场
+6. 拼接后，应用全局调色以统一各片段的视觉色调
 
-**Problem:** Stitching a 16:9 clip with a 9:16 clip creates letterboxing or stretching.
+**AI片段链接陷阱：**
+- AI片段可能具有不一致的FPS — 拼接前将所有片段标准化到相同FPS
+- 不同生成之间的色温常有偏移 — 拼接后应用一致的调色
+- 运动方向可能不匹配 — 检查首尾帧是否存在突兀的运动反转
+- 音频（如有）不会连续 — 剥离AI音频，使用单一音乐/旁白轨道
 
-**Solution:** Decide on a target aspect ratio up front. Pad non-conforming clips with black
-bars (`pad` filter) or crop them (`crop` filter) — never stretch.
+### 4. 混合拼接
 
-### Variable Frame Rate (VFR) Sources
+在特定时刻带空间插入的顺序排列。
 
-**Problem:** Screen recordings and phone footage often use VFR, which causes
-desync and stuttering when stitched with CFR content.
+**适用场景：** 在比较时切换为并排的讲解视频、在演示期间显示画中画的教程、偶尔使用分屏的纪录片。
 
-**Solution:** Convert VFR sources to CFR before stitching:
+**流程：**
+1. 规划时间线：标记哪些片段是顺序的，哪些是空间的
+2. 通过 `video_compose`（叠加操作）将每个空间片段渲染为独立的合成片段
+3. 将渲染的空间片段视为顺序拼接中的普通片段
+4. 使用顺序拼接流程按顺序连接所有内容
+
+## 转场选择
+
+### 决策树
+
+```
+片段N和片段N+1之间是什么关系？
+│
+├── 同一场景，连续动作？
+│   └── 硬切（0ms）
+│
+├── 同一主题，不同角度或镜头？
+│   └── 硬切（0ms）— 使用J-cut或L-cut平滑音频
+│
+├── 主题变化或新章节？
+│   └── 交叉淡入淡出（0.5-1.0秒）
+│
+├── 时间流逝或情绪转变？
+│   └── 交叉淡入淡出（1.0-1.5秒）
+│
+├── 主要章节分隔（引言→正文，正文→结尾）？
+│   └── 黑色淡入淡出（0.5-1.0秒）
+│
+├── 说话者之间的对话转场？
+│   └── L-cut 或 J-cut（音频领先或滞后0.3-0.5秒）
+│
+└── AI片段边界（LTX-2链）？
+    ├── 连续性良好 → 硬切或短交叉淡入淡出（0.3-0.5秒）
+    └── 连续性中断 → 黑色淡入淡出（0.5秒）
+```
+
+### 转场参考
+
+| 转场 | 时长 | 实现方式 | 最适合 |
+|------|------|----------|--------|
+| 硬切 | 0ms | `video_trimmer` concat（编解码器：copy） | 同一场景、快节奏、延续 |
+| 交叉淡入淡出 | 0.5-1.5秒 | `video_compose` 使用 `xfade` 滤镜 | 主题变化、时间流逝、情绪转变 |
+| 黑色淡入淡出 | 各0.5-1.0秒 | `video_compose`：淡出→黑场→淡入 | 主要章节分隔、引言/结尾 |
+| L-cut | 0.3-0.5秒 | 片段N的音频延续到片段N+1的视频中 | 平滑对话结束、延续情感 |
+| J-cut | 0.3-0.5秒 | 片段N+1的音频在片段N的视频下开始 | 对话预期、营造张力 |
+
+### 按内容节奏的转场时长
+
+| 节奏 | 交叉淡入淡出 | 黑色淡入淡出 |
+|------|-------------|---------------|
+| 快（短视频，< 60秒） | 0.3-0.5秒 | 0.3-0.5秒 |
+| 中（1-10分钟） | 0.5-1.0秒 | 0.5-0.8秒 |
+| 慢（纪录片，> 10分钟） | 1.0-1.5秒 | 0.8-1.0秒 |
+
+## 音频协调
+
+### 拼接点的音频
+
+```
+拼接边界存在什么音频？
+│
+├── 两个片段都有旁白/对话？
+│   ├── 硬切 → 确保无音频爆音（在过零点剪切或应用5ms淡入淡出）
+│   ├── 交叉淡入淡出 → 重叠期间将输出音频闪避 -6dB，引入后续音频
+│   └── L-cut/J-cut → 混合：输出音频在0.3-0.5秒内淡出到 -∞dB
+│
+├── 音乐跨越拼接点？
+│   ├── 同一轨道继续 → 不对音频重新编码；使用流复制
+│   ├── 轨道变化 → 以剪切点为中心交叉淡入淡出音乐1.0-2.0秒
+│   └── 音乐+旁白 → 旁白期间始终将音乐闪避 -12dB
+│
+├── 一个片段有音频，另一个无声？
+│   └── 添加0.3秒淡入/淡出以避免突然的静音转换
+│
+└── 两个片段都没有音频？
+    └── 无需音频协调。拼接后作为单轨添加音乐/旁白。
+```
+
+### 音频电平目标
+
+| 内容类型 | 目标 LUFS | 动态余量 |
+|----------|-----------|----------|
+| 旁白/对话 | -16 LUFS | -1 dB 真峰值 |
+| 背景音乐（旁白下） | -28 至 -24 LUFS | -1 dB 真峰值 |
+| 纯音乐（无旁白） | -14 LUFS | -1 dB 真峰值 |
+| 音效 | -20 LUFS | -1 dB 真峰值 |
+
+## 质量检查清单
+
+在宣布拼接完成前，验证每一项：
+
+- [ ] **分辨率匹配：** 所有输入片段具有相同分辨率（或在拼接前缩放匹配）
+- [ ] **FPS匹配：** 所有输入片段共享相同帧率（或使用 `fps` 滤镜统一）
+- [ ] **宽高比一致性：** 除非有意的空间布局，不混合16:9 / 9:16 / 4:3
+- [ ] **色彩一致性：** 拼接边界无可见的色温或曝光跳跃
+- [ ] **音频电平一致性：** 拼接前所有片段标准化至目标 LUFS
+- [ ] **无音频爆音或咔嗒声：** 拼接点有微淡入淡出或在过零点
+- [ ] **转场适当性：** 转场类型匹配内容关系（见决策树）
+- [ ] **总时长检查：** 最终输出时长与预期总和一致（考虑转场重叠）
+- [ ] **编解码器一致性：** 所有片段使用相同编解码器以允许流复制；仅必要时重新编码
+- [ ] **播放测试：** 浏览输出中每个拼接点，确认流畅播放
+
+## 常见陷阱
+
+### 编解码器不匹配导致完全重新编码
+
+**问题：** 混合使用不同编解码器（如 H.264 + H.265）或不同编码参数编码的片段，会迫使 FFmpeg 在连接期间重新编码所有内容。
+
+**解决方案：** 拼接前，使用 `ffprobe` 探测所有片段。如果编解码器不同，将少数片段重新编码以匹配多数编解码器。这比重新编码所有内容更快。
+
+```
+检查：ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate -of csv=p=0 input.mp4
+```
+
+### 长拼接中的音频漂移
+
+**问题：** 连接多个短视频片段（10个以上）时，微小的定时不匹配会累积，导致音频在结尾处不同步。
+
+**解决方案：**
+1. 连接前，用恒定帧率重新编码每个片段（`-vsync cfr`）
+2. 如果使用单独的音频轨道，将其与拼接后最终视频的时长对齐
+3. 对于AI片段链，使用 `-async 1` 在连接时重新同步音频
+
+### 宽高比混合
+
+**问题：** 拼接16:9和9:16的片段会产生信箱格式或拉伸。
+
+**解决方案：** 事先决定目标宽高比。使用黑边填充不符合的片段（`pad` 滤镜）或裁剪它们（`crop` 滤镜）— 切勿拉伸。
+
+### 可变帧率（VFR）源
+
+**问题：** 屏幕录制和手机素材常使用VFR，与CFR内容拼接时会导致不同步和卡顿。
+
+**解决方案：** 拼接前将 VFR 源转换为 CFR：
 `ffmpeg -i vfr_input.mp4 -vsync cfr -r 30 cfr_output.mp4`
 
-### Concatenation with Stream Copy Fails
+### 流复制连接失败
 
-**Problem:** `video_trimmer` concat with `codec: copy` fails or produces glitchy output
-when clips have different GOP structures or encoding parameters.
+**问题：** 当片段具有不同的 GOP 结构或编码参数时，`video_trimmer` 使用 `codec: copy` 的 concat 操作会失败或产生异常的输出。
 
-**Solution:** If stream copy fails, fall back to re-encoding with consistent parameters:
+**解决方案：** 如果流复制失败，回退到使用一致参数重新编码：
 `-c:v libx264 -crf 18 -preset medium -c:a aac -b:a 192k`
-Use CRF 18 (near-lossless) to avoid quality loss from the re-encode.
+使用 CRF 18（近无损）以避免重新编码导致的质量损失。
 
-## Stitch Planning Template
+## 拼接规划模板
 
-When planning a stitch, produce this structure as part of `edit_decisions`:
+规划拼接时，在 `edit_decisions` 中生成此结构：
 
 ```yaml
 stitch_plan:
@@ -297,7 +286,7 @@ stitch_plan:
     music_volume: -24  # LUFS
     ducking: true
 
-  spatial_inserts:  # Only for hybrid strategy
+  spatial_inserts:  # 仅混合策略使用
     - at_clip: clip_02
       at_seconds: 3.0
       layout: pip

@@ -1,24 +1,24 @@
 # HyperFrames Tailwind
 
-HyperFrames `init --tailwind` uses the Tailwind browser runtime pinned by the scaffold. Treat it as Tailwind v4, not Studio's Tailwind v3 setup.
+HyperFrames `init --tailwind` 使用脚手架固定的 Tailwind 浏览器运行时。将其视为 Tailwind v4，而不是 Studio 的 Tailwind v3 设置。
 
-## When To Use
+## 何时使用
 
-- The project was scaffolded with `npx hyperframes init --tailwind`.
-- `index.html` contains `window.__tailwindReady`.
-- The task asks for Tailwind utility classes, `@theme`, custom utilities, or v3-to-v4 fixes in a composition.
-- Rendered frames have missing Tailwind styles or frame-0 flashes.
+- 项目使用 `npx hyperframes init --tailwind` 脚手架初始化。
+- `index.html` 包含 `window.__tailwindReady`。
+- 任务在合成中要求使用 Tailwind 工具类、`@theme`、自定义工具类或 v3 到 v4 的迁移修复。
+- 渲染的帧缺少 Tailwind 样式或出现第 0 帧闪烁。
 
-## Version Contract
+## 版本约定
 
-- **Pinned: `@tailwindcss/browser@4.2.4`** (source of truth: `packages/cli/src/commands/init.ts` `TAILWIND_BROWSER_VERSION`).
-- Do not replace the scaffolded runtime with `cdn.tailwindcss.com` (unpinned, defeats reproducibility).
-- Keep the readiness shim deterministic; HyperFrames waits for `window.__tailwindReady` before frame 0 capture.
-- For offline / locked-down / production-stable renders, compile Tailwind to CSS and ship the stylesheet instead of the browser runtime.
+- **固定版本：`@tailwindcss/browser@4.2.4`**（真实来源：`packages/cli/src/commands/init.ts` 中的 `TAILWIND_BROWSER_VERSION`）。
+- 不要用 `cdn.tailwindcss.com` 替换脚手架的运行时（未固定版本，破坏可复现性）。
+- 保持就绪状态 shim 确定性；HyperFrames 在第 0 帧捕获前等待 `window.__tailwindReady`。
+- 对于离线 / 锁定 / 生产稳定渲染，将 Tailwind 编译为 CSS 并提供样式表，而不是使用浏览器运行时。
 
-## v4 Browser Runtime Rules
+## v4 浏览器运行时规则
 
-Tailwind v4 is CSS-first:
+Tailwind v4 是 CSS 优先的：
 
 ```html
 <style type="text/tailwindcss">
@@ -34,7 +34,7 @@ Tailwind v4 is CSS-first:
 </style>
 ```
 
-Avoid v3-only patterns in browser-runtime compositions:
+在浏览器运行时合成中避免仅 v3 的模式：
 
 ```css
 @tailwind base;
@@ -42,13 +42,13 @@ Avoid v3-only patterns in browser-runtime compositions:
 @tailwind utilities;
 ```
 
-Do not add `tailwind.config.js` only for composition colors, fonts, spacing, or utilities. Use `@theme` and `@utility`.
+不要仅为合成颜色、字体、间距或工具类添加 `tailwind.config.js`。使用 `@theme` 和 `@utility`。
 
-**Migrating from v3?** Load an existing JS config explicitly: put `@config "./tailwind.config.js";` inside a `text/tailwindcss` block. v4 does **not** auto-detect v3 config files.
+**从 v3 迁移？** 明确加载现有的 JS 配置：在 `text/tailwindcss` 块中添加 `@config "./tailwind.config.js";`。v4 **不会**自动检测 v3 配置文件。
 
-## Composition Pattern
+## 合成模式
 
-Use Tailwind for static layout and style. Keep render-critical timing in GSAP or another seekable HyperFrames adapter.
+使用 Tailwind 进行静态布局和样式。将渲染关键的时间控制在 GSAP 或其他可查找的 HyperFrames 适配器中。
 
 ```html
 <section
@@ -64,7 +64,7 @@ Use Tailwind for static layout and style. Keep render-critical timing in GSAP or
 </section>
 ```
 
-For repeated items, **parameterize via CSS variables** — keep the class list static so the runtime sees every utility:
+对于重复项，**通过 CSS 变量参数化** — 保持类列表静态，以便运行时看到每个工具类：
 
 ```html
 <span class="translate-y-[calc(var(--i)*6px)] opacity-80" style="--i: 0"></span>
@@ -72,54 +72,54 @@ For repeated items, **parameterize via CSS variables** — keep the class list s
 <span class="translate-y-[calc(var(--i)*6px)] opacity-80" style="--i: 2"></span>
 ```
 
-## Dynamic Class Safety
+## 动态类安全性
 
-The browser runtime scans classes it can see. Do not build render-critical class names only at seek time:
+浏览器运行时扫描它可以看到的类。不要仅在查找时才构建渲染关键的类名：
 
 ```js
-// Risky: the runtime may never see every generated class.
+// 有风险：运行时可能永远看不到每个生成的类。
 element.className = `bg-${color}-500`;
 ```
 
-Prefer complete class tokens in HTML, data variants, or explicit CSS:
+优先在 HTML、data 变体或显式 CSS 中使用完整的类 token：
 
 ```html
 <div data-tone="blue" class="bg-blue-500 data-[tone=rose]:bg-rose-500"></div>
 ```
 
-If a generated class is unavoidable, make sure the full class token appears in a `text/tailwindcss` block before validation.
+如果生成的类不可避免，确保在验证之前完整的类 token 出现在 `text/tailwindcss` 块中。
 
-## Video-Specific Guardrails
+## 视频特定防护
 
-v4 + render-mode footguns. Every bullet is a hard rule:
+v4 + 渲染模式陷阱。每一条都是硬性规则：
 
-- **Stable dimensions only** — use `w-[…]` / `h-[…]` / `aspect-video` / grid / flex. **No `md:` / `lg:` breakpoints** (renderer is fixed-viewport).
-- **Animate via transforms / opacity** — `translate-*`, `scale-*`, `opacity-*` are seek-safe; animating Tailwind sizing utilities is not.
-- **No `transition-*` for render-critical motion** — a seekable runtime (GSAP) must own the state.
-- **No interaction variants** — `hover:` / `focus:` / `active:` / `group-*:` / `peer-*:` / scroll / pointer variants never fire during render.
-- **Bare `border` is broken in v4** — v4 default is `currentColor` (v3 was `gray-200`). Always write the color: `border border-white/20`.
-- **v4 utility renames** — `shadow-sm` → `shadow-xs`, `rounded-sm` → `rounded-xs`, `outline-none` → `outline-hidden`, `flex-shrink-*` → `shrink-*`, `flex-grow-*` → `grow-*`.
-- **Modern CSS is fine** — `color-mix()`, container queries, logical properties work; the renderer is current Chrome.
+- **仅稳定尺寸** — 使用 `w-[…]` / `h-[…]` / `aspect-video` / grid / flex。**没有 `md:` / `lg:` 断点**（渲染器是固定视口）。
+- **通过 transforms / opacity 进行动画** — `translate-*`、`scale-*`、`opacity-*` 是查找安全的；对 Tailwind 尺寸工具类进行动画则不是。
+- **渲染关键运动不要使用 `transition-*`** — 可查找运行时（GSAP）必须拥有状态控制权。
+- **没有交互变体** — `hover:` / `focus:` / `active:` / `group-*:` / `peer-*:` / 滚动 / 指针变体在渲染期间永远不会触发。
+- **v4 中裸 `border` 有问题** — v4 默认为 `currentColor`（v3 是 `gray-200`）。始终写明颜色：`border border-white/20`。
+- **v4 工具类重命名** — `shadow-sm` → `shadow-xs`，`rounded-sm` → `rounded-xs`，`outline-none` → `outline-hidden`，`flex-shrink-*` → `shrink-*`，`flex-grow-*` → `grow-*`。
+- **现代 CSS 没问题** — `color-mix()`、容器查询、逻辑属性都可用；渲染器是当前版本的 Chrome。
 
-## Validation
+## 验证
 
 ```bash
 npx hyperframes lint
 npx hyperframes validate
 npx hyperframes inspect
 
-# Render proof — frame 0 must NOT flash unstyled content. Preview alone can hide this.
+# 渲染验证 — 第 0 帧绝不能闪烁无样式内容。仅预览可能隐藏此问题。
 npx hyperframes render . --workers 1 --quality draft --output tailwind-proof.mp4
 ```
 
-## Quick Debug Checklist
+## 快速调试检查清单
 
-When Tailwind styles don't apply in a render, check in order:
+当 Tailwind 样式在渲染中不生效时，按顺序检查：
 
-1. Project scaffolded with `npx hyperframes init --tailwind`?
-2. `index.html` `<head>` has `<script src="…@tailwindcss/browser@4.2.4…">` (not `cdn.tailwindcss.com`)?
-3. `window.__tailwindReady` Promise present in `<head>`?
-4. No v3 directives (`@tailwind base/components/utilities`) in the file?
-5. Tokens moved from `tailwind.config.js` to `@theme` (or `@config` reference for v3 migration)?
-6. Every render-critical class appears as a complete static token (no `bg-${color}-500` style assembly)?
-7. Re-run `npx hyperframes validate`, then the render proof above.
+1. 项目使用 `npx hyperframes init --tailwind` 脚手架初始化？
+2. `index.html` 的 `<head>` 中有 `<script src="…@tailwindcss/browser@4.2.4…">`（不是 `cdn.tailwindcss.com`）？
+3. `<head>` 中存在 `window.__tailwindReady` Promise？
+4. 文件中没有 v3 指令（`@tailwind base/components/utilities`）？
+5. 从 `tailwind.config.js` 迁移到 `@theme` 的 token（或 v3 迁移使用 `@config` 引用）？
+6. 每个渲染关键的类都作为完整的静态 token 出现（没有 `bg-${color}-500` 样式拼接）？
+7. 重新运行 `npx hyperframes validate`，然后运行上面的渲染验证。

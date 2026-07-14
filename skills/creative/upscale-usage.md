@@ -1,130 +1,130 @@
-# Upscaling Usage for OpenMontage
+# OpenMontage 放大使用指南
 
-> Sources: Real-ESRGAN documentation, GFPGAN face enhancement docs, Real-ESRGAN paper
-> (Wang et al., 2021), practical upscaling benchmarks
+> 来源：Real-ESRGAN 文档、GFPGAN 面部增强文档、Real-ESRGAN 论文
+> (Wang et al., 2021)、实际放大基准测试
 
-## Quick Reference Card
-
-```
-DEFAULT MODEL:    RealESRGAN_x4plus — real-world photos and video frames
-DEFAULT SCALE:    4x (480p→1080p, 720p→4K)
-ANIME MODEL:     RealESRGAN_x4plus_anime_6B — flat color areas, illustrations
-FACE ENHANCE:    Enable face_enhance for footage with people (uses GFPGAN)
-DENOISE:         0.5 default, raise to 0.8 for very noisy inputs
-```
-
-## When to Upscale
-
-| Situation | Upscale? | Notes |
-|-----------|----------|-------|
-| User-provided footage is 480p or 720p, target is 1080p/4K | Yes | Most common use case |
-| Generated images need higher resolution for video frames | Yes | AI image output is often 512-1024px |
-| Thumbnail or still frames need crisp detail | Yes | Single-frame upscale is fast |
-| Old/archival footage restoration | Yes | Combine with higher denoise_strength |
-| Source is already 1080p+ and target is 1080p | **No** | Wastes compute, can introduce artifacts |
-| Source is already 4K | **No** | Over-sharpening degrades quality |
-
-## Model Selection
-
-| Model | Best For | Notes |
-|-------|----------|-------|
-| `RealESRGAN_x4plus` | Real-world photos, video frames | Default choice |
-| `RealESRGAN_x4plus_anime_6B` | Anime, illustrations, motion graphics | Preserves flat color areas |
-| `RealESRNet_x4plus` | Fastest option, slightly lower quality | When speed matters |
-
-## Scale Factor Guidance
-
-| Scale | Use Case | Example |
-|-------|----------|---------|
-| 4x | Standard upscale for low-res sources | 480p→1080p, 720p→4K |
-| 2x | Moderate upscale when 4x is overkill | 720p→1080p |
-
-- **4x** is the most common choice. Use it for 480p sources targeting 1080p, or 720p targeting 4K.
-- **2x** is appropriate when the source is already 720p and the target is 1080p — avoids unnecessary processing and potential artifacts.
-- **Never upscale beyond 4x in a single pass.** Quality degrades sharply, and hallucinated details become obvious.
-
-## Face Enhancement
-
-- Enable `face_enhance` when the video contains human faces
-- Uses GFPGAN internally to enhance face regions while Real-ESRGAN handles the rest
-- Particularly valuable for webcam footage and old video
-- Do NOT enable for content without faces — adds processing time with no benefit
-
-## Denoising Strength
-
-| Source Quality | denoise_strength | Rationale |
-|---------------|-----------------|-----------|
-| Clean digital source | 0.5 (default) | Minimal denoising needed |
-| Slight compression artifacts | 0.6 | Light cleanup without over-smoothing |
-| Old/noisy footage | 0.7-0.8 | Aggressive denoising for archival content |
-| Very noisy / low-light footage | 0.8 | Maximum practical denoising |
-
-Do not exceed 0.8 — higher values destroy legitimate detail.
-
-## Video Upscaling Notes
-
-- Video upscaling extracts frames, upscales each, reassembles
-- This is **SLOW** — budget 5-10x real-time on GPU
-- For long videos, consider upscaling only key scenes/clips rather than the full video
-- Audio is preserved from the original
-- Output file size will be significantly larger (~16x for 4x upscale)
-
-## Common Workflows
-
-### Workflow 1 — User-Provided Low-Res Footage
+## 快速参考卡
 
 ```
-1. Assess source resolution (e.g., 480p webcam recording)
-2. Choose scale factor: 4x for 480p→1080p, 2x for 720p→1080p
-3. Enable face_enhance if footage contains people
-4. Set denoise_strength based on source quality
-5. Upscale → inspect output → proceed to compose stage
+默认模型：        RealESRGAN_x4plus — 真实照片和视频帧
+默认倍率：        4x（480p→1080p, 720p→4K）
+动漫模型：        RealESRGAN_x4plus_anime_6B — 纯色区域、插图
+面部增强：        为含人物的素材启用 face_enhance（使用 GFPGAN）
+降噪：            默认0.5，极嘈杂输入提高到0.8
 ```
 
-### Workflow 2 — AI-Generated Image Frames
+## 何时放大
+
+| 情况 | 放大？ | 说明 |
+|------|--------|------|
+| 用户提供480p或720p素材，目标1080p/4K | 是 | 最常见用例 |
+| 生成的图像需要更高分辨率作为视频帧 | 是 | AI图像输出常为512-1024px |
+| 缩略图或静态帧需要清晰细节 | 是 | 单帧放大快速 |
+| 老旧/档案素材修复 | 是 | 配合更高的 denoise_strength |
+| 源素材已是1080p+且目标是1080p | **否** | 浪费算力，可能引入伪影 |
+| 源素材已是4K | **否** | 过度锐化降低质量 |
+
+## 模型选择
+
+| 模型 | 最适合 | 说明 |
+|------|--------|------|
+| `RealESRGAN_x4plus` | 真实照片、视频帧 | 默认选择 |
+| `RealESRGAN_x4plus_anime_6B` | 动漫、插图、动态图形 | 保留纯色区域 |
+| `RealESRNet_x4plus` | 最快选项，质量略低 | 当速度重要时 |
+
+## 放大倍数指导
+
+| 倍率 | 使用场景 | 示例 |
+|------|----------|------|
+| 4x | 低分辨率源的标准放大 | 480p→1080p, 720p→4K |
+| 2x | 4x过大时的适度放大 | 720p→1080p |
+
+- **4x** 是最常见的选择。用于480p源目标1080p，或720p目标4K。
+- **2x** 适用于源已是720p且目标是1080p时 — 避免不必要的处理和潜在伪影。
+- **绝不在单次中放大超过4x。** 质量急剧下降，幻觉细节变得明显。
+
+## 面部增强
+
+- 当视频包含人脸时启用 `face_enhance`
+- 内部使用 GFPGAN 增强面部区域，同时 Real-ESRGAN 处理其余部分
+- 对网络摄像头素材和老视频特别有价值
+- 不要在无人脸的内容上启用 — 增加处理时间无收益
+
+## 降噪强度
+
+| 源质量 | denoise_strength | 理由 |
+|--------|-----------------|------|
+| 清晰的数字源 | 0.5（默认） | 需要最少的降噪 |
+| 轻微压缩伪影 | 0.6 | 轻度清理不过度平滑 |
+| 老旧/嘈杂素材 | 0.7-0.8 | 对档案内容激进降噪 |
+| 极嘈杂/低光素材 | 0.8 | 最大实用降噪 |
+
+不要超过0.8 — 更高的值会破坏合法细节。
+
+## 视频放大说明
+
+- 视频放大提取帧、放大每帧、重新组装
+- 这很**慢** — 在GPU上预算5-10倍实时时间
+- 对于长视频，考虑只放大关键场景/片段而非整个视频
+- 音频从原始文件中保留
+- 输出文件大小会显著增大（4x放大约16倍）
+
+## 常见工作流程
+
+### 工作流程1 — 用户提供的低分辨率素材
 
 ```
-1. Generate images at native model resolution (512-1024px)
-2. Upscale with RealESRGAN_x4plus to target video resolution
-3. Keep denoise_strength at 0.5 — AI output is clean
-4. Do NOT enable face_enhance unless faces are prominent
+1. 评估源分辨率（例如，480p网络摄像头录制）
+2. 选择放大倍数：480p→1080p用4x，720p→1080p用2x
+3. 如果素材包含人物，启用 face_enhance
+4. 根据源质量设置 denoise_strength
+5. 放大 → 检查输出 → 进入合成阶段
 ```
 
-### Workflow 3 — Manim / Motion Graphics Frames
+### 工作流程2 — AI生成的图像帧
 
 ```
-1. Render Manim at default resolution
-2. Upscale with RealESRGAN_x4plus_anime_6B (preserves flat colors)
-3. Keep denoise_strength at 0.5
-4. Verify text and line art remain sharp
+1. 以模型原生分辨率生成图像（512-1024px）
+2. 使用 RealESRGAN_x4plus 放大至目标视频分辨率
+3. 保持 denoise_strength 为0.5 — AI输出干净
+4. 除非面部突出，否则不要启用 face_enhance
 ```
 
-### Workflow 4 — Archival Footage Restoration
+### 工作流程3 — Manim / 动态图形帧
 
 ```
-1. Assess noise level and resolution
-2. Set denoise_strength to 0.7-0.8
-3. Enable face_enhance for footage with people
-4. Use RealESRGAN_x4plus at 4x
-5. Carefully inspect output for hallucinated details
+1. 以默认分辨率渲染 Manim
+2. 使用 RealESRGAN_x4plus_anime_6B 放大（保留纯色）
+3. 保持 denoise_strength 为0.5
+4. 验证文字和线条艺术保持清晰
 ```
 
-## Quality Checklist
+### 工作流程4 — 档案素材修复
 
-- [ ] Upscaled output is sharp without visible artifacts
-- [ ] Faces look natural (no over-smoothing or distortion)
-- [ ] Text/UI elements in screen recordings remain readable
-- [ ] No hallucinated details in flat color areas
-- [ ] File size is reasonable (4x upscale = ~16x file size)
+```
+1. 评估噪点水平和分辨率
+2. 设置 denoise_strength 为0.7-0.8
+3. 为含人物素材启用 face_enhance
+4. 使用 RealESRGAN_x4plus 以4x放大
+5. 仔细检查输出是否存在幻觉细节
+```
 
-## Applying to OpenMontage
+## 质量检查清单
 
-When using the `upscale` tool in the asset stage:
+- [ ] 放大输出清晰，无可见伪影
+- [ ] 面部看起来自然（不过度平滑或变形）
+- [ ] 屏幕录制中的文字/UI元素保持可读
+- [ ] 纯色区域无幻觉细节
+- [ ] 文件大小合理（4x放大 ≈ 16倍文件大小）
 
-1. **Upscale BEFORE the compose stage** — it is an asset-prep step, not a post-processing step
-2. **Use `face_enhance=true` for any talking-head footage** — GFPGAN dramatically improves face quality
-3. **Use `RealESRGAN_x4plus_anime_6B` model for Manim outputs** or flat illustration frames — preserves clean edges and flat color areas
-4. **For budget-conscious pipelines**, upscale only hero shots and thumbnails rather than every frame
-5. **Set `denoise_strength` to 0.7-0.8 for old/noisy footage**, keep at 0.5 for clean digital sources
-6. **Check upscaled output for artifacts** — over-sharpening, hallucinated texture, face distortion
-7. **Prefer 2x over 4x when the source is already 720p and target is 1080p** — less compute, fewer artifacts
+## 应用于 OpenMontage
+
+在资产阶段使用 `upscale` 工具时：
+
+1. **在合成阶段之前放大** — 这是资产准备步骤，而非后处理步骤
+2. **为任何说话人头像素材使用 `face_enhance=true`** — GFPGAN 显著改善面部质量
+3. **Manim 输出或平面插图帧使用 `RealESRGAN_x4plus_anime_6B` 模型** — 保留清晰边缘和纯色区域
+4. **预算敏感的流程中**，只放大主镜头和缩略图而非每一帧
+5. **老旧/嘈杂素材设置 `denoise_strength` 为0.7-0.8**，干净数字源保持0.5
+6. **检查放大输出是否存在伪影** — 过度锐化、幻觉纹理、面部变形
+7. **当源已是720p且目标是1080p时，优先选择2x而非4x** — 更少算力、更少伪影

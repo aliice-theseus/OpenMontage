@@ -1,15 +1,15 @@
 ---
-title: Defer State Reads to Usage Point
+title: 将状态读取延迟到使用点
 impact: MEDIUM
-impactDescription: avoids unnecessary subscriptions
+impactDescription: 避免不必要的订阅
 tags: rerender, searchParams, localStorage, optimization
 ---
 
-## Defer State Reads to Usage Point
+## 将状态读取延迟到使用点
 
-Don't subscribe to dynamic state (searchParams, localStorage) if you only read it inside callbacks.
+如果只在回调中读取动态状态（searchParams、localStorage），不要订阅它。
 
-**Incorrect (subscribes to all searchParams changes):**
+**不正确（订阅所有 searchParams 更改）：**
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
@@ -24,7 +24,7 @@ function ShareButton({ chatId }: { chatId: string }) {
 }
 ```
 
-**Correct (reads on demand, no subscription):**
+**正确（按需读取，无订阅）：**
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {

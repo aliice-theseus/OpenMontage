@@ -1,18 +1,18 @@
 ---
 name: charts
-description: Chart and data visualization patterns for Remotion. Use when creating bar charts, pie charts, line charts, stock graphs, or any data-driven animations.
+description: Remotion 的图表和数据可视化模式。用于创建柱状图、饼图、折线图、股票图或任何数据驱动的动画。
 metadata:
   tags: charts, data, visualization, bar-chart, pie-chart, line-chart, stock-chart, svg-paths, graphs
 ---
 
-# Charts in Remotion
+# Remotion 中的图表
 
-Create charts using React code - HTML, SVG, and D3.js are all supported.
+使用 React 代码创建图表 - 支持 HTML、SVG 和 D3.js。
 
-Disable all animations from third party libraries - they cause flickering.  
-Drive all animations from `useCurrentFrame()`.
+禁用第三方库的所有动画——它们会导致闪烁。  
+所有动画都通过 `useCurrentFrame()` 驱动。
 
-## Bar Chart
+## 柱状图
 
 ```tsx
 const STAGGER_DELAY = 5;
@@ -30,9 +30,9 @@ const bars = data.map((item, i) => {
 });
 ```
 
-## Pie Chart
+## 饼图
 
-Animate segments using stroke-dashoffset, starting from 12 o'clock:
+使用 stroke-dashoffset 制作扇形动画，从 12 点钟方向开始：
 
 ```tsx
 const progress = interpolate(frame, [0, 100], [0, 1]);
@@ -53,14 +53,14 @@ const offset = interpolate(progress, [0, 1], [segmentLength, 0]);
 />;
 ```
 
-## Line Chart / Path Animation
+## 折线图 / 路径动画
 
-Use `@remotion/paths` for animating SVG paths (line charts, stock graphs, signatures).
+使用 `@remotion/paths` 制作 SVG 路径动画（折线图、股票图、签名）。
 
-Install: `npx remotion add @remotion/paths`  
-Docs: https://remotion.dev/docs/paths.md
+安装：`npx remotion add @remotion/paths`  
+文档：https://remotion.dev/docs/paths.md
 
-### Convert data points to SVG path
+### 将数据点转换为 SVG 路径
 
 ```tsx
 type Point = { x: number; y: number };
@@ -71,7 +71,7 @@ const generateLinePath = (points: Point[]): string => {
 };
 ```
 
-### Draw path with animation
+### 绘制路径并添加动画
 
 ```tsx
 import { evolvePath } from "@remotion/paths";
@@ -95,7 +95,7 @@ const { strokeDasharray, strokeDashoffset } = evolvePath(progress, path);
 />;
 ```
 
-### Follow path with marker/arrow
+### 使用标记/箭头跟随路径
 
 ```tsx
 import {

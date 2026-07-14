@@ -1,27 +1,27 @@
 ---
 name: lines
-description: Line, Arrow, Vector, DashedLine and connectors
+description: Line、Arrow、Vector、DashedLine 和连接器
 metadata:
   tags: line, arrow, vector, dashedline, brace, connector
 ---
 
-# Lines and Arrows
+# 线和箭头
 
-Connect points and show relationships with lines and arrows.
+使用线和箭头连接点并显示关系。
 
 ## Line
 
-Basic line between two points.
+两点之间的基本线。
 
 ```python
 from manim import *
 
 class LineExample(Scene):
     def construct(self):
-        # Line from two points
+        # 从两个点创建线
         line = Line(LEFT * 2, RIGHT * 2)
 
-        # With styling
+        # 带样式
         styled_line = Line(
             UP * 2, DOWN * 2,
             color=BLUE,
@@ -31,34 +31,34 @@ class LineExample(Scene):
         self.add(line, styled_line)
 ```
 
-### Line Properties
+### Line 属性
 
 ```python
 line = Line(LEFT, RIGHT)
 
-# Get points
+# 获取点
 line.get_start()
 line.get_end()
 line.get_center()
 line.get_length()
 line.get_angle()
 
-# Modify
+# 修改
 line.put_start_and_end_on(new_start, new_end)
-line.set_length(3)  # Keep direction, change length
+line.set_length(3)  # 保持方向，改变长度
 ```
 
 ## Arrow
 
-Line with an arrowhead.
+带箭头的线。
 
 ```python
 class ArrowExample(Scene):
     def construct(self):
-        # Basic arrow
+        # 基本箭头
         arrow = Arrow(LEFT * 2, RIGHT * 2)
 
-        # Styled arrow
+        # 带样式的箭头
         styled = Arrow(
             start=UP,
             end=DOWN,
@@ -71,25 +71,25 @@ class ArrowExample(Scene):
         self.add(arrow, styled)
 ```
 
-### Arrow Variations
+### 箭头变体
 
 ```python
-# Double-headed arrow
+# 双头箭头
 double = DoubleArrow(LEFT * 2, RIGHT * 2)
 
-# Arrow with custom tip
+# 自定义箭头的箭头尖
 arrow = Arrow(LEFT, RIGHT)
-arrow.tip  # Access the tip mobject
+arrow.tip  # 访问箭头尖端 mobject
 ```
 
 ## Vector
 
-Arrow starting from origin (useful for physics/math).
+从原点出发的箭头（适用于物理/数学）。
 
 ```python
 class VectorExample(Scene):
     def construct(self):
-        # Vector from origin
+        # 从原点出发的向量
         v1 = Vector([2, 1, 0], color=YELLOW)
         v2 = Vector([-1, 2, 0], color=GREEN)
 
@@ -104,7 +104,7 @@ class DashedLineExample(Scene):
         dashed = DashedLine(
             LEFT * 2, RIGHT * 2,
             dash_length=0.2,
-            dashed_ratio=0.5,  # Ratio of dash to gap
+            dashed_ratio=0.5,  # 实线部分与间隙的比例
             color=WHITE
         )
         self.add(dashed)
@@ -112,14 +112,14 @@ class DashedLineExample(Scene):
 
 ## TangentLine
 
-Line tangent to a curve at a point.
+在曲线上某点与曲线相切的线。
 
 ```python
 class TangentLineExample(Scene):
     def construct(self):
         circle = Circle(radius=2)
 
-        # Tangent at specific point (t parameter 0-1 along curve)
+        # 在特定点的切线（t 参数 0-1 沿曲线）
         tangent = TangentLine(circle, alpha=0.25, length=3, color=YELLOW)
 
         self.add(circle, tangent)
@@ -127,26 +127,26 @@ class TangentLineExample(Scene):
 
 ## Brace
 
-Curly brace for highlighting.
+用于高亮的花括号。
 
 ```python
 class BraceExample(Scene):
     def construct(self):
         rect = Rectangle(width=4, height=1)
 
-        # Brace under the rectangle
+        # 矩形下方的花括号
         brace = Brace(rect, DOWN)
 
-        # With label
+        # 带标签
         brace_text = brace.get_text("Width")
 
-        # Alternative: BraceLabel
+        # 替代：BraceLabel
         brace_label = BraceLabel(rect, "Width", DOWN)
 
         self.add(rect, brace, brace_text)
 ```
 
-### Brace Directions
+### Brace 方向
 
 ```python
 brace_down = Brace(mobject, DOWN)
@@ -157,7 +157,7 @@ brace_right = Brace(mobject, RIGHT)
 
 ## CurvedArrow
 
-Curved arrow between points.
+两点之间的曲线箭头。
 
 ```python
 class CurvedArrowExample(Scene):
@@ -165,14 +165,14 @@ class CurvedArrowExample(Scene):
         curved = CurvedArrow(
             start_point=LEFT * 2,
             end_point=RIGHT * 2,
-            angle=PI/2  # Curvature
+            angle=PI/2  # 曲率
         )
         self.add(curved)
 ```
 
 ## Elbow
 
-Right-angle connector.
+直角连接器。
 
 ```python
 class ElbowExample(Scene):
@@ -181,7 +181,7 @@ class ElbowExample(Scene):
         self.add(elbow)
 ```
 
-## NumberLine Ticks
+## NumberLine 刻度
 
 ```python
 class TicksExample(Scene):
@@ -190,9 +190,9 @@ class TicksExample(Scene):
         self.add(line)
 ```
 
-## Connecting Mobjects
+## 连接 Mobjects
 
-### Line Between Mobjects
+### Mobjects 之间的线
 
 ```python
 class ConnectMobjects(Scene):
@@ -200,20 +200,20 @@ class ConnectMobjects(Scene):
         c1 = Circle().shift(LEFT * 2)
         c2 = Circle().shift(RIGHT * 2)
 
-        # Line connecting centers
+        # 连接中心的线
         line = Line(c1.get_center(), c2.get_center())
 
-        # Arrow between edges
+        # 边缘之间的箭头
         arrow = Arrow(
-            c1.get_right(),  # Right edge of c1
-            c2.get_left(),   # Left edge of c2
-            buff=0.1         # Small gap from edges
+            c1.get_right(),  # c1 的右边缘
+            c2.get_left(),   # c2 的左边缘
+            buff=0.1         # 距边缘的小间隙
         )
 
         self.add(c1, c2, line, arrow)
 ```
 
-### Dynamic Connections with Updaters
+### 带 Updater 的动态连接
 
 ```python
 class DynamicLine(Scene):
@@ -221,7 +221,7 @@ class DynamicLine(Scene):
         dot1 = Dot(LEFT * 2)
         dot2 = Dot(RIGHT * 2)
 
-        # Line that follows dots
+        # 跟随点的线
         line = always_redraw(lambda: Line(
             dot1.get_center(),
             dot2.get_center(),
@@ -232,10 +232,10 @@ class DynamicLine(Scene):
         self.play(dot1.animate.shift(UP * 2), run_time=2)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use Arrow for direction** - Clearer than plain lines
-2. **Use Vector for physics/math** - Semantically meaningful
-3. **Use Brace for labeling dimensions** - Professional look
-4. **Use DashedLine for auxiliary lines** - Distinguishes from main content
-5. **Use always_redraw for dynamic lines** - Updates with moving endpoints
+1. **方向使用 Arrow** - 比普通线更清晰
+2. **物理/数学使用 Vector** - 语义上有意义
+3. **标注尺寸使用 Brace** - 专业外观
+4. **辅助线使用 DashedLine** - 与主要内容区分
+5. **动态线使用 always_redraw** - 随移动端点更新

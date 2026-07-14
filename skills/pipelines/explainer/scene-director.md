@@ -1,240 +1,240 @@
-# Scene Director — Explainer Pipeline
+# 场景导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the Scene Planner for a generated explainer video. You have a `script` artifact with timestamped sections and enhancement cues. Your job is to transform the script into a visual plan: what the viewer sees at every moment, what assets need to be created, and how scenes transition.
+你是生成式解说视频的场景规划者。你有一个带有时间戳章节和增强提示的 `script` 工件。你的工作是将脚本转化为视觉计划：观众在每个时刻看到什么、需要创建什么资产、以及场景如何过渡。
 
-This is where words become visuals. A great script with a bad scene plan produces a confusing video.
+这是文字变成视觉的地方。一个出色的脚本配上糟糕的场景计划会产生令人困惑的视频。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["proposal"]["proposal_packet"]` | Script sections and proposal packet |
-| Playbook | Active style playbook | Visual language, transitions, motion rules |
-| Layer 3 | `.agents/skills/flux-best-practices/`, `.agents/skills/beautiful-mermaid/`, `.agents/skills/manim-composer/` | Image gen, diagram, animation knowledge |
+| 模式 | `schemas/artifacts/scene_plan.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["script"]["script"]`、`state.artifacts["proposal"]["proposal_packet"]` | 脚本章节和提案包 |
+| 剧本 | 活动风格剧本 | 视觉语言、过渡、运动规则 |
+| 第 3 层 | `.agents/skills/flux-best-practices/`、`.agents/skills/beautiful-mermaid/`、`.agents/skills/manim-composer/` | 图像生成、图表、动画知识 |
 
-## Process
+## 流程
 
-### Step 1: Analyze the Script
+### 步骤 1：分析脚本
 
-Read every section. For each, note:
-- What concept is being explained?
-- What enhancement cues did the script writer embed?
-- What's the emotional beat? (curiosity, revelation, emphasis, humor, conclusion)
-- How much time is available? (end_seconds - start_seconds)
+阅读每个章节。对于每个，注意：
+- 在解释什么概念？
+- 脚本作者嵌入了什么增强提示？
+- 情感节拍是什么？（好奇心、揭示、强调、幽默、结论）
+- 有多少时间可用？（end_seconds - start_seconds）
 
-### Step 2: Research Visual Approaches
+### 步骤 2：研究视觉方法
 
-**Use web search** to find visual techniques for this topic:
+**使用网络搜索**为此主题找到视觉技巧：
 
-1. **How do top creators visualize this?** Search YouTube thumbnails, blog diagrams, conference slides for the topic.
-2. **What visual metaphors work?** Some concepts have well-known visual representations (e.g., neural networks as node graphs, encryption as locks/keys). Use these — viewers recognize them instantly.
-3. **What's novel?** Is there a visual approach nobody has tried? A fresh visualization can make an explainer memorable.
-4. **What's feasible?** Match your ambitions to available tools: `image_selector` (static images), `diagram_gen` (Mermaid flowcharts/sequences), `code_snippet` (syntax-highlighted code), Remotion (motion graphics, text animations), Manim (mathematical animations).
+1. **顶级创作者如何可视化这个？** 搜索 YouTube 缩略图、博客图表、此主题的会议幻灯片。
+2. **哪些视觉隐喻有效？** 一些概念有众所周知的视觉表示（例如神经网络作为节点图、加密作为锁/钥匙）。使用这些 — 观众立刻就能认出。
+3. **什么新颖？** 是否有人从未尝试过的视觉方法？一个新鲜的视觉化可以让解说片令人难忘。
+4. **什么可行？** 将你的雄心与可用工具匹配：`image_selector`（静态图像）、`diagram_gen`（Mermaid 流程图/时序图）、`code_snippet`（语法高亮代码）、Remotion（运动图形、文字动画）、Manim（数学动画）。
 
-If you encounter a visualization need that no existing skill covers, use the **Skill Creator** (`skills/meta/skill-creator.md`) to create a new skill.
+如果你遇到没有现有技能覆盖的视觉化需求，使用**技能创建器**（`skills/meta/skill-creator.md`）创建一个新技能。
 
-### Step 3: Decompose into Scenes
+### 步骤 3：分解为场景
 
-Transform each script section into 1-3 visual scenes. Each scene is a distinct visual moment.
+将每个脚本章节转化为 1-3 个视觉场景。每个场景是一个不同的视觉时刻。
 
 ```json
 {
   "id": "scene-3",
   "type": "diagram",
-  "description": "Mermaid flowchart showing query → encode → vector search → rank → return results. Nodes appear one by one as narrator describes each step.",
+  "description": "Mermaid 流程图显示 query → encode → vector search → rank → return results。节点随着叙述者描述每个步骤逐个出现。",
   "start_seconds": 15,
   "end_seconds": 22,
   "script_section_id": "s3",
-  "framing": "full-screen diagram, centered",
-  "movement": "progressive reveal left-to-right",
+  "framing": "全屏图表，居中",
+  "movement": "从左到右渐进揭示",
   "transition_in": "fade",
   "transition_out": "dissolve",
-  "overlay_notes": "Label each node as it appears",
+  "overlay_notes": "每个节点出现时标记标签",
   "required_assets": [
     {
       "type": "diagram",
-      "description": "Mermaid flowchart: query → encode embedding → vector search (ANN) → rank by cosine similarity → return top-k results",
+      "description": "Mermaid 流程图：query → encode embedding → vector search (ANN) → rank by cosine similarity → return top-k results",
       "source": "generate"
     }
   ]
 }
 ```
 
-#### Scene Types and When to Use Them
+#### 场景类型及其使用时机
 
-| Type | Best For | Available Tools | Duration Guidance |
+| 类型 | 最适合 | 可用工具 | 时长指导 |
 |------|----------|-----------------|-------------------|
-| `hero_title` | Opening titles, dramatic reveals | Remotion HeroTitle (theme-driven title treatment) | 3-5s |
-| `stat_card` | Big dramatic numbers, impactful metrics | Remotion StatCard (large stat + subtitle) | 4-6s |
-| `bar_chart` | Category comparisons, rankings | Remotion BarChart (animated grow-up/slide-in/pop) | 5-7s |
-| `line_chart` | Trends, time series, growth curves | Remotion LineChart (draw/fade animation, multi-series) | 5-7s |
-| `pie_chart` | Proportions, breakdowns, distributions | Remotion PieChart (donut mode, center label, spin/expand) | 5-7s |
-| `kpi_grid` | Dashboards, traction metrics, at-a-glance data | Remotion KPIGrid (2-4 columns, count-up/pop/cascade) | 5-7s |
-| `comparison` | Before/after, A/B, versus comparisons | Remotion ComparisonCard (dual-value with divider) | 4-6s |
-| `callout` | Expert quotes, tips, warnings, important notes | Remotion CalloutBox (info/warning/tip/quote types) | 4-6s |
-| `progress_bar` | Journey visualization, completion, stacked metrics | Remotion ProgressBar (fill/pulse/step animations) | 4-6s |
-| `text_card` | Statements, closing messages, key terms | Remotion TextCard (centered, spring animation) | 3-5s |
-| `animation` | Concepts needing motion (data flow, math) | Remotion, Manim | 4-10s |
-| `diagram` | Processes, architecture, relationships | `diagram_gen` (Mermaid), `image_selector` | 4-8s |
-| `generated` | Illustrations, metaphors, real-world imagery | `image_selector` (FLUX/DALL-E) | 3-6s |
-| `talking_head` | AI avatar speaking (if HeyGen available) | HeyGen tools | 5-15s |
-| `broll` | Context, real-world examples | Stock or generated footage | 3-6s |
-| `screen_recording` | Code demos, UI walkthroughs | Recorded or simulated | 5-15s |
+| `hero_title` | 开场标题、戏剧性揭示 | Remotion HeroTitle（主题驱动的标题处理） | 3-5 秒 |
+| `stat_card` | 大戏剧性数字、有影响力的指标 | Remotion StatCard（大统计数字 + 副标题） | 4-6 秒 |
+| `bar_chart` | 类别比较、排名 | Remotion BarChart（动画增长/滑入/弹出） | 5-7 秒 |
+| `line_chart` | 趋势、时间序列、增长曲线 | Remotion LineChart（绘制/淡入动画，多系列） | 5-7 秒 |
+| `pie_chart` | 比例、分解、分布 | Remotion PieChart（环形模式、中心标签、旋转/展开） | 5-7 秒 |
+| `kpi_grid` | 仪表板、牵引指标、一目了然的数据 | Remotion KPIGrid（2-4 列、计数/弹出/级联） | 5-7 秒 |
+| `comparison` | 前后对比、A/B、对比比较 | Remotion ComparisonCard（双值带分隔线） | 4-6 秒 |
+| `callout` | 专家引述、提示、警告、重要注释 | Remotion CalloutBox（信息/警告/提示/引述类型） | 4-6 秒 |
+| `progress_bar` | 旅程可视化、完成度、堆叠指标 | Remotion ProgressBar（填充/脉冲/步进动画） | 4-6 秒 |
+| `text_card` | 陈述、结束语、关键术语 | Remotion TextCard（居中、弹簧动画） | 3-5 秒 |
+| `animation` | 需要运动的概念（数据流、数学） | Remotion、Manim | 4-10 秒 |
+| `diagram` | 过程、架构、关系 | `diagram_gen`（Mermaid）、`image_selector` | 4-8 秒 |
+| `generated` | 插图、隐喻、真实世界图像 | `image_selector`（FLUX/DALL-E） | 3-6 秒 |
+| `talking_head` | AI 头像说话（如果 HeyGen 可用） | HeyGen 工具 | 5-15 秒 |
+| `broll` | 上下文、真实世界示例 | 素材或生成的片段 | 3-6 秒 |
+| `screen_recording` | 代码演示、UI 导览 | 录制或模拟 | 5-15 秒 |
 
-**Zero-key scene selection:** When no image/video generation is available, prefer `hero_title`, `stat_card`, `bar_chart`, `line_chart`, `pie_chart`, `kpi_grid`, `comparison`, `callout`, `progress_bar`, and `text_card`. These render entirely from Remotion components with zero external dependencies and can still feel distinct if you derive color, typography, and pacing from the subject instead of defaulting to a generic dashboard aesthetic.
+**零密钥场景选择：** 当没有图像/视频生成可用时，优先选择 `hero_title`、`stat_card`、`bar_chart`、`line_chart`、`pie_chart`、`kpi_grid`、`comparison`、`callout`、`progress_bar` 和 `text_card`。这些完全由 Remotion 组件渲染，零外部依赖，如果你从主题推导颜色、排版和节奏，而不是默认使用通用仪表板美学，它们仍然可以感觉独特。
 
-### Step 4: Apply the Visual Technique Library
+### 步骤 4：应用视觉技巧库
 
-These are proven patterns for explainer visuals. Reference them by name in scene descriptions:
+这些是经证实的解说片视觉模式。在场景描述中通过名称引用它们：
 
-**Diagram Reveal**
-Build a diagram progressively — start empty, add components with labels as the narrator describes each part. Perfect for architecture, processes, and systems.
-- Tools: Mermaid + Remotion animation or FLUX-generated diagram
-- Example: "Show the vector database architecture. Add the encoder node when narrator says 'embeddings'. Add the index when narrator says 'search'."
+**图表揭示**
+逐步构建图表 — 从空开始，随着叙述者描述每个部分添加组件和标签。完美适用于架构、过程和系统。
+- 工具：Mermaid + Remotion 动画或 FLUX 生成的图表
+- 示例："显示向量数据库架构。当叙述者说'嵌入'时添加编码器节点。当叙述者说'搜索'时添加索引。"
 
-**Analogy Visualization**
-Show the abstract concept alongside its real-world analogy. Split screen or side-by-side.
-- Tools: `image_selector` for both sides
-- Example: "Left: actual vector space with dots. Right: a library with books sorted by topic."
+**类比视觉化**
+将抽象概念与其现实世界类比并排展示。分屏或并排。
+- 工具：两侧用 `image_selector`
+- 示例："左：实际的向量空间带点。右：按主题分类书籍的图书馆。"
 
-**Stat Card Punch**
-Full-screen number with impact animation (scale up, slight bounce). Use `stat_card` type with a background and accent treatment chosen for the video's identity. Hold for 4-5 seconds.
-- Tools: Remotion StatCard component
-- Example: stat="1ms", subtitle="vs 500ms with traditional search", accentColor="<theme_accent>"
+**统计数据卡片冲击**
+全屏数字带动画效果（缩放、轻微弹跳）。使用 `stat_card` 类型，选择适合视频身份的背景和强调色处理。保持 4-5 秒。
+- 工具：Remotion StatCard 组件
+- 示例：stat="1ms"，subtitle="vs 传统搜索 500ms"，accentColor="<theme_accent>"
 
-**Data Dashboard Sequence**
-A series of data visualization scenes that tell a story through numbers. Start with a KPI overview, then drill into specific charts. Use section_title overlays to group related data. This pattern works with zero external tools.
-- Tools: Remotion chart components (bar_chart, line_chart, pie_chart, kpi_grid)
-- Example: kpi_grid (4 key stats) → bar_chart (breakdown) → line_chart (trend) → pie_chart (distribution)
-- Choose the background treatment from the visual identity: dark for dramatic/technical subjects, light for approachable/educational, textured or warm when the topic calls for it.
+**数据仪表板序列**
+一系列数据可视化场景，通过数字讲述故事。从 KPI 概览开始，然后深入到特定图表。使用 section_title 叠加来分组相关数据。此模式零外部工具即可工作。
+- 工具：Remotion 图表组件（bar_chart、line_chart、pie_chart、kpi_grid）
+- 示例：kpi_grid（4 个关键统计数据）→ bar_chart（细分）→ line_chart（趋势）→ pie_chart（分布）
+- 从视觉身份中选择背景处理：深色用于戏剧性/技术性主题，浅色用于亲切/教育性，纹理或温暖用于主题需要时。
 
-**Before/After Split**
-Show the problem, then the solution using `comparison` type. The comparison card shows dual values side-by-side with animated entrance.
-- Tools: Remotion ComparisonCard component
-- Example: leftLabel="Before", leftValue="500ms", rightLabel="After", rightValue="1ms"
+**前后对比分割**
+使用 `comparison` 类型展示问题，然后是解决方案。比较卡片并排显示双值，带动画入场。
+- 工具：Remotion ComparisonCard 组件
+- 示例：leftLabel="之前"，leftValue="500ms"，rightLabel="之后"，rightValue="1ms"
 
-**Timeline Progression**
-Left-to-right or top-to-bottom sequence showing evolution or process steps. Each step appears as narrator describes it.
-- Tools: Remotion with animated elements or Mermaid timeline
-- Example: "1990: keyword search → 2010: semantic search → 2020: vector databases → 2024: multimodal search"
+**时间线递进**
+从左到右或从上到下的序列，展示演变或过程步骤。每个步骤随着叙述者描述而出现。
+- 工具：Remotion 配合动画元素或 Mermaid 时间线
+- 示例："1990：关键词搜索 → 2010：语义搜索 → 2020：向量数据库 → 2024：多模态搜索"
 
-**Zoom and Focus**
-Start with a wide view of a system, then zoom into a specific component to explain it in detail. Creates spatial context.
-- Tools: Remotion with scale animation on a generated image
-- Example: "Show full system architecture. Zoom into the 'embedding model' component."
+**缩放与聚焦**
+从系统的广角视图开始，然后缩放到特定组件以详细解释。创建空间上下文。
+- 工具：Remotion 配合生成图像上的缩放动画
+- 示例："显示完整系统架构。缩放到'嵌入模型'组件。"
 
-**Code Walkthrough**
-Show code with syntax highlighting. Highlight specific lines as the narrator explains them. Can animate typing or progressive reveal.
-- Tools: `code_snippet` tool + Remotion
-- Example: "Python code: `results = collection.query(embedding, n_results=5)`. Highlight `embedding` parameter when narrator says 'vector'."
+**代码讲解**
+显示带语法高亮的代码。随着叙述者解释高亮特定行。可以动画显示打字或渐进揭示。
+- 工具：`code_snippet` 工具 + Remotion
+- 示例："Python 代码：`results = collection.query(embedding, n_results=5)`。当叙述者说'向量'时高亮 `embedding` 参数。"
 
-### Step 4b: Write Narration with Duration Budget
+### 步骤 4b：用时序预算写旁白
 
-If the video includes narration, the script **must** be written to fit the video duration.
+如果视频包含旁白，脚本**必须**写成适合视频时长。
 
-**Duration budgeting formula:**
-1. Calculate total video duration from scene timings (last cut's `out_seconds`).
-2. Target narration at **85-90%** of video duration to leave breathing room at intro/outro.
-3. Budget words: **2.0-2.5 words/second** for documentary style with natural pauses; **2.5-3.0 words/second** for energetic/fast-paced delivery.
-4. Example: 53s video → target 45-48s of narration → 90-120 words max (documentary) or 112-144 words (energetic).
+**时间预算公式：**
+1. 从场景时间计算总视频时长（最后一个剪辑的 `out_seconds`）。
+2. 目标旁白占视频时长的 **85-90%**，为开场/结尾留出呼吸空间。
+3. 预算字数：纪录片风格带自然停顿为 **2.0-2.5 词/秒**；精力充沛快节奏为 **2.5-3.0 词/秒**。
+4. 示例：53 秒视频 → 目标 45-48 秒旁白 → 最多 90-120 词（纪录片）或 112-144 词（精力充沛）。
 
-**Per-scene word budgets:**
-- Allocate words proportionally to each scene's duration.
-- A 5s scene gets ~10-12 words. A 6s scene gets ~12-15 words.
-- Leave 0.5-1s of silence between scene transitions for visual breathing room.
+**每场景字数预算：**
+- 按比例向每个场景的时长分配字数。
+- 5 秒场景获得约 10-12 词。6 秒场景获得约 12-15 词。
+- 在场景过渡之间留出 0.5-1 秒的静音，以提供视觉呼吸空间。
 
-**Validation (mandatory before TTS generation):**
-- [ ] Total word count is within budget for the target duration
-- [ ] No single scene's narration exceeds its time slot
-- [ ] Opening and closing scenes have brief narration (let visuals breathe)
+**验证（在 TTS 生成前强制）：**
+- [ ] 总词数在目标时长的预算内
+- [ ] 没有单个场景的旁白超过其时间段
+- [ ] 开场和结束场景有简短旁白（让视觉呼吸）
 
-**After TTS generation:**
-- The TTS tool returns `audio_duration_seconds` — compare it against video duration.
-- If narration exceeds video by >1s, either trim the script and regenerate, or extend the video's closing scene.
-- Always run `composition_validator` before rendering to catch mismatches automatically.
+**在 TTS 生成后：**
+- TTS 工具返回 `audio_duration_seconds` — 与视频时长比较。
+- 如果旁白超过视频 >1 秒，要么修剪脚本并重新生成，要么扩展视频的结束场景。
+- 始终在渲染前运行 `composition_validator` 以自动捕获不匹配。
 
-### Step 4c: 5-Aspect Scene-Plan Checklist
+### 步骤 4c：5 方面场景计划检查清单
 
-> Every scene must specify all five aspects. For diagram, chart, and Remotion-native scenes, "Subject" can map to a foregrounded data element and "Camera" can be marked N/A — but only EXPLICITLY (e.g., `"camera": "N/A — Remotion native scene, no virtual camera"`). Silent omission is the most common failure mode and produces unpredictable model output, brittle prompts, and reviewer churn.
+> 每个场景必须指定所有五个方面。对于图表、图表和 Remotion 原生场景，"主体"可以映射到前景数据元素，"镜头"可以标记为 N/A — 但只有**明确**标记（例如 `"camera": "N/A — Remotion 原生场景，无虚拟镜头"`）。静默省略是最常见的失败模式，会产生不可预测的模型输出、脆弱的提示和审查者返工。
 >
-> 1. **Subject** — type + key visual attributes; if multiple, how to disambiguate. For diagram/chart scenes, this is the foregrounded data element (the node, the bar, the KPI being highlighted). For generated images, it's the person/object/concept being illustrated.
-> 2. **Subject Motion** — actions in temporal order; for animated diagrams, the order in which nodes/edges/values appear or change.
-> 3. **Scene** — overlays (separately!) + POV + setting + time of day + scene dynamics. For Remotion scenes, "setting" maps to background treatment + theme.
-> 4. **Spatial Framing** — shot size + position-in-frame + depth (FG/MG/BG) + camera-height-relative; and how those CHANGE. For static Remotion scenes, document the layout grid + which element occupies the visual center.
-> 5. **Camera** — playback speed → lens distortion → height → angle → focus/DoF → steadiness → movement. Mark N/A for native-Remotion scenes; specify fully for `generated`/`broll`/`image_animation` scenes.
+> 1. **主体** — 类型 + 关键视觉属性；如果有多个，如何消歧。对于图表/图表场景，这是前景数据元素（正在高亮的节点、柱状条、KPI）。对于生成图像，这是正在被插图说明的人/物/概念。
+> 2. **主体运动** — 按时间顺序的动作；对于动画图表，节点/边/值出现或变化的顺序。
+> 3. **场景** — 叠加层（分开列出！）+ 视角 + 环境 + 时间 + 场景动态。对于 Remotion 场景，"环境"映射到背景处理 + 主题。
+> 4. **空间构图** — 镜头大小 + 在帧中的位置 + 深度（前景/中景/背景）+ 镜头相对高度；以及它们如何变化。对于静态 Remotion 场景，记录布局网格 + 哪个元素占据视觉中心。
+> 5. **镜头** — 播放速度 → 镜头畸变 → 高度 → 角度 → 对焦/景深 → 稳定性 → 运动。对于原生 Remotion 场景标记 N/A；对于 `generated`/`broll`/`image_animation` 场景完全指定。
 >
-> See `skills/creative/video-gen-prompting.md` for the primitive vocabulary.
+> 参见 `skills/creative/video-gen-prompting.md` 了解原始词汇。
 
-> **Overlays callout.** Overlays (titles, subtitles, HUD, watermarks, framing graphics, lower-thirds, section_title bars, stat_reveal chips, hero_title overlays, provider chips) are NOT part of the scene's foreground/midground/background depth axis. List them separately in scene metadata (`overlays: [...]`) with content and placement. Never describe an overlay as "in the foreground" — that confuses both downstream tools and any video-understanding model that re-analyzes the output.
+> **叠加层提醒。** 叠加层（标题、副标题、HUD、水印、构图图形、下方三分之一、section_title 栏、stat_reveal 芯片、hero_title 叠加、提供者芯片）不是场景前景/中景/背景深度轴的一部分。在场景元数据中单独列出（`overlays: [...]`），注明内容和位置。永远不要将叠加层描述为"在前景中" — 这会混淆下游工具和任何重新分析输出的视频理解模型。
 
-### Step 5: Validate Against Playbook
+### 步骤 5：对照剧本验证
 
-The style playbook constrains your visual choices:
+风格剧本约束你的视觉选择：
 
-| Playbook Field | Scene Impact |
+| 剧本字段 | 场景影响 |
 |----------------|-------------|
-| `visual_language.color_palette` | All generated images and diagrams must use these colors |
-| `visual_language.composition` | Framing rules (rule-of-thirds, centered, etc.) |
-| `motion.transitions` | Allowed transition types (e.g., `gentle-fade`, `soft-dissolve`) |
-| `motion.animation_style` | Animation feel (e.g., `ease-in-out, organic curves`) |
-| `motion.pacing_rules` | Minimum hold times (e.g., "hold establishing shots for 2s minimum") |
-| `asset_generation.image_prompt_prefix` | Distill into a short visual anchor; do not paste verbatim into all prompts |
-| `asset_generation.consistency_anchors` | What must stay consistent across all images (color palette, lighting, style) |
+| `visual_language.color_palette` | 所有生成的图像和图表必须使用这些颜色 |
+| `visual_language.composition` | 构图规则（三分法、居中等等） |
+| `motion.transitions` | 允许的过渡类型（例如 `gentle-fade`、`soft-dissolve`） |
+| `motion.animation_style` | 动画感觉（例如 `ease-in-out, organic curves`） |
+| `motion.pacing_rules` | 最小保持时间（例如"定场镜头至少保持 2 秒"） |
+| `asset_generation.image_prompt_prefix` | 提炼为简短的视觉锚点；不要逐字粘贴到所有提示中 |
+| `asset_generation.consistency_anchors` | 什么必须在所有图像中保持一致（颜色调色板、光线、风格） |
 
-**Checklist before submitting:**
-- [ ] Every scene uses playbook-compatible transitions
-- [ ] All required_asset descriptions include style cues from the playbook
-- [ ] No scene violates pacing rules (min/max duration)
-- [ ] Image descriptions reference the video's actual visual identity, not just a preset name
+**提交前检查清单：**
+- [ ] 每个场景使用与剧本兼容的过渡
+- [ ] 所有 required_asset 描述包括来自剧本的风格提示
+- [ ] 没有场景违反节奏规则（最小/最大时长）
+- [ ] 图像描述引用视频的实际视觉身份，而不仅仅是预设名称
 
-### Step 6: Verify Coverage and Variety
+### 步骤 6：验证覆盖率和多样性
 
-**Coverage check:**
-- [ ] Scenes span the full script duration (first scene starts at 0s, last scene ends at total_duration)
-- [ ] Every script section has at least one corresponding scene
-- [ ] No gaps > 1s between scenes (unless intentional beat)
-- [ ] All enhancement cues from the script are addressed by a scene or required_asset
+**覆盖率检查：**
+- [ ] 场景覆盖完整脚本时长（第一个场景从 0 秒开始，最后一个场景在总时长结束）
+- [ ] 每个脚本章节至少有一个对应的场景
+- [ ] 场景之间无 > 1 秒的空白（除非是有意的节拍）
+- [ ] 脚本中的所有增强提示都已由场景或 required_asset 处理
 
-**Variety check:**
-- [ ] No more than 3 consecutive scenes of the same type
-- [ ] At least 3 different scene types used in the video
-- [ ] Visual pacing alternates between high-information scenes (diagrams, animations) and breathing room (text cards, generated images)
+**多样性检查：**
+- [ ] 不超过 3 个连续相同类型的场景
+- [ ] 视频中使用了至少 3 种不同的场景类型
+- [ ] 视觉节奏在高信息场景（图表、动画）和呼吸空间（文字卡片、生成图像）之间交替
 
-**Feasibility check:**
-- [ ] Every `required_asset` with `source: "generate"` is achievable with available tools
-- [ ] Diagram descriptions are specific enough for Mermaid syntax generation
-- [ ] Image descriptions are specific enough for FLUX/DALL-E prompt engineering
-- [ ] No scene requires tools that aren't in the tool registry
+**可行性检查：**
+- [ ] 每个 `required_asset` 且 `source: "generate"` 是可用工具可实现的
+- [ ] 图表描述对于 Mermaid 语法生成足够具体
+- [ ] 图像描述对于 FLUX/DALL-E 提示工程足够具体
+- [ ] 没有场景需要工具注册表中没有的工具
 
-### Step 7: Self-Evaluate
+### 步骤 7：自我评估
 
-Score (1-5):
+评分（1-5）：
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Visual storytelling** | Does each scene advance understanding, not just decorate? |
-| **Script alignment** | Does every scene match what the narrator is saying at that moment? |
-| **Technique variety** | Did you use multiple visual techniques, not just one? |
-| **Playbook fidelity** | Would every scene look like it belongs to the same video? |
-| **Asset feasibility** | Can every required_asset actually be generated with available tools? |
-| **Pacing** | Does the visual rhythm feel natural? High-info scenes balanced with breathing room? |
+| **视觉叙事** | 每个场景是否推进理解，而不仅仅是装饰？ |
+| **脚本对齐** | 每个场景是否匹配叙述者在那一刻所说的内容？ |
+| **技巧多样性** | 你是否使用了多种视觉技巧，而不仅是一种？ |
+| **剧本忠实度** | 每个场景看起来是否属于同一个视频？ |
+| **资产可行性** | 每个 required_asset 是否真的可以用可用工具生成？ |
+| **节奏** | 视觉节奏感觉自然吗？高信息场景与呼吸空间平衡？ |
 
-If any dimension scores below 3, revise.
+如果任何维度得分低于 3，修订。
 
-### Step 8: Submit
+### 步骤 8：提交
 
-Call `handle_explainer_scene_plan(state, {"scene_plan": scene_plan_json})` to validate and persist.
+调用 `handle_explainer_scene_plan(state, {"scene_plan": scene_plan_json})` 以验证并持久化。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **One scene per section**: Script sections often cover multiple concepts. A 10-second section might need 2-3 visual scenes to avoid boring stasis.
-- **Ignoring enhancement cues**: The script writer embedded visual hints in `enhancement_cues`. Don't ignore them — they represent the writer's visual intent.
-- **Overly ambitious animations**: "Photorealistic 3D fly-through of a data center" can't be generated with current tools. Keep it achievable.
-- **No transition strategy**: Random transitions feel chaotic. Use the playbook's transition rules consistently. Reserve special transitions for topic shifts.
-- **Vague required_assets**: "An image about databases" is useless for prompt engineering. "Isometric illustration of a vector database with embedding vectors floating in 3D space, using the playbook's blue-green palette" is actionable.
-- **Preset thinking**: A scene plan that says "make it flat-motion-graphics" is not enough. The planner must specify what makes THIS video's motion graphics feel distinct.
-- **Static scenes for dynamic concepts**: If the narrator describes a process or transformation, the visual should move. Use animation or progressive reveal, not a static image.
-- **Using `generated` type for CTA/closing screens with exact text**: AI image models hallucinate text — wrong business names, misspelled words, wrong phone numbers. Any scene with verbatim text (CTA, business info, contact details, legal) MUST be `type: "text_card"` so Remotion renders the text exactly. Never plan a `generated` image for a scene where text accuracy matters.
+- **每个章节一个场景**：脚本章节通常覆盖多个概念。一个 10 秒的章节可能需要 2-3 个视觉场景以避免无聊的静态。
+- **忽略增强提示**：脚本作者在 `enhancement_cues` 中嵌入了视觉提示。不要忽略它们 — 它们代表了作者的视觉意图。
+- **过于雄心勃勃的动画**："数据中心的光写实 3D 飞越"无法用当前工具生成。保持可实现。
+- **没有过渡策略**：随机过渡感觉混乱。一致地使用剧本的过渡规则。为主题转换保留特殊过渡。
+- **模糊的 required_assets**："一张关于数据库的图像"对提示工程无用。"向量数据库的等距插图，嵌入向量在 3D 空间中浮动，使用剧本的蓝绿色调色板"是可操作的。
+- **预设思维**：说"做成平面运动图形"的场景计划是不够的。规划者必须指定是什么让这个视频的运动图形感觉独特。
+- **动态概念的静态场景**：如果叙述者描述一个过程或转变，视觉应该移动。使用动画或渐进揭示，而不是静态图像。
+- **对带有确凿文字的 CTA/结束画面使用 `generated` 类型**：AI 图像模型会幻觉文字 — 错误的商号、拼写错误的词、错误的电话号码。任何带有逐字文字（CTA、商业信息、联系方式、法律声明）的场景**必须**使用 `type: "text_card"`，以便 Remotion 精确渲染文字。永远不要为文字准确性重要的场景计划使用 `generated` 图像。

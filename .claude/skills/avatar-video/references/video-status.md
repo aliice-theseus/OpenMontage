@@ -3,15 +3,15 @@ name: video-status
 description: Polling patterns, status types, and retrieving download URLs for HeyGen videos
 ---
 
-# Video Status and Polling
+# 视频状态和轮询
 
-After generating a video, you need to poll for status until the video is complete. HeyGen processes videos asynchronously.
+生成视频后，您需要轮询状态，直到视频完成。HeyGen 异步处理视频。
 
-## MCP Tool (Preferred)
+## MCP 工具（推荐）
 
-If the HeyGen MCP server is connected, use `mcp__heygen__get_video` with the `videoId` parameter. It returns status, video_url, thumbnail_url, duration, title, gif_url, captioned_video_url, and other metadata in a single call.
+如果 HeyGen MCP 服务器已连接，使用 `mcp__heygen__get_video` 并传入 `videoId` 参数。它在一个调用中返回状态、video_url、thumbnail_url、duration、title、gif_url、captioned_video_url 和其他元数据。
 
-## Checking Video Status (Direct API)
+## 检查视频状态（直接 API）
 
 ### curl
 
@@ -79,35 +79,35 @@ def get_video_status(video_id: str) -> dict:
     return data["data"]
 ```
 
-## Video Status Types
+## 视频状态类型
 
-| Status | Description |
+| 状态 | 描述 |
 |--------|-------------|
-| `pending` | Video is queued for processing |
-| `processing` | Video is being generated |
-| `completed` | Video is ready for download |
-| `failed` | Video generation failed |
+| `pending` | 视频已排队等待处理 |
+| `processing` | 视频正在生成中 |
+| `completed` | 视频已准备好下载 |
+| `failed` | 视频生成失败 |
 
-## Expected Generation Times
+## 预期生成时间
 
-Video generation typically takes **5-15 minutes**, but can exceed 20 minutes during peak load or for longer scripts.
+视频生成通常需要 **5-15 分钟**，但在高峰期或脚本较长时可能超过 20 分钟。
 
-| Factor | Impact |
+| 因素 | 影响 |
 |--------|--------|
-| Script length | Longer scripts = significantly longer processing |
-| Resolution | 1080p takes longer than 720p |
-| Avatar complexity | Some avatars render faster |
-| Queue load | Peak hours may cause 15-20+ minute waits |
-| Multiple scenes | Each scene adds processing time |
+| 脚本长度 | 脚本越长 = 处理时间显著增加 |
+| 分辨率 | 1080p 比 720p 需要更长时间 |
+| 虚拟形象复杂度 | 某些虚拟形象渲染更快 |
+| 队列负载 | 高峰时段可能导致 15-20+ 分钟的等待 |
+| 多场景 | 每个场景都会增加处理时间 |
 
-**Recommendations**:
-- Set timeout to **15-20 minutes** (900,000-1,200,000 ms) for safety
-- For scripts > 2 minutes of speech, expect 15+ minutes
-- Consider async patterns (save video_id, check later) for long videos
+**建议：**
+- 将超时时间设置为 **15-20 分钟**（900,000-1,200,000 毫秒）以确保安全
+- 对于超过 2 分钟语音的脚本，预计 15 分钟以上
+- 对于长视频，考虑异步模式（保存 video_id，稍后检查）
 
-## Response Format
+## 响应格式
 
-### Completed Video
+### 完成的视频
 
 ```json
 {
@@ -130,7 +130,7 @@ Video generation typically takes **5-15 minutes**, but can exceed 20 minutes dur
 }
 ```
 
-### Failed Video
+### 失败的视频
 
 ```json
 {
@@ -144,9 +144,9 @@ Video generation typically takes **5-15 minutes**, but can exceed 20 minutes dur
 }
 ```
 
-## Polling Implementation
+## 轮询实现
 
-### Basic Polling
+### 基本轮询
 
 ```typescript
 async function waitForVideo(
@@ -175,7 +175,7 @@ async function waitForVideo(
 }
 ```
 
-### Polling with Progress Callback
+### 带进度回调的轮询
 
 ```typescript
 type ProgressCallback = (status: string, elapsed: number) => void;
@@ -216,7 +216,7 @@ const videoUrl = await waitForVideoWithProgress(
 );
 ```
 
-### Python Polling
+### Python 轮询
 
 ```python
 import time
@@ -255,11 +255,11 @@ def progress_callback(status: str, elapsed: int):
 video_url = wait_for_video(video_id, on_progress=progress_callback)
 ```
 
-## Downloading the Video
+## 下载视频
 
-Once the video is complete, download it. **Important**: The video URL may not be immediately available after status shows "completed". Use retry logic with backoff.
+视频完成后，下载它。**重要提示**：状态显示为"completed"后，视频 URL 可能不会立即可用。使用带退避的重试逻辑。
 
-### TypeScript (with retry)
+### TypeScript（带重试）
 
 ```typescript
 import fs from "fs";
@@ -297,7 +297,7 @@ async function downloadVideoWithRetry(
 }
 ```
 
-### Python (with retry)
+### Python（带重试）
 
 ```python
 import requests
@@ -331,9 +331,9 @@ def download_video_with_retry(
     raise Exception(f"Failed to download after {max_retries} attempts: {last_error}")
 ```
 
-### Simple Download (no retry)
+### 简单下载（无重试）
 
-For quick scripts where you'll retry manually:
+适用于快速脚本，您可以手动重试：
 
 ```typescript
 async function downloadVideo(videoUrl: string, outputPath = "./output/video.mp4") {
@@ -346,7 +346,7 @@ async function downloadVideo(videoUrl: string, outputPath = "./output/video.mp4"
 }
 ```
 
-## Complete Workflow Example
+## 完整工作流程示例
 
 ```typescript
 async function generateAndDownloadVideo(config: VideoConfig): Promise<string> {
@@ -383,11 +383,11 @@ async function generateAndDownloadVideo(config: VideoConfig): Promise<string> {
 }
 ```
 
-## Resumable Status Checking
+## 可恢复的状态检查
 
-For long-running generations, save the video_id and check status later rather than keeping a process waiting.
+对于长时间运行的生成任务，保存 video_id 并稍后检查状态，而不是保持进程等待。
 
-### Save State After Generation
+### 生成后保存状态
 
 ```typescript
 interface PendingVideo {
@@ -418,7 +418,7 @@ async function startVideoGeneration(config: VideoGenerateRequest): Promise<Pendi
 }
 ```
 
-### Check Status Later
+### 稍后检查状态
 
 ```typescript
 async function checkVideoStatus(): Promise<void> {
@@ -463,7 +463,7 @@ async function checkVideoStatus(): Promise<void> {
 }
 ```
 
-### CLI-Friendly Pattern
+### CLI 友好模式
 
 ```typescript
 // generate-video.ts - Start generation and exit
@@ -489,14 +489,14 @@ async function main() {
 }
 ```
 
-## Alternative: Using Webhooks
+## 替代方案：使用 Webhook
 
-Instead of polling, you can use webhooks to receive notifications when videos complete. See [webhooks.md](webhooks.md) for details. Webhooks are ideal for production systems where you don't want to maintain polling connections.
+除了轮询之外，您还可以使用 webhook 在视频完成时接收通知。详见 [webhooks.md](webhooks.md)。Webhook 是生产系统的理想选择，无需维护轮询连接。
 
-## Best Practices
+## 最佳实践
 
-1. **Use exponential backoff** - Increase poll intervals for long-running jobs
-2. **Set reasonable timeouts** - Most videos complete within 10 minutes
-3. **Handle failures gracefully** - Check error messages for actionable feedback
-4. **Consider webhooks** - For production systems, webhooks are more efficient than polling
-5. **Cache video URLs** - Downloaded video URLs are valid for a limited time
+1. **使用指数退避** - 对于长时间运行的任务，增加轮询间隔
+2. **设置合理的超时** - 大多数视频在 10 分钟内完成
+3. **优雅处理失败** - 检查错误消息以获取可操作的反馈
+4. **考虑 webhook** - 对于生产系统，webhook 比轮询更高效
+5. **缓存视频 URL** - 下载的视频 URL 在有限时间内有效

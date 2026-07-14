@@ -1,42 +1,42 @@
 ---
 name: assets
-description: Uploading images, videos, and audio for use in HeyGen video generation
+description: 上传用于 HeyGen 视频生成的图片、视频和音频
 ---
 
-# Asset Upload and Management
+# 资源上传和管理
 
-HeyGen allows you to upload custom assets (images, videos, audio) for use in video generation, such as backgrounds, talking photo sources, and custom audio.
+HeyGen 允许你上传自定义资源（图片、视频、音频），用于视频生成，例如背景、说话照片源和自定义音频。
 
-## Upload Flow
+## 上传流程
 
-Asset uploads are a single-step process: POST the raw file binary directly to the upload endpoint. The Content-Type header must match the file's MIME type.
+资源上传是一个单步骤过程：直接将原始文件二进制数据 POST 到上传端点。Content-Type 头部必须匹配文件的 MIME 类型。
 
-## Uploading an Asset
+## 上传资源
 
-**Endpoint:** `POST https://upload.heygen.com/v1/asset`
+**端点：** `POST https://upload.heygen.com/v1/asset`
 
-### Request
+### 请求
 
-| Header | Required | Description |
+| 头部 | 必需 | 描述 |
 |--------|:--------:|-------------|
-| `X-Api-Key` | ✓ | Your HeyGen API key |
-| `Content-Type` | ✓ | MIME type of the file (e.g. `image/jpeg`) |
+| `X-Api-Key` | ✓ | 你的 HeyGen API 密钥 |
+| `Content-Type` | ✓ | 文件的 MIME 类型（例如 `image/jpeg`） |
 
-The request body is the raw binary file data. No JSON or form fields are needed.
+请求体是原始的二进制文件数据。不需要 JSON 或表单字段。
 
-### Response
+### 响应
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `code` | number | Status code (`100` = success) |
-| `data.id` | string | Unique asset ID for use in video generation |
-| `data.name` | string | Asset name |
-| `data.file_type` | string | `image`, `video`, or `audio` |
-| `data.url` | string | Accessible URL for the uploaded file |
-| `data.image_key` | string \| null | Key for creating uploaded photo avatars (images only) |
-| `data.folder_id` | string | Folder ID (empty if not in a folder) |
-| `data.meta` | string \| null | Asset metadata |
-| `data.created_ts` | number | Unix timestamp of creation |
+| `code` | number | 状态码（`100` = 成功） |
+| `data.id` | string | 用于视频生成的唯一资源 ID |
+| `data.name` | string | 资源名称 |
+| `data.file_type` | string | `image`、`video` 或 `audio` |
+| `data.url` | string | 已上传文件的可访问 URL |
+| `data.image_key` | string \| null | 用于创建上传照片头像的密钥（仅图片） |
+| `data.folder_id` | string | 文件夹 ID（如果不在文件夹中则为空） |
+| `data.meta` | string \| null | 资源元数据 |
+| `data.created_ts` | number | 创建的 Unix 时间戳 |
 
 ### curl
 
@@ -85,19 +85,19 @@ async function uploadAsset(filePath: string, contentType: string): Promise<Asset
   const json: AssetUploadResponse = await response.json();
 
   if (json.code !== 100) {
-    throw new Error(json.message ?? "Upload failed");
+    throw new Error(json.message ?? "上传失败");
   }
 
   return json.data;
 }
 
-// Usage
+// 使用示例
 const asset = await uploadAsset("./background.jpg", "image/jpeg");
-console.log(`Uploaded asset: ${asset.id}`);
-console.log(`Asset URL: ${asset.url}`);
+console.log(`上传资源 ID: ${asset.id}`);
+console.log(`资源 URL: ${asset.url}`);
 ```
 
-### TypeScript (with streams for large files)
+### TypeScript（使用流处理大文件）
 
 ```typescript
 import fs from "fs";
@@ -117,14 +117,14 @@ async function uploadLargeAsset(filePath: string, contentType: string): Promise<
       "Content-Length": fileStats.size.toString(),
     },
     body: fileStream as any,
-    // @ts-ignore - duplex is needed for streaming
+    // @ts-ignore - duplex 是流传输所需的
     duplex: "half",
   });
 
   const json: AssetUploadResponse = await response.json();
 
   if (json.code !== 100) {
-    throw new Error(json.message ?? "Upload failed");
+    throw new Error(json.message ?? "上传失败");
   }
 
   return json.data;
@@ -150,43 +150,43 @@ def upload_asset(file_path: str, content_type: str) -> dict:
 
     data = response.json()
     if data.get("code") != 100:
-        raise Exception(data.get("message", "Upload failed"))
+        raise Exception(data.get("message", "上传失败"))
 
     return data["data"]
 
 
-# Usage
+# 使用示例
 asset = upload_asset("./background.jpg", "image/jpeg")
-print(f"Uploaded asset: {asset['id']}")
-print(f"Asset URL: {asset['url']}")
+print(f"上传资源 ID: {asset['id']}")
+print(f"资源 URL: {asset['url']}")
 ```
 
-## Supported Content Types
+## 支持的内容类型
 
-| Type | Content-Type | Use Case |
+| 类型 | Content-Type | 使用场景 |
 |------|--------------|----------|
-| JPEG | `image/jpeg` | Backgrounds, talking photos |
-| PNG | `image/png` | Backgrounds, overlays |
-| MP4 | `video/mp4` | Video backgrounds |
-| WebM | `video/webm` | Video backgrounds |
-| MP3 | `audio/mpeg` | Custom audio input |
-| WAV | `audio/wav` | Custom audio input |
+| JPEG | `image/jpeg` | 背景、说话照片 |
+| PNG | `image/png` | 背景、叠加层 |
+| MP4 | `video/mp4` | 视频背景 |
+| WebM | `video/webm` | 视频背景 |
+| MP3 | `audio/mpeg` | 自定义音频输入 |
+| WAV | `audio/wav` | 自定义音频输入 |
 
-## Uploading from URL
+## 从 URL 上传
 
-If your asset is already hosted online:
+如果你的资源已经在线托管：
 
 ```typescript
 async function uploadFromUrl(sourceUrl: string, contentType: string): Promise<AssetUploadResponse["data"]> {
-  // 1. Validate and download the file
+  // 1. 验证并下载文件
   const url = new URL(sourceUrl);
   if (url.protocol !== "https:") {
-    throw new Error("Only HTTPS URLs are supported");
+    throw new Error("仅支持 HTTPS URL");
   }
   const sourceResponse = await fetch(sourceUrl);
   const buffer = Buffer.from(await sourceResponse.arrayBuffer());
 
-  // 2. Upload directly to HeyGen
+  // 2. 直接上传到 HeyGen
   const response = await fetch("https://upload.heygen.com/v1/asset", {
     method: "POST",
     headers: {
@@ -199,16 +199,16 @@ async function uploadFromUrl(sourceUrl: string, contentType: string): Promise<As
   const json: AssetUploadResponse = await response.json();
 
   if (json.code !== 100) {
-    throw new Error(json.message ?? "Upload failed");
+    throw new Error(json.message ?? "上传失败");
   }
 
   return json.data;
 }
 ```
 
-## Using Uploaded Assets
+## 使用已上传的资源
 
-### As Background Image
+### 作为背景图片
 
 ```typescript
 const videoConfig = {
@@ -221,19 +221,19 @@ const videoConfig = {
       },
       voice: {
         type: "text",
-        input_text: "Hello, this is a video with a custom background!",
+        input_text: "你好，这是带自定义背景的视频！",
         voice_id: "1bd001e7e50f421d891986aad5158bc8",
       },
       background: {
         type: "image",
-        url: asset.url,  // Use the URL from the upload response
+        url: asset.url,  // 使用上传响应中的 URL
       },
     },
   ],
 };
 ```
 
-### As Talking Photo Source
+### 作为说话照片源
 
 ```typescript
 const talkingPhotoConfig = {
@@ -241,11 +241,11 @@ const talkingPhotoConfig = {
     {
       character: {
         type: "talking_photo",
-        talking_photo_id: asset.id,  // Use the ID from the upload response
+        talking_photo_id: asset.id,  // 使用上传响应中的 ID
       },
       voice: {
         type: "text",
-        input_text: "Hello from my talking photo!",
+        input_text: "我的说话照片向大家问好！",
         voice_id: "1bd001e7e50f421d891986aad5158bc8",
       },
     },
@@ -253,7 +253,7 @@ const talkingPhotoConfig = {
 };
 ```
 
-### As Audio Input
+### 作为音频输入
 
 ```typescript
 const audioConfig = {
@@ -266,25 +266,25 @@ const audioConfig = {
       },
       voice: {
         type: "audio",
-        audio_url: asset.url,  // Use the URL from the upload response
+        audio_url: asset.url,  // 使用上传响应中的 URL
       },
     },
   ],
 };
 ```
 
-## Complete Upload Workflow
+## 完整上传工作流
 
 ```typescript
 async function createVideoWithCustomBackground(
   backgroundPath: string,
   script: string
 ): Promise<string> {
-  // 1. Upload background
-  console.log("Uploading background...");
+  // 1. 上传背景
+  console.log("上传背景...");
   const background = await uploadAsset(backgroundPath, "image/jpeg");
 
-  // 2. Create video config
+  // 2. 创建视频配置
   const config = {
     video_inputs: [
       {
@@ -307,8 +307,8 @@ async function createVideoWithCustomBackground(
     dimension: { width: 1920, height: 1080 },
   };
 
-  // 3. Generate video
-  console.log("Generating video...");
+  // 3. 生成视频
+  console.log("生成视频...");
   const response = await fetch("https://api.heygen.com/v2/video/generate", {
     method: "POST",
     headers: {
@@ -323,17 +323,17 @@ async function createVideoWithCustomBackground(
 }
 ```
 
-## Asset Limitations
+## 资源限制
 
-- **File size**: 10MB maximum
-- **Image dimensions**: Recommended to match video dimensions
-- **Audio duration**: Should match expected video length
-- **Retention**: Assets may be deleted after a period of inactivity
+- **文件大小**：最大 10MB
+- **图片尺寸**：建议匹配视频尺寸
+- **音频时长**：应与预期视频长度匹配
+- **保留期限**：长时间不活动的资源可能被删除
 
-## Best Practices
+## 最佳实践
 
-1. **Optimize images** - Resize to match video dimensions before uploading
-2. **Use appropriate formats** - JPEG for photos, PNG for graphics with transparency
-3. **Validate before upload** - Check file type and size locally first
-4. **Handle upload errors** - Implement retry logic for failed uploads
-5. **Cache asset IDs** - Reuse assets across multiple video generations
+1. **优化图片** - 在上传前将尺寸调整为匹配视频尺寸
+2. **使用合适的格式** - 照片用 JPEG，带透明度的图形用 PNG
+3. **上传前验证** - 先在本地检查文件类型和大小
+4. **处理上传错误** - 为上传失败实现重试逻辑
+5. **缓存资源 ID** - 在多次视频生成中复用资源

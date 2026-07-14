@@ -1,78 +1,78 @@
 ---
 name: hyperframes-core
-description: The HyperFrames composition contract — build one renderable project. Use for composition structure, the `data-*` timing attributes, `class="clip"`, tracks, sub-compositions, variables, framework-owned media playback, deterministic-render rules, and validation. Read before writing composition HTML.
+description: HyperFrames 合成契约 — 构建一个可渲染的项目。用于合成结构、`data-*` 时间属性、`class="clip"`、轨道、子合成、变量、框架拥有的媒体播放、确定性渲染规则和验证。在编写合成 HTML 之前阅读。
 ---
 
-# HyperFrames Core
+# HyperFrames 核心
 
-HyperFrames renders video from HTML. A composition is an HTML file whose DOM declares timing with `data-*` attributes, whose animation runtime is seekable, and whose media playback is owned by the framework.
+HyperFrames 从 HTML 渲染视频。合成是一个 HTML 文件，其 DOM 使用 `data-*` 属性声明时间，其动画运行时是可定位的，其媒体播放由框架拥有。
 
-This skill is the **technical contract** — how to build one hyperframes project. The body below is the build guide; per-topic detail lives in `references/` (index next), read on demand. Other concerns live in the sibling domain skills — `hyperframes-animation`, `hyperframes-creative`, `hyperframes-media`, `hyperframes-cli`, `hyperframes-registry`. The capability map in `/hyperframes` says what each one covers.
+此技能是**技术契约** — 如何构建一个 hyperframes 项目。以下正文是构建指南；每个主题的细节在 `references/` 中（索引如下），按需阅读。其他关注点在同级领域技能中 — `hyperframes-animation`、`hyperframes-creative`、`hyperframes-media`、`hyperframes-cli`、`hyperframes-registry`。`/hyperframes` 中的能力映射说明了每个技能涵盖的内容。
 
-## References
+## 参考
 
-| File                                 | Read it to…                                                                                       |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `references/minimal-composition.md`  | start from the smallest renderable composition skeleton                                           |
-| `references/composition-patterns.md` | choose monolithic vs modular; structure a modular `index.html`; pick a sub-comp archetype         |
-| `references/data-attributes.md`      | look up any `data-*` (root / clip / sub-comp host / legacy aliases); use `class="clip"`           |
-| `references/tracks-and-clips.md`     | pick `data-track-index`, handle same-track overlap / z-index, time a clip relative to another     |
-| `references/sub-compositions.md`     | wire a sub-composition (host attrs, `<template>`, per-instance vars) and animate inside it        |
-| `references/variables-and-media.md`  | declare variables; place `<video>`/`<audio>`, set volume, trim                                    |
-| `references/determinism-rules.md`    | build a seekable timeline; determinism bans; the animatable-property allowlist; layout / text fit |
-| `references/full-screen-motion.md`   | author full-frame motion with shared backgrounds                                                  |
-| `references/storyboard-format.md`    | author a `STORYBOARD.md` plan (+ the parsed manifest)                                             |
-| `references/script-format.md`        | author the optional `SCRIPT.md` locked narration                                                  |
-| `references/subagent-dispatch.md`    | map subagent dispatch verbs (parallel fan-out / background / wait) to your harness                |
-| `references/tailwind.md`             | work in a Tailwind v4 project (`init --tailwind`; runtime contract differs from Studio's v3)      |
+| 文件                                  | 阅读以…                                                                                   |
+| ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `references/minimal-composition.md`  | 从最小的可渲染合成骨架开始                                                                  |
+| `references/composition-patterns.md` | 选择整体式与模块化；组织模块化 `index.html`；选择子合成原型                                  |
+| `references/data-attributes.md`      | 查找任何 `data-*`（根/剪辑/子合成宿主/旧别名）；使用 `class="clip"`                         |
+| `references/tracks-and-clips.md`     | 选择 `data-track-index`，处理同轨道重叠/z-index，相对于另一个剪辑计时                        |
+| `references/sub-compositions.md`     | 连接子合成（宿主属性、`<template>`、实例变量）并在其中执行动画                               |
+| `references/variables-and-media.md`  | 声明变量；放置 `<video>`/`<audio>`、设置音量、修剪                                          |
+| `references/determinism-rules.md`    | 构建可定位的时间线；确定性禁止规则；可动画属性白名单；布局/文本适配                           |
+| `references/full-screen-motion.md`   | 使用共享背景创作全帧动画                                                                    |
+| `references/storyboard-format.md`    | 创作 `STORYBOARD.md` 计划（+ 解析后的清单）                                                 |
+| `references/script-format.md`        | 创作可选的 `SCRIPT.md` 锁定旁白                                                            |
+| `references/subagent-dispatch.md`    | 将子代理调度动词（并行展开/后台/等待）映射到你的框架                                         |
+| `references/tailwind.md`             | 在 Tailwind v4 项目中工作（`init --tailwind`；与 Studio 的 v3 运行时契约不同）               |
 
-For animation runtime specifics (GSAP API, Lottie, Three.js, etc.) go to `hyperframes-animation` → `adapters/<runtime>.md`.
+关于动画运行时细节（GSAP API、Lottie、Three.js 等），请查看 `hyperframes-animation` → `adapters/<runtime>.md`。
 
-## Building a composition
+## 构建合成
 
-### Two root forms (not interchangeable)
+### 两种根形式（不可互换）
 
-- **Standalone** (top-level `index.html`) — root `<div data-composition-id="…">` sits directly in `<body>`, **no `<template>` wrapper** (wrapping it hides all content and breaks rendering).
-- **Sub-composition** (loaded via `data-composition-src`) — root **must** be wrapped in `<template>`.
+- **独立**（顶层 `index.html`）— 根 `<div data-composition-id="…">` 直接放在 `<body>` 中，**无 `<template>` 包装器**（包装它会隐藏所有内容并破坏渲染）。
+- **子合成**（通过 `data-composition-src` 加载）— 根**必须**包装在 `<template>` 中。
 
-> ⚠ Transport rule: the runtime **only clones `<template>` contents**; everything outside (incl. `<head>` styles/scripts) is discarded — put `<style>`/`<script>` **inside** the template.
-> ⚠ Host-id rule: the host slot's `data-composition-id` must **exactly equal** the inner template's `data-composition-id` **and** the `window.__timelines["<id>"]` key — no `-mount`/`-slot`/`-host` suffix.
+> ⚠ 传输规则：运行时**仅克隆 `<template>` 内容**；外部的一切（包括 `<head>` 样式/脚本）都被丢弃 — 将 `<style>`/`<script>` 放在模板**内部**。
+> ⚠ 宿主 ID 规则：宿主插槽的 `data-composition-id` 必须**完全等于**内部模板的 `data-composition-id` **以及** `window.__timelines["<id>"]` 键 — 不允许有 `-mount`/`-slot`/`-host` 后缀。
 
-File shape, host wiring, and the pre-render checklist → `references/sub-compositions.md`.
+文件形状、宿主连接和渲染前检查清单 → `references/sub-compositions.md`。
 
-### Root must be sized (silent layout bug)
+### 根必须有尺寸（静默布局错误）
 
-The standalone root needs an explicit **sized box** (`width`/`height` in px), and every ancestor down to a `height:100%` element must have a resolved height — otherwise a flex/`100%` child collapses to ~0 and content piles into the top-left corner. `lint`/`validate`/`inspect` do **not** catch this. Skeleton → `references/minimal-composition.md`.
+独立根需要一个显式的**尺寸框**（`width`/`height` 以像素为单位），并且到 `height:100%` 元素的每个祖先都必须有解析的高度 — 否则 flex/`100%` 子元素会塌缩到 ~0，内容堆积到左上角。`lint`/`validate`/`inspect` 不会捕获此问题。骨架 → `references/minimal-composition.md`。
 
-### One paused timeline
+### 一个暂停的时间线
 
-Each composition registers **exactly one** `gsap.timeline({ paused: true })` at `window.__timelines["<id>"]` (key = root `data-composition-id`), built **synchronously** at page load. Render duration = root `data-duration`, not timeline length. Don't manually nest sub-timelines into the host. Full contract (incl. non-GSAP runtimes) → `references/determinism-rules.md` + `hyperframes-animation/adapters/`.
+每个合成在 `window.__timelines["<id>"]`（键 = 根 `data-composition-id`）处注册**恰好一个** `gsap.timeline({ paused: true })`，在页面加载时**同步**构建。渲染时长 = 根 `data-duration`，而非时间线长度。不要手动将子时间线嵌套到宿主中。完整契约（包括非 GSAP 运行时）→ `references/determinism-rules.md` + `hyperframes-animation/adapters/`。
 
-### Non-negotiable rules (silent bugs `lint`/`validate`/`inspect` won't catch)
+### 不可协商的规则（`lint`/`validate`/`inspect` 不会捕获的静默错误）
 
-Surfaced here; full rationale in the linked reference. Do not violate:
+在此列出；完整原理在链接的参考中。不要违反：
 
-- No render-time clocks / unseeded `Math.random` / network / input-state; no `repeat: -1` (use a finite count). → `determinism-rules.md`
-- Animate only the visual-property allowlist; never `display`/`visibility`; no `gsap.set` on later-scene clips. → `determinism-rules.md`
-- No `<br>` in body text; transformed elements must be block-level + sized; pulsing absolute decoratives need peak clearance. → `determinism-rules.md`
-- `<video>`/`<audio>` must be a **direct child of the host root** (never inside a sub-comp `<template>`/wrapper); the framework owns playback. → `variables-and-media.md`
-- Every `id` must be unique across the **assembled** page; inside a sub-comp, prefix ids with the composition id (`#<id>-hero`). Duplicate `<video>`/`<img>` ids render **blank** — the producer injects frames by `getElementById`, and cross-file dupes slip past `lint`. → `composition-patterns.md`
-- A full-screen scene fill goes on a full-bleed **child** (`position:absolute; inset:0`), never on the composition root itself — the producer's frame compositing can drop the root element's own `background` (the frame renders **black**) even though preview/`snapshot` show it correctly. → `composition-patterns.md`
+- 无运行时时钟 / 未播种的 `Math.random` / 网络 / 输入状态；无 `repeat: -1`（使用有限计数）。→ `determinism-rules.md`
+- 仅动画化视觉属性白名单；永远不要 `display`/`visibility`；不在后期场景剪辑上使用 `gsap.set`。→ `determinism-rules.md`
+- 正文中没有 `<br>`；变换后的元素必须是块级+有尺寸；脉冲式绝对定位装饰元素需要峰值间距。→ `determinism-rules.md`
+- `<video>`/`<audio>` 必须是宿主根的**直接子元素**（决不能放在子合成 `<template>`/包装器内部）；框架拥有播放控制。→ `variables-and-media.md`
+- 每个 `id` 必须在**组装后的**页面中唯一；在子合成内部，使用合成 ID 作为 id 前缀（`#<id>-hero`）。重复的 `<video>`/`<img>` id 会渲染为**空白** — 生产者通过 `getElementById` 注入帧，跨文件重复会绕过 `lint`。→ `composition-patterns.md`
+- 全屏场景填充应放在全出血的**子元素**上（`position:absolute; inset:0`），决不能放在合成本身上 — 生产者的帧合成可能会丢弃根元素自身的 `background`（帧渲染为**黑色**），即使预览/`snapshot` 显示正确。→ `composition-patterns.md`
 
-## Editing existing compositions
+## 编辑现有合成
 
-- Read the files first. Preserve unrelated timing, tracks, IDs, variables, media paths.
-- Match existing composition IDs and timeline keys.
-- Adding a clip: pick a non-overlapping `data-track-index` or adjust surrounding timing intentionally.
-- Adding a sub-composition: verify its internal `data-composition-id` before wiring the host.
+- 先阅读文件。保留不相关的时间、轨道、ID、变量、媒体路径。
+- 匹配现有的合成 ID 和时间线键。
+- 添加剪辑：选择不重叠的 `data-track-index` 或有意识地调整周围时间。
+- 添加子合成：在连接宿主之前验证其内部 `data-composition-id`。
 
-## Validation
+## 验证
 
-Use `hyperframes-cli` for command details
+使用 `hyperframes-cli` 获取命令详情
 
-- [ ] `npx hyperframes lint` passes (0 errors)
-- [ ] `npx hyperframes validate` passes (0 console errors)
-- [ ] `npx hyperframes inspect` passes (0 errors)
-- [ ] Projects with sub-compositions: `npx hyperframes snapshot --at <midpoints>` and eyeball each frame
-- [ ] `npx hyperframes preview` for review (the user can edit anything in Studio's timeline)
-- [ ] `npx hyperframes render` only after the user approves
+- [ ] `npx hyperframes lint` 通过（0 错误）
+- [ ] `npx hyperframes validate` 通过（0 控制台错误）
+- [ ] `npx hyperframes inspect` 通过（0 错误）
+- [ ] 带子合成的项目：`npx hyperframes snapshot --at <midpoints>` 并目视检查每个帧
+- [ ] `npx hyperframes preview` 用于审查（用户可以在 Studio 的时间线中编辑任何内容）
+- [ ] 仅当用户批准后运行 `npx hyperframes render`

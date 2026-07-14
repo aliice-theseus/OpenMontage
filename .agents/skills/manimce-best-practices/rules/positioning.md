@@ -1,23 +1,23 @@
 ---
 name: positioning
-description: move_to, next_to, align_to, shift and positioning methods
+description: move_to、next_to、align_to、shift 和定位方法
 metadata:
   tags: position, move_to, next_to, shift, align, layout
 ---
 
-# Positioning in Manim
+# Manim 中的定位
 
-Methods for placing and moving mobjects in the scene.
+用于在场景中放置和移动 mobject 的方法。
 
-## Coordinate System
+## 坐标系
 
-Manim uses a coordinate system where:
-- Origin (0, 0, 0) is at the center of the screen
-- X-axis: LEFT (-) to RIGHT (+)
-- Y-axis: DOWN (-) to UP (+)
-- Z-axis: IN (-) to OUT (+) (for 3D)
+Manim 使用以下坐标系：
+- 原点 (0, 0, 0) 位于屏幕中心
+- X轴：左 (-) 到右 (+)
+- Y轴：下 (-) 到上 (+)
+- Z轴：内 (-) 到外 (+)（用于3D）
 
-### Direction Constants
+### 方向常量
 ```python
 UP = np.array([0, 1, 0])
 DOWN = np.array([0, -1, 0])
@@ -25,16 +25,16 @@ LEFT = np.array([-1, 0, 0])
 RIGHT = np.array([1, 0, 0])
 ORIGIN = np.array([0, 0, 0])
 
-# Diagonals
-UL = UP + LEFT      # Upper left
-UR = UP + RIGHT     # Upper right
-DL = DOWN + LEFT    # Lower left
-DR = DOWN + RIGHT   # Lower right
+# 对角线
+UL = UP + LEFT      # 左上
+UR = UP + RIGHT     # 右上
+DL = DOWN + LEFT    # 左下
+DR = DOWN + RIGHT   # 右下
 ```
 
 ## move_to
 
-Move to an absolute position.
+移动到绝对位置。
 
 ```python
 from manim import *
@@ -43,43 +43,43 @@ class MoveToExample(Scene):
     def construct(self):
         circle = Circle()
 
-        # Move to origin
+        # 移动到原点
         circle.move_to(ORIGIN)
 
-        # Move to specific coordinates
+        # 移动到指定坐标
         circle.move_to(RIGHT * 2 + UP * 1)
 
-        # Move to another mobject's position
+        # 移动到另一个 mobject 的位置
         square = Square().shift(LEFT * 2)
         circle.move_to(square)
 
-        # Move to a specific point of another mobject
+        # 移动到另一个 mobject 的特定点
         circle.move_to(square.get_top())
 ```
 
 ## shift
 
-Move relative to current position.
+相对于当前位置移动。
 
 ```python
 class ShiftExample(Scene):
     def construct(self):
         circle = Circle()
 
-        # Shift in one direction
+        # 向一个方向移动
         circle.shift(RIGHT)
         circle.shift(UP * 2)
 
-        # Shift in multiple directions
+        # 向多个方向移动
         circle.shift(RIGHT * 2 + UP * 1)
 
-        # Chain shifts
+        # 链式移动
         circle.shift(LEFT).shift(DOWN)
 ```
 
 ## next_to
 
-Position relative to another mobject.
+相对于另一个 mobject 定位。
 
 ```python
 class NextToExample(Scene):
@@ -88,30 +88,30 @@ class NextToExample(Scene):
         circle = Circle()
         triangle = Triangle()
 
-        # Place circle to the right of square
+        # 将圆形放置在正方形的右侧
         circle.next_to(square, RIGHT)
 
-        # With buffer (spacing)
+        # 带间距缓冲区
         triangle.next_to(square, DOWN, buff=0.5)
 
-        # Aligned to specific edge
+        # 对齐到特定边缘
         circle.next_to(square, RIGHT, aligned_edge=UP)
 ```
 
-### buff Parameter
+### buff 参数
 ```python
-# Default buffer
-circle.next_to(square, RIGHT)  # Uses DEFAULT_MOBJECT_TO_MOBJECT_BUFFER
+# 默认间距
+circle.next_to(square, RIGHT)  # 使用 DEFAULT_MOBJECT_TO_MOBJECT_BUFFER
 
-# Custom buffer
-circle.next_to(square, RIGHT, buff=0)    # No gap
-circle.next_to(square, RIGHT, buff=1)    # 1 unit gap
-circle.next_to(square, RIGHT, buff=0.5)  # Half unit gap
+# 自定义间距
+circle.next_to(square, RIGHT, buff=0)    # 无间隙
+circle.next_to(square, RIGHT, buff=1)    # 1个单位间隙
+circle.next_to(square, RIGHT, buff=0.5)  # 半单位间隙
 ```
 
 ## align_to
 
-Align edges with another mobject.
+与另一个 mobject 的边缘对齐。
 
 ```python
 class AlignToExample(Scene):
@@ -119,36 +119,36 @@ class AlignToExample(Scene):
         square = Square().shift(LEFT)
         circle = Circle().shift(RIGHT)
 
-        # Align circle's left edge with square's left edge
+        # 将圆形的左边缘与正方形的左边缘对齐
         circle.align_to(square, LEFT)
 
-        # Align tops
+        # 对齐顶部
         circle.align_to(square, UP)
 
-        # Align to a point
+        # 对齐到某点
         circle.align_to(ORIGIN, DOWN)
 ```
 
-## Edge Methods
+## 边缘方法
 
-Position at screen edges.
+定位到屏幕边缘。
 
 ```python
 class EdgeExample(Scene):
     def construct(self):
-        # To screen edges
+        # 定位到屏幕边缘
         text1 = Text("Top").to_edge(UP)
         text2 = Text("Bottom").to_edge(DOWN)
         text3 = Text("Left").to_edge(LEFT)
         text4 = Text("Right").to_edge(RIGHT)
 
-        # With buffer
+        # 带间距
         text5 = Text("Buffered").to_edge(UP, buff=1)
 ```
 
-## Corner Methods
+## 角落方法
 
-Position at screen corners.
+定位到屏幕角落。
 
 ```python
 class CornerExample(Scene):
@@ -158,37 +158,37 @@ class CornerExample(Scene):
         t3 = Text("DL").to_corner(DL)
         t4 = Text("DR").to_corner(DR)
 
-        # With buffer
+        # 带间距
         t5 = Text("Buffered").to_corner(UL, buff=0.5)
 ```
 
-## center
+## 居中
 
-Center on screen or another mobject.
+在屏幕或另一个 mobject 中居中。
 
 ```python
-mobject.center()           # Center on screen
-mobject.center_on(other)   # Center on another mobject (custom helper)
+mobject.center()           # 在屏幕中居中
+mobject.center_on(other)   # 在另一个 mobject 上居中（自定义辅助方法）
 ```
 
-## Getting Positions
+## 获取位置
 
 ```python
 circle = Circle()
 
-# Get various points
-circle.get_center()        # Center point
-circle.get_top()           # Top edge center
-circle.get_bottom()        # Bottom edge center
-circle.get_left()          # Left edge center
-circle.get_right()         # Right edge center
-circle.get_corner(UL)      # Upper left corner
-circle.get_corner(DR)      # Lower right corner
-circle.get_start()         # Start of path
-circle.get_end()           # End of path
+# 获取各种位置点
+circle.get_center()        # 中心点
+circle.get_top()           # 顶部边缘中心
+circle.get_bottom()        # 底部边缘中心
+circle.get_left()          # 左侧边缘中心
+circle.get_right()         # 右侧边缘中心
+circle.get_corner(UL)      # 左上角
+circle.get_corner(DR)      # 右下角
+circle.get_start()         # 路径起点
+circle.get_end()           # 路径终点
 ```
 
-## Animated Positioning
+## 动画定位
 
 ```python
 class AnimatedPosition(Scene):
@@ -196,16 +196,16 @@ class AnimatedPosition(Scene):
         square = Square()
         self.add(square)
 
-        # Animate movement
+        # 动画移动
         self.play(square.animate.shift(RIGHT * 2))
         self.play(square.animate.move_to(UP * 2))
         self.play(square.animate.to_edge(LEFT))
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use next_to for relative positioning** - Maintains relationships
-2. **Use move_to for absolute positioning** - Precise coordinates
-3. **Use shift for relative adjustments** - Quick tweaks
-4. **Use to_edge/to_corner for screen positioning** - Responsive layouts
-5. **Adjust buff for visual spacing** - Don't let elements crowd
+1. **相对定位使用 next_to** - 保持关系
+2. **绝对定位使用 move_to** - 精确坐标
+3. **相对调整使用 shift** - 快速微调
+4. **屏幕定位使用 to_edge/to_corner** - 响应式布局
+5. **调整 buff 控制视觉间距** - 不要让元素拥挤

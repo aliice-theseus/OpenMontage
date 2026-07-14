@@ -1,45 +1,44 @@
-# Eval: how to validate a translation end-to-end
+# 评估：如何端到端验证翻译
 
-Every translation should be measured. The skill ships three scripts and
-a tiered test corpus that, together, gate translation quality.
+每次翻译都应该被度量。该技能附带三个脚本和一个分层测试语料库，共同把关翻译质量。
 
-## The three scripts
+## 三个脚本
 
-| Script                   | Input                       | Output                                                              |
-| ------------------------ | --------------------------- | ------------------------------------------------------------------- |
-| `scripts/lint_source.py` | Remotion source dir or file | JSON findings + exit code (0 clean, 1 has blockers)                 |
-| `scripts/render_diff.sh` | two MP4 paths               | per-frame SSIM + JSON summary (`mean`, `min`, `p05`, `p95`, `pass`) |
-| `scripts/frame_strip.sh` | two MP4 paths               | side-by-side comparison strip PNG for visual debugging              |
+| 脚本                     | 输入                           | 输出                                                                   |
+| ------------------------ | ------------------------------ | ---------------------------------------------------------------------- |
+| `scripts/lint_source.py` | Remotion 源码目录或文件         | JSON 结果 + 退出码（0 干净, 1 有阻断器）                                |
+| `scripts/render_diff.sh` | 两个 MP4 路径                  | 逐帧 SSIM + JSON 摘要（`mean`、`min`、`p05`、`p95`、`pass`）           |
+| `scripts/frame_strip.sh` | 两个 MP4 路径                  | 并排对比条 PNG，用于可视化调试                                           |
 
-Run them in this order: **lint → render → diff → (if fail) strip**.
+按此顺序运行：**lint → render → diff →（如果失败）strip**。
 
-## Per-fixture flow
+## 每个测试用例流程
 
 ```bash
-# 1. Lint the source — blockers mean stop
+# 1. 检查源码 — 阻断器表示停止
 python3 ../../scripts/lint_source.py ./remotion-src/src/
 
-# 2. Generate any binary assets (T2+T3 only)
+# 2. 生成任何二进制资源（仅 T2+T3）
 [ -f setup.sh ] && ./setup.sh
 
-# 3. Render Remotion baseline
+# 3. 渲染 Remotion 基线
 cd remotion-src && npm install && npm run render
 # -> remotion-src/out/baseline.mp4
 
-# 4. Render HF translation
+# 4. 渲染 HF 翻译
 cd .. && node ../../../packages/cli/dist/cli.js render hf-src/ --output hf.mp4
 # -> hf.mp4
 
-# 5. SSIM diff
+# 5. SSIM 差异比较
 ../../scripts/render_diff.sh ./remotion-src/out/baseline.mp4 ./hf.mp4 ./diff
 # -> diff/summary.json
 
-# 6. If diff fails, generate frame strip for visual inspection
+# 6. 如果差异比较失败，生成帧条用于视觉检查
 ../../scripts/frame_strip.sh ./remotion-src/out/baseline.mp4 ./hf.mp4 ./strip 8
 # -> strip/strip.png
 ```
 
-## Reading `diff/summary.json`
+## 读取 `diff/summary.json`
 
 ```json
 {
@@ -54,87 +53,67 @@ cd .. && node ../../../packages/cli/dist/cli.js render hf-src/ --output hf.mp4
 }
 ```
 
-| Field         | What it tells you                                                           |
-| ------------- | --------------------------------------------------------------------------- |
-| `mean`        | average SSIM across all frames; the headline number                         |
-| `min`         | worst frame; below threshold means at least one frame is structurally wrong |
-| `p05` / `p95` | 5th / 95th percentile — most frames sit between these                       |
-| `threshold`   | from `R2HF_SSIM_THRESHOLD` env var (default 0.85)                           |
-| `pass`        | whether `mean >= threshold`                                                 |
+| 字段           | 含义                                                                       |
+| -------------- | -------------------------------------------------------------------------- |
+| `mean`         | 所有帧的平均 SSIM；核心指标                                                  |
+| `min`          | 最差帧；低于阈值表示至少有一帧存在结构性错误                                   |
+| `p05` / `p95`  | 第 5 / 第 95 百分位 — 大多数帧落在此范围内                                    |
+| `threshold`    | 来自 `R2HF_SSIM_THRESHOLD` 环境变量（默认 0.85）                             |
+| `pass`         | `mean >= threshold` 是否成立                                                 |
 
-## Validated tier thresholds
+## 已验证的分层阈值
 
-Calibrated against actual Remotion + HF renders:
+针对实际的 Remotion + HF 渲染进行校准：
 
-| Tier | Composition shape                           | Mean  | Threshold | Margin |
-| ---- | ------------------------------------------- | ----- | --------- | ------ |
-| T1   | single-element fade-in                      | 0.974 | 0.95      | +0.022 |
-| T2   | multi-scene + spring + audio + image        | 0.985 | 0.95      | +0.016 |
-| T3   | data-driven, custom subcomponents, count-up | 0.953 | 0.90      | +0.038 |
+| 层级 | 合成形状                               | 平均 SSIM | 阈值    | 余量     |
+| ---- | -------------------------------------- | --------- | ------- | ------ |
+| T1   | 单元素淡入                             | 0.974     | 0.95    | +0.022 |
+| T2   | 多场景 + spring + 音频 + 图片          | 0.985     | 0.95    | +0.016 |
+| T3   | 数据驱动、自定义子组件、计数动画         | 0.953     | 0.90    | +0.038 |
 
-Each fixture's `expected.json` carries:
+每个测试用例的 `expected.json` 包含：
 
-- `ssim_threshold` — the gate for `pass`
-- `validation` — the actual measured numbers from the calibration run
-- `translation_notes` — what's lossy and why
+- `ssim_threshold` — `pass` 的阈值门限
+- `validation` — 校准运行的实际测量数据
+- `translation_notes` — 有损部分及原因
 
-## Critical: encoder config
+## 关键：编码器配置
 
-Both Remotion and HF must output the same pixel format for SSIM to be
-meaningful. Remotion's default JPEG output writes `yuvj420p` (full-range);
-HF outputs `yuv420p` (limited-range). The mismatch costs ~0.05 SSIM.
+Remotion 和 HF 必须输出相同的像素格式，SSIM 才有意义。Remotion 的默认 JPEG 输出写入 `yuvj420p`（全范围）；HF 输出 `yuv420p`（有限范围）。这种不匹配会导致约 ~0.05 SSIM 的损失。
 
-Every fixture's `remotion.config.ts` sets:
+每个测试用例的 `remotion.config.ts` 设置：
 
 ```ts
 Config.setVideoImageFormat("png");
 Config.setColorSpace("bt709");
 ```
 
-If the user's source doesn't have these, add them in the translation
-step — otherwise the diff measures encoder differences, not translation
-fidelity.
+如果用户的源码没有这些设置，在翻译步骤中添加它们 — 否则差异比较测量的是编码器差异，而非翻译保真度。
 
-## What the noise floor looks like
+## 噪声基底的表现
 
-The dominant non-translation noise is **system font fallback divergence**.
-Remotion's bundled Chromium and HF's `chrome-headless-shell` interpret
-`font-weight: 800` differently when there's no real font installed:
+主要的非翻译噪声是**系统字体回退差异**。Remotion 捆绑的 Chromium 和 HF 的 `chrome-headless-shell` 在没有安装真实字体时对 `font-weight: 800` 的解释不同：
 
-- Remotion HELLO at 160px: medium-weight stroke
-- HF HELLO at 160px: heavy-weight stroke
+- Remotion 中 160px 的 HELLO：中等粗细笔画
+- HF 中 160px 的 HELLO：粗笔画
 
-This costs ~0.025 mean SSIM. Visible in T1's frame strip.
-[fonts.md](fonts.md) covers how to mitigate (use Inter, load explicit
-Google Fonts).
+这造成约 ~0.025 的平均 SSIM 损失。在 T1 的帧条中可见。[fonts.md](fonts.md) 介绍了如何缓解（使用 Inter、加载显式的 Google Fonts）。
 
-## Threshold rule of thumb
+## 阈值经验法则
 
-Set the threshold ~0.02 below measured `p05`:
+将阈值设置在测量的 `p05` 以下约 ~0.02：
 
-- Real translation regressions drop mean by 0.05+ — caught.
-- Encoder/font drift between CI runs is bounded at ~0.01 — not caught.
+- 真正的翻译回归会导致均值下降 0.05 以上 — 会被捕获。
+- CI 运行间的编码器/字体漂移被限制在约 ~0.01 — 不会被捕获。
 
-If a calibration run's measured mean is far above your initial threshold
-guess, _don't_ tighten the threshold to fit. Leave headroom — fixtures
-re-rendered on different hardware will drift.
+如果校准运行测量的均值远高于你最初的阈值猜测，_不要_收紧阈值来拟合。留出余量 — 在不同硬件上重新渲染的测试用例会发生漂移。
 
-## When the diff fails
+## 当差异比较失败时
 
-1. **Look at `frame_strip.sh` output first.** A side-by-side strip at 6–10
-   evenly-spaced timestamps shows whether the failure is structural
-   (wrong scene durations, missing element) or cosmetic (different font
-   weight, slight timing skew).
-2. **Check `diff/ssim.log`.** Per-frame SSIM tells you _which_ frames
-   failed. Cluster of bad frames in the middle of a scene = animation
-   problem; bad frames at scene boundaries = sequencing problem.
-3. **Re-read the relevant reference.** [timing.md](timing.md) for
-   spring/easing issues, [sequencing.md](sequencing.md) for scene
-   boundary issues, [media.md](media.md) for asset loading issues.
+1. **首先查看 `frame_strip.sh` 的输出。** 6–10 个均匀间隔时间戳的并排对比条可以显示失败是结构性的（错误的场景时长、缺少元素）还是外观性的（不同的字体粗细、轻微的时间偏差）。
+2. **检查 `diff/ssim.log`。** 逐帧 SSIM 告诉你_哪些_帧失败了。场景中间的不良帧簇 = 动画问题；场景边界的不良帧 = 序列问题。
+3. **重新阅读相关参考。** 弹簧/缓动问题参见 [timing.md](timing.md)，场景边界问题参见 [sequencing.md](sequencing.md)，资源加载问题参见 [media.md](media.md)。
 
-## CI integration
+## CI 集成
 
-The fixtures are not yet wired into CI (`packages/producer/tests/` runs
-inside Docker; the skill corpus needs the same). PR 7 of the stack adds
-the orchestrator that runs all four tiers and emits an aggregated pass
-report. For now, evaluate by hand per fixture.
+这些测试用例尚未接入 CI（`packages/producer/tests/` 在 Docker 内运行；技能语料库需要同样的环境）。PR 7 添加了运行所有四个层级并输出聚合通过报告的组织器。目前，手动评估每个测试用例。

@@ -1,24 +1,24 @@
 ---
 name: playwright-recording
-description: Record browser interactions as video using Playwright. Use for capturing demo videos, app walkthroughs, and UI flows for Remotion videos. Triggers include recording a demo, capturing browser video, screen recording a website, or creating walkthrough footage.
+description: 使用 Playwright 将浏览器交互录制为视频。用于捕获演示视频、应用导览和为 Remotion 视频准备的 UI 流程。触发条件包括录制演示、捕获浏览器视频、屏幕录制网站或创建导览素材。
 ---
 
-# Playwright Video Recording
+# Playwright 视频录制
 
-Playwright can record browser interactions as video - perfect for demo footage in Remotion compositions.
+Playwright 可以将浏览器交互录制为视频——非常适合 Remotion 合成中的演示素材。
 
-## Quick Start
+## 快速入门
 
-### Installation
+### 安装
 
 ```bash
-# In your video project
+# 在您的视频项目中
 npm init -y
 npm install -D playwright @playwright/test
 npx playwright install chromium
 ```
 
-### Basic Recording Script
+### 基本录制脚本
 
 ```typescript
 // scripts/record-demo.ts
@@ -36,13 +36,13 @@ async function recordDemo() {
 
   const page = await context.newPage();
 
-  // Your recording actions
+  // 您的录制操作
   await page.goto('https://example.com');
   await page.waitForTimeout(2000);
   await page.click('button.demo');
   await page.waitForTimeout(3000);
 
-  // Close to save video
+  // 关闭以保存视频
   await context.close();
   await browser.close();
 
@@ -52,53 +52,53 @@ async function recordDemo() {
 recordDemo();
 ```
 
-Run with:
+用以下命令运行：
 ```bash
 npx ts-node scripts/record-demo.ts
-# or
+# 或
 npx tsx scripts/record-demo.ts
 ```
 
-## Recording Configuration
+## 录制配置
 
-### Viewport Sizes
+### 视口大小
 
 ```typescript
-// Standard 1080p (recommended for Remotion)
+// 标准 1080p（推荐用于 Remotion）
 viewport: { width: 1920, height: 1080 }
 
-// 720p (smaller files)
+// 720p（较小文件）
 viewport: { width: 1280, height: 720 }
 
-// Square (social media)
+// 正方形（社交媒体）
 viewport: { width: 1080, height: 1080 }
 
-// Mobile
+// 移动端
 viewport: { width: 390, height: 844 } // iPhone 14
 ```
 
-### Video Quality Settings
+### 视频质量设置
 
 ```typescript
 const context = await browser.newContext({
   viewport: { width: 1920, height: 1080 },
   recordVideo: {
     dir: './recordings',
-    size: { width: 1920, height: 1080 } // Match viewport for crisp output
+    size: { width: 1920, height: 1080 } // 匹配视口以获得清晰输出
   },
-  // Slow down for visibility
-  // Note: slowMo is on browser launch, not context
+  // 减速以便可见
+  // 注意：slowMo 在浏览器启动时，不在上下文中
 });
 
-// For slow motion, launch browser with slowMo
+// 对于慢动作，使用 slowMo 启动浏览器
 const browser = await chromium.launch({
-  slowMo: 100 // 100ms delay between actions
+  slowMo: 100 // 操作间 100ms 延迟
 });
 ```
 
-## Recording Patterns
+## 录制模式
 
-### Form Submission Demo
+### 表单提交演示
 
 ```typescript
 import { chromium } from 'playwright';
@@ -114,17 +114,17 @@ async function recordFormDemo() {
   await page.goto('https://myapp.com/form');
   await page.waitForTimeout(1000);
 
-  // Type with realistic speed
+  // 以真实速度输入
   await page.fill('#name', 'John Smith', { timeout: 5000 });
   await page.waitForTimeout(500);
 
   await page.fill('#email', 'john@example.com');
   await page.waitForTimeout(500);
 
-  // Click submit
+  // 点击提交
   await page.click('button[type="submit"]');
 
-  // Wait for result
+  // 等待结果
   await page.waitForSelector('.success-message');
   await page.waitForTimeout(2000);
 
@@ -133,7 +133,7 @@ async function recordFormDemo() {
 }
 ```
 
-### Multi-Page Navigation
+### 多页面导航
 
 ```typescript
 async function recordNavDemo() {
@@ -144,16 +144,16 @@ async function recordNavDemo() {
   });
   const page = await context.newPage();
 
-  // Page 1
+  // 页面 1
   await page.goto('https://myapp.com');
   await page.waitForTimeout(2000);
 
-  // Navigate to page 2
+  // 导航到页面 2
   await page.click('nav a[href="/features"]');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(2000);
 
-  // Navigate to page 3
+  // 导航到页面 3
   await page.click('nav a[href="/pricing"]');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(2000);
@@ -163,7 +163,7 @@ async function recordNavDemo() {
 }
 ```
 
-### Scroll Demo
+### 滚动演示
 
 ```typescript
 async function recordScrollDemo() {
@@ -177,7 +177,7 @@ async function recordScrollDemo() {
   await page.goto('https://myapp.com/long-page');
   await page.waitForTimeout(1000);
 
-  // Smooth scroll
+  // 平滑滚动
   await page.evaluate(async () => {
     const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
     for (let i = 0; i < 10; i++) {
@@ -192,7 +192,7 @@ async function recordScrollDemo() {
 }
 ```
 
-### Login Flow
+### 登录流程
 
 ```typescript
 async function recordLoginDemo() {
@@ -214,7 +214,7 @@ async function recordLoginDemo() {
 
   await page.click('button[type="submit"]');
 
-  // Wait for dashboard
+  // 等待仪表板
   await page.waitForURL('**/dashboard');
   await page.waitForTimeout(3000);
 
@@ -223,14 +223,14 @@ async function recordLoginDemo() {
 }
 ```
 
-## Cursor Highlighting
+## 光标高亮
 
-Playwright doesn't show cursor by default. Add visual indicators:
+Playwright 默认不显示光标。添加视觉指示器：
 
-### CSS Cursor Highlight
+### CSS 光标高亮
 
 ```typescript
-// Inject cursor visualization
+// 注入光标可视化
 await page.addStyleTag({
   content: `
     * { cursor: none !important; }
@@ -253,7 +253,7 @@ await page.addStyleTag({
   `
 });
 
-// Add cursor element
+// 添加光标元素
 await page.evaluate(() => {
   const cursor = document.createElement('div');
   cursor.className = 'playwright-cursor';
@@ -269,10 +269,10 @@ await page.evaluate(() => {
 });
 ```
 
-### Click Ripple Effect
+### 点击涟漪效果
 
 ```typescript
-// Add click ripple visualization
+// 添加点击涟漪可视化
 await page.addStyleTag({
   content: `
     .click-ripple {
@@ -295,7 +295,7 @@ await page.addStyleTag({
   `
 });
 
-// Custom click function with ripple
+// 带涟漪的自定义点击函数
 async function clickWithRipple(page, selector) {
   const element = await page.locator(selector);
   const box = await element.boundingBox();
@@ -313,9 +313,9 @@ async function clickWithRipple(page, selector) {
 }
 ```
 
-## Output for Remotion
+## 为 Remotion 输出
 
-### Move Recording to public/demos/
+### 将录制移动到 public/demos/
 
 ```typescript
 import { chromium } from 'playwright';
@@ -330,11 +330,11 @@ async function recordForRemotion(outputName: string) {
   });
   const page = await context.newPage();
 
-  // ... recording actions ...
+  // ... 录制操作 ...
 
   await context.close();
 
-  // Get the video path
+  // 获取视频路径
   const video = page.video();
   const videoPath = await video?.path();
 
@@ -344,28 +344,28 @@ async function recordForRemotion(outputName: string) {
     fs.renameSync(videoPath, destPath);
     console.log(`Recording saved to: ${destPath}`);
 
-    // Get duration for config
-    // Use ffprobe: ffprobe -v error -show_entries format=duration -of csv=p=0 file.webm
+    // 获取时长用于配置
+    // 使用 ffprobe：ffprobe -v error -show_entries format=duration -of csv=p=0 file.webm
   }
 
   await browser.close();
 }
 ```
 
-### Convert WebM to MP4
+### 将 WebM 转换为 MP4
 
-Playwright outputs WebM. Convert for better Remotion compatibility:
+Playwright 输出 WebM。转换为更好的 Remotion 兼容性：
 
 ```bash
 ffmpeg -i recording.webm -c:v libx264 -crf 20 -preset medium -movflags faststart public/demos/demo.mp4
 ```
 
-## Interactive Recording
+## 交互式录制
 
-For user-driven recordings where you manually perform actions:
+对于用户驱动的录制（您手动执行操作）：
 
 ```typescript
-// Inject ESC key listener to stop recording
+// 注入 ESC 键监听器以停止录制
 async function injectStopListener(page: Page): Promise<void> {
   await page.evaluate(() => {
     if ((window as any).__escListenerAdded) return;
@@ -380,26 +380,26 @@ async function injectStopListener(page: Page): Promise<void> {
   });
 }
 
-// Poll for stop signal - handle navigation errors gracefully
+// 轮询停止信号 - 优雅处理导航错误
 while (!stopped) {
   try {
     const shouldStop = await page.evaluate(() => (window as any).__stopRecording === true);
     if (shouldStop) break;
   } catch {
-    // Page navigating - continue recording
+    // 页面导航中 - 继续录制
   }
   await new Promise(r => setTimeout(r, 200));
 }
 ```
 
-**Key insight:** `page.evaluate()` throws during navigation. Use try/catch and continue - don't treat errors as stop signals.
+**关键要点：** `page.evaluate()` 在导航期间会抛出异常。使用 try/catch 并继续——不要将错误视为停止信号。
 
-## Window Scaling for Laptops
+## 笔记本电脑窗口缩放
 
-Record at full 1080p while showing a smaller window:
+在全 1080p 录制同时显示较小窗口：
 
 ```typescript
-const scale = 0.75; // 75% window size
+const scale = 0.75; // 75% 窗口大小
 const context = await browser.newContext({
   viewport: { width: 1920 * scale, height: 1080 * scale },
   deviceScaleFactor: 1 / scale,
@@ -407,9 +407,9 @@ const context = await browser.newContext({
 });
 ```
 
-## Cookie Banner Dismissal
+## Cookie 横幅关闭
 
-Comprehensive selector list for common consent platforms:
+常见同意平台的全面选择器列表：
 
 ```typescript
 const COOKIE_SELECTORS = [
@@ -432,38 +432,38 @@ async function dismissCookieBanners(page: Page): Promise<void> {
         await btn.click({ timeout: 500 });
         return;
       }
-    } catch { /* try next */ }
+    } catch { /* 尝试下一个 */ }
   }
 }
 ```
 
-Call after `page.goto()` and on `page.on('load')` for navigation.
+在 `page.goto()` 之后以及 `page.on('load')` 导航时调用。
 
-## Important: Injected Elements Appear in Video
+## 重要：注入的元素会出现在视频中
 
-**Warning:** Any DOM elements you inject (cursors, control panels, overlays) will be recorded. For UI-free recordings, use terminal-based controls only (Ctrl+C, max duration timer).
+**警告：** 您注入的任何 DOM 元素（光标、控制面板、叠加层）都会被录制。对于无 UI 的录制，仅使用基于终端的控制（Ctrl+C、最大时长计时器）。
 
-## Tips for Good Demo Recordings
+## 优质演示录制技巧
 
-1. **Use slowMo** - 50-100ms makes actions visible
-2. **Add waitForTimeout** - Pause between actions for comprehension
-3. **Wait for animations** - Use `waitForLoadState('networkidle')`
-4. **Match Remotion dimensions** - 1920x1080 at 30fps typical
-5. **Test without recording first** - Debug before final capture
-6. **Clear browser state** - Use fresh context for clean demos
-7. **Dismiss cookie banners** - Use comprehensive selector list above
-8. **Re-inject on navigation** - Cursor/listeners reset on page load
+1. **使用 slowMo** - 50-100ms 使操作可见
+2. **添加 waitForTimeout** - 操作间暂停以便理解
+3. **等待动画** - 使用 `waitForLoadState('networkidle')`
+4. **匹配 Remotion 尺寸** - 通常 1920x1080 30fps
+5. **先不录制测试** - 在最终捕获前调试
+6. **清除浏览器状态** - 为新演示使用全新上下文
+7. **关闭 Cookie 横幅** - 使用上面的综合选择器列表
+8. **导航后重新注入** - 光标/监听器在页面加载时重置
 
 ---
 
-## Feedback & Contributions
+## 反馈与贡献
 
-If this skill is missing information or could be improved:
+如果此技能缺少信息或可以改进：
 
-- **Missing a pattern?** Describe what you needed
-- **Found an error?** Let me know what's wrong
-- **Want to contribute?** I can help you:
-  1. Update this skill with improvements
-  2. Create a PR to github.com/digitalsamba/claude-code-video-toolkit
+- **缺少模式？** 描述您需要的内容
+- **发现错误？** 告诉我哪里有问题
+- **想要贡献？** 我可以帮助您：
+  1. 用改进更新此技能
+  2. 向 github.com/digitalsamba/claude-code-video-toolkit 创建 PR
 
-Just say "improve this skill" and I'll guide you through updating `.claude/skills/playwright-recording/SKILL.md`.
+只需说"improve this skill"，我将引导您更新 `.claude/skills/playwright-recording/SKILL.md`。

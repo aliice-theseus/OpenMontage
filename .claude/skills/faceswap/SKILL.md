@@ -1,7 +1,7 @@
 ---
 name: faceswap
 description: |
-  Swap faces in a video using AI via the HeyGen API. Use when: (1) Replacing a face in a video with another face, (2) Face swapping from a source image onto a target video, (3) Creating personalized videos by swapping in a person's face, (4) Working with HeyGen's /v1/workflows/executions endpoint for face swap processing.
+  使用 AI 通过 HeyGen API 在视频中换脸。在以下情况下使用：(1) 用另一张脸替换视频中的脸，(2) 从源图片将脸换到目标视频上，(3) 通过换入某人的脸来创建个性化视频，(4) 使用 HeyGen 的 /v1/workflows/executions 端点进行换脸处理。
 allowed-tools: mcp__heygen__*
 metadata:
   openclaw:
@@ -11,13 +11,13 @@ metadata:
     primaryEnv: HEYGEN_API_KEY
 ---
 
-# Face Swap (HeyGen API)
+# 换脸（HeyGen API）
 
-Swap a face from a source image into a target video using GPU-accelerated AI processing. The source image provides the face to swap in, and the target video receives the new face.
+使用 GPU 加速的 AI 处理，将源图片中的脸换到目标视频中。源图片提供要换入的脸，目标视频接收新脸。
 
-## Authentication
+## 认证
 
-All requests require the `X-Api-Key` header. Set the `HEYGEN_API_KEY` environment variable.
+所有请求都需要 `X-Api-Key` 头。设置 `HEYGEN_API_KEY` 环境变量。
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/workflows/executions" \
@@ -26,26 +26,26 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
   -d '{"workflow_type": "FaceswapNode", "input": {"source_image_url": "https://example.com/face.jpg", "target_video_url": "https://example.com/video.mp4"}}'
 ```
 
-## Default Workflow
+## 默认工作流
 
-1. Call `POST /v1/workflows/executions` with `workflow_type: "FaceswapNode"`, a source face image, and a target video
-2. Receive a `execution_id` in the response
-3. Poll `GET /v1/workflows/executions/{id}` every 10 seconds until status is `completed`
-4. Use the returned `video_url` from the output
+1. 调用 `POST /v1/workflows/executions`，使用 `workflow_type: "FaceswapNode"`、源脸部图片和目标视频
+2. 在响应中收到 `execution_id`
+3. 每 10 秒轮询 `GET /v1/workflows/executions/{id}`，直到状态为 `completed`
+4. 使用输出中返回的 `video_url`
 
-## Execute Face Swap
+## 执行换脸
 
-### Endpoint
+### 端点
 
 `POST https://api.heygen.com/v1/workflows/executions`
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `workflow_type` | string | Y | Must be `"FaceswapNode"` |
-| `input.source_image_url` | string | Y | URL of the face image to swap in |
-| `input.target_video_url` | string | Y | URL of the video to apply the face swap to |
+| `workflow_type` | string | Y | 必须为 `"FaceswapNode"` |
+| `input.source_image_url` | string | Y | 要换入的脸部图片 URL |
+| `input.target_video_url` | string | Y | 要应用换脸的视频 URL |
 
 ### curl
 
@@ -123,7 +123,7 @@ def faceswap(source_image_url: str, target_video_url: str) -> str:
     return data["data"]["execution_id"]
 ```
 
-### Response Format
+### 响应格式
 
 ```json
 {
@@ -134,9 +134,9 @@ def faceswap(source_image_url: str, target_video_url: str) -> str:
 }
 ```
 
-## Check Status
+## 检查状态
 
-### Endpoint
+### 端点
 
 `GET https://api.heygen.com/v1/workflows/executions/{execution_id}`
 
@@ -147,7 +147,7 @@ curl -X GET "https://api.heygen.com/v1/workflows/executions/node-gw-f1s2w3p4" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-### Response Format (Completed)
+### 响应格式（已完成）
 
 ```json
 {
@@ -161,7 +161,7 @@ curl -X GET "https://api.heygen.com/v1/workflows/executions/node-gw-f1s2w3p4" \
 }
 ```
 
-## Polling for Completion
+## 轮询完成
 
 ```typescript
 async function faceswapAndWait(
@@ -170,7 +170,7 @@ async function faceswapAndWait(
   pollIntervalMs = 10000
 ): Promise<string> {
   const executionId = await faceswap(input);
-  console.log(`Submitted face swap: ${executionId}`);
+  console.log(`已提交换脸: ${executionId}`);
 
   const startTime = Date.now();
   while (Date.now() - startTime < maxWaitMs) {
@@ -184,21 +184,21 @@ async function faceswapAndWait(
       case "completed":
         return data.output.video_url;
       case "failed":
-        throw new Error(data.error?.message || "Face swap failed");
+        throw new Error(data.error?.message || "换脸失败");
       case "not_found":
-        throw new Error("Workflow not found");
+        throw new Error("工作流未找到");
       default:
         await new Promise((r) => setTimeout(r, pollIntervalMs));
     }
   }
 
-  throw new Error("Face swap timed out");
+  throw new Error("换脸超时");
 }
 ```
 
-## Usage Examples
+## 使用示例
 
-### Basic Face Swap
+### 基础换脸
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/workflows/executions" \
@@ -213,14 +213,14 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
   }'
 ```
 
-### Chain with Avatar Video
+### 与 Avatar 视频链式使用
 
-Generate an avatar video first, then swap in a custom face:
+先生成 Avatar 视频，然后换入自定义脸部：
 
 ```python
 import time
 
-# Step 1: Generate avatar video
+# 步骤 1：生成 Avatar 视频
 avatar_execution_id = requests.post(
     "https://api.heygen.com/v1/workflows/executions",
     headers={"X-Api-Key": os.environ["HEYGEN_API_KEY"], "Content-Type": "application/json"},
@@ -233,7 +233,7 @@ avatar_execution_id = requests.post(
     },
 ).json()["data"]["execution_id"]
 
-# Step 2: Wait for avatar video to complete
+# 步骤 2：等待 Avatar 视频完成
 while True:
     status = requests.get(
         f"https://api.heygen.com/v1/workflows/executions/{avatar_execution_id}",
@@ -244,18 +244,18 @@ while True:
         break
     time.sleep(10)
 
-# Step 3: Swap in a custom face
+# 步骤 3：换入自定义脸部
 faceswap_execution_id = faceswap(
     source_image_url="https://example.com/custom-face.jpg",
     target_video_url=avatar_video_url,
 )
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use a clear, front-facing face photo** — the source image should show a single face with good lighting
-2. **Face swap is GPU-intensive** — expect 1-3 minutes processing time, poll every 10 seconds
-3. **Source image quality matters** — higher resolution face photos produce better results
-4. **One face per source image** — the source should contain exactly one face to swap in
-5. **Works with any video** — the target video can be an avatar video, a recording, or any video with visible faces
-6. **Chain with other workflows** — generate an avatar video first, then swap in a custom face for personalization
+1. **使用清晰、正面的脸部照片** — 源图片应显示单张脸部，光线良好
+2. **换脸是 GPU 密集型的** — 预计 1-3 分钟处理时间，每 10 秒轮询一次
+3. **源图片质量很重要** — 更高分辨率的脸部照片产生更好的效果
+4. **每张源图片一张脸** — 源图片应恰好包含一张要换入的脸
+5. **适用于任何视频** — 目标视频可以是 Avatar 视频、录制品或任何包含可见脸部的视频
+6. **与其他工作流链式使用** — 先生成 Avatar 视频，然后换入自定义脸部进行个性化

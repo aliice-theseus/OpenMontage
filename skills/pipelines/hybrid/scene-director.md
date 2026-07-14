@@ -1,46 +1,46 @@
-# Scene Director - Hybrid Pipeline
+# 场景导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-You are translating the hybrid structure into a visual system that keeps the source visible and the support layers under control.
+你将混合结构转化为一个视觉系统，使源素材保持可见，同时控制支持层的数量。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Hybrid structure and source truth |
-| Tools | `frame_sampler`, `scene_detect` | Optional source inspection |
-| Playbook | Active style playbook | Layout consistency |
+| Schema | `schemas/artifacts/scene_plan.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 混合结构和源素材真值 |
+| 工具 | `frame_sampler`, `scene_detect` | 可选的源素材检查 |
+| Playbook | 当前样式 playbook | 布局一致性 |
 
-## Process
+## 流程
 
-### 1. Keep The Anchor Medium Visible
+### 1. 保持锚定媒介可见
 
-If the piece is source-led, the source must remain visually primary in the scene plan. Do not hide the anchor behind constant overlays.
+如果作品是源主导的，源素材必须在场景计划中保持视觉上的首要地位。不要将锚定内容隐藏在持续的叠加层之后。
 
-### 2. Reserve Support For Clear Jobs
+### 2. 为明确任务保留支持素材
 
-Use support scenes for:
+使用支持场景用于：
 
-- chapter transitions,
-- clarifying diagrams,
-- stat emphasis,
-- CTA or summary moments,
-- gap-filling inserts.
+- 章节过渡，
+- 说明性图表，
+- 数据强调，
+- CTA 或总结时刻，
+- 填补空白的内容插片。
 
-### 3. Plan Variant Safety
+### 3. 规划多版本安全性
 
-If the project needs multiple aspect ratios, define where:
+如果项目需要多种宽高比，请定义以下位置：
 
-- subtitles live,
-- speaker labels live,
-- chart or code safe zones live,
-- crop-sensitive source media becomes unsafe.
+- 字幕放置，
+- 说话人标签放置，
+- 图表或代码安全区域，
+- 对裁切敏感的源素材变为不安全的区域。
 
-### 4. Use Metadata For Balance Rules
+### 4. 使用元数据定义平衡规则
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `anchor_rules`
 - `support_rules`
@@ -48,15 +48,16 @@ Recommended metadata keys:
 - `variant_rules`
 - `overlay_density_limits`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the anchor medium stays primary where intended,
-- support layers are limited and purposeful,
-- aspect-ratio planning is explicit,
-- no scene relies on invisible future magic.
+- 锚定媒介在预期位置保持首要地位，
+- 支持层有数量限制且目的明确，
+- 宽高比规划明确，
+- 没有场景依赖不可见的未来魔法。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Turning source-led scenes into overlay soup.
-- Forgetting variant-safe zones until compose.
-- Using generated inserts for every transition.
+- 将源主导场景变成叠加层混乱。
+- 直到合成阶段才想起多版本安全区域。
+- 每个过渡都用生成的内容插片。
+

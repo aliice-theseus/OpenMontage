@@ -1,11 +1,11 @@
 ---
 name: threejs-shaders
-description: Three.js shaders - GLSL, ShaderMaterial, uniforms, custom effects. Use when creating custom visual effects, modifying vertices, writing fragment shaders, or extending built-in materials.
+description: Three.js 着色器 — GLSL、ShaderMaterial、uniform、自定义特效。在创建自定义视觉效果、修改顶点、编写片段着色器或扩展内置材质时使用。
 ---
 
-# Three.js Shaders
+# Three.js 着色器
 
-## Quick Start
+## 快速开始
 
 ```javascript
 import * as THREE from "three";
@@ -29,20 +29,20 @@ const material = new THREE.ShaderMaterial({
   `,
 });
 
-// Update in animation loop
+// 在动画循环中更新
 material.uniforms.time.value = clock.getElapsedTime();
 ```
 
-## ShaderMaterial vs RawShaderMaterial
+## ShaderMaterial 与 RawShaderMaterial
 
 ### ShaderMaterial
 
-Three.js provides built-in uniforms and attributes.
+Three.js 提供内置的 uniform 和属性。
 
 ```javascript
 const material = new THREE.ShaderMaterial({
   vertexShader: `
-    // Built-in uniforms available:
+    // 可用的内置 uniform：
     // uniform mat4 modelMatrix;
     // uniform mat4 modelViewMatrix;
     // uniform mat4 projectionMatrix;
@@ -50,7 +50,7 @@ const material = new THREE.ShaderMaterial({
     // uniform mat3 normalMatrix;
     // uniform vec3 cameraPosition;
 
-    // Built-in attributes available:
+    // 可用的内置属性：
     // attribute vec3 position;
     // attribute vec3 normal;
     // attribute vec2 uv;
@@ -69,7 +69,7 @@ const material = new THREE.ShaderMaterial({
 
 ### RawShaderMaterial
 
-Full control - you define everything.
+完全控制 — 你定义所有内容。
 
 ```javascript
 const material = new THREE.RawShaderMaterial({
@@ -100,32 +100,32 @@ const material = new THREE.RawShaderMaterial({
 
 ## Uniforms
 
-### Uniform Types
+### Uniform 类型
 
 ```javascript
 const material = new THREE.ShaderMaterial({
   uniforms: {
-    // Numbers
+    // 数值
     floatValue: { value: 1.5 },
     intValue: { value: 1 },
 
-    // Vectors
+    // 向量
     vec2Value: { value: new THREE.Vector2(1, 2) },
     vec3Value: { value: new THREE.Vector3(1, 2, 3) },
     vec4Value: { value: new THREE.Vector4(1, 2, 3, 4) },
 
-    // Colors (converted to vec3)
+    // 颜色（转换为 vec3）
     colorValue: { value: new THREE.Color(0xff0000) },
 
-    // Matrices
+    // 矩阵
     mat3Value: { value: new THREE.Matrix3() },
     mat4Value: { value: new THREE.Matrix4() },
 
-    // Textures
+    // 纹理
     textureValue: { value: texture },
     cubeTextureValue: { value: cubeTexture },
 
-    // Arrays
+    // 数组
     floatArray: { value: [1.0, 2.0, 3.0] },
     vec3Array: {
       value: [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0)],
@@ -134,15 +134,15 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-### GLSL Declarations
+### GLSL 声明
 
 ```glsl
-// In shader
+// 在着色器中
 uniform float floatValue;
 uniform int intValue;
 uniform vec2 vec2Value;
 uniform vec3 vec3Value;
-uniform vec3 colorValue;    // Color becomes vec3
+uniform vec3 colorValue;    // Color 变成 vec3
 uniform vec4 vec4Value;
 uniform mat3 mat3Value;
 uniform mat4 mat4Value;
@@ -152,23 +152,23 @@ uniform float floatArray[3];
 uniform vec3 vec3Array[2];
 ```
 
-### Updating Uniforms
+### 更新 Uniform
 
 ```javascript
-// Direct assignment
+// 直接赋值
 material.uniforms.time.value = clock.getElapsedTime();
 
-// Vector/Color updates
+// 向量/颜色更新
 material.uniforms.position.value.set(x, y, z);
 material.uniforms.color.value.setHSL(hue, 1, 0.5);
 
-// Matrix updates
+// 矩阵更新
 material.uniforms.matrix.value.copy(mesh.matrixWorld);
 ```
 
-## Varyings
+## Varyings（可变变量）
 
-Pass data from vertex to fragment shader.
+将数据从顶点着色器传递到片段着色器。
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -191,16 +191,16 @@ const material = new THREE.ShaderMaterial({
     varying vec3 vPosition;
 
     void main() {
-      // Use interpolated values
+      // 使用插值后的值
       gl_FragColor = vec4(vNormal * 0.5 + 0.5, 1.0);
     }
   `,
 });
 ```
 
-## Common Shader Patterns
+## 常用着色器模式
 
-### Texture Sampling
+### 纹理采样
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -227,7 +227,7 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-### Vertex Displacement
+### 顶点位移
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -242,7 +242,7 @@ const material = new THREE.ShaderMaterial({
     void main() {
       vec3 pos = position;
 
-      // Wave displacement
+      // 波浪位移
       pos.z += sin(pos.x * 5.0 + time) * amplitude;
       pos.z += sin(pos.y * 5.0 + time) * amplitude;
 
@@ -257,7 +257,7 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-### Fresnel Effect
+### 菲涅尔效果
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -276,7 +276,7 @@ const material = new THREE.ShaderMaterial({
     varying vec3 vWorldPosition;
 
     void main() {
-      // cameraPosition is auto-provided by ShaderMaterial
+      // cameraPosition 由 ShaderMaterial 自动提供
       vec3 viewDirection = normalize(cameraPosition - vWorldPosition);
       float fresnel = pow(1.0 - dot(viewDirection, vNormal), 3.0);
 
@@ -289,15 +289,15 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-### Noise-Based Effects
+### 基于噪点的效果
 
 ```glsl
-// Simple noise function
+// 简单噪点函数
 float random(vec2 st) {
   return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// Value noise
+// 值噪点
 float noise(vec2 st) {
   vec2 i = floor(st);
   vec2 f = fract(st);
@@ -312,26 +312,26 @@ float noise(vec2 st) {
   return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
-// Usage
+// 使用
 float n = noise(vUv * 10.0 + time);
 ```
 
-### Gradient
+### 渐变
 
 ```glsl
-// Linear gradient
+// 线性渐变
 vec3 color = mix(colorA, colorB, vUv.y);
 
-// Radial gradient
+// 径向渐变
 float dist = distance(vUv, vec2(0.5));
 vec3 color = mix(centerColor, edgeColor, dist * 2.0);
 
-// Smooth gradient with custom curve
+// 带自定义曲线的平滑渐变
 float t = smoothstep(0.0, 1.0, vUv.y);
 vec3 color = mix(colorA, colorB, t);
 ```
 
-### Rim Lighting
+### 边缘光
 
 ```javascript
 const material = new THREE.ShaderMaterial({
@@ -364,7 +364,7 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-### Dissolve Effect
+### 溶解效果
 
 ```glsl
 uniform float progress;
@@ -377,7 +377,7 @@ void main() {
     discard;
   }
 
-  // Edge glow
+  // 边缘发光
   float edge = smoothstep(progress, progress + 0.1, noise);
   vec3 edgeColor = vec3(1.0, 0.5, 0.0);
   vec3 baseColor = vec3(0.5);
@@ -386,23 +386,23 @@ void main() {
 }
 ```
 
-## Extending Built-in Materials
+## 扩展内置材质
 
 ### onBeforeCompile
 
-Modify existing material shaders.
+修改现有材质的着色器。
 
 ```javascript
 const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 
 material.onBeforeCompile = (shader) => {
-  // Add custom uniform
+  // 添加自定义 uniform
   shader.uniforms.time = { value: 0 };
 
-  // Store reference for updates
+  // 存储引用以便更新
   material.userData.shader = shader;
 
-  // Modify vertex shader
+  // 修改顶点着色器
   shader.vertexShader = shader.vertexShader.replace(
     "#include <begin_vertex>",
     `
@@ -411,126 +411,124 @@ material.onBeforeCompile = (shader) => {
     `,
   );
 
-  // Add uniform declaration
+  // 添加 uniform 声明
   shader.vertexShader = "uniform float time;\n" + shader.vertexShader;
 };
 
-// Update in animation loop
+// 在动画循环中更新
 if (material.userData.shader) {
   material.userData.shader.uniforms.time.value = clock.getElapsedTime();
 }
 ```
 
-### Common Injection Points
+### 常用注入点
 
 ```javascript
-// Vertex shader chunks
-"#include <begin_vertex>"; // After position is calculated
-"#include <project_vertex>"; // After gl_Position
-"#include <beginnormal_vertex>"; // Normal calculation start
+// 顶点着色器代码段
+"#include <begin_vertex>"; // 在 position 计算之后
+"#include <project_vertex>"; // 在 gl_Position 之后
+"#include <beginnormal_vertex>"; // 法线计算开始
 
-// Fragment shader chunks
-"#include <color_fragment>"; // After diffuse color
-"#include <output_fragment>"; // Final output
-"#include <fog_fragment>"; // After fog applied
+// 片段着色器代码段
+"#include <color_fragment>"; // 在漫反射颜色之后
+"#include <output_fragment>"; // 最终输出
+"#include <fog_fragment>"; // 在雾效应用之后
 ```
 
-## GLSL Built-in Functions
+## GLSL 内置函数
 
-### Math Functions
+### 数学函数
 
 ```glsl
-// Basic
+// 基础
 abs(x), sign(x), floor(x), ceil(x), fract(x)
 mod(x, y), min(x, y), max(x, y), clamp(x, min, max)
 mix(a, b, t), step(edge, x), smoothstep(edge0, edge1, x)
 
-// Trigonometry
+// 三角函数
 sin(x), cos(x), tan(x)
 asin(x), acos(x), atan(y, x), atan(x)
 radians(degrees), degrees(radians)
 
-// Exponential
+// 指数
 pow(x, y), exp(x), log(x), exp2(x), log2(x)
 sqrt(x), inversesqrt(x)
 ```
 
-### Vector Functions
+### 向量函数
 
 ```glsl
-// Length and distance
+// 长度和距离
 length(v), distance(p0, p1), dot(x, y), cross(x, y)
 
-// Normalization
+// 归一化
 normalize(v)
 
-// Reflection and refraction
+// 反射和折射
 reflect(I, N), refract(I, N, eta)
 
-// Component-wise
+// 分量比较
 lessThan(x, y), lessThanEqual(x, y)
 greaterThan(x, y), greaterThanEqual(x, y)
 equal(x, y), notEqual(x, y)
 any(bvec), all(bvec)
 ```
 
-### Texture Functions
+### 纹理函数
 
 ```glsl
-// GLSL 1.0 (default) - use texture2D/textureCube
+// GLSL 1.0（默认）— 使用 texture2D/textureCube
 texture2D(sampler, coord)
 texture2D(sampler, coord, bias)
 textureCube(sampler, coord)
 
-// GLSL 3.0 (glslVersion: THREE.GLSL3) - use texture()
-// texture(sampler, coord) replaces texture2D/textureCube
-// Also use: out vec4 fragColor instead of gl_FragColor
+// GLSL 3.0（glslVersion: THREE.GLSL3）— 使用 texture()
+// texture(sampler, coord) 替代 texture2D/textureCube
+// 同时使用：out vec4 fragColor 替代 gl_FragColor
 
-// Texture size (GLSL 1.30+)
+// 纹理大小（GLSL 1.30+）
 textureSize(sampler, lod)
 ```
 
-## Common Material Properties
+## 常用材质属性
 
 ```javascript
 const material = new THREE.ShaderMaterial({
-  uniforms: {
-    /* ... */
-  },
+  uniforms: { /* ... */ },
   vertexShader: "/* ... */",
   fragmentShader: "/* ... */",
 
-  // Rendering
+  // 渲染
   transparent: true,
   opacity: 1.0,
   side: THREE.DoubleSide,
   depthTest: true,
   depthWrite: true,
 
-  // Blending
+  // 混合
   blending: THREE.NormalBlending,
   // AdditiveBlending, SubtractiveBlending, MultiplyBlending
 
-  // Wireframe
+  // 线框
   wireframe: false,
-  wireframeLinewidth: 1, // Note: >1 has no effect on most platforms (WebGL limitation)
+  wireframeLinewidth: 1, // 注意：>1 在大多数平台上无效（WebGL 限制）
 
-  // Extensions
+  // 扩展
   extensions: {
-    derivatives: true, // For fwidth, dFdx, dFdy
+    derivatives: true, // 用于 fwidth, dFdx, dFdy
     fragDepth: true, // gl_FragDepth
-    drawBuffers: true, // Multiple render targets
+    drawBuffers: true, // 多渲染目标
     shaderTextureLOD: true, // texture2DLod
   },
 
-  // GLSL version
-  glslVersion: THREE.GLSL3, // For WebGL2 features
+  // GLSL 版本
+  glslVersion: THREE.GLSL3, // 用于 WebGL2 功能
 });
 ```
 
-## Shader Includes
+## 着色器包含
 
-### Using Three.js Shader Chunks
+### 使用 Three.js 着色器代码段
 
 ```javascript
 import { ShaderChunk } from "three";
@@ -550,10 +548,10 @@ const fragmentShader = `
 `;
 ```
 
-### External Shader Files
+### 外部着色器文件
 
 ```javascript
-// With vite/webpack
+// 使用 vite/webpack
 import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragment.glsl";
 
@@ -563,12 +561,12 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-## Instanced Shaders
+## 实例化着色器
 
 ```javascript
-// Instanced attribute
+// 实例化属性
 const offsets = new Float32Array(instanceCount * 3);
-// Fill offsets...
+// 填充 offsets...
 geometry.setAttribute("offset", new THREE.InstancedBufferAttribute(offsets, 3));
 
 const material = new THREE.ShaderMaterial({
@@ -588,55 +586,55 @@ const material = new THREE.ShaderMaterial({
 });
 ```
 
-## Debugging Shaders
+## 调试着色器
 
 ```javascript
-// Check for compile errors
+// 检查编译错误
 material.onBeforeCompile = (shader) => {
-  console.log("Vertex Shader:", shader.vertexShader);
-  console.log("Fragment Shader:", shader.fragmentShader);
+  console.log("顶点着色器:", shader.vertexShader);
+  console.log("片段着色器:", shader.fragmentShader);
 };
 
-// Visual debugging
+// 可视化调试
 fragmentShader: `
   void main() {
-    // Debug UV
+    // 调试 UV
     gl_FragColor = vec4(vUv, 0.0, 1.0);
 
-    // Debug normals
+    // 调试法线
     gl_FragColor = vec4(vNormal * 0.5 + 0.5, 1.0);
 
-    // Debug position
+    // 调试位置
     gl_FragColor = vec4(vPosition * 0.1 + 0.5, 1.0);
   }
 `;
 
-// Check WebGL errors
+// 检查 WebGL 错误
 renderer.debug.checkShaderErrors = true;
 ```
 
-## Performance Tips
+## 性能提示
 
-1. **Minimize uniforms**: Group related values into vectors
-2. **Avoid conditionals**: Use mix/step instead of if/else
-3. **Precalculate**: Move calculations to JS when possible
-4. **Use textures**: For complex functions, use lookup tables
-5. **Limit overdraw**: Avoid transparent objects when possible
+1. **最小化 uniform 数量**：将相关值合并到向量中
+2. **避免条件分支**：使用 mix/step 替代 if/else
+3. **预计算**：尽可能将计算移到 JS 中
+4. **使用纹理**：对于复杂函数，使用查找表
+5. **限制过度绘制**：尽可能避免透明对象
 
 ```glsl
-// Instead of:
+// 不要这样写：
 if (value > 0.5) {
   color = colorA;
 } else {
   color = colorB;
 }
 
-// Use:
+// 应该这样写：
 color = mix(colorB, colorA, step(0.5, value));
 ```
 
-## See Also
+## 另请参阅
 
-- `threejs-materials` - Built-in material types
-- `threejs-postprocessing` - Full-screen shader effects
-- `threejs-textures` - Texture sampling in shaders
+- `threejs-materials` — 内置材质类型
+- `threejs-postprocessing` — 全屏着色器效果
+- `threejs-textures` — 着色器中的纹理采样

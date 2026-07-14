@@ -1,37 +1,37 @@
-# Script Director - Character Animation Pipeline
+# 剧本导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Write scripts as performable animation beats, not just narration.
+编写可作为可表演动画节拍的剧本，而不仅仅是叙述。
 
-## Process
+## 流程
 
-1. Lock audio architecture:
-   - music-only,
-   - narrator,
-   - character dialogue,
-   - narrator plus character sounds/dialogue.
-2. Break the story into beats that can be acted with poses.
-3. For each beat, state what changes visually:
-   - emotion,
-   - gaze,
-   - body pose,
-   - prop interaction,
-   - camera,
-   - environment.
+1. 锁定音频架构：
+   - 纯音乐，
+   - 旁白，
+   - 角色对话，
+   - 旁白加角色音效/对话。
+2. 将故事拆解为可以通过姿态表演的节拍。
+3. 针对每个节拍，说明视觉上发生了什么变化：
+   - 情绪，
+   - 视线，
+   - 身体姿态，
+   - 道具互动，
+   - 摄像机，
+   - 环境。
 
-## Writing Rules
+## 写作规则
 
-- Prefer short visual beats with readable holds.
-- Avoid action that needs many unique hand-drawn poses unless approved.
-- Dialogue should be short enough for mouth-shape approximation.
-- Silent/music-led scenes need stronger physical acting notes.
+- 优先选择简短、带有可读停顿的视觉节拍。
+- 除非获得批准，否则避免需要大量独特手绘姿态的动作。
+- 对话应足够简短，以便进行口型近似处理。
+- 无声/音乐主导的场景需要更强烈的肢体表演说明。
 
-## Output Notes
+## 输出说明
 
-In the `script` artifact metadata, include:
+在 `script` 元数据产物中，包含：
 
-- `audio_architecture`,
-- `character_beats`,
-- `required_emotions`,
-- `required_actions`.
+- `audio_architecture`，
+- `character_beats`，
+- `required_emotions`，
+- `required_actions`。

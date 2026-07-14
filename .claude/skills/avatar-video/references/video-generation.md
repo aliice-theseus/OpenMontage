@@ -3,39 +3,39 @@ name: video-generation
 description: POST /v2/video/generate workflow and multi-scene videos for HeyGen
 ---
 
-# Video Generation
+# 视频生成
 
-## Table of Contents
-- [Video Output Formats](#video-output-formats)
-- [Basic Video Generation](#basic-video-generation)
-- [Request Fields](#request-fields)
-- [Video Configuration Options](#video-configuration-options)
-- [Multi-Scene Videos](#multi-scene-videos)
-- [Using Different Character Types](#using-different-character-types)
-- [Voice Input Types](#voice-input-types)
-- [Complete Workflow Example](#complete-workflow-example)
-- [Error Handling](#error-handling)
-- [Script Length Limits](#script-length-limits)
-- [Adding Pauses to Scripts](#adding-pauses-to-scripts)
-- [Test Mode](#test-mode)
-- [Production-Ready Workflow](#production-ready-workflow)
-- [Transparent Background Videos (WebM)](#transparent-background-videos-webm)
-- [Best Practices](#best-practices)
+## 目录
+- [视频输出格式](#视频输出格式)
+- [基本视频生成](#基本视频生成)
+- [请求字段](#请求字段)
+- [视频配置选项](#视频配置选项)
+- [多场景视频](#多场景视频)
+- [使用不同的角色类型](#使用不同的角色类型)
+- [语音输入类型](#语音输入类型)
+- [完整工作流程示例](#完整工作流程示例)
+- [错误处理](#错误处理)
+- [脚本长度限制](#脚本长度限制)
+- [在脚本中添加暂停](#在脚本中添加暂停)
+- [测试模式](#测试模式)
+- [生产就绪工作流程](#生产就绪工作流程)
+- [透明背景视频 (WebM)](#透明背景视频-webm)
+- [最佳实践](#最佳实践)
 
 ---
 
-The `/v2/video/generate` endpoint is the primary way to create AI avatar videos with HeyGen.
+`/v2/video/generate` 端点是使用 HeyGen 创建 AI 虚拟形象视频的主要方式。
 
-## Video Output Formats
+## 视频输出格式
 
-| Endpoint | Format | Use Case |
+| 端点 | 格式 | 用例 |
 |----------|--------|----------|
-| `/v2/video/generate` | MP4 | **Standard** - videos with background (most common) |
-| `/v1/video.webm` | WebM | Transparent background - only when needed |
+| `/v2/video/generate` | MP4 | **标准** - 带背景的视频（最常见） |
+| `/v1/video.webm` | WebM | 透明背景 - 仅在需要时使用 |
 
-Use MP4 with background for most cases. WebM is only needed when you want to see content *behind* the avatar (e.g., overlaying avatar on a screen recording).
+大多数情况下使用带背景的 MP4。仅当您想看到虚拟形象*后面*的内容时才需要 WebM（例如，在屏幕录制上叠加虚拟形象）。
 
-## Basic Video Generation
+## 基本视频生成
 
 ### curl
 
@@ -65,52 +65,52 @@ curl -X POST "https://api.heygen.com/v2/video/generate" \
   }'
 ```
 
-## Request Fields
+## 请求字段
 
-### Top-Level Fields
+### 顶层字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `video_inputs` | array | ✓ | Array of 1-50 video input objects |
-| `dimension` | object | | Video dimensions `{width, height}` |
-| `title` | string | | Video name for organization |
-| `test` | boolean | | Test mode (watermarked, no credits) |
-| `caption` | boolean | | Enable auto-captions |
-| `callback_id` | string | | Custom ID for webhook tracking |
-| `callback_url` | string | | URL for completion notification |
-| `folder_id` | string | | Storage folder ID |
+| `video_inputs` | array | ✓ | 1-50 个视频输入对象的数组 |
+| `dimension` | object | | 视频尺寸 `{width, height}` |
+| `title` | string | | 视频名称，用于组织管理 |
+| `test` | boolean | | 测试模式（含水印，不消耗积分） |
+| `caption` | boolean | | 启用自动字幕 |
+| `callback_id` | string | | 用于 webhook 跟踪的自定义 ID |
+| `callback_url` | string | | 完成通知的 URL |
+| `folder_id` | string | | 存储文件夹 ID |
 
-### video_inputs[].character Fields
+### video_inputs[].character 字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `type` | string | ✓ | `"avatar"` or `"talking_photo"` |
-| `avatar_id` | string | ✓* | Avatar ID (*required when type is "avatar") |
-| `talking_photo_id` | string | ✓* | Photo ID (*required when type is "talking_photo") |
-| `avatar_style` | string | | `"normal"`, `"closeUp"`, or `"circle"` |
-| `scale` | number | | Avatar scale factor |
-| `offset` | object | | Position offset `{x, y}` |
+| `type` | string | ✓ | `"avatar"` 或 `"talking_photo"` |
+| `avatar_id` | string | ✓* | 虚拟形象 ID（*当 type 为 "avatar" 时必填） |
+| `talking_photo_id` | string | ✓* | 照片 ID（*当 type 为 "talking_photo" 时必填） |
+| `avatar_style` | string | | `"normal"`、`"closeUp"` 或 `"circle"` |
+| `scale` | number | | 虚拟形象缩放系数 |
+| `offset` | object | | 位置偏移 `{x, y}` |
 
-### video_inputs[].voice Fields
+### video_inputs[].voice 字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `type` | string | ✓ | `"text"`, `"audio"`, or `"silence"` |
-| `voice_id` | string | ✓* | Voice ID (*required when type is "text") |
-| `input_text` | string | ✓* | Script text (*required when type is "text") |
-| `audio_url` | string | ✓* | Audio URL (*required when type is "audio") |
-| `duration` | number | ✓* | Duration in seconds (*required when type is "silence") |
-| `speed` | number | | Speech speed 0.5-2.0 (default 1.0) |
-| `pitch` | number | | Voice pitch -20 to 20 (default 0) |
+| `type` | string | ✓ | `"text"`、`"audio"` 或 `"silence"` |
+| `voice_id` | string | ✓* | 语音 ID（*当 type 为 "text" 时必填） |
+| `input_text` | string | ✓* | 脚本文本（*当 type 为 "text" 时必填） |
+| `audio_url` | string | ✓* | 音频 URL（*当 type 为 "audio" 时必填） |
+| `duration` | number | ✓* | 持续秒数（*当 type 为 "silence" 时必填） |
+| `speed` | number | | 语速 0.5-2.0（默认 1.0） |
+| `pitch` | number | | 音调 -20 到 20（默认 0） |
 
-### video_inputs[].background Fields
+### video_inputs[].background 字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `type` | string | | `"color"`, `"image"`, or `"video"` |
-| `value` | string | | Hex color (when type is "color") |
-| `url` | string | | Image/video URL (when type is "image"/"video") |
-| `fit` | string | | `"cover"` or `"contain"` |
+| `type` | string | | `"color"`、`"image"` 或 `"video"` |
+| `value` | string | | 十六进制颜色（type 为 "color" 时） |
+| `url` | string | | 图片/视频 URL（type 为 "image"/"video" 时） |
+| `fit` | string | | `"cover"` 或 `"contain"` |
 
 ### TypeScript
 
@@ -203,9 +203,9 @@ def generate_video(config: dict) -> str:
     return data["data"]["video_id"]
 ```
 
-## Video Configuration Options
+## 视频配置选项
 
-### Full Configuration Example
+### 完整配置示例
 
 ```typescript
 const fullConfig: VideoGenerateRequest = {
@@ -250,9 +250,9 @@ const fullConfig: VideoGenerateRequest = {
 };
 ```
 
-## Multi-Scene Videos
+## 多场景视频
 
-Create videos with multiple scenes:
+创建包含多个场景的视频：
 
 ```typescript
 const multiSceneConfig = {
@@ -313,9 +313,9 @@ const multiSceneConfig = {
 };
 ```
 
-## Using Different Character Types
+## 使用不同的角色类型
 
-### Avatar
+### 虚拟形象
 
 ```typescript
 {
@@ -327,7 +327,7 @@ const multiSceneConfig = {
 }
 ```
 
-### Talking Photo
+### 说话照片
 
 ```typescript
 {
@@ -338,9 +338,9 @@ const multiSceneConfig = {
 }
 ```
 
-## Voice Input Types
+## 语音输入类型
 
-### Text-to-Speech
+### 文本转语音
 
 ```typescript
 {
@@ -354,7 +354,7 @@ const multiSceneConfig = {
 }
 ```
 
-### Custom Audio
+### 自定义音频
 
 ```typescript
 {
@@ -365,7 +365,7 @@ const multiSceneConfig = {
 }
 ```
 
-## Complete Workflow Example
+## 完整工作流程示例
 
 ```typescript
 async function createVideo(script: string, avatarId: string, voiceId: string) {
@@ -429,7 +429,7 @@ async function waitForVideo(videoId: string): Promise<string> {
 }
 ```
 
-## Error Handling
+## 错误处理
 
 ```typescript
 async function generateVideoSafe(config: VideoGenerateRequest) {
@@ -453,7 +453,7 @@ async function generateVideoSafe(config: VideoGenerateRequest) {
 }
 ```
 
-## Script Length Limits
+## 脚本长度限制
 
 | Tier | Max Characters |
 |------|----------------|
@@ -462,7 +462,7 @@ async function generateVideoSafe(config: VideoGenerateRequest) {
 | Team | ~3,000 |
 | Enterprise | ~5,000+ |
 
-## Adding Pauses to Scripts
+## 在脚本中添加暂停
 
 Use `<break>` tags to add pauses in your script:
 
@@ -476,9 +476,9 @@ const script = "Welcome to our demo. <break time=\"1s\"/> Let me show you the fe
 
 See [voices.md](voices.md) for detailed break tag documentation.
 
-## Test Mode
+## 测试模式
 
-Use test mode during development:
+在开发过程中使用测试模式：
 
 ```typescript
 const config = {
@@ -487,7 +487,7 @@ const config = {
 };
 ```
 
-## Production-Ready Workflow
+## 生产就绪工作流程
 
 Complete example using avatar's default voice (recommended), proper timeouts, and retry logic:
 
@@ -598,34 +598,34 @@ const result2 = await generateAvatarVideo(
 );
 ```
 
-## Transparent Background Videos (WebM)
+## 透明背景视频 (WebM)
 
-Use WebM **only when you need transparency** - i.e., when the avatar should be overlaid on other video content and you need to see through to what's behind.
+**仅在需要透明时**使用 WebM——即虚拟形象应叠加在其他视频内容上，并且您需要看到后面的内容。
 
-**Don't need WebM for:**
-- Avatar with motion graphics/text overlaid ON TOP of avatar
-- Picture-in-picture with solid background
-- Standard presenter videos
+**不需要 WebM 的情况：**
+- 虚拟形象上方叠加动态图形/文字
+- 带纯色背景的画中画
+- 标准主持人视频
 
-**Do need WebM for:**
-- Avatar overlaid on screen recording
-- Avatar floating over video background
-- True alpha-channel compositing
+**需要 WebM 的情况：**
+- 虚拟形象叠加在屏幕录制上
+- 虚拟形象浮动在视频背景上
+- 真正的 alpha 通道合成
 
-### WebM Request Fields
+### WebM 请求字段
 
-**Note:** The WebM endpoint (`/v1/video.webm`) uses a different structure than `/v2/video/generate`.
+**注意：** WebM 端点（`/v1/video.webm`）使用的结构与 `/v2/video/generate` 不同。
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `avatar_pose_id` | string | ✓ | Avatar pose ID (from avatar details) |
-| `avatar_style` | string | ✓ | `"normal"` or `"closeUp"` only (no circle) |
-| `input_text` | string | ✓* | Script text (*required if not using input_audio) |
-| `voice_id` | string | ✓* | Voice ID (*required with input_text) |
-| `input_audio` | string | ✓* | Audio URL (*required if not using input_text) |
-| `dimension` | object | | `{width, height}` (default: 1280x720) |
+| `avatar_pose_id` | string | ✓ | 虚拟形象姿态 ID（来自虚拟形象详情） |
+| `avatar_style` | string | ✓ | 仅 `"normal"` 或 `"closeUp"`（不支持 circle） |
+| `input_text` | string | ✓* | 脚本文本（*如果不使用 input_audio 则必填） |
+| `voice_id` | string | ✓* | 语音 ID（*与 input_text 配合使用） |
+| `input_audio` | string | ✓* | 音频 URL（*如果不使用 input_text 则必填） |
+| `dimension` | object | | `{width, height}`（默认：1280x720） |
 
-**Either** (`input_text` + `voice_id`) **OR** `input_audio` must be provided, but not both.
+**要么**提供（`input_text` + `voice_id`），**要么**提供 `input_audio`，但不能同时提供。
 
 ### curl
 
@@ -682,20 +682,20 @@ async function generateTransparentVideo(
 }
 ```
 
-### When to Use WebM vs MP4
+### 何时使用 WebM vs MP4
 
-| Scenario | Format | Why |
+| 场景 | 格式 | 原因 |
 |----------|--------|-----|
-| Avatar with overlays on top | **MP4** | Overlays go on top, don't need transparency |
-| Standard presenter | **MP4** | Simpler, more compatible |
-| Loom-style (avatar over screen recording) | **WebM** + `normal`/`closeUp` | Need transparency, crop to circle in post |
-| Avatar floating over video content | **WebM** | Need to see content behind avatar |
+| 虚拟形象上方有叠加层 | **MP4** | 叠加层在上方，不需要透明 |
+| 标准主持人 | **MP4** | 更简单，兼容性更好 |
+| Loom 风格（虚拟形象叠在屏幕录制上） | **WebM** + `normal`/`closeUp` | 需要透明，后期裁剪为圆形 |
+| 虚拟形象浮动在视频内容上 | **WebM** | 需要看到虚拟形象后面的内容 |
 
-**Note:** WebM only supports `normal` and `closeUp` styles. Circle style is not supported for WebM - apply circular masking in your video editor/Remotion instead.
+**注意：** WebM 仅支持 `normal` 和 `closeUp` 样式。WebM 不支持圆形样式——请在视频编辑器/Remotion 中应用圆形遮罩。
 
-### WebM Example: Loom-Style (Avatar Over Screen Recording)
+### WebM 示例：Loom 风格（虚拟形象叠在屏幕录制上）
 
-Generate with `normal` or `closeUp` style (circle not supported for WebM):
+使用 `normal` 或 `closeUp` 样式生成（WebM 不支持圆形）：
 
 ```typescript
 // Generate avatar with transparent background
@@ -712,7 +712,7 @@ const videoId = await fetch("https://api.heygen.com/v1/video.webm", {
 }).then(r => r.json()).then(d => d.data.video_id);
 ```
 
-Apply circular masking in Remotion:
+在 Remotion 中应用圆形遮罩：
 
 ```tsx
 import { Video, AbsoluteFill } from "remotion";
@@ -745,9 +745,9 @@ export const LoomStyleVideo: React.FC<{
 };
 ```
 
-### Note on Status Polling
+### 状态轮询说明
 
-WebM videos use the same status endpoint as MP4:
+WebM 视频使用与 MP4 相同的状态端点：
 
 ```typescript
 // Same polling as regular videos
@@ -755,16 +755,16 @@ const status = await getVideoStatus(videoId);
 // status.video_url will be a .webm file
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Preview avatars before generating** - Download `preview_image_url` so user can see what the avatar looks like before committing to a video (see [avatars.md](avatars.md))
-2. **Use avatar's default voice** - Most avatars have a `default_voice_id` that's pre-matched for natural results (see [avatars.md](avatars.md))
-2. **Fallback: match gender manually** - If no default voice, ensure avatar and voice genders match (see [voices.md](voices.md))
-3. **Validate inputs** - Check avatar and voice IDs before generating
-4. **Use test mode** - Test configurations without consuming credits
-5. **Set generous timeouts** - Use 15-20 minutes; generation often takes 10-15 min, sometimes longer
-6. **Consider async patterns** - For long videos, save video_id and check status later (see [video-status.md](video-status.md))
-7. **Handle errors gracefully** - Implement proper error handling
-8. **Monitor progress** - Implement polling with progress feedback
-9. **Optimize scripts** - Keep scripts concise and natural
-10. **Consider dimensions** - Match dimensions to your use case (see [dimensions.md](dimensions.md))
+1. **生成前预览虚拟形象** - 下载 `preview_image_url`，使用户在提交前可以看到虚拟形象的外观（见 [avatars.md](avatars.md)）
+2. **使用虚拟形象的默认语音** - 大多数虚拟形象都有预先匹配的 `default_voice_id`，可获得自然效果（见 [avatars.md](avatars.md)）
+2. **回退方案：手动匹配性别** - 如果没有默认语音，确保虚拟形象和语音的性别匹配（见 [voices.md](voices.md)）
+3. **验证输入** - 在生成前检查虚拟形象和语音 ID
+4. **使用测试模式** - 在不消耗积分的情况下测试配置
+5. **设置充裕的超时时间** - 使用 15-20 分钟；生成通常需要 10-15 分钟，有时更长
+6. **考虑异步模式** - 对于长视频，保存 video_id 并在之后检查状态（见 [video-status.md](video-status.md)）
+7. **优雅处理错误** - 实现适当的错误处理
+8. **监控进度** - 实现带进度反馈的轮询
+9. **优化脚本** - 保持脚本简洁自然
+10. **考虑尺寸** - 根据用例匹配尺寸（见 [dimensions.md](dimensions.md)）

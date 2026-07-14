@@ -1,217 +1,216 @@
-# Extract from Video
+# 从视频提取
 
-Generate a `visual-style.md` from video keyframes.
+从视频关键帧生成 `visual-style.md`。
 
-## Workflow
+## 工作流
 
-1. **Receive video** — User provides a video URL or file
-2. **Sample keyframes** — Capture 4-6 screenshots at different points
-3. **Analyze frames** — Identify consistent visual patterns across all frames
-4. **Focus on motion** — Pay special attention to transitions and animation
-5. **Generate** — Output complete `visual-style.md`
-6. **Validate** — Ensure all required fields are present
+1. **接收视频** — 用户提供视频 URL 或文件
+2. **采样关键帧** — 在不同的时间点捕获 4-6 个截图
+3. **分析帧** — 识别所有帧中一致的视觉模式
+4. **关注动效** — 特别注意过渡和动画
+5. **生成** — 输出完整的 `visual-style.md`
+6. **验证** — 确保所有必填字段存在
 
-## Keyframe Sampling Strategy
+## 关键帧采样策略
 
-Sample frames at these intervals:
-- **0:00-0:02** — Opening/title frame
-- **0:05-0:10** — Early content frame
-- **0:15-0:20** — Middle content frame
-- **Near end** — Closing frame
-- **Transitions** — Capture mid-transition if possible
+在这些时间间隔采样帧：
+- **0:00-0:02** — 开场/标题帧
+- **0:05-0:10** — 早期内容帧
+- **0:15-0:20** — 中间内容帧
+- **接近结尾** — 结尾帧
+- **过渡** — 尽可能捕获过渡中间帧
 
-Look for **consistency** across frames — the style is what stays the same.
+寻找帧之间的**一致性** — 风格是保持不变的部分。
 
-## Extraction Prompt
+## 提取提示
 
-Use this prompt template when analyzing video frames:
+分析视频帧时使用此提示模板：
 
 ```
-Analyze these video keyframes and extract a visual-style.md.
+分析这些视频关键帧并提取 visual-style.md。
 
-These are [N] frames from a single video. Identify the CONSISTENT visual
-system across all frames, not the unique content of each frame.
+这是同一视频的 [N] 帧。识别所有帧中一致的视觉
+系统，而非每帧的独特内容。
 
-Identify and output:
+识别并输出：
 
-REQUIRED:
-- name: A descriptive name for this style
-- version: "1.0"
-- style_prompt_short: 1-2 sentence hook
-- style_prompt_full: Detailed generation prompt covering:
-  - Color palette (consistent colors across frames)
-  - Typography style (font appearance, text treatment)
-  - Motion patterns (transitions, animation style)
-  - Layout approach (composition, spacing)
-  - Overall mood
-- colors.primary: At least 2 consistent colors
+必填：
+- name：此风格的描述性名称
+- version："1.0"
+- style_prompt_short：1-2 句钩子
+- style_prompt_full：详细的生成提示，涵盖：
+  - 调色板（帧间一致的颜色）
+  - 排版风格（字体外观、文字处理）
+  - 动效模式（过渡、动画风格）
+  - 布局方法（构图、间距）
+  - 整体氛围
+- colors.primary：至少 2 种一致的颜色
 
-CRITICAL FOR VIDEO:
-- motion.transitions: How do scenes change?
-- motion.animation_style: How do elements move?
-- motion.pacing: Fast cuts vs. slow fades?
-- mood.keywords: What feeling does the motion create?
+视频特别重要：
+- motion.transitions：场景如何变化？
+- motion.animation_style：元素如何移动？
+- motion.pacing：快速剪辑还是慢速淡入淡出？
+- mood.keywords：动效创造了什么感觉？
 
-Be specific about MOTION patterns:
-- Do elements snap or ease?
-- Are transitions hard cuts or smooth fades?
-- Do things bounce, slide, or appear suddenly?
-- What's the rhythm? Quick and energetic, or slow and measured?
+具体说明动效模式：
+- 元素是弹跳还是缓动？
+- 过渡是硬切还是平滑淡入淡出？
+- 东西是弹跳、滑动还是突然出现？
+- 节奏如何？快速有活力，还是缓慢沉稳？
 
-Output format:
-Complete YAML frontmatter between --- delimiters
-Plus Markdown body sections
+输出格式：
+--- 分隔符之间的完整 YAML 前置元数据
+加上 Markdown 正文章节
 ```
 
-## Analysis Checklist
+## 分析检查清单
 
-When extracting from video, look for:
+从视频提取时，查找：
 
-### Colors
-- [ ] Background colors (do they change between scenes?)
-- [ ] Primary text/graphic colors
-- [ ] Accent colors for emphasis
-- [ ] Color transitions (do colors shift?)
+### 颜色
+- [ ] 背景色（场景之间会变吗？）
+- [ ] 主要文字/图形颜色
+- [ ] 用于强调的强调色
+- [ ] 颜色过渡（颜色会变化吗？）
 
-### Typography
-- [ ] Title treatment (size, weight, animation)
-- [ ] Body text style (if present)
-- [ ] Caption/subtitle style
-- [ ] Text animation (fade, slide, type-on)
+### 排版
+- [ ] 标题处理（大小、字重、动画）
+- [ ] 正文样式（如有）
+- [ ] 说明文字/副标题样式
+- [ ] 文字动画（淡入、滑动、打字效果）
 
-### Motion (Critical)
-- [ ] Scene transitions (cut, wipe, dissolve, morph)
-- [ ] Element entrances (fade, slide, pop, scale)
-- [ ] Element exits (how do things leave?)
-- [ ] Easing style (linear, ease-out, bounce, snap)
-- [ ] Timing/rhythm (quick cuts, slow reveals)
-- [ ] Looping patterns (if any)
+### 动效（关键）
+- [ ] 场景过渡（剪切、擦拭、溶解、变形）
+- [ ] 元素入场（淡入、滑动、弹出、缩放）
+- [ ] 元素退场（元素如何离开？）
+- [ ] 缓动风格（线性、ease-out、弹跳、吸附）
+- [ ] 时间/节奏（快速剪辑、慢速揭示）
+- [ ] 循环模式（如有）
 
-### Layout
-- [ ] Composition style (centered, asymmetric, grid-locked)
-- [ ] Framing (full-bleed, contained, letterboxed)
-- [ ] Text placement (bottom third, centered, dynamic)
-- [ ] Aspect ratio (16:9, 9:16, 1:1)
+### 布局
+- [ ] 构图风格（居中、不对称、网格锁定）
+- [ ] 取景（全出血、内含、信箱格式）
+- [ ] 文字放置（下方三分之一、居中、动态）
+- [ ] 宽高比（16:9、9:16、1:1）
 
-### Mood
-- [ ] Energy level (calm, energetic, intense)
-- [ ] Tone (serious, playful, dramatic)
-- [ ] Era/genre references
-- [ ] Sound-visual relationship (if audio present)
+### 氛围
+- [ ] 能量水平（平静、有活力、强烈）
+- [ ] 基调（严肃、俏皮、戏剧性）
+- [ ] 时代/类型参考
+- [ ] 声音-视觉关系（如有音频）
 
-## Example Output
+## 示例输出
 
-Given frames from a retro arcade-style video:
+给定复古街机风格视频的帧：
 
 ```yaml
 ---
-name: "Pac-Man Arcade Style"
+name: "Pac-Man 街机风格"
 version: "1.0"
 tags:
-  - pixel retro
-  - gaming
-author: "Extracted"
+  - 像素复古
+  - 游戏
+author: "提取"
 source_url: ""
 created: "2026-03-12"
 
 style_prompt_short: >
-  8-bit arcade nostalgia. Pixel graphics, neon on black,
-  classic Pac-Man yellow with ghost accents.
+  8 位街机怀旧。像素图形，黑色上的霓虹色，
+  经典 Pac-Man 黄色配幽灵强调色。
 
 style_prompt_full: >
-  Retro 8-bit arcade aesthetic inspired by Pac-Man. Pure black
-  backgrounds with neon pixel graphics. Classic Pac-Man yellow
-  (#FFFF00) as the hero color. Ghost colors for accents: Blinky
-  red (#FF0000), Pinky pink (#FFB8FF), Inky cyan (#00FFFF),
-  Clyde orange (#FFB852). Chunky pixel fonts. Elements move in
-  discrete pixel steps, not smooth curves. Maze-like compositions.
-  Screen flicker and CRT scanline effects. 8-bit sound design
-  aesthetic applied visually. Hard cuts between scenes. No
-  gradients, no anti-aliasing, no rounded corners.
+  受 Pac-Man 启发的复古 8 位街机美学。纯黑色
+  背景配霓虹像素图形。经典 Pac-Man 黄色 (#FFFF00)
+  作为主角颜色。幽灵色作为强调色：Blinky 红色 (#FF0000)，
+  Pinky 粉色 (#FFB8FF)，Inky 青色 (#00FFFF)，
+  Clyde 橙色 (#FFB852)。粗圆像素字体。元素以离散的
+  像素步骤移动，非平滑曲线。迷宫般的构图。
+  屏幕闪烁和 CRT 扫描线效果。视觉上应用 8 位声音设计
+  美学。场景之间硬切。无渐变、无抗锯齿、无圆角。
 
 colors:
   primary:
-    - name: "Arcade Black"
+    - name: "街机黑"
       hex: "#000000"
-      role: "background, the void"
-    - name: "Pac-Man Yellow"
+      role: "背景，虚空"
+    - name: "Pac-Man 黄"
       hex: "#FFFF00"
-      role: "hero element, primary accent"
+      role: "主角元素，主要强调"
   accent:
-    - name: "Blinky Red"
+    - name: "Blinky 红"
       hex: "#FF0000"
-      role: "danger, emphasis"
-    - name: "Inky Cyan"
+      role: "危险，强调"
+    - name: "Inky 青"
       hex: "#00FFFF"
-      role: "secondary accent"
-    - name: "Pinky Pink"
+      role: "次要强调"
+    - name: "Pinky 粉"
       hex: "#FFB8FF"
-      role: "tertiary accent"
-    - name: "Clyde Orange"
+      role: "第三级强调"
+    - name: "Clyde 橙"
       hex: "#FFB852"
-      role: "warm accent"
+      role: "暖色强调"
   neutral:
-    - name: "Maze Blue"
+    - name: "迷宫蓝"
       hex: "#2121DE"
-      role: "structure, maze walls"
+      role: "结构，迷宫墙壁"
 
 typography:
   display:
     family: "Press Start 2P, monospace"
     weight: "400"
-    style: "uppercase, pixel-perfect"
+    style: "大写，像素完美"
   body:
     family: "VT323, monospace"
     weight: "400"
-    style: "8-bit rendering"
+    style: "8 位渲染"
   caption:
     family: "Press Start 2P, monospace"
     weight: "400"
-    style: "small, all caps"
+    style: "小号，全部大写"
   rules:
-    - "All text must appear pixel-perfect"
-    - "No anti-aliasing on fonts"
-    - "Text animates character by character"
+    - "所有文字必须像素完美"
+    - "字体无抗锯齿"
+    - "文字逐字符动画"
 
 layout:
-  grid: "Pixel grid, 8px base unit"
-  alignment: "Centered compositions"
-  aspect_ratio: "4:3 or 16:9"
+  grid: "像素网格，8px 基础单位"
+  alignment: "居中构图"
+  aspect_ratio: "4:3 或 16:9"
   notes:
-    - "Maze-like structures as compositional elements"
-    - "Frame content like an arcade cabinet"
-    - "Leave scanline space at edges"
+    - "迷宫状结构作为构图元素"
+    - "像街机框体一样构图内容"
+    - "在边缘留出扫描线空间"
 
 motion:
   transitions:
-    - "hard cuts (no dissolves)"
-    - "screen wipe from Pac-Man eating across"
-    - "pixel dissolve / scatter"
+    - "硬切（无溶解）"
+    - "屏幕从 Pac-Man 吃过去的方向擦拭"
+    - "像素溶解/散开"
   animation_style: >
-    Discrete pixel movement — elements jump from position to position,
-    never smooth tweening. Characters animate at 12fps max. Screen
-    flicker for emphasis. Chomping animation on any moving element.
-  pacing: "Energetic, game-loop rhythm"
+    离散的像素移动 — 元素从一个位置跳到另一个位置，
+    绝无平滑补间。角色以最高 12fps 动画。
+    屏幕闪烁以增强效果。任何移动元素上的咀嚼动画。
+  pacing: "有活力，游戏循环节奏"
   audio_cues:
-    - "wakka-wakka sound on transitions"
-    - "8-bit beeps and boops"
+    - "过渡时的 wakka-wakka 声音"
+    - "8 位哔哔声"
 
 mood:
   keywords:
-    - "nostalgic"
-    - "playful"
-    - "arcade"
-    - "8-bit"
-    - "energetic"
-  era: "1980s arcade golden age"
-  cultural_reference: "Pac-Man, Space Invaders, Galaga, arcade cabinets"
+    - "怀旧"
+    - "俏皮"
+    - "街机"
+    - "8 位"
+    - "有活力"
+  era: "1980 年代街机黄金时代"
+  cultural_reference: "Pac-Man，太空侵略者，Galaga，街机框体"
   avoid:
-    - "smooth gradients"
-    - "anti-aliased edges"
-    - "photorealistic elements"
-    - "modern UI patterns"
-    - "slow, smooth animations"
-    - "muted or desaturated colors"
+    - "平滑渐变"
+    - "抗锯齿边缘"
+    - "逼真元素"
+    - "现代 UI 模式"
+    - "慢速平滑动画"
+    - "柔和或去饱和颜色"
 
 assets:
   reference_images: []
@@ -221,20 +220,20 @@ assets:
 
 ## Design Principles
 
-Everything is a pixel. Movement is discrete, never continuous.
-Colors are pure and saturated. The arcade cabinet is the frame.
+一切都是像素。移动是离散的，绝不连续。
+颜色是纯色和饱和的。街机框体是画框。
 
 ## Extraction Notes
 
-Extracted from video keyframes.
-Color palette based on original Pac-Man game (1980).
-Motion patterns reflect 8-bit hardware limitations as aesthetic choice.
+从视频关键帧提取。
+调色板基于原始 Pac-Man 游戏（1980）。
+动效模式反映 8 位硬件限制作为美学选择。
 ```
 
-## Tips
+## 技巧
 
-- **Focus on what's consistent** — Ignore unique content, find the system
-- **Motion is primary** — Video styles are defined by how things move
-- **Describe the rhythm** — Is it quick cuts or slow fades?
-- **Note the easing** — Does it snap, bounce, or glide?
-- **Reference the era** — Many video styles reference specific decades or genres
+- **关注一致的部分** — 忽略独特内容，找到系统
+- **动效是主要的** — 视频风格由事物如何移动定义
+- **描述节奏** — 是快速剪辑还是慢速淡入淡出？
+- **注意缓动** — 是吸附、弹跳还是滑动？
+- **参考时代** — 许多视频风格引用特定年代或类型

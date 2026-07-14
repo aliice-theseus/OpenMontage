@@ -1,6 +1,6 @@
-# Dark / Premium
+# 深色 / 高级
 
-Tech, finance, luxury, cinematic content.
+科技、金融、奢华、电影感内容。
 
 ```
 #000000 #14213D #FCA311 #E5E5E5 #FFFFFF

@@ -1,51 +1,51 @@
-# Sections
+# 章节
 
-This file defines all sections, their ordering, impact levels, and descriptions.
-The section ID (in parentheses) is the filename prefix used to group rules.
+本文件定义了所有章节、它们的排序、影响级别和描述。
+章节 ID（括号内）是用于分组规则的文件名前缀。
 
 ---
 
-## 1. Core Principles (core)
+## 1. 核心原则 (core)
 
-**Impact:** CRITICAL
-**Description:** Universal prompting principles that apply to all FLUX models. Master these before diving into specific techniques.
+**影响：** 关键
+**描述：** 适用于所有 FLUX 模型的通用提示词原则。在深入特定技巧之前掌握这些内容。
 
-## 2. Model Selection (model, flux2, flux1)
+## 2. 模型选择 (model, flux2, flux1)
 
-**Impact:** HIGH
-**Description:** Choosing the right FLUX model for your use case. Covers both FLUX.2 (latest) and FLUX.1 (legacy) model families.
+**影响：** 高
+**描述：** 根据你的使用场景选择正确的 FLUX 模型。涵盖 FLUX.2（最新）和 FLUX.1（旧版）模型系列。
 
-## 3. Text-to-Image Prompting (t2i)
+## 3. 文生图提示词 (t2i)
 
-**Impact:** HIGH
-**Description:** Crafting effective prompts for generating images from text descriptions.
+**影响：** 高
+**描述：** 编写从文本描述生成图像的有效提示词。
 
-## 4. Image-to-Image Editing (i2i)
+## 4. 图生图编辑 (i2i)
 
-**Impact:** HIGH
-**Description:** Techniques for editing and transforming existing images using FLUX.2 models.
+**影响：** 高
+**描述：** 使用 FLUX.2 模型编辑和变换现有图像的技术。
 
-## 5. JSON Structured Prompting (json)
+## 5. JSON 结构化提示词 (json)
 
-**Impact:** MEDIUM-HIGH
-**Description:** Using structured JSON for complex multi-element scene composition.
+**影响：** 中高
+**描述：** 使用结构化 JSON 进行复杂的多元素场景组合。
 
-## 6. Color Specification (hex)
+## 6. 颜色指定 (hex)
 
-**Impact:** MEDIUM
-**Description:** Precise color control using hex codes for brand-accurate generations.
+**影响：** 中等
+**描述：** 使用十六进制代码进行精确颜色控制，实现品牌准确的内容生成。
 
-## 7. Typography and Text (typography)
+## 7. 排版与文本 (typography)
 
-**Impact:** MEDIUM
-**Description:** Rendering text and typography within generated images.
+**影响：** 中等
+**描述：** 在生成的图像中渲染文本和排版。
 
-## 8. Multi-Reference Editing (multi)
+## 8. 多参考编辑 (multi)
 
-**Impact:** MEDIUM
-**Description:** Combining multiple reference images for style transfer and composition.
+**影响：** 中等
+**描述：** 组合多张参考图片进行风格迁移和构图。
 
-## 9. Positive Prompt Alternatives (negative)
+## 9. 正面提示词替代方案 (negative)
 
-**Impact:** MEDIUM
-**Description:** Strategies for achieving results without negative prompts, which FLUX does not support.
+**影响：** 中等
+**描述：** 在不使用 FLUX 不支持的负面提示词的情况下实现结果的策略。

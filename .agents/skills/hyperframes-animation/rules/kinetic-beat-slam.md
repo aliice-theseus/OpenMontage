@@ -1,32 +1,32 @@
 ---
 name: kinetic-beat-slam
-description: Percussive kinetic typography — short phrases slam in on a steady beat with distinct per-phrase entrances, optional rhythm chrome (metronome ticks, beat bar), then a locked finale.
+description: 打击式动感排版 — 短短语以稳定节拍猛烈进入，带有每个短语不同的入场，可选节奏镀铬（节拍器滴答、节拍条），然后锁定终曲。
 metadata:
   tags: text, kinetic, typography, beat, rhythm, slam, percussive, punchy
 ---
 
-# Kinetic Beat Slam
+# 动感节拍撞击
 
-Short phrases hit one at a time on a **steady beat**, each with a _different_ entrance, then stack into a locked finale. This is the recipe for "punchy / rhythmic" text-forward pieces (taglines, manifestos, hype intros). The difference between generic and rhythmic is (1) one shared **onset array** driving every element, (2) **distinct** entrances per phrase rather than one reused helper, and (3) optional **rhythm chrome** that visibly keeps the beat.
+短短语在**稳定节拍**上一次一个进入，每个有**不同**的入场，然后堆叠成锁定的终曲。这是"有力/节奏"文本前卫片段（标语、宣言、炒作开场）的配方。泛泛和节奏感之间的区别在于 (1) 一个共享的**开始时间数组**驱动每个元素，(2) 每个短语**不同**的入场而非一个重复使用的辅助函数，以及 (3) 可选的**节奏镀铬**，肉眼可见地保持节拍。
 
-## How It Works
+## 工作原理
 
-1. **Define the beat once.** A single `BEATS = [t0, t1, t2, …]` array (seconds) is the rhythmic spine. Every phrase entrance, accent, and chrome tick reads its time from this array — so the whole piece locks to one pulse instead of drifting hand-tuned offsets.
-2. **Vary the entrances.** Phrase 1 slams (scale + blur), phrase 2 snaps from the side, phrase 3 rises and rotates. Same _energy_, different _form_ — reusing one `punchIn()` for all three reads as flat.
-3. **Land a finale.** All phrases lock into a left-aligned or centered stack; an accent underline sweeps in; optionally a continuous low-amplitude pulse holds the last beat.
+1. **一次定义节拍。** 一个单一的 `BEATS = [t0, t1, t2, …]` 数组（秒）是节奏脊柱。每个短语入场、重音和镀铬滴答从此数组读取其时间 — 因此整个作品锁定一个脉冲，而非漂移的手调偏移。
+2. **变化入场。** 短语 1 猛击（缩放 + 模糊），短语 2 从侧边快照，短语 3 上升并旋转。相同的**能量**，不同的**形式** — 为全部三个重用一个 `punchIn()` 读作平铺直叙。
+3. **着陆终曲。** 所有短语锁定到左对齐或居中堆叠；一个重音下划线扫入；可选一个持续的低振幅脉冲保持最后一拍。
 
-## Beat & Easing
+## 节拍与缓动
 
-Pick the entrance easing by attack character (the choice is discrete):
+按攻击特性选择入场缓动（选择是离散的）：
 
-| GSAP ease     | Attack feel                                 |
-| ------------- | ------------------------------------------- |
-| `power4.out`  | Hard slam, fast settle ⭐ default for a hit |
-| `expo.out`    | Hardest snap (side-snaps, whip-ins)         |
-| `back.out(2)` | Overshoot pop — accents, not body words     |
-| `circ.out`    | Heavy rise with momentum                    |
+| GSAP 缓动       | 攻击感觉                               |
+| --------------- | -------------------------------------- |
+| `power4.out`    | 硬撞击，快速稳定 ⭐ 撞击的默认选择      |
+| `expo.out`      | 最硬快照（侧边快照，鞭打进入）         |
+| `back.out(2)`   | 过冲弹出 — 重音，非正文单词            |
+| `circ.out`      | 带动量的沉重上升                       |
 
-Use **at least 3 distinct easings** across the piece (entrances are its "tone of voice"). Keep durations short — 0.35–0.6s on the hit, ≤0.25s on the exit — so the beat stays percussive.
+跨作品使用**至少 3 种不同缓动**（入场是其"语气"）。保持时长短 — 撞击 0.35–0.6 秒，退出 ≤0.25 秒 — 使节拍保持打击感。
 
 ## HTML
 
@@ -37,7 +37,7 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
     <div class="kbs-line" id="p2"><span class="verb">Decide</span> faster.</div>
     <div class="kbs-line" id="p3"><span class="verb">Act</span> now.</div>
   </div>
-  <!-- optional rhythm chrome -->
+  <!-- 可选节奏镀铬 -->
   <div class="kbs-metronome" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 </section>
 ```
@@ -52,11 +52,11 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
   flex-direction: column;
   justify-content: center;
   gap: 8px;
-  padding: 120px 160px; /* title-safe margin */
+  padding: 120px 160px; /* 标题安全边距 */
   box-sizing: border-box;
 }
 .kbs-line {
-  font-family: "Archivo Black", "League Gothic", sans-serif; /* embedded display face */
+  font-family: "Archivo Black", "League Gothic", sans-serif; /* 嵌入展示字体 */
   font-size: 150px;
   line-height: 0.96;
   letter-spacing: -0.03em;
@@ -65,7 +65,7 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
 }
 .kbs-line .verb {
   color: #ff5b2e;
-} /* one accent hue */
+} /* 一个重音色调 */
 .kbs-metronome {
   position: absolute;
   bottom: 64px;
@@ -82,7 +82,7 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -90,11 +90,11 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // ONE tempo grid drives everything — phrases AND the metronome read it (no scattered offsets).
-  const PULSE = 0.4; // seconds per sub-beat (the grid)
-  const BEATS = [PULSE * 1, PULSE * 5, PULSE * 9]; // phrase onsets, on the grid
+  // 一个节奏网格驱动一切 — 短语和节拍器都读取它（无分散偏移）。
+  const PULSE = 0.4; // 每子节拍秒数（网格）
+  const BEATS = [PULSE * 1, PULSE * 5, PULSE * 9]; // 短语开始时间，在网格上
 
-  // Distinct entrances per phrase (NOT one reused helper).
+  // 每个短语不同的入场（不是一个重复使用的辅助函数）。
   tl.fromTo(
     "#p1",
     { scale: 1.5, filter: "blur(16px)", opacity: 0 },
@@ -114,7 +114,7 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
     BEATS[2],
   );
 
-  // Rhythm chrome: each metronome tick flashes on the SAME grid (PULSE), not a magic offset.
+  // 节奏镀铬：每个节拍器滴答在相同网格（PULSE）上闪烁，而非神奇偏移。
   const ticks = gsap.utils.toArray(".kbs-metronome i");
   ticks.forEach((tick, i) => {
     tl.to(
@@ -124,9 +124,9 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
     );
   });
 
-  // Finale hold: a low-amplitude breath on the locked stack.
-  // floor (not ceil) so the repeat never overshoots data-duration; max(0,…) so a short hold
-  // never yields a negative repeat (GSAP treats negative repeat as -1 = infinite = non-deterministic).
+  // 终曲保持：锁定堆栈上的低振幅呼吸。
+  // 使用 floor（而非 ceil）使重复从不超过 data-duration；max(0,…) 使短保持
+  // 从不产生负重复（GSAP 将负 repeat 视为 -1 = 无限 = 非确定性）。
   const holdStart = BEATS[2] + 0.7,
     cycle = 1.6,
     holdDur = 15 - holdStart;
@@ -146,38 +146,38 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **BEATS spacing** — 1.2–1.8s between hits reads as a confident beat; <0.8s feels frantic, >2.5s loses the pulse. Keep spacing even (it's a _beat_).
-- **Entrance duration** — 0.35–0.6s. The hit must resolve before the next beat.
-- **Distinct entrances** — assign a different transform axis per phrase (scale / x / y+rotate). Reuse the _ease family_, vary the _motion_.
-- **Accent hue** — exactly one (the verbs). The rest is mono white/near-black.
-- **Rhythm chrome** — optional but high-impact for "rhythmic": a 5-tick metronome, a center beat bar, or a `// label` monospace tag pulsing on-beat. Mark any decorative that must survive a shader transition per `../../transitions/overview.md` rules.
+- **BEATS 间距** — 1.2–1.8 秒之间的撞击读作自信节拍；<0.8 秒感觉狂乱，>2.5 秒失去脉冲。保持间距均匀（它是**节拍**）。
+- **入场时长** — 0.35–0.6 秒。撞击必须在下一个节拍前解析。
+- **不同入场** — 为每个短语分配不同的变换轴（缩放 / x / y+旋转）。复用_缓动族_，变化_运动_。
+- **重音色调** — 恰好一个（动词）。其余为单色白/近黑。
+- **节奏镀铬** — 可选但对于"节奏感"高影响力：一个 5 滴答节拍器、一个中心节拍条或一个在节拍上脉冲的 `// label` 等宽标签。根据 `../../transitions/overview.md` 规则，标记必须通过着色器过渡的任何装饰性元素。
 
-## Key Principles
+## 关键原则
 
-- **One beat array, not scattered offsets** — every element times off `BEATS[]`. This is the single biggest lever for "rhythmic."
-- **Different entrance per phrase** — a reused `punchIn()` for all lines is the flat-but-competent tell.
-- **Short attacks** — percussive means fast in, brief, decisive. Long fades kill the beat.
-- **One accent hue, heavy weight** — embedded display faces (Archivo Black, League Gothic, Oswald) at 150px+; see `hyperframes-creative/references/typography.md`.
-- **Finale earns the hold** — stack + underline sweep + optional breath; don't just leave the last phrase sitting.
+- **一个节拍数组，非分散偏移** — 每个元素从 `BEATS[]` 计时。这是"节奏感"最大的单杠杆。
+- **每个短语不同的入场** — 为所有行重用一个 `punchIn()` 是平铺但合格的特征。
+- **短攻击** — 打击意味着快进、简短、果断。长淡入淡出杀死节拍。
+- **一个重音色调，重字重** — 嵌入展示字体（Archivo Black、League Gothic、Oswald）150px+；参见 `hyperframes-creative/references/typography.md`。
+- **终曲赢得保持** — 堆叠 + 下划线扫过 + 可选呼吸；不要只是让最后一个短语坐着。
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline paused**: `gsap.timeline({ paused: true })`. Never `tl.play()`.
-- **No infinite repeats** on the hold/chrome — use `repeat: Math.max(0, Math.floor(dur / cycle) - 1)` (no `repeat: -1`). Use **`Math.floor`, not `Math.ceil`** — `ceil` overshoots `data-duration` and trips the `gsap_repeat_ceil_overshoot` lint rule; the `Math.max(0, …)` guards against a negative repeat (which GSAP reads as `-1` = infinite = non-deterministic) when the hold is shorter than two cycles.
-- **No banned exit animations** between scenes — if this is one of several scenes, the _transition_ is the exit (see `../../transitions/overview.md`); only a final scene may fade out.
-- **Display font must be embedded** or it silently falls back at render (Anton/Bebas-as-literal are NOT embedded — `Bebas Neue` aliases to League Gothic; verify in `typography.md`).
-- **Registry key = `data-composition-id`** on the root.
+- **时间线暂停**：`gsap.timeline({ paused: true })`。永远不要 `tl.play()`。
+- **保持/镀铬上无无限重复** — 使用 `repeat: Math.max(0, Math.floor(dur / cycle) - 1)`（无 `repeat: -1`）。使用 **`Math.floor`，而非 `Math.ceil`** — `ceil` 会超过 `data-duration` 并触发 `gsap_repeat_ceil_overshoot` lint 规则；`Math.max(0, …)` 防止当保持短于两个周期时的负重复（GSAP 将其视为 `-1` = 无限 = 非确定性）。
+- **场景之间无禁止的退出动画** — 如果这是几个场景之一，**过渡**就是退出（参见 `../../transitions/overview.md`）；只有最终场景可以淡出。
+- **展示字体必须嵌入**，否则在渲染时会静默回退（Anton/Bebas-as-literal 未嵌入 — `Bebas Neue` 别名到 League Gothic；在 `typography.md` 中验证）。
+- **根元素上的注册键 = `data-composition-id`**。
 
-## Combinations
+## 组合
 
-- [3d-text-depth-layers.md](3d-text-depth-layers.md) — extruded depth on the slammed words
-- [css-marker-patterns.md](css-marker-patterns.md) — underline sweep / circle on the finale
-- [sine-wave-loop.md](sine-wave-loop.md) — the finale breath/pulse
+- [3d-text-depth-layers.md](3d-text-depth-layers.md) — 撞击词上的挤压深度
+- [css-marker-patterns.md](css-marker-patterns.md) — 终曲上的下划线扫过/圆圈
+- [sine-wave-loop.md](sine-wave-loop.md) — 终曲呼吸/脉冲
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — timeline + easing vocabulary (`../../adapters/gsap-easing-and-stagger.md`)
-- `/hyperframes-creative` — `references/video-composition.md` (foreground rhythm chrome), `references/typography.md` (embedded display fonts)
-- `/hyperframes-core` — composition wiring, determinism (finite repeats)
+- `/hyperframes-animation` — 时间线 + 缓动词汇（`../../adapters/gsap-easing-and-stagger.md`）
+- `/hyperframes-creative` — `references/video-composition.md`（前景节奏镀铬）、`references/typography.md`（嵌入展示字体）
+- `/hyperframes-core` — 组合接线、确定性（有限重复）

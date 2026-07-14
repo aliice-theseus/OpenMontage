@@ -1,31 +1,31 @@
 ---
 name: endpoints
-description: Complete BFL API endpoint documentation
+description: BFL API 完整端点文档
 ---
 
-# BFL API Endpoints
+# BFL API 端点
 
-Complete reference for all BFL FLUX API endpoints.
+所有 BFL FLUX API 端点的完整参考。
 
-## Base URLs
+## 基础 URL
 
-| Region | Endpoint                | Use Case                           |
-| ------ | ----------------------- | ---------------------------------- |
-| Global | `https://api.bfl.ai`    | Default, automatic failover        |
-| EU     | `https://api.eu.bfl.ai` | GDPR compliance, EU data residency |
-| US     | `https://api.us.bfl.ai` | US data residency                  |
+| 区域 | 端点 | 用途 |
+|------|------|------|
+| 全局 | `https://api.bfl.ai` | 默认，自动故障转移 |
+| 欧盟 | `https://api.eu.bfl.ai` | GDPR 合规，欧盟数据驻留 |
+| 美国 | `https://api.us.bfl.ai` | 美国数据驻留 |
 
-**Recommendation:** Use the global endpoint (`api.bfl.ai`) unless you have specific regional requirements.
+**建议：** 除非有特定区域要求，否则使用全局端点（`api.bfl.ai`）。
 
-## Authentication
+## 认证
 
-All requests require the `x-key` header with your API key:
+所有请求都需要在 `x-key` 头中提供 API 密钥：
 
 ```bash
 x-key: YOUR_API_KEY
 ```
 
-## FLUX.2 Text-to-Image and Image-to-Image Endpoints
+## FLUX.2 文本到图像和图像到图像端点
 
 ### FLUX.2 [klein] 4B
 
@@ -33,7 +33,7 @@ x-key: YOUR_API_KEY
 POST /v1/flux-2-klein-4b
 ```
 
-Fastest generation, 4B parameters.
+最快生成，4B 参数。
 
 ### FLUX.2 [klein] 9B
 
@@ -41,7 +41,7 @@ Fastest generation, 4B parameters.
 POST /v1/flux-2-klein-9b
 ```
 
-Fast generation with better quality, 9B parameters.
+快速生成，质量更好，9B 参数。
 
 ### FLUX.2 [max]
 
@@ -49,7 +49,7 @@ Fast generation with better quality, 9B parameters.
 POST /v1/flux-2-max
 ```
 
-Highest quality, supports grounding search.
+最高质量，支持基础搜索。
 
 ### FLUX.2 [pro]
 
@@ -57,7 +57,7 @@ Highest quality, supports grounding search.
 POST /v1/flux-2-pro
 ```
 
-Production balanced quality and speed.
+生产环境平衡质量和速度。
 
 ### FLUX.2 [flex]
 
@@ -65,9 +65,9 @@ Production balanced quality and speed.
 POST /v1/flux-2-flex
 ```
 
-Typography optimized, adjustable steps/guidance.
+排版优化，可调节步数/引导尺度。
 
-## FLUX.1 Endpoints
+## FLUX.1 端点
 
 ### FLUX1.1 [pro]
 
@@ -75,7 +75,7 @@ Typography optimized, adjustable steps/guidance.
 POST /v1/flux-pro-1.1
 ```
 
-Text-to-image generation.
+文本到图像生成。
 
 ### FLUX.1 Kontext
 
@@ -95,63 +95,63 @@ POST /v1/flux-kontext-max
 POST /v1/flux-fill
 ```
 
-Inpainting and object removal - you can achieve inpainting and object removal with specific prompting style with FLUX.2 models for better performance.
+修复填充和物体移除——使用 FLUX.2 模型并通过特定提示风格可以实现修复填充和物体移除，性能更佳。
 
-## Common Request Parameters
+## 通用请求参数
 
-### Text-to-Image (T2I)
+### 文本到图像 (T2I)
 
-| Parameter          | Type    | Required | Description                                  |
-| ------------------ | ------- | -------- | -------------------------------------------- |
-| `prompt`           | string  | Yes      | Text description (up to 32K tokens)          |
-| `width`            | integer | No       | Image width (multiple of 16, max 4MP total)  |
-| `height`           | integer | No       | Image height (multiple of 16, max 4MP total) |
-| `seed`             | integer | No       | Random seed for reproducibility              |
-| `safety_tolerance` | integer | No       | 0 (strict) to 5 (permissive), default 2      |
-| `output_format`    | string  | No       | "jpeg" or "png", default "jpeg"              |
-| `webhook_url`      | string  | No       | URL for async notification                   |
-| `webhook_secret`   | string  | No       | Secret for webhook signature                 |
+| 参数                | 类型    | 必需 | 描述                                      |
+| ------------------- | ------- | ---- | ----------------------------------------- |
+| `prompt`            | string  | 是   | 文本描述（最多 32K tokens）                |
+| `width`             | integer | 否   | 图像宽度（16 的倍数，最大 4MP 总面积）     |
+| `height`            | integer | 否   | 图像高度（16 的倍数，最大 4MP 总面积）     |
+| `seed`              | integer | 否   | 随机种子，用于可重现结果                  |
+| `safety_tolerance`  | integer | 否   | 0（严格）到 5（宽松），默认 2              |
+| `output_format`     | string  | 否   | "jpeg" 或 "png"，默认 "jpeg"               |
+| `webhook_url`       | string  | 否   | 用于异步通知的 URL                        |
+| `webhook_secret`    | string  | 否   | 用于 webhook 签名的密钥                    |
 
-### Image-to-Image (I2I)
+### 图像到图像 (I2I)
 
-> **Important:** All FLUX.2 models (klein, pro, max, flex) support image-to-image editing via the `input_image` parameter. FLUX.2 is recommended over FLUX.1 Kontext for editing.
+> **重要：** 所有 FLUX.2 模型（klein、pro、max、flex）都通过 `input_image` 参数支持图像到图像编辑。推荐使用 FLUX.2 而非 FLUX.1 Kontext 进行编辑。
 
-> **Preferred: Use URLs directly** - The API fetches URLs automatically, which is simpler and more convenient than downloading and encoding to base64. Both URL and base64 work, but URLs are recommended when available.
+> **推荐：直接使用 URL** - API 自动获取 URL，比下载并编码为 base64 更简单方便。URL 和 base64 都可用，但推荐在可用时使用 URL。
 
-| Parameter                         | Type    | Required | Description                                                    |
-| --------------------------------- | ------- | -------- | -------------------------------------------------------------- |
-| `prompt`                          | string  | Yes      | Edit instruction                                               |
-| `input_image`                     | string  | Yes      | **URL (preferred)** or base64 - API fetches URLs automatically |
-| `input_image_2` - `input_image_8` | string  | No       | Additional reference URLs or base64                            |
-| `width`                           | integer | No       | Output width                                                   |
-| `height`                          | integer | No       | Output height                                                  |
+| 参数                               | 类型    | 必需 | 描述                                              |
+| ---------------------------------- | ------- | ---- | ------------------------------------------------- |
+| `prompt`                           | string  | 是   | 编辑指令                                          |
+| `input_image`                      | string  | 是   | **URL（推荐）** 或 base64 - API 自动获取 URL      |
+| `input_image_2` - `input_image_8`  | string  | 否   | 额外的参考 URL 或 base64                          |
+| `width`                            | integer | 否   | 输出宽度                                          |
+| `height`                           | integer | 否   | 输出高度                                          |
 
-### FLUX.2 [flex] Specific
+### FLUX.2 [flex] 专有
 
-| Parameter  | Type    | Default | Description             |
-| ---------- | ------- | ------- | ----------------------- |
-| `steps`    | integer | 50      | Inference steps (1-50)  |
-| `guidance` | float   | 4.5     | Guidance scale (1.5-10) |
+| 参数      | 类型    | 默认值 | 描述                     |
+| --------- | ------- | ------ | ------------------------ |
+| `steps`   | integer | 50     | 推理步数（1-50）         |
+| `guidance`| float   | 4.5    | 引导尺度（1.5-10）       |
 
-## Resolution Constraints
+## 分辨率约束
 
-- **Minimum:** 64x64 pixels
-- **Maximum:** 4MP total (width x height)
-- **Multiple of:** 16 (both dimensions)
+- **最小：** 64x64 像素
+- **最大：** 4MP 总面积（宽度 x 高度）
+- **倍数：** 16（两个维度）
 
-### Common Resolutions
+### 常用分辨率
 
-| Aspect Ratio    | Resolution | Megapixels |
-| --------------- | ---------- | ---------- |
-| 1:1 (Square)    | 1024x1024  | 1.05 MP    |
-| 16:9 (Wide)     | 1920x1080  | 2.07 MP    |
-| 9:16 (Portrait) | 1080x1920  | 2.07 MP    |
-| 4:3 (Classic)   | 1536x1152  | 1.77 MP    |
-| 2:1 (Panorama)  | 2048x1024  | 2.10 MP    |
+| 宽高比         | 分辨率      | 百万像素  |
+| -------------- | ----------- | --------- |
+| 1:1（正方形）  | 1024x1024   | 1.05 MP   |
+| 16:9（宽屏）   | 1920x1080   | 2.07 MP   |
+| 9:16（竖屏）   | 1080x1920   | 2.07 MP   |
+| 4:3（经典）    | 1536x1152   | 1.77 MP   |
+| 2:1（全景）    | 2048x1024   | 2.10 MP   |
 
-## Example Requests
+## 示例请求
 
-### Basic T2I Request
+### 基本 T2I 请求
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -164,7 +164,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   }'
 ```
 
-### Response
+### 响应
 
 ```json
 {
@@ -173,7 +173,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
 }
 ```
 
-### T2I with All Options
+### 带所有选项的 T2I
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-max" \
@@ -191,9 +191,9 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-max" \
   }'
 ```
 
-### I2I Request (FLUX.2 - Recommended)
+### I2I 请求（FLUX.2 - 推荐）
 
-Edit images using any FLUX.2 model by passing the source image URL directly:
+使用任何 FLUX.2 模型通过直接传递源图像 URL 来编辑图像：
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-klein-9b" \
@@ -205,7 +205,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-klein-9b" \
   }'
 ```
 
-For higher quality edits, use FLUX.2 [pro] or [max]:
+如需更高质量的编辑，请使用 FLUX.2 [pro] 或 [max]：
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
@@ -217,7 +217,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-pro" \
   }'
 ```
 
-### Multi-Reference I2I (FLUX.2)
+### 多参考 I2I (FLUX.2)
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-max" \
@@ -231,7 +231,7 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-max" \
   }'
 ```
 
-### FLUX.2 [flex] with Custom Steps
+### FLUX.2 [flex] 带自定义步数
 
 ```bash
 curl -X POST "https://api.bfl.ai/v1/flux-2-flex" \
@@ -244,21 +244,21 @@ curl -X POST "https://api.bfl.ai/v1/flux-2-flex" \
   }'
 ```
 
-## Polling Endpoint
+## 轮询端点
 
-### Get Result
+### 获取结果
 
 ```
 GET /v1/get_result?id={generation_id}
 ```
 
-### Response States
+### 响应状态
 
 ```json
-// Pending
+// 处理中
 { "status": "Pending" }
 
-// Ready
+// 就绪
 {
   "status": "Ready",
   "result": {
@@ -268,19 +268,19 @@ GET /v1/get_result?id={generation_id}
   }
 }
 
-// Error
+// 错误
 {
   "status": "Error",
   "error": "Error description"
 }
 ```
 
-## Error Responses
+## 错误响应
 
-| Status Code | Meaning          | Action             |
-| ----------- | ---------------- | ------------------ |
-| 400         | Bad Request      | Check parameters   |
-| 401         | Unauthorized     | Verify API key     |
-| 402         | Payment Required | Add credits        |
-| 429         | Rate Limited     | Implement backoff  |
-| 500         | Server Error     | Retry with backoff |
+| 状态码 | 含义           | 操作               |
+| ------ | -------------- | ------------------ |
+| 400    | 错误请求       | 检查参数           |
+| 401    | 未授权         | 验证 API 密钥      |
+| 402    | 需要付款       | 添加积分           |
+| 429    | 请求过多       | 实施退避策略       |
+| 500    | 服务器错误     | 带退避重试         |

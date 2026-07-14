@@ -1,29 +1,29 @@
-# Requirements & Caches
+# 需求与缓存
 
-## Credential & key priority
+## 凭证与密钥优先级
 
-Run `npx hyperframes auth status` to see what's configured and which engines a workflow will use (see the skill's **Preflight** section). Keys resolve in this order — **first match wins**:
+运行 `npx hyperframes auth status` 查看已配置的内容以及工作流将使用哪些引擎（参见技能的**预检**部分）。密钥按以下顺序解析——**第一个匹配的胜出**：
 
-| Provider                             | Resolution order (first non-empty wins)                                                                                                                                    | Local deps when used                             |
+| 提供商 | 解析顺序（第一个非空胜出） | 使用时的本地依赖 |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **HeyGen** (TTS + BGM/SFX retrieval) | `$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → `~/.heygen/credentials` (shared with heygen-cli; `$HEYGEN_CONFIG_DIR` overrides the dir; written by `hyperframes auth login`) | none (REST)                                      |
-| **ElevenLabs** (TTS fallback)        | `$ELEVENLABS_API_KEY`                                                                                                                                                      | `pip install elevenlabs`                         |
-| **Lyria** (BGM fallback)             | `$GEMINI_API_KEY` → `$GOOGLE_API_KEY`                                                                                                                                      | `pip install google-genai`                       |
-| **Kokoro** (TTS, no key)             | always — final voice fallback                                                                                                                                              | `pip install kokoro-onnx soundfile`              |
-| **MusicGen** (BGM, no key)           | always — final music fallback                                                                                                                                              | `pip install transformers torch soundfile numpy` |
+| **HeyGen**（TTS + BGM/SFX 检索） | `$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → `~/.heygen/credentials`（与 heygen-cli 共享；`$HEYGEN_CONFIG_DIR` 可覆盖目录；由 `hyperframes auth login` 写入） | 无（REST） |
+| **ElevenLabs**（TTS 备选） | `$ELEVENLABS_API_KEY` | `pip install elevenlabs` |
+| **Lyria**（BGM 备选） | `$GEMINI_API_KEY` → `$GOOGLE_API_KEY` | `pip install google-genai` |
+| **Kokoro**（TTS，无需密钥） | 始终可用——最终语音备选 | `pip install kokoro-onnx soundfile` |
+| **MusicGen**（BGM，无需密钥） | 始终可用——最终音乐备选 | `pip install transformers torch soundfile numpy` |
 
-`hyperframes auth login` (browser OAuth) is the recommended setup: one sign-in, every project, no per-repo `.env`. An OAuth login is sent as `Authorization: Bearer`; an API key as `X-Api-Key`. With no HeyGen credential, voice/BGM run fully locally (Kokoro / MusicGen) — `hyperframes auth status` and `hyperframes doctor` both report whether those local deps are installed.
+`hyperframes auth login`（浏览器 OAuth）是推荐的设置方式：一次登录，所有项目，无需每个仓库的 `.env`。OAuth 登录作为 `Authorization: Bearer` 发送；API 密钥作为 `X-Api-Key` 发送。如果没有 HeyGen 凭证，语音/BGM 完全在本地运行（Kokoro / MusicGen）——`hyperframes auth status` 和 `hyperframes doctor` 都会报告这些本地依赖是否已安装。
 
-## Model caches & system dependencies
+## 模型缓存与系统依赖
 
-Each command downloads its own model on first run and caches it under `~/.cache/hyperframes/`:
+每个命令在首次运行时下载自己的模型并缓存在 `~/.cache/hyperframes/` 下：
 
-- **TTS (HeyGen)** — no local deps; needs a HeyGen credential + `ffmpeg` on PATH (to transcode the mp3 response to `.wav`). Credential resolves like the CLI: `$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → `~/.heygen/credentials` (shared with heygen-cli; run `npx hyperframes auth login`). An OAuth login is sent as `Authorization: Bearer`; an API key as `X-Api-Key`.
-- **TTS (ElevenLabs)** — same as HeyGen: API key + `ffmpeg`.
-- **TTS (Kokoro)** — Kokoro-82M (~311 MB) + voices (~27 MB) in `tts/`. Requires Python 3.8+ with `kokoro-onnx` and `soundfile` (`pip install kokoro-onnx soundfile`). Non-English text also needs `espeak-ng` system-wide.
-- **BGM (Lyria)** — needs `$GEMINI_API_KEY` or `$GOOGLE_API_KEY` + `pip install google-genai`. No local model cache.
-- **BGM (MusicGen)** — `pip install transformers torch soundfile`. `facebook/musicgen-small` (~300 MB) cached under `~/.cache/huggingface/` on first run.
-- **Transcribe** — Whisper model size depending on choice (75 MB – 3.1 GB) in `whisper/`. Bundles `whisper.cpp`.
-- **Remove-background** — `u2net_human_seg` (~168 MB ONNX) in `background-removal/models/`. Peak inference RAM ~1.5 GB.
+- **TTS（HeyGen）**——无本地依赖；需要 HeyGen 凭证 + PATH 上的 `ffmpeg`（用于将 mp3 响应转码为 `.wav`）。凭证解析方式与 CLI 相同：`$HEYGEN_API_KEY` → `$HYPERFRAMES_API_KEY` → `~/.heygen/credentials`（与 heygen-cli 共享；运行 `npx hyperframes auth login`）。OAuth 登录作为 `Authorization: Bearer` 发送；API 密钥作为 `X-Api-Key`。
+- **TTS（ElevenLabs）**——与 HeyGen 相同：API 密钥 + `ffmpeg`。
+- **TTS（Kokoro）**——Kokoro-82M（约 311 MB）+ 语音（约 27 MB）在 `tts/` 目录下。需要 Python 3.8+ 并安装 `kokoro-onnx` 和 `soundfile`（`pip install kokoro-onnx soundfile`）。非英语文本还需要系统级安装 `espeak-ng`。
+- **BGM（Lyria）**——需要 `$GEMINI_API_KEY` 或 `$GOOGLE_API_KEY` + `pip install google-genai`。无本地模型缓存。
+- **BGM（MusicGen）**——`pip install transformers torch soundfile`。`facebook/musicgen-small`（约 300 MB）首次运行时缓存到 `~/.cache/huggingface/` 下。
+- **转录（Transcribe）**——Whisper 模型大小取决于选择（75 MB – 3.1 GB）在 `whisper/` 目录下。包含 `whisper.cpp`。
+- **去除背景（Remove-background）**——`u2net_human_seg`（约 168 MB ONNX）在 `background-removal/models/` 目录下。峰值推理内存约 1.5 GB。
 
-Run `npx hyperframes doctor` if a command fails because of a missing dependency.
+如果命令因缺少依赖而失败，运行 `npx hyperframes doctor`。

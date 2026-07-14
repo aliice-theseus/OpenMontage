@@ -1,169 +1,167 @@
-# Image Generation Usage for OpenMontage
+# OpenMontage 图像生成使用指南
 
-> Sources: OpenAI DALL-E 3 documentation, FLUX/BFL API documentation, existing Layer 3 skills
-> at `.agents/skills/flux-best-practices/` and `.agents/skills/bfl-api/`
+> 来源：OpenAI DALL-E 3 文档、FLUX/BFL API 文档、现有 Layer 3 技能
+> 位于 `.agents/skills/flux-best-practices/` 和 `.agents/skills/bfl-api/`
 
-## Quick Reference Card
-
-```
-FLUX RESOLUTION:  1920x1088 (16:9) | 1088x1920 (9:16) — must be multiples of 16
-MAX TOTAL:        4 megapixels (width x height)
-CONSISTENCY:      Use hero image as input_image for subsequent frames
-STYLE SYSTEM:     Derive from subject + audience + tone, then adapt per scene
-BATCH STRATEGY:   Hero at max quality → iterate with klein → final pass with pro
-```
-
-## Resolution for Video Frames
-
-All FLUX dimensions **must be multiples of 16**. Maximum total is 4MP.
-
-| Target | FLUX Resolution | Cost (FLUX.2 pro) |
-|--------|----------------|-------------------|
-| YouTube 16:9 | `1920x1088` | $0.03/image |
-| YouTube 4K | `3840x2160` | Requires pro/max |
-| TikTok/Reels 9:16 | `1088x1920` | $0.03/image |
-| Square 1:1 | `1024x1024` | $0.03/image |
-| Thumbnail | `1280x720` | $0.03/image |
-
-## Maintaining Visual Consistency
-
-The biggest challenge: making 8-12 generated images look like they belong in the same video.
-
-### Strategy 1 — Shared Visual System (Always Use)
-
-Define a shared visual system for the project first, then adapt it per scene.
-Capture the project's:
-
-- dominant mood and texture,
-- palette direction,
-- lighting bias,
-- rendering medium,
-- character/environment consistency anchors.
-
-The playbook's `image_prompt_prefix` is source material, not something to paste
-verbatim into every prompt. Distill it into a shorter scene-appropriate anchor.
-
-### Strategy 2 — Hero Reference Image (Recommended)
-
-1. Generate one "hero" image at maximum quality (`FLUX.2 [max]`, $0.07)
-2. Use it as `input_image` for all subsequent frames:
+## 快速参考卡
 
 ```
-Frame 1: T2I with detailed prompt → hero.png
-Frame 2: I2I with hero.png + "Same style, camera pans right to show..."
-Frame 3: I2I with hero.png + "Same style, zoomed in on..."
+FLUX 分辨率：    1920x1088（16:9）| 1088x1920（9:16）— 必须是16的倍数
+最大总像素：      4 百万像素（宽 x 高）
+一致性：          使用主视觉图像作为后续帧的 input_image
+风格系统：        从主体 + 受众 + 语调推导，然后按场景适配
+批量策略：        主视觉以最高质量 → 用 klein 迭代 → 最终用 pro
 ```
 
-FLUX.2 supports up to 4 references (klein) or 8 references (pro/max/flex). Reference by number: "The character from image 1 in the environment from image 2."
+## 视频帧分辨率
 
-### Strategy 3 — Seed Locking
+所有 FLUX 尺寸**必须是16的倍数**。最大总像素为4MP。
 
-Use the same `seed` parameter across generations with similar prompts. Produces similar compositions but is fragile to prompt changes — use as supplement, not primary strategy.
+| 目标 | FLUX 分辨率 | 费用（FLUX.2 pro） |
+|------|-------------|-------------------|
+| YouTube 16:9 | `1920x1088` | $0.03/图像 |
+| YouTube 4K | `3840x2160` | 需 pro/max |
+| TikTok/Reels 9:16 | `1088x1920` | $0.03/图像 |
+| 方形 1:1 | `1024x1024` | $0.03/图像 |
+| 缩略图 | `1280x720` | $0.03/图像 |
 
-## Prompt Construction — 3-Part Contextual Approach
+## 保持视觉一致性
 
-**Do NOT copy the playbook's `image_prompt_prefix` verbatim into every prompt.** That's what makes all scenes look the same. Instead, build each prompt from 3 contextual layers:
+最大的挑战：让8-12张生成的图像看起来属于同一个视频。
 
-### Part 1: Scene-Specific Style Direction (from shot_language + texture_keywords)
+### 策略1 — 共享视觉系统（始终使用）
 
-Use the scene's `shot_language` fields to set camera and lighting:
-```
-[SHOT SIZE from shot_language.shot_size, e.g., "medium close-up"].
-[LIGHTING from shot_language.lighting_key, e.g., "golden hour warm light"].
-[DEPTH from shot_language.depth_of_field, e.g., "shallow depth of field with bokeh"].
-[TEXTURE from scene.texture_keywords, e.g., "film grain, warm tones"].
-```
+首先为项目定义一个共享的视觉系统，然后按场景适配。
+捕捉项目的：
 
-If the scene has no shot_language, fall back to the template below.
+- 主导情绪和纹理
+- 调色板方向
+- 光照偏好
+- 渲染媒介
+- 角色/环境一致性锚点
 
-### Part 2: Playbook Consistency Anchor (adapted, not verbatim)
+剧本的 `image_prompt_prefix` 是源材料，不是要逐字粘贴到每个提示中的内容。将其提取为更短的场景适当锚点。
 
-Extract the ESSENCE of the playbook's visual language — don't copy the prefix. For example:
-- Playbook says "Clean, minimal illustration with soft shadows, muted color palette" → Adapt to: "muted color palette, soft shadows"
-- Playbook says "Bold flat motion graphics, vibrant gradients" → Adapt to: "vibrant flat style"
+### 策略2 — 主视觉参考图像（推荐）
 
-The anchor keeps scenes visually coherent without making them identical.
-
-### Part 3: Scene Description
-
-The actual content of the scene. Be specific — replace generic words with concrete details.
-
-**BAD:** "A person using a computer in a modern office"
-**GOOD:** "Software developer in a dimly lit home office, blue monitor glow reflecting off glasses, desk cluttered with energy drinks and sticky notes"
-
-### Full Prompt Example (with shot_language)
+1. 以最高质量生成一个"主视觉"图像（`FLUX.2 [max]`，$0.07）
+2. 将其用作所有后续帧的 `input_image`：
 
 ```
-Medium close-up, golden hour warm lighting, shallow depth of field.
-Muted earth tones, soft shadows.
-Beekeeper in white protective gear lifting a frame dripping with honey,
-late afternoon sun catching golden droplets, lavender field blurred
-in the background. Film grain, warm amber tones.
-16:9 aspect ratio.
+帧1：带详细提示的 T2I → hero.png
+帧2：使用 hero.png 的 I2I + "相同风格，相机向右摇摄以显示……"
+帧3：使用 hero.png 的 I2I + "相同风格，放大到……"
 ```
 
-### Fallback Template (when no shot_language is available)
+FLUX.2 支持最多4个参考（klein）或8个参考（pro/max/flex）。按编号引用："来自图像1的角色在来自图像2的环境中。"
+
+### 策略3 — 种子锁定
+
+在不同生成中使用相同的 `seed` 参数配合相似的提示。产生相似的构图但对提示变化敏感 — 作为补充策略，非主要策略。
+
+## 提示构建 — 3部分上下文方法
+
+**不要将剧本的 `image_prompt_prefix` 逐字复制到每个提示中。** 那会让所有场景看起来都一样。相反，从3个上下文层构建每个提示：
+
+### 第1部分：场景特定风格方向（来自 shot_language + texture_keywords）
+
+使用场景的 `shot_language` 字段设置镜头和光照：
+```
+[镜头大小来自 shot_language.shot_size，例如，"中近景"]。
+[光照来自 shot_language.lighting_key，例如，"黄金时刻的温暖光线"]。
+[景深来自 shot_language.depth_of_field，例如，"带虚化的浅景深"]。
+[纹理来自 scene.texture_keywords，例如，"胶片颗粒感，暖色调"]。
+```
+
+如果场景没有 shot_language，回退到下面的模板。
+
+### 第2部分：剧本一致性锚点（适配而非逐字复制）
+
+提取剧本视觉语言的**精髓** — 不要复制前缀。例如：
+- 剧本说"干净的极简插图，柔和阴影，柔和调色板" → 适配为："柔和调色板，柔和阴影"
+- 剧本说"大胆平面动态图形，鲜艳渐变" → 适配为："鲜艳平面风格"
+
+锚点让场景在视觉上连贯而不至于完全相同。
+
+### 第3部分：场景描述
+
+场景的实际内容。要具体 — 用具体细节替换通用词语。
+
+**糟糕：** "一个人在现代化办公室里使用电脑"
+**好：** "软件开发人员在昏暗的家庭办公室里，蓝色显示器光映在眼镜上，桌子上堆满能量饮料和便利贴"
+
+### 完整提示示例（带 shot_language）
 
 ```
-[ADAPTED STYLE ANCHOR from playbook — 5-10 words, not the full prefix].
-[SCENE DESCRIPTION: specific subject, action, environment].
-[LIGHTING: golden hour / overcast / studio softbox / dramatic side-light].
-[COMPOSITION: wide shot / medium shot / close-up / overhead / isometric].
-[CAMERA: Shot on [camera] with [lens] at [aperture]] (for photorealistic only).
-16:9 aspect ratio.
+中近景，黄金时刻的温暖光线，浅景深。
+柔和大地色调，柔和阴影。
+穿白色防护服的养蜂人举起滴着蜂蜜的框架，
+午后的阳光捕捉金色液滴，
+背景中模糊的薰衣草田。胶片颗粒感，温暖琥珀色调。
+16:9 宽高比。
 ```
 
-### Using lib/shot_prompt_builder.py
+### 回退模板（无 shot_language 时）
 
-For programmatic prompt construction, use the shot prompt builder which automates the 3-part approach:
+```
+[从剧本适配的风格锚点 — 5-10个词，不是完整前缀]。
+[场景描述：具体的主体、动作、环境]。
+[光照：黄金时刻/阴天/工作室柔光箱/戏剧性侧光]。
+[构图：广角/中景/特写/俯视/等距]。
+[相机：用 [相机] 配 [镜头] 在 [光圈] 拍摄]（仅照片级真实感）。
+16:9 宽高比。
+```
+
+### 使用 lib/shot_prompt_builder.py
+
+对于程序化提示构建，使用镜头提示构建器，自动化3部分方法：
 
 ```python
 from lib.shot_prompt_builder import build_shot_prompt
 prompt = build_shot_prompt(scene, style_context=playbook_data)
 ```
 
-This converts the structured shot_language fields into natural-language prompts
-optimized for image/video generation providers.
+这将结构化的 shot_language 字段转换为针对图像/视频生成提供商优化的自然语言提示。
 
-### Style-Specific Prompt Patterns
+### 风格特定提示模式
 
-| Style | Prompt Pattern |
-|-------|---------------|
-| **Flat illustration** | "Flat vector illustration, bold colors, clean edges, no gradients, white background" |
-| **Isometric** | "Isometric 3D illustration, 30-degree angle, clean geometric shapes, soft shadows" |
-| **Photorealistic** | "Photorealistic, shot on Canon EOS R5 with 85mm f/1.4, shallow depth of field" |
-| **Diagram-style** | "Technical diagram, labeled components, clean lines, minimal color, white background" |
-| **Watercolor** | "Soft watercolor illustration, muted tones, visible brush strokes, paper texture" |
+| 风格 | 提示模式 |
+|------|---------|
+| **平面插图** | "平面矢量插图，大胆颜色，干净边缘，无渐变，白色背景" |
+| **等距** | "等距3D插图，30度角，干净几何形状，柔和阴影" |
+| **照片级真实感** | "照片级真实感，用 Canon EOS R5 配 85mm f/1.4 拍摄，浅景深" |
+| **图表风格** | "技术图表，标注组件，干净线条，极简颜色，白色背景" |
+| **水彩** | "柔和水彩插图，柔和色调，可见笔触，纸张纹理" |
 
-## Batch Generation Strategy
+## 批量生成策略
 
-| Phase | Model | Cost/Image | Purpose |
-|-------|-------|-----------|---------|
-| 1. Style guide | FLUX.2 [max] | $0.07 | One hero image, maximum quality |
-| 2. Storyboard iteration | FLUX.2 [klein] 9B | $0.015 | Rapid variations during planning |
-| 3. Final frames | FLUX.2 [pro] | $0.03 | Re-generate finals with hero as reference |
+| 阶段 | 模型 | 费用/图像 | 用途 |
+|------|------|-----------|------|
+| 1. 风格指南 | FLUX.2 [max] | $0.07 | 一张主视觉图像，最高质量 |
+| 2. 故事板迭代 | FLUX.2 [klein] 9B | $0.015 | 规划期间快速变体 |
+| 3. 最终帧 | FLUX.2 [pro] | $0.03 | 以主视觉为参考重新生成最终图 |
 
-**Rate limit:** 24 concurrent requests max. Pipeline accordingly.
+**速率限制：** 最大24个并发请求。按流水线处理。
 
-**Budget for 8-image explainer:** $0.07 (hero) + $0.12 (8x klein iterations) + $0.24 (8x pro finals) = ~$0.43
+**8张图像讲解的预算：** $0.07（主视觉）+ $0.12（8x klein 迭代）+ $0.24（8x pro 最终）= 约$0.43
 
-## Common Pitfalls
+## 常见陷阱
 
-1. **Text in images** — AI image generators are unreliable with text. Never include text in prompts; add text as overlays in the compose stage
-2. **Hands and fingers** — DALL-E 3 and FLUX still struggle. Avoid prompts requiring detailed hand poses
-3. **Inconsistent characters** — Without reference images, the same character will look different each time. Always use the hero reference strategy
-4. **Over-prompting** — Long, complex prompts produce unpredictable results. Keep to 2-3 sentences
-5. **Over-unifying prompts** — Forcing the exact same style phrase into every prompt makes scenes look samey. Keep the visual system consistent, but let each scene express its own subject, shot, and emotional beat.
+1. **图像中的文字** — AI 图像生成器处理文字不可靠。绝不在提示中包含文字；在合成阶段将文字添加为叠加
+2. **手和手指** — DALL-E 3 和 FLUX 仍有困难。避免需要详细手部姿势的提示
+3. **角色不一致** — 没有参考图像，相同的角色每次看起来都不同。始终使用主视觉参考策略
+4. **过度提示** — 长而复杂的提示产生不可预测的结果。保持在2-3句话
+5. **过度统一提示** — 强制将完全相同的风格短语放入每个提示使场景看起来雷同。保持视觉系统一致，但让每个场景表达自己的主体、镜头和情感节拍
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When using the `image_selector` tool in the asset stage:
+在资产阶段使用 `image_selector` 工具时：
 
-1. **Design the visual system first** from the proposal or custom playbook: mood, palette, texture, motion energy
-2. **Generate a hero image first** at highest quality, use as reference for all others
-3. **Use `1920x1088`** for 16:9 video frames (FLUX multiple-of-16 requirement)
-4. **Never request text in images** — add text overlays in the compose stage
-5. **Budget check** — estimate total image cost before generating; switch to local diffusers if over budget
-6. **Iterate with klein** during planning, finalize with pro
-7. **Keep prompts to 2-3 sentences** — scene-specific camera/lighting + adapted visual anchor + concrete subject
-8. **Match the scene plan** — each image maps to a specific scene in the script
+1. **首先从提案或自定义剧本设计视觉系统**：情绪、调色板、纹理、运动能量
+2. **首先生成主视觉图像** 以最高质量，用作其他图像的参考
+3. **对于16:9视频帧使用 `1920x1088`**（FLUX 的16倍数要求）
+4. **绝不请求图像中的文字** — 在合成阶段添加文字叠加
+5. **预算检查** — 在生成前估算总图像费用；超预算时切换到本地 diffusers
+6. **规划期间用 klein 迭代**，最终用 pro 定稿
+7. **保持提示在2-3句话** — 场景特定镜头/光照 + 适配的视觉锚点 + 具体主体
+8. **匹配场景计划** — 每张图像映射到脚本中的特定场景

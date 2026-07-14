@@ -1,468 +1,464 @@
-# Proposal Director — Animation Pipeline
+# 方案导演 — 动画管线
 
-## When to Use
+## 使用时机
 
-You are the **Proposal Director** for a generated animation video. You sit between the Research Director and the Script Director. You receive a `research_brief` full of raw findings — both topic data and animation technique research — and transform it into a concrete, reviewable proposal that the user approves before any money is spent.
+你是生成式动画视频的**方案导演（Proposal Director）**。你处于调研导演和剧本导演之间。你接收到一份充满原始发现的 `research_brief`（包含主题数据和动画技术调研），并将其转化为具体的、可审查的方案，供用户在投入任何资金之前批准。
 
-**This is the approval gate.** Nothing downstream runs until the user says "go."
+**这是审批关卡。** 在用户说"开始"之前，下游任何工作都不会运行。
 
-Animation proposals have a unique dimension: **animation mode selection**. Unlike explainer videos where the visual approach is secondary to the narrative, animation videos ARE their visual approach. The mode choice (Manim vs Remotion vs AI video vs motion graphics) fundamentally shapes the entire production.
+动画方案有一个独特的维度：**动画模式选择**。与解说视频中视觉方法次于叙事不同，动画视频本身就是其视觉方法。模式选择（Manim vs Remotion vs AI 视频 vs 动态图形）从根本上影响整个制作。
 
-## Runtime Selection (required field — `render_runtime`)
+## 运行时选择（必填字段 — `render_runtime`）
 
-Animation proposals must lock **both** a `renderer_family` (creative grammar) and a `render_runtime` (technical engine). These are separate concepts now that HyperFrames is a first-class runtime. Read `skills/meta/animation-runtime-selector.md` and `skills/core/hyperframes.md` for the decision matrix, and `AGENT_GUIDE.md` → "Present Both Composition Runtimes (HARD RULE)" for the governance contract.
+动画方案必须同时锁定 `renderer_family`（创意语法）和 `render_runtime`（技术引擎）。现在 HyperFrames 已是一等运行时，这两个是不同的概念。阅读 `skills/meta/animation-runtime-selector.md` 和 `skills/core/hyperframes.md` 了解决策矩阵，以及 `AGENT_GUIDE.md` → "Present Both Composition Runtimes (HARD RULE)" 了解治理合约。
 
-**MANDATORY workflow — present both runtimes, don't silently default:**
+**强制工作流 — 同时呈现两个运行时，不要静默默认：**
 
-1. Query `video_compose.get_info()["render_engines"]`. If both `remotion` and `hyperframes` are `True`, proceed to step 2. If only one is available, go to step 4 with just that one.
-2. Present both runtimes to the user with brief-specific analysis:
-   - **Remotion** — one line on fit (e.g. "your brief uses data-chart and stat_card heavily, both already exist as React components"), one line on tradeoff (e.g. "React component authoring is more rigid than HTML/CSS for custom typographic motion").
-   - **HyperFrames** — one line on fit (e.g. "the kinetic-typography opener fits HTML + GSAP better than Remotion interpolation"), one line on tradeoff (e.g. "no word-level caption burn parity yet; no access to existing Remotion chart library").
-3. Recommend one with rationale tied to the brief's `delivery_promise`, the selected animation mode, and the reuse strategy from research.
-4. Wait for explicit user approval. Do NOT write `render_runtime` into `proposal_packet.production_plan` before approval.
-5. Log a `render_runtime_selection` decision in `decision_log` with BOTH runtimes in `options_considered`, the user's pick as `selected`, and the rationale as `reason`. If a runtime was unavailable, record it as rejected with `rejected_because: "runtime not available on this machine"`.
+1. 查询 `video_compose.get_info()["render_engines"]`。如果 `remotion` 和 `hyperframes` 都是 `True`，进入步骤 2。如果只有一个可用，直接进入步骤 4 仅呈现那一个。
+2. 向用户呈现两个运行时并附上针对方案的简要分析：
+   - **Remotion** — 一行说明适配性（例如"你的方案大量使用了数据图表和统计卡片，两者都已作为 React 组件存在"），一行说明权衡（例如"React 组件编写比 HTML/CSS 更严格，不便于自定义排版动画"）。
+   - **HyperFrames** — 一行说明适配性（例如"动态排版开头用 HTML + GSAP 比 Remotion 插值更合适"），一行说明权衡（例如"尚无字词级字幕烧录支持；无法访问现有的 Remotion 图表库"）。
+3. 推荐一个，并附上理由，与方案的 `delivery_promise`、选定的动画模式和调研的复用策略相关联。
+4. 等待用户明确批准。在批准之前，不要将 `render_runtime` 写入 `proposal_packet.production_plan`。
+5. 在 `decision_log` 中记录 `render_runtime_selection` 决策，`options_considered` 中列出两个运行时，用户选择作为 `selected`，理由作为 `reason`。如果某个运行时不可用，记录为已拒绝，`rejected_because: "runtime not available on this machine"`。
 
-Fit cheat-sheet for the recommendation (NOT an auto-decision):
+推荐的适配速查表（非自动决策）：
 
-| Brief characteristic | Lean toward |
+| 方案特征 | 倾向选择 |
 |----------------------|-------------|
-| Data-chart-heavy, text_card/stat_card/kpi_grid dominant | Remotion |
-| MathAnimate / Manim scene in the animatic | Remotion (Manim renders to a video, composed in Remotion) |
-| Kinetic typography, product promo, launch reel, HTML/GSAP-native motion | HyperFrames |
-| Website-to-video or UI-driven composition | HyperFrames |
-| Registry blocks needed (data-chart, grain-overlay, shader transitions) | HyperFrames |
-| Word-level/karaoke caption burn required | Remotion (HyperFrames caption parity deferred) |
-| Simple source-footage concat, no composition | ffmpeg |
+| 数据图表密集、text_card/stat_card/kpi_grid 主导 | Remotion |
+| animatic 中存在 MathAnimate / Manim 场景 | Remotion（Manim 渲染为视频，在 Remotion 中合成） |
+| 动态排版、产品推广、发布预告、HTML/GSAP 原生运动 | HyperFrames |
+| 网站转视频或 UI 驱动合成 | HyperFrames |
+| 需要注册表块（data-chart、grain-overlay、shader transitions） | HyperFrames |
+| 需要字词级/卡拉 OK 字幕烧录 | Remotion（HyperFrames 字幕支持推迟） |
+| 简单的源素材拼接，无合成 | ffmpeg |
 
-A `render_runtime_selection` decision with only one option considered when both were available is a CRITICAL reviewer finding. That's how the moat collapses into "everything looks like our chart stack."
+当两个运行时都可用但只考虑了一个选项的 `render_runtime_selection` 决策，是审查者的严重发现。这就是护城河退化为"一切看起来都像我们的图表堆栈"的原因。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/proposal_packet.schema.json` | Artifact validation |
-| Prior artifact | `research_brief` from Research Director | Raw findings + technique research |
-| Pipeline manifest | `pipeline_defs/animation.yaml` | Stage and tool definitions |
-| Tool registry | `support_envelope()` output | What's actually available right now |
-| Cost tracker | `tools/cost_tracker.py` | Cost estimation data |
-| Style playbooks | `styles/*.yaml` | Available visual styles |
-| User input | Topic, any preferences expressed | Creative direction |
+| Schema | `schemas/artifacts/proposal_packet.schema.json` | 产物验证 |
+| 前置产物 | 来自调研导演的 `research_brief` | 原始发现 + 技术调研 |
+| 管线清单 | `pipeline_defs/animation.yaml` | 阶段和工具定义 |
+| 工具注册表 | `support_envelope()` 输出 | 当前实际可用内容 |
+| 成本追踪器 | `tools/cost_tracker.py` | 成本估算数据 |
+| 样式手册 | `styles/*.yaml` | 可用的视觉样式 |
+| 用户输入 | 主题、任何已表达的首选项 | 创意方向 |
 
-## Process
+## 流程
 
-### Step 0: Check for Reference Video Context
+### 步骤 0：检查参考视频上下文
 
-Before starting proposal work, check if a VideoAnalysisBrief exists for this project.
+在开始方案工作之前，检查该项目是否存在 VideoAnalysisBrief。
 
-**When a VideoAnalysisBrief is present — Reference-Aware Animation Concept Design:**
+**当 VideoAnalysisBrief 存在时 — 参考感知的动画概念设计：**
 
-**HARD RULE: No carbon copies.** Each concept option MUST:
-1. Name at least ONE animation element it keeps from the reference (pacing, motion style, narrative structure)
-2. Name at least ONE element it changes (animation mode, visual identity, topic angle)
-3. Explain WHY the change makes the output more engaging or clearer
+**硬性规则：禁止抄袭。** 每个概念选项必须：
+1. 列出至少一个从参考视频保留的动画元素（节奏、运动风格、叙事结构）
+2. 列出至少一个改变的元素（动画模式、视觉标识、主题角度）
+3. 解释为什么这种改变能使输出更具吸引力或更清晰
 
-**Animation differentiation patterns:**
+**动画差异化模式：**
 
-| Pattern | Example |
+| 模式 | 示例 |
 |---------|---------|
-| **Same topic, different animation mode** | Reference: stock footage → Ours: Manim mathematical visualization |
-| **Same style, different complexity** | Reference: simple diagrams → Ours: progressive build with layers |
-| **Same pacing, different visual identity** | Reference: corporate blue → Ours: vibrant neon-on-black |
-| **Same narrative, different interactivity** | Reference: linear → Ours: data-driven with animated charts |
+| **相同主题，不同动画模式** | 参考：素材视频 → 我们的：Manim 数学可视化 |
+| **相同风格，不同复杂度** | 参考：简单图表 → 我们的：分层渐进构建 |
+| **相同节奏，不同视觉标识** | 参考：企业蓝 → 我们的：黑色背景鲜艳霓虹 |
+| **相同叙事，不同交互性** | 参考：线性 → 我们的：数据驱动带动画图表 |
 
-**Mandatory Sample Protocol:** After concept approval, produce a 10-15 second sample
-to validate the animation style before full production.
+**强制样片协议：** 概念批准后，制作 10-15 秒样片在全面制作前验证动画风格。
 
-**When no VideoAnalysisBrief is present:** Skip this step and proceed normally.
+**当没有 VideoAnalysisBrief 时：** 跳过此步骤，正常进行。
 
-### Step 1: Absorb the Research (or Direct Brief)
+### 步骤 1：吸收调研（或直接简报）
 
-**If a `research_brief` artifact exists:** Read it thoroughly. Extract:
+**如果存在 `research_brief` 产物：** 彻底阅读。提取：
 
-**If no research_brief exists (direct user brief):** The user has given you a creative brief directly. This is common for short videos (30-60s) where formal research is overkill. Use the user's brief as your input and proceed to Step 2. Note the missing research as a limitation — you won't have data_points, technique references, or audience_insights to draw from, so concept design relies on your knowledge and the user's direction.
+**如果没有 research_brief（用户直接简报）：** 用户直接给了你一份创意简报。这在短视频（30-60 秒）中很常见，正式调研显得大材小用。以用户的简报作为输入，进入步骤 2。注意缺失调研是一个限制——你将没有数据点、技术参考或受众洞察可借鉴，因此概念设计依赖你的知识和用户的指导。
 
-**When a research_brief IS available,** extract:
+**当 research_brief 可用时，** 提取：
 
-- **`research_summary`** — read first. Contains both the key insight and the most promising animation approach.
-- **`angles_discovered`** — raw concept candidates, each with an `animation_fit` field.
-- **`data_points`** — especially those with high `visual_potential` ratings.
-- **Animation technique references** — from the animation-specific research step. These directly inform mode selection.
-- **`audience_insights.misconceptions`** — animation excels at showing "wrong way → right way" transitions.
-- **Mathematical/technical accuracy notes** — critical constraints on what we can and cannot simplify.
+- **`research_summary`** — 先阅读。包含关键洞察和最有前景的动画方法。
+- **`angles_discovered`** — 原始概念候选，每个都有 `animation_fit` 字段。
+- **`data_points`** — 尤其是那些具有高 `visual_potential` 评级的。
+- **动画技术参考** — 来自动画特定调研步骤。这些直接影响模式选择。
+- **`audience_insights.misconceptions`** — 动画擅长展示"错误方式→正确方式"的转场。
+- **数学/技术准确性说明** — 关于什么可以简化、什么不可简化的关键约束。
 
-### Step 2: Run Preflight
+### 步骤 2：运行预检
 
-Before designing concepts, know what tools are available:
+在设计概念之前，了解可用工具：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.support_envelope(), indent=2))"
 ```
 
-Also check the capability catalog:
+同时检查能力目录：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.capability_catalog(), indent=2))"
 ```
 
-**Animation-specific preflight checks:**
+**动画特定预检检查：**
 
-| Capability | What to Check | Impact if Missing |
+| 能力 | 检查内容 | 缺失影响 |
 |------------|---------------|-------------------|
-| `math_animate` | Is ManimCE installed and working? | Cannot do programmatic math animation — fall back to diagram_gen + image_selector |
-| `diagram_gen` | Is Mermaid rendering available? | Cannot do diagram-led animation — fall back to image_selector |
-| `video_selector` | Which video gen providers are available? | Limits AI video clip options |
-| `image_selector` | Which image gen providers are available? | Limits still frame options |
-| `tts_selector` | Which TTS providers are available? | Affects narration quality |
-| `video_compose` | Is FFmpeg/Remotion available? | Critical — cannot render without this |
+| `math_animate` | ManimCE 是否已安装并工作？ | 无法进行程序化数学动画——回退到 diagram_gen + image_selector |
+| `diagram_gen` | Mermaid 渲染是否可用？ | 无法进行图表主导动画——回退到 image_selector |
+| `video_selector` | 哪些视频生成提供商可用？ | 限制 AI 视频片段选项 |
+| `image_selector` | 哪些图像生成提供商可用？ | 限制静态帧选项 |
+| `tts_selector` | 哪些 TTS 提供商可用？ | 影响旁白质量 |
+| `video_compose` | FFmpeg/Remotion 是否可用？ | 关键——没有这个就无法渲染 |
 
-Record all findings. **Do not propose an animation mode that requires tools you don't have.**
+记录所有发现。**不要提出需要你没有工具的动画模式。**
 
-### Step 3: Animation Approach Selection
+### 步骤 3：动画方法选择
 
-This is the key differentiator from the explainer proposal. **Present the user with concrete animation approaches, explain what each looks like, what tools/keys they need, and what's already available.**
+这是与解说方案的关键区别。**向用户呈现具体的动画方法，解释每种方法的样子、需要什么工具/密钥以及哪些已经可用。**
 
-#### Step 3a: Tool Availability Scan
+#### 步骤 3a：工具可用性扫描
 
-Before designing concepts, scan what's available and present it honestly. **Do NOT hardcode provider names, costs, or key names in this output** — they drift. Read them live from the registry:
+在设计概念之前，扫描可用内容并诚实地呈现。**在此输出中不要硬编码提供商名称、成本或密钥名称**——它们会变化。从注册表中实时读取：
 
 ```python
 from tools.tool_registry import registry
 registry.discover()
-summary = registry.provider_menu_summary()  # see AGENT_GUIDE.md > Mandatory Preflight
+summary = registry.provider_menu_summary()  # 参见 AGENT_GUIDE.md > Mandatory Preflight
 ```
 
-Then render the scan from `summary`, grouping by capability. Example shape you should **generate from the registry**, not copy:
+然后根据 `summary` 渲染扫描，按能力分组。示例形状（应从注册表**生成**，而非复制）：
 
 ```
-TOOL AVAILABILITY SCAN
+工具可用性扫描
 ──────────────────────
-Image generation:  {configured}/{total}
-  ✅ {tool_name} ({provider}) — available
-  ❌ {tool_name} ({provider}) — {install_instructions trimmed to one line}
-Video generation:  {configured}/{total}
+图像生成：{已配置}/{总数}
+  ✅ {工具名} ({提供商}) — 可用
+  ❌ {工具名} ({提供商}) — {安装说明（一行）}
+视频生成：{已配置}/{总数}
   ...
-Composition runtimes:  {ffmpeg} / {remotion} / {hyperframes}
-  See AGENT_GUIDE.md > "Present Both Composition Runtimes (HARD RULE)".
-Audio: {configured}/{total}
-Math/Diagram: {configured}/{total}
+合成运行时：{ffmpeg} / {remotion} / {hyperframes}
+  参见 AGENT_GUIDE.md > "Present Both Composition Runtimes (HARD RULE)"。
+音频：{已配置}/{总数}
+数学/图表：{已配置}/{总数}
 ```
 
-**Rules for this output:**
-- Every name, provider, cost, and install instruction comes from `provider_menu_summary()` or `provider_menu()`. Don't type them from memory — provider surfaces change between releases.
-- Never cite a cost that isn't live in the tool's `estimate_cost` or install metadata.
-- Composition runtimes are a separate section because the "Present Both" HARD RULE needs all three engines visible.
+**此输出的规则：**
+- 每个名称、提供商、成本和安装说明来自 `provider_menu_summary()` 或 `provider_menu()`。不要凭记忆输入——提供者界面在不同版本之间会变化。
+- 决不引用不在工具 `estimate_cost` 或安装元数据中的成本。
+- 合成运行时是一个独立的部分，因为"Present Both"硬性规则需要所有三个引擎可见。
 
-**Present this scan to the user.** Say: "Here's what I can see right now. Based on this, here are your animation approach options."
+**将此扫描呈现给用户。** 说："以下是我当前可以看到的内容。基于此，以下是你的动画方法选项。"
 
-#### Step 3b: Animation Approach Decision Matrix
+#### 步骤 3b：动画方法决策矩阵
 
-Present the approaches as clear options:
+将方法呈现为清晰的选项：
 
-| Approach | What It Looks Like | Tools Required | Cost | Proven? |
+| 方法 | 样子 | 所需工具 | 成本 | 已验证？ |
 |----------|-------------------|----------------|------|---------|
-| **A: Image-Based Animation (Remotion)** | AI-generated keyframes with crossfade, camera motion, particles. Looks like moving anime/illustration. | `image_selector` (any provider) + Remotion | Pull per-image cost from the chosen provider's `estimate_cost`; 2-3 images per scene is typical | ✅ Proven (mori-no-seishin) |
-| **B: Clip-Based Video** | AI-generated video clips assembled as a story. Most cinematic but least consistent. | `video_selector` routing to whichever provider is available | Pull per-clip cost from the chosen provider's `estimate_cost`; varies widely between providers | ❌ Not yet proven |
-| **C: Programmatic Animation (Manim)** | Code-driven math/geometry animation. Precise, clean, 3Blue1Brown style. | `math_animate` (ManimCE) | Free (local) | ❌ Not yet proven |
-| **D: Data Visualization (Remotion)** | Animated charts, KPIs, kinetic typography. Data-driven storytelling. | Remotion (built-in components) | Free (local) | ✅ Proven (zero-key formula) |
-| **E: Diagram + Image Stills** | Process flows and architecture diagrams with Ken Burns. | `diagram_gen` + `image_selector` | `diagram_gen` is free; per-image cost from `image_selector`'s routed provider | ✅ Proven |
-| **F: Mixed Mode** | Combine any of the above per-scene. Most flexible. | Multiple tools | Sum per-scene from each tool's `estimate_cost` | Partial |
+| **A：基于图像的动画（Remotion）** | AI 生成的关键帧，带交叉淡入淡出、镜头运动、粒子。看起来像移动的动漫/插画。 | `image_selector`（任何提供商）+ Remotion | 从所选提供商的 `estimate_cost` 获取每张图像成本；每场景 2-3 张图像为典型 | ✅ 已验证（mori-no-seishin） |
+| **B：基于片段的视频** | AI 生成的视频片段组装为故事。最电影感但最不一致。 | `video_selector` 路由到任何可用提供商 | 从所选提供商的 `estimate_cost` 获取每个片段成本；提供商之间差异很大 | ❌ 尚未验证 |
+| **C：程序化动画（Manim）** | 代码驱动的数学/几何动画。精确、干净，3Blue1Brown 风格。 | `math_animate`（ManimCE） | 免费（本地） | ❌ 尚未验证 |
+| **D：数据可视化（Remotion）** | 动画图表、KPI、动态排版。数据驱动的故事讲述。 | Remotion（内置组件） | 免费（本地） | ✅ 已验证（zero-key formula） |
+| **E：图表 + 图像静态帧** | 流程架构图和架构图，带 Ken Burns 效果。 | `diagram_gen` + `image_selector` | `diagram_gen` 免费；每张图像成本从 `image_selector` 的路由提供商获取 | ✅ 已验证 |
+| **F：混合模式** | 按场景组合上述任何方法。最灵活。 | 多个工具 | 从每个工具的 `estimate_cost` 按场景加总 | 部分验证 |
 
-**Rule:** do NOT fill in a dollar figure in the Cost column from memory. Read every cost live via `estimate_cost()` or `provider_menu_summary()` at proposal time. Provider pricing changes between releases.
+**规则：** 不要在成本列中凭记忆填写美元数字。在方案制定时通过 `estimate_cost()` 或 `provider_menu_summary()` 实时读取每个成本。提供商的定价在不同版本之间会变化。
 
-**For each viable approach, present to the user:**
+**对于每种可行方法，呈现给用户：**
 
 ```
-APPROACH A: Image-Based Animation (Remotion)
+方法 A：基于图像的动画（Remotion）
 ─────────────────────────────────────────────
-What it looks like: Multiple AI-generated images per scene, crossfaded with
-camera motion (zoom, pan, ken-burns) and particle overlays (fireflies, mist,
-sparkles). Creates the illusion of movement from still frames.
+样子：每个场景多张 AI 生成图像，通过镜头运动（缩放、平移、ken-burns）
+和粒子叠加（萤火虫、薄雾、闪光）进行交叉淡入淡出。从静态帧创建运动错觉。
 
-You need: An image generation API key.
-  → You already have: {from provider_menu_summary: available image_generation providers}
-  → Alternative: {from setup_offers: 1-env-var image_generation tools}
-  → Alternative: local Stable Diffusion (see local_diffusion tool install_instructions)
+你需要：一个图像生成 API 密钥。
+  → 你已有：{从 provider_menu_summary: 可用的 image_generation 提供商}
+  → 替代方案：{从 setup_offers: 单环境变量的 image_generation 工具}
+  → 替代方案：本地 Stable Diffusion（参见 local_diffusion 工具的 install_instructions）
 
-Estimated cost for 30s video: pull per-image costs from each provider's
-`estimate_cost` (do NOT hardcode — they drift between releases).
+30 秒视频的预估成本：从每个提供商的 `estimate_cost` 获取每张图像成本
+（不要硬编码——它们在不同版本之间会变化）。
 
-Style options: depend on the picked provider; read from playbook and
-  provider-specific Layer 3 skill (e.g. `.agents/skills/flux-best-practices`).
+样式选项：取决于所选提供商；从样式手册和提供商特定的 Layer 3 技能中读取
+（例如 `.agents/skills/flux-best-practices`）。
 
-APPROACH B: Clip-Based Video
+方法 B：基于片段的视频
 ─────────────────────────────
-What it looks like: AI-generated 3-5 second video clips assembled as a story.
-Most cinematic output but hardest to maintain visual consistency across clips.
+样子：AI 生成的 3-5 秒视频片段组装为故事。
+最具电影感输出，但难以在片段间保持视觉一致性。
 
-You need: A video generation API key.
-  → Currently available: {from provider_menu_summary: available video_generation providers}
-  → To enable: {from setup_offers: 1-env-var video_generation tools}, or
-    install a local video model (see video_selector fallback_tools).
+你需要：一个视频生成 API 密钥。
+  → 当前可用：{从 provider_menu_summary: 可用的 video_generation 提供商}
+  → 启用方式：{从 setup_offers: 单环境变量的 video_generation 工具}，或
+    安装本地视频模型（参见 video_selector 的 fallback_tools）。
 
-Estimated cost for 30s video: pull from each provider's `estimate_cost` on the
-  actual clip plan — per-clip costs range widely between providers and change
-  often. Do NOT hardcode.
+30 秒视频的预估成本：从每个提供商的 `estimate_cost` 获取实际的片段计划成本——
+不同提供商之间的每片段成本差异很大且经常变化。不要硬编码。
 
-Note: This approach is not yet proven in the OpenMontage pipeline.
-      Consistency across clips is the #1 challenge.
+注意：此方法在 OpenMontage 管线中尚未验证。
+      片段间的一致性是第一大挑战。
 ```
 
-**Critical principle: Surface capabilities, don't hide limitations.** The user should know exactly what's possible right now vs. what needs setup.
+**关键原则：呈现能力，不隐藏限制。** 用户应确切了解当前可能的内容与需要设置的内容。
 
-**Rules for this section — same as Step 3a:**
-- Every provider name, env var, and cost comes from `provider_menu_summary()` or a tool's live `install_instructions` / `estimate_cost`.
-- The `{placeholder}` tokens above are for the agent to fill from the registry, not paste literally.
-- If you find yourself typing a specific API-key env-var name or a per-unit dollar cost into this section, stop. Those drift between releases; hardcoding them in a director skill is a governance regression (see AGENT_GUIDE.md on hardcoded provider names). Pull the same data from the registry instead.
+**本节规则 — 同步骤 3a：**
+- 每个提供商名称、环境变量和成本来自 `provider_menu_summary()` 或工具的实时 `install_instructions` / `estimate_cost`。
+- 上面的 `{占位符}` 标记供代理从注册表填充，不是字面粘贴。
+- 如果你发现自己在本节中输入特定的 API 密钥环境变量名或每单位美元成本，停下来。这些在不同版本之间会变化；在导演技能中硬编码它们是治理上的倒退（参见 AGENT_GUIDE.md 关于硬编码提供商名称的规定）。而是从注册表拉取相同的数据。
 
-#### Step 3c: Mode Selection Rules
+#### 步骤 3c：模式选择规则
 
-- If the topic is visual/artistic (anime, illustration, fantasy) → **Approach A** (image-based)
-- If the topic involves data/statistics/business → **Approach D** (data viz) or **Approach A** with data overlays
-- If the topic involves math/physics → **Approach C** (Manim) if available, else **Approach E**
-- If the topic is abstract/conceptual and budget allows → **Approach B** (clip-based) for key moments
-- If no paid APIs available → **Approach D** (zero-key Remotion) or **Approach E** (diagrams)
-- If the user wants maximum quality and has video gen keys → **Approach F** (mixed: video clips for hero shots + Remotion for data)
-- **Always offer at least one free/local option** alongside paid approaches
-- **Never silently downgrade** — if the best approach needs a key the user doesn't have, say so explicitly
+- 如果主题是视觉/艺术性的（动漫、插画、奇幻）→ **方法 A**（基于图像）
+- 如果主题涉及数据/统计/商业 → **方法 D**（数据可视化）或带数据叠加的**方法 A**
+- 如果主题涉及数学/物理 → **方法 C**（Manim）如果可用，否则**方法 E**
+- 如果主题抽象/概念性且预算允许 → **方法 B**（基于片段）用于关键时刻
+- 如果没有付费 API 可用 → **方法 D**（零密钥 Remotion）或**方法 E**（图表）
+- 如果用户想要最高质量且有视频生成密钥 → **方法 F**（混合：英雄镜头用视频片段 + 数据用 Remotion）
+- **始终在付费方法旁提供至少一个免费/本地选项**
+- **决不静默降级** — 如果最佳方法需要用户没有的密钥，明确说明
 
-### Step 3d: Mood Board (Before Concepts)
+### 步骤 3d：情绪板（在概念之前）
 
-Before developing full concepts, present a quick mood board to catch direction mismatches early:
+在开发完整概念之前，呈现一个快速情绪板以尽早发现方向不匹配：
 
-- **3-5 reference images** (animation style examples from web search — show what each approach LOOKS like)
-- **Color palette direction** (2-3 options, e.g. clean data-viz vs vibrant motion graphics vs sketchy hand-drawn)
-- **Tone references** ("Think: 3Blue1Brown meets Kurzgesagt" or "Think: Pixar short meets infographic")
-- **1-2 animation style samples** (if Manim: mathematical elegance; if Remotion: smooth data transitions; if AI video: cinematic motion)
+- **3-5 张参考图像**（来自网络搜索的动画风格示例——展示每种方法的样子）
+- **调色板方向**（2-3 个选项，例如干净数据可视化 vs 鲜艳动态图形 vs 草图手绘）
+- **基调参考**（"想想：3Blue1Brown 遇见 Kurzgesagt"或"想想：皮克斯短片遇见信息图"）
+- **1-2 个动画风格样片**（如果 Manim：数学优雅；如果 Remotion：平滑数据转场；如果 AI 视频：电影感运动）
 
-Ask: **"Does this FEEL like what you're imagining? Any of these off-track?"**
+问：**"这感觉像你想象的吗？有任何偏离轨道的吗？"**
 
-This catches style misalignment before concept design. If the user expected hand-drawn and you're heading toward data-viz, better to know now.
+这能在概念设计之前捕捉到风格不匹配。如果用户预期手绘风格而你正走向数据可视化，最好现在就知道。
 
-### Step 4: Progressive Reveal and Concept Design
+### 步骤 4：渐进揭示和概念设计
 
-Don't dump the full proposal at once. Build understanding step by step:
+不要一次性抛出完整方案。逐步构建理解：
 
-1. **Research summary** (2-3 sentences): "Here's what I found..."
-   → User reacts, course-corrects if needed.
-2. **Mood board** (from Step 3d — already presented)
-   → User confirms animation style direction.
-3. **Concept options** (3+ approaches):
-   → Present below.
-4. **Invite mixing** (see Step 4c below).
-5. **Production plan for selected concept** (tools, cost, timeline):
-   → User approves budget and approach.
+1. **调研总结**（2-3 句）："以下是我发现的..."
+   → 用户反应，必要时修正方向。
+2. **情绪板**（来自步骤 3d——已呈现）
+   → 用户确认动画风格方向。
+3. **概念选项**（3+ 种方法）：
+   → 在下方呈现。
+4. **邀请混合**（见下面步骤 4c）。
+5. **选定概念的制作计划**（工具、成本、时间线）：
+   → 用户批准预算和方法。
 
-Build **at least 3 genuinely different concepts.** Start from the `angles_discovered` in the research brief and the animation mode analysis.
+构建**至少 3 个真正不同的概念。** 从调研简报中的 `angles_discovered` 和动画模式分析开始。
 
-For each concept, specify:
+对于每个概念，指定：
 
-#### 4a: Title and Hook
+#### 4a：标题和钩子
 
-**Hook construction patterns for animation:**
+**动画的钩子构建模式：**
 
-| Pattern | Template | When to Use |
+| 模式 | 模板 | 使用时机 |
 |---------|----------|-------------|
-| **Visual surprise** | "Watch [thing] transform into [unexpected thing]." | When the animation itself IS the hook |
-| **Misconception flip** | "You've been visualizing [topic] wrong. Here's what it actually looks like." | When common mental models are wrong |
-| **Progressive reveal** | "Start with [simple]. End with [complex]. Every step animated." | When the topic has layered complexity |
-| **Impossible camera** | "What if you could see [invisible process] happening in real time?" | When animation reveals the unseeable |
-| **Data surprise** | "[Counterintuitive number]. Watch it happen." | When animated data is more powerful than static |
+| **视觉惊喜** | "观看[事物]变换为[意想不到的事物]。" | 当动画本身即是钩子时 |
+| **错误观念翻转** | "你一直用错误的方式可视化[主题]。以下是它实际的样子。" | 当常见心智模型错误时 |
+| **渐进揭示** | "从[简单]开始。以[复杂]结束。每一步都有动画。" | 当主题具有分层复杂度时 |
+| **不可能镜头** | "如果能看到[不可见过程]实时发生会怎样？" | 当动画揭示不可见之物时 |
+| **数据惊喜** | "[反直觉的数字]。观看它发生。" | 当动画数据比静态更有力时 |
 
-**Rules:**
-- Hook must be under 20 words
-- Hook must promise a VISUAL experience, not just information
-- Hook must be grounded in a specific research finding
+**规则：**
+- 钩子必须在 20 个字以内
+- 钩子必须承诺**视觉体验**，而非仅仅信息
+- 钩子必须基于具体的调研发现
 
-#### 4b: Animation Approach and Visual Identity
+#### 4b：动画方法和视觉标识
 
-For each concept, specify:
-- **Animation approach**: `image_animation` / `clip_video` / `manim` / `remotion_dataviz` / `diagram_stills` / `mixed`
-- **Why this approach**: grounded in technique research AND tool availability from Step 3
-- **Image/video generation provider**: which specific provider from the preflight scan (e.g., "FLUX via fal.ai", "gpt-image-1 via OpenAI", "Stable Diffusion local")
-- **Reuse strategy**: What's the visual system? (recurring motifs, layout grid, color scheme, transition family)
-- **Complexity estimate**: How many unique scene types vs. reusable templates?
-- **Visual identity**: palette, typography, texture, motion energy, and why they fit this subject, audience, and platform
-- **Playbook strategy**: preset if it truly fits, or a custom playbook generated via `lib/playbook_generator.py`
+为每个概念指定：
+- **动画方法**：`image_animation` / `clip_video` / `manim` / `remotion_dataviz` / `diagram_stills` / `mixed`
+- **为什么选择此方法**：基于技术调研和步骤 3 的工具可用性
+- **图像/视频生成提供商**：预检扫描中的具体提供商（例如"通过 fal.ai 的 FLUX"、"通过 OpenAI 的 gpt-image-1"、"本地 Stable Diffusion"）
+- **复用策略**：视觉系统是什么？（重复主题、布局网格、配色方案、转场系列）
+- **复杂度估算**：多少个独特场景类型 vs 可复用模板？
+- **视觉标识**：调色板、排版、纹理、运动能量，以及为什么它们适合此主题、受众和平台
+- **样式手册策略**：如果真正适合则使用预设，否则通过 `lib/playbook_generator.py` 生成自定义样式手册
 
-**Important:** Do not reduce animation identity to a preset name. A physics explainer, a startup launch video, and a dreamy anime short may all use Remotion, but they should not share the same color logic, typography, or motion cadence.
+**重要：** 不要将动画标识简化为样式手册名称。物理解说、创业公司发布视频和梦幻动漫短片都可能使用 Remotion，但不应共享相同的颜色逻辑、排版或运动节奏。
 
-#### 4c: Narrative Structure
+#### 4c：叙事结构
 
-Choose from: `myth_busting`, `problem_solution`, `data_narrative`, `comparison`, `timeline`, `journey`, `analogy`, `progressive_build`, `transformation`
+从以下选项中选择：`myth_busting`、`problem_solution`、`data_narrative`、`comparison`、`timeline`、`journey`、`analogy`、`progressive_build`、`transformation`
 
-**Animation-specific structure: `progressive_build`** — start simple, add complexity layer by layer. This is the classic 3Blue1Brown approach and works exceptionally well for math/technical topics.
+**动画特定结构：`progressive_build`** — 从简单开始，逐层增加复杂度。这是经典的 3Blue1Brown 方法，对数学/技术主题特别有效。
 
-#### 4d: Duration and Platform
+#### 4d：时长和平台
 
-| Platform | Duration Range | Word Budget (150 WPM) |
+| 平台 | 时长范围 | 字数预算（150 WPM） |
 |----------|---------------|----------------------|
-| TikTok | 30-60s | 65-150 words |
-| YouTube Shorts | 30-60s | 65-150 words |
-| YouTube | 60-300s | 150-750 words |
-| LinkedIn | 60-120s | 150-300 words |
+| TikTok | 30-60 秒 | 65-150 字 |
+| YouTube Shorts | 30-60 秒 | 65-150 字 |
+| YouTube | 60-300 秒 | 150-750 字 |
+| LinkedIn | 60-120 秒 | 150-300 字 |
 
-**Animation note:** Animation videos can be longer than live-action explainers because the visual density sustains attention. A 3-minute math animation holds attention better than a 3-minute talking head.
+**动画说明：** 动画视频可以比真人解说视频更长，因为视觉密度能维持注意力。一个 3 分钟的数学动画比一个 3 分钟的对头说话更能保持注意力。
 
-#### 4e: Concept Diversity Check
+#### 4e：概念多样性检查
 
-- [ ] No two concepts use the same animation approach
-- [ ] No two concepts use the same narrative structure
-- [ ] At least one concept is achievable with free/local tools only (zero-key or local image gen)
-- [ ] At least one concept leverages the most surprising data point
-- [ ] Each concept's approach is grounded in tool availability AND technique research
-- [ ] Each concept states which API keys/tools it requires (and flags any the user doesn't have)
+- [ ] 没有两个概念使用相同的动画方法
+- [ ] 没有两个概念使用相同的叙事结构
+- [ ] 至少一个概念可仅用免费/本地工具实现（零密钥或本地图像生成）
+- [ ] 至少一个概念利用最令人惊讶的数据点
+- [ ] 每个概念的方法基于工具可用性 AND 技术调研
+- [ ] 每个概念说明需要哪些 API 密钥/工具（并标记用户没有的任何内容）
 
-### Step 5: Present Concepts and Get Selection
+### 步骤 5：呈现概念并获取选择
 
-Present all concepts clearly to the user. For each concept, show:
+向用户清晰呈现所有概念。每个概念展示：
 
-1. **Title** and **hook** — the creative pitch
-2. **Animation mode** — what the video will LOOK like (with a plain-language description)
-3. **Why this works** — research backing, in one sentence
-4. **Duration** — how long
-5. **Reuse strategy** — "5 scenes built from 2 templates" vs "8 unique scenes"
+1. **标题**和**钩子** — 创意推介
+2. **动画模式** — 视频将看起来什么样（用通俗语言描述）
+3. **为什么有效** — 调研支持，一句话
+4. **时长** — 多长时间
+5. **复用策略** — "从 2 个模板构建 5 个场景" vs "8 个独特场景"
 
-#### Step 5b: Invite Mixing
+#### 步骤 5b：邀请混合
 
-After presenting concepts, always say something like:
-> "You can also mix elements — for example, Concept A's hook with Concept C's animation approach, or Concept B's narrative with Concept A's visual style. What speaks to you?"
+在呈现概念后，始终说类似这样的话：
+> "你也可以混合元素——例如，概念 A 的钩子搭配概念 C 的动画方法，或概念 B 的叙事搭配概念 A 的视觉风格。什么吸引你？"
 
-If the user mixes, create a new hybrid concept entry in the proposal_packet with clear attribution: "Hook from Concept A, animation approach from Concept C, narrative structure from Concept B."
+如果用户混合，在 proposal_packet 中创建一个新的混合概念条目，并明确标注来源："钩子来自概念 A，动画方法来自概念 C，叙事结构来自概念 B。"
 
-Let the user select, combine, modify, or redirect.
+让用户选择、组合、修改或重定向。
 
-Record the selection in `selected_concept` with rationale and any modifications.
+在 `selected_concept` 中记录选择，附上理由和任何修改。
 
-### Step 6: Build the Production Plan
+### 步骤 6：构建制作计划
 
-For the selected concept, design the stage-by-stage production plan.
+为选定概念设计逐阶段制作计划。
 
-**Animation-specific production plan fields:**
+**动画特定制作计划字段：**
 
 ```
-PRODUCTION PLAN (Animation Pipeline)
+制作计划（动画管线）
 
-animation_mode: [selected mode]
+animation_mode: [选定模式]
 reuse_strategy:
-  recurring_motifs: [list]
-  layout_system: [description]
-  transition_family: [type]
-  typography_hierarchy: [levels]
-  estimated_unique_scenes: [N]
-  estimated_reusable_templates: [N]
+  recurring_motifs: [列表]
+  layout_system: [描述]
+  transition_family: [类型]
+  typography_hierarchy: [层级]
+  estimated_unique_scenes: [数量]
+  estimated_reusable_templates: [数量]
 
 stages:
   script:
-    tools: [none — creative work]
+    tools: [无 — 创意工作]
     cost: $0
-    notes: "Script must be written in animation beats — one visual idea per section"
+    notes: "剧本必须按动画节拍编写——每部分一个视觉想法"
 
   scene_plan:
-    tools: [none — planning work]
+    tools: [无 — 计划工作]
     cost: $0
-    notes: "Scene plan must specify animation mode per scene and reuse template references"
+    notes: "场景计划必须按场景指定动画模式和复用模板引用"
 
   assets:
-    tools: [specific providers from preflight]
-    cost: [itemized]
-    notes: "Reusable motifs generated once, referenced by multiple scenes"
+    tools: [来自预检的特定提供商]
+    cost: [逐项列出]
+    notes: "一次性生成可复用的主题元素，由多个场景引用"
 
   edit:
-    tools: [none — planning work]
+    tools: [无 — 计划工作]
     cost: $0
-    notes: "Edit must preserve hold times and staggered reveals"
+    notes: "剪辑必须保留停留时间和错开揭示"
 
   compose:
     tools: [video_compose, audio_mixer]
-    cost: $0 (local rendering)
-    notes: "Text and diagrams must remain sharp at final resolution"
+    cost: $0（本地渲染）
+    notes: "文本和图表在最终分辨率下必须保持清晰"
 
   publish:
-    tools: [none — metadata work]
+    tools: [无 — 元数据工作]
     cost: $0
 ```
 
-### Step 7: Build the Cost Estimate
+### 步骤 7：构建成本估算
 
-Itemize every paid operation:
+逐项列出每个付费操作：
 
 ```
-COST ESTIMATE
-├── TTS Narration: [provider] × 1 run              $X.XX
-├── Image Generation: [provider] × N scenes          $X.XX
-│   (N unique + M reused = total scenes)
-├── AI Video Clips: [provider] × K clips (if any)   $X.XX
-├── Music: music_gen × 1 track                       $X.XX
-├── Math Animation: math_animate (local/free)        $0.00
-├── Diagram Generation: diagram_gen (local/free)     $0.00
-└── TOTAL ESTIMATED                                  $X.XX
-    Budget cap: $X.XX
-    Verdict: within_budget ✓ / over_budget ✗
-    Headroom: $X.XX for revisions
+成本估算
+├── TTS 旁白：[提供商] × 1 次运行              $X.XX
+├── 图像生成：[提供商] × N 个场景          $X.XX
+│   （N 个独特 + M 个复用 = 总场景数）
+├── AI 视频片段：[提供商] × K 个片段（如有）   $X.XX
+├── 音乐：music_gen × 1 首曲目                       $X.XX
+├── 数学动画：math_animate（本地/免费）        $0.00
+├── 图表生成：diagram_gen（本地/免费）     $0.00
+└── 总计估算                                  $X.XX
+    预算上限：$X.XX
+    结论：within_budget ✓ / over_budget ✗
+    余量：$X.XX 用于修改
 ```
 
-**Animation cost note:** Programmatic animation (Manim, Remotion, diagram_gen) is FREE. This means animation pipelines can often be much cheaper than explainer pipelines — the primary cost is TTS narration and any AI-generated images/video used as backgrounds or transitions.
+**动画成本说明：** 程序化动画（Manim、Remotion、diagram_gen）是**免费**的。这意味着动画管线的成本通常远低于解说管线——主要成本是 TTS 旁白和任何用作背景或转场的 AI 生成图像/视频。
 
-### Step 8: Assemble the Approval Gate
+### 步骤 8：组装审批关卡
 
 ```
 ────────────────────────────────────────
-PROPOSAL READY FOR APPROVAL
+方案已准备好审批
 
-Concept: [selected title]
-Animation mode: [mode] — [plain description]
-Duration: [X] seconds for [platform]
-Reuse strategy: [N] unique scenes from [M] templates
-Estimated cost: $[X.XX] of $[budget] budget
-Production path: [premium/standard/budget/free]
+概念：[选定标题]
+动画模式：[模式] — [通俗描述]
+时长：[X] 秒，用于 [平台]
+复用策略：[从 M 个模板构建 N] 个独特场景
+估算成本：$[X.XX] / $[预算] 预算
+制作路径：[premium/standard/budget/free]
 
-Proceed? (approve / approve with changes / reject)
+继续？（approve / approve with changes / reject）
 ────────────────────────────────────────
 ```
 
-**Critical rule:** The pipeline MUST NOT proceed past this stage without explicit approval.
+**关键规则：** 管线在获得明确批准之前不得通过此阶段。
 
-### Step 9: Submit
+### 步骤 9：提交
 
-Validate the `proposal_packet` artifact against `schemas/artifacts/proposal_packet.schema.json` and submit.
+根据 `schemas/artifacts/proposal_packet.schema.json` 验证 `proposal_packet` 产物并提交。
 
-## How This Connects Downstream
+## 如何连接下游
 
-| Downstream Stage | What It Takes From proposal_packet |
+| 下游阶段 | 从 proposal_packet 获取的内容 |
 |------------------|------------------------------------|
-| Script Director | `selected_concept` (title, hook, key_points, animation_mode, narrative_structure) + research data |
-| Scene Director | `selected_concept.animation_mode` + `reuse_strategy` + `production_plan.playbook` |
-| Asset Director | `production_plan.stages[assets].tools` — knows exactly which providers to use |
-| Executive Producer | `cost_estimate` — initializes budget tracking |
-| All stages | `approval.approved_budget_usd` — hard spending cap |
+| 剧本导演 | `selected_concept`（标题、钩子、关键点、动画模式、叙事结构）+ 调研数据 |
+| 场景导演 | `selected_concept.animation_mode` + `reuse_strategy` + `production_plan.playbook` |
+| 资产导演 | `production_plan.stages[assets].tools` — 确切知道使用哪些提供商 |
+| 执行制片人 | `cost_estimate` — 初始化预算追踪 |
+| 所有阶段 | `approval.approved_budget_usd` — 硬性支出上限 |
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Not showing the Tool Availability Scan**: The user must know what's available BEFORE seeing concepts. Don't hide missing keys or tools.
-- **Ignoring animation approach feasibility**: If the routed image/video provider isn't available, don't propose that approach without explicitly telling the user what's needed. Read each missing tool's `install_instructions` from the registry (do NOT hardcode specific env var names here — they drift). Design around constraints OR explicitly state what's needed.
-- **Three versions of the same concept with different titles**: Structural diversity means different animation approaches, different narrative structures, different hooks.
-- **Not leveraging free tools**: Animation has a huge cost advantage — Manim, Remotion data-viz, and diagram_gen are free. If proposing expensive AI video, justify why free alternatives won't work.
-- **Over-promising visual complexity**: 20 unique hand-crafted scenes is not realistic. Design reuse strategies that look varied but share underlying templates.
-- **Skipping the approval gate**: This is the whole point of pre-production. No shortcuts.
-- **Ignoring mathematical accuracy**: If the research brief flagged technical accuracy constraints, the concept MUST respect them. A beautiful but wrong animation is a failure.
-- **Not distinguishing image_animation from clip_video**: These are fundamentally different. Image-based animation (Approach A) generates still images and uses Remotion for motion/crossfade. Clip-based video (Approach B) generates actual video clips with an AI video model. The user should understand this distinction clearly.
-- **Silent downgrades**: If the user picked image_animation but image generation fails, STOP and tell them. Never silently fall back to text cards or diagram stills.
+- **不展示工具可用性扫描**：用户必须在看到概念之前了解可用内容。不要隐藏缺失的密钥或工具。
+- **忽略动画方法可行性**：如果路由的图像/视频提供商不可用，不要提出该方法而不明确告知用户需要什么。从注册表读取每个缺失工具的 `install_instructions`（不要在此处硬编码特定的环境变量名——它们会变化）。围绕约束设计或者明确说明需要什么。
+- **三个版本相同概念、不同标题**：结构多样性意味着不同的动画方法、不同的叙事结构、不同的钩子。
+- **不利用免费工具**：动画有巨大的成本优势——Manim、Remotion 数据可视化和 diagram_gen 都是免费的。如果提出昂贵的 AI 视频，解释为什么免费替代方案不行。
+- **过度承诺视觉复杂度**：20 个独特的手工制作场景不现实。设计看起来多变但共享底层模板的复用策略。
+- **跳过审批关卡**：这是前期制作的全部意义所在。没有捷径。
+- **忽略数学准确性**：如果调研简报标记了技术准确性约束，概念必须尊重它们。漂亮但错误的动画就是失败。
+- **不区分 image_animation 和 clip_video**：两者有本质区别。基于图像的动画（方法 A）生成静态图像并使用 Remotion 进行运动/交叉淡入。基于片段的视频（方法 B）使用 AI 视频模型生成实际的视频片段。用户应清楚理解这一区别。
+- **静默降级**：如果用户选择了 image_animation 但图像生成失败，停下来告诉他们。决不静默地回退到文本卡片或图表静态帧。
 
+## 当你不知道如何做时
 
-## When You Do Not Know How
+如果遇到不确定的生成技术、提供者行为或提示模式：
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+1. **搜索网络**了解当前最佳实践——模型和 API 频繁变化，代理的训练数据可能已过时
+2. **检查 `.agents/skills/`** 中现有的 Layer 3 知识（提供者特定的提示指南、API 模式）
+3. **如果两者都不起作用**，在 `projects/<project-name>/skills/<name>.md` 编写项目范围的技能，记录你学到的东西
+4. **在技能中引用来源 URL**，使知识可追溯
+5. **在决策日志中记录**：`category: "capability_extension"`，`subject: "learned technique: <name>"`
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+以下方面尤其重要：
+- **视频生成提示**——模型对特定词汇的响应会随每个版本变化
+- **图像模型参数**——FLUX、DALL-E、Imagen 的最佳设置各不相同且不断演变
+- **音频提供者特性**——语音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式**——新的合成技术随框架演变而出现
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
-
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时的知识。有疑问时，先搜索。

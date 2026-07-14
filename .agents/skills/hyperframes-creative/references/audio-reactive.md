@@ -1,8 +1,8 @@
-# Audio-Reactive Animation
+# 音频响应式动画
 
-Drive visuals from music, voice, or sound. Any GSAP-animatable property can respond to pre-extracted audio data.
+通过音乐、语音或声音驱动视觉效果。任何 GSAP 可动画化的属性都可以响应预提取的音频数据。
 
-## Audio Data Format
+## 音频数据格式
 
 ```js
 var AUDIO_DATA = {
@@ -12,34 +12,34 @@ var AUDIO_DATA = {
 };
 ```
 
-- `frames[i].bands[]` — frequency band amplitudes, 0-1. Index 0 = bass, higher = treble.
-- Each band normalized independently across the full track.
+- `frames[i].bands[]` — 频段振幅，0-1。索引 0 = 低音，越高 = 高音。
+- 每个频段在整个音轨上独立归一化。
 
-## Mapping Audio to Visuals
+## 音频到视觉的映射
 
-| Audio signal           | Visual property                   | Effect                     |
-| ---------------------- | --------------------------------- | -------------------------- |
-| Bass (bands[0])        | `scale`                           | Pulse on beat              |
-| Treble (bands[12-14])  | `textShadow`, `boxShadow`         | Glow intensity             |
-| Overall amplitude      | `opacity`, `y`, `backgroundColor` | Breathe, lift, color shift |
-| Mid-range (bands[4-8]) | `borderRadius`, `width`           | Shape morphing             |
+| 音频信号                | 视觉属性                           | 效果             |
+| ----------------------- | --------------------------------- | ---------------- |
+| 低音（bands[0]）        | `scale`                           | 节拍脉冲         |
+| 高音（bands[12-14]）    | `textShadow`、`boxShadow`         | 光晕强度         |
+| 整体振幅                | `opacity`、`y`、`backgroundColor` | 呼吸、抬升、颜色变化 |
+| 中频（bands[4-8]）      | `borderRadius`、`width`           | 形状变形         |
 
-Any GSAP-tweenable property works — `clipPath`, `filter`, SVG attributes, CSS custom properties.
+任何 GSAP 可补间的属性都有效——`clipPath`、`filter`、SVG 属性、CSS 自定义属性。
 
-## Content, Not Medium
+## 内容，而非媒介
 
-Audio provides **timing and intensity**. The visual vocabulary comes from the narrative.
+音频提供**时序和强度**。视觉词汇来自叙事。
 
-**Never add:** equalizer bars, spectrum analyzers, waveform displays, musical notes clip art, generic particle systems, rainbow color cycling, strobing white on beats, abstract pulsing orbs.
+**永远不要添加：** 均衡器条、频谱分析器、波形显示、音符剪贴画、通用粒子系统、彩虹颜色循环、节拍上的闪烁白色、抽象脉动球体。
 
-**Instead:** Let content guide the visual and audio drive its behavior. Bass makes warmth _swell_. Treble sharpens _contrast_. The visual choice comes from "what does this piece feel like?"
+**而是：** 让内容引导视觉，音频驱动其行为。低音让温暖_膨胀_。高音锐化_对比_。视觉选择来自"这件作品感觉如何？"
 
-## Sampling Pattern
+## 采样模式
 
-Audio reactivity requires per-frame sampling via a `for` loop with `tl.call()`, not a single tween:
+音频响应需要通过 `for` 循环配合 `tl.call()` 进行逐帧采样，而不是单个补间：
 
 ```js
-// ✅ Correct — sample every frame
+// ✅ 正确 — 每帧采样
 for (var f = 0; f < AUDIO_DATA.totalFrames; f++) {
   tl.call(
     (function (frame) {
@@ -52,25 +52,25 @@ for (var f = 0; f < AUDIO_DATA.totalFrames; f++) {
   );
 }
 
-// ❌ Wrong — single tween, doesn't react to audio
+// ❌ 错误 — 单个补间，不对音频作出反应
 gsap.to(".el", { scale: 1.2, duration: totalDuration });
 ```
 
-Without per-frame sampling, the composition doesn't actually react to audio.
+没有逐帧采样，合成实际上不会对音频作出反应。
 
-## textShadow Gotcha
+## textShadow 陷阱
 
-`textShadow` on a parent container with semi-transparent children (e.g., inactive caption words at `rgba(255,255,255,0.3)`) renders a visible glow rectangle behind all children. Fix: apply `scale` to the container for beat pulse, but apply `textShadow` to individual active words only.
+在具有半透明子元素的父容器上的 `textShadow`（例如，`rgba(255,255,255,0.3)` 的非活动字幕词）会在所有子元素后面渲染一个可见的光晕矩形。修复：对容器应用 `scale` 用于节拍脉冲，但只对单个活动词应用 `textShadow`。
 
-## Guidelines
+## 指南
 
-- **Subtlety for text** — 3-6% scale variation, soft glow. Heavy pulsing makes text unreadable.
-- **Go bigger on non-text** — backgrounds and shapes can handle 10-30% swings.
-- **Match the energy** — corporate = subtle; music video = dramatic.
-- **Deterministic** — pre-extracted data, no Web Audio API, no runtime analysis.
+- **文本要微妙** — 3-6% 的缩放变化，柔和光晕。强力脉动使文本不可读。
+- **非文本可以更大** — 背景和形状可以处理 10-30% 的波动。
+- **匹配能量** — 企业 = 微妙；音乐视频 = 戏剧性。
+- **确定性** — 预提取数据，无 Web Audio API，无运行时分析。
 
-## Constraints
+## 约束
 
-- All audio data must be pre-extracted (use `extract-audio-data.py` from this skill's `scripts/`)
-- No `Math.random()` or `Date.now()`
-- Audio reactivity runs on the same GSAP timeline as everything else
+- 所有音频数据必须预提取（使用此技能 `scripts/` 中的 `extract-audio-data.py`）
+- 无 `Math.random()` 或 `Date.now()`
+- 音频响应与其他所有内容在同一个 GSAP 时间线上运行

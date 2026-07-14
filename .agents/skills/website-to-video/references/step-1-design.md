@@ -1,106 +1,106 @@
-# Step 1: Write DESIGN.md (the brand-truth cheat sheet)
+# 步骤 1：编写 DESIGN.md（品牌真相备忘单）
 
-DESIGN.md is a **brand-truth cheat sheet** — colors and fonts you'll **weave into your composed builds**. It is NOT a layout spec, not a moodboard, not a 400-line design system audit.
+DESIGN.md 是一份**品牌真相备忘单**——颜色和字体，你将**融入你构建的作品中**。它不是布局规范，不是情绪板，不是 400 行的设计系统审计。
 
-DESIGN.md is the brand inflection sub-agents apply when building each beat: which color is "primary," which font is for headlines, what tone the brand carries — the load-bearing knobs they flip while building.
+DESIGN.md 是子代理在构建每个节拍时应用的品牌转折：哪种颜色是「主色」，哪种字体用于标题，品牌承载什么语调——他们在构建时需要操作的承载点。
 
-**Target length: 250–350 lines.** Step 5 sub-agents read DESIGN.md to brand each beat — the more precise the component CSS values you encode here, the more brand-faithful the result. Going under 200 lines tends to produce generic dark-cinematic output because sub-agents have no brand component DNA to work from; going over 350 means you're over-investing in prose.
+**目标长度：250–350 行。** 步骤 5 的子代理阅读 DESIGN.md 来为每个节拍打上品牌烙印——你在此编码的组件 CSS 值越精确，结果越忠于品牌。低于 200 行往往会产生通用的暗色电影感输出，因为子代理没有品牌组件的 DNA 可供参考；超过 350 行则意味着你在散文上投入过多。
 
-**Fast-pacing exception:** For billboard-per-beat videos (short social ads where each beat is a single hero element on full-bleed background), a 50-line DESIGN.md with just colors + fonts + 3-5 do's/don'ts is enough. The Step 5 sub-agent prompt pastes brand values inline, so DESIGN.md depth only matters when the beats render full UIs.
+**快节奏例外：** 对于广告牌式节拍视频（短的社交广告，每个节拍是一个单独的英雄元素铺满背景），50 行的 DESIGN.md 只包含颜色 + 字体 + 3-5 条做/不做规则就足够了。步骤 5 的子代理提示内联粘贴品牌值，因此 DESIGN.md 的深度仅在节拍渲染完整 UI 时才重要。
 
-**User preferences always override brand rules.** If the user says "make it bright even though the site is dark" or "use serif fonts even though the brand is sans" — follow the user. DESIGN.md describes the captured website. The video might deliberately break that.
+**用户偏好始终覆盖品牌规则。** 如果用户说「让它明亮，即使网站是暗色的」或「使用衬线字体，即使品牌是无衬线的」——遵循用户。DESIGN.md 描述的是捕获的网站。视频可能有意打破它。
 
-**Read these now** — they're the inputs DESIGN.md is built from. Don't guess colors or sizes from screenshots:
+**现在读取这些**——它们是构建 DESIGN.md 的输入。不要从截图中猜测颜色或大小：
 
-- `capture/extracted/tokens.json` — top brand colors (HEX) and font families with weight ranges.
-- `capture/extracted/design-styles.json` — computed CSS values from the live DOM: typography hierarchy (font-size, weight, line-height, letter-spacing per text role), button variants (background, padding, radius, shadow), card/container/nav styles, spacing scale, border-radius scale, box-shadow values with usage counts. **Primary data source for Sections 3–6 below.**
+- `capture/extracted/tokens.json`——顶级品牌颜色（HEX）和带权重范围的字体家族。
+- `capture/extracted/design-styles.json`——来自实时 DOM 的计算 CSS 值：排版层级（每个文本角色的 font-size、weight、line-height、letter-spacing）、按钮变体（background、padding、radius、shadow）、卡片/容器/导航样式、间距比例、圆角比例、带使用计数的 box-shadow 值。**以下第 3–6 节的主要数据源。**
 
-**Font availability check — do this before writing anything else.** Read `capture/extracted/fonts-manifest.json`. The capture pipeline reads the OpenType `name` table embedded in every downloaded font file, so even hash-renamed Next.js/Webpack fonts are identified by their real family name (Inter, JetBrains Mono, Geist Mono, etc.). No guessing required.
+**字体可用性检查——在写任何其他内容之前执行此操作。** 读取 `capture/extracted/fonts-manifest.json`。捕获流水线读取每个下载字体文件中嵌入的 OpenType `name` 表，因此即使是哈希重命名的 Next.js/Webpack 字体也能通过其真实家族名称识别（Inter、JetBrains Mono、Geist Mono 等）。无需猜测。
 
-The manifest gives you two views:
+清单提供两个视图：
 
-- `families[]` — one entry per distinct family with the weights captured, whether it's a variable font, and the files belonging to it
-- `files[]` — one entry per downloaded font with family, subfamily, weight, style, and any variation axes
+- `families[]`——每个不同家族一个条目，包含捕获的权重、是否是可变字体以及属于它的文件
+- `files[]`——每个下载的字体一个条目，包含家族、子家族、权重、样式和任何变化轴
 
-**How to use it:**
+**如何使用它：**
 
-- For each family you'll reference in DESIGN.md, name it by what's in `families[].family` (e.g. "Inter", not "f266e704 hashed font"). The hashed filenames are the `@font-face src` paths — they stay as-is on disk; only the display name comes from the manifest.
-- If a family has `variable: true` and `variationAxes` includes `"wght"`, you can use any weight 100-900 via `font-variation-settings: 'wght' <value>` even if only one static weight appears in the captured files. Note this in DESIGN.md so sub-agents know they have the full weight range available.
-- If the manifest's `unidentified[]` is non-empty, those files failed name-table extraction (rare — heavily subset fonts that strip metadata). Flag them as `unknown` in DESIGN.md and suggest a fallback rather than guessing.
-- Commercial fonts hosted on brand CDNs (GT Walsheim, Söhne, Graphik, Canela) won't be in the manifest because they aren't downloaded. Detect this by checking what the site uses (from `design-styles.json`) against what's in the manifest — anything used but missing is a CDN-hosted font. Flag explicitly: "Söhne not in capture; use Inter 600 as substitute."
+- 对于你在 DESIGN.md 中会引用的每个家族，使用 `families[].family` 中的名称（例如「Inter」，而不是「f266e704 哈希字体」）。哈希文件名是 `@font-face src` 路径——它们在磁盘上保持不变；只有显示名称来自清单。
+- 如果一个家族有 `variable: true` 且 `variationAxes` 包含 `"wght"`，你可以通过 `font-variation-settings: 'wght' <value>` 使用任何 100-900 的权重，即使捕获的文件中只出现一个静态权重。在 DESIGN.md 中注明这一点，以便子代理知道他们拥有完整的权重范围。
+- 如果清单的 `unidentified[]` 非空，这些文件未能提取名称表（很少见——高度子集化的字体可能剥离元数据）。在 DESIGN.md 中将其标记为 `unknown` 并建议备选方案，而不是猜测。
+- 托管在品牌 CDN 上的商业字体（GT Walsheim、Söhne、Graphik、Canela）不会出现在清单中，因为它们未被下载。通过检查网站使用的内容（来自 `design-styles.json`）与清单中的内容来检测——任何已使用但缺失的都是 CDN 托管的字体。显式标记：「Söhne 未在捕获中；使用 Inter 600 作为替代。」
 
-Sub-agents try to use the fonts you list. The manifest tells you exactly what's available — there's no excuse for claiming "Charlie Display 700" when no such file exists.
-
----
-
-## The 5 sections to write
-
-### `## 1. Visual Theme (one paragraph)`
-
-3–5 sentences describing the brand's visual personality. Cover: dark-first or light-first, contrast strategy, dominant visual elements (gradients, illustrations, photography, UI mockups), overall mood, what makes it distinctive vs. generic.
-
-This is the only prose section. Make it specific to _this_ brand — not template-filling. A sentence that could describe any well-designed website is not useful.
-
-**Example:**
-
-> Stripe's visual language is light-first and clean, with deep navy (`#061B31`) and pure white as the foundation. The accent stack — Stripe Purple (`#533AFD`) for CTAs, Vibrant Orange (`#FF6118`) for energetic emphasis — keeps interactive elements unmistakable. Type is sohne-var Light (300) for display, weight 400 for body; the brand achieves hierarchy through size and weight, never color shifts. The mood is confident financial-tech — premium without theatrical drama. Distinctive: gradient overlays at 135° between purple and orange appear as subtle washes over white backgrounds, never as bold focal elements.
+子代理会尝试使用你列出的字体。清单精确告诉你什么可用——没有借口声称「Charlie Display 700」当这样的文件不存在时。
 
 ---
 
-### `## 2. Quick Reference`
+## 要编写的 5 个章节
 
-A flat lookup of the values sub-agents grab while composing beats. Two sub-sections — keep them tight.
+### `## 1. 视觉主题（一个段落）`
 
-#### Colors
+3–5 句话描述品牌的视觉个性。涵盖：暗色优先或亮色优先、对比策略、主导视觉元素（渐变、插画、摄影、UI 模型）、整体情绪、与通用品牌相比的独特之处。
 
-List 8–12 colors with brand-specific names + HEX + role. Not generic ("Accent 1") but evocative ("Stripe Purple", "Deep Navy", "Slate Border"). The name carries meaning; "blue 4" doesn't.
+这是唯一的散文章节。让它**对这个品牌**具体——而不是填充模板。一句可以描述任何设计良好的网站的句子是无用的。
 
-**For each text-on-surface combination the brand uses, compute the WCAG AA contrast ratio and flag failing pairings explicitly.** A real failure mode from prior runs: the brand's secondary-text color (`#68686A`) on its dark panel color (`#18191B`) = 3.16:1, which fails AA's 4.5:1 minimum. Sub-agents faithfully reproduced the brand's color choice and the result was unreadable. Encode the safe / unsafe pairings here so sub-agents pick text colors by surface context, not by "this is the brand's secondary text color." The `/hyperframes-contrast` skill audits ratios — run it before finalizing DESIGN.md.
+**示例：**
 
-**Example:**
+> Stripe 的视觉语言是亮色优先且简洁的，以深海军蓝（`#061B31`）和纯白色为基础。强调色堆栈——Stripe 紫（`#533AFD`）用于 CTA，活力橙（`#FF6118`）用于活力强调——使交互元素一目了然。字体是 sohne-var Light（300）用于展示，weight 400 用于正文；品牌通过大小和权重实现层级，从不通过颜色变化。情绪是自信的金融科技——高级而不戏剧化。独特之处：135° 的紫色和橙色渐变叠加层以柔和的水洗效果出现在白色背景上，从不作为大胆的焦点元素。
+
+---
+
+### `## 2. 快速参考`
+
+子代理在组合节拍时抓取的值的扁平查找表。两个子章节——保持紧凑。
+
+#### 颜色
+
+列出 8–12 种颜色，带品牌特定名称 + HEX + 角色。不是泛泛的（「强调色 1」）而是有表现力的（「Stripe 紫」、「深海军蓝」、「石板边框」）。名称承载含义；「蓝色 4」则不然。
+
+**对于品牌使用的每种文本在表面上的组合，计算 WCAG AA 对比度比并显式标记失败的配对。** 之前运行中的一个真实失败模式：品牌的次要文本颜色（`#68686A`）在其深色面板颜色（`#18191B`）上 = 3.16:1，未通过 AA 的 4.5:1 最低要求。子代理忠实再现了品牌的颜色选择，结果是不可读的。在此处编码安全/不安全的配对，以便子代理根据表面上下文选择文本颜色，而不是根据「这是品牌的次要文本颜色。」`/hyperframes-contrast` 技能审计对比度比——在最终确定 DESIGN.md 之前运行它。
+
+**示例：**
 
 ```markdown
-#### Colors
+#### 颜色
 
-- **Stripe Purple** (`#533AFD`): Primary CTA, interactive elements, focus rings — the brand's action signal
-  - On Pure White: 6.2:1 ✅ — On Deep Navy: 3.8:1 ⚠ AA-only-Large
-- **Deep Navy** (`#061B31`): Primary text on light surfaces, also a dark surface tier
-  - As text on Pure White: 17.4:1 ✅ — As surface: see Slate-on-Navy pairings below
-- **Pure White** (`#FFFFFF`): Page background, card surfaces
-- **Light Gray** (`#F5F7FA`): Surface tier 2 (cards on white pages, alternating sections)
-- **Slate Blue** (`#273951`): Secondary text on LIGHT surfaces
-  - On Pure White: 12.6:1 ✅ — On Light Gray: 11.8:1 ✅ — On Deep Navy: 1.4:1 ❌ DO NOT USE
-- **Light Slate** (`#64748D`): Metadata, captions on light surfaces only
-  - On Pure White: 4.8:1 ✅ — On Light Gray: 4.5:1 ✅ — On Deep Navy: 3.0:1 ❌ — On Dark Panel: 2.9:1 ❌
-  - **For dark-surface metadata, use `#9A9A9E` instead: 6.4:1 on Deep Navy ✅, 6.1:1 on Dark Panel ✅**
-- **Subtle Border** (`#D4DEE9`): Card borders, dividers (not text — borders don't need AA)
-- **Vibrant Orange** (`#FF6118`): Energy accent — gradient endpoints, highlight bursts (never primary text)
-- **Error Red** (`#FF0022`): Validation errors. On Pure White: 4.5:1 ✅
-- **Success Green** (`#4CD963`): Confirmation states. On Pure White: 1.7:1 ❌ — must be paired with a darker outline or use as accent on dark surfaces
+- **Stripe 紫**（`#533AFD`）：主 CTA、交互元素、焦点环——品牌的动作信号
+  - 在纯白上：6.2:1 ✅——在深海军蓝上：3.8:1 ⚠ 仅 AA 大号
+- **深海军蓝**（`#061B31`）：亮色表面的主文本，也是深色表面层级
+  - 作为文本在纯白上：17.4:1 ✅——作为表面：见下面的石板色在海军蓝上的配对
+- **纯白**（`#FFFFFF`）：页面背景、卡片表面
+- **浅灰**（`#F5F7FA`）：表面层级 2（白色页面上的卡片、交替区域）
+- **石板蓝**（`#273951`）：亮色表面上的次要文本
+  - 在纯白上：12.6:1 ✅——在浅灰上：11.8:1 ✅——在深海军蓝上：1.4:1 ❌ 不要使用
+- **浅石板**（`#64748D`）：仅在亮色表面上的元数据、说明文字
+  - 在纯白上：4.8:1 ✅——在浅灰上：4.5:1 ✅——在深海军蓝上：3.0:1 ❌——在暗色面板上：2.9:1 ❌
+  - **对于暗色表面元数据，改用 `#9A9A9E`：在深海军蓝上 6.4:1 ✅，在暗色面板上 6.1:1 ✅**
+- **微妙边框**（`#D4DEE9`）：卡片边框、分割线（不是文本——边框不需要 AA）
+- **活力橙**（`#FF6118`）：能量强调色——渐变端点、高亮爆发（从不作为主文本）
+- **错误红**（`#FF0022`）：验证错误。在纯白上：4.5:1 ✅
+- **成功绿**（`#4CD963`）：确认状态。在纯白上：1.7:1 ❌——必须与深色轮廓配对或在暗色表面上用作强调色
 ```
 
-**Where the brand's own palette fails WCAG**, document the substitute (like the `#9A9A9E` override above). Sub-agents pick the safe color by surface — and if the deviation matters to the brand identity, the user can revisit at Step 6.
+**在品牌自己的调色板未能通过 WCAG 的地方**，记录替代方案（像上面的 `#9A9A9E` 覆盖）。子代理根据表面选择安全颜色——如果偏差对品牌标识重要，用户可以在步骤 6 重新审视。
 
-#### Fonts
+#### 字体
 
-List font families with their role AND **the exact file path per family + weight** from `fonts-manifest.json`. Sub-agents will copy the `@font-face` block verbatim — if you only name the family without the path, sub-agents have to guess which `.woff2` file belongs to which family and get it wrong half the time (a real failure mode from prior runs: agents pointed `@font-face` for "ES Build Neutral" at the Inter `.woff2` files and the wordmark rendered in Inter).
+列出字体家族及其角色，以及**来自 `fonts-manifest.json` 的每个家族+权重的精确文件路径**。子代理会逐字复制 `@font-face` 块——如果你只命名家族而没有路径，子代理必须猜测哪个 `.woff2` 文件属于哪个家族，一半情况下会出错（来自之前运行的真实失败模式：代理将「ES Build Neutral」的 `@font-face` 指向了 Inter 的 `.woff2` 文件，结果字标以 Inter 渲染）。
 
-**Example:**
+**示例：**
 
 ````markdown
-#### Fonts
+#### 字体
 
-- **Display:** `"ES Build Neutral"` — wordmarks, headlines
-  - 600: `capture/assets/fonts/14d7ce3e41dcbb66-s.p.woff2`
-  - 700: `capture/assets/fonts/e8b276476c0ac6fa-s.p.woff2`
-- **Body:** `"Inter"` (variable 100–900, captured ✓) — body, labels, UI
-  - 400: `capture/assets/fonts/9a8d3f06c4e89f2b-s.p.woff2`
-  - 600: `capture/assets/fonts/1b0b3615811be75b-s.p.woff2`
-- **Mono:** `"JetBrains Mono"` — code, metadata
-  - 400: `capture/assets/fonts/c7d2e9f5a1b3c8d4-s.p.woff2`
-- **Fallback stack:** `-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+- **展示：** `"ES Build Neutral"`——字标、标题
+  - 600：`capture/assets/fonts/14d7ce3e41dcbb66-s.p.woff2`
+  - 700：`capture/assets/fonts/e8b276476c0ac6fa-s.p.woff2`
+- **正文：** `"Inter"`（可变 100–900，已捕获 ✓）——正文、标签、UI
+  - 400：`capture/assets/fonts/9a8d3f06c4e89f2b-s.p.woff2`
+  - 600：`capture/assets/fonts/1b0b3615811be75b-s.p.woff2`
+- **等宽：** `"JetBrains Mono"`——代码、元数据
+  - 400：`capture/assets/fonts/c7d2e9f5a1b3c8d4-s.p.woff2`
+- **备选堆栈：** `-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
 
-**`@font-face` block to paste in every composition** (sub-agents copy this verbatim — do not invent file paths):
+**要在每个作品中粘贴的 `@font-face` 块**（子代理逐字复制——不要编造文件路径）：
 
 ```css
 @font-face {
@@ -115,219 +115,217 @@ List font families with their role AND **the exact file path per family + weight
   font-weight: 400;
   font-display: block;
 }
-/* + any other family/weight combinations the storyboard's beats need */
+/* + 故事板节拍需要的其他任何家族/权重组合 */
 ```
 ````
 
-The brand uses **size for hierarchy, weight for emphasis**. Display 1: 48px/600, Display 2: 32px/600, Body: 14px/400. (Adjust to the actual brand's hierarchy.)
+品牌使用**大小实现层级、权重实现强调**。展示 1：48px/600、展示 2：32px/600、正文：14px/400。（根据实际品牌的层级调整。）
 
-````
+精确的 `@font-face` 块让子代理可以逐字复制，而不是通过推断构建。如果一个节拍需要的权重不在清单中，在此处显式标记：例如，「ES Build Neutral 900 不在捕获中；使用 ES Build Neutral 700 作为替代，或回退到 Inter 700。」
 
-The exact `@font-face` block lets sub-agents copy verbatim instead of constructing one from inference. If a beat needs a weight that isn't in the manifest, flag it explicitly here: e.g., "ES Build Neutral 900 NOT in capture; use ES Build Neutral 700 as substitute, or fall back to Inter 700."
-
-That's the whole typography section. If sub-agents need exact line-heights or letter-spacing, they read `design-styles.json` directly.
+这就是整个排版章节。如果子代理需要精确的 line-height 或 letter-spacing，他们直接读取 `design-styles.json`。
 
 ---
 
-### `## 3. Component Stylings` (the build-step's spec sheet)
+### `## 3. 组件样式`（构建步骤的规格说明）
 
-This is the section sub-agents consult most when building beats in Step 5. **Without exact per-component CSS, sub-agents fall back to generic "dark bg + glow + centered text" patterns regardless of brand** — which is why every video starts looking the same. Encode the brand's actual component DNA here.
+这是子代理在步骤 5 构建节拍时最常查阅的章节。**如果没有每个组件的精确 CSS，子代理会回退到通用的「暗色背景 + 光晕 + 居中文本」模式——这就是为什么每个视频开始看起来都一样。在此处编码品牌实际的组件 DNA。**
 
-Target **6-12 distinct components**. Document what the site actually uses; skip categories the brand doesn't have. For each component, name it descriptively ("Stripe Primary Button" not "Button 1") and provide exact CSS-level properties: background, text color, padding, border-radius, border, font size/weight, height, box-shadow, and any hover/active/disabled states.
+目标 **6-12 个不同的组件**。记录网站实际使用的内容；跳过品牌没有的分类。对于每个组件，用描述性命名（「Stripe 主按钮」而不是「按钮 1」），并提供精确的 CSS 级属性：background、text color、padding、border-radius、border、font size/weight、height、box-shadow 以及任何 hover/active/disabled 状态。
 
-#### Buttons (always required)
+#### 按钮（始终需要）
 
-Cover every variant the site uses — typically Primary, Secondary/Ghost, and Icon. **Example:**
-
-```markdown
-#### Primary Button (Stripe Purple)
-
-- **Background:** `#533AFD`
-- **Text color:** `#FFFFFF`
-- **Font:** sohne-var 16px / 400
-- **Padding:** `15.5px 24px 16.5px 24px`
-- **Border radius:** `4px`
-- **Border:** none
-- **Height:** `48px` (with padding)
-- **Box shadow:** none
-- **Hover:** background `#4329E8`, opacity `0.95`
-- **Active:** background `#3720D4`, scale `0.98`
-- **Disabled:** background `#C9C3F0`, cursor `not-allowed`
-
-#### Secondary Button (outline)
-
-- **Background:** `#FFFFFF`
-- **Text color:** `#533AFD`
-- **Border:** `1px solid #533AFD`
-- **Padding / radius / font:** same as Primary
-- **Hover:** background `#F3F0FF`, border `#4329E8`
-
-#### Ghost Button (text-only link)
-
-- **Background:** transparent
-- **Text color:** `#533AFD`
-- **Font:** sohne-var 14px / 400
-- **Padding:** `12px 0`
-- **Hover:** background `rgba(83, 58, 253, 0.08)`, optional underline
-````
-
-#### Cards & Containers (always required if the site uses any)
-
-Document each distinct card type — Standard, Feature Highlight, Glass, Pricing, Testimonial — whatever this brand actually uses. **Example:**
+覆盖网站使用的每个变体——通常是主要、次要/幽灵和图标。**示例：**
 
 ```markdown
-#### Standard Card
+#### 主按钮（Stripe 紫）
 
-- **Background:** `#FFFFFF`
-- **Border:** `1px solid #D4DEE9`
-- **Border radius:** `5px`
-- **Padding:** `32px`
-- **Box shadow:** `0 1px 2px rgba(0, 0, 0, 0.04)` (default), `0 4px 12px rgba(0, 0, 0, 0.08)` (hover)
-- **Hover:** border `#B8CCDB`
+- **背景：** `#533AFD`
+- **文本颜色：** `#FFFFFF`
+- **字体：** sohne-var 16px / 400
+- **内边距：** `15.5px 24px 16.5px 24px`
+- **圆角：** `4px`
+- **边框：** 无
+- **高度：** `48px`（含 padding）
+- **盒阴影：** 无
+- **悬停：** 背景 `#4329E8`，不透明度 `0.95`
+- **激活：** 背景 `#3720D4`，缩放 `0.98`
+- **禁用：** 背景 `#C9C3F0`，光标 `not-allowed`
 
-#### Feature Highlight Card (gradient backdrop)
+#### 次要按钮（轮廓）
 
-- **Background:** linear-gradient(180deg, rgba(83, 58, 253, 0.05) 0%, rgba(255, 97, 24, 0.03) 100%)
-- **Border:** `1px solid #E5EDF5`
-- **Padding:** `36px`
-- **Box shadow:** none
+- **背景：** `#FFFFFF`
+- **文本颜色：** `#533AFD`
+- **边框：** `1px solid #533AFD`
+- **内边距/圆角/字体：** 与主按钮相同
+- **悬停：** 背景 `#F3F0FF`，边框 `#4329E8`
+
+#### 幽灵按钮（仅文本链接）
+
+- **背景：** 透明
+- **文本颜色：** `#533AFD`
+- **字体：** sohne-var 14px / 400
+- **内边距：** `12px 0`
+- **悬停：** 背景 `rgba(83, 58, 253, 0.08)`，可选下划线
 ```
 
-#### Distinctive components (anything else the brand actually shows)
+#### 卡片和容器（如果网站使用任何，则始终需要）
 
-Logo marquees, testimonial carousels, pricing tables, gradient overlays, glassmorphism panels, bento grids, code blocks, terminal UIs, dashboard mockups — name and document anything visually distinctive. Sub-agents will reach for these specs when the storyboard calls for a beat featuring the X.
+记录每种不同的卡片类型——标准、功能高亮、玻璃、定价、推荐——这个品牌实际使用的任何类型。**示例：**
 
 ```markdown
-#### Glass Container (frosted overlay)
+#### 标准卡片
 
-- **Background:** `rgba(255, 255, 255, 0.9)`
-- **Border:** `1px solid rgba(255, 255, 255, 0.2)`
-- **Backdrop filter:** `blur(8px)`
-- **Use:** floating chat widgets, modal overlays, hero callouts only — the only place transparent fills appear in the system
+- **背景：** `#FFFFFF`
+- **边框：** `1px solid #D4DEE9`
+- **圆角：** `5px`
+- **内边距：** `32px`
+- **盒阴影：** `0 1px 2px rgba(0, 0, 0, 0.04)`（默认），`0 4px 12px rgba(0, 0, 0, 0.08)`（悬停）
+- **悬停：** 边框 `#B8CCDB`
+
+#### 功能高亮卡片（渐变背景）
+
+- **背景：** linear-gradient(180deg, rgba(83, 58, 253, 0.05) 0%, rgba(255, 97, 24, 0.03) 100%)
+- **边框：** `1px solid #E5EDF5`
+- **内边距：** `36px`
+- **盒阴影：** 无
 ```
 
-**The rule:** if a sub-agent in Step 5 has to invent CSS values for a component this brand actually uses, you under-documented this section. The values should be lookup-able, not guessable.
+#### 特色组件（品牌实际展示的任何其他内容）
+
+Logo 行、推荐轮播、定价表、渐变叠加、玻璃态面板、便当网格、代码块、终端 UI、仪表板模型——命名并记录任何视觉上独特的内容。当故事板要求展示 X 的节拍时，子代理会引用这些规格。
+
+```markdown
+#### 玻璃容器（毛玻璃叠加）
+
+- **背景：** `rgba(255, 255, 255, 0.9)`
+- **边框：** `1px solid rgba(255, 255, 255, 0.2)`
+- **背景滤镜：** `blur(8px)`
+- **用途：** 浮动聊天部件、模态叠加、英雄标注——这是系统中唯一出现透明填充的地方
+```
+
+**规则：** 如果步骤 5 中的子代理必须为这个品牌实际使用的组件编造 CSS 值，那就是你记录不足了。这些值应该是可查的，而不是可猜的。
 
 ---
 
-### `## 4. Spacing & Layout`
+### `## 4. 间距与布局`
 
-The brand's rhythm. Three sub-sections, kept tight.
+品牌的节奏。三个子章节，保持紧凑。
 
-#### Spacing scale
+#### 间距比例
 
-Identify the **base unit** (typically `4px` or `8px`) and the full scale with usage context. **Example:**
+确定**基础单位**（通常是 `4px` 或 `8px`）以及完整的使用上下文比例。**示例：**
 
 ```markdown
-**Base unit:** `4px`
+**基础单位：** `4px`
 
-| Token | Value   | Used for                                                  |
+| 标记 | 值 | 用途 |
 | ----- | ------- | --------------------------------------------------------- |
-| xs    | `4px`   | Inline icon gaps, tight badge padding                     |
-| sm    | `8px`   | Button-group gaps, small component padding                |
-| md    | `16px`  | Card padding, form-field gaps, standard component spacing |
-| lg    | `32px`  | Section vertical spacing, large card padding              |
-| xl    | `60px`  | Major section separation                                  |
-| 2xl   | `100px` | Page-level rhythm, hero section padding                   |
+| xs | `4px` | 内联图标间距、紧凑徽标内边距 |
+| sm | `8px` | 按钮组间距、小组件内边距 |
+| md | `16px` | 卡片内边距、表单字段间距、标准组件间距 |
+| lg | `32px` | 部分垂直间距、大卡片内边距 |
+| xl | `60px` | 主要部分分隔 |
+| 2xl | `100px` | 页面级节奏、英雄部分内边距 |
 
-Never use odd values (`13px`, `17px`) — the system only uses multiples of 4.
+不要使用奇数值（`13px`、`17px`）——系统仅使用 4 的倍数。
 ```
 
-#### Border-radius scale
+#### 圆角比例
 
-Every radius the site uses, with what uses it.
+网站使用的每个圆角及其用途。
 
 ```markdown
-- `0px`: Form labels, technical UI markers
-- `4px`: Primary buttons, inputs, small badges
-- `8px`: Standard cards, dropdowns
-- `12px`: Feature cards, larger callouts
-- `40px`: Icon buttons (square pill)
-- `9999px`: Pill-shaped CTAs, status chips
+- `0px`：表单标签、技术 UI 标记
+- `4px`：主按钮、输入框、小徽标
+- `8px`：标准卡片、下拉菜单
+- `12px`：功能卡片、较大的标注
+- `40px`：图标按钮（方形药丸）
+- `9999px`：药丸形 CTA、状态标签
 ```
 
-#### Whitespace philosophy (one paragraph)
+#### 留白哲学（一个段落）
 
-How does this brand use whitespace — generous and architectural? Tight and information-dense? Section gaps in the 60–100px range, or 20–40px? Document the brand's actual rhythm.
+这个品牌如何使用留白——慷慨且建筑化？紧凑且信息密集？区域间距在 60–100px 范围还是 20–40px？记录品牌的实际节奏。
 
 ```markdown
-Generous whitespace as confidence. Section gaps are always `60–100px`. Content never touches viewport edges — minimum `40px` horizontal padding on mobile, `80–160px` on desktop. The brand uses negative space as active design, not emptiness.
+慷慨的留白作为自信的体现。区域间距始终为 `60–100px`。内容从不接触视口边缘——移动端最小 `40px` 水平内边距，桌面端 `80–160px`。品牌将负空间用作积极的设计，而不是空白。
 ```
 
 ---
 
-### `## 5. Iteration Guide` (the load-bearing section)
+### `## 5. 迭代指南`（承重章节）
 
-5–10 numbered rules that encode the most important brand decisions. Each rule is a **single actionable sentence stating what to do, with the specific values from this site.** These are the "if in doubt, do this" rules sub-agents consult while composing beats.
+5–10 条编号规则，编码最重要的品牌决策。每条规则是一个**单一可操作的句子，说明要做什么，并包含来自此站点的特定值。** 这些是「如有疑问，就这样做」的规则，子代理在组合节拍时会查阅。
 
-**The single most common failure mode is writing generic rules that could apply to any well-designed website.** A rule that doesn't name a specific value, a specific color, or a specific component this brand actually uses is doing nothing.
+**最常见的失败模式是编写适用于任何设计良好的网站的通用规则。** 一条不命名特定值、特定颜色或此品牌实际使用的特定组件的规则毫无作用。
 
-**Test for any rule you write:** can you swap this brand for a different brand and have the rule still make sense? If yes, it's too generic. If no, ship it.
+**测试你编写的任何规则：** 你是否可以将此品牌换成不同的品牌，而规则仍然有意义？如果是，它太通用了。如果不是，发布它。
 
-#### ❌ Generic vs ✅ site-specific
+#### ❌ 通用 vs ✅ 站点特定
 
-| Generic (delete)                                  | Site-specific (keep)                                                                                                                                                            |
+| 通用（删除） | 站点特定（保留） |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Use the primary brand color for CTAs.             | All primary CTAs use Stripe Purple (`#533AFD`). Secondary actions use white background with `#533AFD` border + text. **There is no third button color anywhere in the system.** |
-| Maintain visual hierarchy through color contrast. | Body text is `#000000` on white, `#FFFFFF` on dark. Metadata uses `#64748D` on white only — never on dark. The brand has no mid-gray text on dark backgrounds.                  |
-| Use clear typographic hierarchy.                  | All type is sohne-var. H1 `48px`/300, H2 `32px`/300, body `14px`/400. **Never use weights above 400** — this brand has no bold variant.                                         |
-| Use consistent spacing.                           | Spacing is from a fixed scale: `4, 8, 12, 16, 20, 24, 32, 40, 60` px. Section gaps are always `60–100px`. Card padding is always `32px`. No exceptions.                         |
-| Buttons should have rounded corners.              | Buttons are `40px` tall minimum, `4px` radius, `15.5px 24px` padding. Pill-shape `9999px` radius is reserved for the floating chat trigger only.                                |
+| 在最主要的行动号召上使用主要品牌颜色。 | 所有主要 CTA 使用 Stripe 紫（`#533AFD`）。次要操作使用白色背景配 `#533AFD` 边框+文本。**系统中没有第三个按钮颜色。** |
+| 通过颜色对比维护视觉层级。 | 正文文本在白色上为 `#000000`，在深色上为 `#FFFFFF`。元数据仅在白色上使用 `#64748D`——从不在深色上。品牌在深色背景上没有中灰色文本。 |
+| 使用清晰的排版层级。 | 所有字体为 sohne-var。H1 `48px`/300，H2 `32px`/300，正文 `14px`/400。**不要使用超过 400 的权重**——此品牌没有粗体变体。 |
+| 使用一致的间距。 | 间距来自固定比例：`4、8、12、16、20、24、32、40、60` px。区域间距始终为 `60–100px`。卡片内边距始终为 `32px`。无例外。 |
+| 按钮应有圆角。 | 按钮最小高度 `40px`、`4px` 圆角、`15.5px 24px` 内边距。药丸形 `9999px` 圆角仅保留用于浮动聊天触发器。 |
 
-#### One worked example (Framer — 5 rules)
+#### 一个工作示例（Framer——5 条规则）
 
 ```markdown
-### Iteration Guide
+### 迭代指南
 
-1. **All interactive elements use Framer Blue (`#0000EE`)** — links, primary buttons, active states, focus indicators. Secondary uses `#0099FF` for hover. **No other interactive color exists in the system.**
+1. **所有交互元素使用 Framer 蓝（`#0000EE`）**——链接、主按钮、激活状态、焦点指示器。次要使用 `#0099FF` 用于悬停。**系统中没有其他交互颜色。**
 
-2. **Typography: GT Walsheim Medium for headings, Inter for body.** Hierarchy enforced through size only, never color. H2 `62px`, H5 `85px`, body `14px`, labels `12px`/500. Text defaults to `#000000` on white, `#FFFFFF` on dark.
+2. **排版：GT Walsheim Medium 用于标题，Inter 用于正文。** 层级仅通过大小实现，从不通过颜色。H2 `62px`、H5 `85px`、正文 `14px`、标签 `12px`/500。文本默认在白色上为 `#000000`，在深色上为 `#FFFFFF`。
 
-3. **Spacing is base-4** — every margin / padding / gap is a multiple of `4px`. Section gaps `60–100px`. **Never use odd values like `13px` or `17px`** — the system has no place for them.
+3. **间距基于 4**——每个 margin / padding / gap 都是 `4px` 的倍数。区域间距 `60–100px`。**不要使用像 `13px` 或 `17px` 这样的奇数值**——系统没有它们的位置。
 
-4. **Cards: white (`#FFFFFF`), `1px` border `#EFEFEF`, `8px` radius, `16–20px` padding, no shadow by default.** Dark-mode cards swap to `#1A1A1A` background with `#242424` border. Shadow only appears on hover.
+4. **卡片：白色（`#FFFFFF`）、`1px` 边框 `#EFEFEF`、`8px` 圆角、`16–20px` 内边距、默认无阴影。** 深色模式卡片切换到 `#1A1A1A` 背景配 `#242424` 边框。阴影仅在悬停时出现。
 
-5. **Glass containers** use `rgba(255,255,255,0.9)` background, `1px` border `rgba(255,255,255,0.2)`, optional `backdrop-filter: blur(8px)`. **These are the only place transparent fills appear** — everywhere else uses solid color.
+5. **玻璃容器**使用 `rgba(255,255,255,0.9)` 背景、`1px` 边框 `rgba(255,255,255,0.2)`、可选 `backdrop-filter: blur(8px)`。**这是唯一出现透明填充的地方**——其他地方都使用纯色。
 ```
 
-If your draft has a rule like "all interactive elements require visible focus states for accessibility" — delete it. Not wrong, just not load-bearing for _this_ brand.
+如果你的草稿有一条规则如「所有交互元素需要可见的焦点状态以确保无障碍」——删除它。没有错，只是对这个品牌来说不承重。
 
 ---
 
-## Rules
+## 规则
 
-- Use **exact values** from `capture/extracted/tokens.json`. Cross-reference with screenshots when needed.
-- Name colors and components descriptively — "Stripe Purple" not "Accent 1."
-- When you can't extract exact values, estimate from visual inspection and note it.
-- No "Assets" section — `capture/extracted/asset-descriptions.md` is the asset index.
-- No "Motion" section — the storyboard specifies motion per-beat.
-- No separate "Components" section — Quick Reference is where components live.
-- No "Depth & Elevation" tables — shadow language is implied by the brand's mood (heavy shadows for premium, no shadows for flat/clean); sub-agents pick appropriate values without a table.
+- 使用来自 `capture/extracted/tokens.json` 的**精确值**。需要时与截图交叉引用。
+- 用描述性方式命名颜色和组件——「Stripe 紫」而不是「强调色 1」。
+- 当你无法提取精确值时，通过目测估计并注明。
+- 没有「资源」章节——`capture/extracted/asset-descriptions.md` 是资源索引。
+- 没有「动效」章节——故事板指定了每个节拍的动效。
+- 没有独立的「组件」章节——快速参考是组件所在的地方。
+- 没有「深度与高度」表——阴影语言由品牌情绪隐含（重阴影用于高级，无阴影用于扁平/简洁）；子代理会选择适当的值，无需表格。
 
 ---
 
-## Quick User Check (before moving to Step 2)
+## 快速用户检查（在进入步骤 2 之前）
 
-30-second sanity check before Step 2:
+30 秒完整性检查，然后再进入步骤 2：
 
-> "Here's what I extracted as [Brand Name]'s visual identity:
+> 「以下是我提取的 [品牌名称] 的视觉标识：
 >
-> - **Colors:** [primary], [accent], [2-3 others with roles]
-> - **Fonts:** [headline font], [body font]
-> - **Tone:** [1 sentence on the brand feel]
+> - **颜色：** [主色]、[强调色]、[2-3 个其他颜色及其角色]
+> - **字体：** [标题字体]、[正文字体]
+> - **语调：** [1 句话描述品牌感觉]
 >
-> Does this match how you want the video to feel? Any corrections or overrides before I start the storyboard?"
+> 这符合你对视频感觉的预期吗？在我开始故事板之前有什么需要修正或覆盖的吗？」
 
-If the user has corrections ("use the blue, not the gray" / "ignore the dark mode" / "we just rebranded, use [these values] instead") — update DESIGN.md now. One minute here saves thirty minutes of rebuilding.
+如果用户有纠正（「使用蓝色，不是灰色」/「忽略深色模式」/「我们刚重新品牌了，改用 [这些值]」）——立即更新 DESIGN.md。在这里花一分钟可以节省之后三十分钟的重建时间。
 
 ---
 
-## What makes a useful DESIGN.md
+## 什么构成有用的 DESIGN.md
 
-A sub-agent reading just your Quick Reference + Iteration Guide should be able to:
+一个只阅读你的快速参考 + 迭代指南的子代理应该能够：
 
-1. Pick the right color for any primary action, secondary action, body text, error state
-2. Pick the right font/weight/size for any headline, body, metadata
-3. Know which 2-3 rules they cannot break without losing the brand
+1. 为任何主要操作、次要操作、正文文本、错误状态选择正确的颜色
+2. 为任何标题、正文、元数据选择正确的字体/权重/大小
+3. 知道哪 2-3 条规则他们不能打破而不失去品牌特性
 
-That's the test. If they can answer those three questions from a 60–120 line doc, you've nailed it. If they need to read 400 lines of mood-board prose to find a color, you've buried the signal.
+这就是测试。如果他们能从一个 60–120 行的文档回答这三个问题，你就做对了。如果他们需要阅读 400 行的情绪板散文才能找到一种颜色，你埋没了信号。

@@ -1,8 +1,8 @@
 ## 3D
 
-### 3D Card Flip
+### 3D 卡片翻转
 
-180° Y-axis rotation. Requires CSS: `backface-visibility: hidden; transform-style: preserve-3d;` on both scene-inners. Parent needs `perspective: 1200px`.
+180° Y 轴旋转。在两个场景内部元素上需要 CSS：`backface-visibility: hidden; transform-style: preserve-3d;`。父级需要 `perspective: 1200px`。
 
 ```js
 tl.set(new, { rotationY: -180, opacity: 1 }, T);

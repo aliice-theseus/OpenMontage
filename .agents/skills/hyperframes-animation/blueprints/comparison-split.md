@@ -1,27 +1,27 @@
-# comparison-split — Comparison Split-Cards
+# comparison-split — 比较分屏卡片
 
-**intent**: Two paired items of equal weight shown side-by-side with mirrored 3D "book-open" tilts — the eye reads them as a balanced comparison, then a pill badge lands at each card's inner edge to punctuate. The motion IS the symmetry: two cards arriving from opposite wings into a held spread.
+**意图**：两个同等权重的配对项目并排显示，带有镜像的 3D"书本打开"倾斜 — 眼睛将它们读作平衡比较，然后一个胶囊徽章在每张卡片的内侧边缘着陆以标点。运动**就是**对称性：两张卡片从对侧进入，到一个展开的构图中保持。
 
-**roles served**
+**服务角色**
 
-- Key_Feature (from `comparison-split-cards`): when two complementary features / capabilities of equal weight should be presented **simultaneously, not sequentially** — an A/B, a "X + Y together," paired concepts the viewer must weigh side-by-side. Not for >2 items (use `grid-card-assemble`) or sequential steps.
+- Key_Feature（来自 `comparison-split-cards`）：当两个同等权重的互补功能/能力应该**同时**而非**顺序**呈现时 — 一个 A/B、一个"X + Y 一起"、观看者必须并排权衡的配对概念。不适用于 >2 个项目（使用 `grid-card-assemble`）或顺序步骤。
 
-**duration**: 4–6s
+**时长**：4–6 秒
 
-**shot structure** (a `[bg]` canvas carrying two faint ambient glow blooms — `[accent A]` near 30%, `[accent B]` near 70% — so each side owns a color identity across a 50% symmetry axis; equal-width cards under one shared perspective parent)
+**镜头结构**（一个 `[bg]` canvas 携带两个微弱环境辉光绽放 — `[accent A]` 近 30%、`[accent B]` 近 70% — 使每边在一个 50% 对称轴上拥有颜色身份；等宽卡片在一个共享透视父级下）
 
-- **Scene 1 (0.0–~0.8s) — title sets the concept.** A centered `[title line]` with an `[accent keyword]` slides DOWN into place from just above (a short smooth settle). The downward arrival is deliberate: it forms a non-conflicting T-shape against the cards, which arrive from the sides next.
-- **Scene 2 (~0.4–1.9s) — the split-tilt entry (signature move).** Two equal-width feature cards arrive from opposite wings — `[left card]` from the left, `[right card]` from the right ~0.2s behind — each carrying a **mirrored 3D `rotateY` tilt** (left faces right, right faces left, opening like a book) and scaling ~0.85→1 as it lands. The entry overlaps the title's tail so the whole thing reads as ONE arrival, not two beats. Each card holds `[image / label / subtitle]`; box-shadows fall **outward** from the tilt (left shadow right, right shadow left).
-- **Scene 3 (~1.9–end) — badges punctuate, then hold.** A pill `[badge]` lands at each card's **inner edge** (left then right, ~0.3s apart), overlapping its card ~15% so it reads as attached, not orbiting. This is the lone overshoot in the shot — it earns the punctuation. Settles and holds.
+- **场景 1（0.0–~0.8 秒）——标题设定概念。** 一个居中的 `[title line]` 带一个 `[accent keyword]` 从正上方**向下滑入**到位（短平滑稳定）。向下到达是有意的：它形成一个不冲突的 T 形，与接下来从侧边到达的卡片形成对比。
+- **场景 2（~0.4–1.9 秒）——分屏倾斜进入（标志性动作）。** 两张等宽功能卡片从对侧到达 — `[left card]` 从左侧，`[right card]` 从右侧 ~0.2 秒后 — 每张携带一个**镜像的 3D `rotateY` 倾斜**（左侧朝右，右侧朝左，像书一样打开）并缩放 ~0.85→1 着陆。进入与标题的尾部重叠，使整个读作**一次**到达，而非两个节拍。每张卡片持有 `[image / label / subtitle]`；盒阴影从倾斜**向外**落下（左侧阴影向右，右侧阴影向左）。
+- **场景 3（~1.9–结束）——徽章标点，然后保持。** 一个胶囊 `[badge]` 在每张卡片的**内侧边缘**着陆（左侧然后右侧，~0.3 秒间隔），与卡片重叠 ~15%，使其读作附着而非轨道运行。这是镜头中唯一的过冲 — 它赢得了标点。稳定并保持。
 
-**motion vocabulary**: title slide-down from above; mirrored opposite-wing card entry; static book-open `rotateY` tilt (`+tilt` left, `−tilt` right); tilt-matched outward box-shadow; inner-edge badge spring-pop; gentle phase-opposed idle float (left vs right, never synchronized) registered as subtle jitter; dual side-glow ambient.
+**动词语汇**：标题从上方下滑；镜像对侧卡片进入；静态书本打开 `rotateY` 倾斜（`+tilt` 左，`−tilt` 右）；倾斜匹配向外盒阴影；内侧边缘徽章弹簧弹出；温和相位相反空闲浮动（左 vs 右，从不同步）注册为细微抖动；双面辉光环境。
 
-**rule mapping**
+**规则映射**
 
-- two cards entering from opposite wings with mirrored `rotateY` tilts + tilt-matched shadow → `split-tilt-cards` (the signature; keep the two-layer split so the entry `x`/`scale` and the idle never collide on one alias)
-- title slide-down settle → `gsap-effects` (translate + opacity on a long-tail `power3`)
-- inner-edge pill badge pop (the one overshoot) → `spring-pop-entrance` (overshoot register — earns the punctuation)
-- phase-opposed idle float on the pair → `sine-wave-loop` (low-amplitude register — subtle jitter, NOT lazy breathing; left `sin(t)`, right `sin(t+π)` so they never conveyor-belt)
-- the two faint side glows behind the cards → `ambient-glow-bloom` (un-triggered soft bloom, one per accent)
+- 两张卡片从对侧进入，带镜像 `rotateY` 倾斜 + 倾斜匹配阴影 → `split-tilt-cards`（标志性动作；保持双层分裂，使进入 `x`/`scale` 和空闲从不在一个别名上碰撞）
+- 标题下滑稳定 → `gsap-effects`（长尾 `power3` 上的平移 + 不透明度）
+- 内侧边缘胶囊徽章弹出（唯一的过冲）→ `spring-pop-entrance`（过冲寄存器 — 赢得标点）
+- 对上的相位相反空闲浮动 → `sine-wave-loop`（低振幅寄存器 — 细微抖动，非懒散呼吸；左 `sin(t)`，右 `sin(t+π)` 使它们从不同步）
+- 卡片后的两个微弱侧辉光 → `ambient-glow-bloom`（无触发柔和绽放，每重音一个）
 
-**camera modifier**: camera-static by default — the symmetry is the subject and a move would break the balance.
+**摄像机修饰**：默认摄像机静止 — 对称性是主体，移动会破坏平衡。

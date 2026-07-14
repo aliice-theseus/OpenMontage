@@ -1,17 +1,17 @@
 ---
 name: avatars
-description: Listing avatars, avatar styles, and avatar_id selection for HeyGen
+description: 列出头像、头像样式和为 HeyGen 选择 avatar_id
 ---
 
-# HeyGen Avatars
+# HeyGen 头像
 
-Avatars are the AI-generated presenters in HeyGen videos. You can use public avatars provided by HeyGen or create custom avatars.
+头像是在 HeyGen 视频中作为 AI 生成的出镜人物。你可以使用 HeyGen 提供的公共头像，也可以创建自定义头像。
 
-## Previewing Avatars Before Generation
+## 在生成前预览头像
 
-Always preview avatars before generating a video to ensure they match user preferences. Each avatar has preview URLs that can be opened directly in the browser - no downloading required.
+在生成视频前始终预览头像，以确保它们符合用户偏好。每个头像都有预览 URL，可以直接在浏览器中打开——无需下载。
 
-### List Avatars and Show Previews
+### 列出头像并显示预览
 
 ```typescript
 async function listAndPreviewAvatars(openInBrowser = true): Promise<void> {
@@ -26,31 +26,31 @@ async function listAndPreviewAvatars(openInBrowser = true): Promise<void> {
     console.log(`  Preview: ${avatar.preview_image_url}`);
   }
 
-  // Preview URLs can be opened directly in any browser
+  // 预览 URL 可以直接在任何浏览器中打开
   for (const avatar of data.avatars.slice(0, 3)) {
     console.log(`Open in browser: ${avatar.preview_image_url}`);
   }
 }
 ```
 
-### Workflow: Preview Before Generate
+### 工作流：生成前预览
 
-1. **List available avatars** - get names, genders, and preview URLs
-2. **Show preview URLs to user** - share `preview_image_url` for visual check
-3. **User selects** preferred avatar by name or ID
-4. **Get avatar details** for `default_voice_id`
-5. **Generate video** with selected avatar
+1. **列出可用头像** - 获取名称、性别和预览 URL
+2. **向用户展示预览 URL** - 分享 `preview_image_url` 供视觉检查
+3. **用户选择** 偏好的头像（按名称或 ID）
+4. **获取头像详情** 获取 `default_voice_id`
+5. **使用所选头像生成视频**
 
-### Preview Fields in API Response
+### API 响应中的预览字段
 
-| Field | Description |
+| 字段 | 描述 |
 |-------|-------------|
-| `preview_image_url` | Static image of the avatar (JPG) - publicly accessible URL |
-| `preview_video_url` | Short video clip showing avatar animation |
+| `preview_image_url` | 头像静态图片（JPG）- 可公开访问的 URL |
+| `preview_video_url` | 显示头像动画的短视频片段 |
 
-Both URLs are publicly accessible - no authentication needed to view.
+这两个 URL 都是公开可访问的——无需身份验证即可查看。
 
-## Listing Available Avatars
+## 列出可用头像
 
 ### curl
 
@@ -112,7 +112,7 @@ def list_avatars() -> list:
     return data["data"]["avatars"]
 ```
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -139,49 +139,49 @@ def list_avatars() -> list:
 }
 ```
 
-## Avatar Types
+## 头像类型
 
-### Public Avatars
+### 公共头像
 
-HeyGen provides a library of public avatars that anyone can use:
+HeyGen 提供了一系列公共头像库，任何人都可以使用：
 
 ```typescript
-// List only public avatars
+// 仅列出公共头像
 const avatars = await listAvatars();
 const publicAvatars = avatars.filter((a) => !a.avatar_id.startsWith("custom_"));
 ```
 
-### Private/Custom Avatars
+### 私有/自定义头像
 
-Custom avatars created from your own training footage:
+从你自己的训练素材创建的自定义头像：
 
 ```typescript
 const customAvatars = avatars.filter((a) => a.avatar_id.startsWith("custom_"));
 ```
 
-## Avatar Styles
+## 头像样式
 
-Avatars support different rendering styles:
+头像支持不同的渲染样式：
 
-| Style | Description |
+| 样式 | 描述 |
 |-------|-------------|
-| `normal` | Full body shot, standard framing |
-| `closeUp` | Close-up on face, more expressive |
-| `circle` | Avatar in circular frame (talking head) |
-| `voice_only` | Audio only, no video rendering |
+| `normal` | 全身镜头，标准构图 |
+| `closeUp` | 面部特写，更具表现力 |
+| `circle` | 圆形框架中的头像（说话人头像） |
+| `voice_only` | 仅音频，不渲染视频 |
 
-### When to Use Each Style
+### 每种样式的使用场景
 
-| Use Case | Recommended Style |
+| 使用场景 | 推荐样式 |
 |----------|-------------------|
-| Full-screen presenter video | `normal` |
-| Personal/intimate content | `closeUp` |
-| Picture-in-picture overlay | `circle` |
-| Small corner widget | `circle` |
-| Podcast/audio content | `voice_only` |
-| Motion graphics with avatar overlay | `normal` or `closeUp` + transparent bg |
+| 全屏出镜视频 | `normal` |
+| 个人/亲密内容 | `closeUp` |
+| 画中画叠加 | `circle` |
+| 小角落小部件 | `circle` |
+| 播客/音频内容 | `voice_only` |
+| 动态图形叠加头像 | `normal` 或 `closeUp` + 透明背景 |
 
-### Using Avatar Styles
+### 使用头像样式
 
 ```typescript
 const videoConfig = {
@@ -202,12 +202,12 @@ const videoConfig = {
 };
 ```
 
-### Circle Style for Talking Heads
+### Circle 样式用于说话人头像
 
-Circle style is ideal for overlay compositions:
+Circle 样式非常适合叠加合成：
 
 ```typescript
-// Circle avatar for picture-in-picture
+// 画中画圆形头像
 {
   character: {
     type: "avatar",
@@ -217,14 +217,14 @@ Circle style is ideal for overlay compositions:
   voice: { ... },
   background: {
     type: "color",
-    value: "#00FF00", // Green for chroma key, or use webm endpoint
+    value: "#00FF00", // 绿色用作色度键，或使用 webm 端点
   },
 }
 ```
 
-## Searching and Filtering Avatars
+## 搜索和筛选头像
 
-### By Gender
+### 按性别
 
 ```typescript
 function filterByGender(avatars: Avatar[], gender: "male" | "female"): Avatar[] {
@@ -235,7 +235,7 @@ const maleAvatars = filterByGender(avatars, "male");
 const femaleAvatars = filterByGender(avatars, "female");
 ```
 
-### By Name
+### 按名称
 
 ```typescript
 function searchByName(avatars: Avatar[], query: string): Avatar[] {
@@ -248,22 +248,22 @@ function searchByName(avatars: Avatar[], query: string): Avatar[] {
 const results = searchByName(avatars, "josh");
 ```
 
-## Avatar Groups
+## 头像分组
 
-Avatars are organized into groups for better management.
+头像被组织成组以便更好地管理。
 
-### List Avatar Groups
+### 列出头像组
 
 ```bash
 curl -X GET "https://api.heygen.com/v2/avatar_group.list?include_public=true" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-#### Query Parameters
+#### 查询参数
 
-| Parameter | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 |-----------|------|---------|-------------|
-| `include_public` | bool | false | Include public avatars in results |
+| `include_public` | bool | false | 在结果中包括公共头像 |
 
 #### TypeScript
 
@@ -308,16 +308,16 @@ async function listAvatarGroups(
 }
 ```
 
-### Get Avatars in a Group
+### 获取组中的头像
 
 ```bash
 curl -X GET "https://api.heygen.com/v2/avatar_group/{group_id}/avatars" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-## Using Avatars in Video Generation
+## 在视频生成中使用头像
 
-### Basic Avatar Usage
+### 基本头像用法
 
 ```typescript
 const videoConfig = {
@@ -339,7 +339,7 @@ const videoConfig = {
 };
 ```
 
-### Multiple Scenes with Different Avatars
+### 使用不同头像的多场景
 
 ```typescript
 const multiSceneConfig = {
@@ -372,28 +372,28 @@ const multiSceneConfig = {
 };
 ```
 
-## Using Avatar's Default Voice
+## 使用头像的默认语音
 
-Many avatars have a `default_voice_id` that's pre-matched for natural results. **This is the recommended approach** rather than manually selecting voices.
+许多头像都有一个预先匹配好的 `default_voice_id`，可以获得自然的效果。**这是推荐的做法**，而不是手动选择语音。
 
-### Recommended Flow
+### 推荐流程
 
 ```
-1. GET /v2/avatars           → Get list of avatar_ids
-2. GET /v2/avatar/{id}/details → Get default_voice_id for chosen avatar
-3. POST /v2/video/generate   → Use avatar_id + default_voice_id
+1. GET /v2/avatars           → 获取 avatar_id 列表
+2. GET /v2/avatar/{id}/details → 获取所选头像的 default_voice_id
+3. POST /v2/video/generate   → 使用 avatar_id + default_voice_id
 ```
 
-### Get Avatar Details (v2 API)
+### 获取头像详情（v2 API）
 
-Given an `avatar_id`, fetch its details including the default voice:
+给定一个 `avatar_id`，获取其详情，包括默认语音：
 
 ```bash
 curl -X GET "https://api.heygen.com/v2/avatar/{avatar_id}/details" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-#### Response Format
+#### 响应格式
 
 ```json
 {
@@ -444,7 +444,7 @@ async function getAvatarDetails(avatarId: string): Promise<AvatarDetails> {
   return json.data;
 }
 
-// Usage: Get default voice for a known avatar
+// 使用：获取已知头像的默认语音
 const details = await getAvatarDetails("josh_lite3_20230714");
 if (details.default_voice_id) {
   console.log(`Using ${details.name} with default voice: ${details.default_voice_id}`);
@@ -453,21 +453,21 @@ if (details.default_voice_id) {
 }
 ```
 
-#### Complete Example: Generate Video with Any Avatar's Default Voice
+#### 完整示例：使用任何头像的默认语音生成视频
 
 ```typescript
 async function generateWithAvatarDefaultVoice(
   avatarId: string,
   script: string
 ): Promise<string> {
-  // 1. Get avatar details to find default voice
+  // 1. 获取头像详情以找到默认语音
   const avatar = await getAvatarDetails(avatarId);
 
   if (!avatar.default_voice_id) {
     throw new Error(`Avatar ${avatar.name} has no default voice`);
   }
 
-  // 2. Generate video with the avatar's default voice
+  // 2. 使用头像的默认语音生成视频
   const videoId = await generateVideo({
     video_inputs: [{
       character: {
@@ -488,58 +488,58 @@ async function generateWithAvatarDefaultVoice(
 }
 ```
 
-### Why Use Default Voice?
+### 为什么使用默认语音？
 
-1. **Guaranteed gender match** - Avatar and voice are pre-paired
-2. **Natural lip sync** - Default voices are optimized for the avatar
-3. **Simpler code** - No need to fetch and match voices separately
-4. **Better quality** - HeyGen has tested this combination
+1. **保证性别匹配** - 头像和语音已预先配对
+2. **自然的唇形同步** - 默认语音已针对头像优化
+3. **代码更简单** - 无需分别获取和匹配语音
+4. **更高质量** - HeyGen 已测试过此组合
 
-## Selecting the Right Avatar
+## 选择正确的头像
 
-### Avatar Categories
+### 头像类别
 
-HeyGen avatars fall into distinct categories. Match the category to your use case:
+HeyGen 头像分为不同的类别。根据你的使用场景匹配类别：
 
-| Category | Examples | Best For |
+| 类别 | 示例 | 最适合 |
 |----------|----------|----------|
-| **Business/Professional** | Josh, Angela, Wayne | Corporate videos, product demos, training |
-| **Casual/Friendly** | Lily, various lifestyle avatars | Social media, informal content |
-| **Themed/Seasonal** | Holiday-themed, costume avatars | Specific campaigns, seasonal content |
-| **Expressive** | Avatars with "expressive" in name | Engaging storytelling, dynamic content |
+| **商务/专业** | Josh, Angela, Wayne | 企业视频、产品演示、培训 |
+| **休闲/友好** | Lily, 各种生活方式头像 | 社交媒体、非正式内容 |
+| **主题/季节性** | 节日主题、角色扮演头像 | 特定活动、季节性内容 |
+| **表现力丰富** | 名称中带有"expressive"的头像 | 引人入胜的故事讲述、动态内容 |
 
-### Selection Guidelines
+### 选择指南
 
-**For business/professional content:**
-- Choose avatars with neutral attire (business casual or formal)
-- Avoid themed or seasonal avatars (holiday costumes, casual clothing)
-- Preview the avatar to verify professional appearance
-- Consider your audience demographics when selecting gender and appearance
+**对于商务/专业内容：**
+- 选择着装中性的头像（商务休闲或正式）
+- 避免主题或季节性头像（节日服装、休闲装）
+- 预览头像以确认专业外观
+- 在选择性别和外貌时考虑受众群体
 
-**For casual/social content:**
-- More flexibility in avatar choice
-- Themed avatars can work for specific campaigns
-- Match avatar energy to content tone
+**对于休闲/社交内容：**
+- 头像选择更灵活
+- 主题头像可用于特定活动
+- 匹配头像能量与内容基调
 
-### Common Mistakes to Avoid
+### 常见错误避免
 
-1. **Using themed avatars for business content** - A holiday-themed avatar looks unprofessional in a product demo
-2. **Not previewing before generation** - Always check the preview URL to verify appearance
-3. **Ignoring avatar style** - A `circle` style avatar may not work for full-screen presentations
-4. **Mismatched voice gender** - Always use the avatar's `default_voice_id` or match genders manually
+1. **在商务内容中使用主题头像** - 节日主题的头像在产品演示中显得不专业
+2. **生成前不预览** - 始终检查预览 URL 以确认外观
+3. **忽略头像样式** - `circle` 样式可能不适用于全屏演示
+4. **语音性别不匹配** - 始终使用头像的 `default_voice_id` 或手动匹配性别
 
-### Selection Checklist
+### 选择清单
 
-Before generating a video:
-- [ ] Previewed avatar image/video in browser
-- [ ] Avatar appearance matches content tone (professional vs casual)
-- [ ] Avatar style (`normal`, `closeUp`, `circle`) fits the video format
-- [ ] Voice gender matches avatar gender
-- [ ] Using `default_voice_id` when available
+在生成视频之前：
+- [ ] 在浏览器中预览过头像图片/视频
+- [ ] 头像外观与内容基调匹配（专业 vs 休闲）
+- [ ] 头像样式（`normal`, `closeUp`, `circle`）适合视频格式
+- [ ] 语音性别与头像性别匹配
+- [ ] 尽可能使用 `default_voice_id`
 
-## Helper Functions
+## 辅助函数
 
-### Get Avatar by ID
+### 按 ID 获取头像
 
 ```typescript
 async function getAvatarById(avatarId: string): Promise<Avatar | null> {
@@ -548,7 +548,7 @@ async function getAvatarById(avatarId: string): Promise<Avatar | null> {
 }
 ```
 
-### Validate Avatar ID
+### 验证头像 ID
 
 ```typescript
 async function isValidAvatarId(avatarId: string): Promise<boolean> {
@@ -557,7 +557,7 @@ async function isValidAvatarId(avatarId: string): Promise<boolean> {
 }
 ```
 
-### Get Random Avatar
+### 获取随机头像
 
 ```typescript
 async function getRandomAvatar(gender?: "male" | "female"): Promise<Avatar> {
@@ -572,15 +572,15 @@ async function getRandomAvatar(gender?: "male" | "female"): Promise<Avatar> {
 }
 ```
 
-## Common Avatar IDs
+## 常用头像 ID
 
-Some commonly used public avatar IDs (availability may vary):
+一些常用的公共头像 ID（可用性可能有所不同）：
 
-| Avatar ID | Name | Gender |
+| 头像 ID | 名称 | 性别 |
 |-----------|------|--------|
-| `josh_lite3_20230714` | Josh | Male |
-| `angela_expressive_20231010` | Angela | Female |
-| `wayne_20240422` | Wayne | Male |
-| `lily_20230614` | Lily | Female |
+| `josh_lite3_20230714` | Josh | 男 |
+| `angela_expressive_20231010` | Angela | 女 |
+| `wayne_20240422` | Wayne | 男 |
+| `lily_20230614` | Lily | 女 |
 
-Always verify avatar availability by calling the list endpoint before using.
+在使用前始终通过调用列表端点来验证头像的可用性。

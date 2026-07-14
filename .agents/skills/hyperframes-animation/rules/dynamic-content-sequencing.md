@@ -1,21 +1,21 @@
 ---
 name: dynamic-content-sequencing
-description: Auto-calculate timeline start/end times from content length + per-item duration config — longer content gets more screen time without hardcoded numbers.
+description: 从内容长度 + 每项时长配置自动计算时间线开始/结束时间 — 更长的内容获得更多屏幕时间，无需硬编码数字。
 metadata:
   tags: timeline, sequencing, dynamic, duration, content-aware, utility
 ---
 
-# Dynamic Content Sequencing
+# 动态内容排序
 
-A utility pattern (not a motion rule in itself) for scenes that show a SEQUENCE of items (cards, phrases, stats). Each item's duration is calculated from its content length + a per-item config; the sequencer assigns absolute start/end times automatically. Distinct from [discrete-text-sequence](discrete-text-sequence.md) (which is one text element changing states) — this rule swaps between distinct content blocks.
+一个实用模式（本身不是动效规则），用于显示一系列项目（卡片、短语、统计）的场景。每个项目的时长从其内容长度 + 逐项配置计算；排序器自动分配绝对开始/结束时间。与 [discrete-text-sequence](discrete-text-sequence.md)**不同**（后者是一个文本元素改变状态）— 此规则在离散内容块之间交换。
 
-## How It Works
+## 工作原理
 
-1. Define a content array — each entry has `{ text, speedFactor, hold }` (or arbitrary fields)
-2. Pre-compute absolute start times: `start[i] = sum of durations 0..i-1`
-3. In onUpdate, find which entry is active (last entry whose `start ≤ time`) and render it
+1. 定义内容数组 — 每个条目有 `{ text, speedFactor, hold }`（或任意字段）
+2. 预计算绝对开始时间：`start[i] = sum of durations 0..i-1`
+3. 在 onUpdate 中，找到哪个条目是活动的（最后一个其 `start ≤ time` 的条目）并渲染它
 
-The "dynamic" part: items with longer text get more screen time (formula: `baseDuration + textLength * msPerChar`). No hardcoded `from` / `durationInFrames` per item.
+"动态"部分：文本较长的项目获得更多屏幕时间（公式：`baseDuration + textLength * msPerChar`）。无硬编码的 `from` / `durationInFrames` 每项。
 
 ## HTML
 
@@ -40,7 +40,7 @@ The "dynamic" part: items with longer text get more screen time (formula: `baseD
 
 ## CSS
 
-Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}` make the dark backdrop gradient; `{accentColor}` highlights the eyebrow / brand / progress fill; `{textColor}` is the primary readable foreground.
+占位符：`{font}` 是项目无衬线栈；`{bgColor1}`/`{bgColor2}` 制作暗背景渐变；`{accentColor}` 高亮眉标/品牌/进度填充；`{textColor}` 是主要可读前景。
 
 ```css
 .scene {
@@ -80,12 +80,12 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
   line-height: 1.4;
   color: {accentColor};
   opacity: 0.9;
-  min-height: 160px; /* reserve space so layout doesn't jump */
+  min-height: 160px; /* 保留空间使布局不跳变 */
 }
 .progress-bar {
   width: 600px;
   height: 4px;
-  background: {accentColor}26; /* ~15% alpha */
+  background: {accentColor}26; /* ~15% 不透明度 */
   border-radius: 2px;
   margin-top: 16px;
   overflow: hidden;
@@ -107,7 +107,7 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -115,9 +115,9 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // Content array — N entries, each with its own pacing config.
-  // Shape: short eyebrow label, short title, longer body sentence, plus per-entry pacing.
-  // The final entry typically uses a larger `hold` (closing beat).
+  // 内容数组 — N 个条目，每个有自己的节奏配置。
+  // 形状：短眉标标签、短标题、较长正文句子，加上每项节奏。
+  // 最后一个条目通常使用更大的 `hold`（结束节拍）。
   const CONTENT = [
     {
       eyebrow: "{eyebrow1}",
@@ -143,9 +143,9 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
     },
   ];
 
-  // Pre-compute absolute start times.
-  // Duration per entry: BASE_DURATION + body.length * SEC_PER_CHAR + entry.hold seconds.
-  // BASE_DURATION, SEC_PER_CHAR documented in How to Choose Values.
+  // 预计算绝对开始时间。
+  // 每项时长：BASE_DURATION + body.length * SEC_PER_CHAR + entry.hold 秒。
+  // BASE_DURATION、SEC_PER_CHAR 在"如何选择值"中有文档。
   let cumulative = 0;
   const TIMELINE = CONTENT.map((entry) => {
     const dur = BASE_DURATION + entry.body.length * SEC_PER_CHAR + entry.hold;
@@ -154,7 +154,7 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
     return { ...entry, start, end: cumulative };
   });
 
-  // Reverse-search current entry
+  // 反向搜索当前条目
   function entryAt(time) {
     for (let i = TIMELINE.length - 1; i >= 0; i--) {
       if (time >= TIMELINE[i].start) return TIMELINE[i];
@@ -179,14 +179,14 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
       ease: "none",
       onUpdate: () => {
         const entry = entryAt(driver.t);
-        // Only swap content on transitions (avoid per-frame DOM thrash)
+        // 仅在过渡时交换内容（避免每帧 DOM 抖动）
         if (entry.title !== lastTitle) {
           eyebrowEl.textContent = entry.eyebrow;
           titleEl.textContent = entry.title;
           bodyEl.textContent = entry.body;
           lastTitle = entry.title;
         }
-        // Progress bar fills 0% → 100% as composition advances
+        // 进度条填充 0% → 100% 随组合推进
         progressEl.style.width = `${(driver.t / TOTAL_DURATION) * 100}%`;
       },
     },
@@ -197,11 +197,11 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
 </script>
 ```
 
-## Variations
+## 变体
 
-### Crossfade between items (not hard cut)
+### 项目间交叉淡入淡出（非硬切）
 
-Add `overlap` to the find function — return BOTH the previous and next entry during the overlap window, render with crossfade opacity:
+向查找函数添加 `overlap` — 在重叠窗口期间返回前一个和下一个条目，以交叉淡入淡出不透明度渲染：
 
 ```js
 function activeEntries(time, overlap = 0.3) {
@@ -213,15 +213,15 @@ function activeEntries(time, overlap = 0.3) {
 }
 ```
 
-Then render the two adjacent entries with computed opacities based on distance from boundary.
+然后基于与边界的距离用计算的不透明度渲染两个相邻条目。
 
-### Per-item motion variation
+### 每项运动变化
 
-Each entry has its own motion style. Map `entry.style` to one of the existing rules: chapter 1 uses [3d-text-depth-layers](3d-text-depth-layers.md), chapter 2 uses [hacker-flip-3d](hacker-flip-3d.md), chapter 3 uses [counting-dynamic-scale](counting-dynamic-scale.md). The sequencer just orchestrates timing; per-entry rendering uses the appropriate rule.
+每个条目有自己的运动风格。将 `entry.style` 映射到现有规则之一：第 1 章使用 [3d-text-depth-layers](3d-text-depth-layers.md)，第 2 章使用 [hacker-flip-3d](hacker-flip-3d.md)，第 3 章使用 [counting-dynamic-scale](counting-dynamic-scale.md)。排序器仅编排时间；逐项渲染使用适当的规则。
 
-### Auto-extend composition duration
+### 自动延长组合时长
 
-If you don't know upfront how long the sequence will be (dynamic content count), bind `data-duration` to the computed `TOTAL_DURATION`. Do this in script BEFORE the timeline registers:
+如果你事先不知道序列有多长（动态内容数量），将 `data-duration` 绑定到计算出的 `TOTAL_DURATION`。在时间线注册**之前**在脚本中执行此操作：
 
 ```js
 document
@@ -229,79 +229,73 @@ document
   .setAttribute("data-duration", String(Math.ceil(TOTAL_DURATION)));
 ```
 
-(Caveat: HF reads `data-duration` at composition load; setting after init may not take effect — author the duration manually based on a rough TOTAL calc.)
+（注意：HF 在组合加载时读取 `data-duration`；在 init 后设置可能不会生效 — 基于粗略的总时间计算手动编写时长。）
 
-## Key Principles
+## 关键原则
 
-- **Pre-compute timeline once, not per-frame** — building absolute start/end at script init means onUpdate is O(log n) reverse-search, not O(n²).
-- **Per-item duration formula: `BASE_DURATION + body.length × SEC_PER_CHAR + hold`** — longer text needs more reading time. The formula is the load-bearing teaching of this rule; ranges for each const are in How to Choose Values.
-- **Reserve `min-height` on body element** — content height varies per item; without reservation, layout jumps and downstream elements (progress bar, brand) jitter.
-- **DOM update on transition, not every frame** — track `lastTitle` (or whatever key) and only call `textContent =` when it changes. Per-frame textContent assignment causes flicker in HF render.
-- **Optional progress indicator** — a thin bar at the bottom showing 0-100% completes the "this is a sequence" framing.
-- **Climax dwell longer than mid-sequence dwell** — the outro's `hold` (HOLD_FINAL) should exceed the in-sequence `hold` (HOLD_MID) so the final brand/CTA lands.
+- **预计算时间线一次，而非每帧** — 在脚本 init 时构建绝对开始/结束意味着 onUpdate 是 O(log n) 反向搜索，而非 O(n²)。
+- **每项时长公式：`BASE_DURATION + body.length × SEC_PER_CHAR + hold`** — 更长的文本需要更多的阅读时间。此公式是本规则的承载教学；每个 const 的范围在"如何选择值"中。
+- **在 body 元素上保留 `min-height`** — 内容高度每项不同；没有保留，布局跳变且下游元素（进度条、品牌）抖动。
+- **仅在过渡时更新 DOM，而非每帧** — 跟踪 `lastTitle`（或任何键）仅在其变化时调用 `textContent =`。每帧 textContent 赋值在 HF 渲染中导致闪烁。
+- **可选进度指示器** — 底部显示 0-100% 的细条完成了"这是一个序列"的框架。
+- **高潮停留比序列中段停留更长** — 结尾的 `hold`（HOLD_FINAL）应超过序列中的 `hold`（HOLD_MID），使最终品牌/CTA 着陆。
 
-## How to Choose Values
+## 如何选择值
 
-- **BASE_DURATION** — minimum visible time of an entry regardless of content length
-  - Range: 0.6-1.5 s
-  - Effects: low end snaps through short entries too fast for the eye; high end stalls on short titles
-  - Constraints: ensures even one-word entries have time to read
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+- **BASE_DURATION** — 无论内容长度如何，条目的最小可见时间
+  - 范围：0.6-1.5 秒
+  - 效果：低端使短条目快速闪过，眼睛来不及看；高端使短标题上停滞
+  - 约束：确保即使一个词的条目也有时间阅读
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **SEC_PER_CHAR** — 每个正文字符添加的额外时间
+  - 范围：0.03-0.06 秒/字符（≈ 视频阅读速度 17-33 字符/秒）
+  - 效果：低端感觉段落式正文急促；高端在正文短时感觉慢
+  - 约束：应在整个序列中保持一致，使节奏读作一个引擎；对于字符较宽的语言，偏向高端
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **HOLD_MID** — 非最终条目的打字完成后的停留
+  - 范围：0.5-1.0 秒
+  - 效果：低端感觉匆忙；高端感觉懒散
+  - 约束：`HOLD_MID < HOLD_FINAL`
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **HOLD_FINAL** — 最后一个条目上的停留（结尾/高潮）
+  - 范围：1.0-2.0 秒
+  - 效果：低端截断结束节拍；高端停留过久
+  - 约束：必须明显超过 HOLD_MID，使结尾读作一个节拍，而非另一个序列中段暂停
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **SPEED_FACTOR** — 每项节奏乘数
+  - 范围：0.5-2.0（默认 1.0）
+  - 效果：<1 拉伸条目的正文驱动时长（适合高密度段落）；>1 压缩它
+  - 约束：离散选择 — 使用 1.0，除非一个条目需要特殊节奏；如果每个条目使用相同因子，改为将其合并到 SEC_PER_CHAR 中
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **TAIL_PAD** — 最后一个条目的 `end` 后添加到 `TOTAL_DURATION` 的秒数
+  - 范围：0.0-1.0 秒
+  - 效果：0 在最后 `hold` 完成时精确结束驱动器；>0 留下一个安静节拍（在过渡到下一个组合前有用）
+  - 约束：如果下游是另一个组合，优先使用 0 并在组合接缝处处理呼吸
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
+- **CONTENT 长度（N）** — 序列中条目数
+  - 范围：3-6 个条目
+  - 效果：<3 不是序列（使用静态场景）；>6 拖沓
+  - 约束：每个条目的 `title` 必须适合一行，使用所选 `.title` 字号；正文应在折行后适应 `min-height`
+  - 参考：参见 `../../examples/messaging-multi-phrase.html`（以及任何使用此规则的蓝图）
 
-- **SEC_PER_CHAR** — extra time added per body character
-  - Range: 0.03-0.06 s/char (≈ 17-33 chars/sec read pace for video)
-  - Effects: low end feels rushed for paragraph-style bodies; high end feels slow when bodies are short
-  - Constraints: should be uniform across the sequence so the pace reads as one engine; for languages with wider characters, lean to the high end
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+## 关键约束
 
-- **HOLD_MID** — dwell after the typing of a non-final entry completes
-  - Range: 0.5-1.0 s
-  - Effects: low end feels rushed; high end feels lazy
-  - Constraints: `HOLD_MID < HOLD_FINAL`
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **预计算 TIMELINE 数组** — 不要在 onUpdate 中重新计算
+- **body 上设置 `min-height`** 用于布局稳定性
+- **仅在条目过渡时交换 DOM** — 使用 lastTitle/lastKey 守护
+- **仅顺序** — 对于并行轨道，使用不同的归约（此规则是顺序的）
 
-- **HOLD_FINAL** — dwell on the last entry (outro / climax)
-  - Range: 1.0-2.0 s
-  - Effects: low end truncates the closing beat; high end overstays
-  - Constraints: must exceed HOLD_MID by a clear margin so the close reads as a beat, not another mid-sequence pause
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+## 组合
 
-- **SPEED_FACTOR** — per-entry pacing multiplier
-  - Range: 0.5-2.0 (default 1.0)
-  - Effects: <1 stretches an entry's body-driven duration (good for high-density passages); >1 compresses it
-  - Constraints: discrete choice — use 1.0 unless one entry needs special pacing; if every entry uses the same factor, fold it into SEC_PER_CHAR instead
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+- [discrete-text-sequence.md](discrete-text-sequence.md) — body 上的每项打字机
+- [context-sensitive-cursor.md](context-sensitive-cursor.md) — 每章段的光标颜色
+- [vertical-spring-ticker.md](vertical-spring-ticker.md) — 项目之间的动画单词过渡（而非硬切）
+- [scale-swap-transition.md](scale-swap-transition.md) — 条目之间的视觉变形
 
-- **TAIL_PAD** — seconds added to `TOTAL_DURATION` after the last entry's `end`
-  - Range: 0.0-1.0 s
-  - Effects: 0 ends the driver exactly at the last `hold` completion; >0 leaves a quiet beat (useful before a transition to the next composition)
-  - Constraints: if downstream is another composition, prefer 0 and handle the breath at the composition seam
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
+## 与 HF 技能配对
 
-- **CONTENT length (N)** — number of entries in the sequence
-  - Range: 3-6 entries
-  - Effects: <3 isn't a sequence (use a static scene); >6 drags
-  - Constraints: each entry's `title` must fit one line at the chosen `.title` fontSize; bodies should fit within `min-height` after wrapping
-  - Reference: see `../../examples/messaging-multi-phrase.html` (and any blueprint that uses this rule)
-
-## Critical Constraints
-
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **Pre-compute the TIMELINE array** — don't recompute in onUpdate
-- **`min-height` on body** for layout stability
-- **DOM swap only on entry transition** — use lastTitle/lastKey guard
-- **Sequential only** — for parallel tracks, use a different reduction (this rule is sequential)
-
-## Combinations
-
-- [discrete-text-sequence.md](discrete-text-sequence.md) — per-entry typewriter on the body
-- [context-sensitive-cursor.md](context-sensitive-cursor.md) — cursor color per chapter segment
-- [vertical-spring-ticker.md](vertical-spring-ticker.md) — animated word transitions between items (instead of hard cut)
-- [scale-swap-transition.md](scale-swap-transition.md) — visual morph between entries
-
-## Pairs with HF skills
-
-- `/hyperframes-animation` — single driver, reverse-search dispatch
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 单一驱动器，反向搜索分派
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

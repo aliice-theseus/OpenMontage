@@ -1,9 +1,8 @@
-# Parameter translation: Zod schemas, defaultProps, calculateMetadata
+# 参数翻译：Zod schemas、defaultProps、calculateMetadata
 
-How a typed Remotion `<Composition schema={...} defaultProps={...} />`
-turns into a parameterized HF composition.
+有类型的 Remotion `<Composition schema={...} defaultProps={...} />` 如何转化为参数化的 HF 合成。
 
-## Sync calculateMetadata (translatable)
+## 同步 calculateMetadata（可翻译）
 
 ```tsx
 <Composition
@@ -18,9 +17,7 @@ turns into a parameterized HF composition.
 />
 ```
 
-When `calculateMetadata` is synchronous and only uses `props`, **resolve
-it at translation time** — call it with `defaultProps` (or whatever the
-caller specifies) and write the concrete result into the HTML:
+当 `calculateMetadata` 是同步的且只使用 `props` 时，**在翻译时解析它** — 使用 `defaultProps`（或调用者指定的任何值）调用它，并将具体结果写入 HTML：
 
 ```html
 <div
@@ -33,11 +30,9 @@ caller specifies) and write the concrete result into the HTML:
 ></div>
 ```
 
-The `data-title` attribute carries the value through. Code that originally
-read `props.title` reads `document.getElementById("stage").dataset.title`
-in HF.
+`data-title` 属性携带值。原来读取 `props.title` 的代码在 HF 中读取 `document.getElementById("stage").dataset.title`。
 
-## Async calculateMetadata (NOT translatable)
+## 异步 calculateMetadata（不可翻译）
 
 ```tsx
 <Composition
@@ -48,13 +43,11 @@ in HF.
 />
 ```
 
-**Refuse + interop**. HF needs composition metadata up-front to seed the
-HTML. Resolving network calls at translation time defeats the purpose
-of having dynamic metadata. See [escape-hatch.md](escape-hatch.md).
+**拒绝 + 互操作**。HF 需要预先知道合成的元数据来生成 HTML。在翻译时解析网络调用违背了动态元数据的目的。参见 [escape-hatch.md](escape-hatch.md)。
 
-The lint rule `r2hf/async-metadata` catches this. T4 case 03 tests it.
+lint 规则 `r2hf/async-metadata` 会捕获此情况。T4 案例 03 测试了此情况。
 
-## Default props
+## 默认属性（Default props）
 
 ```tsx
 defaultProps={{
@@ -64,16 +57,15 @@ defaultProps={{
 }}
 ```
 
-Translate to `data-*` attributes on the root `#stage` div:
+翻译为根 `#stage` div 上的 `data-*` 属性：
 
 ```html
 <div id="stage" data-title="Hello" data-subtitle="World" data-count="42">...</div>
 ```
 
-Convention: `propName` → `data-prop-name` (kebab-case). Inside the GSAP
-script, read via `document.getElementById("stage").dataset.propName`.
+约定：`propName` → `data-prop-name`（kebab-case）。在 GSAP 脚本内部，通过 `document.getElementById("stage").dataset.propName` 读取。
 
-## Nested object / array props
+## 嵌套对象 / 数组属性
 
 ```tsx
 defaultProps={{
@@ -84,8 +76,7 @@ defaultProps={{
 }}
 ```
 
-Don't try to encode the array as a JSON `data-` attribute — HF's runtime
-doesn't parse those. Materialize the array as **repeated HTML markup**:
+不要尝试将数组编码为 JSON `data-` 属性 — HF 的运行时不会解析这些。将数组物化为**重复的 HTML 标记**：
 
 ```html
 <div id="scene-stats">
@@ -100,38 +91,32 @@ doesn't parse those. Materialize the array as **repeated HTML markup**:
 </div>
 ```
 
-The component template (`StatCard.tsx`) becomes the markup template;
-each instance gets its scalar props rendered as `data-*` and CSS
-custom properties.
+组件模板（`StatCard.tsx`）成为标记模板；每个实例将其标量属性渲染为 `data-*` 和 CSS 自定义属性。
 
-Validated in T3 — three StatCards reused with different props,
-mean SSIM 0.953.
+在 T3 中验证 — 三个 StatCards 使用不同属性重用，平均 SSIM 0.953。
 
-## Numeric props that need typed parsing
+## 需要类型解析的数字属性
 
-`document.getElementById("stage").dataset.count` is a string. Convert at
-read time:
+`document.getElementById("stage").dataset.count` 是字符串。在读取时转换：
 
 ```js
 const count = Number(stage.dataset.count);
 ```
 
-Or inline values directly into the GSAP script when the data is known
-at translation time and doesn't need to vary per render.
+或者当数据在翻译时已知且不需要因渲染而异时，将值直接内联到 GSAP 脚本中。
 
-## Boolean props
+## 布尔属性
 
 ```tsx
 defaultProps={{ darkMode: true }}
 ```
 
-Two conventions:
+两种约定：
 
-- `data-dark-mode="true"` — read as string, compare `=== "true"`
-- `data-dark-mode` (presence/absence) — `<div data-dark-mode>` for true, omit for false
+- `data-dark-mode="true"` — 作为字符串读取，比较 `=== "true"`
+- `data-dark-mode`（存在/缺失） — true 时 `<div data-dark-mode>`，false 时省略
 
-Pick one and be consistent. The presence/absence form is HTML-idiomatic
-and pairs well with CSS attribute selectors:
+选择一种并保持一致。存在/缺失形式符合 HTML 习惯，并且与 CSS 属性选择器配合良好：
 
 ```css
 [data-dark-mode] .scene {
@@ -139,17 +124,13 @@ and pairs well with CSS attribute selectors:
 }
 ```
 
-## Zod runtime validation
+## Zod 运行时验证
 
-Remotion's `schema` validates props at composition load. HF doesn't have
-an equivalent — by the time the HTML is in the renderer, the schema is
-already gone.
+Remotion 的 `schema` 在合成加载时验证属性。HF 没有等价物 — 当 HTML 进入渲染器时，schema 已经不存在了。
 
-Validate at translation time instead. If the user passes invalid data,
-fail with a translation error before emitting HTML. This matches Zod's
-"fail loud" intent without requiring the runtime dependency.
+改为在翻译时验证。如果用户传递了无效数据，在生成 HTML 之前以翻译错误失败。这符合 Zod 的"大声失败"意图，而不需要运行时依赖。
 
-## When the composition uses props for computed prop derivation
+## 当合成使用属性进行计算派生
 
 ```tsx
 const Composition: React.FC<Props> = ({ stats }) => {
@@ -158,10 +139,6 @@ const Composition: React.FC<Props> = ({ stats }) => {
 };
 ```
 
-Compute the derived value at translation time and bake it into the HTML
-or a `data-` attribute. Don't try to express the computation in JS in the
-HF composition — that adds runtime overhead and makes the HTML stateful
-in ways that complicate human editing.
+在翻译时计算派生值，并将其烘焙到 HTML 或 `data-` 属性中。不要在 HF 合成中尝试用 JS 表达计算 — 这会增加运行时开销，并使 HTML 以复杂化人工编辑的方式变为有状态。
 
-If the derivation is non-trivial (involves the array itself, not just
-scalars), materialize it as static text in the HTML.
+如果派生过程非平凡（涉及数组本身，而不仅仅是标量），将其物化为 HTML 中的静态文本。

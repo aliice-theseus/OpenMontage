@@ -1,15 +1,15 @@
 ---
-title: Defer Non-Critical Third-Party Libraries
+title: 延迟非关键的第三方库
 impact: MEDIUM
-impactDescription: loads after hydration
+impactDescription: 在 hydration 后加载
 tags: bundle, third-party, analytics, defer
 ---
 
-## Defer Non-Critical Third-Party Libraries
+## 延迟非关键的第三方库
 
-Analytics, logging, and error tracking don't block user interaction. Load them after hydration.
+分析、日志和错误跟踪不会阻塞用户交互。在 hydration 后加载它们。
 
-**Incorrect (blocks initial bundle):**
+**错误做法（阻塞初始包）：**
 
 ```tsx
 import { Analytics } from '@vercel/analytics/react'
@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
 }
 ```
 
-**Correct (loads after hydration):**
+**正确做法（在 hydration 后加载）：**
 
 ```tsx
 import dynamic from 'next/dynamic'

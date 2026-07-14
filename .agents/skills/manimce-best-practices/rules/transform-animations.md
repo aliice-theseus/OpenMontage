@@ -1,17 +1,17 @@
 ---
 name: transform-animations
-description: Transform, ReplacementTransform, and morphing animations
+description: Transform、ReplacementTransform 和变形动画
 metadata:
   tags: transform, replacementtransform, morph, transformfromcopy
 ---
 
-# Transform Animations
+# 变换动画
 
-Animations that morph one mobject into another.
+将一个 mobject 变形为另一个的动画。
 
 ## Transform
 
-Morphs the source mobject into the shape of the target. The source mobject is modified.
+将源 mobject 变形为目标形状。源 mobject 被修改。
 
 ```python
 class TransformExample(Scene):
@@ -21,14 +21,14 @@ class TransformExample(Scene):
 
         self.play(Create(square))
         self.play(Transform(square, circle))
-        # Note: 'square' now looks like 'circle' but is still 'square'
+        # 注意：'square' 现在看起来像 'circle'，但仍然是 'square'
 ```
 
-**Important:** After Transform, the original variable still references the mobject, even though it looks like the target.
+**重要提示：** Transform 之后，原始变量仍然引用该 mobject，尽管它看起来像目标。
 
 ## ReplacementTransform
 
-Morphs source into target and replaces the reference. More intuitive for most uses.
+将源变形为目标并替换引用。对大多数使用场景更直观。
 
 ```python
 class ReplacementTransformExample(Scene):
@@ -39,28 +39,28 @@ class ReplacementTransformExample(Scene):
 
         self.play(Create(square))
         self.play(ReplacementTransform(square, circle))
-        # 'square' is removed, 'circle' is now in the scene
+        # 'square' 被移除，'circle' 现在在场景中
         self.play(ReplacementTransform(circle, triangle))
-        # 'circle' is removed, 'triangle' is now in the scene
+        # 'circle' 被移除，'triangle' 现在在场景中
 ```
 
 ## Transform vs ReplacementTransform
 
 ```python
-# Transform - source variable changes appearance
+# Transform - 源变量改变外观
 self.play(Transform(A, B))
-# A is still in scene (but looks like B)
-# B is NOT in scene
+# A 仍在场景中（但看起来像 B）
+# B 不在场景中
 
-# ReplacementTransform - source is replaced by target
+# ReplacementTransform - 源被目标替换
 self.play(ReplacementTransform(A, B))
-# A is removed from scene
-# B is now in scene
+# A 从场景中移除
+# B 现在在场景中
 ```
 
 ## TransformFromCopy
 
-Creates a copy of source and morphs it to target. Original remains unchanged.
+创建源的副本并将其变形为目标。原始对象保持不变。
 
 ```python
 class TransformFromCopyExample(Scene):
@@ -70,12 +70,12 @@ class TransformFromCopyExample(Scene):
 
         self.add(square)
         self.play(TransformFromCopy(square, circle))
-        # Both square and circle are now visible
+        # square 和 circle 现在都可见
 ```
 
 ## TransformMatchingShapes
 
-Intelligently matches and transforms corresponding parts.
+智能匹配并变换对应部分。
 
 ```python
 class MatchingShapesExample(Scene):
@@ -89,7 +89,7 @@ class MatchingShapesExample(Scene):
 
 ## TransformMatchingTex
 
-Matches LaTeX parts by their TeX strings.
+通过 TeX 字符串匹配 LaTeX 部分。
 
 ```python
 class MatchingTexExample(Scene):
@@ -103,7 +103,7 @@ class MatchingTexExample(Scene):
 
 ## MoveToTarget
 
-Pre-set a target state and animate to it.
+预设目标状态并动画化到该状态。
 
 ```python
 class MoveToTargetExample(Scene):
@@ -111,7 +111,7 @@ class MoveToTargetExample(Scene):
         square = Square()
         self.add(square)
 
-        # Generate and modify target
+        # 生成并修改目标
         square.generate_target()
         square.target.shift(RIGHT * 2)
         square.target.set_color(RED)
@@ -120,9 +120,9 @@ class MoveToTargetExample(Scene):
         self.play(MoveToTarget(square))
 ```
 
-## Path Arc Transforms
+## 路径弧线变换
 
-Control the path of transformation with `path_arc`.
+使用 `path_arc` 控制变换路径。
 
 ```python
 class PathArcExample(Scene):
@@ -131,11 +131,11 @@ class PathArcExample(Scene):
         dot2 = Dot(RIGHT * 2)
 
         self.add(dot1)
-        # Transform along an arc
+        # 沿弧线变换
         self.play(Transform(dot1, dot2, path_arc=PI/2))
 ```
 
-## Chained Transformations
+## 链式变换
 
 ```python
 class ChainedExample(Scene):
@@ -143,15 +143,15 @@ class ChainedExample(Scene):
         shape = Square()
         self.play(Create(shape))
 
-        # Chain of transformations
+        # 变换链
         for target in [Circle(), Triangle(), Star()]:
             self.play(Transform(shape, target))
             self.wait(0.5)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use ReplacementTransform for clarity** - More intuitive variable behavior
-2. **Use TransformFromCopy to preserve original** - When you need both visible
-3. **Use TransformMatchingTex for equations** - Better alignment of matching parts
-4. **Set path_arc for visual interest** - Curved paths look more dynamic
+1. **为清晰使用 ReplacementTransform** - 更直观的变量行为
+2. **为保留原始使用 TransformFromCopy** - 当两者都需要可见时
+3. **方程使用 TransformMatchingTex** - 匹配部分对齐更好
+4. **设置 path_arc 增加视觉趣味** - 曲线路径看起来更动态

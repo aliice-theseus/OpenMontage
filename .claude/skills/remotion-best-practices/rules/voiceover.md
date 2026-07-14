@@ -1,31 +1,31 @@
 ---
 name: voiceover
-description: Adding AI-generated voiceover to Remotion compositions using ElevenLabs TTS
+description: 使用 ElevenLabs TTS 为 Remotion 合成添加 AI 生成画外音
 metadata:
   tags: voiceover, audio, elevenlabs, tts, speech, calculateMetadata, dynamic duration
 ---
 
-# Adding AI voiceover to a Remotion composition
+# 为 Remotion 合成添加 AI 画外音
 
-Use ElevenLabs TTS to generate speech audio per scene, then use [`calculateMetadata`](./calculate-metadata) to dynamically size the composition to match the audio.
+使用 ElevenLabs TTS 为每个场景生成语音音频，然后使用 [`calculateMetadata`](./calculate-metadata) 动态调整合成大小以匹配音频。
 
-## Prerequisites
+## 前置条件
 
-An **ElevenLabs API key** is required (`ELEVENLABS_API_KEY` environment variable).
+需要 **ElevenLabs API 密钥**（`ELEVENLABS_API_KEY` 环境变量）。
 
-**MUST** ask the user for their ElevenLabs API key if `ELEVENLABS_API_KEY` is not set. **MUST NOT** fall back to other TTS tools.
+如果未设置 `ELEVENLABS_API_KEY`，**必须**向用户询问其 ElevenLabs API 密钥。**不得**回退到其他 TTS 工具。
 
-Ensure the environment variable is available when running the generation script:
+确保在运行生成脚本时环境变量可用：
 
 ```bash
 node --strip-types generate-voiceover.ts
 ```
 
-## Generating audio with ElevenLabs
+## 使用 ElevenLabs 生成音频
 
-Create a script that reads the config, calls the ElevenLabs API for each scene, and writes MP3 files to the `public/` directory so Remotion can access them via `staticFile()`.
+创建一个脚本，读取配置，为每个场景调用 ElevenLabs API，并将 MP3 文件写入 `public/` 目录，以便 Remotion 通过 `staticFile()` 访问。
 
-The core API call for a single scene:
+单个场景的核心 API 调用：
 
 ```ts title="generate-voiceover.ts"
 const response = await fetch(
@@ -38,7 +38,7 @@ const response = await fetch(
       Accept: "audio/mpeg",
     },
     body: JSON.stringify({
-      text: "Welcome to the show.",
+      text: "欢迎来到节目。",
       model_id: "eleven_multilingual_v2",
       voice_settings: {
         stability: 0.5,
@@ -53,9 +53,9 @@ const audioBuffer = Buffer.from(await response.arrayBuffer());
 writeFileSync(`public/voiceover/${compositionId}/${scene.id}.mp3`, audioBuffer);
 ```
 
-## Dynamic composition duration with calculateMetadata
+## 使用 calculateMetadata 动态设置合成时长
 
-Use [`calculateMetadata`](./calculate-metadata.md) to measure the [audio durations](./get-audio-duration.md) and set the composition length accordingly.
+使用 [`calculateMetadata`](./calculate-metadata.md) 测量[音频时长](./get-audio-duration.md)并相应设置合成长度。
 
 ```tsx
 import { CalculateMetadataFunction, staticFile } from "remotion";
@@ -86,14 +86,14 @@ export const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-The computed `sceneDurations` are passed into the component via a `voiceover` prop so the component knows how long each scene should be.
+计算出的 `sceneDurations` 通过 `voiceover` 属性传递给组件，以便组件知道每个场景应持续多长时间。
 
-If the composition uses [`<TransitionSeries>`](./transitions.md), subtract the overlap from total duration: [./transitions.md#calculating-total-composition-duration](./transitions.md#calculating-total-composition-duration)
+如果合成使用 [`<TransitionSeries>`](./transitions.md)，请从总时长中减去重叠部分：[./transitions.md#calculating-total-composition-duration](./transitions.md#calculating-total-composition-duration)
 
-## Rendering audio in the component
+## 在组件中渲染音频
 
-See [audio.md](./audio.md) for more information on how to render audio in the component.
+有关如何在组件中渲染音频的更多信息，请参阅 [audio.md](./audio.md)。
 
-## Delaying audio start
+## 延迟音频开始
 
-See [audio.md#delaying](./audio.md#delaying) for more information on how to delay the audio start.
+有关如何延迟音频开始的更多信息，请参阅 [audio.md#delaying](./audio.md#delaying)。

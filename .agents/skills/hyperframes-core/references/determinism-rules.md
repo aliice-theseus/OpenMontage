@@ -1,6 +1,6 @@
-# Determinism, Animation Runtime, and Layout
+# 确定性、动画运行时与布局
 
-HyperFrames seeks compositions frame-by-frame. Every frame must be reproducible from its time value alone — same input time → same pixels. Three contracts enforce this: the **animation runtime contract**, the **determinism rules**, and the **layout contract**.
+HyperFrames 逐帧定位合成。每个帧必须仅从其时间值可重现 — 相同输入时间 → 相同像素。三个契约强制执行这一点：**动画运行时契约**、**确定性规则**和**布局契约**。
 
 ## Animation Runtime Contract
 

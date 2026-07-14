@@ -1,223 +1,223 @@
-# Visual Techniques for Math Animation
+# 数学动画的视觉技巧
 
-Effective visualization patterns for explaining mathematical concepts.
+解释数学概念的高效可视化模式。
 
-## Core Principles
+## 核心原则
 
-### 1. Progressive Disclosure
-Never show everything at once. Build complexity gradually.
+### 1. 渐进揭示
+永远不要一次性展示所有内容。逐步构建复杂度。
 
-**Bad:** Show complete equation immediately
-**Good:** Build equation term by term, explaining each part
+**不好：** 立即显示完整方程
+**好：** 逐项构建方程，解释每一部分
 
 ```
-Scene flow:
-1. Show simple case: f(x) = x²
-2. Add complexity: f(x) = ax²
-3. Full form: f(x) = ax² + bx + c
+场景流程：
+1. 展示简单情况：f(x) = x²
+2. 增加复杂度：f(x) = ax²
+3. 完整形式：f(x) = ax² + bx + c
 ```
 
-### 2. Transform, Don't Replace
-When possible, morph objects into new forms rather than fading out/in.
+### 2. 变换，而非替换
+尽可能将对象变形为新形式，而不是淡出/淡入。
 
-**Bad:** FadeOut(equation1), FadeIn(equation2)
-**Good:** TransformMatchingTex(equation1, equation2)
+**不好：** FadeOut(equation1), FadeIn(equation2)
+**好：** TransformMatchingTex(equation1, equation2)
 
-This maintains visual continuity and shows the relationship between forms.
+这保持了视觉连续性并展示了形式之间的关系。
 
-### 3. Color as Meaning
-Use color consistently to encode meaning throughout the video.
+### 3. 颜色即含义
+在整个视频中一致地使用颜色来编码含义。
 
-**Pattern:**
-- Input/given values: BLUE
-- Output/results: GREEN
-- Key terms being discussed: YELLOW highlight
-- Errors/negatives: RED
-- Neutral/supporting: WHITE/GREY
+**模式：**
+- 输入/给定值：蓝色
+- 输出/结果：绿色
+- 正在讨论的关键术语：黄色高亮
+- 错误/负面：红色
+- 中性/辅助：白色/灰色
 
-### 4. Spatial Relationships
-Position encodes relationships:
-- Left-to-right: transformation, time, causation
-- Top-to-bottom: hierarchy, derivation
-- Center: focus of attention
-- Periphery: context, reference
+### 4. 空间关系
+位置编码关系：
+- 从左到右：变换、时间、因果
+- 从上到下：层级、推导
+- 中心：注意力焦点
+- 边缘：上下文、参考
 
 ---
 
-## Animation Techniques
+## 动画技巧
 
-### Highlighting & Focus
+### 高亮与聚焦
 
-**Indicate** - Brief flash to draw attention
+**Indicate** - 短暂闪烁以吸引注意力
 ```python
 self.play(Indicate(term))
 ```
 
-**Circumscribe** - Circle around important element
+**Circumscribe** - 在重要元素周围画圈
 ```python
 self.play(Circumscribe(equation, color=YELLOW))
 ```
 
-**FlashAround** - Dramatic attention on revelation
+**FlashAround** - 揭示时的戏剧性关注
 ```python
 self.play(FlashAround(result))
 ```
 
-### Equation Manipulation
+### 方程操作
 
-**Isolate terms** - Color or move specific parts
+**隔离项** - 着色或移动特定部分
 ```python
 equation.set_color_by_tex("x", BLUE)
 ```
 
-**Step-by-step derivation** - Show each algebraic step
+**逐步推导** - 展示每个代数步骤
 ```python
 step1 = MathTex(r"2x + 4 = 10")
 step2 = MathTex(r"2x = 6")
 step3 = MathTex(r"x = 3")
-# Transform between steps with alignment
+# 在步骤之间带对齐变换
 ```
 
-**Substitution** - Show value being plugged in
+**代入** - 展示值被代入
 ```python
-# Animate the number moving into the variable's position
+# 动画展示数字移动到变量的位置
 ```
 
-### Geometric Intuition
+### 几何直觉
 
-**Coordinate systems** - Always label axes
+**坐标系** - 始终标记坐标轴
 ```python
 axes = Axes(x_range=[-3, 3], y_range=[-2, 2])
 labels = axes.get_axis_labels(x_label="x", y_label="f(x)")
 ```
 
-**Trace paths** - Show how points move
+**轨迹路径** - 展示点如何移动
 ```python
 trace = TracedPath(dot.get_center, stroke_color=YELLOW)
 ```
 
-**Area visualization** - For integrals, sums
+**面积可视化** - 用于积分、求和
 ```python
 area = axes.get_area(graph, x_range=[a, b], color=BLUE, opacity=0.5)
 ```
 
-### 3D Techniques
+### 3D 技巧
 
-**Camera orbiting** - Reveal 3D structure
+**摄像机环绕** - 揭示 3D 结构
 ```python
 self.play(frame.animate.reorient(60, 70), run_time=3)
 ```
 
-**Projection** - Show 3D object's 2D shadow
+**投影** - 展示 3D 对象的 2D 阴影
 ```python
-# Helps connect 3D intuition to 2D formulas
+# 有助于将 3D 直觉连接到 2D 公式
 ```
 
-**Slicing** - Cut through 3D objects
+**切片** - 切割 3D 对象
 ```python
-# Show cross-sections to understand structure
+# 展示横截面以理解结构
 ```
 
 ---
 
-## Common Visual Metaphors
+## 常见视觉隐喻
 
-### Vectors as Arrows
-- Position vectors: arrows from origin
-- Addition: tip-to-tail
-- Scaling: stretching/shrinking
+### 向量作为箭头
+- 位置向量：从原点的箭头
+- 加法：首尾相接
+- 缩放：拉伸/收缩
 
-### Functions as Machines
-- Input goes in one side
-- Transformation happens
-- Output comes out
+### 函数作为机器
+- 输入从一侧进入
+- 变换发生
+- 输出从另一侧出来
 
-### Matrices as Transformations
-- Show grid being transformed
-- Track where basis vectors go
-- Emphasize determinant as area scaling
+### 矩阵作为变换
+- 展示网格被变换
+- 跟踪基向量的去向
+- 强调行列式作为面积缩放因子
 
-### Derivatives as Slopes
-- Tangent line touching curve
-- Zoom in to show local linearity
-- Animate slope changing as point moves
+### 导数作为斜率
+- 与曲线相切的切线
+- 放大以展示局部线性
+- 动画展示斜率随点移动而变化
 
-### Integrals as Accumulation
-- Riemann sums with rectangles
-- Width → 0 animation
-- Area filling under curve
+### 积分作为累加
+- 用矩形的黎曼和
+- 宽度 → 0 动画
+- 曲线下面积填充
 
 ---
 
-## Scene Composition
+## 场景构图
 
-### The Golden Layout
+### 黄金布局
 ```
 ┌─────────────────────────────────┐
-│           TITLE/CONTEXT         │  (top edge)
+│           标题/上下文           │  （顶部边缘）
 ├─────────────────────────────────┤
 │                                 │
-│      MAIN VISUALIZATION         │  (center, largest area)
+│         主要可视化              │  （中心，最大面积）
 │                                 │
 ├─────────────────────────────────┤
-│    EQUATION / FORMULA           │  (bottom third)
+│         方程/公式               │  （底部三分之一）
 └─────────────────────────────────┘
 ```
 
-### Side-by-Side Comparison
+### 并排对比
 ```
 ┌───────────────┬───────────────┐
-│   BEFORE /    │   AFTER /     │
-│   CONCEPT A   │   CONCEPT B   │
+│    之前 /     │    之后 /     │
+│    概念 A     │    概念 B     │
 └───────────────┴───────────────┘
 ```
 
-### Zoomed Detail
+### 缩放细节
 ```
 ┌─────────────────────────────────┐
 │  ┌─────┐                        │
-│  │ZOOM │ ←── magnified detail   │
+│  │放大 │ ←── 放大的细节          │
 │  └─────┘                        │
-│         Main context            │
+│         主上下文                 │
 └─────────────────────────────────┘
 ```
 
 ---
 
-## Timing Guidelines
+## 时间指南
 
-| Action | Typical Duration |
+| 操作 | 典型时长 |
 |--------|------------------|
-| Simple shape creation | 0.5-1s |
-| Text/equation writing | 1-2s |
-| Transformation | 1-2s |
-| Camera movement | 2-3s |
-| Pause for absorption | 0.5-1s |
-| Complex animation | 2-4s |
+| 简单形状创建 | 0.5-1 秒 |
+| 文字/方程书写 | 1-2 秒 |
+| 变换 | 1-2 秒 |
+| 摄像机移动 | 2-3 秒 |
+| 吸收暂停 | 0.5-1 秒 |
+| 复杂动画 | 2-4 秒 |
 
-### Rhythm Pattern
-Fast-fast-SLOW-fast-fast-SLOW
+### 节奏模式
+快-快-慢-快-快-慢
 
-Quick animations for setup, slow down for key insights.
+快速动画用于设置，关键时刻放慢速度。
 
 ---
 
-## Color Palettes
+## 调色板
 
-### Classic 3b1b
-- Background: #1C1C1C (dark grey)
-- Primary: #58C4DD (blue)
-- Secondary: #83C167 (green)
-- Accent: #FFFF00 (yellow)
-- Warning: #FF6666 (red)
+### 经典 3b1b
+- 背景：#1C1C1C（深灰色）
+- 主色：#58C4DD（蓝色）
+- 辅色：#83C167（绿色）
+- 强调色：#FFFF00（黄色）
+- 警告色：#FF6666（红色）
 
-### High Contrast
-- Background: #000000
-- Primary: #FFFFFF
-- Accent: #FFD700
+### 高对比度
+- 背景：#000000
+- 主色：#FFFFFF
+- 强调色：#FFD700
 
-### Soft Academic
-- Background: #2D2D2D
-- Primary: #6ECFFF
-- Secondary: #98E898
-- Accent: #FFE66D
+### 柔和学术
+- 背景：#2D2D2D
+- 主色：#6ECFFF
+- 辅色：#98E898
+- 强调色：#FFE66D

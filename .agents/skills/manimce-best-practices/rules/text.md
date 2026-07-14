@@ -1,15 +1,15 @@
 ---
 name: text
-description: Text mobjects, fonts, and text styling in Manim
+description: Manim 中的 Text mobject、字体和文本样式
 metadata:
   tags: text, font, typography, markup, paragraph
 ---
 
-# Text in Manim
+# Manim 中的文本
 
-The `Text` class renders text using Pango/Cairo, supporting various fonts and styles.
+`Text` 类使用 Pango/Cairo 渲染文本，支持各种字体和样式。
 
-## Basic Text
+## 基本文本
 
 ```python
 from manim import *
@@ -20,44 +20,44 @@ class TextExample(Scene):
         self.play(Write(text))
 ```
 
-## Text Parameters
+## 文本参数
 
 ```python
 text = Text(
     "Hello World",
-    font_size=48,           # Size (default: 48)
-    color=BLUE,             # Text color
-    font="Arial",           # Font family
-    weight=BOLD,            # NORMAL, BOLD, etc.
-    slant=ITALIC,           # NORMAL, ITALIC, OBLIQUE
-    line_spacing=1.5,       # Space between lines
+    font_size=48,           # 大小（默认：48）
+    color=BLUE,             # 文本颜色
+    font="Arial",           # 字体系列
+    weight=BOLD,            # NORMAL、BOLD 等
+    slant=ITALIC,           # NORMAL、ITALIC、OBLIQUE
+    line_spacing=1.5,       # 行间距
 )
 ```
 
-## Font Size
+## 字体大小
 
 ```python
-# Using font_size parameter
+# 使用 font_size 参数
 small = Text("Small", font_size=24)
 medium = Text("Medium", font_size=48)
 large = Text("Large", font_size=72)
 
-# Using scale after creation
+# 创建后使用 scale
 text = Text("Hello").scale(2)
 ```
 
-## Custom Fonts
+## 自定义字体
 
 ```python
-# Use any installed system font
+# 使用任何已安装的系统字体
 text = Text("Custom Font", font="Comic Sans MS")
 text = Text("Monospace", font="Courier New")
 text = Text("Serif", font="Times New Roman")
 ```
 
-## Text Styling with MarkupText
+## 使用 MarkupText 的文本样式
 
-Use Pango markup for mixed styling within one Text object:
+使用 Pango 标记在单个 Text 对象中实现混合样式：
 
 ```python
 class MarkupExample(Scene):
@@ -69,60 +69,60 @@ class MarkupExample(Scene):
         self.play(Write(text))
 ```
 
-### Available Markup Tags
+### 可用的标记标签
 
 ```python
-# Bold and italic
+# 粗体和斜体
 text = MarkupText('<b>Bold</b> and <i>Italic</i>')
 
-# Colors using fgcolor
+# 使用 fgcolor 指定颜色
 text = MarkupText('<span fgcolor="yellow">Yellow</span>')
 
-# Subscripts and superscripts
+# 下标和上标
 text = MarkupText('H<sub>2</sub>O and x<sup>2</sup>')
 
-# Font size
+# 字体大小
 text = MarkupText('<big>Big</big> and <small>small</small>')
 
-# Underline and strikethrough
+# 下划线和删除线
 text = MarkupText('<u>Underline</u> and <s>Strike</s>')
 
-# Double underline with color
+# 带颜色的双下划线
 text = MarkupText('<span underline="double" underline_color="green">text</span>')
 
-# Monospace
+# 等宽字体
 text = MarkupText('type <tt>help</tt> for help')
 ```
 
-### Gradients in MarkupText
+### MarkupText 中的渐变
 
 ```python
-# Global gradient
+# 全局渐变
 text = MarkupText("nice gradient", gradient=(BLUE, GREEN))
 
-# Inline gradient
+# 内联渐变
 text = MarkupText(
     'nice <gradient from="RED" to="YELLOW">colored</gradient> text'
 )
 ```
 
-### Escaping Special Characters
+### 转义特殊字符
 
 ```python
-# Must escape these characters:
-# > as &gt;
-# < as &lt;
-# & as &amp;
+# 必须转义以下字符：
+# > 转义为 &gt;
+# < 转义为 &lt;
+# & 转义为 &amp;
 text = MarkupText("5 &gt; 3 and 2 &lt; 4")
 ```
 
-## Multi-line Text
+## 多行文本
 
 ```python
-# Using \n for line breaks
+# 使用 \n 换行
 text = Text("Line 1\nLine 2\nLine 3")
 
-# Using Paragraph for better control
+# 使用 Paragraph 获得更好控制
 from manim import Paragraph
 
 para = Paragraph(
@@ -133,46 +133,46 @@ para = Paragraph(
 )
 ```
 
-## Coloring Parts of Text
+## 文本部分着色
 
 ```python
 class ColoredText(Scene):
     def construct(self):
         text = Text("Hello World")
-        text[0:5].set_color(RED)    # "Hello" in red
-        text[6:11].set_color(BLUE)  # "World" in blue
+        text[0:5].set_color(RED)    # "Hello" 用红色
+        text[6:11].set_color(BLUE)  # "World" 用蓝色
         self.play(Write(text))
 ```
 
-## Text with Gradients
+## 带渐变的文本
 
 ```python
 text = Text("Gradient Text")
 text.set_color_by_gradient(RED, YELLOW, GREEN)
 ```
 
-## Accessing Characters
+## 访问字符
 
 ```python
 text = Text("ABCDE")
 
-# Individual characters
+# 单个字符
 text[0]  # 'A'
 text[1]  # 'B'
 
-# Slices
+# 切片
 text[0:3]  # 'ABC'
 text[-1]   # 'E'
 
-# Iterate
+# 迭代
 for char in text:
     char.set_color(random_color())
 ```
 
-## Text Positioning
+## 文本定位
 
 ```python
-# Standard positioning methods work
+# 标准定位方法有效
 text = Text("Hello")
 text.to_edge(UP)
 text.to_corner(UL)
@@ -180,10 +180,10 @@ text.move_to(ORIGIN)
 text.next_to(other_mobject, DOWN)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use Text for regular text** - Simple and fast
-2. **Use MarkupText for mixed styles** - When you need multiple colors/weights
-3. **Use MathTex for math** - Text doesn't render LaTeX
-4. **Install fonts system-wide** - Manim uses system fonts
-5. **Keep font_size consistent** - Use the same size for related text
+1. **常规文本使用 Text** - 简单且快速
+2. **混合样式使用 MarkupText** - 当需要多种颜色/粗细时
+3. **数学内容使用 MathTex** - Text 不渲染 LaTeX
+4. **系统范围安装字体** - Manim 使用系统字体
+5. **保持 font_size 一致** - 相关文本使用相同大小

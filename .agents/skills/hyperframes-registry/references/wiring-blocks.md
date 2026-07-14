@@ -1,16 +1,16 @@
-# Wiring Blocks
+# 接入块
 
-Blocks are standalone compositions with their own `data-composition-id`, dimensions, duration, and GSAP timeline. Include them in a host composition using `data-composition-src` on a `<div>`.
+块是独立作品，有自己的 `data-composition-id`、尺寸、时长和 GSAP 时间线。通过在 `<div>` 上使用 `data-composition-src` 将其包含在宿主作品中。
 
-## Basic wiring
+## 基本接入
 
-After `hyperframes add data-chart`, wire it into your `index.html`:
+在 `hyperframes add data-chart` 后，将其接入你的 `index.html`：
 
 ```html
 <div id="stage" data-composition-id="main" data-width="1920" data-height="1080" data-duration="20">
   <video id="a-roll" src="video.mp4" data-start="0" data-duration="20" data-track-index="0"></video>
 
-  <!-- Block: appears at 2s, plays for 15s, on layer 1 -->
+  <!-- 块：在 2s 出现，播放 15s，在第 1 层 -->
   <div
     data-composition-id="data-chart"
     data-composition-src="compositions/data-chart.html"
@@ -23,25 +23,25 @@ After `hyperframes add data-chart`, wire it into your `index.html`:
 </div>
 ```
 
-## Required attributes
+## 必需属性
 
-| Attribute              | Description                                                          |
+| 属性 | 描述 |
 | ---------------------- | -------------------------------------------------------------------- |
-| `data-composition-src` | Path to the block HTML file (relative to index.html)                 |
-| `data-composition-id`  | Unique ID matching the block's internal composition ID               |
-| `data-start`           | When the block appears in the host timeline (seconds)                |
-| `data-duration`        | How long the block plays (seconds, at most the block's own duration) |
-| `data-track-index`     | Layer ordering — higher numbers render in front                      |
-| `data-width`           | Block canvas width (match the block's dimensions)                    |
-| `data-height`          | Block canvas height (match the block's dimensions)                   |
+| `data-composition-src` | 块 HTML 文件的路径（相对于 index.html） |
+| `data-composition-id` | 与块的内部作品 ID 匹配的唯一 ID |
+| `data-start` | 块在宿主时间线中出现的时间（秒） |
+| `data-duration` | 块播放的时长（秒，最多为块自身的时长） |
+| `data-track-index` | 图层排序——更高的数字渲染在前 |
+| `data-width` | 块画布宽度（与块的尺寸匹配） |
+| `data-height` | 块画布高度（与块的尺寸匹配） |
 
-## Timeline coordination
+## 时间线协调
 
-The block's internal GSAP timeline runs independently from the host timeline. The HyperFrames runtime loads the sub-composition, finds its `window.__timelines` registration, and seeks the block in sync with the host, offset by `data-start`. You do NOT need to reference the block's timeline in your host's GSAP code.
+块的内部 GSAP 时间线与宿主时间线独立运行。HyperFrames 运行时加载子作品，找到其 `window.__timelines` 注册，并在与宿主同步的情况下定位块，偏移量为 `data-start`。你不需要在宿主的 GSAP 代码中引用块的时间线。
 
-## Positioning blocks
+## 定位块
 
-To position a block in a specific area of the screen, add CSS:
+要将块定位在屏幕的特定区域，添加 CSS：
 
 ```html
 <div
@@ -56,6 +56,6 @@ To position a block in a specific area of the screen, add CSS:
 ></div>
 ```
 
-## Multiple blocks
+## 多个块
 
-Add additional `<div data-composition-src="...">` siblings with non-overlapping or overlapping `data-start` values — each block's timeline is independent and seeked in sync by the runtime.
+添加额外的 `<div data-composition-src="...">` 兄弟元素，使用不重叠或重叠的 `data-start` 值——每个块的时间线都是独立的，由运行时同步定位。

@@ -1,19 +1,17 @@
 ---
-title: Define Generic Context Interfaces for Dependency Injection
+title: 为依赖注入定义通用上下文接口
 impact: HIGH
-impactDescription: enables dependency-injectable state across use-cases
+impactDescription: 实现跨用例的可依赖注入状态
 tags: composition, context, state, typescript, dependency-injection
 ---
 
-## Define Generic Context Interfaces for Dependency Injection
+## 为依赖注入定义通用上下文接口
 
-Define a **generic interface** for your component context with three parts:
-`state`, `actions`, and `meta`. This interface is a contract that any provider
-can implement—enabling the same UI components to work with completely different
-state implementations.
+为你的组件上下文定义一个**通用接口**，包含三部分：
+`state`、`actions` 和 `meta`。这个接口是一个任何 provider 都可以实现的契约—
+使相同的 UI 组件能够与完全不同的状态实现一起工作。
 
-**Core principle:** Lift state, compose internals, make state
-dependency-injectable.
+**核心原则：** 提升状态、组合内部结构、使状态可依赖注入。
 
 **Incorrect (UI coupled to specific state implementation):**
 

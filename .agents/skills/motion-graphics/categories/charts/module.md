@@ -1,21 +1,21 @@
-# charts — category module
+# charts — 类别模块
 
-Animated **data-viz** from data. Asset-free (the "input" is the data). "One chart, one message" for short durations.
+数据驱动的动画**数据可视化**。无资产（"输入"就是数据）。"一个图表，一个信息"，时长简短。
 
-## Plan (Director)
+## 规划（Director）
 
-`content`: `{ type: bar|line|pie|race|pct, data[], labels[], headline, axes: bool }`. For `race`, data must be cumulative/time-staged.
+`content`：`{ type: bar|line|pie|race|pct, data[], labels[], headline, axes: bool }`。对于 `race`，数据必须是累积/分阶段时间序列的。
 
-## Vocabulary / leans on
+## 词汇表 / 依赖
 
-- Block: **`data-chart`** (animated **bar + line**, staggered reveal, value labels — proven: borrowed + customized + rendered to MP4 in the prototype `charts-demo`).
-- Gaps (hand-author): **pie / donut, bar-chart-race, ring/%** — `data-chart` doesn't cover these. Use D3/visx for data→geometry + GSAP for motion.
-- Signature animations: bar stagger-grow · line `stroke-dashoffset` draw-on · pie radial sweep · ring fill · KPI count-up · race reorder.
+- 块：**`data-chart`**（动画**条形 + 折线**、交错揭示、数值标签 — 已验证：在原型 `charts-demo` 中借用 + 定制 + 渲染为 MP4）。
+- 空白（手动编写）：**饼图/甜甜圈图、条形竞赛图、环形/百分比** — `data-chart` 不覆盖这些。使用 D3/visx 处理数据→几何 + GSAP 处理动画。
+- 标志性动画：条形交错生长 · 折线 `stroke-dashoffset` 绘制 · 饼图径向扫入 · 环形填充 · KPI 计数 · 竞赛重排序。
 
-## Build (reuse-first)
+## 构建（优先复用）
 
-Reuse `data-chart`: `npx hyperframes add data-chart` → edit the data arrays + scales + headline/labels + palette in place (its data is baked in the script, not a `--variables` flag). Axes hidden by default; show muted only when magnitude is the message. Determinism: drive any animation from the seek clock, never wall-clock.
+复用 `data-chart`：`npx hyperframes add data-chart` → 原地编辑数据数组 + 比例尺 + 标题/标签 + 调色板（其数据烘焙在脚本中，不是 `--variables` 标志）。坐标轴默认隐藏；仅当量级是信息时才显示柔和坐标轴。确定性：任何动画由 seek 时钟驱动，绝不用时钟。
 
-## Dashboard-skeleton variant
+## 仪表板骨架变体
 
-For a **product-dashboard** case: lay out a skeleton dashboard — a top bar with a **real test logo** (e.g. the hyperframes logo in `samples/_assets/`) + a title, then a grid of 3–4 **KPI cards** (each a `stat` count-up) + one `data-chart` panel. Reveal order: header/logo in → cards stagger in → the chart animates. Composes the `stat` + `charts` primitives inside a dashboard frame; the logo is a frozen project-local asset.
+对于**产品仪表板**场景：布局一个骨架仪表板 — 顶部栏带**真实测试标志**（例如 `samples/_assets/` 中的 hyperframes 标志）+ 标题，然后是一个3–4个 **KPI 卡片**的网格（每个是一个 `stat` 计数）+ 一个 `data-chart` 面板。揭示顺序：页眉/标志进入 → 卡片交错进入 → 图表动画化。在仪表板框架内组合 `stat` + `charts` 原语；标志是冻结的项目本地资产。

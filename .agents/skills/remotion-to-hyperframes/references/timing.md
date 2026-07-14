@@ -1,54 +1,48 @@
-# Timing translation: interpolate, spring, easing
+# 时间翻译：interpolate, spring, 缓动
 
-The single highest-leverage reference. Easings and timings are what readers
-notice; getting them wrong costs more SSIM than any other translation choice.
-Empirically validated against tiers T1–T3.
+这是最高杠杆率的参考。缓动和时间是读者最注意的；弄错它们会比任何其他翻译选择损失更多的 SSIM。已根据 T1–T3 层级进行了经验验证。
 
-## Conversion: frames → seconds
+## 转换：帧 → 秒
 
-HF's timeline is in seconds. Remotion is frame-based. Always:
+HF 的时间线以秒为单位。Remotion 基于帧。始终：
 
 ```
 time_seconds = frame / fps
 ```
 
-So at fps=30:
+因此在 fps=30 时：
 
-- frame 15 → 0.5 s
-- frame 30 → 1.0 s
-- frame 90 → 3.0 s
+- 第 15 帧 → 0.5 秒
+- 第 30 帧 → 1.0 秒
+- 第 90 帧 → 3.0 秒
 
-Do this conversion once when translating, not at runtime.
+在翻译时一次性完成此转换，而非在运行时。
 
-## interpolate — linear
+## interpolate — 线性
 
 ```tsx
 const opacity = interpolate(frame, [0, 30], [0, 1], { extrapolateRight: "clamp" });
 ```
 
-Translates to:
+翻译为：
 
 ```js
 gsap.to(target, { opacity: 1, duration: 1.0, ease: "none" }, 0);
-// fromTo if the property starts at 0 and CSS doesn't already set it
+// 如果属性从 0 开始且 CSS 尚未设置它，则使用 fromTo
 gsap.fromTo(target, { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "none" }, 0);
 ```
 
-`ease: "none"` matches Remotion's default linear interpolation. CSS sets the
-`from` value if your initial state is in CSS; otherwise use `fromTo`.
+`ease: "none"` 匹配 Remotion 的默认线性插值。如果初始状态在 CSS 中，CSS 设置 `from` 值；否则使用 `fromTo`。
 
-`extrapolateLeft`/`extrapolateRight` defaults to `"extend"` in Remotion but
-`"clamp"` is what the agent will see most often. GSAP doesn't extend — values
-hold at the start and end of the tween. So for `clamp`, GSAP matches; for
-`extend`, you'd need to extend the input range manually before emitting.
+`extrapolateLeft`/`extrapolateRight` 在 Remotion 中默认为 `"extend"`，但代理最常看到的是 `"clamp"`。GSAP 不支持 extend — 值在补间的开始和结束处保持不变。因此对于 `clamp`，GSAP 匹配；对于 `extend`，你需要在输出前手动扩展输入范围。
 
-## interpolate — multi-segment
+## interpolate — 多段
 
 ```tsx
 const opacity = interpolate(frame, [0, 15, 75, 90], [0, 1, 1, 0]);
 ```
 
-Three keyframed tweens at offsets `[0]/fps`, `[1]/fps`, `[2]/fps`:
+在偏移 `[0]/fps`、`[1]/fps`、`[2]/fps` 处的三个关键帧补间：
 
 ```js
 const tl = gsap.timeline({ paused: true });
@@ -57,73 +51,67 @@ tl.to(target, { opacity: 1, duration: 2.0, ease: "none" }, 0.5);
 tl.to(target, { opacity: 0, duration: 0.5, ease: "none" }, 2.5);
 ```
 
-Validated in T1 — mean SSIM 0.974 against Remotion baseline.
+在 T1 中验证 — 与 Remotion 基线的平均 SSIM 为 0.974。
 
 ## spring → GSAP back.out
 
-Remotion's `spring()` is the most lossy translation. The mapping is approximate
-but close enough that real-world compositions hold ≥ 0.92 SSIM (T2: 0.985, T3: 0.953).
+Remotion 的 `spring()` 是最有损的翻译。映射是近似的，但足够接近，真实世界的合成能保持 ≥ 0.92 SSIM（T2：0.985，T3：0.953）。
 
-| Remotion `spring` config                          | GSAP equivalent                                      | Validated in                     |
+| Remotion `spring` 配置                          | GSAP 等价物                                            | 已验证于                     |
 | ------------------------------------------------- | ---------------------------------------------------- | -------------------------------- |
-| `{damping: 12, stiffness: 100, mass: 1}` (snappy) | `back.out(1.4)` over ~0.7 s                          | T2, T3 (TitleScene)              |
-| `{damping: 14, stiffness: 90, mass: 1}` (calmer)  | `back.out(1.2)` over ~0.7 s                          | T3 (StatCard)                    |
-| `{damping: 8, stiffness: 200}` (very bouncy)      | `back.out(2.0)` or `elastic.out(1, 0.5)` over ~0.6 s | not validated; budget ~0.05 SSIM |
-| `{overshootClamping: true}`                       | `power3.out` over ~0.6 s (no overshoot)              | not validated                    |
+| `{damping: 12, stiffness: 100, mass: 1}`（明快） | `back.out(1.4)` 约 ~0.7 秒                            | T2, T3 (TitleScene)              |
+| `{damping: 14, stiffness: 90, mass: 1}`（平静）  | `back.out(1.2)` 约 ~0.7 秒                            | T3 (StatCard)                    |
+| `{damping: 8, stiffness: 200}`（非常有弹性）      | `back.out(2.0)` 或 `elastic.out(1, 0.5)` 约 ~0.6 秒   | 未验证；预算约 0.05 SSIM         |
+| `{overshootClamping: true}`                       | `power3.out` 约 ~0.6 秒（无过冲）                     | 未验证                           |
 
-**Rule of thumb**: `back.out(N)` overshoot ratio ≈ `(stiffness / damping^2) * 1.4`. For
-`damping:12, stiffness:100` that gives `1.4 * 100/144 = 0.97`, which is close to
-the validated 1.4 (the formula is rough; tune by visual). Default duration is
-~0.7 s for the typical config.
+**经验法则**：`back.out(N)` 过冲比 ≈ `(stiffness / damping^2) * 1.4`。对于 `damping:12, stiffness:100`，得到 `1.4 * 100/144 = 0.97`，接近已验证的 1.4（公式是粗略的；通过视觉调整）。典型配置的默认持续时间约为 ~0.7 秒。
 
-When the spring's `delay`/`from`/`to` are non-default, scale the duration
-proportionally.
+当 spring 的 `delay`/`from`/`to` 非默认值时，按比例缩放持续时间。
 
-## interpolate with custom easing
+## 带自定义缓动的 interpolate
 
 ```tsx
 import { Easing } from "remotion";
 interpolate(frame, [0, 30], [0, 1], { easing: Easing.out(Easing.cubic) });
 ```
 
-| Remotion                     | GSAP                                                                                   |
-| ---------------------------- | -------------------------------------------------------------------------------------- |
-| `Easing.in(Easing.linear)`   | `ease: "none"`                                                                         |
-| `Easing.out(Easing.cubic)`   | `ease: "power3.out"`                                                                   |
-| `Easing.inOut(Easing.cubic)` | `ease: "power3.inOut"`                                                                 |
-| `Easing.out(Easing.poly(N))` | `ease: "power<N>.out"` (N=2 quad, 3 cubic, 4 quart, 5 quint)                           |
-| `Easing.bezier(a,b,c,d)`     | `CustomEase.create("c", "M0,0 C${a},${b} ${c},${d} 1,1")` (requires CustomEase plugin) |
-| `Easing.elastic(bounciness)` | `ease: "elastic.out(${bounciness}, 0.3)"`                                              |
-| `Easing.bounce`              | `ease: "bounce.out"`                                                                   |
-| `Easing.back(overshoot)`     | `ease: "back.out(${overshoot * 1.7})"` (Remotion's overshoot scale differs)            |
+| Remotion                     | GSAP                                                                                      |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| `Easing.in(Easing.linear)`   | `ease: "none"`                                                                            |
+| `Easing.out(Easing.cubic)`   | `ease: "power3.out"`                                                                      |
+| `Easing.inOut(Easing.cubic)` | `ease: "power3.inOut"`                                                                    |
+| `Easing.out(Easing.poly(N))` | `ease: "power<N>.out"`（N=2 二次, 3 三次, 4 四次, 5 五次）                                 |
+| `Easing.bezier(a,b,c,d)`     | `CustomEase.create("c", "M0,0 C${a},${b} ${c},${d} 1,1")`（需要 CustomEase 插件）          |
+| `Easing.elastic(bounciness)` | `ease: "elastic.out(${bounciness}, 0.3)"`                                                 |
+| `Easing.bounce`              | `ease: "bounce.out"`                                                                      |
+| `Easing.back(overshoot)`     | `ease: "back.out(${overshoot * 1.7})"`（Remotion 的过冲比例不同）                           |
 
-## interpolate driving non-numeric properties
+## interpolate 驱动非数值属性
 
 ```tsx
 const color = interpolateColors(frame, [0, 30], ["#ff0000", "#0000ff"]);
 ```
 
-GSAP does color tweens natively:
+GSAP 原生支持颜色补间：
 
 ```js
 gsap.to(target, { color: "#0000ff", duration: 1.0, ease: "none" }, 0);
 ```
 
-Same for `backgroundColor`, `borderColor`. The `from` value is read from CSS
-or the inline style.
+`backgroundColor`、`borderColor` 同理。`from` 值从 CSS 或内联样式中读取。
 
-## Custom count-up / number tweens
+## 自定义计数 / 数字补间
 
-When Remotion uses a frame-driven number ramp (`Math.round(value * eased)`):
+当 Remotion 使用基于帧的数字渐变时（`Math.round(value * eased)`）：
 
 ```tsx
 const t = interpolate(frame, [0, 45], [0, 1]);
-const eased = 1 - (1 - t) ** 3; // cubic ease-out
+const eased = 1 - (1 - t) ** 3; // 三次缓出
 const value = Math.round(target * eased);
 return <div>{value.toLocaleString()}</div>;
 ```
 
-GSAP equivalent — tween a counter object, write `textContent` on update:
+GSAP 等价物 — 对计数器对象进行补间，在更新时写入 `textContent`：
 
 ```js
 const counter = { v: 0 };
@@ -141,25 +129,23 @@ tl.to(
 );
 ```
 
-`power3.out` matches `1 - (1-t)^3` exactly. Validated in T3 (mean SSIM 0.953).
-Per-frame digit mismatches occur on sub-frame timing offsets but final values
-converge — no SSIM impact above the noise floor.
+`power3.out` 完全匹配 `1 - (1-t)^3`。在 T3 中验证（平均 SSIM 0.953）。逐帧数字不匹配发生在子帧时间偏移上，但最终值收敛 — 在噪声基底以上无 SSIM 影响。
 
-## Stagger via per-instance prop
+## 通过实例属性交错
 
-When custom subcomponents take a `delayInFrames` prop:
+当自定义子组件接受 `delayInFrames` 属性时：
 
 ```tsx
 <StatCard delayInFrames={i * 12} value={...} />
 ```
 
-Translate to GSAP timeline offsets:
+翻译为 GSAP 时间线偏移：
 
 ```js
 cards.forEach((card, i) => {
-  const start = base + i * (12 / fps); // i * 0.4s at fps=30
+  const start = base + i * (12 / fps); // fps=30 时 i * 0.4秒
   tl.to(card, { ... }, start);
 });
 ```
 
-Validated in T3 — three StatCards staggered at 0.0/0.4/0.8 s.
+在 T3 中验证 — 三个 StatCards 以 0.0/0.4/0.8 秒交错。

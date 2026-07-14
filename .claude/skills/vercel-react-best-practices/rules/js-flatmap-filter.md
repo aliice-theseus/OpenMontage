@@ -1,17 +1,17 @@
 ---
-title: Use flatMap to Map and Filter in One Pass
+title: 使用 flatMap 一次完成映射和过滤
 impact: LOW-MEDIUM
-impactDescription: eliminates intermediate array
+impactDescription: 消除中间数组
 tags: javascript, arrays, flatMap, filter, performance
 ---
 
-## Use flatMap to Map and Filter in One Pass
+## 使用 flatMap 一次完成映射和过滤
 
-**Impact: LOW-MEDIUM (eliminates intermediate array)**
+**影响：低-中（消除中间数组）**
 
-Chaining `.map().filter(Boolean)` creates an intermediate array and iterates twice. Use `.flatMap()` to transform and filter in a single pass.
+链式调用 `.map().filter(Boolean)` 会创建中间数组并迭代两次。使用 `.flatMap()` 在单次传递中完成转换和过滤。
 
-**Incorrect (2 iterations, intermediate array):**
+**错误做法（2 次迭代，中间数组）：**
 
 ```typescript
 const userNames = users
@@ -19,7 +19,7 @@ const userNames = users
   .filter(Boolean)
 ```
 
-**Correct (1 iteration, no intermediate array):**
+**正确做法（1 次迭代，无中间数组）：**
 
 ```typescript
 const userNames = users.flatMap(user =>
@@ -27,34 +27,34 @@ const userNames = users.flatMap(user =>
 )
 ```
 
-**More examples:**
+**更多示例：**
 
 ```typescript
-// Extract valid emails from responses
-// Before
+// 从响应中提取有效邮箱
+// 之前
 const emails = responses
   .map(r => r.success ? r.data.email : null)
   .filter(Boolean)
 
-// After
+// 之后
 const emails = responses.flatMap(r =>
   r.success ? [r.data.email] : []
 )
 
-// Parse and filter valid numbers
-// Before
+// 解析并过滤有效数字
+// 之前
 const numbers = strings
   .map(s => parseInt(s, 10))
   .filter(n => !isNaN(n))
 
-// After
+// 之后
 const numbers = strings.flatMap(s => {
   const n = parseInt(s, 10)
   return isNaN(n) ? [] : [n]
 })
 ```
 
-**When to use:**
-- Transforming items while filtering some out
-- Conditional mapping where some inputs produce no output
-- Parsing/validating where invalid inputs should be skipped
+**何时使用：**
+- 转换项目同时过滤掉部分项目
+- 条件映射，某些输入不产生输出
+- 解析/验证时跳过无效输入

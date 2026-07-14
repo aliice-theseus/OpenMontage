@@ -1,24 +1,24 @@
-# Publish Director - Avatar Spokesperson Pipeline
+# 发布总监 - 虚拟形象发言人管线
 
-## When To Use
+## 使用时机
 
-Package the finished spokesperson outputs for delivery. This stage should make it obvious which file is the hero cut, which are derivatives, and what message or audience each version serves.
+将完成的发言人输出打包交付。此阶段应使哪个文件是主角版本、哪些是衍生版本、每个版本服务于什么信息或受众一目了然。
 
-## Process
+## 流程
 
-### 1. Label Deliverables Clearly
+### 1. 清晰标记交付物
 
-Distinguish:
+区分：
 
-- hero cut,
-- vertical cutdown,
-- square cutdown,
-- language variants,
-- watermark or review versions.
+- 主角版本，
+- 竖屏缩减版，
+- 方形缩减版，
+- 语言变体，
+- 水印或审查版本。
 
-### 2. Keep Metadata Message-Led
+### 2. 保持元数据以信息为导向
 
-Recommended metadata keys:
+推荐元数据键：
 
 - `audience_segment`
 - `cta_copy`
@@ -26,19 +26,19 @@ Recommended metadata keys:
 - `locale`
 - `thumbnail_concept`
 
-### 3. Package Review Notes
+### 3. 打包审查备注
 
-If the avatar path has limitations such as visible lip-sync risk, retain that note in the package instead of hiding it.
+如果虚拟形象路径存在限制，如可见的唇形同步风险，请将该备注保留在包中，而非隐藏。
 
-### 4. Quality Gate
+### 4. 质量门禁
 
-- exports are clearly named,
-- metadata matches the intended message,
-- poster frame or thumbnail concept features the presenter cleanly,
-- review notes stay attached to the package.
+- 导出文件命名清晰，
+- 元数据与预期信息一致，
+- 海报帧或缩略图概念清晰展示主持人，
+- 审查备注始终附在包中。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Mixing hero and derivative exports without clear naming.
-- Reusing generic metadata that ignores the spokesperson offer.
-- Dropping risk notes that matter for downstream publishing teams.
+- 主角版本和衍生导出文件混合，缺乏清晰命名。
+- 复用忽略发言人卖点的通用元数据。
+- 丢失对下游发布团队有影响的风险备注。

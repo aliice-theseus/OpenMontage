@@ -1,36 +1,36 @@
 ---
-title: Early Length Check for Array Comparisons
+title: 数组比较前先检查长度
 impact: MEDIUM-HIGH
-impactDescription: avoids expensive operations when lengths differ
+impactDescription: 长度不同时避免昂贵操作
 tags: javascript, arrays, performance, optimization, comparison
 ---
 
-## Early Length Check for Array Comparisons
+## 数组比较前先检查长度
 
-When comparing arrays with expensive operations (sorting, deep equality, serialization), check lengths first. If lengths differ, the arrays cannot be equal.
+在使用昂贵操作（排序、深度相等、序列化）比较数组时，先检查长度。如果长度不同，数组不可能相等。
 
-In real-world applications, this optimization is especially valuable when the comparison runs in hot paths (event handlers, render loops).
+在实际应用中，当比较在热路径（事件处理程序、渲染循环）中运行时，这种优化特别有价值。
 
-**Incorrect (always runs expensive comparison):**
+**不正确（总是执行昂贵比较）：**
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {
-  // Always sorts and joins, even when lengths differ
+  // 即使长度不同也总是排序和拼接
   return current.sort().join() !== original.sort().join()
 }
 ```
 
-Two O(n log n) sorts run even when `current.length` is 5 and `original.length` is 100. There is also overhead of joining the arrays and comparing the strings.
+即使在 `current.length` 为 5 而 `original.length` 为 100 时，也会执行两次 O(n log n) 排序。还有拼接数组和比较字符串的开销。
 
-**Correct (O(1) length check first):**
+**正确（先进行 O(1) 长度检查）：**
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {
-  // Early return if lengths differ
+  // 如果长度不同，提前返回
   if (current.length !== original.length) {
     return true
   }
-  // Only sort when lengths match
+  // 仅在长度匹配时排序
   const currentSorted = current.toSorted()
   const originalSorted = original.toSorted()
   for (let i = 0; i < currentSorted.length; i++) {
@@ -42,8 +42,8 @@ function hasChanges(current: string[], original: string[]) {
 }
 ```
 
-This new approach is more efficient because:
-- It avoids the overhead of sorting and joining the arrays when lengths differ
-- It avoids consuming memory for the joined strings (especially important for large arrays)
-- It avoids mutating the original arrays
-- It returns early when a difference is found
+这种新方法更高效，因为：
+- 长度不同时避免了排序和拼接数组的开销
+- 避免了为拼接后的字符串消耗内存（对大数组尤其重要）
+- 避免了改变原始数组
+- 发现差异时提前返回

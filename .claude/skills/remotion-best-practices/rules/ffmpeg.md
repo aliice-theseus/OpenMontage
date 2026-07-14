@@ -1,31 +1,31 @@
 ---
 name: ffmpeg
-description: Using FFmpeg and FFprobe in Remotion
+description: 在 Remotion 中使用 FFmpeg 和 FFprobe
 metadata:
   tags: ffmpeg, ffprobe, video, trimming
 ---
 
-## FFmpeg in Remotion
+## Remotion 中的 FFmpeg
 
-`ffmpeg` and `ffprobe` do not need to be installed. They are available via the `bunx remotion ffmpeg` and `bunx remotion ffprobe`:
+`ffmpeg` 和 `ffprobe` 无需单独安装。它们可以通过 `bunx remotion ffmpeg` 和 `bunx remotion ffprobe` 使用：
 
 ```bash
 bunx remotion ffmpeg -i input.mp4 output.mp3
 bunx remotion ffprobe input.mp4
 ```
 
-### Trimming videos
+### 裁剪视频
 
-You have 2 options for trimming videos:
+有两种裁剪视频的选项：
 
-1. Use the FFMpeg command line. You MUST re-encode the video to avoid frozen frames at the start of the video.
+1. 使用 FFMpeg 命令行。必须重新编码视频，以避免视频开头出现冻结帧。
 
 ```bash
-# Re-encodes from the exact frame
+# 从精确帧开始重新编码
 bunx remotion ffmpeg -ss 00:00:05 -i public/input.mp4 -to 00:00:10 -c:v libx264 -c:a aac public/output.mp4
 ```
 
-2. Use the `trimBefore` and `trimAfter` props of the `<Video>` component. The benefit is that this is non-destructive and you can change the trim at any time.
+2. 使用 `<Video>` 组件的 `trimBefore` 和 `trimAfter` 属性。好处是这是非破坏性的，可以随时更改裁剪设置。
 
 ```tsx
 import { Video } from "@remotion/media";

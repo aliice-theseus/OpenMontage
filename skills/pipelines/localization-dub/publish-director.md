@@ -1,24 +1,24 @@
-# Publish Director - Localization Dub Pipeline
+# 发布导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Package the completed localization outputs so downstream teams can find the right video, subtitle, and metadata bundle for each language without manual cleanup.
+打包完成的本地化输出，使下游团队能够找到每种语言对应的视频、字幕和元数据包，无需手动整理。
 
-## Process
+## 流程
 
-### 1. Package By Locale
+### 1. 按地区打包
 
-Each language package should clearly separate:
+每个语言包应清晰分离以下内容：
 
-- video output,
-- subtitle files,
-- transcript or approved script copy,
-- review notes,
-- metadata.
+- 视频输出
+- 字幕文件
+- 转录文本或批准的剧本副本
+- 审核备注
+- 元数据
 
-### 2. Keep Naming Precise
+### 2. 保持命名精确
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `locale`
 - `language_name`
@@ -26,19 +26,19 @@ Recommended metadata keys:
 - `subtitle_included`
 - `review_owner`
 
-### 3. Preserve Review Context
+### 3. 保留审核上下文
 
-If a language output has pronunciation caveats, timing warnings, or missing lip sync, keep that note in the published package.
+如果某语言输出存在发音注意事项、时序警告或缺少唇形同步，请在发布的包中保留该备注。
 
-### 4. Quality Gate
+### 4. 质量门禁
 
-- locale packages are clearly labeled,
-- metadata matches the actual treatment,
-- supporting text assets are present,
-- warnings and review notes are not lost.
+- 地区包标签清晰
+- 元数据与实际处理方案匹配
+- 辅助文本资产存在
+- 警告和审核备注未丢失
 
-## Common Pitfalls
+## 常见陷阱
 
-- Shipping localized videos without the matching subtitle or transcript files.
-- Mixing audio-dub and subtitle-only variants under the same generic filename.
-- Removing the QA notes that explain known issues.
+- 发布本地化视频时未附带匹配的字幕或转录文件
+- 将配音音频和纯字幕变体混用同一通用文件名
+- 删除解释了已知问题的 QA 备注

@@ -1,17 +1,16 @@
 ---
-title: Prefer Composing Children Over Render Props
+title: 优先使用 Children 而非渲染属性
 impact: MEDIUM
-impactDescription: cleaner composition, better readability
+impactDescription: 更清晰的组合，更好的可读性
 tags: composition, children, render-props
 ---
 
-## Prefer Children Over Render Props
+## 优先使用 Children 而非渲染属性
 
-Use `children` for composition instead of `renderX` props. Children are more
-readable, compose naturally, and don't require understanding callback
-signatures.
+使用 `children` 进行组合，而不是 `renderX` 属性。Children 更易读、
+组合更自然，且不需要理解回调签名。
 
-**Incorrect (render props):**
+**错误（渲染属性）：**
 
 ```tsx
 function Composer({
@@ -33,7 +32,7 @@ function Composer({
   )
 }
 
-// Usage is awkward and inflexible
+// 用法笨拙且不灵活
 return (
   <Composer
     renderHeader={() => <CustomHeader />}
@@ -48,7 +47,7 @@ return (
 )
 ```
 
-**Correct (compound components with children):**
+**正确（带 children 的复合组件）：**
 
 ```tsx
 function ComposerFrame({ children }: { children: React.ReactNode }) {
@@ -59,7 +58,7 @@ function ComposerFooter({ children }: { children: React.ReactNode }) {
   return <footer className='flex'>{children}</footer>
 }
 
-// Usage is flexible
+// 用法灵活
 return (
   <Composer.Frame>
     <CustomHeader />
@@ -73,15 +72,15 @@ return (
 )
 ```
 
-**When render props are appropriate:**
+**何时渲染属性合适：**
 
 ```tsx
-// Render props work well when you need to pass data back
+// 当需要向子组件传递数据时，渲染属性效果很好
 <List
   data={items}
   renderItem={({ item, index }) => <Item item={item} index={index} />}
 />
 ```
 
-Use render props when the parent needs to provide data or state to the child.
-Use children when composing static structure.
+当父组件需要向子组件提供数据或状态时，使用渲染属性。
+当组合静态结构时，使用 children。

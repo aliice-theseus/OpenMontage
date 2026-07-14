@@ -1,28 +1,28 @@
-# cta-morph-press — CTA Morph & Press
+# cta-morph-press — CTA 变形与按下
 
-**intent**: A resting brand mark condenses at the same screen center into a smaller, brighter CTA, then a cursor arrives from off-stage and lands a human-aimed click on it. The viewer's eye is walked from "this is who we are" to "and this is what you do." The morph and the click are the two headline beats.
+**意图**：一个休息的品牌标记在同一屏幕中心凝聚成一个更小、更亮的 CTA，然后一个光标从舞台外来，着陆一个瞄准人类的点击。观看者的眼睛被引导从"这就是我们"到"这就是你做的。"变形和点击是两个标题节拍。
 
-**roles served**
+**服务角色**
 
-- CTA (from `cta-morph-press`): when the close moves from brand identity to a single user action, two elements share the same center sequentially (a morph, not a cut), and the payoff is a simulated click with physical feedback. Reach for it for a focused "click here" sign-off — no spatial set, no multi-step UI (that's `cursor-ui-demo`).
+- CTA（来自 `cta-morph-press`）：当结尾从品牌身份移动到单个用户动作时，两个元素顺序共享同一中心（变形，而非切），回报是带物理反馈的模拟点击。用于专注的"点击这里"签退 — 无空间设置，无多步骤 UI（那是 `cursor-ui-demo`）。
 
-**duration**: 4–6s
+**时长**：4–6 秒
 
-**shot structure** (a `[bg]` canvas; hero and CTA are flex-centered siblings sharing one `transform-origin`)
+**镜头结构**（一个 `[bg]` canvas；主角和 CTA 是弹性居中的兄弟元素共享一个 `transform-origin`）
 
-- **Scene 1 (0.0–~1.4s) — presence.** The `[hero mark / brand lockup]` holds dead-center, alive but resting — only a faint rotational breath on the mark; any title text under it stays rock-stable. Camera static.
-- **Scene 2 (~1.4–2.4s) — the morph (signature move).** The hero CONDENSES at the same screen center into a smaller, brighter `[CTA]` (button / card): the outgoing mark shrink-fades exactly as the CTA scales up in its place. Because they share one `transform-origin`, the eye reads it as one element transforming, not a swap.
-- **Scene 3 (~2.4–3.4s) — approach.** A `[cursor]` arrives from off-stage on a **decelerating** path (it "arrives," it does not pass through) and lands a few px **off** the CTA's geometric center, so the aim reads human, not scripted.
-- **Scene 4 (~3.4–end) — press.** The cursor lands a physical CLICK — cursor and CTA compress together in lockstep, then release with feedback (an optional ripple / glow bloom). Holds on the clicked state.
+- **场景 1（0.0–~1.4 秒）——存在。** `[hero mark / brand lockup]` 在正中保持，活跃但休息——仅在标记上的微弱旋转呼吸；其下的任何标题文字完全稳定。摄像机静止。
+- **场景 2（~1.4–2.4 秒）——变形（标志性动作）。** 主角在相同屏幕中心**凝聚**成一个更小、更亮的 `[CTA]`（按钮/卡片）：退出的标记缩小-淡出，同时 CTA 在其位置放大。因为它们共享一个 `transform-origin`，眼睛把它读作一个元素在变换，而非交换。
+- **场景 3（~2.4–3.4 秒）——接近。** 一个 `[cursor]` 从舞台外来，沿**减速**路径（它"到达"，不是经过），着陆在离 CTA 几何中心**偏离**几像素的位置，使瞄准读作人类，而非脚本化。
+- **场景 4（~3.4–结束）——按下。** 光标着陆一个物理**点击** — 光标和 CTA 同步一起压缩，然后释放带反馈（可选涟漪/辉光绽放）。在点击状态上保持。
 
-**motion vocabulary**: faint rotation-only resting breath (logo scope only); same-center morph-swap (shrink-fade ↔ scale-up sharing `transform-origin`); cursor decel-arrival from off-stage; off-center human aim; lockstep press compression; release feedback ripple / glow.
+**动词语汇**：微弱仅旋转休息呼吸（仅限 logo 范围）；同中心变形交换（缩小-淡出 ↔ 放大共享 `transform-origin`）；光标减速到达从舞台外；偏离中心人类瞄准；同步按下压缩；释放反馈涟漪/辉光。
 
-**rule mapping**
+**规则映射**
 
-- hero → CTA condense at one center → `scale-swap-transition` (shared `transform-origin: 50% 50%` is what sells the morph; CTA `position: absolute` so it doesn't shove the hero during the brief overlap)
-- resting-hero aliveness (rotation only, scoped to the mark so the Phase-2 scale doesn't fight it) → `sine-wave-loop` (low-amplitude rotation register — subtle jitter, not a scale breath)
-- cursor press + release in lockstep (single-target-array so both compress together) → `physics-press-reaction` (PRESS_DOWN + RELEASE portion)
-- cursor approach (decel from off-stage, off-center landing, hard-cut opacity in) → `gsap-effects` (translate on `power2.out`)
-- click ripple / release glow → `cursor-click-ripple` (attack-decay ring) and/or `ambient-glow-bloom` (release bloom)
+- 主角 → CTA 在中心凝聚 → `scale-swap-transition`（共享 `transform-origin: 50% 50%` 是使变形成功的关键；CTA `position: absolute` 使其在短暂重叠期间不推挤主角）
+- 休息主角生动感（仅旋转，限于标记，使阶段 2 的缩放不与它冲突）→ `sine-wave-loop`（低振幅旋转寄存器——细微抖动，非缩放呼吸）
+- 光标按下 + 同步释放（单目标数组使两者一起压缩）→ `physics-press-reaction`（PRESS_DOWN + RELEASE 部分）
+- 光标接近（从舞台外减速，偏离中心着陆，硬切不透明度进入）→ `gsap-effects`（`power2.out` 上的平移）
+- 点击涟漪/释放辉光 → `cursor-click-ripple`（攻击衰减环）和/或 `ambient-glow-bloom`（释放绽放）
 
-**camera modifier**: camera-static — the morph and click happen in element space; a camera move would compete with the click as the climax.
+**摄像机修饰**：摄像机静止 — 变形和点击发生在元素空间；摄像机移动会与作为高潮的点击竞争。

@@ -1,61 +1,53 @@
-# Proposal Director - Character Animation Pipeline
+# 提案导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Present character-animation concepts that are honest about local rigged motion,
-reuse, cost, and runtime choice.
+呈现诚实的角色动画方案，明确说明本地骨架运动的限制、复用策略、成本和运行时选择。
 
-## Required Proposal Elements
+## 必需提案要素
 
-Each option must include:
+每个选项必须包含：
 
-- characters and roles,
-- visual style,
-- action complexity,
-- rig reuse strategy,
-- sample plan,
-- audio architecture,
-- music plan,
-- render runtime options,
-- cost estimate,
-- honest limitation note.
+- 角色及其职责，
+- 视觉风格，
+- 动作复杂度，
+- 骨架复用策略，
+- 样片计划，
+- 音频架构，
+- 音乐计划，
+- 渲染运行时选项，
+- 成本估算，
+- 诚实的局限性说明。
 
-## Runtime Selection
+## 运行时选择
 
-Read `skills/meta/animation-runtime-selector.md` before recommending a runtime.
+在推荐运行时之前，请阅读 `skills/meta/animation-runtime-selector.md`。
 
-When both Remotion and HyperFrames are available:
+当 Remotion 和 HyperFrames 都可用时：
 
-- Remotion: best when the final composition needs deterministic React-rendered
-  video, captions, audio, scene JSON, and final MP4 governance.
-- HyperFrames: best when the character scene is HTML/SVG/GSAP-heavy and benefits
-  from web-native authoring, lint, validate, and registry blocks.
-- FFmpeg: post-processing only. Do not pick FFmpeg as the primary runtime for
-  character acting.
+- Remotion：最适合最终合成需要确定性 React 渲染视频、字幕、音频、场景 JSON 和最终 MP4 管控的场景。
+- HyperFrames：最适合角色场景以 HTML/SVG/GSAP 为主并受益于 Web 原生创作、lint、校验和注册表模块的场景。
+- FFmpeg：仅用于后期处理。不要选择 FFmpeg 作为角色表演的主要运行时。
 
-Present both Remotion and HyperFrames to the user before recommending one.
-Record the alternatives considered in the decision log as
-`render_runtime_selection`, including why `hyperframes` was accepted or rejected.
-Wait for user approval before locking `render_runtime`.
+在推荐之前，同时向用户呈现 Remotion 和 HyperFrames。在决策日志中将已考虑的替代方案记录为 `render_runtime_selection`，包括为什么接受或拒绝了 `hyperframes`。在用户批准锁定 `render_runtime` 之前，等待其确认。
 
-## Sample-First Rule
+## 样片优先规则
 
-Before full production, propose a 10-15 second sample containing:
+在全量制作之前，提出一个 10-15 秒的样片，包含：
 
-- one main character,
-- one expression change,
-- one body action,
-- one camera/background treatment,
-- one audio/music cue if relevant.
+- 一个主要角色，
+- 一次表情变化，
+- 一个身体动作，
+- 一个摄像机/背景处理，
+- 一个相关的音频/音乐提示（如适用）。
 
-Do not batch-generate all assets until this sample is approved.
+在样片获得批准之前，不要批量生成所有资源。
 
-## Cost Honesty
+## 成本诚实
 
-Local rigging is cheap at render time but expensive in authoring complexity.
-Report the difference:
+本地骨架在渲染时成本低廉，但在创作复杂度上代价高昂。需报告以下差异：
 
-- asset generation cost,
-- TTS/music cost,
-- local render cost,
-- manual complexity risk.
+- 资源生成成本，
+- TTS/音乐成本，
+- 本地渲染成本，
+- 人工复杂度风险。

@@ -1,21 +1,21 @@
 # shot-plan IR
 
-The single contract between Director and Builder. One file: `PROJECT_DIR/shot-plan.json`.
+Director 和 Builder 之间的单一约定。一个文件：`PROJECT_DIR/shot-plan.json`。
 
 ```jsonc
 {
-  // ── envelope (every category) ──
+  // ── 概要（所有类别）──
   "category": "kinetic-type | stat | charts | logo-reveal | lower-thirds | webpage | news | tweet | asset-fusion",
   "duration_s": 6,
   "fps": 30,
   "canvas": { "w": 1080, "h": 1920, "aspect": "9:16" },
-  "style": "free-form visual direction (mood / energy / reference)",
-  "palette": ["#…"], // or "derive-from-asset"
+  "style": "自由形式视觉方向（氛围/能量/参考）",
+  "palette": ["#…"], // 或 "derive-from-asset"
   "font": "<HF embed-list font>",
-  "beats": [12, 37], // optional accent frames/seconds
-  "export": "mp4", // or "alpha-overlay" (transparent webm/mov)
+  "beats": [12, 37], // 可选的重音帧/秒
+  "export": "mp4", // 或 "alpha-overlay"（透明 webm/mov）
 
-  // ── sourcing seam (Director Part 1) — [] means skip the source phase ──
+  // ── 素材获取接缝（Director 第1部分）— [] 表示跳过素材来源阶段 ──
   "asset_needs": [
     {
       "role": "hero",
@@ -26,29 +26,29 @@ The single contract between Director and Builder. One file: `PROJECT_DIR/shot-pl
     },
   ],
 
-  // ── build directive (Director Part 2, reuse-first) ──
-  "block": "<catalog block id, e.g. data-chart | caption-kinetic-slam>", // optional
+  // ── 构建指令（Director 第2部分，优先复用）──
+  "block": "<catalog block id, e.g. data-chart | caption-kinetic-slam>", // 可选
   "customize": {
-    /* what to change on the block: data, text, palette, positions */
+    /* 要在块上更改的内容：数据、文字、调色板、位置 */
   },
 
-  // ── category-specific content ──
+  // ── 类别特有内容 ──
   "content": {
-    /* shape varies by category, below */
+    /* 形状因类别而异，见下文 */
   },
 }
 ```
 
-**Per-category `content` shapes:**
+**各类别 `content` 形状：**
 
 - `kinetic-type` → `scenes[]` `{ id, start, end, text, emphasis_words[], emotion, motion, beats[] }`
 - `stat` → `{ value, prefix, suffix, label, ring: bool }`
 - `charts` → `{ type: bar|line|pie|race|pct, data[], labels[], headline, axes: bool }`
 - `logo-reveal` → `{ logo: <asset path>, tagline, url }`
 - `lower-thirds` → `{ name, role, position, brand_colors[] }`
-- `webpage` → `{ url, capture, highlights: [ { selector|region, label } ] }` (step-highlight a real captured page)
-- `news` → `{ outlet, headline, body, keyword, layout: A|B, logo?, date?, subject? }` (article-highlight: lay text out readable — **no zoom** — then sweep a marker band over the keyword in place. Layout **A** = centered-emphasis 9:16 text-only; **B** = full article 16:9 with `logo` + `date` + `subject` (a person photo → `remove-background` cutout))
+- `webpage` → `{ url, capture, highlights: [ { selector|region, label } ] }`（逐步高亮一个真实捕获的页面）
+- `news` → `{ outlet, headline, body, keyword, layout: A|B, logo?, date?, subject? }`（文章高亮：将文字以可读大小排版 — **无缩放** — 然后在原地用标记带扫过关键词。布局**A** = 居中强调 9:16 纯文字；**B** = 完整文章 16:9，带 `logo` + `date` + `subject`（人物照片 → `remove-background` 抠图））
 - `tweet` → `{ author, handle, avatar, text, metrics }`
 - `asset-fusion` → `{ data_type, asset: <path>, affordance, element_positions: {center, extent, safe[], avoid[]}, derived_palette[], connectors[] }`
 
-**Invariants:** `scenes` (if present) partition `[0, duration_s]` with no gaps/overlaps · empty `asset_needs` ⇒ Step 2 (source) is skipped · a named `block` ⇒ the Builder reuses + customizes it rather than hand-authoring.
+**不变规则：** `scenes`（如果存在）划分 `[0, duration_s]` 无间隙/重叠 · 空 `asset_needs` ⇒ 第2步（素材来源）跳过 · 指定了 `block` ⇒ Builder 复用它并定制，而非手动编写。

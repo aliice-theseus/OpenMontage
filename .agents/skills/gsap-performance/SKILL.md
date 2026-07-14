@@ -1,47 +1,47 @@
 ---
 name: gsap-performance
-description: Official GSAP skill for performance — prefer transforms, avoid layout thrashing, will-change, batching. Use when optimizing GSAP animations, reducing jank, or when the user asks about animation performance, FPS, or smooth 60fps.
+description: GSAP 性能官方技能 — 优先使用变换、避免布局抖动、will-change、批处理。在优化 GSAP 动画、减少卡顿或用户询问动画性能、FPS 或流畅的 60fps 时使用。
 license: MIT
 ---
 
-# GSAP Performance
+# GSAP 性能
 
-## When to Use This Skill
+## 何时使用此技能
 
-Apply when optimizing GSAP animations for smooth 60fps, reducing layout/paint cost, or when the user asks about performance, jank, or best practices for fast animations.
+在优化 GSAP 动画以实现流畅的 60fps、减少布局/绘制开销，或用户询问性能、卡顿或快速动画最佳实践时应用。
 
-**Related skills:** Build animations with **gsap-core** (transforms, autoAlpha) and **gsap-timeline**; for ScrollTrigger performance see **gsap-scrolltrigger**.
+**相关技能：** 使用 **gsap-core**（变换、autoAlpha）和 **gsap-timeline** 构建动画；ScrollTrigger 性能参见 **gsap-scrolltrigger**。
 
-## Prefer Transform and Opacity
+## 优先使用变换和不透明度
 
-Animating **transform** (`x`, `y`, `scaleX`, `scaleY`, `rotation`, `rotationX`, `rotationY`, `skewX`, `skewY`) and **opacity** keeps work on the compositor and avoids layout and most paint. Avoid animating layout-heavy properties when a transform can achieve the same effect.
+动画 **transform**（`x`、`y`、`scaleX`、`scaleY`、`rotation`、`rotationX`、`rotationY`、`skewX`、`skewY`）和 **opacity** 将工作保留在合成器上，避免布局和大部分绘制。当变换能实现相同效果时，避免动画布局密集属性。
 
-- ✅ Prefer: **x**, **y**, **scale**, **rotation**, **opacity**.
-- ❌ Avoid when possible: **width**, **height**, **top**, **left**, **margin**, **padding** (they trigger layout and can cause jank).
+- ✅ 优先使用：**x**、**y**、**scale**、**rotation**、**opacity**。
+- ❌ 尽可能避免：**width**、**height**、**top**、**left**、**margin**、**padding**（它们触发布局并可能导致卡顿）。
 
-GSAP’s **x** and **y** use transforms (translate) by default; use them instead of **left**/**top** for movement.
+GSAP 的 **x** 和 **y** 默认使用变换（translate）；使用它们替代 **left**/**top** 进行移动。
 
 ## will-change
 
-Use **will-change** in CSS on elements that will animate. It hints the browser to promote the layer.
+在将动画的元素上使用 CSS 中的 **will-change**。它提示浏览器提升图层。
 
 ```css
 will-change: transform;
 ```
 
-## Batch Reads and Writes
+## 批量读取和写入
 
-GSAP batches updates internally. When mixing GSAP with direct DOM reads/writes or layout-dependent code, avoid interleaving reads and writes in a way that causes repeated layout thrashing. Prefer doing all reads first, then all writes (or let GSAP handle the writes in one go).
+GSAP 内部会批量更新。当将 GSAP 与直接 DOM 读取/写入或布局相关代码混合使用时，避免以导致重复布局抖动的方式交错读取和写入。优先先完成所有读取，然后进行所有写入（或让 GSAP 一次性处理写入）。
 
-## Many Elements (Stagger, Lists)
+## 许多元素（Stagger、列表）
 
-- Use **stagger** instead of many separate tweens with manual delays when the animation is the same; it’s more efficient.
-- For long lists, consider **virtualization** or animating only visible items; avoid creating hundreds of simultaneous tweens if it causes jank.
-- Reuse timelines where possible; avoid creating new timelines every frame.
+- 当动画相同时，使用 **stagger** 而非使用手动延迟的多个单独补间；效率更高。
+- 对于长列表，考虑**虚拟化**或仅动画可见项；如果导致卡顿，避免创建数百个同时补间。
+- 尽可能复用时间线；避免每帧创建新时间线。
 
-## Frequently updated properties (e.g. mouse followers)
+## 频繁更新的属性（例如鼠标追随器）
 
-Prefer **gsap.quickTo()** for properties that are updated often (e.g. mouse-follower x/y). It reuses a single tween instead of creating new tweens on each update. 
+对于频繁更新的属性（例如鼠标追随器的 x/y），优先使用 **gsap.quickTo()**。它复用一个补间而不是在每次更新时创建新补间。
 
 ```javascript
 let xTo = gsap.quickTo("#id", "x", { duration: 0.4, ease: "power3" }),
@@ -53,27 +53,27 @@ document.querySelector("#container").addEventListener("mousemove", (e) => {
 });
 ```
 
-## ScrollTrigger and Performance
+## ScrollTrigger 和性能
 
-- **pin: true** promotes the pinned element; pin only what’s needed.
-- **scrub** with a small value (e.g. `scrub: 1`) can reduce work during scroll; test on low-end devices.
-- Call **ScrollTrigger.refresh()** only when layout actually changes (e.g. after content load), not on every resize; debounce when possible.
+- **pin: true** 会提升固定元素；只固定需要的内容。
+- **scrub** 使用较小值（例如 `scrub: 1`）可以减少滚动时的工作；在低端设备上测试。
+- 仅在布局实际变化时（例如内容加载后）调用 **ScrollTrigger.refresh()**，而非每次调整大小时；尽可能防抖。
 
-## Reduce Simultaneous Work
+## 减少同时工作
 
-- Pause or kill off-screen or inactive animations when they’re not visible (e.g. when the user navigates away).
-- Avoid animating huge numbers of properties on many elements at once; simplify or sequence if needed.
+- 暂停或杀死屏幕外或不活动的动画（例如用户导航离开时）。
+- 避免一次在多个元素上动画大量属性；必要时简化或排序。
 
-## Best practices
+## 最佳实践
 
-- ✅ Animate **transform** and **opacity**; use **will-change** in CSS only on elements that animate.
-- ✅ Use **stagger** instead of many separate tweens with manual delays when the animation is the same.
-- ✅ Use **gsap.quickTo()** for frequently updated properties (e.g. mouse followers).
-- ✅ Clean up or kill off-screen animations; call **ScrollTrigger.refresh()** when layout changes, debounced when possible.
+- ✅ 动画 **transform** 和 **opacity**；仅对正在动画的元素使用 CSS 中的 **will-change**。
+- ✅ 当动画相同时使用 **stagger** 而非带手动延迟的多个单独补间。
+- ✅ 对频繁更新的属性使用 **gsap.quickTo()**（例如鼠标追随器）。
+- ✅ 清理或杀死屏幕外动画；当布局变化时调用 **ScrollTrigger.refresh()**，尽可能防抖。
 
-## Do Not
+## 禁止
 
-- ❌ Animate **width**/ **height**/ **top**/ **left** for movement when **x**/ **y**/ **scale** can achieve the same look.
-- ❌ Set **will-change** or **force3D** on every element “just in case”; use for elements that are actually animating.
-- ❌ Create hundreds of overlapping tweens or ScrollTriggers without testing on low-end devices.
-- ❌ Ignore cleanup; stray tweens and ScrollTriggers keep running and can hurt performance and correctness.
+- ❌ 当 **x**/**y**/**scale** 能实现相同效果时，动画 **width**/**height**/**top**/**left** 进行移动。
+- ❌ 在每个元素上设置 **will-change** 或 **force3D**"以防万一"；仅对实际正在动画的元素使用。
+- ❌ 在不经过低端设备测试的情况下创建数百个重叠的补间或 ScrollTrigger。
+- ❌ 忽略清理；游离的补间和 ScrollTrigger 会持续运行，损害性能和正确性。

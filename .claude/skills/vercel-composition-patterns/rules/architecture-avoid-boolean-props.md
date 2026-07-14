@@ -1,17 +1,17 @@
 ---
-title: Avoid Boolean Prop Proliferation
+title: 避免布尔属性泛滥
 impact: CRITICAL
-impactDescription: prevents unmaintainable component variants
+impactDescription: 防止不可维护的组件变体
 tags: composition, props, architecture
 ---
 
-## Avoid Boolean Prop Proliferation
+## 避免布尔属性泛滥
 
-Don't add boolean props like `isThread`, `isEditing`, `isDMThread` to customize
-component behavior. Each boolean doubles possible states and creates
-unmaintainable conditional logic. Use composition instead.
+不要像 `isThread`、`isEditing`、`isDMThread` 这样添加布尔属性来自定义
+组件行为。每个布尔属性都会使可能的状态翻倍，并产生
+不可维护的条件逻辑。请使用组合代替。
 
-**Incorrect (boolean props create exponential complexity):**
+**错误（布尔属性产生指数级复杂性）：**
 
 ```tsx
 function Composer({
@@ -45,10 +45,10 @@ function Composer({
 }
 ```
 
-**Correct (composition eliminates conditionals):**
+**正确（组合消除条件判断）：**
 
 ```tsx
-// Channel composer
+// 频道编辑器
 function ChannelComposer() {
   return (
     <Composer.Frame>
@@ -64,7 +64,7 @@ function ChannelComposer() {
   )
 }
 
-// Thread composer - adds "also send to channel" field
+// 线程编辑器 - 添加"同时发送到频道"字段
 function ThreadComposer({ channelId }: { channelId: string }) {
   return (
     <Composer.Frame>
@@ -80,7 +80,7 @@ function ThreadComposer({ channelId }: { channelId: string }) {
   )
 }
 
-// Edit composer - different footer actions
+// 编辑编辑器 - 不同的底部操作
 function EditComposer() {
   return (
     <Composer.Frame>
@@ -96,5 +96,5 @@ function EditComposer() {
 }
 ```
 
-Each variant is explicit about what it renders. We can share internals without
-sharing a single monolithic parent.
+每个变体明确地说明了它渲染什么。我们可以在不共享
+单个单体父组件的情况下共享内部组件。

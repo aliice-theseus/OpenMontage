@@ -1,19 +1,19 @@
-# Extract from Website
+# 从网站提取
 
-Generate a `visual-style.md` from a website URL.
+从网站 URL 生成 `visual-style.md`。
 
-## Workflow
+## 工作流程
 
-1. **Receive URL** — User provides a website URL
-2. **Fetch the page** — Use web fetch to get the HTML/CSS
-3. **Take screenshots** — Capture the page visually if possible
-4. **Analyze** — Identify colors, typography, layout, motion, mood
-5. **Generate** — Output complete `visual-style.md`
-6. **Validate** — Ensure all required fields are present
+1. **接收 URL** — 用户提供网站 URL
+2. **获取页面** — 使用网页抓取获取 HTML/CSS
+3. **截取屏幕截图** — 如果可能，捕获页面的视觉效果
+4. **分析** — 识别颜色、排版、布局、动效、氛围
+5. **生成** — 输出完整的 `visual-style.md`
+6. **验证** — 确保所有必填字段齐全
 
-## Extraction Prompt
+## 提取提示
 
-Use this prompt template when analyzing a website:
+分析网站时使用此提示模板：
 
 ```
 Analyze this website and extract a visual-style.md following the spec.
@@ -61,51 +61,51 @@ Complete YAML frontmatter between --- delimiters
 Plus Markdown body sections (## Design Principles, ## Extraction Notes)
 ```
 
-## Analysis Checklist
+## 分析检查清单
 
-When extracting, look for:
+提取时，注意查找：
 
-### Colors
-- [ ] Background colors (primary surfaces)
-- [ ] Text colors (headings vs body)
-- [ ] Accent/CTA button colors
-- [ ] Link colors (default, hover, visited)
-- [ ] Border/divider colors
-- [ ] Gradient usage (if any)
+### 颜色
+- [ ] 背景色（主要表面）
+- [ ] 文字颜色（标题 vs 正文）
+- [ ] 强调色/CTA 按钮颜色
+- [ ] 链接颜色（默认、悬停、已访问）
+- [ ] 边框/分割线颜色
+- [ ] 渐变使用（如有）
 
-### Typography
-- [ ] Heading font family
-- [ ] Body font family
-- [ ] Font weights used (light, regular, bold, etc.)
-- [ ] Text sizes (heading scale)
-- [ ] Line heights
-- [ ] Letter spacing patterns
-- [ ] Text transform (uppercase, lowercase)
+### 排版
+- [ ] 标题字体族
+- [ ] 正文字体族
+- [ ] 使用的字重（light、regular、bold 等）
+- [ ] 文字大小（标题比例）
+- [ ] 行高
+- [ ] 字间距模式
+- [ ] 文字变换（大写、小写）
 
-### Layout
-- [ ] Max content width
-- [ ] Grid columns (if visible)
-- [ ] Spacing rhythm (consistent gaps)
-- [ ] Alignment patterns (left, center, mixed)
-- [ ] Card/component patterns
-- [ ] Negative space usage
+### 布局
+- [ ] 最大内容宽度
+- [ ] 网格列数（如可见）
+- [ ] 间距节奏（一致的间隙）
+- [ ] 对齐模式（左、中、混合）
+- [ ] 卡片/组件模式
+- [ ] 负空间使用
 
-### Motion
-- [ ] Page transitions
-- [ ] Hover effects
-- [ ] Scroll animations
-- [ ] Loading states
-- [ ] Micro-interactions
+### 动效
+- [ ] 页面过渡
+- [ ] 悬停效果
+- [ ] 滚动动画
+- [ ] 加载状态
+- [ ] 微交互
 
-### Mood
-- [ ] Overall feeling (professional, playful, minimal, bold)
-- [ ] Design era (modern, retro, timeless)
-- [ ] Brand personality (serious, friendly, technical)
-- [ ] What they explicitly avoid
+### 氛围
+- [ ] 整体感觉（专业、趣味、简约、大胆）
+- [ ] 设计时代（现代、复古、永恒）
+- [ ] 品牌个性（严肃、友好、技术感）
+- [ ] 他们明确避免什么
 
-## Example Output
+## 示例输出
 
-Given URL `https://stripe.com`:
+给定 URL `https://stripe.com`：
 
 ```yaml
 ---
@@ -224,10 +224,10 @@ Typography stack identified via browser dev tools.
 Mesh gradient patterns noted in hero sections.
 ```
 
-## Tips
+## 提示
 
-- **Use dev tools** — Inspect element to get exact hex values and font stacks
-- **Check CSS variables** — Many sites define their palette in `:root`
-- **Note responsive patterns** — How does the design adapt?
-- **Capture the feel** — The `style_prompt_full` should evoke the same feeling
-- **Be specific about avoids** — What does this brand clearly NOT do?
+- **使用开发者工具** — 检查元素以获取精确的十六进制值和字体栈
+- **检查 CSS 变量** — 许多网站在 `:root` 中定义调色板
+- **记录响应式模式** — 设计如何适配？
+- **捕捉感觉** — `style_prompt_full` 应唤起相同的感觉
+- **具体说明避免项** — 该品牌明确**不**做什么？

@@ -1,25 +1,25 @@
 ---
 name: hex-color-prompting
-description: Using hex color codes for precise color specification
+description: 使用十六进制颜色代码进行精确颜色指定
 ---
 
-# Hex Color Prompting
+# 十六进制颜色提示词
 
-FLUX supports hex color codes (#RRGGBB) for precise color specification, essential for brand consistency and exact color matching.
+FLUX 支持十六进制颜色代码（#RRGGBB）进行精确颜色指定，对于品牌一致性和精确颜色匹配至关重要。
 
-## Syntax
+## 语法
 
-Include hex codes directly in your prompt with descriptive names:
+直接在提示词中包含十六进制代码和描述性名称：
 
 ```
-A modern living room with walls painted in #2C3E50 (dark blue-gray),
-accent pillows in #E74C3C (vibrant red), and a #F39C12 (warm amber)
-throw blanket on a #ECF0F1 (off-white) sofa
+现代客厅，墙壁涂成 #2C3E50（深蓝灰色），
+点缀靠枕为 #E74C3C（鲜艳红色），#F39C12（暖琥珀色）
+毛毯搭在 #ECF0F1（米白色）沙发上
 ```
 
-## Signal Keywords
+## 信号关键词
 
-Use these keywords to indicate color specification:
+使用这些关键词表示颜色指定：
 
 ```
 color #02eb3c
@@ -28,138 +28,138 @@ in #FF5733
 using color code #3498DB
 ```
 
-## Best Practices
+## 最佳实践
 
-### 1. Always Pair with Description
+### 1. 始终与描述配对
 
-Never use hex codes alone - include the color name:
-
-```
-Good: #FF6B6B (coral pink)
-Bad: #FF6B6B
-```
-
-### 2. Associate with Specific Objects
-
-Clearly connect colors to their targets:
+切勿单独使用十六进制代码 — 包含颜色名称：
 
 ```
-A product shot featuring a smartphone with a #1DA1F2 (Twitter blue) case,
-resting on a #14171A (near black) matte surface
+好：#FF6B6B（珊瑚粉）
+差：#FF6B6B
 ```
 
-### 3. Limit Color Palette
+### 2. 关联到特定物体
 
-3-5 colors typically work best. Too many can confuse the model:
-
-```
-Color palette for the scene: #2ECC71 (emerald green), #3498DB (sky blue),
-#F1C40F (sunflower yellow), #FFFFFF (pure white)
-```
-
-## Use Cases
-
-### Brand Colors
+清晰地连接颜色到其目标：
 
 ```
-Corporate office reception with brand colors prominently featured:
-walls in #0066CC (company blue), accent furniture in #FF6600 (company orange),
-logo displayed in #FFFFFF (white) against the blue backdrop
+产品拍摄：智能手机配 #1DA1F2（Twitter 蓝）保护壳，
+放置在 #14171A（近黑色）哑光表面上
 ```
 
-### Interior Design
+### 3. 限制颜色数量
+
+通常 3-5 种颜色效果最佳。太多可能混淆模型：
 
 ```
-Scandinavian minimalist bedroom with #F5F5F5 (warm white) walls,
-#8B4513 (saddle brown) wooden headboard and nightstands,
-#708090 (slate gray) linen bedding, and #DAA520 (goldenrod) accent lamp
+场景调色板：#2ECC71（翡翠绿）、#3498DB（天蓝色）、
+#F1C40F（向日葵黄）、#FFFFFF（纯白）
 ```
 
-### Fashion
+## 使用场景
+
+### 品牌颜色
 
 ```
-Editorial fashion photo: model wearing #000000 (black) cashmere turtleneck,
-#FF4500 (orange-red) wide-leg wool pants, #C0C0C0 (silver) geometric earrings,
-against a #F0F0F0 (light gray) studio backdrop
+企业办公室接待区，突出品牌颜色：
+墙壁 #0066CC（公司蓝），点缀家具 #FF6600（公司橙），
+蓝色背景上展示白色 #FFFFFF 标志
 ```
 
-### Product Design
+### 室内设计
 
 ```
-Premium headphones product shot: #1C1C1E (space gray) aluminum body,
-#F5F5F7 (silver) mesh ear cups, #FF9500 (iOS orange) accent ring around controls
+斯堪的纳维亚极简卧室：#F5F5F5（暖白）墙壁，
+#8B4513（鞍棕色）木质床头板和床头柜，
+#708090（石板灰）亚麻床上用品，#DAA520（麒麟草黄）点缀台灯
 ```
 
-### Digital Art
+### 时尚
 
 ```
-Synthwave cityscape: #FF00FF (magenta) and #00FFFF (cyan) neon signs,
-#1A1A2E (deep navy) night sky, #E94560 (hot pink) setting sun on horizon,
-#16213E (dark blue) building silhouettes, rain-slicked streets reflecting lights
+编辑时尚照：模特穿着 #000000（黑色）羊绒高领毛衣，
+#FF4500（橙红色）阔腿羊毛裤，#C0C0C0（银色）几何耳环，
+#F0F0F0（浅灰色）工作室背景
 ```
 
-### Data Visualization
+### 产品设计
 
 ```
-Infographic showing market share: segments in #2ECC71 (green) for growth,
-#E74C3C (red) for decline, #3498DB (blue) for stable, #95A5A6 (gray) for other,
-clean #FFFFFF (white) background
+高级耳机产品照：#1C1C1E（太空灰）铝制机身，
+#F5F5F7（银色）网面耳罩，#FF9500（iOS 橙色）控制环点缀
 ```
 
-## Gradient Colors
-
-Specify gradients with start and end colors:
+### 数字艺术
 
 ```
-Abstract background starting with color #02eb3c (bright green) and
-finishing with color #edfa3c (lime yellow), smooth horizontal gradient
+合成波城市景观：#FF00FF（品红）和 #00FFFF（青色）霓虹灯，
+#1A1A2E（深海军蓝）夜空，#E94560（热粉色）地平线落日，
+#16213E（深蓝）建筑剪影，雨水湿润的街道反射灯光
+```
+
+### 数据可视化
+
+```
+展示市场份额的信息图：#2ECC71（绿色）增长，
+#E74C3C（红色）下降，#3498DB（蓝色）稳定，#95A5A6（灰色）其他，
+干净 #FFFFFF（白色）背景
+```
+
+## 渐变颜色
+
+使用起始和结束颜色指定渐变：
+
+```
+抽象背景从颜色 #02eb3c（亮绿色）开始，
+以颜色 #edfa3c（酸橙黄）结束，平滑水平渐变
 ```
 
 ```
-Sunset sky gradient from #FF6B6B (coral) at horizon through
-#FFA07A (light salmon) to #87CEEB (sky blue) at top
+日落天空渐变从地平线 #FF6B6B（珊瑚）经过
+#FFA07A（亮鲑鱼色）到顶部 #87CEEB（天蓝色）
 ```
 
-## Color Harmony Patterns
+## 色彩和谐模式
 
-### Complementary (Opposite on color wheel)
+### 互补色（色轮上对面）
 ```
-Scene using complementary colors: #3498DB (blue) dominant with
-#E67E22 (orange) accents for visual pop
-```
-
-### Analogous (Adjacent colors)
-```
-Harmonious palette using analogous colors: #9B59B6 (purple),
-#8E44AD (deep purple), #3498DB (blue) - flowing naturally together
+使用互补色的场景：#3498DB（蓝色）为主，
+#E67E22（橙色）点缀以获得视觉冲击
 ```
 
-### Triadic (Evenly spaced)
+### 类似色（相邻颜色）
 ```
-Vibrant triadic scheme: #E74C3C (red), #F1C40F (yellow),
-#3498DB (blue) - balanced and dynamic
-```
-
-### Monochromatic (Single hue variations)
-```
-Sophisticated monochromatic blue: #1A5276 (dark navy), #2980B9 (medium blue),
-#85C1E9 (light blue), #D4E6F1 (pale blue) - elegant depth
+使用类似色的和谐调色板：#9B59B6（紫色）、
+#8E44AD（深紫色）、#3498DB（蓝色）— 自然流畅地融合
 ```
 
-## Combining with JSON Structured Prompts
+### 三色（均匀分布）
+```
+充满活力的三色方案：#E74C3C（红色）、#F1C40F（黄色）、
+#3498DB（蓝色）— 平衡且动感
+```
+
+### 单色（单一色调变化）
+```
+精致的单色蓝色：#1A5276（深海军蓝）、#2980B9（中蓝）、
+#85C1E9（浅蓝）、#D4E6F1（淡蓝）— 优雅的深度感
+```
+
+## 与 JSON 结构化提示词的结合
 
 ```json
 {
   "scene": {
-    "setting": "modern tech startup office",
-    "mood": "innovative, energetic"
+    "setting": "现代科技初创公司办公室",
+    "mood": "创新、充满活力"
   },
   "colors": {
-    "primary": "#6C5CE7 (electric purple)",
-    "secondary": "#00CEC9 (teal)",
-    "accent": "#FD79A8 (pink)",
-    "neutral": "#DFE6E9 (light gray)",
-    "dark": "#2D3436 (charcoal)"
+    "primary": "#6C5CE7 (电光紫)",
+    "secondary": "#00CEC9 (青色)",
+    "accent": "#FD79A8 (粉色)",
+    "neutral": "#DFE6E9 (浅灰)",
+    "dark": "#2D3436 (炭黑)"
   },
   "application": {
     "walls": "neutral #DFE6E9",
@@ -170,41 +170,41 @@ Sophisticated monochromatic blue: #1A5276 (dark navy), #2980B9 (medium blue),
 }
 ```
 
-## Common Brand Color References
+## 常见品牌颜色参考
 
-For reference only - always verify current brand guidelines:
+仅供参考 — 始终验证当前品牌指南：
 
 ```
-# Social Media
-Twitter/X Blue: #1DA1F2
-Facebook Blue: #1877F2
-Instagram Gradient: #833AB4 to #FD1D1D
-LinkedIn Blue: #0A66C2
+# 社交媒体
+Twitter/X 蓝：#1DA1F2
+Facebook 蓝：#1877F2
+Instagram 渐变：#833AB4 到 #FD1D1D
+LinkedIn 蓝：#0A66C2
 
-# Tech
-Apple Gray: #1C1C1E
-Google Blue: #4285F4
-Microsoft Blue: #00A4EF
-Amazon Orange: #FF9900
+# 科技
+Apple 灰：#1C1C1E
+Google 蓝：#4285F4
+Microsoft 蓝：#00A4EF
+Amazon 橙：#FF9900
 
-# Design
-Figma Purple: #A259FF
-Dribbble Pink: #EA4C89
-Behance Blue: #1769FF
+# 设计
+Figma 紫：#A259FF
+Dribbble 粉：#EA4C89
+Behance 蓝：#1769FF
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Color Not Accurate
-- Add the color name alongside hex
-- Specify the exact object the color applies to
-- Use fewer total colors in the prompt
+### 颜色不准确
+- 在十六进制旁添加颜色名称
+- 指定颜色应用到的精确物体
+- 在提示词中使用更少的颜色总数
 
-### Color Bleeding
-- Clearly delineate which objects get which colors
-- Use spatial descriptions: "the LEFT chair in #color"
+### 颜色溢出
+- 清晰地界定哪个物体使用哪种颜色
+- 使用空间描述："左手边的椅子用 #color"
 
-### Muddy Colors
-- Check hex code accuracy
-- Specify lighting that won't shift colors
-- Use "maintaining exact color #XXXXXX" for emphasis
+### 颜色浑浊
+- 检查十六进制代码的准确性
+- 指定不会改变颜色的光照
+- 使用"保持精确颜色 #XXXXXX"来强调

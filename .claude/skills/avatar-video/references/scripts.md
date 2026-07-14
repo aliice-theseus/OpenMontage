@@ -3,23 +3,23 @@ name: scripts
 description: Writing effective scripts for HeyGen AI avatar videos
 ---
 
-# Writing Scripts for HeyGen Videos
+# 编写 HeyGen 视频脚本
 
-Scripts for AI avatar videos have different requirements than scripts for human presenters. This guide covers best practices for writing scripts that sound natural and render well.
+AI 虚拟形象视频的脚本与真人主持人的脚本要求不同。本指南涵盖了编写自然流畅、渲染效果良好的脚本的最佳实践。
 
-## Script Basics
+## 脚本基础
 
-### Speech Rate and Duration
+### 语速和时长
 
-Typical speech is approximately **150 words per minute** at normal speed (1.0x). Use this as a rough estimate for planning script length.
+正常语速（1.0x）下，典型语音约为每分钟 **150 个单词**。以此为粗略估算来规划脚本长度。
 
-| Script Length | Approximate Duration |
+| 脚本长度 | 大约时长 |
 |---------------|---------------------|
-| 75 words | 30 seconds |
-| 150 words | 1 minute |
-| 300 words | 2 minutes |
-| 450 words | 3 minutes |
-| 750 words | 5 minutes |
+| 75 个单词 | 30 秒 |
+| 150 个单词 | 1 分钟 |
+| 300 个单词 | 2 分钟 |
+| 450 个单词 | 3 分钟 |
+| 750 个单词 | 5 分钟 |
 
 ```typescript
 // Estimate video duration from script
@@ -36,66 +36,66 @@ function estimateFrames(script: string, fps: number = 30, speed: number = 1.0): 
 }
 ```
 
-### Sentence Structure
+### 句子结构
 
-**Keep sentences short.** AI voices handle shorter sentences more naturally.
+**保持句子简短。** AI 语音处理较短的句子更加自然。
 
-| Guideline | Example |
+| 指南 | 示例 |
 |-----------|---------|
-| **Good**: 10-20 words per sentence | "Our platform helps teams collaborate. It syncs in real-time across all devices." |
-| **Avoid**: 30+ word run-on sentences | "Our platform helps teams collaborate more effectively by providing real-time synchronization across all devices while also offering offline support and automatic conflict resolution." |
+| **好的**：每句 10-20 个单词 | "Our platform helps teams collaborate. It syncs in real-time across all devices." |
+| **避免**：30 个单词以上的冗长句子 | "Our platform helps teams collaborate more effectively by providing real-time synchronization across all devices while also offering offline support and automatic conflict resolution." |
 
-### Punctuation Affects Delivery
+### 标点符号影响表达
 
-| Punctuation | Effect |
+| 标点 | 效果 |
 |-------------|--------|
-| Period `.` | Full stop, natural pause |
-| Comma `,` | Brief pause |
-| Question mark `?` | Rising intonation |
-| Exclamation `!` | Emphasis (use sparingly) |
-| Ellipsis `...` | Trailing off, slight pause |
+| 句号 `.` | 完全停顿，自然停顿 |
+| 逗号 `,` | 短暂停顿 |
+| 问号 `?` | 升调 |
+| 感叹号 `!` | 强调（谨慎使用） |
+| 省略号 `...` | 逐渐减弱，轻微停顿 |
 
-## Adding Pauses with Break Tags
+## 使用 Break 标签添加暂停
 
-Use SSML-style `<break>` tags for precise pause control:
+使用 SSML 风格的 `<break>` 标签进行精确的暂停控制：
 
 ```
 <break time="Xs"/>
 ```
 
-Where `X` is seconds (e.g., `0.5s`, `1s`, `1.5s`, `2s`).
+其中 `X` 是秒数（例如 `0.5s`、`1s`、`1.5s`、`2s`）。
 
-### Formatting Rules
+### 格式化规则
 
-| Rule | Correct | Incorrect |
+| 规则 | 正确 | 错误 |
 |------|---------|-----------|
-| Space before tag | `word <break time="1s"/>` | `word<break time="1s"/>` |
-| Space after tag | `<break time="1s"/> word` | `<break time="1s"/>word` |
-| Use seconds with "s" | `<break time="1.5s"/>` | `<break time="1500ms"/>` |
-| Self-closing tag | `<break time="1s"/>` | `<break time="1s"></break>` |
+| 标签前有空格 | `word <break time="1s"/>` | `word<break time="1s"/>` |
+| 标签后有空格 | `<break time="1s"/> word` | `<break time="1s"/>word` |
+| 使用秒并带"s" | `<break time="1.5s"/>` | `<break time="1500ms"/>` |
+| 自闭合标签 | `<break time="1s"/>` | `<break time="1s"></break>` |
 
-### When to Use Pauses
+### 何时使用暂停
 
-| Situation | Recommended Pause | Example |
+| 场景 | 推荐暂停时长 | 示例 |
 |-----------|-------------------|---------|
-| After greeting | 0.5-1s | `Hello! <break time="0.5s"/> Welcome to...` |
-| Between sections | 1-1.5s | `...that's feature one. <break time="1.5s"/> Now let's look at...` |
-| Before key point | 0.5s | `The most important thing is <break time="0.5s"/> consistency.` |
-| For dramatic effect | 1.5-2s | `And the winner is... <break time="2s"/> you!` |
-| After question | 1s | `Sound good? <break time="1s"/> Let's get started.` |
-| List items | 0.5s | `First, speed. <break time="0.5s"/> Second, reliability.` |
+| 问候之后 | 0.5-1s | `Hello! <break time="0.5s"/> Welcome to...` |
+| 章节之间 | 1-1.5s | `...that's feature one. <break time="1.5s"/> Now let's look at...` |
+| 关键点之前 | 0.5s | `The most important thing is <break time="0.5s"/> consistency.` |
+| 戏剧效果 | 1.5-2s | `And the winner is... <break time="2s"/> you!` |
+| 问题之后 | 1s | `Sound good? <break time="1s"/> Let's get started.` |
+| 列表项 | 0.5s | `First, speed. <break time="0.5s"/> Second, reliability.` |
 
-### Pause Duration Guide
+### 暂停时长指南
 
-| Duration | Feel | Use For |
+| 时长 | 感觉 | 用途 |
 |----------|------|---------|
-| 0.3-0.5s | Brief breath | Between clauses, light emphasis |
-| 0.5-1s | Natural pause | Sentence breaks, transitions |
-| 1-1.5s | Deliberate pause | Section changes, setup for key points |
-| 1.5-2s | Dramatic | Reveals, important announcements |
-| 2s+ | Long pause | Use sparingly, can feel unnatural |
+| 0.3-0.5s | 短暂呼吸 | 从句之间，轻微强调 |
+| 0.5-1s | 自然暂停 | 句子断句，过渡 |
+| 1-1.5s | 有意的暂停 | 章节变更，为关键点铺垫 |
+| 1.5-2s | 戏剧效果 | 揭示、重要宣布 |
+| 2s+ | 长暂停 | 谨慎使用，可能感觉不自然 |
 
-### Examples
+### 示例
 
 ```typescript
 // Section transitions
@@ -126,9 +126,9 @@ Let me show you each one.
 `;
 ```
 
-### Consecutive Breaks
+### 连续暂停
 
-Multiple consecutive breaks are combined:
+多个连续的暂停会被合并：
 
 ```typescript
 // These two breaks:
@@ -137,9 +137,9 @@ Multiple consecutive breaks are combined:
 // Are treated as a single 1.5s pause
 ```
 
-## Script Structure Templates
+## 脚本结构模板
 
-### Product Demo (60 seconds, ~150 words)
+### 产品演示（60 秒，约 150 个单词）
 
 ```typescript
 const productDemo = `
@@ -160,7 +160,7 @@ Visit [website] today.
 `;
 ```
 
-### Tutorial Introduction (90 seconds, ~225 words)
+### 教程介绍（90 秒，约 225 个单词）
 
 ```typescript
 const tutorial = `
@@ -187,7 +187,7 @@ Thanks for watching!
 `;
 ```
 
-### Announcement (30 seconds, ~75 words)
+### 公告（30 秒，约 75 个单词）
 
 ```typescript
 const announcement = `
@@ -204,29 +204,29 @@ We can't wait to hear what you think!
 `;
 ```
 
-## Writing Tips for AI Voices
+## AI 语音写作技巧
 
-### Do
+### 应该做
 
-- **Write conversationally** - Read it aloud to check flow
-- **Use contractions** - "We're" not "We are", "It's" not "It is"
-- **Break up long sentences** - Split at natural pause points
-- **Spell out abbreviations** - "API" may sound like "a pee eye"
-- **Add pauses for emphasis** - Guide the listener's attention
-- **End sections clearly** - Don't trail off mid-thought
+- **用对话式写作** - 大声朗读检查流畅度
+- **使用缩写** - 用"We're"代替"We are"，用"It's"代替"It is"
+- **拆分长句** - 在自然停顿点分割
+- **拼出缩写** - "API"可能听起来像"a pee eye"
+- **添加暂停以强调** - 引导听众的注意力
+- **清晰结束段落** - 不要在中途逐渐消失
 
-### Avoid
+### 避免
 
-- **Jargon without context** - Explain technical terms
-- **Long parentheticals** - Move to separate sentences
-- **Ambiguous pronunciations** - "read" (present) vs "read" (past)
-- **Excessive exclamation marks** - One per script is usually enough
-- **Run-on sentences** - Break into digestible chunks
-- **Dense information** - Space out facts with pauses
+- **无上下文的行话** - 解释技术术语
+- **长的插入语** - 移到单独的句子中
+- **歧义发音** - "read"（现在时）vs "read"（过去时）
+- **过多的感叹号** - 每个脚本通常一个就足够了
+- **冗长句子** - 拆分为易于理解的小段
+- **密集信息** - 用暂停间隔开事实
 
-### Pronunciation Hints
+### 发音提示
 
-For words that might be mispronounced, spell phonetically or add hints:
+对于可能被误读的单词，用音标拼写或添加提示：
 
 ```typescript
 // Technical terms
@@ -239,9 +239,9 @@ const script2 = "I read (red) the documentation yesterday...";
 const script3 = "Welcome to HeyGen (hey-jen)...";
 ```
 
-## Multi-Scene Scripts
+## 多场景脚本
 
-When splitting scripts across scenes (for different backgrounds or avatars):
+当跨场景分割脚本时（用于不同背景或虚拟形象）：
 
 ```typescript
 const multiSceneVideo = {
@@ -271,21 +271,21 @@ const multiSceneVideo = {
 };
 ```
 
-### Scene Transition Tips
+### 场景转换技巧
 
-- End each scene with a complete thought
-- Start new scenes with brief context
-- Maintain consistent tone across scenes
-- Use pauses at scene starts to let visuals register
+- 每个场景以完整的一个想法结束
+- 新场景以简短上下文开始
+- 保持跨场景的语气一致
+- 在场景开头使用暂停让视觉效果先呈现
 
-## Testing Your Script
+## 测试脚本
 
-Before generating the full video:
+在生成完整视频之前：
 
-1. **Read aloud** - Time yourself, check for awkward phrasing
-2. **Count words** - Verify expected duration
-3. **Check break tags** - Ensure proper spacing and syntax
-4. **Preview with short clip** - Generate a 10-second test if unsure about pronunciation
+1. **大声朗读** - 计时，检查别扭的措辞
+2. **统计单词数** - 验证预期时长
+3. **检查 break 标签** - 确保正确的间距和语法
+4. **用短视频片段预览** - 如果不确定发音，生成 10 秒测试
 
 ```typescript
 // Test a small portion first
@@ -299,9 +299,9 @@ const testVideoId = await generateVideo({
 });
 ```
 
-## Voice Speed Adjustment
+## 语音速度调整
 
-Adjust delivery speed in the voice configuration:
+在语音配置中调整语速：
 
 ```typescript
 voice: {
@@ -312,11 +312,11 @@ voice: {
 }
 ```
 
-| Speed | Effect | Use Case |
+| 速度 | 效果 | 用例 |
 |-------|--------|----------|
-| 0.8-0.9 | Slower, deliberate | Complex topics, older audiences |
-| 1.0 | Normal | General use |
-| 1.1-1.2 | Slightly faster | Energetic content, younger audiences |
-| 1.3+ | Fast | Use sparingly, may reduce clarity |
+| 0.8-0.9 | 较慢，从容 | 复杂主题，年长观众 |
+| 1.0 | 正常 | 一般使用 |
+| 1.1-1.2 | 略快 | 充满活力的内容，年轻观众 |
+| 1.3+ | 快 | 谨慎使用，可能降低清晰度 |
 
-See [voices.md](voices.md) for full voice configuration options.
+有关完整的语音配置选项，请参阅 [voices.md](voices.md)。

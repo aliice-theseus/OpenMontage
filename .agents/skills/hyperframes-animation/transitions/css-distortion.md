@@ -1,21 +1,21 @@
-## Distortion
+## 扭曲
 
-### Glitch
+### 故障
 
-RGB-tinted overlays (NOT multiply blend — use normal blending at 35% opacity) jitter with large offsets. Scene itself also jitters.
+RGB 着色叠加层（非 multiply 混合 — 使用 35% 不透明度的正常混合）以大偏移抖动。场景本身也抖动。
 
 ```js
 tl.set("#glitch-r", { opacity: 1, x: 40, y: -8 }, T);
 tl.set("#glitch-g", { opacity: 1, x: -30, y: 12 }, T);
 tl.set("#glitch-b", { opacity: 1, x: 15, y: -20 }, T);
 tl.set(old, { x: -15 }, T);
-// 6 jitter frames at 0.03s intervals with big offsets (±30-60px)
-// ... swap and clear at T + 0.2
+// 6 个抖动帧，0.03s 间隔，大偏移（±30-60px）
+// ... 在 T + 0.2 交换并清理
 ```
 
-### Chromatic Aberration
+### 色差
 
-RGB overlays start aligned then spread apart (±80px), scene fades, converge on new scene.
+RGB 叠加层从对齐开始然后散开（±80px），场景淡出，汇聚到新场景上。
 
 ```js
 tl.set("#glitch-r", { opacity: 0.6, x: 0 }, T);
@@ -24,22 +24,34 @@ tl.set("#glitch-b", { opacity: 0.6, x: 0 }, T);
 tl.to("#glitch-r", { x: -80, opacity: 0.8, duration: 0.3, ease: "power2.in" }, T);
 tl.to("#glitch-b", { x: 80, opacity: 0.8, duration: 0.3, ease: "power2.in" }, T);
 tl.to("#glitch-g", { y: 30, duration: 0.3, ease: "power2.in" }, T);
-// Swap at T + 0.3, converge back at T + 0.3
+// 在 T + 0.3 交换，在 T + 0.3 汇聚回
 ```
 
-### Ripple
+### 涟漪
 
-Rapid oscillation (±30px) + scale distortion (0.97-1.03) + increasing blur. Swap at peak distortion.
+从点击点或中心扩展的同心波纹。
 
 ```js
-tl.to(old, { x: 30, scale: 1.02, duration: 0.04, ease: "none" }, T);
-tl.to(old, { x: -25, scale: 0.98, filter: "blur(4px)", duration: 0.04, ease: "none" }, T + 0.04);
-// ... more oscillations with increasing blur
-// Swap at peak, incoming stabilizes with decreasing wobble
+var ripples = document.querySelectorAll(".ripple");
+ripples.forEach(function(r, i) {
+  tl.fromTo(r,
+    { scale: 0, opacity: 0.7 },
+    { scale: 4, opacity: 0, duration: 0.6, ease: "power2.out" },
+    T + i * 0.08);
+});
+// 在最后一个涟漪开始后不久交换
+tl.set(old, { opacity: 0 }, T + 0.25);
+tl.set(new, { opacity: 1 }, T + 0.25);
 ```
 
-### VHS Tape
+### VHS 磁带
 
-Clone scene into 20 horizontal strips (each 54px, clip-path'd). Each strip shifts x independently with seeded pseudo-random offsets at per-bar random intervals. Add red+blue chromatic offset copies on each strip (z-index above main, 35% opacity). Make strips wider than frame (2020px at left:-50px) so edges never show.
+失谐、彩色伪影和水平条带模拟模拟磁带故障。通过 `cloneNode(true)` 克隆实际场景内容（非彩色条）。
 
-See SKILL.md for clone-based implementation pattern.
+```js
+// 克隆场景内容 — 使用 cloneNode(true) 使每个条完全渲染
+// 每个条稍宽于画面（2020px 在 left:-50px）
+// 红 + 蓝色差副本在 z-index 高于主条
+// 种子化 PRNG 用于确定性随机偏移
+// 水平条带、颜色偏移和滚动条
+```

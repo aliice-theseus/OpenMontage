@@ -1,32 +1,28 @@
-# Character Design Director - Character Animation Pipeline
+# 角色设计导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Produce `character_design`: a small cast with clear silhouettes, roles,
-emotions, actions, and style anchors.
+产出 `character_design`：一个精简的角色阵容，具有清晰的剪影、职责、情绪、动作和风格锚点。
 
-## Process
+## 流程
 
-1. List every character with `id`, role, body type, and style.
-2. Identify the minimum emotional range needed by the story.
-3. Identify the minimum action list needed by the story.
-4. Decide required views: front, 3/4, side, back. Keep MVPs to one or two views.
-5. Note props attached to characters, such as scarf, feather, bag, glasses.
+1. 列出每个角色，包含 `id`、职责、体型和风格。
+2. 确定故事所需的最小情绪范围。
+3. 确定故事所需的最小动作列表。
+4. 确定所需视图：正面、四分之三侧面、侧面、背面。MVP 版本保持在一到两个视图。
+5. 记录角色附带的道具，如围巾、羽毛、包、眼镜。
 
-## Constraints
+## 约束
 
-- One or two characters is the MVP sweet spot.
-- Animal characters need species-specific parts and action cycles.
-- More views multiply asset and pose requirements.
-- Do not invent more poses than the approved duration can use.
+- 一到两个角色是 MVP 的最佳选择。
+- 动物角色需要物种特定的部件和动作循环。
+- 更多的视图会成倍增加资源和姿态需求。
+- 不要设计超过已批准时长所能使用的姿态数量。
 
-## Tool Use
+## 工具使用
 
-Use `character_spec_generator` for structured drafts. Use `image_selector` only
-after the visual style and character sheet requirements are explicit. Before
-using image generation, read the tool's Layer 3 skills from the registry.
+使用 `character_spec_generator` 进行结构化草稿。只有在视觉风格和角色表需求明确之后，才使用 `image_selector`。在使用图像生成之前，请从注册表中读取工具的 Layer 3 技能。
 
-## Quality Bar
+## 质量门槛
 
-A character design is ready only when an animator or tool can infer what parts,
-expressions, and actions must exist.
+角色设计只有在动画师或工具能够推断出需要哪些部件、表情和动作时，才算准备就绪。

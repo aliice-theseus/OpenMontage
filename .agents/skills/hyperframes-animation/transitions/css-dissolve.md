@@ -1,19 +1,19 @@
-## Dissolve
+## 溶解
 
-### Crossfade
+### 交叉淡入淡出
 
-Simple opacity swap. The baseline.
+简单的不透明度交换。基线。
 
 ```js
 tl.to(old, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, T);
 tl.fromTo(new, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, T);
 ```
 
-### Blur Crossfade
+### 模糊交叉淡入淡出
 
-Dissolve with blur + scale shift. **Scale blur amount by energy** — see SKILL.md "Blur Intensity by Energy" section. The examples below show the medium (default) version. For calm compositions, increase to 20-30px with a 0.3-0.5s hold at peak blur. For high-energy, decrease to 3-6px with no hold.
+带模糊 + 缩放偏移的溶解。**按能量缩放模糊量** — 参见 SKILL.md 中"按能量的模糊强度"部分。下面示例显示中等（默认）版本。对于平静组成，增加到 20-30px，在峰值模糊处保持 0.3-0.5s。对于高能，减少到 3-6px，不保持。
 
-**Medium (default):**
+**中等（默认）：**
 
 ```js
 tl.to(old, { filter: "blur(10px)", scale: 1.03, opacity: 0, duration: 0.5, ease: "power2.inOut" }, T);
@@ -22,45 +22,54 @@ tl.fromTo(new,
   { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.5, ease: "power2.inOut" }, T + 0.1);
 ```
 
-**Calm (wellness, luxury) — heavy blur, holds at abstract color:**
+**平静（健康、奢华）— 重模糊，保持在抽象颜色：**
 
 ```js
 tl.to(old, { filter: "blur(25px)", scale: 1.05, duration: 0.6, ease: "power1.in" }, T);
 tl.to(old, { opacity: 0, duration: 0.4, ease: "power1.in" }, T + 0.4);
 tl.fromTo(new,
   { filter: "blur(25px)", scale: 0.95, opacity: 0 },
-  { filter: "blur(25px)", scale: 0.95, opacity: 1, duration: 0.3, ease: "power1.inOut" }, T + 0.5);
-tl.to(new, { filter: "blur(0px)", scale: 1, duration: 0.6, ease: "power1.out" }, T + 0.8);
+  { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.5, ease: "power1.out" }, T + 0.5);
 ```
 
-### Focus Pull
-
-Outgoing slowly blurs while incoming fades in sharp. Depth-of-field feel. **Scale blur amount and hold duration by energy.**
-
-**Medium:**
+**高能（促销、体育）— 轻模糊，快：**
 
 ```js
-tl.to(old, { filter: "blur(15px)", duration: 0.5, ease: "power1.in" }, T);
-tl.to(old, { opacity: 0, duration: 0.3, ease: "power2.in" }, T + 0.25);
-tl.fromTo(new, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, T + 0.25);
+tl.to(old, { filter: "blur(6px)", opacity: 0, duration: 0.25, ease: "power4.in" }, T);
+tl.fromTo(new,
+  { filter: "blur(6px)", opacity: 0 },
+  { filter: "blur(0px)", opacity: 1, duration: 0.2, ease: "power4.out" }, T + 0.15);
 ```
 
-**Calm — slow rack focus with long hold at peak defocus:**
+### 焦距拉动
+
+旧场景模糊退出，新场景清晰进入。像摄像机重新对焦。所有三种能量水平如下。
+
+**平静：**
 
 ```js
-tl.to(old, { filter: "blur(30px)", duration: 0.8, ease: "power1.in" }, T);
-tl.to(old, { opacity: 0, duration: 0.5, ease: "power1.in" }, T + 0.6);
-tl.fromTo(new, { opacity: 0, filter: "blur(20px)" },
-  { opacity: 1, filter: "blur(20px)", duration: 0.3, ease: "power1.inOut" }, T + 0.7);
-tl.to(new, { filter: "blur(0px)", duration: 0.6, ease: "power1.out" }, T + 1.0);
+tl.to(old, { filter: "blur(20px)", duration: 0.5, ease: "sine.in" }, T);
+tl.to(old, { opacity: 0, duration: 0.3 }, T + 0.4);
+tl.fromTo(new, { filter: "blur(20px)", opacity: 0 }, { filter: "blur(0px)", opacity: 1, duration: 0.6, ease: "sine.out" }, T + 0.5);
 ```
 
-### Color Dip
-
-Fade to solid color, hold, fade up new scene.
+**中等/高能 — 使用 `scale` 强化运动（默认）：**
 
 ```js
-tl.to(old, { opacity: 0, duration: 0.2, ease: "power2.in" }, T);
-// Background color shows through
-tl.fromTo(new, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" }, T + 0.25);
+tl.to(old, { filter: "blur(10px)", scale: 1.03, opacity: 0, duration: 0.4, ease: "power2.in" }, T);
+tl.fromTo(new,
+  { filter: "blur(10px)", scale: 0.97, opacity: 0 },
+  { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.4, ease: "power2.out" }, T + 0.2);
+```
+
+### 浸入
+
+场景变为单色（通常为黑色），然后解析为新场景。对情绪转变有效。
+
+```js
+tl.to(old, { filter: "saturate(0)", duration: 0.2, ease: "power1.in" }, T);
+tl.to(old, { filter: "saturate(0) brightness(0.3)", duration: 0.3, ease: "power2.in" }, T + 0.2);
+tl.set(old, { opacity: 0 }, T + 0.5);
+tl.set(new, { opacity: 1 }, T + 0.5);
+tl.to(new, { filter: "saturate(1) brightness(1)", duration: 0.4, ease: "power2.out" }, T + 0.5);
 ```

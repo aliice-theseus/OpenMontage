@@ -1,23 +1,23 @@
-# Background music (BGM)
+# 背景音乐（BGM）
 
-One music bed per composition, produced by the shared audio engine (`scripts/audio.mjs` → `scripts/lib/bgm.mjs`). Two routes, chosen by the engine's one switch — whether a HeyGen credential is present:
+每部作品一个音乐底垫，由共享音频引擎（`scripts/audio.mjs` → `scripts/lib/bgm.mjs`）生成。两条路径，由引擎的一个开关决定——是否存在 HeyGen 凭证：
 
-- **HeyGen retrieval — the default when credentialed.** Search HeyGen's music catalog by mood, download the top track. No generation; same `~/.heygen` / `$HEYGEN_API_KEY` credential as TTS.
-- **Local generation (Lyria → MusicGen) — the fallback when there is no credential** (or when asked for explicitly). Generate a WAV from a mood prompt. There is **no `npx hyperframes bgm` command**; the engine spawns `scripts/lyria-recipe.py` or an inline MusicGen script directly.
+- **HeyGen 检索——有凭证时的默认方式。** 按情绪搜索 HeyGen 的音乐目录，下载最佳曲目。没有生成过程；与 TTS 使用相同的 `~/.heygen` / `$HEYGEN_API_KEY` 凭证。
+- **本地生成（Lyria → MusicGen）——无凭证时的回退方式**（或当显式要求时）。从情绪提示生成 WAV。没有 `npx hyperframes bgm` 命令；引擎直接启动 `scripts/lyria-recipe.py` 或内联的 MusicGen 脚本。
 
-> **Run the Preflight first — no credential is not a green light to silently generate locally.** Before generating, complete the sign-in **Preflight** (see `../SKILL.md` → Preflight): run `npx hyperframes auth status`, recommend signing in, and **STOP for the user's choice** (sign in for HeyGen's music library, or continue offline with local generation). This applies to a one-off "generate a BGM" request just as much as inside a full workflow.
+> **首先运行预检——无凭证不是静默本地生成的绿灯。** 在生成之前，完成登录**预检**（参见 `../SKILL.md` → 预检）：运行 `npx hyperframes auth status`，建议登录，并**等待用户选择**（登录以使用 HeyGen 的音乐库，或离线继续使用本地生成）。这同样适用于单独的「生成 BGM」请求和完整工作流。
 
-## Driving it from the request
+## 从请求驱动
 
-`audio_request.json` → `bgm: { mode?, query?, prompt? }`:
+`audio_request.json` → `bgm: { mode?, query?, prompt? }`：
 
-- **`mode`** — `retrieve | generate | none`. Omit for **auto** (retrieve when credentialed, else generate). An **explicit** `retrieve` is strict: no credential ⇒ skip, never a detached generate (so a caller with no `wait-bgm` step, e.g. product-launch, can't get a pending job it won't await).
-- **`query`** — the mood, used for retrieval and as a fallback prompt seed (e.g. a storyboard's `music:` field, falling back to `message` → `arc` → `"calm cinematic underscore"`).
-- **`prompt`** — an explicit full prompt for generation; omit and the engine infers one (see Mood inference). Optional `blob` / `archetype` / `arc` feed that inference.
+- **`mode`**——`retrieve | generate | none`。省略则为**自动**（有凭证时检索，否则生成）。**显式** `retrieve` 是严格的：无凭证 ⇒ 跳过，绝不进行分离生成（因此没有 `wait-bgm` 步骤的调用方，例如产品发布，不会得到它不会等待的挂起任务）。
+- **`query`**——情绪，用于检索和作为回退提示种子（例如故事板的 `music:` 字段，回退到 `message` → `arc` → `"calm cinematic underscore"`）。
+- **`prompt`**——用于生成的显式完整提示；省略时引擎会推断一个（参见情绪推断）。可选的 `blob` / `archetype` / `arc` 提供推断输入。
 
-## HeyGen retrieval (default)
+## HeyGen 检索（默认）
 
-`searchSounds(query, "music", { limit: 5 })` → `GET /audio/sounds?query=<mood>&type=music&limit=5`. Take the top result (ranked by `score`), download its presigned `audio_url` → `assets/bgm/track.mp3`. Synchronous. No match → skip (BGM is optional; never fail the render over it). Cue written to `audio_meta.json`:
+`searchSounds(query, "music", { limit: 5 })` → `GET /audio/sounds?query=<mood>&type=music&limit=5`。取最佳结果（按 `score` 排序），下载其预签名的 `audio_url` → `assets/bgm/track.mp3`。同步。无匹配 → 跳过（BGM 是可选的；从不因它导致渲染失败）。提示写入 `audio_meta.json`：
 
 ```jsonc
 {
@@ -29,44 +29,44 @@ One music bed per composition, produced by the shared audio engine (`scripts/aud
 }
 ```
 
-`volume` is 0.8 under narration, 0.9 for a silent film (no voice). `bgm_pending` is `false` — the file is on disk when the engine returns.
+`volume` 在有叙述时为 0.8，无声电影（无语音）时为 0.9。`bgm_pending` 为 `false`——引擎返回时文件已在磁盘上。
 
-## Local generation (fallback) — Lyria → MusicGen
+## 本地生成（回退）——Lyria → MusicGen
 
-Spawned **detached** so voice work isn't blocked; `audio_meta.bgm_pending: true` and `bgm_pid` / `bgm_log` are set until it finishes. **Run `scripts/wait-bgm.mjs` before assembling** — it polls the output file / process / log, detects crashes, and writes `bgm_status.json` (`status: ready | failed | timeout | disabled`). A failed/absent track is simply omitted; it never blocks voice/SFX.
+以**分离**模式启动，这样语音工作不会被阻塞；设置 `audio_meta.bgm_pending: true` 和 `bgm_pid` / `bgm_log`，直到完成。**在组装前运行 `scripts/wait-bgm.mjs`**——它会轮询输出文件/进程/日志，检测崩溃，并写入 `bgm_status.json`（`status: ready | failed | timeout | disabled`）。失败/缺失的曲目直接省略；它从不阻塞语音/SFX。
 
-| Order | Provider                             | Env / deps                                                                            | Speed                                   | Quality                     |
-| ----- | ------------------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------- | --------------------------- |
-| 1     | Google Lyria RealTime                | `$GEMINI_API_KEY` or `$GOOGLE_API_KEY` + `google-genai` (auto-installed on demand)    | Real-time stream (≈ requested duration) | Production-grade            |
-| 2     | MusicGen (`facebook/musicgen-small`) | Python `transformers + torch + soundfile + numpy` (~300 MB first run; auto-installed) | Slow on CPU; fast on Apple MPS / CUDA   | Decent; prompt-only control |
+| 顺序 | 提供商 | 环境变量/依赖 | 速度 | 质量 |
+| ---- | ------------------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------- | --------------------------- |
+| 1 | Google Lyria RealTime | `$GEMINI_API_KEY` 或 `$GOOGLE_API_KEY` + `google-genai`（按需自动安装） | 实时流（≈ 请求时长） | 生产级 |
+| 2 | MusicGen（`facebook/musicgen-small`） | Python `transformers + torch + soundfile + numpy`（首次运行约 300 MB；自动安装） | CPU 慢；Apple MPS / CUDA 快 | 尚可；仅提示控制 |
 
-Output → `assets/bgm/track.wav`, target = total voice duration. MusicGen generates **one** seed clip (≤28–30s, under the decoder's positional limit) then crossfade-loops it up to the target (or trims down if shorter), avoiding per-segment seams. Backend selection is by what can actually **run**: Lyria only when `import google.genai` succeeds, else MusicGen; if neither can be made to run, BGM is skipped (voice + SFX still render).
+输出 → `assets/bgm/track.wav`，目标 = 总语音时长。MusicGen 生成**一个**种子片段（≤28–30s，受解码器的位置限制），然后交叉淡入淡出循环到目标时长（如果较短则裁剪），避免逐段接缝。后端选择基于实际能**运行**的：仅当 `import google.genai` 成功时使用 Lyria，否则使用 MusicGen；如果两者都无法运行，则跳过 BGM（语音 + SFX 仍然渲染）。
 
-## Mood inference (the generate prompt)
+## 情绪推断（生成提示）
 
-`inferBgmPrompt()` in `scripts/lib/bgm.mjs`: an explicit `prompt` wins; otherwise industry-keyword **base** → narrative-**archetype** shape → emotional-**arc** tiebreaker.
+`scripts/lib/bgm.mjs` 中的 `inferBgmPrompt()`：显式 `prompt` 优先；否则行业关键词**基础** → 叙事**原型**形状 → 情感**弧**决胜器。
 
-| Match in `blob` / `query`                              | Base prompt                                                                 | BPM |
+| `blob` / `query` 中的匹配 | 基础提示 | BPM |
 | ------------------------------------------------------ | --------------------------------------------------------------------------- | --- |
-| `crypto / nft / web3 / defi / token / blockchain`      | atmospheric electronic, deep bass, futuristic synths, restrained percussion | 100 |
-| `finance / fintech / bank / payment / invest / wealth` | calm cinematic, soft strings, subtle piano, restrained percussion           | 92  |
-| `creative / agency / design / studio / art / brand`    | playful electronic, warm pads, light percussion                             | 115 |
-| _(default: SaaS / tech / platform)_                    | uplifting corporate tech, bright modern piano with synth pads               | 108 |
+| `crypto / nft / web3 / defi / token / blockchain` | 氛围电子乐，深沉低音，未来合成器，克制的打击乐 | 100 |
+| `finance / fintech / bank / payment / invest / wealth` | 平静电影风，柔和的弦乐，微妙的钢琴，克制的打击乐 | 92 |
+| `creative / agency / design / studio / art / brand` | 俏皮电子乐，温暖垫音，轻打击乐 | 115 |
+| _（默认：SaaS / 科技 / 平台）_ | 振奋的企业科技风，明亮的现代钢琴配合成器垫音 | 108 |
 
-Archetype then reshapes the arc — PAS → "MINOR to MAJOR" build; BAB / future-pacing → aspirational rising; feature-cascade → +10 BPM driving; demo-loop → −8 BPM minimal. The emotional arc breaks remaining ties (tension→relief, excitement, trust/reassurance).
+原型然后重塑弧——PAS →「小调到大调」构建；BAB / 未来规划 → 进取上升；功能瀑布 → +10 BPM 驱动；演示循环 → −8 BPM 最小化。情感弧解决剩余分歧（紧张→缓解、兴奋、信任/安心）。
 
-## Lyria knobs (direct recipe use)
+## Lyria 参数（直接配方使用）
 
-The engine bakes BPM / scale into the **prompt text** (via the inference above) and passes only `--output` / `--duration` / `--prompt` to the recipe. If you invoke `scripts/lyria-recipe.py` directly you can also set: `--bpm` (90–110 calm, 110–130 energetic), `--brightness` (0–1, ≥0.7 promotional), `--density` (0–1, higher = fuller), `--scale` (`MAJOR` / `MINOR` / `PENTATONIC` / …), `--negative-prompt` (styles to exclude). MusicGen ignores all of these — put the mood in the prompt.
+引擎将 BPM / 音阶烘焙到**提示文本**中（通过上述推断），只传递 `--output` / `--duration` / `--prompt` 给配方。如果直接调用 `scripts/lyria-recipe.py`，还可以设置：`--bpm`（90–110 平静，110–130 充满活力）、`--brightness`（0–1，≥0.7 促销用）、`--density`（0–1，越高越丰满）、`--scale`（`MAJOR` / `MINOR` / `PENTATONIC` / ……）、`--negative-prompt`（要排除的风格）。MusicGen 忽略所有这些——把情绪放在提示中。
 
-## Failure modes
+## 失败模式
 
-| Failure                                       | Behavior                                                                                 |
+| 失败 | 行为 |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| No music match (retrieve)                     | `bgm: null`, anomaly logged. Render proceeds without BGM.                                |
-| Explicit `retrieve`, no credential            | Skipped (no silent generate fallback). Use `mode: generate` or omit `mode` for auto.     |
-| Neither Lyria nor MusicGen can run (generate) | `bgm` disabled with a `pip install …` hint. Voice + SFX still render.                    |
-| Generate still rendering at assemble time     | `bgm_pending: true`; `wait-bgm.mjs` waits/checks and writes `bgm_status.json` first.     |
-| Generate crashed                              | `wait-bgm.mjs` → `bgm_status.json { status: "failed" }`; the `<audio>` track is omitted. |
+| 无音乐匹配（检索） | `bgm: null`，记录异常。渲染继续无 BGM。 |
+| 显式 `retrieve`，无凭证 | 跳过（无静默生成回退）。使用 `mode: generate` 或省略 `mode` 以自动处理。 |
+| Lyria 和 MusicGen 都无法运行（生成） | `bgm` 禁用，附带 `pip install …` 提示。语音 + SFX 仍然渲染。 |
+| 组装时生成仍在渲染 | `bgm_pending: true`；`wait-bgm.mjs` 先等待/检查并写入 `bgm_status.json`。 |
+| 生成崩溃 | `wait-bgm.mjs` → `bgm_status.json { status: "failed" }`；省略 `<audio>` 轨道。 |
 
-BGM failure never blocks a render.
+BGM 失败从不阻塞渲染。

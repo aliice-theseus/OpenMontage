@@ -1,45 +1,42 @@
-# WhisperX / Transcription Skill
+# WhisperX / 转写技能
 
-## When to Use
+## 使用时机
 
-Use the `transcriber` tool whenever you need to convert speech to text from
-audio or video files. This is the entry point for all transcript-dependent
-workflows: subtitle generation, edit decisions based on spoken content, and
-scene analysis from dialogue.
+当你需要将音频或视频文件中的语音转换为文本时，请使用 `transcriber` 工具。这是所有依赖转写的流程的入口点：字幕生成、基于对话内容的剪辑决策，以及从对话中分析场景。
 
-## Tool
+## 工具
 
-| Tool | Capability |
+| 工具 | 功能 |
 |------|-----------|
-| `transcriber` | Speech-to-text with word timestamps, language detection, optional diarization |
+| `transcriber` | 语音转文本，包含单词时间戳、语言检测，可选说话人分离 |
 
-## How It Works
+## 工作原理
 
-1. **Model loading:** faster-whisper loads the specified model size (tiny through large-v3). Defaults to `base` for speed. Use `large-v3` for production quality.
-2. **Transcription:** VAD filter removes silence. Word-level timestamps are always enabled.
-3. **Diarization (optional):** WhisperX alignment + pyannote speaker diarization assigns speaker labels. Requires `HF_TOKEN` environment variable.
+1. **模型加载：** faster-whisper 加载指定的模型大小（从 tiny 到 large-v3）。默认为 `base` 以兼顾速度。生产质量请使用 `large-v3`。
+2. **转写：** VAD 滤波器移除静音部分。始终启用单词级时间戳。
+3. **说话人分离（可选）：** WhisperX 对齐 + pyannote 说话人分离，分配说话人标签。需要设置 `HF_TOKEN` 环境变量。
 
-## Model Size Guide
+## 模型大小指南
 
-| Model | RAM | Speed (CPU) | Quality | When to Use |
+| 模型 | 内存 | 速度（CPU） | 质量 | 使用场景 |
 |-------|-----|-------------|---------|-------------|
-| `tiny` | ~1 GB | ~10x real-time | Low | Quick drafts, iteration |
-| `base` | ~1 GB | ~5x real-time | Good | Default for development |
-| `small` | ~2 GB | ~3x real-time | Better | Short content |
-| `medium` | ~5 GB | ~1.5x real-time | High | Important content |
-| `large-v3` | ~10 GB | ~0.5x real-time | Best | Final production |
+| `tiny` | ~1 GB | ~10倍实时 | 低 | 快速草稿、迭代 |
+| `base` | ~1 GB | ~5倍实时 | 良好 | 开发默认选择 |
+| `small` | ~2 GB | ~3倍实时 | 较好 | 短内容 |
+| `medium` | ~5 GB | ~1.5倍实时 | 高 | 重要内容 |
+| `large-v3` | ~10 GB | ~0.5倍实时 | 最佳 | 最终生产 |
 
-## Key Patterns
+## 关键模式
 
-### Choosing When to Diarize
+### 何时启用说话人分离
 
-- **Single speaker (talking head):** Skip diarization — it adds latency with no benefit.
-- **Multiple speakers (interview, podcast):** Enable diarization to label who said what.
-- **Diarization requires** `whisperx` and `HF_TOKEN`. If unavailable, the tool proceeds without speaker labels.
+- **单一说话人（人物出镜）：** 跳过说话人分离——它只会增加延迟而无收益。
+- **多人说话（访谈、播客）：** 启用说话人分离，标记谁说了什么。
+- **说话人分离需要** `whisperx` 和 `HF_TOKEN`。如果不可用，该工具将在没有说话人标签的情况下继续处理。
 
-### Word Timestamps for Subtitles
+### 用于字幕的单词时间戳
 
-The transcriber produces word-level timestamps with confidence scores. The `subtitle_gen` tool consumes these directly:
+`transcriber` 生成带有置信度分数的单词级时间戳。`subtitle_gen` 工具直接使用这些数据：
 
 ```
 word_timestamps: [
@@ -49,15 +46,15 @@ word_timestamps: [
 ]
 ```
 
-### Language Detection
+### 语言检测
 
-- Pass `language: null` to auto-detect (adds ~1s overhead).
-- Pass an explicit ISO 639-1 code (`en`, `es`, `ja`, etc.) when you know the language.
+- 传入 `language: null` 以自动检测（增加约1秒开销）。
+- 当你已知语言时，传入明确的 ISO 639-1 代码（`en`、`es`、`ja` 等）。
 
-## Quality Checklist
+## 质量检查清单
 
-- [ ] Transcript text is accurate (spot-check 3-5 segments)
-- [ ] Word timestamps align with actual speech when played back
-- [ ] No missing segments or large gaps in the transcript
-- [ ] Language was correctly detected (if auto)
-- [ ] Speaker labels are correct (if diarization was used)
+- [ ] 转写文本准确（抽查3-5个片段）
+- [ ] 单词时间戳与实际播放时的语音对齐
+- [ ] 转写中没有缺失片段或大段空白
+- [ ] 语言检测正确（如果使用自动检测）
+- [ ] 说话人标签正确（如果使用了说话人分离）

@@ -1,37 +1,32 @@
-# Scene Director - Character Animation Pipeline
+# 场景导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Produce a `scene_plan` where each scene is feasible for rigged character
-animation.
+产出 `scene_plan`，确保每个场景对于骨架角色动画来说是可行的。
 
-## Scene Planning Fields
+## 场景规划字段
 
-For each scene, include:
+每个场景需包含：
 
-- character IDs,
-- emotional beat,
-- action sequence,
-- camera/framing,
-- background,
-- props,
-- effects,
-- required assets,
-- transition notes.
+- 角色 ID，
+- 情绪节拍，
+- 动作序列，
+- 摄像机/取景，
+- 背景，
+- 道具，
+- 特效，
+- 所需资源，
+- 转场说明。
 
-Use `type: "character_scene"` for rigged character acting scenes. Store
-character-specific detail in `character_actions`; do not put per-scene acting
-data in arbitrary metadata because the shared `scene_plan` schema rejects
-unknown per-scene fields.
+对于骨架角色表演场景，使用 `type: "character_scene"`。将角色特定细节存放在 `character_actions` 中；不要在任意元数据中放置按场景的表演数据，因为共享的 `scene_plan` 模式会拒绝未知的按场景字段。
 
-## Complexity Budget
+## 复杂度预算
 
-Prefer fewer, stronger shots:
+优先选择更少但更有力的镜头：
 
-- one establish,
-- one action beat,
-- one reaction beat,
-- one resolution beat.
+- 一个建立镜头，
+- 一个动作节拍，
+- 一个反应节拍，
+- 一个解决节拍。
 
-Avoid scenes that require many unique views or complex physical contact unless
-the user approved that complexity.
+避免需要大量独特视角或复杂物理接触的场景，除非用户已批准该复杂度。

@@ -1,49 +1,49 @@
-# `SCRIPT.md` — locked narration (optional)
+# `SCRIPT.md` — 锁定解说词（可选）
 
-The **locked narration** for a project: the final spoken lines + voice + delivery. It is an _optional_ plan-layer file — a video with no narration (bgm-only, silent overlay) has none. The storyboard's per-frame `voiceover` is the lighter, editable _guide_; `SCRIPT.md` is the _commit_. (Storyboard format → `references/storyboard-format.md`.)
+项目的**锁定解说词**：最终的台词 + 声音 + 表达方式。这是一个_可选的_计划层文件——仅 bgm、无声叠加的视频没有解说词文件。故事板每帧的 `voiceover` 是较轻松、可编辑的_指南_；`SCRIPT.md` 是_提交版本_。（故事板格式 → `references/storyboard-format.md`。）
 
-This file defines the SCRIPT.md **shape** only. Synthesizing the spoken lines into audio is a capability owned by `hyperframes-media` → `references/tts.md`.
+本文件仅定义 SCRIPT.md **形状**。将台词合成为音频是 `hyperframes-media` → `references/tts.md` 拥有的能力。
 
-Free-form markdown — there is no strict parser; the Studio renders it read-only beside the Storyboard board, and the TTS step extracts the indented spoken lines.
+自由格式的 markdown — 没有严格的解析器；Studio 在故事板旁边以只读方式渲染它，TTS 步骤提取缩进的台词。
 
-## Shape
+## 形状
 
-A header block, then one section per spoken line.
+一个头部块，然后每个台词一个章节。
 
-| Part                            | Holds                                                                                                                                   |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Header                          | `**Voice:**` (provider + voice), `**Voice settings:**` (e.g. stability / similarity / style), `**Voice direction:**` (overall delivery) |
-| `## Line N — <label> (Frame N)` | one spoken line, tied to its storyboard frame                                                                                           |
-| `**Time:**`                     | the board's rough window — a _guide_, not authoritative (real timing comes from TTS word timestamps)                                    |
-| `**Delivery:**`                 | per-line delivery note                                                                                                                  |
-| indented block                  | the **spoken text** — the only part fed to TTS                                                                                          |
+| 部分                           | 包含                                                                 |
+| ------------------------------ | -------------------------------------------------------------------- |
+| 头部                           | `**Voice:**`（提供商 + 声音）、`**Voice settings:**`（例如 stability / similarity / style）、`**Voice direction:**`（整体表达方式） |
+| `## Line N — <label> (Frame N)` | 一条台词，关联到其故事板帧                                           |
+| `**Time:**`                    | 大致的窗口时间——一个_指南_，非权威来源（实际时间来自 TTS 词级时间戳） |
+| `**Delivery:**`                | 每行表达注释                                                         |
+| 缩进块                          | **台词文本**——唯一送入 TTS 的部分                                     |
 
-## Example
+## 示例
 
 ```markdown
 # SCRIPT — acme-launch
 
 **Voice:** Rachel (ElevenLabs)
 **Voice settings:** stability 0.35 · similarity 0.75 · style 0.20
-**Voice direction:** Confident, warm, a little playful.
+**Voice direction:** 自信、温暖、略带俏皮。
 
 ---
 
 ## Line 1 — Hook (Frame 1)
 
 **Time:** 0.0 – 3.0s
-**Delivery:** Land the promise on the beat.
+**Delivery:** 在节拍上落地承诺。
 
     Ship a launch video in an afternoon.
 
 ## Line 2 — The problem (Frame 2)
 
 **Time:** 3.0 – 7.0s
-**Delivery:** Wry, a touch tired.
+**Delivery:** 苦笑，略带疲惫。
 
     The old way? Prompt, wait twenty minutes, get something that misses.
 ```
 
-## To TTS
+## 到 TTS
 
-Feed each line's spoken text to `npx hyperframes tts` (pin `--voice` / `--provider` from the header; capture word timestamps for captions). Real per-word timing replaces the `**Time:**` guides. CLI contract → `hyperframes-media/references/tts.md`.
+将每行的台词文本送入 `npx hyperframes tts`（使用头部的 `--voice` / `--provider`；捕获词级时间戳用于字幕）。实际的逐词时间戳替换 `**Time:**` 指南。CLI 约定 → `hyperframes-media/references/tts.md`。

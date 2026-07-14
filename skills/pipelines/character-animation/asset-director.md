@@ -1,35 +1,33 @@
-# Asset Director - Character Animation Pipeline
+# 资源导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Produce `asset_manifest` with character parts, backgrounds, props, audio, music,
-and preview artifacts.
+产出 `asset_manifest`，包含角色部件、背景、道具、音频、音乐和预览产物。
 
-## Layer 3 Gate
+## Layer 3 门控
 
-Before authoring or generating animation assets, read the relevant Layer 3 skills:
+在创作或生成动画资源之前，请阅读相关的 Layer 3 技能：
 
 - `character-rigging`
 - `svg-character-animation`
 - `pose-library-design`
-- `canvas-procedural-animation` when p5/canvas effects are used
-- `character-animation-qa` before review
-- `gsap-core`, `gsap-timeline`, and `gsap-react` for GSAP/Remotion work
-- `remotion` and `remotion-best-practices` for Remotion render work
-- `hyperframes` and `hyperframes-cli` for HyperFrames work
+- `canvas-procedural-animation`（当使用 p5/canvas 特效时）
+- `character-animation-qa`（审阅前）
+- `gsap-core`、`gsap-timeline` 和 `gsap-react`（用于 GSAP/Remotion 工作）
+- `remotion` 和 `remotion-best-practices`（用于 Remotion 渲染工作）
+- `hyperframes` 和 `hyperframes-cli`（用于 HyperFrames 工作）
 
-Before image/TTS/music generation, read the tool's `agent_skills` from the
-registry.
+在图像/TTS/音乐生成之前，请从注册表中读取工具的 `agent_skills`。
 
-## Asset Organization
+## 资源组织
 
-Write character assets under:
+角色资源存放在：
 
 ```text
 projects/<project-name>/assets/characters/<character-id>/
 ```
 
-Use subfolders:
+使用子文件夹：
 
 ```text
 parts/
@@ -37,21 +35,20 @@ poses/
 previews/
 ```
 
-Generated backgrounds go under:
+生成的背景存放在：
 
 ```text
 projects/<project-name>/assets/backgrounds/
 ```
 
-## Process
+## 流程
 
-1. Produce or source only the parts required by `rig_plan`.
-2. Keep each moving part separate.
-3. Preserve transparent backgrounds for parts.
-4. Record prompts, seeds, providers, and model names.
-5. Build a small preview before full asset expansion.
+1. 仅制作或获取 `rig_plan` 所需的部件。
+2. 保持每个活动部件独立分离。
+3. 为部件保留透明背景。
+4. 记录提示词、种子、提供者和模型名称。
+5. 在全量资源扩展之前先构建一个小型预览。
 
-## Quality Bar
+## 质量门槛
 
-All parts referenced by `rig_plan` must exist before compose. Missing parts are a
-blocker unless the action timeline removes the action requiring them.
+`rig_plan` 引用的所有部件必须在合成之前存在。缺失部件构成阻塞，除非动作时间线移除了需要该部件的动作。

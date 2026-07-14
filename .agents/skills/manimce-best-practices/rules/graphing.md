@@ -1,15 +1,15 @@
 ---
 name: graphing
-description: Plotting functions, parametric curves, and data visualization
+description: 绘制函数、参数曲线和数据可视化
 metadata:
   tags: plot, graph, function, parametric, curve, data
 ---
 
-# Graphing Functions
+# 绘制函数
 
-Plot mathematical functions and curves.
+绘制数学函数和曲线。
 
-## Plotting Functions on Axes
+## 在坐标轴上绘制函数
 
 ```python
 from manim import *
@@ -18,13 +18,13 @@ class BasicPlot(Scene):
     def construct(self):
         axes = Axes(x_range=[-3, 3], y_range=[-2, 8])
 
-        # Plot a function
+        # 绘制函数
         graph = axes.plot(lambda x: x**2, color=BLUE)
 
         self.add(axes, graph)
 ```
 
-## plot() Parameters
+## plot() 参数
 
 ```python
 class PlotParameters(Scene):
@@ -33,7 +33,7 @@ class PlotParameters(Scene):
 
         graph = axes.plot(
             lambda x: np.sin(x),
-            x_range=[-PI, PI],    # Limit domain
+            x_range=[-PI, PI],    # 限制定义域
             color=YELLOW,
             stroke_width=4,
         )
@@ -41,7 +41,7 @@ class PlotParameters(Scene):
         self.add(axes, graph)
 ```
 
-## Multiple Functions
+## 多个函数
 
 ```python
 class MultiplePlots(Scene):
@@ -55,7 +55,7 @@ class MultiplePlots(Scene):
         self.add(axes, sin_graph, cos_graph, quad_graph)
 ```
 
-## Adding Labels to Graphs
+## 为图形添加标签
 
 ```python
 class GraphLabels(Scene):
@@ -63,7 +63,7 @@ class GraphLabels(Scene):
         axes = Axes(x_range=[-3, 3], y_range=[-2, 10])
         graph = axes.plot(lambda x: x**2, color=BLUE)
 
-        # Add label to graph
+        # 为图形添加标签
         label = axes.get_graph_label(
             graph,
             label=MathTex("y = x^2"),
@@ -74,16 +74,16 @@ class GraphLabels(Scene):
         self.add(axes, graph, label)
 ```
 
-## Parametric Curves
+## 参数曲线
 
-Plot curves defined by parametric equations.
+绘制由参数方程定义的曲线。
 
 ```python
 class ParametricExample(Scene):
     def construct(self):
         axes = Axes(x_range=[-3, 3], y_range=[-3, 3])
 
-        # Circle: x = cos(t), y = sin(t)
+        # 圆：x = cos(t), y = sin(t)
         curve = axes.plot_parametric_curve(
             lambda t: np.array([np.cos(t), np.sin(t), 0]),
             t_range=[0, 2 * PI],
@@ -93,22 +93,22 @@ class ParametricExample(Scene):
         self.add(axes, curve)
 ```
 
-### Parametric Curve Examples
+### 参数曲线示例
 
 ```python
-# Lissajous curve
+# 利萨茹曲线
 curve = axes.plot_parametric_curve(
     lambda t: np.array([np.sin(3*t), np.sin(2*t), 0]),
     t_range=[0, 2*PI],
 )
 
-# Spiral
+# 螺旋线
 curve = axes.plot_parametric_curve(
     lambda t: np.array([t*np.cos(t), t*np.sin(t), 0]),
     t_range=[0, 4*PI],
 )
 
-# Heart curve
+# 心形曲线
 curve = axes.plot_parametric_curve(
     lambda t: np.array([
         16 * np.sin(t)**3,
@@ -119,9 +119,9 @@ curve = axes.plot_parametric_curve(
 )
 ```
 
-## ParametricFunction (standalone)
+## ParametricFunction（独立使用）
 
-Create parametric curves without axes:
+无需坐标轴即可创建参数曲线：
 
 ```python
 class StandaloneParametric(Scene):
@@ -134,7 +134,7 @@ class StandaloneParametric(Scene):
         self.add(curve)
 ```
 
-## Area Under Curve
+## 曲线下面积
 
 ```python
 class AreaUnderCurve(Scene):
@@ -142,7 +142,7 @@ class AreaUnderCurve(Scene):
         axes = Axes(x_range=[-1, 5], y_range=[-1, 10])
         graph = axes.plot(lambda x: x**2, x_range=[0, 3], color=BLUE)
 
-        # Shade area under curve
+        # 填充曲线下的面积
         area = axes.get_area(
             graph,
             x_range=[0, 2],
@@ -153,7 +153,7 @@ class AreaUnderCurve(Scene):
         self.add(axes, graph, area)
 ```
 
-## Riemann Rectangles
+## 黎曼矩形
 
 ```python
 class RiemannRectangles(Scene):
@@ -172,7 +172,7 @@ class RiemannRectangles(Scene):
         self.add(axes, graph, rects)
 ```
 
-## Animated Graphing
+## 动画绘图
 
 ```python
 class AnimatedGraph(Scene):
@@ -182,11 +182,11 @@ class AnimatedGraph(Scene):
 
         graph = axes.plot(lambda x: np.sin(x), color=BLUE)
 
-        # Animate the graph being drawn
+        # 动画绘制图形
         self.play(Create(graph), run_time=3)
 ```
 
-## Moving Point on Graph
+## 图形上的移动点
 
 ```python
 class MovingPointOnGraph(Scene):
@@ -194,7 +194,7 @@ class MovingPointOnGraph(Scene):
         axes = Axes(x_range=[-3, 3], y_range=[-2, 2])
         graph = axes.plot(lambda x: np.sin(x), color=BLUE)
 
-        # Point that follows graph
+        # 跟随图形的点
         x_tracker = ValueTracker(-3)
 
         dot = always_redraw(lambda: Dot(
@@ -206,7 +206,7 @@ class MovingPointOnGraph(Scene):
         self.play(x_tracker.animate.set_value(3), run_time=4)
 ```
 
-## 3D Surface Plots
+## 3D 曲面图
 
 ```python
 class SurfacePlot(ThreeDScene):
@@ -224,10 +224,10 @@ class SurfacePlot(ThreeDScene):
         self.add(axes, surface)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Set x_range on plot for discontinuities** - Avoid graphing undefined regions
-2. **Use get_graph_label for clarity** - Label functions on the graph
-3. **Match graph color to concept** - Consistent color coding
-4. **Use i2gp for points on graphs** - Automatically handles conversion
-5. **Animate graph creation** - More engaging than static display
+1. **在 plot 上设置 x_range 处理不连续点** - 避免绘制未定义区域
+2. **使用 get_graph_label 提高清晰度** - 在图形上标注函数
+3. **匹配图形颜色与概念** - 一致的颜色编码
+4. **图形上的点使用 i2gp** - 自动处理转换
+5. **动画创建图形** - 比静态显示更吸引人

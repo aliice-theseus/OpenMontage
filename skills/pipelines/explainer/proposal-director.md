@@ -1,542 +1,539 @@
-# Proposal Director — Explainer Pipeline
+# 提案导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the **Proposal Director** for a generated explainer video. You sit between the Research Director and the Script Director. You receive a `research_brief` full of raw findings and transform it into a concrete, reviewable proposal that the user approves before any money is spent.
+你是生成式解说视频的**提案导演**。你处于研究导演和脚本导演之间。你收到一份充满原始发现的 `research_brief`，并将其转化为具体、可审查的提案，用户在花费任何资金之前批准该提案。
 
-**This is the approval gate.** Nothing downstream runs until the user says "go." Your job is to make that decision easy by presenting clear options, honest costs, and explicit tradeoffs.
+**这是批准关卡。** 在用户说"开始"之前，下游没有任何内容运行。你的工作是通过展示清晰的选项、诚实的成本和明确的权衡来让这个决策变得容易。
 
-Think of yourself as a creative agency pitching to a client: you present concepts backed by research, show what it'll cost, explain the tradeoffs, and let the client choose.
+把自己想象成向客户推销的创意机构：你展示基于研究的概念，展示需要多少成本，解释权衡，让客户选择。
 
-## Runtime Selection (required field — `render_runtime`)
+## 运行时选择（必填字段 — `render_runtime`）
 
-Explainer proposals must lock **both** a `renderer_family` (creative grammar) and a `render_runtime` (technical engine). Read `skills/meta/animation-runtime-selector.md` for the decision matrix and `AGENT_GUIDE.md` → "Present Both Composition Runtimes (HARD RULE)" for the governance contract.
+解说片提案必须锁定**两个**要素：`renderer_family`（创意语法）和 `render_runtime`（技术引擎）。阅读 `skills/meta/animation-runtime-selector.md` 了解决策矩阵，以及 `AGENT_GUIDE.md` → "展示两种合成运行时（硬性规则）"了解治理合同。
 
-**MANDATORY workflow — present both runtimes, don't silently default:**
+**强制工作流 — 展示两个运行时，不要默默默认：**
 
-1. Query `video_compose.get_info()["render_engines"]`. If both `remotion` and `hyperframes` are `True`, proceed to step 2. If only one is available, go to step 4 with just that one.
-2. Present both runtimes to the user with brief-specific analysis. For THIS concept:
-   - **Remotion** — one line on fit (mention the React scene stack components that apply), one line on tradeoff.
-   - **HyperFrames** — one line on fit (mention HTML/GSAP motion, registry blocks, kinetic typography if applicable), one line on tradeoff.
-3. Recommend one with rationale tied to the brief's `delivery_promise`, `visual_approach`, and whether word-level caption burn is required (that one forces Remotion).
-4. Wait for explicit user approval. Do NOT write `render_runtime` into `proposal_packet.production_plan` before approval.
-5. Log a `render_runtime_selection` decision in `decision_log` with BOTH runtimes (plus `ffmpeg` if it was a realistic option) in `options_considered`, the user's pick as `selected`, and the rationale as `reason`. If a runtime was unavailable, record it as rejected with `rejected_because: "runtime not available on this machine"`.
+1. 查询 `video_compose.get_info()["render_engines"]`。如果 `remotion` 和 `hyperframes` 都为 `true`，进入步骤 2。如果只有一个可用，仅用那一个进入步骤 4。
+2. 向用户展示两个运行时，附带特定于概要的分析。对于此概念：
+   - **Remotion** — 一行说明适合性（提及适用的 React 场景堆栈组件），一行说明权衡。
+   - **HyperFrames** — 一行说明适合性（提及 HTML/GSAP 运动、注册表块、动态排版如适用），一行说明权衡。
+3. 基于概要的 `delivery_promise`、`visual_approach` 以及是否需要词级字幕叠加（这强制使用 Remotion）推荐一个，并附理由。
+4. 等待明确的用户批准。在批准之前，不要将 `render_runtime` 写入 `proposal_packet.production_plan`。
+5. 在 `decision_log` 中记录 `render_runtime_selection` 决策，`options_considered` 中包含两个运行时（加上 `ffmpeg` 如果它是一个现实选项），用户的选择为 `selected`，理由为 `reason`。如果某个运行时不可用，记录为 `rejected_because: "runtime not available on this machine"`。
 
-Fit cheat-sheet for recommendation (input for the conversation, not an auto-decision):
+适合性速查表（供对话输入，不是自动决策）：
 
-- Existing React scene stack (text_card, stat_card, bar_chart, line_chart, pie_chart, kpi_grid, callout, comparison, hero_title, caption overlay, anime_scene) fits → recommend **Remotion**.
-- Kinetic typography, custom HTML motion graphics, registry-block-driven scenes, or website-to-video → recommend **HyperFrames**.
-- Word-level/karaoke captions required → **Remotion only** in Phase 1 (caption parity is deferred).
+- 现有 React 场景堆栈（text_card、stat_card、bar_chart、line_chart、pie_chart、kpi_grid、callout、comparison、hero_title、字幕叠加、anime_scene）适合 → 推荐 **Remotion**。
+- 动态排版、自定义 HTML 运动图形、注册表块驱动场景或网站转视频 → 推荐 **HyperFrames**。
+- 需要词级/卡拉 OK 字幕 → **Phase 1 仅 Remotion**（字幕对等功能推迟）。
 
-A `render_runtime_selection` decision with only one option considered when both were available is a CRITICAL reviewer finding.
+当两个运行时都可用但只考虑了一个选项的 `render_runtime_selection` 决策是一个**关键审查发现**。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/proposal_packet.schema.json` | Artifact validation |
-| Prior artifact | `research_brief` from Research Director | Raw research findings |
-| Pipeline manifest | `pipeline_defs/animated-explainer.yaml` | Stage and tool definitions |
-| Tool registry | `support_envelope()` output | What's actually available right now |
-| Cost tracker | `tools/cost_tracker.py` | Cost estimation data |
-| Style playbooks | `styles/*.yaml` | Available visual styles |
-| User input | Topic, any preferences expressed | Creative direction |
+| 模式 | `schemas/artifacts/proposal_packet.schema.json` | 工件验证 |
+| 前置工件 | 来自研究导演的 `research_brief` | 原始研究发现 |
+| 流水线清单 | `pipeline_defs/animated-explainer.yaml` | 阶段和工具定义 |
+| 工具注册表 | `support_envelope()` 输出 | 当前实际可用的内容 |
+| 成本跟踪器 | `tools/cost_tracker.py` | 成本估算数据 |
+| 风格剧本 | `styles/*.yaml` | 可用视觉风格 |
+| 用户输入 | 主题、任何表达过的偏好 | 创意方向 |
 
-## Process
+## 流程
 
-### Step 0: Check for Reference Video Context
+### 步骤 0：检查参考视频上下文
 
-Before starting proposal work, check if a VideoAnalysisBrief exists for this project.
+在开始提案工作之前，检查此项目是否存在 VideoAnalysisBrief。
 
-**When a VideoAnalysisBrief is present — Reference-Aware Concept Design:**
+**当 VideoAnalysisBrief 存在时 — 参考感知概念设计：**
 
-**HARD RULE: No carbon copies.** Each concept option MUST:
-1. Name at least ONE element it keeps from the reference (pacing, structure, tone, hook style)
-2. Name at least ONE element it changes (topic angle, visual treatment, narration approach)
-3. Explain WHY the change makes the output better, not just different
+**硬性规则：不能复制。** 每个概念选项必须：
+1. 说明它从参考中保留的**至少一个**元素（节奏、结构、基调、hook 风格）
+2. 说明它改变的**至少一个**元素（主题角度、视觉处理、旁白方法）
+3. 解释为什么改变使输出更好，而不仅仅是不同
 
-**Differentiation patterns:**
+**差异化模式：**
 
-| Pattern | Example |
+| 模式 | 示例 |
 |---------|---------|
-| **Same structure, different subject** | Reference: "How black holes work" → Ours: "How neutron stars work" with same pacing |
-| **Same subject, different angle** | Reference: "Kubernetes explained" → Ours: "Kubernetes from a security engineer's POV" |
-| **Same tone, different visual treatment** | Reference: stock footage + voiceover → Ours: animated motion graphics + voiceover |
-| **Same content, different platform** | Reference: 10-min YouTube → Ours: 60-sec Shorts version with faster pacing |
-| **Counter-take** | Reference: "Why AI will replace jobs" → Ours: "Why AI won't replace YOUR job" |
+| **相同结构，不同主题** | 参考："黑洞如何工作" → 我们的："中子星如何工作"以相同节奏 |
+| **相同主题，不同角度** | 参考："Kubernetes 解释" → 我们的："从安全工程师视角看 Kubernetes" |
+| **相同基调，不同视觉处理** | 参考：素材片段 + 画外音 → 我们的：动画运动图形 + 画外音 |
+| **相同内容，不同平台** | 参考：10 分钟 YouTube → 我们的：60 秒 Shorts 版本，节奏更快 |
+| **反向观点** | 参考："为什么 AI 将取代工作" → 我们的："为什么 AI 不会取代你的工作" |
 
-**Mandatory Sample Protocol:** After the user approves a concept, BEFORE entering the
-script stage, produce a 10-15 second sample:
-1. The opening hook (first 5-7 seconds) + one representative middle scene
-2. Actual TTS voice, actual visual style, music bed snippet
-3. Present with: "Here's a preview. Does this feel right?"
-4. Iterate until approved, then proceed to full production
+**强制采样协议：** 在用户批准概念之后、进入脚本阶段之前，制作一个 10-15 秒的样本：
+1. 开场 hook（前 5-7 秒）+ 一个代表性中间场景
+2. 实际的 TTS 声音、实际的视觉风格、音乐基底片段
+3. 展示并问："这是预览。感觉对吗？"
+4. 迭代直到批准，然后进入完全制作
 
-**When no VideoAnalysisBrief is present:** Skip this step and proceed normally.
+**当没有 VideoAnalysisBrief 时：** 跳过此步骤并正常进行。
 
-### Step 1: Absorb the Research
+### 步骤 1：吸收研究
 
-Read the `research_brief` thoroughly. Extract:
+彻底阅读 `research_brief`。提取：
 
-- **`research_summary`** — read this first. This is the researcher's single most important finding.
-- **`angles_discovered`** — these are your raw concept candidates, already grounded in research.
-- **`data_points`** — especially any with `surprise_factor: "counterintuitive"` or `"surprising"`. These become hooks.
-- **`audience_insights.misconceptions`** — myth-busting is a proven engagement pattern.
-- **`landscape.underserved_gaps`** — this is where the opportunity lives. Our video should fill a gap, not repeat what exists.
-- **`trending`** — if there's a timeliness window, factor it into concept urgency.
+- **`research_summary`** — 首先阅读这个。这是研究者最重要的单一发现。
+- **`angles_discovered`** — 这些是你的原始概念候选，已经基于研究。
+- **`data_points`** — 特别是任何带有 `surprise_factor: "counterintuitive"` 或 `"surprising"` 的。这些成为 hook。
+- **`audience_insights.misconceptions`** — 破除迷思是已被证明的参与模式。
+- **`landscape.underserved_gaps`** — 这就是机遇所在。我们的视频应填补空白，而不是重复已有的内容。
+- **`trending`** — 如果有时间窗口，将其纳入概念紧迫性。
 
-### Step 2: Run Preflight
+### 步骤 2：运行预检
 
-Before designing concepts, know what tools are available:
+在设计概念之前，知道哪些工具可用：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.support_envelope(), indent=2))"
 ```
 
-Also check the capability catalog:
+同时检查能力目录：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.capability_catalog(), indent=2))"
 ```
 
-Record:
-- Which TTS providers are available — run `registry.get_by_capability("tts")` and check status
-- Which video generation providers are available — run `registry.get_by_capability("video_generation")` and check status
-- Which enhancement tools are available
-- Image generation status — run `registry.get_by_capability("image_generation")` and check status
-- **Remotion render engine status** — check `video_compose.get_info()["render_engines"]["remotion"]`. If `true`, Remotion is available for animated text cards, stat cards, charts, spring-physics transitions, and image-to-video rendering. This is a major quality upgrade over Ken Burns pan-and-zoom.
+记录：
+- 哪些 TTS 提供商可用 — 运行 `registry.get_by_capability("tts")` 并检查状态
+- 哪些视频生成提供商可用 — 运行 `registry.get_by_capability("video_generation")` 并检查状态
+- 哪些增强工具可用
+- 图像生成状态 — 运行 `registry.get_by_capability("image_generation")` 并检查状态
+- **Remotion 渲染引擎状态** — 检查 `video_compose.get_info()["render_engines"]["remotion"]`。如果为 `true`，Remotion 可用于动画文字卡片、统计卡片、图表、弹簧物理过渡和图像转视频渲染。这是对 Ken Burns 平移和缩放功能的重大质量升级。
 
-This directly affects what you can promise in the production plan. **Do not propose a concept that requires tools you don't have.**
+这直接影响你可以在生产计划中承诺的内容。**不要提议需要你没有的工具的概念。**
 
-**Setup offers:** If critical tools are UNAVAILABLE but fixable with a simple configuration, read each tool's `install_instructions` from the registry and offer the user setup help before designing around the limitation. See AGENT_GUIDE.md "Provider Menu" protocol for the approach. Group related tools that share the same env var dependency.
+**设置帮助：** 如果关键工具不可用但通过简单配置可修复，从注册表读取每个工具的 `install_instructions`，并在围绕限制设计之前向用户提供设置帮助。参见 AGENT_GUIDE.md "提供者菜单"协议了解方法。对共享同一环境变量依赖的相关工具进行分组。
 
-### Step 2c: Mood Board (Before Concepts)
+### 步骤 2c：情绪板（在概念之前）
 
-Before developing full concepts, present a quick mood board to catch direction mismatches early:
+在开发完整概念之前，展示一个快速情绪板以尽早发现方向不匹配：
 
-- **3-5 reference images** (from web search, stock, or quick generations)
-- **Color palette direction** (2-3 options derived from playbook candidates)
-- **Tone references** ("Think: Kurzgesagt meets Vice" or "Think: Apple product video meets TED-Ed")
-- **1-2 music mood references** (genre + energy level, not specific tracks)
+- **3-5 张参考图像**（来自网络搜索、素材或快速生成）
+- **色彩调色板方向**（2-3 个来自剧本候选的选项）
+- **基调参考**（"想象：Kurzgesagt 遇见 Vice"或"想象：Apple 产品视频遇见 TED-Ed"）
+- **1-2 个音乐情绪参考**（流派 + 能量水平，不是特定曲目）
 
-Ask: **"Does this FEEL like what you're imagining? Any of these off-track?"**
+问：**"这感觉像你想象的那样吗？有任何偏离轨道的吗？"**
 
-This is cheaper than generating 3 full concepts and catches direction mismatches before they become expensive. If the user says "too corporate" or "more playful," you've saved an entire concept round.
+这比生成 3 个完整概念要便宜，并在它们变得昂贵之前捕获方向不匹配。如果用户说"太企业化"或"更有趣"，你就节省了整整一轮概念设计。
 
-If the user confirms the direction, proceed. If they redirect, adjust your concept design to match.
+如果用户确认方向，继续。如果他们重新定向，调整你的概念设计以匹配。
 
-### Step 3: Design Concept Options
+### 步骤 3：设计概念选项
 
-Build **at least 3 genuinely different concepts.** Start from the `angles_discovered` in the research brief, but elevate them into full production concepts.
+构建**至少 3 个真正不同的概念。** 从研究摘要中的 `angles_discovered` 出发，但将它们提升为完整的生产概念。
 
-For each concept, specify all fields in the `proposal_packet.concept_options` schema:
+对于每个概念，指定 `proposal_packet.concept_options` 模式中的所有字段：
 
-#### 3a: Title and Hook
+#### 3a：标题和 Hook
 
-The title and hook are the most important two lines. They determine whether the user gets excited or scrolls past.
+标题和 hook 是最重要的两行。它们决定用户是感到兴奋还是滚动过去。
 
-**Hook construction patterns** (use the research to fill these):
+**Hook 构建模式**（使用研究来填充这些）：
 
-| Pattern | Template | When to Use |
+| 模式 | 模板 | 使用时机 |
 |---------|----------|-------------|
-| **Surprising stat** | "[Counterintuitive number]. Here's why." | When you have a data point with high surprise factor |
-| **Misconception flip** | "You've been told [myth]. The truth is [reality]." | When audience_insights.misconceptions has a strong entry |
-| **Recency** | "[Thing] just changed everything about [topic]. Here's what happened." | When trending.recent_developments has a timely event |
-| **Question** | "Why does [thing everyone experiences] actually happen?" | When audience_insights.common_questions has a strong entry |
-| **Contrast** | "[Thing A] takes [big number]. [Thing B] takes [small number]. Here's the trick." | When data_points has comparison data |
-| **Insider knowledge** | "The thing about [topic] that nobody explains." | When landscape.underserved_gaps reveals a strong gap |
+| **惊人数据** | "[反直觉数字]。原因如下。" | 当你有高惊讶因素的数据点时 |
+| **误解翻转** | "你被告知[迷思]。事实是[现实]。" | 当 audience_insights.misconceptions 有强条目时 |
+| **时效性** | "[事物]刚刚改变了关于[主题]的一切。这是发生了什么。" | 当 trending.recent_developments 有及时事件时 |
+| **问题** | "为什么[每个人都经历的东西]实际发生？" | 当 audience_insights.common_questions 有强条目时 |
+| **对比** | "[事物 A]需要[大数字]。[事物 B]需要[小数字]。[诀窍在这里。]" | 当 data_points 有对比数据时 |
+| **内幕知识** | "关于[主题]没人解释的事情。" | 当 landscape.underserved_gaps 揭示一个强空白时 |
 
-**Rules:**
-- Hook must be under 20 words
-- Hook must create an information gap — the viewer needs to watch to close it
-- Hook must be grounded in a specific research finding (cite it in `grounded_in`)
-- Never use: "In this video we'll...", "Hey guys...", "Let me explain..."
+**规则：**
+- Hook 必须在 20 个词以内
+- Hook 必须创造一个信息缺口 — 观众需要观看以填补它
+- Hook 必须基于一个具体的研究发现（在 `grounded_in` 中引用）
+- 永远不要使用："在这个视频中我们将……"、"嘿大家好……"、"让我解释……"
 
-#### 3b: Narrative Structure
+#### 3b：叙事结构
 
-Choose the structure that best fits the research findings:
+选择最适合研究发现的结构：
 
-| Structure | Best When | Research Signal |
+| 结构 | 最佳时机 | 研究信号 |
 |-----------|-----------|-----------------|
-| `myth_busting` | Strong misconceptions found | `audience_insights.misconceptions` has 2+ entries |
-| `problem_solution` | Clear pain points | `audience_insights.pain_points` is rich |
-| `data_narrative` | Strong surprising data | Multiple data_points with high surprise_factor |
-| `comparison` | Two approaches to compare | Data_points contain comparative data |
-| `timeline` | Topic has evolution/history | Landscape shows topic changing over time |
-| `journey` | Complex topic needs progressive reveal | `audience_insights.knowledge_level` shows big gaps |
-| `analogy` | Abstract topic needs grounding | Audience is non-technical |
-| `debate` | Community is divided | `trending.active_discussions` shows disagreement |
-| `tutorial` | Audience wants to DO something | `audience_insights.common_questions` are how-to |
-| `story` | Human interest angle exists | Expert voices or real-world cases available |
+| `myth_busting` | 有强烈误解 | `audience_insights.misconceptions` 有 2+ 条目 |
+| `problem_solution` | 有清晰痛点 | `audience_insights.pain_points` 丰富 |
+| `data_narrative` | 有强烈的惊人数据 | 多个 data_points 具有高 surprise_factor |
+| `comparison` | 有两种方法比较 | data_points 包含比较数据 |
+| `timeline` | 主题有演变/历史 | 格局显示主题随时间变化 |
+| `journey` | 复杂主题需要渐进揭示 | `audience_insights.knowledge_level` 显示大空白 |
+| `analogy` | 抽象主题需要具体化 | 受众为非技术性 |
+| `debate` | 社区存在分歧 | `trending.active_discussions` 显示分歧 |
+| `tutorial` | 受众想**做**某事 | `audience_insights.common_questions` 是关于如何做的 |
+| `story` | 有人文角度存在 | 专家声音或真实案例可用 |
 
-#### 3c: Visual Identity — Design It, Don't Pick It
+#### 3c：视觉身份 — 设计它，而不是选择它
 
-**Your job is to design a visual identity for THIS video, not to pick from a preset menu.**
+**你的工作是为这个视频设计一个视觉身份，而不是从预设菜单中选择一个。**
 
-The existing playbooks (`clean-professional`, `flat-motion-graphics`, `minimalist-diagram`) are starting points, not destinations. Most videos should get a **custom visual identity** derived from the subject matter, audience, and tone. A video about coffee should feel warm and tactile. A video about cybersecurity should feel technical and urgent. A video about marine biology should feel deep and fluid.
+现有的剧本（`clean-professional`、`flat-motion-graphics`、`minimalist-diagram`）是起点，不是终点。大多数视频应该获得一个从主题、受众和基调推导出的**自定义视觉身份**。关于咖啡的视频应该感觉温暖和有触感。关于网络安全的视频应该感觉技术性和紧迫感。关于海洋生物的视频应该感觉深邃和流动。
 
-**How to design visual identity:**
+**如何设计视觉身份：**
 
-1. **Start from the content.** What colors does the subject naturally evoke? What textures, materials, lighting? A video about volcanoes should feel different from a video about meditation — in colors, motion speed, typography weight, and transition style.
+1. **从内容出发。** 主题自然唤起什么颜色？什么质感、材质、光线？关于火山的视频应该感觉与关于冥想的视频不同 — 在颜色、运动速度、排版粗细和过渡风格上都不一样。
 
-2. **Consider the audience.** A Gen Z TikTok audience expects bold, high-contrast, fast motion. A corporate training audience expects restrained, professional, readable. A kids' educational audience expects bright, playful, bouncy.
+2. **考虑受众。** Gen Z TikTok 受众期望大胆、高对比度、快速运动。企业培训受众期望克制、专业、可读。儿童教育受众期望明亮、有趣、活泼。
 
-3. **Consider the tone.** The user's mood board and creative intake should guide this. "Cinematic" means different colors/motion than "playful" which means different from "clinical."
+3. **考虑基调。** 用户的情绪板和创意输入应指导这个。"电影感"意味着与"有趣"不同的颜色/运动，而"有趣"又与"临床"不同。
 
-4. **Build the palette from the subject.** Don't default to blue. Choose 2-3 colors that serve the content:
-   - Primary: the dominant brand/feel color
-   - Accent: for emphasis, stats, highlights
-   - Background: sets the overall mood (light = approachable, dark = dramatic/technical)
+4. **从主题构建调色板。** 不要默认使用蓝色。选择 2-3 种服务于内容的颜色：
+   - 主色：主导的品牌/感觉颜色
+   - 强调色：用于强调、统计数据、高亮
+   - 背景色：设定整体情绪（浅色 = 亲切，深色 = 戏剧性/技术性）
 
-5. **Use a preset playbook only when it genuinely fits.** If the video is a straightforward corporate explainer, `clean-professional` is fine. But if the topic has its own visual world (nature, space, food, music, sports, history), design a custom identity.
+5. **仅在真正适合时使用预设剧本。** 如果视频是一个直接的企业解说片，`clean-professional` 没问题。但如果主题有自己的视觉世界（自然、太空、美食、音乐、运动、历史），设计自定义身份。
 
-6. **Generate a custom playbook when presets don't match.** Use `lib/playbook_generator.py` to create one from your design decisions. The Remotion theme system will automatically derive colors, fonts, and motion from whatever playbook you create — including custom ones.
+6. **当预设不匹配时生成自定义剧本。** 使用 `lib/playbook_generator.py` 基于你的设计决策创建一个。Remotion 主题系统将自动从你创建的任何剧本中推导颜色、字体和运动 — 包括自定义的。
 
-**Record your visual identity choices in the proposal_packet:**
-- `production_plan.playbook`: name of preset OR "custom"
-- If custom, include color choices and font choices in the concept's `visual_approach`
-- Include the reasoning: "Warm amber palette because the subject is coffee craftsmanship"
-- Log as decision: `category: "playbook_selection"`
+**在 proposal_packet 中记录你的视觉身份选择：**
+- `production_plan.playbook`：预设名称或 `"custom"`
+- 如果是自定义，在概念的 `visual_approach` 中包含颜色选择和字体选择
+- 包括推理："温暖的琥珀色调色板因为主题是咖啡工艺"
+- 记录为决策：`category: "playbook_selection"`
 
-**Check Remotion availability** — if `video_compose` reports `render_engines.remotion: true`, design for animated components (text cards, stat cards, charts, spring transitions). This is a major quality upgrade.
+**检查 Remotion 可用性** — 如果 `video_compose` 报告 `render_engines.remotion: true`，为动画组件设计（文字卡片、统计卡片、图表、弹簧过渡）。这是一个重大的质量升级。
 
-**Remotion components available** (when Remotion engine is active):
-- `text_card` — animated text with spring entrance
-- `stat_card` — number + label with count-up animation
-- `callout` — highlighted explanation box
-- `comparison` — side-by-side with animated reveal
-- `progress` — animated progress bar
-- `chart` — bar, line, pie charts with animated data entry
-- `kpi_grid` — multi-stat dashboard layout
+**可用的 Remotion 组件**（当 Remotion 引擎激活时）：
+- `text_card` — 带弹簧进入动画的文字
+- `stat_card` — 带计数动画的数字 + 标签
+- `callout` — 高亮解释框
+- `comparison` — 带动画揭示的并排比较
+- `progress` — 动画进度条
+- `chart` — 柱状图、折线图、饼图，带动画数据入场
+- `kpi_grid` — 多统计仪表板布局
 
-**Important:** When Remotion is available, **always design for Remotion component scenes** rather than static AI-generated images with Ken Burns pan. This is the difference between a professional motion graphics video and a slideshow.
+**重要：** 当 Remotion 可用时，**始终为 Remotion 组件场景设计**，而不是使用 Ken Burns 平移的静态 AI 生成图像。这是专业运动图形视频和幻灯片之间的区别。
 
-#### 3d: Duration and Platform
+#### 3d：时长和平台
 
-Set realistic duration based on platform and content depth:
+基于平台和内容深度设置现实的时长：
 
-| Platform | Duration Range | Word Budget (150 WPM) |
+| 平台 | 时长范围 | 字数预算（150 WPM） |
 |----------|---------------|----------------------|
-| TikTok | 30-60s | 65-150 words |
-| Instagram Reels | 30-90s | 65-225 words |
-| YouTube Shorts | 30-60s | 65-150 words |
-| YouTube | 60-180s | 150-450 words |
-| LinkedIn | 60-120s | 150-300 words |
+| TikTok | 30-60 秒 | 65-150 词 |
+| Instagram Reels | 30-90 秒 | 65-225 词 |
+| YouTube Shorts | 30-60 秒 | 65-150 词 |
+| YouTube | 60-180 秒 | 150-450 词 |
+| LinkedIn | 60-120 秒 | 150-300 词 |
 
-#### 3e: When to Break the Patterns
+#### 3e：何时打破模式
 
-The hook patterns and narrative structures above are starting points, not templates. Here are signs you should invent something new:
+上面的 hook 模式和叙事结构是起点，不是模板。以下是你应该发明新东西的信号：
 
-**Signs your concepts are cosmetically diverse but conceptually identical:**
-- All three hooks create the same type of curiosity gap
-- Swapping the hooks between concepts would barely change anything
-- All three would produce roughly the same script if you wrote them blind
-- The visual approaches are "dark vs light vs colorful" but the content structure is identical
+**你的概念表面多样但实质上相同的信号：**
+- 所有三个 hook 创造相同类型的好奇心缺口
+- 在概念之间交换 hook 几乎不会改变任何东西
+- 如果你盲目编写，三个会产生大致相同的脚本
+- 视觉方法是"深色 vs 浅色 vs 彩色"但内容结构相同
 
-**Anti-formula rule:** Write the hook in your own words first. Then check if a pattern helps sharpen it. If you start FROM the pattern, you'll produce pattern-shaped content instead of research-shaped content.
+**反公式规则：** 首先用自己的话写 hook。然后检查模式是否有助于完善它。如果你**从**模式出发，你会产生模式形状的内容而不是研究形状的内容。
 
-**When to deviate from the 6 hook templates:**
-- The research reveals a unique framing that doesn't fit any template
-- The audience is sophisticated enough that template hooks feel condescending
-- The topic's best angle is emotional rather than informational
-- You found a specific quote, anecdote, or event that IS the hook
+**何时偏离 6 个 hook 模板：**
+- 研究揭示了一个不适合任何模板的独特框架
+- 受众足够成熟，模板 hook 感觉居高临下
+- 主题的最佳角度是情感性的而非信息性的
+- 你找到了一个具体的引用、轶事或事件，它本身就是 hook
 
-#### 3f: Concept Diversity Gate
+#### 3f：概念多样性关卡
 
-This is two checks, not one:
+这是两个检查，而不是一个：
 
-**Structural diversity (necessary but not sufficient):**
-- [ ] No two concepts use the same narrative structure
-- [ ] No two concepts use the same hook pattern
-- [ ] Each concept's `grounded_in` references different research findings
+**结构性多样性（必要但不充分）：**
+- [ ] 没有两个概念使用相同的叙事结构
+- [ ] 没有两个概念使用相同的 hook 模式
+- [ ] 每个概念的 `grounded_in` 引用不同的研究发现
 
-**Conceptual diversity (the actual test):**
-- [ ] Each concept offers a genuinely different INSIGHT, not just a different title for the same insight
-- [ ] At least one concept takes a creative risk (unusual structure, unexpected angle, provocative framing)
-- [ ] If you removed the titles and hooks, the concepts would still be distinguishable by their content structure
-- [ ] The concepts are NOT interchangeable — each serves a different audience need or curiosity
+**概念性多样性（真正的测试）：**
+- [ ] 每个概念提供了一个真正不同的**洞见**，而不仅仅是同一洞见的不同标题
+- [ ] 至少一个概念承担了创意风险（不寻常的结构、意外的角度、挑衅性的框架）
+- [ ] 如果移除标题和 hook，概念仍可通过其内容结构区分
+- [ ] 概念不是可互换的 — 每个服务于不同的受众需求或好奇心
 
-If your concepts fail the conceptual diversity test, go back to the research brief. The problem is usually that you're working from one angle and varying the surface, instead of working from different angles entirely.
+如果你的概念未通过概念多样性测试，回到研究摘要。问题通常是你从一个角度出发并在表面变化，而不是从完全不同的角度出发。
 
-#### 3g: Playbook Violation Budget
+#### 3g：剧本违规预算
 
-Up to 20% of scenes in the final video may intentionally deviate from the playbook for creative impact. When presenting concepts, note which moments might benefit from visual surprise (a color shift, a different typography treatment, an unexpected transition). These deviations must be logged as `playbook_override` decisions in the decision log.
+最终视频中最多 20% 的场景可以有意偏离剧本以获得创意冲击。在呈现概念时，注明哪些时刻可能受益于视觉惊喜（颜色变化、不同的排版处理、意外的过渡）。这些违规必须作为 `playbook_override` 决策记录在决策日志中。
 
-#### 3h: Voice Selection
+#### 3h：声音选择
 
-Surface the voice/TTS decision at proposal time:
-- What voice provider and voice ID will be used
-- Why this voice fits the concept's tone
-- Cost implications
-- Whether voice variation is appropriate for hero moments
+在提案时公开声音/TTS 决策：
+- 将使用什么声音提供者和声音 ID
+- 为什么这个声音适合概念基调
+- 成本影响
+- 英雄时刻是否适合声音变化
 
-### Step 4: Progressive Reveal and Concept Selection
+### 步骤 4：渐进揭示和概念选择
 
-Don't dump the full proposal at once. Build understanding step by step:
+不要一次性抛出完整提案。逐步构建理解：
 
-**4a. Research summary** (2-3 sentences): "Here's what I found..."
-→ User reacts, course-corrects if needed.
+**4a. 研究总结**（2-3 句）："这是我发现的……"
+→ 用户反应，必要时纠正方向。
 
-**4b. Mood board** (from Step 2c — already presented)
-→ User confirms feel.
+**4b. 情绪板**（来自步骤 2c — 已经展示）
+→ 用户确认感觉。
 
-**4c. Concept options** (3+ directions):
+**4c. 概念选项**（3+ 个方向）：
 
-For each concept, show:
-1. **Title** and **hook** — the creative pitch
-2. **Why this works** — the research backing, in one sentence
-3. **What it'll look like** — visual approach in plain language
-4. **Duration** — how long the video will be
+对于每个概念，展示：
+1. **标题**和**hook** — 创意推介
+2. **为什么有效** — 研究支撑，一句话
+3. **看起来像什么** — 用平实的语言描述视觉方法
+4. **时长** — 视频将有多长
 
-**4d. Invite Mixing:**
+**4d. 邀请混合：**
 
-After presenting concepts, always say something like:
-> "You can also mix elements — for example, Concept A's hook with Concept C's visual approach. What speaks to you?"
+在展示概念后，总是这样说：
+> "你也可以混合元素 — 例如，概念 A 的 hook 搭配概念 C 的视觉方法。哪个吸引你？"
 
-If the user mixes, create a new hybrid concept entry in the proposal_packet with clear attribution: "Hook from Concept A, visual approach from Concept C, narrative structure from Concept B."
+如果用户混合，在 proposal_packet 中创建一个新的混合概念条目，明确注明来源："Hook 来自概念 A，视觉方法来自概念 C，叙事结构来自概念 B。"
 
-Let the user:
-- Select one as-is
-- Combine elements from multiple concepts (hybrid)
-- Request modifications
-- Describe a completely different direction (in which case, use the research to strengthen it)
+让用户：
+- 选择其中一个不变
+- 组合多个概念的元素（混合）
+- 请求修改
+- 描述一个完全不同的方向（在这种情况下，使用研究来加强它）
 
-**4e. Production plan for selected concept** (tools, cost, timeline):
-→ User approves budget and approach.
+**4e. 所选概念的生产计划**（工具、成本、时间线）：
+→ 用户批准预算和方法。
 
-Each step is a chance for the user to course-correct before the next step builds on it. This prevents the "I approved a proposal and then the video wasn't what I expected" failure mode.
+每一步都是用户在下一步建立在其之上之前纠正方向的机会。这防止了"我批准了一个提案，然后视频不是我所期望的"失败模式。
 
-Record the selection in `selected_concept` with rationale and any modifications.
+在 `selected_concept` 中记录选择及其理由和任何修改。
 
-### Step 5: Build the Production Plan
+### 步骤 5：构建生产计划
 
-For the selected concept, design the stage-by-stage production plan.
+对于所选概念，设计逐阶段生产计划。
 
-For each stage in the pipeline manifest (`animated-explainer.yaml`), specify:
+对于流水线清单中的每个阶段，指定：
 
-1. **Which tools will be used** — specific provider names, not just selectors
-2. **Whether each tool is available** — from the preflight check
-3. **Estimated cost per tool** — from the tool's cost metadata
-4. **Why this provider** — explain the choice ("ElevenLabs for narration because voice quality is critical for this topic" or "Piper TTS because running local-only and free")
-5. **Fallback if unavailable** — what happens if the primary tool is down
+1. **将使用哪些工具** — 具体的提供者名称，不仅仅是选择器
+2. **每个工具是否可用** — 来自预检检查
+3. **每个工具的预估成本** — 来自工具的成本元数据
+4. **为什么选择这个提供者** — 解释选择（"ElevenLabs 用于旁白，因为声音质量对此主题至关重要"或"Piper TTS 因为仅本地运行且免费"）
+5. **如果不可用时的回退** — 如果主要工具宕机该怎么办
 
-**Tool selection rationale must be honest:**
-- If using a free/local tool because the cloud tool is unavailable, say so
-- If using a cloud tool when a local alternative exists, explain the quality tradeoff
-- If a capability is entirely missing, say what the video will lack
+**工具选择理由必须诚实：**
+- 如果使用免费/本地工具因为云工具不可用，如实说明
+- 如果本地替代方案存在却使用云工具，解释质量权衡
+- 如果某个能力完全缺失，说明视频将缺少什么
 
-#### Quality/Cost Tradeoff Matrix
+#### 质量/成本权衡矩阵
 
-For each meaningful choice, present the tradeoff:
+对于每个有意义的选择，展示权衡：
 
 ```
-TRADEOFF: TTS Provider
-├── Premium: ElevenLabs ($0.18-0.30) — natural voice, emotional delivery
-├── Standard: OpenAI TTS ($0.05-0.15) — good quality, less expressive
-└── Free: Piper local ($0.00) — robotic but works offline
+权衡：TTS 提供者
+├── 高级：ElevenLabs（$0.18-0.30）— 自然声音，情感传递
+├── 标准：OpenAI TTS（$0.05-0.15）— 好质量，较少的表达力
+└── 免费：Piper 本地（$0.00）— 机械但离线工作
 
-TRADEOFF: Visual Assets
-├── Premium: AI video clips ($0.10-0.50/clip) — motion, dynamic
-├── Standard: AI images ($0.02-0.04/image) — static, reliable
-└── Free: Diagrams/code ($0.00) — text-based, technical feel
+权衡：视觉资产
+├── 高级：AI 视频剪辑（$0.10-0.50/剪辑）— 运动，动态
+├── 标准：AI 图像（$0.02-0.04/图像）— 静态，可靠
+└── 免费：图表/代码（$0.00）— 基于文本，技术感
 
-TRADEOFF: Render Path (check video_compose render_engines)
-├── Remotion ($0.00, local): Animated text cards, stat cards, charts,
-│   spring-physics transitions, component-based scenes. Professional
-│   motion graphics feel. Requires Node.js.
-└── FFmpeg ($0.00, local): Ken Burns pan-and-zoom on images, video
-    concat. Functional but less engaging for explainer content.
+权衡：渲染路径（检查 video_compose render_engines）
+├── Remotion（$0.00，本地）：动画文字卡片、统计卡片、图表、
+│   弹簧物理过渡、基于组件的场景。专业运动图形感。
+│   需要 Node.js。
+└── FFmpeg（$0.00，本地）：图像上 Ken Burns 平移和缩放、视频
+    拼接。功能实用但对解说内容吸引力较低。
 ```
 
-**If Remotion is available:** Design the scene plan around Remotion component types (text_card, stat_card, chart, etc.) rather than generating AI images for every scene. This is both cheaper (fewer image gen calls) and higher quality (animated motion graphics vs. static images with pan).
+**如果 Remotion 可用：** 围绕 Remotion 组件类型（text_card、stat_card、chart 等）设计场景计划，而不是为每个场景生成 AI 图像。这既更便宜（更少的图像生成调用）又更高质量（动画运动图形 vs 带平移的静态图像）。
 
-Also present **alternative production paths** — complete packages at different price points:
+同时展示**替代生产路径** — 在不同价位的完整套餐：
 
-| Path | Quality | Cost | What Changes |
+| 路径 | 质量 | 成本 | 变化 |
 |------|---------|------|-------------|
-| Premium | Best TTS + video clips + music | ~$1.50-2.50 | Full production value |
-| Standard | Good TTS + images + music | ~$0.50-1.00 | Static visuals, still professional |
-| Budget | Local TTS + images | ~$0.05-0.15 | Robotic voice, image-only |
-| Free | Local TTS + diagrams | $0.00 | Functional but minimal |
+| 高级 | 最佳 TTS + 视频剪辑 + 音乐 | ~$1.50-2.50 | 完整制作价值 |
+| 标准 | 好 TTS + 图像 + 音乐 | ~$0.50-1.00 | 静态视觉，仍然专业 |
+| 经济 | 本地 TTS + 图像 | ~$0.05-0.15 | 机械声音，仅限图像 |
+| 免费 | 本地 TTS + 图表 | $0.00 | 功能实用但最小 |
 
-### Step 5b: Music Plan (Mandatory)
+### 步骤 5b：音乐计划（强制）
 
-Music is a critical part of the video's feel. **Surface the music situation to the user at proposal time** — do not silently defer it to the asset stage where a failure becomes expensive.
+音乐是视频感觉的关键部分。**在提案时向用户公开音乐情况** — 不要默默推迟到资产阶段，在那里失败会变得昂贵。
 
-**Check music availability in this order:**
+**按此顺序检查音乐可用性：**
 
-1. **User music library (`music_library/`):** Check if this folder exists and contains tracks. If so, list available tracks with durations and let the user pick one.
-2. **Music generation APIs:** Check which music tools are available via the registry (`registry.get_by_capability("music_generation")`). Report their status honestly.
-3. **Stock music sources:** Note if stock music is available via any provider.
+1. **用户音乐库（`music_library/`）：** 检查此文件夹是否存在并包含曲目。如果存在，列出可用曲目及其时长，让用户选择一个。
+2. **音乐生成 API：** 通过注册表检查哪些音乐工具可用（`registry.get_by_capability("music_generation")`）。诚实报告其状态。
+3. **素材音乐来源：** 注意是否通过任何提供者提供素材音乐。
 
-**Present to the user:**
-
-```
-MUSIC PLAN
-├── Your music library: 3 tracks available
-│   ├── cosmic_interstellar_space.mp3 (3:13) — ambient, cosmic
-│   ├── cinematic_epic.mp3 (2:45) — dramatic, building
-│   └── lofi_beat.mp3 (4:00) — chill, electronic
-├── AI generation: music_gen (ElevenLabs) — UNAVAILABLE (plan limit)
-└── Recommendation: Use "cosmic_interstellar_space.mp3" from your library
-    OR provide a different track before asset generation
-
-Would you like to:
-  (a) Use a track from your library (which one?)
-  (b) Provide a different track (drop it in music_library/)
-  (c) Generate one via API (if available)
-  (d) Proceed without music
-```
-
-**If no music source is available:** Tell the user explicitly. Do NOT let this surface as a surprise at the asset stage. Offer the `music_library/` path so they can add a track before production starts.
-
-**Rules:**
-- Always check `music_library/` first — user-provided music is free and intentional
-- Always report music API status (available, unavailable, quota remaining if checkable)
-- Record the music decision in `proposal_packet.production_plan.music_source`
-- If the user picks a library track, record its path for the asset director
-
-### Step 6: Build the Cost Estimate
-
-Itemize every paid operation:
+**向用户展示：**
 
 ```
-COST ESTIMATE
-├── TTS Narration: tts_selector × 1 run (~150 words)       $0.18
-├── Image Generation: image_selector × 6 scenes                  $0.24
-├── Music: music_gen × 1 track (30s)                        $0.10
-├── Video Generation: video_selector × 2 clips (optional)   $0.00 (local)
-├── Audio Enhancement: audio_enhance × 1 pass               $0.00 (local)
-└── TOTAL ESTIMATED                                         $0.52
-    Budget cap: $2.00
-    Verdict: within_budget ✓
-    Headroom: $1.48 for revisions/regeneration
+音乐计划
+├── 你的音乐库：3 首可用曲目
+│   ├── cosmic_interstellar_space.mp3（3:13）— 环境，宇宙
+│   ├── cinematic_epic.mp3（2:45）— 戏剧性，渐强
+│   └── lofi_beat.mp3（4:00）— 放松，电子
+├── AI 生成：music_gen（ElevenLabs）— 不可用（计划限制）
+└── 推荐：从你的库中使用 "cosmic_interstellar_space.mp3"
+    或在资产生成前提供不同的曲目
+
+你想：
+  (a) 从你的库中使用一首曲目（哪一首？）
+  (b) 提供不同的曲目（放入 music_library/）
+  (c) 通过 API 生成一个（如果可用）
+  (d) 在没有音乐的情况下继续
 ```
 
-**Rules:**
-- Always show per-item costs, not just the total
-- Always show the budget cap comparison
-- If over budget, list specific savings options (e.g., "Switch to a cheaper TTS provider: saves $0.18" — check each provider's `estimate_cost` via the registry)
-- Include headroom note — some budget should remain for revisions
+**如果没有音乐来源可用：** 明确告诉用户。不要让它作为资产阶段的惊喜出现。提供 `music_library/` 路径，以便他们可以在生产开始前添加曲目。
 
-### Step 7: Assemble the Approval Gate
+**规则：**
+- 始终先检查 `music_library/` — 用户提供的音乐免费且有意图
+- 始终报告音乐 API 状态（可用、不可用、剩余配额如可检查）
+- 在 `proposal_packet.production_plan.music_source` 中记录音乐决策
+- 如果用户选择了库中的曲目，为资产导演记录其路径
 
-The approval section is where the user commits. Present it as a clear decision point:
+### 步骤 6：构建成本估算
+
+逐项列出每个付费操作：
+
+```
+成本估算
+├── TTS 旁白：tts_selector × 1 次运行（约 150 词）       $0.18
+├── 图像生成：image_selector × 6 个场景                  $0.24
+├── 音乐：music_gen × 1 首曲目（30 秒）                  $0.10
+├── 视频生成：video_selector × 2 个剪辑（可选）           $0.00（本地）
+├── 音频增强：audio_enhance × 1 次处理                    $0.00（本地）
+└── 总计预估                                             $0.52
+    预算上限：$2.00
+    判定：在预算内 ✓
+    余量：$1.48 用于修订/重新生成
+```
+
+**规则：**
+- 始终显示单项成本，而不仅仅是总计
+- 始终显示预算上限比较
+- 如果超预算，列出具体的节省选项（例如"切换到更便宜的 TTS 提供者：节省 $0.18" — 通过注册表检查每个提供者的 `estimate_cost`）
+- 包含余量说明 — 一些预算应保留用于修订
+
+### 步骤 7：组装批准关卡
+
+批准部分是用户做出承诺的地方。将其呈现为一个清晰的决策点：
 
 ```
 ────────────────────────────────────────
-PROPOSAL READY FOR APPROVAL
+提案准备批准
 
-Concept: [selected title]
-Duration: [X] seconds for [platform]
-Estimated cost: $[X.XX] of $[budget] budget
-Production path: [premium/standard/budget/free]
+概念：[选定的标题]
+时长：[X] 秒，适用于 [平台]
+预估成本：$[X.XX] / $[budget] 预算
+生产路径：[高级/标准/经济/免费]
 
-Proceed? (approve / approve with changes / reject)
+继续？（批准 / 带修改批准 / 拒绝）
 ────────────────────────────────────────
 ```
 
-Set `approval.status: "pending"` in the artifact. The EP or the user updates this to `approved` before the pipeline continues.
+在工件中将 `approval.status: "pending"` 设置为。EP 或用户在流水线继续前将其更新为 `approved`。
 
-**Critical rule:** The pipeline MUST NOT proceed past this stage without explicit approval. This is the last free exit. Everything after this costs money and time.
+**关键规则：** 没有明确批准，流水线**不得**通过此阶段。这是最后的免费退出点。之后的一切都会消耗金钱和时间。
 
-### Step 8: Submit
+### 步骤 8：提交
 
-Validate the `proposal_packet` artifact against `schemas/artifacts/proposal_packet.schema.json` and submit.
+对照 `schemas/artifacts/proposal_packet.schema.json` 验证 `proposal_packet` 工件并提交。
 
-## How This Connects Downstream
+## 如何与下游连接
 
-| Downstream Stage | What It Takes From proposal_packet |
+| 下游阶段 | 它从 proposal_packet 获取什么 |
 |------------------|------------------------------------|
-| Script Director | `selected_concept` (title, hook, key_points, core_message, tone, narrative_structure) + research_brief data points |
-| Scene Director | `selected_concept.visual_approach` + `production_plan.playbook` |
-| Asset Director | `production_plan.stages[assets].tools` — knows exactly which providers to use |
-| Executive Producer | `cost_estimate` — initializes budget tracking |
-| All stages | `approval.approved_budget_usd` — hard spending cap |
+| 脚本导演 | `selected_concept`（标题、hook、key_points、core_message、基调、narrative_structure）+ research_brief 数据点 |
+| 场景导演 | `selected_concept.visual_approach` + `production_plan.playbook` |
+| 资产导演 | `production_plan.stages[assets].tools` — 确切知道使用哪些提供者 |
+| 执行制片人 | `cost_estimate` — 初始化预算跟踪 |
+| 所有阶段 | `approval.approved_budget_usd` — 硬性支出上限 |
 
-The `selected_concept` in the proposal_packet effectively replaces what the old `brief` artifact used to be — but it's grounded in research and comes with an explicit production plan attached.
+proposal_packet 中的 `selected_concept` 有效地取代了旧 `brief` 工件的作用 — 但它基于研究并附带明确的生产计划。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Presenting concepts without research grounding**: Every concept's `why_this_works` must reference specific research findings. "This is a popular topic" is not grounding. "Cloudflare Radar shows 13.5% of DNS queries hit 1.1.1.1, which contradicts the common belief that Google DNS dominates" is grounding.
-- **Hiding costs**: Be transparent. If ElevenLabs will cost $0.30, say $0.30. Don't round down or omit items. The user trusts you more when you're honest.
-- **Over-promising tool availability**: If the preflight shows only Piper TTS available, don't design a concept that depends on expressive voice acting. Design around constraints.
-- **Three versions of the same concept**: "Kubernetes Explained", "Understanding Kubernetes", and "Kubernetes Guide" are not three concepts. They're one concept with three titles. Structural diversity means different narrative structures, different hooks, different audiences.
-- **Skipping the approval gate**: This is the whole point of pre-production. No shortcuts.
-- **Not showing alternatives**: The user should always see at least 2 production paths at different price points. Let them make an informed choice.
+- **展示没有研究基础的概念**：每个概念的 `why_this_works` 必须引用具体研究发现。"这是一个热门主题"不是基础。"Cloudflare Radar 显示 13.5% 的 DNS 查询到达 1.1.1.1，这与普遍认为 Google DNS 占主导的信念相矛盾"才是基础。
+- **隐藏成本**：透明。如果 ElevenLabs 将花费 $0.30，就说 $0.30。不要向下取整或省略项目。当你诚实时，用户更信任你。
+- **过度承诺工具可用性**：如果预检只显示 Piper TTS 可用，不要设计依赖表现力配音的概念。围绕约束设计。
+- **同一概念的三个版本**："Kubernetes 解释"、"理解 Kubernetes"和"Kubernetes 指南"不是三个概念。它们是带有三个标题的一个概念。结构性多样性意味着不同的叙事结构、不同的 hook、不同的受众。
+- **跳过批准关卡**：这是制作前的全部意义所在。不能走捷径。
+- **不展示替代方案**：用户应该始终至少看到 2 个不同价位的生产路径。让他们做出知情选择。
 
-## Example: Full Proposal Flow
+## 示例：完整提案流程
 
-### Input: research_brief on "How DNS Works"
+### 输入：关于"DNS 如何工作"的 research_brief
 
-**Concept 1: "The 200ms Journey" (data_driven)**
-- Hook: "Every website you visit starts with a 200-millisecond treasure hunt across the internet."
-- Structure: journey — follow a DNS query step by step
-- Visual: custom signal-map identity — midnight background, electric route traces, packet-flow motion language
-- Duration: 90s (YouTube)
-- Grounded in: recursive resolution timing data, audience gap about multi-step process
-- Why it works: Most viewers think DNS is instant and singular. Showing the real journey is the aha moment.
+**概念 1："200 毫秒的旅程"（data_driven）**
+- Hook："你访问的每个网站都始于一场横跨互联网的 200 毫秒寻宝。"
+- 结构：旅程 — 逐步跟随 DNS 查询
+- 视觉：自定义信号图身份 — 午夜背景、电子路线痕迹、数据包流运动语言
+- 时长：90 秒（YouTube）
+- 基于：递归解析时序数据、关于多步骤过程的受众空白
+- 为什么有效：大多数观众认为 DNS 是即时且单一的。展示真实的旅程就是啊哈时刻。
 
-**Concept 2: "Your ISP Knows Everything" (contrarian)**
-- Hook: "Your internet provider logs every website you visit. Here's the 40-year-old system that makes it possible."
-- Structure: myth_busting — challenge "private browsing = private" belief
-- Visual: custom surveillance-noir identity — low-key contrast, privacy-warning accents, restrained typography
-- Duration: 75s (YouTube)
-- Grounded in: DNS privacy misconception (audience research), DoH trending signal
-- Why it works: Privacy is emotionally charged. The misconception that HTTPS = full privacy is widespread.
+**概念 2："你的 ISP 什么都知道"（contrarian）**
+- Hook："你的互联网提供商会记录你访问的每个网站。这是一个让这成为可能的 40 年历史的系统。"
+- 结构：破除迷思 — 挑战"隐私浏览 = 隐私"的信念
+- 视觉：自定义监控黑色电影身份 — 低调对比、隐私警告强调色、克制排版
+- 时长：75 秒（YouTube）
+- 基于：DNS 隐私误解（受众研究）、DoH 热门信号
+- 为什么有效：隐私是情感性话题。HTTPS = 完全隐私的误解很普遍。
 
-**Concept 3: "The Internet's Phone Book" (analogy)**
-- Hook: "DNS is a phone book designed in 1983 that somehow still runs the modern internet."
-- Structure: analogy — phone book metaphor through historical evolution
-- Visual: custom retro-systems identity — off-white paper base, archival type, neon-modern contrast for present-day beats
-- Duration: 60s (LinkedIn)
-- Grounded in: audience knowledge gap about DNS age, landscape gap (no historical angle found)
-- Why it works: Simplest on-ramp for non-technical audience. The "still works after 40 years" angle is inherently surprising.
+**概念 3："互联网的电话簿"（analogy）**
+- Hook："DNS 是一个在 1983 年设计的电话簿，却不知何故仍然运行着现代互联网。"
+- 结构：类比 — 通过历史演变的电话簿隐喻
+- 视觉：自定义复古系统身份 — 米白纸基底、档案式字体、霓虹现代对比用于当下节拍
+- 时长：60 秒（LinkedIn）
+- 基于：受众关于 DNS 年代的知识空白、格局空白（未找到历史角度）
+- 为什么有效：非技术受众最简单的入口。"40 年后仍然有效"的角度本身就很惊人。
 
-**Production plan (for selected concept 1, Remotion available):**
+**生产计划（针对选定的概念 1，Remotion 可用）：**
 ```
-script   → no tools, no cost
-scene    → no tools, no cost — design 4 Remotion component scenes + 4 AI image scenes
-assets   → tts_selector ($0.22), image_selector × 4 ($0.16), music_gen ($0.10)
-edit     → no tools, no cost
-compose  → video_compose/Remotion render (free) — animated text cards, stat cards,
-           spring transitions, image scenes with animation. NOT Ken Burns.
-publish  → no tools, no cost
-TOTAL: $0.48 of $2.00 budget (saved $0.16 by using Remotion components instead of
-       generating images for text/data scenes)
-```
-
-**Production plan (for selected concept 1, FFmpeg only):**
-```
-script   → no tools, no cost
-scene    → no tools, no cost
-assets   → tts_selector ($0.22), image_selector × 8 ($0.32), music_gen ($0.10)
-edit     → no tools, no cost
-compose  → video_compose/FFmpeg (free) — Ken Burns pan-and-zoom on images
-publish  → no tools, no cost
-TOTAL: $0.64 of $2.00 budget
+script   → 无工具，无成本
+scene    → 无工具，无成本 — 设计 4 个 Remotion 组件场景 + 4 个 AI 图像场景
+assets   → tts_selector（$0.22）、image_selector × 4（$0.16）、music_gen（$0.10）
+edit     → 无工具，无成本
+compose  → video_compose/Remotion 渲染（免费）— 动画文字卡片、统计卡片、
+           弹簧过渡、带动画的图像场景。不是 Ken Burns。
+publish  → 无工具，无成本
+总计：$0.48 / $2.00 预算（通过使用 Remotion 组件代替生成文字/数据场景的图像节省了 $0.16）
 ```
 
-**Alternative paths:**
-- Premium (Remotion): Best available TTS + 4 AI images + 4 Remotion animated scenes = $0.48
-- Standard: Mid-tier TTS + images = $0.40
-- Free: Local TTS + Remotion component scenes only = $0.00 (no images, pure motion graphics)
+**生产计划（针对选定的概念 1，仅 FFmpeg）：**
+```
+script   → 无工具，无成本
+scene    → 无工具，无成本
+assets   → tts_selector（$0.22）、image_selector × 8（$0.32）、music_gen（$0.10）
+edit     → 无工具，无成本
+compose  → video_compose/FFmpeg（免费）— 图像上 Ken Burns 平移和缩放
+publish  → 无工具，无成本
+总计：$0.64 / $2.00 预算
+```
 
+**替代路径：**
+- 高级（Remotion）：最佳可用 TTS + 4 个 AI 图像 + 4 个 Remotion 动画场景 = $0.48
+- 标准：中档 TTS + 图像 = $0.40
+- 免费：本地 TTS + 仅 Remotion 组件场景 = $0.00（无图像，纯运动图形）
 
-## When You Do Not Know How
+## 当你不确定时
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+如果你遇到不熟悉的生成技术、提供者行为或提示模式：
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+1. **搜索网络**了解当前最佳实践 — 模型和 API 频繁变化，代理的训练数据可能过时
+2. **检查 `.agents/skills/`** 是否有现有的第 3 层知识（提供者特定提示指南、API 模式）
+3. **如果两者都不行**，在 `projects/<project-name>/skills/<name>.md` 编写项目范围的技能，记录你学到的内容
+4. **在技能中引用来源 URL**，使知识可追溯
+5. **在决策日志中记录**：`category: "capability_extension"`、`subject: "learned technique: <name>"`
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
+这对以下方面尤其重要：
+- **视频生成提示** — 模型响应特定的词汇，这些词汇随每个版本变化
+- **图像模型参数** — FLUX、DALL-E、Imagen 的最佳设置各不相同且不断演变
+- **音频提供者特性** — 声音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式** — 随着框架发展，新的合成技术不断涌现
 
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时的知识。有疑问时，先搜索。

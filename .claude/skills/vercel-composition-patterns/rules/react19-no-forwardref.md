@@ -1,17 +1,17 @@
 ---
-title: React 19 API Changes
+title: React 19 API 变化
 impact: MEDIUM
-impactDescription: cleaner component definitions and context usage
+impactDescription: 更清晰的组件定义和 context 使用
 tags: react19, refs, context, hooks
 ---
 
-## React 19 API Changes
+## React 19 API 变化
 
-> **⚠️ React 19+ only.** Skip this if you're on React 18 or earlier.
+> **⚠️ 仅 React 19+。** 如果使用 React 18 或更早版本，请跳过本节。
 
-In React 19, `ref` is now a regular prop (no `forwardRef` wrapper needed), and `use()` replaces `useContext()`.
+在 React 19 中，`ref` 现在是一个常规属性（不再需要 `forwardRef` 包装），并且 `use()` 替代了 `useContext()`。
 
-**Incorrect (forwardRef in React 19):**
+**错误（在 React 19 中使用 forwardRef）：**
 
 ```tsx
 const ComposerInput = forwardRef<TextInput, Props>((props, ref) => {
@@ -19,7 +19,7 @@ const ComposerInput = forwardRef<TextInput, Props>((props, ref) => {
 })
 ```
 
-**Correct (ref as a regular prop):**
+**正确（ref 作为常规属性）：**
 
 ```tsx
 function ComposerInput({ ref, ...props }: Props & { ref?: React.Ref<TextInput> }) {
@@ -27,16 +27,16 @@ function ComposerInput({ ref, ...props }: Props & { ref?: React.Ref<TextInput> }
 }
 ```
 
-**Incorrect (useContext in React 19):**
+**错误（在 React 19 中使用 useContext）：**
 
 ```tsx
 const value = useContext(MyContext)
 ```
 
-**Correct (use instead of useContext):**
+**正确（使用 use 替代 useContext）：**
 
 ```tsx
 const value = use(MyContext)
 ```
 
-`use()` can also be called conditionally, unlike `useContext()`.
+`use()` 还可以有条件地调用，而 `useContext()` 不行。

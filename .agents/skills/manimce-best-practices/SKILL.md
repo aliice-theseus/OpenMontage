@@ -1,119 +1,119 @@
 ---
 name: manimce-best-practices
 description: |
-  Trigger when: (1) User mentions "manim" or "Manim Community" or "ManimCE", (2) Code contains `from manim import *`, (3) User runs `manim` CLI commands, (4) Working with Scene, MathTex, Create(), or ManimCE-specific classes.
+  触发条件：(1) 用户提及"manim"或"Manim Community"或"ManimCE"，(2) 代码包含`from manim import *`，(3) 用户运行`manim` CLI命令，(4) 使用Scene、MathTex、Create()或ManimCE特有类。
 
-  Best practices for Manim Community Edition - the community-maintained Python animation engine. Covers Scene structure, animations, LaTeX/MathTex, 3D with ThreeDScene, camera control, styling, and CLI usage.
+  Manim社区版最佳实践 - 社区维护的Python动画引擎。涵盖Scene结构、动画、LaTeX/MathTex、使用ThreeDScene的3D、相机控制、样式和CLI使用。
 
-  NOT for ManimGL/3b1b version (which uses `manimlib` imports and `manimgl` CLI).
+  不适用于ManimGL/3b1b版本（使用`manimlib`导入和`manimgl` CLI）。
 ---
 
-## How to use
+## 使用方法
 
-Read individual rule files for detailed explanations and code examples:
+阅读各个规则文件以获取详细解释和代码示例：
 
-### Core Concepts
-- [rules/scenes.md](rules/scenes.md) - Scene structure, construct method, and scene types
-- [rules/mobjects.md](rules/mobjects.md) - Mobject types, VMobject, Groups, and positioning
-- [rules/animations.md](rules/animations.md) - Animation classes, playing animations, and timing
+### 核心概念
+- [rules/scenes.md](rules/scenes.md) - Scene结构、construct方法和场景类型
+- [rules/mobjects.md](rules/mobjects.md) - Mobject类型、VMobject、Groups和定位
+- [rules/animations.md](rules/animations.md) - 动画类、播放动画和时间控制
 
-### Creation & Transformation
-- [rules/creation-animations.md](rules/creation-animations.md) - Create, Write, FadeIn, DrawBorderThenFill
-- [rules/transform-animations.md](rules/transform-animations.md) - Transform, ReplacementTransform, morphing
-- [rules/animation-groups.md](rules/animation-groups.md) - AnimationGroup, LaggedStart, Succession
+### 创建与变换
+- [rules/creation-animations.md](rules/creation-animations.md) - Create、Write、FadeIn、DrawBorderThenFill
+- [rules/transform-animations.md](rules/transform-animations.md) - Transform、ReplacementTransform、变形
+- [rules/animation-groups.md](rules/animation-groups.md) - AnimationGroup、LaggedStart、Succession
 
-### Text & Math
-- [rules/text.md](rules/text.md) - Text mobjects, fonts, and styling
-- [rules/latex.md](rules/latex.md) - MathTex, Tex, LaTeX rendering, and coloring formulas
-- [rules/text-animations.md](rules/text-animations.md) - Write, AddTextLetterByLetter, TypeWithCursor
+### 文本与数学
+- [rules/text.md](rules/text.md) - Text mobject、字体和样式
+- [rules/latex.md](rules/latex.md) - MathTex、Tex、LaTeX渲染和公式着色
+- [rules/text-animations.md](rules/text-animations.md) - Write、AddTextLetterByLetter、TypeWithCursor
 
-### Styling & Appearance
-- [rules/colors.md](rules/colors.md) - Color constants, gradients, and color manipulation
-- [rules/styling.md](rules/styling.md) - Fill, stroke, opacity, and visual properties
+### 样式与外观
+- [rules/colors.md](rules/colors.md) - 颜色常量、渐变和颜色操作
+- [rules/styling.md](rules/styling.md) - 填充、描边、不透明度和视觉属性
 
-### Positioning & Layout
-- [rules/positioning.md](rules/positioning.md) - move_to, next_to, align_to, shift methods
-- [rules/grouping.md](rules/grouping.md) - VGroup, Group, arrange, and layout patterns
+### 定位与布局
+- [rules/positioning.md](rules/positioning.md) - move_to、next_to、align_to、shift方法
+- [rules/grouping.md](rules/grouping.md) - VGroup、Group、arrange和布局模式
 
-### Coordinate Systems & Graphing
-- [rules/axes.md](rules/axes.md) - Axes, NumberPlane, coordinate systems
-- [rules/graphing.md](rules/graphing.md) - Plotting functions, parametric curves
-- [rules/3d.md](rules/3d.md) - ThreeDScene, 3D axes, surfaces, camera orientation
+### 坐标系与绘图
+- [rules/axes.md](rules/axes.md) - Axes、NumberPlane、坐标系
+- [rules/graphing.md](rules/graphing.md) - 绘制函数、参数曲线
+- [rules/3d.md](rules/3d.md) - ThreeDScene、3D坐标轴、曲面、相机朝向
 
-### Animation Control
-- [rules/timing.md](rules/timing.md) - Rate functions, easing, run_time, lag_ratio
-- [rules/updaters.md](rules/updaters.md) - Updaters, ValueTracker, dynamic animations
-- [rules/camera.md](rules/camera.md) - MovingCameraScene, zoom, pan, frame manipulation
+### 动画控制
+- [rules/timing.md](rules/timing.md) - 速率函数、缓动、run_time、lag_ratio
+- [rules/updaters.md](rules/updaters.md) - Updaters、ValueTracker、动态动画
+- [rules/camera.md](rules/camera.md) - MovingCameraScene、缩放、平移、帧操作
 
-### Configuration & CLI
-- [rules/cli.md](rules/cli.md) - Command-line interface, rendering options, quality flags
-- [rules/config.md](rules/config.md) - Configuration system, manim.cfg, settings
+### 配置与CLI
+- [rules/cli.md](rules/cli.md) - 命令行界面、渲染选项、质量标志
+- [rules/config.md](rules/config.md) - 配置系统、manim.cfg、设置
 
-### Shapes & Geometry
-- [rules/shapes.md](rules/shapes.md) - Circle, Square, Rectangle, Polygon, and geometric primitives
-- [rules/lines.md](rules/lines.md) - Line, Arrow, Vector, DashedLine, and connectors
+### 形状与几何
+- [rules/shapes.md](rules/shapes.md) - Circle、Square、Rectangle、Polygon和几何基本体
+- [rules/lines.md](rules/lines.md) - Line、Arrow、Vector、DashedLine和连接器
 
-## Working Examples
+## 工作示例
 
-Complete, tested example files demonstrating common patterns:
+完整、经过测试的示例文件，展示常见模式：
 
-- [examples/basic_animations.py](examples/basic_animations.py) - Shape creation, text, lagged animations, path movement
-- [examples/math_visualization.py](examples/math_visualization.py) - LaTeX equations, color-coded math, derivations
-- [examples/updater_patterns.py](examples/updater_patterns.py) - ValueTracker, dynamic animations, physics simulations
-- [examples/graph_plotting.py](examples/graph_plotting.py) - Axes, functions, areas, Riemann sums, polar plots
-- [examples/3d_visualization.py](examples/3d_visualization.py) - ThreeDScene, surfaces, 3D camera, parametric curves
+- [examples/basic_animations.py](examples/basic_animations.py) - 形状创建、文本、交错动画、路径移动
+- [examples/math_visualization.py](examples/math_visualization.py) - LaTeX方程、颜色编码数学、推导
+- [examples/updater_patterns.py](examples/updater_patterns.py) - ValueTracker、动态动画、物理仿真
+- [examples/graph_plotting.py](examples/graph_plotting.py) - 坐标轴、函数、面积、黎曼和、极坐标图
+- [examples/3d_visualization.py](examples/3d_visualization.py) - ThreeDScene、曲面、3D相机、参数曲线
 
-## Scene Templates
+## 场景模板
 
-Copy and modify these templates to start new projects:
+复制并修改这些模板以开始新项目：
 
-- [templates/basic_scene.py](templates/basic_scene.py) - Standard 2D scene template
-- [templates/camera_scene.py](templates/camera_scene.py) - MovingCameraScene with zoom/pan
-- [templates/threed_scene.py](templates/threed_scene.py) - 3D scene with surfaces and camera rotation
+- [templates/basic_scene.py](templates/basic_scene.py) - 标准2D场景模板
+- [templates/camera_scene.py](templates/camera_scene.py) - 带缩放/平移的MovingCameraScene
+- [templates/threed_scene.py](templates/threed_scene.py) - 带曲面和相机旋转的3D场景
 
-## Quick Reference
+## 快速参考
 
-### Basic Scene Structure
+### 基本场景结构
 ```python
 from manim import *
 
 class MyScene(Scene):
     def construct(self):
-        # Create mobjects
+        # 创建mobject
         circle = Circle()
 
-        # Add to scene (static)
+        # 添加到场景（静态）
         self.add(circle)
 
-        # Or animate
+        # 或动画
         self.play(Create(circle))
 
-        # Wait
+        # 等待
         self.wait(1)
 ```
 
-### Render Command
+### 渲染命令
 ```bash
-# Basic render with preview
+# 基本渲染带预览
 manim -pql scene.py MyScene
 
-# Quality flags: -ql (low), -qm (medium), -qh (high), -qk (4k)
+# 质量标志：-ql（低）、-qm（中）、-qh（高）、-qk（4k）
 manim -pqh scene.py MyScene
 ```
 
-### Key Differences from 3b1b/ManimGL
+### 与3b1b/ManimGL的主要区别
 
-| Feature | Manim Community | 3b1b/ManimGL |
+| 特性 | Manim社区版 | 3b1b/ManimGL |
 |---------|-----------------|--------------|
-| Import | `from manim import *` | `from manimlib import *` |
+| 导入 | `from manim import *` | `from manimlib import *` |
 | CLI | `manim` | `manimgl` |
-| Math text | `MathTex(r"\pi")` | `Tex(R"\pi")` |
-| Scene | `Scene` | `InteractiveScene` |
-| Package | `manim` (PyPI) | `manimgl` (PyPI) |
+| 数学文本 | `MathTex(r"\pi")` | `Tex(R"\pi")` |
+| 场景 | `Scene` | `InteractiveScene` |
+| 包 | `manim` (PyPI) | `manimgl` (PyPI) |
 
-### Jupyter Notebook Support
+### Jupyter Notebook 支持
 
-Use the `%%manim` cell magic:
+使用 `%%manim` 单元格魔术命令：
 
 ```python
 %%manim -qm MyScene
@@ -122,30 +122,30 @@ class MyScene(Scene):
         self.play(Create(Circle()))
 ```
 
-### Common Pitfalls to Avoid
+### 常见陷阱
 
-1. **Version confusion** - Ensure you're using `manim` (Community), not `manimgl` (3b1b version)
-2. **Check imports** - `from manim import *` is ManimCE; `from manimlib import *` is ManimGL
-3. **Outdated tutorials** - Video tutorials may be outdated; prefer official documentation
-4. **manimpango issues** - If text rendering fails, check manimpango installation requirements
-5. **PATH issues (Windows)** - If `manim` command not found, use `python -m manim` or check PATH
+1. **版本混淆** - 确保使用 `manim`（社区版），不是 `manimgl`（3b1b版本）
+2. **检查导入** - `from manim import *` 是 ManimCE；`from manimlib import *` 是 ManimGL
+3. **过时的教程** - 视频教程可能已过时；优先参考官方文档
+4. **manimpango 问题** - 如果文本渲染失败，请检查 manimpango 安装要求
+5. **Windows 的 PATH 问题** - 如果找不到 `manim` 命令，使用 `python -m manim` 或检查 PATH
 
-### Installation
+### 安装
 
 ```bash
-# Install Manim Community
+# 安装 Manim 社区版
 pip install manim
 
-# Check installation
+# 检查安装
 manim checkhealth
 ```
 
-### Useful Commands
+### 有用命令
 
 ```bash
-manim -pql scene.py Scene    # Preview low quality (development)
-manim -pqh scene.py Scene    # Preview high quality
-manim --format gif scene.py  # Output as GIF
-manim checkhealth            # Verify installation
-manim plugins -l             # List plugins
+manim -pql scene.py Scene    # 低质量预览（开发用）
+manim -pqh scene.py Scene    # 高质量预览
+manim --format gif scene.py  # 输出为 GIF
+manim checkhealth            # 验证安装
+manim plugins -l             # 列出插件
 ```

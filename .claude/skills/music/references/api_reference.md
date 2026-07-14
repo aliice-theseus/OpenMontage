@@ -1,29 +1,29 @@
-# Music API Reference
+# 音乐 API 参考
 
-## Table of Contents
+## 目录
 
 - [compose](#compose)
 - [composition_plan.create](#composition_plancreate)
 - [compose_detailed](#compose_detailed)
 - [upload](#upload)
-- [Error Handling](#error-handling)
+- [错误处理](#error-handling)
 
 ## compose
 
-Generate music from a text prompt. Returns an audio stream.
+根据文本提示词生成音乐。返回音频流。
 
-### Parameters
+### 参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必填 | 描述 |
 |-----------|------|----------|-------------|
-| `prompt` | string | Yes* | Description of desired music |
-| `composition_plan` | object | Yes* | Pre-defined composition plan (alternative to prompt) |
-| `music_length_ms` | integer | No | Duration in milliseconds (3,000–600,000) when using `prompt`; if omitted, the model chooses |
-| `model_id` | string | No | Defaults to `music_v1` |
-| `force_instrumental` | boolean | No | Guarantee an instrumental output (prompt mode only) |
-| `respect_sections_durations` | boolean | No | Enforce exact `duration_ms` in each composition plan section |
+| `prompt` | string | 是* | 所需音乐的描述 |
+| `composition_plan` | object | 是* | 预定义的作曲方案（替代 prompt） |
+| `music_length_ms` | integer | 否 | 持续时间（毫秒），范围 3,000–600,000；使用 `prompt` 时若省略则由模型选择 |
+| `model_id` | string | 否 | 默认为 `music_v1` |
+| `force_instrumental` | boolean | 否 | 确保输出为纯器乐（仅提示词模式） |
+| `respect_sections_durations` | boolean | 否 | 强制遵循作曲方案中每个段落的精确 `duration_ms` |
 
-*Provide either `prompt` or `composition_plan`, not both.
+*提供 `prompt` 或 `composition_plan` 其中之一，不能同时提供。
 
 ### Python
 
@@ -50,7 +50,7 @@ const writeStream = createWriteStream("output.mp3");
 audio.pipe(writeStream);
 ```
 
-### With Composition Plan
+### 使用作曲方案
 
 ```python
 plan = client.music.composition_plan.create(
@@ -58,7 +58,7 @@ plan = client.music.composition_plan.create(
     music_length_ms=60000
 )
 
-# Modify the plan as needed
+# 根据需要修改方案
 audio = client.music.compose(
     composition_plan=plan,
     music_length_ms=60000
@@ -67,16 +67,16 @@ audio = client.music.compose(
 
 ## composition_plan.create
 
-Generate a structured composition plan from a prompt for granular control before generating audio.
+根据提示词生成结构化作曲方案，以便在生成音频前进行精细控制。
 
-### Parameters
+### 参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必填 | 描述 |
 |-----------|------|----------|-------------|
-| `prompt` | string | Yes | Music description |
-| `music_length_ms` | integer | Yes | Duration in milliseconds |
+| `prompt` | string | 是 | 音乐描述 |
+| `music_length_ms` | integer | 是 | 持续时间（毫秒） |
 
-### Response Structure
+### 响应结构
 
 ```json
 {
@@ -103,7 +103,7 @@ plan = client.music.composition_plan.create(
     music_length_ms=60000
 )
 
-# Inspect and modify the plan
+# 查看和修改方案
 print(plan.positiveGlobalStyles)
 for section in plan.sections:
     print(f"{section.name}: {section.duration_ms}ms")
@@ -111,15 +111,15 @@ for section in plan.sections:
 
 ## compose_detailed
 
-Generate music while returning both the composition plan and metadata alongside the audio.
+生成音乐的同时返回作曲方案和元数据以及音频。
 
-### Returns
+### 返回值
 
-| Field | Description |
+| 字段 | 描述 |
 |-------|-------------|
-| `json` | Composition plan + song metadata (includes lyrics if applicable) |
-| `filename` | Output file identifier |
-| `audio` | Audio bytes |
+| `json` | 作曲方案 + 歌曲元数据（如适用，包含歌词） |
+| `filename` | 输出文件标识符 |
+| `audio` | 音频字节 |
 
 ### Python
 
@@ -129,31 +129,31 @@ result = client.music.compose_detailed(
     music_length_ms=120000
 )
 
-# Access the composition plan and metadata
+# 访问作曲方案和元数据
 print(result.json)
 
-# Save the audio
+# 保存音频
 with open(result.filename, "wb") as f:
     f.write(result.audio)
 ```
 
 ## upload
 
-Upload a music file for later inpainting workflows. This endpoint is available to enterprise clients with access to the inpainting feature.
+上传音乐文件用于后续补全工作流。此端点仅对拥有补全功能访问权限的企业客户可用。
 
-### Parameters
+### 参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必填 | 描述 |
 |-----------|------|----------|-------------|
-| `file` | file | Yes | The audio file to upload |
-| `extract_composition_plan` | boolean | No | If `true`, the response includes an extracted composition plan and may take longer to return |
+| `file` | file | 是 | 要上传的音频文件 |
+| `extract_composition_plan` | boolean | 否 | 如果为 `true`，响应中包含提取的作曲方案，可能返回更慢 |
 
-### Returns
+### 返回值
 
-| Field | Description |
+| 字段 | 描述 |
 |-------|-------------|
-| `song_id` | Unique identifier for the uploaded song |
-| `composition_plan` | Extracted composition plan, or `null` when `extract_composition_plan` is not enabled |
+| `song_id` | 上传歌曲的唯一标识符 |
+| `composition_plan` | 提取的作曲方案，未启用 `extract_composition_plan` 时为 `null` |
 
 ### Python
 
@@ -171,11 +171,11 @@ curl -X POST "https://api.elevenlabs.io/v1/music/upload" \
   -F "file=@<file1>"
 ```
 
-## Error Handling
+## 错误处理
 
 ### bad_prompt
 
-Occurs when the prompt references copyrighted material (specific artists, bands, or copyrighted lyrics). The error response includes a `prompt_suggestion` with alternative phrasing.
+当提示词引用受版权保护的内容（特定艺术家、乐队或受版权保护的歌词）时发生。错误响应包含 `prompt_suggestion`，提供替代措辞。
 
 ```python
 try:
@@ -189,12 +189,12 @@ except Exception as e:
 
 ### bad_composition_plan
 
-Returned when a composition plan contains copyrighted styles. The error includes a `composition_plan_suggestion` with corrected styles. No suggestion is provided for harmful content.
+当作曲方案包含受版权保护的风格时返回。错误包含 `composition_plan_suggestion` 和纠正后的风格。对于有害内容不提供建议。
 
-### Common HTTP Errors
+### 常见 HTTP 错误
 
-| Code | Meaning |
+| 状态码 | 含义 |
 |------|---------|
-| 401 | Invalid API key |
-| 422 | Invalid parameters |
-| 429 | Rate limit exceeded |
+| 401 | API 密钥无效 |
+| 422 | 参数无效 |
+| 429 | 超过频率限制 |

@@ -1,15 +1,15 @@
 ---
-title: Parallel Nested Data Fetching
+title: 并行嵌套数据获取
 impact: CRITICAL
-impactDescription: eliminates server-side waterfalls
+impactDescription: 消除服务端瀑布请求
 tags: server, rsc, parallel-fetching, promise-chaining
 ---
 
-## Parallel Nested Data Fetching
+## 并行嵌套数据获取
 
-When fetching nested data in parallel, chain dependent fetches within each item's promise so a slow item doesn't block the rest.
+在并行获取嵌套数据时，在每个项目的 promise 中链式依赖获取，这样慢的项目不会阻塞其他项目。
 
-**Incorrect (a single slow item blocks all nested fetches):**
+**不正确（单个慢项目阻塞所有嵌套获取）：**
 
 ```tsx
 const chats = await Promise.all(
@@ -21,9 +21,9 @@ const chatAuthors = await Promise.all(
 )
 ```
 
-If one `getChat(id)` out of 100 is extremely slow, the authors of the other 99 chats can't start loading even though their data is ready.
+如果 100 个中的一个 `getChat(id)` 非常慢，其他 99 个聊天的作者即使数据已就绪也无法开始加载。
 
-**Correct (each item chains its own nested fetch):**
+**正确（每个项目链式自己的嵌套获取）：**
 
 ```tsx
 const chatAuthors = await Promise.all(
@@ -31,4 +31,4 @@ const chatAuthors = await Promise.all(
 )
 ```
 
-Each item independently chains `getChat` → `getUser`, so a slow chat doesn't block author fetches for the others.
+每个项目独立链式 `getChat` → `getUser`，所以慢的聊天不会阻塞其他项目的作者获取。

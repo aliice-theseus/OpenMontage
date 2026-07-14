@@ -1,202 +1,196 @@
 ---
 name: flux2-models
-description: Prompting guidelines specific to FLUX.2 model family
+description: FLUX.2 模型系列的提示词指南
 ---
 
-# FLUX.2 Model Family
+# FLUX.2 模型系列
 
-Complete guide to FLUX.2 variants and their optimal prompting strategies.
+FLUX.2 变体及其最佳提示词策略的完整指南。
 
-> **Key Feature:** All FLUX.2 models natively support both text-to-image generation AND image-to-image editing via reference images. There's no need to use legacy FLUX.1 Kontext models for editing tasks.
+> **主要特性：** 所有 FLUX.2 模型都原生支持通过参考图片进行文生图生成和图像编辑。无需使用旧的 FLUX.1 Kontext 模型进行编辑任务。
 
-## Model Overview
+## 模型概述
 
-| Model | Parameters | Best For | Speed | Reference Images |
-|-------|------------|----------|-------|------------------|
-| [klein] | 4B/9B | Fast iterations, previews, quick edits | Fastest | Up to 4 |
-| [max] | - | Highest quality generation & editing | Slowest | Up to 8-10 |
-| [pro] | - | Production balanced | Medium | Up to 8 |
-| [flex] | - | Typography, text rendering | Medium | Up to 8 |
-| [dev] | - | Local development | Varies | Varies |
+| 模型     | 参数     | 最适合                     | 速度   | 参考图片         |
+| ------- | -------- | ------------------------- | ------ | ---------------- |
+| [klein] | 4B/9B    | 快速迭代、预览、快速编辑     | 最快   | 最多 4 张         |
+| [max]   | -        | 最高质量生成与编辑           | 最慢   | 最多 8-10 张      |
+| [pro]   | -        | 生产平衡                   | 中等   | 最多 8 张         |
+| [flex]  | -        | 排版、文本渲染              | 中等   | 最多 8 张         |
+| [dev]   | -        | 本地开发                   | 各异   | 各异             |
 
-## FLUX.2 [klein] - Fast Generation
+## FLUX.2 [klein] - 快速生成
 
-Best for rapid prototyping, previews, and high-volume generation.
+最适合快速原型开发、预览和批量生成。
 
-### Characteristics
-- 4B or 9B parameter versions available
-- Sub-second generation times
-- Optimized for speed over maximum detail
-- **No prompt upsampling** - be descriptive yourself
-- Supports up to 4 reference images
+### 特性
+- 提供 4B 或 9B 参数版本
+- 亚秒级生成时间
+- 为速度优化而非最大细节
+- **无提示词上采样** - 需要自己详细描述
+- 支持最多 4 张参考图片
 
-### Prompting Style: Narrative Prose
+### 提示词风格：叙述性散文
 
-Klein responds best to descriptive, narrative-style prompts with emphasis on lighting and atmosphere.
+Klein 最适合描述性、叙事风格的提示词，重点突出光照和氛围。
 
-### Example Prompt
+### 示例提示词
 ```
-A cozy coffee shop interior bathed in warm afternoon light, steam rising lazily
-from ceramic cups, worn leather armchairs arranged around small wooden tables,
-bookshelves lining exposed brick walls, the soft atmosphere of a quiet afternoon
-with dust motes floating in sunbeams through tall windows
-```
-
-### Tips for [klein]
-- Write like a novelist describing a scene
-- Front-load your subject (word order critical)
-- Emphasize lighting descriptions heavily
-- Keep prompts moderately detailed (40-70 words)
-
-## FLUX.2 [max] - Highest Quality
-
-Premium model for final production assets and maximum detail.
-
-### Characteristics
-- Highest detail and coherence
-- Best editing consistency
-- Vast world knowledge
-- Includes grounding search (real-time web data)
-- Strongest prompt following
-- Supports up to 8 reference images (API), 10 (playground)
-
-### Prompting Style: Technical + Descriptive
-
-[max] excels with detailed technical specifications combined with descriptive prose.
-
-### Example Prompt
-```
-Portrait of a weathered fisherman, age 70, deep wrinkles telling stories of
-decades at sea, salt-and-pepper beard with streaks of white, wearing a navy
-cable-knit sweater with visible wool texture. Shot on Hasselblad X2D with
-90mm f/2.8 lens at f/4, golden hour natural light from the left creating
-strong rim lighting, shallow depth of field with soft bokeh from harbor
-lights behind, Kodak Portra 400 color science with natural grain
+一个舒适的咖啡馆内部，沐浴在温暖的午后阳光中，蒸汽从陶瓷杯中缓缓升起，
+破旧的皮革扶手椅围绕着小木桌排列，书架沿裸露砖墙摆放，
+安静午后的柔和氛围中，灰尘颗粒在高窗透入的光束中飘浮
 ```
 
-### Tips for [max]
-- Include camera and lens specifications for photorealism
-- Specify film stock or digital sensor characteristics
-- Use technical photography terms (aperture, focal length)
-- Leverage grounding search for current events: "news photo of [recent event]"
+### [klein] 使用技巧
+- 像小说家描述场景一样写作
+- 前置主体（词序至关重要）
+- 强调光照描述
+- 保持提示词适度详细（40-70 词）
 
-## FLUX.2 [pro] - Production Balanced
+## FLUX.2 [max] - 最高质量
 
-Optimal balance of quality and speed for production workflows.
+用于最终生产素材和最大细节的高级模型。
 
-### Characteristics
-- Good quality-to-speed ratio
-- Reliable, consistent output
-- Suitable for batch processing
-- Supports prompt upsampling
-- Supports up to 8 reference images
+### 特性
+- 最高细节和连贯性
+- 最佳编辑一致性
+- 广泛的世界知识
+- 包含 grounding 搜索（实时网络数据）
+- 最强的提示词遵循能力
+- 支持最多 8 张参考图片（API），10 张（游乐场）
 
-### Prompting Style: Balanced Detail
+### 提示词风格：技术 + 描述
 
-Standard detailed prompts work well without excessive technical specification.
+[max] 擅长将详细的技术规格与描述性散文相结合。
 
-### Example Prompt
+### 示例提示词
 ```
-A modern minimalist living room with floor-to-ceiling windows overlooking
-a city skyline at dusk, clean white furniture with subtle textures, a single
-statement plant in the corner, warm ambient lighting from hidden sources,
-architectural photography style with clean lines and balanced composition
-```
-
-### Tips for [pro]
-- Balance specificity with generation speed
-- Good for template-based prompt systems
-- Enable prompt upsampling for enhanced results
-- Consistent quality for production pipelines
-
-## FLUX.2 [flex] - Typography Specialist
-
-Optimized for text rendering and typographic content.
-
-### Characteristics
-- Superior text rendering quality
-- Handles multiple text elements
-- Adjustable steps (1-50) and guidance (1.5-10)
-- Best for signage, posters, UI mockups
-- Supports up to 8 reference images
-
-### Prompting Style: Typography-Focused
-
-Always quote text and specify font characteristics explicitly.
-
-### Example Prompt
-```
-A modern minimalist poster design with the headline "DESIGN SUMMIT 2025"
-in bold condensed sans-serif typography centered in the upper third,
-subtitle "Innovation Meets Creativity" in lighter weight below,
-date "MARCH 15-17" in small caps at the bottom, all text in white
-on a gradient background transitioning from deep purple #4A0080 to
-coral #FF6B6B, clean geometric accent lines, professional print quality
+一位饱经风霜的 70 岁渔夫肖像，深深的皱纹诉说着数十年的海上经历，
+花白胡须带白色条纹，穿着可见羊毛纹理的藏青色绞花毛衣。
+使用哈苏 X2D 配 90mm f/2.8 镜头在 f/4 拍摄，左侧金色自然光
+形成强烈的轮廓光，浅景深，身后港口灯光形成柔和散景，
+柯达 Portra 400 色彩科学，带自然颗粒
 ```
 
-### Tips for [flex]
-- Always quote exact text: `"Your Text Here"`
-- Specify font style: serif, sans-serif, script, display, monospace
-- Describe text hierarchy: headline, subhead, body
-- Include placement: centered, left-aligned, upper third
-- Adjust steps (higher = better quality) and guidance (higher = stricter)
+### [max] 使用技巧
+- 包含相机和镜头规格以获得照片级真实感
+- 指定胶片类型或数字传感器特性
+- 使用摄影技术术语（光圈、焦距）
+- 利用 grounding 搜索获取实时信息："[近期事件]的新闻照片"
 
-## FLUX.2 [dev] - Local Development
+## FLUX.2 [pro] - 生产平衡
 
-For local development, testing, and non-commercial use.
+为生产工作流提供质量与速度的最佳平衡。
 
-### Characteristics
-- Open weights on Hugging Face
-- Runs locally (~13GB VRAM recommended)
-- Full customization available
-- Free for non-commercial use
-- Base variants available (undistilled) for fine-tuning
+### 特性
+- 良好的质量速度比
+- 可靠、一致的输出
+- 适合批量处理
+- 支持提示词上采样
+- 支持最多 8 张参考图片
 
-### Prompting Style: Standard
+### 提示词风格：平衡细节
 
-Same prompting patterns as [pro] work well.
+标准的详细提示词效果良好，无需过多技术规格。
 
-### Tips for [dev]
-- Use for development and testing before production
-- Experiment with prompt variations
-- Good for fine-tuning experiments
-- Check license for commercial use restrictions
-
-## Image-to-Image Editing with FLUX.2
-
-All FLUX.2 models support image editing via reference images. This replaces the need for legacy FLUX.1 Kontext models.
-
-### How It Works
-
-1. Provide your source image(s) as reference images
-2. Describe the desired changes in your prompt
-3. The model preserves context while applying edits
-
-### Example: Style Transfer
+### 示例提示词
 ```
-Reference: [your source image]
-Prompt: Transform this image into a watercolor painting style,
-maintaining the exact composition and subject positioning
+一个现代极简主义客厅，落地窗俯瞰黄昏时分的城市天际线，
+干净的白色家具带有微妙纹理，角落里的个性植物，
+来自隐藏光源的温暖环境光，建筑摄影风格，线条干净构图平衡
 ```
 
-### Example: Object Modification
+### [pro] 使用技巧
+- 平衡具体性与生成速度
+- 适合基于模板的提示词系统
+- 启用提示词上采样以获得增强效果
+- 生产流水线的一致质量
+
+## FLUX.2 [flex] - 排版专家
+
+针对文本渲染和排版内容进行了优化。
+
+### 特性
+- 卓越的文本渲染质量
+- 处理多个文本元素
+- 可调节的步数（1-50）和引导力度（1.5-10）
+- 最适合标牌、海报、UI 原型
+- 支持最多 8 张参考图片
+
+### 提示词风格：排版聚焦
+
+始终引用文本并明确指定字体特性。
+
+### 示例提示词
 ```
-Reference: [your source image]
-Prompt: Change the car color to red while keeping everything else identical
+现代极简海报设计，标题"DESIGN SUMMIT 2025"使用粗体浓缩无衬线字体，
+居中位于上三分之一，副标题"Innovation Meets Creativity"使用较轻字重在其下方，
+底部日期"MARCH 15-17"使用小型大写字母，所有文字为白色，
+背景从深紫色 #4A0080 渐变到珊瑚色 #FF6B6B，干净的几何装饰线条，专业印刷质量
 ```
 
-### Example: Character Consistency
+### [flex] 使用技巧
+- 始终引用精确文本：`"Your Text Here"`
+- 指定字体风格：serif、sans-serif、script、display、monospace
+- 描述文字层级：标题、副标题、正文
+- 包含位置：居中、左对齐、上三分之一
+- 调整步数（越高=质量越好）和引导力度（越高=越严格）
+
+## FLUX.2 [dev] - 本地开发
+
+用于本地开发、测试和非商业用途。
+
+### 特性
+- Hugging Face 上的开放权重
+- 本地运行（推荐 ~13GB VRAM）
+- 完全可定制
+- 非商业用途免费
+- 提供基础变体（未蒸馏）用于微调
+
+### 提示词风格：标准
+
+与 [pro] 相同的提示词模式效果良好。
+
+### [dev] 使用技巧
+- 在投入生产前用于开发和测试
+- 尝试提示词变体
+- 适合微调实验
+- 检查许可证了解商业使用限制
+
+## 使用 FLUX.2 进行图生图编辑
+
+所有 FLUX.2 模型都支持通过参考图片进行图像编辑。这取代了对旧 FLUX.1 Kontext 模型的需求。
+
+### 工作原理
+
+1. 提供你的源图片作为参考
+2. 在提示词中描述所需的更改
+3. 模型在应用编辑时保留上下文
+
+### 示例：风格迁移
 ```
-Reference: [character reference image]
-Prompt: The same person from the reference image walking through
-a busy Tokyo street at night, neon lights reflecting on wet pavement
+参考：[你的源图片]
+提示词：将此图片转换为水彩画风格，保持精确的构图和主体位置
 ```
 
-### Model Selection for Editing
+### 示例：物体修改
+```
+参考：[你的源图片]
+提示词：将汽车颜色改为红色，保持其他一切不变
+```
 
-| Use Case | Recommended Model |
-|----------|-------------------|
-| Quick iterations/previews | FLUX.2 [klein] |
-| Production quality edits | FLUX.2 [pro] |
-| Maximum quality/complex edits | FLUX.2 [max] |
-| Text/typography edits | FLUX.2 [flex] |
+### 示例：角色一致性
+```
+参考：[角色参考图片]
+提示词：与参考图片中相同的人走在繁忙的东京夜晚街道上，
+霓虹灯在湿漉漉的路面上反射
+```
+
+### 编辑用模型选择
+
+| 使用场景           | 推荐模型         |
+| ----------------- | --------------- |
+| 快速迭代/预览      | FLUX.2 [klein]  |
+| 生产质量编辑       | FLUX.2 [pro]    |
+| 最高质量/复杂编辑  | FLUX.2 [max]    |
+| 文字/排版编辑      | FLUX.2 [flex]   |

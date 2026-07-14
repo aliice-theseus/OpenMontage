@@ -1,18 +1,15 @@
-# Font translation
+# 字体翻译
 
-Fonts are the dominant non-translation noise floor. Same `font-weight: 800`
-renders perceptibly bolder on HF's `chrome-headless-shell` than on
-Remotion's bundled Chromium when there's no real font installed. Validation
-showed this costs ~0.025 mean SSIM at the noise floor.
+字体是主要的非翻译噪声基底。在未安装真实字体的情况下，相同的 `font-weight: 800` 在 HF 的 `chrome-headless-shell` 上比 Remotion 捆绑的 Chromium 渲染得明显更粗。验证显示，这在噪声基底处造成了约 ~0.025 的平均 SSIM 损失。
 
-## Pattern: `@remotion/google-fonts/<Family>`
+## 模式：`@remotion/google-fonts/<Family>`
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Inter";
 loadFont("normal", { weights: ["400", "800"] });
 ```
 
-Translate to a `<link>` tag in `<head>`:
+翻译为 `<head>` 中的 `<link>` 标签：
 
 ```html
 <head>
@@ -30,11 +27,9 @@ Translate to a `<link>` tag in `<head>`:
 </head>
 ```
 
-Pull the family name and weights from the import path and `loadFont`
-arguments. HF's compiler inlines the Google Fonts CSS at render time, so
-you don't pay a network round-trip per render.
+从导入路径和 `loadFont` 参数中提取字体系列名称和字重。HF 的编译器在渲染时内联 Google Fonts CSS，因此你无需为每次渲染支付网络往返开销。
 
-## Pattern: local fonts via `@font-face`
+## 模式：通过 `@font-face` 使用本地字体
 
 ```tsx
 import { Font } from "remotion";
@@ -42,7 +37,7 @@ import { Font } from "remotion";
 Font.loadFont("/MyFont.woff2", "MyFont");
 ```
 
-Translate to a `@font-face` rule:
+翻译为 `@font-face` 规则：
 
 ```html
 <style>
@@ -55,58 +50,42 @@ Translate to a `@font-face` rule:
 </style>
 ```
 
-Copy the font file into `hf-src/assets/` next to the HTML.
+将字体文件复制到 HTML 旁边的 `hf-src/assets/` 中。
 
-## Pattern: system font fallback (no font load)
+## 模式：系统字体回退（无字体加载）
 
 ```tsx
 <div style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>...</div>
 ```
 
-Same string in HF — but be aware: on Linux without a real Helvetica
-installed (typical CI environment), Remotion and HF fall back to
-_different_ sans-serif system fonts because they bundle different
-Chromium versions. This is the noise floor: ~0.025 mean SSIM cost,
-visible as different stroke widths at large font weights (800+).
+在 HF 中保留相同字符串 — 但要注意：在没有安装真实 Helvetica 的 Linux 上（典型的 CI 环境），Remotion 和 HF 会回退到_不同的_无衬线系统字体，因为它们捆绑了不同版本的 Chromium。这就是噪声基底：约 ~0.025 的平均 SSIM 损失，在大字重（800+）时表现为不同的笔画宽度。
 
-If matching the Remotion render exactly matters for a specific
-fixture, load the same font explicitly — don't rely on system
-fallback.
+如果特定测试用例需要精确匹配 Remotion 渲染，显式加载相同的字体 — 不要依赖系统回退。
 
-## When in doubt: use Inter
+## 如有疑问：使用 Inter
 
-Inter renders identically across Chromium versions and is free.
-Translate any "system sans-serif" Remotion comp to Inter when you
-need to minimize font drift in the validation harness.
+Inter 在不同 Chromium 版本之间渲染一致且免费。当你需要在验证框架中最小化字体漂移时，将任何"系统无衬线"的 Remotion 合成翻译为使用 Inter。
 
-## Font loading and `delayRender`
+## 字体加载和 `delayRender`
 
-Remotion uses `delayRender()` to defer the first frame until fonts
-load. HF's compiler inlines Google Fonts at compile time and waits
-on `@font-face` readiness via the Frame Adapter pattern — the
-`delayRender` call drops in translation. See [media.md](media.md).
+Remotion 使用 `delayRender()` 来延迟第一帧直到字体加载完成。HF 的编译器在编译时内联 Google Fonts，并通过 Frame Adapter 模式等待 `@font-face` 就绪 — `delayRender` 调用在翻译时丢弃。参见 [media.md](media.md)。
 
-## Multi-weight loading
+## 多字重加载
 
-When Remotion loads multiple weights:
+当 Remotion 加载多个字重时：
 
 ```tsx
 loadFont("normal", { weights: ["400", "500", "700", "800"] });
 ```
 
-Inline all weights in the Google Fonts URL:
+将所有字重内联到 Google Fonts URL 中：
 
 ```
 ?family=Inter:wght@400;500;700;800&display=swap
 ```
 
-Translation rule: enumerate every distinct `font-weight` value
-that appears in the composition's CSS (`font-weight: 800` →
-weight 800 must be loaded). If the Remotion source loads weights
-that aren't actually used, drop them.
+翻译规则：枚举合成 CSS 中出现的每个不同的 `font-weight` 值（`font-weight: 800` → 必须加载字重 800）。如果 Remotion 源码加载了实际未使用的字重，则丢弃它们。
 
-## Font subsetting
+## 字体子集化
 
-Remotion's `loadFont` doesn't subset; HF's compiler doesn't either
-(yet). Don't try to optimize this in translation — it's lossless to
-keep the same weight set as the Remotion source.
+Remotion 的 `loadFont` 不做子集化；HF 的编译器目前也不做。不要在翻译中尝试优化这一点 — 保持与 Remotion 源码相同的字重集合是无损的。

@@ -1,35 +1,35 @@
 ---
 name: counting-dynamic-scale
-description: Counter animation where font size grows with the counting value, creating escalating visual weight.
+description: 计数器动画，字号随计数值增长，创造递增的视觉重量。
 metadata:
   tags: counter, counting, scale, font-size, number, dynamic, emphasis
 ---
 
-# Counting with Dynamic Scale
+# 动态缩放计数
 
-A number counts from A → B while its font size simultaneously grows, creating escalating visual weight that reinforces magnitude.
+数字从 A 计数到 B，同时其字号增长，创造递增的视觉重量，强化量级。
 
-## How It Works
+## 工作原理
 
-A single eased timeline drives **two synchronized properties**:
+一个单一的缓动时间线驱动**两个同步属性**：
 
-1. The numeric value (rendered as DOM text via `onUpdate`)
-2. The font size (tweened from `START_SIZE` → `END_SIZE`)
+1. 数值（通过 `onUpdate` 渲染为 DOM 文本）
+2. 字号（从 `START_SIZE` → `END_SIZE` 补间）
 
-As the number gets bigger, the text gets larger — visually communicating "this is impressive."
+随着数字变大，文本也变大 — 视觉上传达"这令人印象深刻。"
 
-## Easing
+## 缓动
 
-Pick by drama desired (the choice is discrete; coefficient is implicit):
+按所需的戏剧性选择（选择是离散的；系数是隐式的）：
 
-| GSAP ease    | Effect                                        |
-| ------------ | --------------------------------------------- |
-| `power1.out` | Mild — slight deceleration                    |
-| `power2.out` | Default — ease-out, fast start slow end       |
-| `power3.out` | Strong — dramatic deceleration ⭐ recommended |
-| `expo.out`   | Very dramatic — almost stops at the end       |
+| GSAP 缓动     | 效果                                        |
+| ------------- | ------------------------------------------- |
+| `power1.out`  | 温和 — 轻微减速                             |
+| `power2.out`  | 默认 — 缓出，快起始慢结束                    |
+| `power3.out`  | 强 — 戏剧性减速 ⭐ 推荐                      |
+| `expo.out`    | 非常戏剧性 — 几乎在结束时停止                |
 
-`power3.out` matches the polynomial `1 - (1-x)^k` family at k ≈ 2.5 — number rushes up then slows dramatically at the peak.
+`power3.out` 匹配多项式 `1 - (1-x)^k` 族在 k ≈ 2.5 处 — 数字冲上去然后在峰值剧烈减速。
 
 ## HTML
 
@@ -65,7 +65,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
   align-items: baseline;
   justify-content: center;
   gap: 8px;
-  /* Fixed-width container prevents layout shift as digit count changes */
+  /* 固定宽度容器防止数字位数变化时布局偏移 */
   width: {counterContainerWidth};
   text-align: center;
 }
@@ -74,9 +74,9 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
   font-family: {font};
   font-weight: 900;
   color: {textColor};
-  /* MANDATORY — tabular-nums keeps digits the same width */
+  /* 必须 — tabular-nums 保持数字宽度相同 */
   font-variant-numeric: tabular-nums;
-  /* Initial font-size; GSAP will tween this */
+  /* 初始字号；GSAP 将补间此属性 */
   font-size: {startSize};
   letter-spacing: -2px;
   line-height: 1;
@@ -100,7 +100,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -111,7 +111,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
   const counter = document.getElementById("counter");
   const state = { value: 0, fontSize: START_SIZE };
 
-  // Synchronized count + font-size tween
+  // 同步计数 + 字号补间
   tl.to(
     state,
     {
@@ -127,7 +127,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
     0,
   );
 
-  // Suffix slides in after count completes
+  // 后缀在计数完成后滑入
   tl.to(
     ".counter-suffix",
     {
@@ -139,7 +139,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
     COUNT_DUR,
   );
 
-  // Label fades in early
+  // 标签提前淡入
   tl.from(
     ".counter-label",
     {
@@ -155,43 +155,37 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
 </script>
 ```
 
-## How to Choose Values
+## 如何选择值
 
-- **TARGET_VALUE** — the number the counter lands on
-  - Effects: 2–3 digits reads best at hero size; 4+ digits requires wider container
-  - Constraints: must fit horizontally at END_SIZE inside the container
+- **TARGET_VALUE** — 计数器着陆的数字
+  - 效果：2–3 位数字在主角大小时读作最佳；4+ 位数字需要更宽的容器
+  - 约束：必须在 END_SIZE 时水平适应容器
+- **START_SIZE / END_SIZE** — 初始和最终字号
+  - 范围：START_SIZE ≈ END_SIZE 的 40–60%
+  - 效果：更小的 START_SIZE = 更戏剧性的增长；更大 = 更微妙
+  - 约束：END_SIZE × 数字位数必须适应容器宽度而不裁剪
+- **COUNT_DUR** — 计数 + 缩放补间时长
+  - 范围：1.2–2.5 秒
+  - 效果：更短 = 激进；更长 = 稳定，给阅读时间
+  - 约束：必须让眼睛能阅读滚过的数字；低于 ~0.8 秒读作闪烁
+- **COUNT_EASE** — 值和字号的共享缓动
+  - 离散选择：`power2.out`、`power3.out`、`expo.out`（参见上表）
+  - 约束：避免 `back.out` / `elastic.out` — 过冲读作不稳定数据
+- **SUFFIX_DUR** — 后缀滑入时长
+  - 范围：0.3–0.6 秒
+  - 效果：更短 = 快照；更长 = 浮动
+  - 约束：必须在计数着陆后触发（在 COUNT_DUR 开始），而非期间
+- **SUFFIX_BOUNCE_FACTOR** — 后缀入场的 back.out 系数
+  - 范围：1.4–2.0
+  - 效果：1.4 = 小过冲；2.0 = 弹跳
+- **LABEL_AT / LABEL_DUR** — 标签淡入的时间和时长
+  - 范围：LABEL_AT < COUNT_DUR / 2（标签在计数达到峰值前到达）；LABEL_DUR 0.4–0.7 秒
 
-- **START_SIZE / END_SIZE** — initial and final font size
-  - Range: START_SIZE ≈ 40–60 % of END_SIZE
-  - Effects: smaller START_SIZE = more dramatic growth; larger = subtler
-  - Constraints: END_SIZE × digit count must fit the container width without clipping
+## 变体
 
-- **COUNT_DUR** — count + scale tween duration
-  - Range: 1.2–2.5 s
-  - Effects: shorter = aggressive; longer = settled, gives reading time
-  - Constraints: must allow the eye to read the digits scrolling past; below ~0.8 s reads as a flash
+### 直接 `innerText` 补间（无代理对象）
 
-- **COUNT_EASE** — shared ease for value AND font-size
-  - Discrete choice: `power2.out`, `power3.out`, `expo.out` (see table above)
-  - Constraint: avoid `back.out` / `elastic.out` — overshoot reads as unstable data
-
-- **SUFFIX_DUR** — duration of the suffix slide-in
-  - Range: 0.3–0.6 s
-  - Effects: shorter = snap; longer = floats
-  - Constraints: must fire after the count lands (started at COUNT_DUR), not during
-
-- **SUFFIX_BOUNCE_FACTOR** — back.out coefficient on the suffix entry
-  - Range: 1.4–2.0
-  - Effects: 1.4 = small overshoot; 2.0 = bouncy
-
-- **LABEL_AT / LABEL_DUR** — when and how long the label fades in
-  - Range: LABEL_AT < COUNT_DUR / 2 (label arrives before count peaks); LABEL_DUR 0.4–0.7 s
-
-## Variations
-
-### Direct `innerText` tween (no proxy object)
-
-The GSAP inspector reads `innerText` directly, so a number-only counter can skip the `state` proxy:
+GSAP 检查器直接读取 `innerText`，因此仅数字的计数器可以跳过 `state` 代理：
 
 ```js
 tl.to(
@@ -201,11 +195,11 @@ tl.to(
 );
 ```
 
-`snap: { innerText: 1 }` keeps it integer. Keep the proxy-object `onUpdate` form (above) whenever you must **co-drive** font-size, locale formatting (`toLocaleString`), or a suffix in the same tween — `innerText` alone can't do those, and dynamic scale is the whole point of this rule, so the proxy form is the default here.
+`snap: { innerText: 1 }` 保持为整数。当必须**共同驱动**字号、区域格式（`toLocaleString`）或同一补间中的后缀时，保留代理对象 `onUpdate` 形式（如上）— `innerText` 单独无法做到这些，而动态缩放正是此规则的要点，因此代理形式是这里的默认值。
 
-### 3D depth entry
+### 3D 深度入场
 
-Combine with `translateZ` for parallax-style depth on entry:
+与 `translateZ` 组合实现视差风格深度入场：
 
 ```js
 tl.from(
@@ -214,13 +208,13 @@ tl.from(
     z: -300,
     duration: 0.6,
     ease: "power2.out",
-    // requires parent or .counter itself to have perspective set
+    // 需要父级或 .counter 本身设置 perspective
   },
   0,
 );
 ```
 
-CSS prerequisite:
+CSS 先决条件：
 
 ```css
 .counter-wrap {
@@ -231,9 +225,9 @@ CSS prerequisite:
 }
 ```
 
-### Multi-stat coordinated reveal
+### 多统计协调揭示
 
-For 3 stats counting in parallel, share the SAME ease and duration so they finish together — visually a chord, not arpeggio. Each stat usually also needs a **paired graphic** (bar / ring / stars) — don't stop at the number; see [stat-bars-and-fills.md](stat-bars-and-fills.md):
+对于并行计数的 3 个统计，共享相同的缓动和时长，使它们同时完成 — 视觉上是一个和弦，而非琶音。每个统计通常也需要一个**配对图形**（条/环/星）— 不要只停在数字上；参见 [stat-bars-and-fills.md](stat-bars-and-fills.md)：
 
 ```js
 ["#stat1", "#stat2", "#stat3"].forEach((sel, i) => {
@@ -247,37 +241,37 @@ For 3 stats counting in parallel, share the SAME ease and duration so they finis
       onUpdate: () => (document.querySelector(sel).textContent = Math.round(obj.v)),
     },
     0,
-  ); // same start position — chord
+  ); // 相同起始位置 — 和弦
 });
 ```
 
-## Key Principles
+## 关键原则
 
-- **Synchronized value + size in ONE tween** so they share an ease and stay coordinated
-- **`font-variant-numeric: tabular-nums` is mandatory** — without it digit-count transitions (e.g. 9 → 10 → 100) cause visible jitter as glyph widths change
-- **Fixed-width container** as belt-and-suspenders — even with tabular-nums, glyph shape changes can shift baselines
-- **Grow in place, don't bounce** — the number should feel weighty, not springy. `power3.out` ends at exact value; `back.out` overshoots and feels cartoonish
-- **Start small enough to grow noticeably** (~50 % of final size); end large enough to feel decisive but not clip viewport
-- **Suffix animates AFTER the count, not during** — gives the number its own beat
-- **❗ Label is BIG TEXT, not a page-style tiny caption** — for VIDEO, a small paragraph-style caption below a hero-size number reads as visual noise. Use display-size, uppercase, tracked label so the layout is "two-line big-text"; the label is part of the headline, not a footer.
+- **在一个补间中同步值和大小**，使它们共享缓动并保持协调
+- **`font-variant-numeric: tabular-nums` 是强制性的** — 没有它，数字位数转换（例如 9 → 10 → 100）会因字形宽度变化引起可见抖动
+- **固定宽度容器**作为双重保障 — 即使有 tabular-nums，字形形状变化也可能偏移基线
+- **原位增长，不弹跳** — 数字应感觉有重量，而非有弹性。`power3.out` 在精确值结束；`back.out` 过冲并感觉卡通化
+- **从小到足以明显增长开始**（最终大小的 ~50%）；结束大到足以感觉果断但不超过视口
+- **后缀在计数后动画，而非期间** — 给数字自己的节拍
+- **❗ 标签是大字体，而非页面风格的小标题** — 对于视频，主角大小数字下方的小段落风格标题读作视觉噪声。使用展示大小、大写、跟踪的标签，使布局为"两行大字体"；标签是标题的一部分，而非页脚。
 
-## Critical Constraints
+## 关键约束
 
-- **`tabular-nums` mandatory** — required CSS for layout stability
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`. Never `tl.play()`
-- **Registry key = `data-composition-id`**: `window.__timelines["counter-scene"]` must match scene root
-- **`onUpdate` mutates DOM**: HF runtime seeks the timeline frame-by-frame, so `onUpdate` runs on every seek call. Keep `onUpdate` work O(1) — set text + font-size, no DOM creation
-- **`Math.round` not `Math.floor`** — half-way through the final integer should display the final value briefly, not the previous one
-- **Avoid `back.out` / `elastic.out`** for the counter itself — overshoot makes the number look unstable (it's data, not decoration)
+- **`tabular-nums` 必须** — 布局稳定性所需的 CSS
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`。永远不要 `tl.play()`
+- **注册键 = `data-composition-id`**：`window.__timelines["counter-scene"]` 必须匹配场景根元素
+- **`onUpdate` 变更 DOM**：HF 运行时逐帧定位时间线，因此 `onUpdate` 在每次 seek 调用时运行。保持 `onUpdate` 工作为 O(1) — 设置文本 + 字号，无 DOM 创建
+- **使用 `Math.round` 而非 `Math.floor`** — 最终整数的一半处应短暂显示最终值，而非前一个值
+- **避免计数器本身使用 `back.out` / `elastic.out`** — 过冲使数字看起来不稳定（它是数据，非装饰）
 
-## Combinations
+## 组合
 
-- [stat-bars-and-fills.md](stat-bars-and-fills.md) — **the paired graphic beside the number** (growth bars / progress ring / star wipe). A stat scene is usually BOTH rules: the count-up here + a fill there. Give the fill the same ease and duration so number and graphic land as one beat.
-- [svg-path-draw.md](svg-path-draw.md) — icons drawing in around the number
-- [center-outward-expansion.md](center-outward-expansion.md) — related icons exploding outward synced to count peak
+- [stat-bars-and-fills.md](stat-bars-and-fills.md) — **数字旁边的配对图形**（增长条/进度环/星擦拭）。一个统计场景通常同时需要两个规则：这里的计数递增 + 那里的填充。给填充相同的缓动和时长，使数字和图形作为一个节拍着陆。
+- [svg-path-draw.md](svg-path-draw.md) — 图标在数字周围绘制
+- [center-outward-expansion.md](center-outward-expansion.md) — 相关图标在计数峰值时向外爆发
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — timeline + `onUpdate` API
-- `/hyperframes-core` — composition wiring, `data-*` attributes
-- `/hyperframes-cli` — `hyperframes lint` to verify scene
+- `/hyperframes-animation` — 时间线 + `onUpdate` API
+- `/hyperframes-core` — 组合接线、`data-*` 属性
+- `/hyperframes-cli` — `hyperframes lint` 验证场景

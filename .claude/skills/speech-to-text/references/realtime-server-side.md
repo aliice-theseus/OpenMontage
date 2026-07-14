@@ -1,8 +1,8 @@
-# Server-Side Real-Time Streaming
+# 服务端实时流式传输
 
-Transcribe audio streams in real-time from your server with ultra-low latency.
+在服务器上以超低延迟实时转录音频流。
 
-## Installation
+## 安装
 
 ```bash
 # Python
@@ -12,17 +12,17 @@ pip install elevenlabs python-dotenv pydub
 npm install @elevenlabs/elevenlabs-js dotenv
 ```
 
-> **Warning:** Do not use `npm install elevenlabs` - that's an outdated v1.x package. Always use `@elevenlabs/elevenlabs-js`.
+> **警告：** 不要使用 `npm install elevenlabs`——那是一个过时的 v1.x 包。始终使用 `@elevenlabs/elevenlabs-js`。
 
-## Configuration
+## 配置
 
-Store your API key in a `.env` file:
+将您的 API 密钥存储在 `.env` 文件中：
 
 ```
 ELEVENLABS_API_KEY=<your_api_key_here>
 ```
 
-## Stream from URL
+## 从 URL 流式传输
 
 ### Python
 
@@ -46,17 +46,17 @@ async def main():
     ))
 
     def on_partial_transcript(data):
-        print(f"Partial: {data.get('text', '')}")
+        print(f"部分：{data.get('text', '')}")
 
     def on_committed_transcript(data):
-        print(f"Committed: {data.get('text', '')}")
+        print(f"已提交：{data.get('text', '')}")
 
     def on_error(error):
-        print(f"Error: {error}")
+        print(f"错误：{error}")
         stop_event.set()
 
     def on_close():
-        print("Connection closed")
+        print("连接已关闭")
 
     connection.on(RealtimeEvents.PARTIAL_TRANSCRIPT, on_partial_transcript)
     connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT, on_committed_transcript)
@@ -66,7 +66,7 @@ async def main():
     try:
         await stop_event.wait()
     except KeyboardInterrupt:
-        print("\nStopping transcription...")
+        print("\n正在停止转录...")
     finally:
         await connection.close()
 
@@ -89,25 +89,25 @@ const connection = await elevenlabs.speechToText.realtime.connect({
 });
 
 connection.on(RealtimeEvents.PARTIAL_TRANSCRIPT, (transcript) => {
-  console.log("Partial transcript", transcript);
+  console.log("部分转录", transcript);
 });
 
 connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT, (transcript) => {
-  console.log("Committed transcript", transcript);
+  console.log("已提交转录", transcript);
 });
 
 connection.on(RealtimeEvents.ERROR, (error) => {
-  console.log("Error", error);
+  console.log("错误", error);
 });
 
 connection.on(RealtimeEvents.CLOSE, () => {
-  console.log("Connection closed");
+  console.log("连接已关闭");
 });
 ```
 
-## Manual Audio Chunking
+## 手动音频分块
 
-For local files or custom audio streams, convert to PCM format and send in chunks.
+对于本地文件或自定义音频流，转换为 PCM 格式并按块发送。
 
 ### Python
 
@@ -149,28 +149,28 @@ async def main():
     ))
 
     def on_session_started(data):
-        print(f"Session started: {data}")
+        print(f"会话已开始：{data}")
         asyncio.create_task(send_audio())
 
     def on_partial_transcript(data):
         transcript = data.get('text', '')
         if transcript:
-            print(f"Partial: {transcript}")
+            print(f"部分：{transcript}")
 
     def on_committed_transcript(data):
         transcript = data.get('text', '')
-        print(f"\nCommitted transcript: {transcript}")
+        print(f"\n已提交转录：{transcript}")
 
     def on_committed_transcript_with_timestamps(data):
-        print(f"Timestamps: {data.get('words', '')}")
+        print(f"时间戳：{data.get('words', '')}")
         transcription_complete.set()
 
     def on_error(error):
-        print(f"Error: {error}")
+        print(f"错误：{error}")
         transcription_complete.set()
 
     def on_close():
-        print("Connection closed")
+        print("连接已关闭")
         transcription_complete.set()
 
     connection.on(RealtimeEvents.SESSION_STARTED, on_session_started)
@@ -183,7 +183,7 @@ async def main():
     async def send_audio():
         audio_file_path = Path("audio.mp3")
         audio_data = load_and_convert_audio(audio_file_path)
-        chunk_size = 32000  # 1 second of audio at 16kHz
+        chunk_size = 32000  # 16kHz 下 1 秒音频
         chunks = [audio_data[i:i + chunk_size] for i in range(0, len(audio_data), chunk_size)]
 
         for i, chunk in enumerate(chunks):
@@ -199,7 +199,7 @@ async def main():
     try:
         await transcription_complete.wait()
     except KeyboardInterrupt:
-        print("\nStopping...")
+        print("\n正在停止...")
     finally:
         await connection.close()
 
@@ -224,28 +224,28 @@ const connection = await elevenlabs.speechToText.realtime.connect({
 });
 
 connection.on(RealtimeEvents.SESSION_STARTED, (data) => {
-  console.log("Session started", data);
+  console.log("会话已开始", data);
   sendAudio();
 });
 
 connection.on(RealtimeEvents.PARTIAL_TRANSCRIPT, (transcript) => {
-  console.log("Partial transcript", transcript);
+  console.log("部分转录", transcript);
 });
 
 connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT, (transcript) => {
-  console.log("Committed transcript", transcript);
+  console.log("已提交转录", transcript);
 });
 
 connection.on(RealtimeEvents.COMMITTED_TRANSCRIPT_WITH_TIMESTAMPS, (transcript) => {
-  console.log("Committed with timestamps", transcript);
+  console.log("带时间戳的已提交", transcript);
 });
 
 connection.on(RealtimeEvents.ERROR, (error) => {
-  console.log("Error", error);
+  console.log("错误", error);
 });
 
 connection.on(RealtimeEvents.CLOSE, () => {
-  console.log("Connection closed");
+  console.log("连接已关闭");
 });
 
 async function sendAudio() {
@@ -278,26 +278,26 @@ async function sendAudio() {
 }
 ```
 
-## Direct WebSocket Connection
+## 直接 WebSocket 连接
 
-For cases where the SDK cannot be used:
+适用于无法使用 SDK 的情况：
 
 ```
 wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime
 ```
 
-### Message Format
+### 消息格式
 
 ```json
 {
   "message_type": "input_audio_chunk",
-  "audio_base_64": "<base64-encoded-audio>",
+  "audio_base_64": "<base64 编码的音频>",
   "commit": false,
   "sample_rate": 16000
 }
 ```
 
-### Commit Message
+### 提交消息
 
 ```json
 {
@@ -305,13 +305,13 @@ wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime
 }
 ```
 
-## Audio Requirements
+## 音频要求
 
-| Parameter | Value |
+| 参数 | 值 |
 |-----------|-------|
-| Format | PCM 16-bit |
-| Sample Rate | 16000 Hz (recommended) |
-| Channels | Mono |
-| Chunk Size | 32,000 bytes = 1 second |
+| 格式 | PCM 16 位 |
+| 采样率 | 16000 Hz（推荐） |
+| 声道 | 单声道 |
+| 块大小 | 32,000 字节 = 1 秒 |
 
-Supported sample rates: 8kHz to 48kHz
+支持的采样率：8kHz 到 48kHz

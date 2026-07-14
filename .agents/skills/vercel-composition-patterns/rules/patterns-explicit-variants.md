@@ -1,15 +1,14 @@
 ---
-title: Create Explicit Component Variants
+title: 创建显式组件变体
 impact: MEDIUM
-impactDescription: self-documenting code, no hidden conditionals
+impactDescription: 自文档化代码，无隐藏条件逻辑
 tags: composition, variants, architecture
 ---
 
-## Create Explicit Component Variants
+## 创建显式组件变体
 
-Instead of one component with many boolean props, create explicit variant
-components. Each variant composes the pieces it needs. The code documents
-itself.
+不要使用一个具有许多布尔属性的组件，而是创建显式的变体组件。
+每个变体组合它需要的部分。代码自文档化。
 
 **Incorrect (one component, many modes):**
 

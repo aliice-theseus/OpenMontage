@@ -1,215 +1,215 @@
 ---
 name: manimgl-best-practices
 description: |
-  Trigger when: (1) User mentions "manimgl" or "ManimGL" or "3b1b manim", (2) Code contains `from manimlib import *`, (3) User runs `manimgl` CLI commands, (4) Working with InteractiveScene, self.frame, self.embed(), ShowCreation(), or ManimGL-specific patterns.
+  触发条件：(1) 用户提到 "manimgl" 或 "ManimGL" 或 "3b1b manim"，(2) 代码包含 `from manimlib import *`，(3) 用户运行 `manimgl` CLI 命令，(4) 使用 InteractiveScene、self.frame、self.embed()、ShowCreation() 或 ManimGL 特定模式。
 
-  Best practices for ManimGL (Grant Sanderson's 3Blue1Brown version) - OpenGL-based animation engine with interactive development. Covers InteractiveScene, Tex with t2c, camera frame control, interactive mode (-se flag), 3D rendering, and checkpoint_paste() workflow.
+  ManimGL（Grant Sanderson 的 3Blue1Brown 版本）的最佳实践 — 基于 OpenGL 的动画引擎，支持交互式开发。涵盖 InteractiveScene、带 t2c 的 Tex、相机框架控制、交互模式（-se 标志）、3D 渲染和 checkpoint_paste() 工作流程。
 
-  NOT for Manim Community Edition (which uses `manim` imports and `manim` CLI).
+  不适用于 Manim Community Edition（使用 `manim` 导入和 `manim` CLI）。
 ---
 
-## How to use
+## 使用方法
 
-Read individual rule files for detailed explanations and code examples:
+阅读各规则文件以获取详细解释和代码示例：
 
-### Core Concepts
-- [rules/scenes.md](rules/scenes.md) - InteractiveScene, Scene types, and construct method
-- [rules/mobjects.md](rules/mobjects.md) - Mobject types, VMobject, Groups, and positioning
-- [rules/animations.md](rules/animations.md) - Animation classes, playing animations, and timing
+### 核心概念
+- [rules/scenes.md](rules/scenes.md) - InteractiveScene、场景类型和 construct 方法
+- [rules/mobjects.md](rules/mobjects.md) - Mobject 类型、VMobject、组和定位
+- [rules/animations.md](rules/animations.md) - 动画类、播放动画和时间控制
 
-### Creation & Transformation
-- [rules/creation-animations.md](rules/creation-animations.md) - ShowCreation, Write, FadeIn, DrawBorderThenFill
-- [rules/transform-animations.md](rules/transform-animations.md) - Transform, ReplacementTransform, TransformMatchingTex
-- [rules/animation-groups.md](rules/animation-groups.md) - LaggedStart, Succession, AnimationGroup
+### 创建与变换
+- [rules/creation-animations.md](rules/creation-animations.md) - ShowCreation、Write、FadeIn、DrawBorderThenFill
+- [rules/transform-animations.md](rules/transform-animations.md) - Transform、ReplacementTransform、TransformMatchingTex
+- [rules/animation-groups.md](rules/animation-groups.md) - LaggedStart、Succession、AnimationGroup
 
-### Text & Math
-- [rules/tex.md](rules/tex.md) - Tex class, raw strings R"...", and LaTeX rendering
-- [rules/text.md](rules/text.md) - Text mobjects, fonts, and styling
-- [rules/t2c.md](rules/t2c.md) - tex_to_color_map (t2c) for coloring math expressions
+### 文本与数学
+- [rules/tex.md](rules/tex.md) - Tex 类、原始字符串 R"..." 和 LaTeX 渲染
+- [rules/text.md](rules/text.md) - Text mobject、字体和样式
+- [rules/t2c.md](rules/t2c.md) - tex_to_color_map (t2c) 用于为数学表达式着色
 
-### Styling & Appearance
-- [rules/colors.md](rules/colors.md) - Color constants, gradients, RGB, hex, GLSL coloring
-- [rules/styling.md](rules/styling.md) - Fill, stroke, opacity, backstroke, gloss, shadow
+### 样式与外观
+- [rules/colors.md](rules/colors.md) - 颜色常量、渐变、RGB、十六进制、GLSL 着色
+- [rules/styling.md](rules/styling.md) - 填充、描边、不透明度、背景描边、光泽、阴影
 
-### 3D & Camera
-- [rules/3d.md](rules/3d.md) - 3D objects, surfaces, Sphere, Torus, parametric surfaces, lighting
-- [rules/camera.md](rules/camera.md) - frame.reorient(), Euler angles, fix_in_frame(), camera animations
+### 3D 与相机
+- [rules/3d.md](rules/3d.md) - 3D 对象、曲面、球体、环面、参数曲面、光照
+- [rules/camera.md](rules/camera.md) - frame.reorient()、欧拉角、fix_in_frame()、相机动画
 
-### Interactive Development
-- [rules/interactive.md](rules/interactive.md) - Interactive mode with `-se` flag, checkpoint_paste()
-- [rules/frame.md](rules/frame.md) - self.frame, camera control, reorient, and zooming
-- [rules/embedding.md](rules/embedding.md) - self.embed() for IPython debugging, touch() mode
+### 交互式开发
+- [rules/interactive.md](rules/interactive.md) - 使用 `-se` 标志的交互模式、checkpoint_paste()
+- [rules/frame.md](rules/frame.md) - self.frame、相机控制、重新定向和缩放
+- [rules/embedding.md](rules/embedding.md) - 用于 IPython 调试的 self.embed()、touch() 模式
 
-### Configuration & CLI
-- [rules/cli.md](rules/cli.md) - manimgl command, flags (-w, -o, -se, -l, -h), rendering options
-- [rules/config.md](rules/config.md) - custom_config.yml, directories, camera settings, quality presets
+### 配置与 CLI
+- [rules/cli.md](rules/cli.md) - manimgl 命令、标志（-w、-o、-se、-l、-h）、渲染选项
+- [rules/config.md](rules/config.md) - custom_config.yml、目录、相机设置、质量预设
 
-## Working Examples
+## 工作示例
 
-Complete, tested example files demonstrating common patterns:
+展示常见模式的完整、经过测试的示例文件：
 
-- [examples/basic_animations.py](examples/basic_animations.py) - Basic shapes, text, and animations
-- [examples/math_visualization.py](examples/math_visualization.py) - LaTeX equations and mathematical content
-- [examples/graph_plotting.py](examples/graph_plotting.py) - Axes, functions, and graphing
-- [examples/3d_visualization.py](examples/3d_visualization.py) - 3D scenes with camera control and surfaces
-- [examples/updater_patterns.py](examples/updater_patterns.py) - Dynamic animations with updaters
+- [examples/basic_animations.py](examples/basic_animations.py) - 基本形状、文本和动画
+- [examples/math_visualization.py](examples/math_visualization.py) - LaTeX 方程和数学内容
+- [examples/graph_plotting.py](examples/graph_plotting.py) - 坐标轴、函数和绘图
+- [examples/3d_visualization.py](examples/3d_visualization.py) - 带相机控制和曲面的 3D 场景
+- [examples/updater_patterns.py](examples/updater_patterns.py) - 使用更新器的动态动画
 
-## Scene Templates
+## 场景模板
 
-Copy and modify these templates to start new projects:
+复制并修改这些模板以开始新项目：
 
-- [templates/basic_scene.py](templates/basic_scene.py) - Standard 2D scene template
-- [templates/interactive_scene.py](templates/interactive_scene.py) - InteractiveScene with self.embed()
-- [templates/3d_scene.py](templates/3d_scene.py) - 3D scene with frame.reorient()
-- [templates/math_scene.py](templates/math_scene.py) - Mathematical derivations and equations
+- [templates/basic_scene.py](templates/basic_scene.py) - 标准 2D 场景模板
+- [templates/interactive_scene.py](templates/interactive_scene.py) - 带 self.embed() 的 InteractiveScene
+- [templates/3d_scene.py](templates/3d_scene.py) - 带 frame.reorient() 的 3D 场景
+- [templates/math_scene.py](templates/math_scene.py) - 数学推导和方程
 
-## Quick Reference
+## 快速参考
 
-### Basic Scene Structure
+### 基本场景结构
 ```python
 from manimlib import *
 
 class MyScene(InteractiveScene):
     def construct(self):
-        # Create mobjects
+        # 创建 mobject
         circle = Circle()
 
-        # Add to scene (static)
+        # 添加到场景（静态）
         self.add(circle)
 
-        # Or animate
-        self.play(ShowCreation(circle))  # Note: ShowCreation, not Create
+        # 或动画
+        self.play(ShowCreation(circle))  # 注意：ShowCreation，不是 Create
 
-        # Wait
+        # 等待
         self.wait(1)
 ```
 
-### Render Command
+### 渲染命令
 ```bash
-# Render and preview
+# 渲染并预览
 manimgl scene.py MyScene
 
-# Interactive mode - drop into shell at line 15
+# 交互模式 — 在第 15 行进入 shell
 manimgl scene.py MyScene -se 15
 
-# Write to file
+# 写入文件
 manimgl scene.py MyScene -w
 
-# Low quality for testing
+# 低质量测试
 manimgl scene.py MyScene -l
 ```
 
-### Key Differences from ManimCE
+### 与 ManimCE 的关键区别
 
-| Feature | ManimGL (3b1b) | Manim Community |
+| 功能 | ManimGL (3b1b) | Manim Community |
 |---------|----------------|-----------------|
-| Import | `from manimlib import *` | `from manim import *` |
+| 导入 | `from manimlib import *` | `from manim import *` |
 | CLI | `manimgl` | `manim` |
-| Math text | `Tex(R"\pi")` | `MathTex(r"\pi")` |
-| Scene | `InteractiveScene` | `Scene` |
-| Create anim | `ShowCreation` | `Create` |
-| Camera | `self.frame` | `self.camera.frame` |
-| Fix in frame | `mob.fix_in_frame()` | `self.add_fixed_in_frame_mobjects(mob)` |
-| Package | `manimgl` (PyPI) | `manim` (PyPI) |
+| 数学文本 | `Tex(R"\pi")` | `MathTex(r"\pi")` |
+| 场景 | `InteractiveScene` | `Scene` |
+| 创建动画 | `ShowCreation` | `Create` |
+| 相机 | `self.frame` | `self.camera.frame` |
+| 固定在框架 | `mob.fix_in_frame()` | `self.add_fixed_in_frame_mobjects(mob)` |
+| 包 | `manimgl` (PyPI) | `manim` (PyPI) |
 
-### Interactive Development Workflow
+### 交互式开发工作流程
 
-ManimGL's killer feature is interactive development:
+ManimGL 的杀手级功能是交互式开发：
 
 ```bash
-# Start at line 20 with state preserved
+# 从第 20 行开始，状态保留
 manimgl scene.py MyScene -se 20
 ```
 
-In interactive mode:
+在交互模式中：
 ```python
-# Copy code to clipboard, then run:
-checkpoint_paste()           # Run with animations
-checkpoint_paste(skip=True)  # Run instantly (no animations)
-checkpoint_paste(record=True) # Record while running
+# 复制代码到剪贴板，然后运行：
+checkpoint_paste()           # 带动画运行
+checkpoint_paste(skip=True)  # 立即运行（无动画）
+checkpoint_paste(record=True) # 运行时录制
 ```
 
-### Camera Control (self.frame)
+### 相机控制（self.frame）
 
 ```python
-# Get the camera frame
+# 获取相机框架
 frame = self.frame
 
-# Reorient in 3D (phi, theta, gamma, center, height)
+# 3D 重新定向（phi, theta, gamma, center, height）
 frame.reorient(45, -30, 0, ORIGIN, 8)
 
-# Animate camera movement
+# 动画化相机移动
 self.play(frame.animate.reorient(60, -45, 0))
 
-# Fix mobjects to stay in screen space during 3D movement
+# 在 3D 移动期间将 mobject 固定在屏幕空间
 title.fix_in_frame()
 ```
 
-### LaTeX with Tex class
+### 带 Tex 类的 LaTeX
 
 ```python
-# Use raw strings with capital R
+# 使用大写 R 的原始字符串
 formula = Tex(R"\int_0^1 x^2 \, dx = \frac{1}{3}")
 
-# Color mapping with t2c
+# 使用 t2c 进行颜色映射
 equation = Tex(
     R"E = mc^2",
     t2c={"E": BLUE, "m": GREEN, "c": YELLOW}
 )
 
-# Isolate substrings for animation
+# 隔离子串用于动画
 formula = Tex(R"\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}")
 formula.set_color_by_tex("n", BLUE)
 ```
 
-### Common Patterns
+### 常见模式
 
-#### Embedding for debugging
+#### 用于调试的嵌入
 ```python
 def construct(self):
     circle = Circle()
     self.play(ShowCreation(circle))
-    self.embed()  # Drops into IPython shell here
+    self.embed()  # 在此处进入 IPython shell
 ```
 
-#### Set floor plane for 3D
+#### 设置 3D 地平面
 ```python
-self.set_floor_plane("xz")  # Makes xy the viewing plane
+self.set_floor_plane("xz")  # 使 xy 成为观察平面
 ```
 
-#### Backstroke for text readability
+#### 文本可读性的背景描边
 ```python
 text = Text("Label")
-text.set_backstroke(BLACK, 5)  # Black outline behind text
+text.set_backstroke(BLACK, 5)  # 文本后方的黑色轮廓
 ```
 
-### Installation
+### 安装
 
 ```bash
-# Install ManimGL
+# 安装 ManimGL
 pip install manimgl
 
-# Check installation
+# 检查安装
 manimgl --version
 ```
 
-### Common Pitfalls to Avoid
+### 应避免的常见陷阱
 
-1. **Version confusion** - Ensure you're using `manimgl`, not `manim` (community version)
-2. **ShowCreation vs Create** - ManimGL uses `ShowCreation`, not `Create`
-3. **Tex vs MathTex** - ManimGL uses `Tex` with capital R raw strings
-4. **self.frame vs self.camera.frame** - ManimGL uses `self.frame` directly
-5. **fix_in_frame()** - Call on the mobject, not the scene
-6. **Interactive mode** - Use `-se` flag for interactive development
+1. **版本混淆** - 确保使用 `manimgl`，而不是 `manim`（社区版）
+2. **ShowCreation 与 Create** - ManimGL 使用 `ShowCreation`，不是 `Create`
+3. **Tex 与 MathTex** - ManimGL 使用带大写 R 原始字符串的 `Tex`
+4. **self.frame 与 self.camera.frame** - ManimGL 直接使用 `self.frame`
+5. **fix_in_frame()** - 在 mobject 上调用，而不是在场景上
+6. **交互模式** - 使用 `-se` 标志进行交互式开发
 
-## License & Attribution
+## 许可与署名
 
-This skill contains example code adapted from [3Blue1Brown's video repository](https://github.com/3b1b/videos) by Grant Sanderson.
+本技能包含改编自 [3Blue1Brown 的视频仓库](https://github.com/3b1b/videos)（Grant Sanderson 创作）的示例代码。
 
-**License:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+**许可协议：** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-- **Attribution required** - Credit both 3Blue1Brown and the adapter
-- **NonCommercial** - Not for commercial use
-- **ShareAlike** - Derivatives must use the same license
+- **要求署名** - 同时注明 3Blue1Brown 和改编者
+- **非商业用途** - 不可用于商业目的
+- **相同方式共享** - 衍生作品必须使用相同许可协议
 
-See [LICENSE.txt](LICENSE.txt) for full details.
+详见 [LICENSE.txt](LICENSE.txt)。

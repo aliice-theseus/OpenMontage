@@ -1,33 +1,33 @@
 ---
 name: authentication
-description: API key setup, X-Api-Key header, and authentication patterns for HeyGen
+description: API 密钥设置、X-Api-Key 头部以及 HeyGen 的身份验证模式
 ---
 
-# HeyGen Authentication
+# HeyGen 身份验证
 
-All HeyGen API requests require authentication using an API key passed in the `X-Api-Key` header.
+所有 HeyGen API 请求都需要使用通过 `X-Api-Key` 头部传递的 API 密钥进行身份验证。
 
-## Getting Your API Key
+## 获取 API 密钥
 
-1. Go to https://app.heygen.com/settings?from=&nav=API
-2. Log in if prompted
-3. Copy your API key
+1. 访问 https://app.heygen.com/settings?from=&nav=API
+2. 根据需要登录
+3. 复制你的 API 密钥
 
-## Environment Setup
+## 环境设置
 
-Store your API key securely as an environment variable:
+将 API 密钥安全地存储为环境变量：
 
 ```bash
 export HEYGEN_API_KEY="your-api-key-here"
 ```
 
-For `.env` files:
+对于 `.env` 文件：
 
 ```
 HEYGEN_API_KEY=your-api-key-here
 ```
 
-## Making Authenticated Requests
+## 发起带身份验证的请求
 
 ### curl
 
@@ -89,7 +89,7 @@ async with httpx.AsyncClient() as client:
     data = response.json()
 ```
 
-## Creating a Reusable API Client
+## 创建可复用的 API 客户端
 
 ### TypeScript
 
@@ -132,14 +132,14 @@ class HeyGenClient {
   }
 }
 
-// Usage
+// 使用示例
 const client = new HeyGenClient(process.env.HEYGEN_API_KEY!);
 const avatars = await client.get("/v2/avatars");
 ```
 
-## API Response Format
+## API 响应格式
 
-All HeyGen API responses follow this structure:
+所有 HeyGen API 响应遵循以下结构：
 
 ```typescript
 interface ApiResponse<T> {
@@ -148,7 +148,7 @@ interface ApiResponse<T> {
 }
 ```
 
-Successful response example:
+成功响应示例：
 
 ```json
 {
@@ -159,7 +159,7 @@ Successful response example:
 }
 ```
 
-Error response example:
+错误响应示例：
 
 ```json
 {
@@ -168,17 +168,17 @@ Error response example:
 }
 ```
 
-## Error Handling
+## 错误处理
 
-Common authentication errors:
+常见的身份验证错误：
 
-| Status Code | Error | Cause |
+| 状态码 | 错误 | 原因 |
 |-------------|-------|-------|
-| 401 | Invalid API key | API key is missing or incorrect |
-| 403 | Forbidden | API key doesn't have required permissions |
-| 429 | Rate limit exceeded | Too many requests |
+| 401 | API 密钥无效 | API 密钥缺失或不正确 |
+| 403 | 禁止访问 | API 密钥没有所需权限 |
+| 429 | 超出速率限制 | 请求过于频繁 |
 
-### Handling Errors
+### 错误处理
 
 ```typescript
 async function makeRequest(endpoint: string) {
@@ -196,12 +196,12 @@ async function makeRequest(endpoint: string) {
 }
 ```
 
-## Rate Limiting
+## 速率限制
 
-HeyGen enforces rate limits on API requests:
-- Standard rate limits apply per API key
-- Some endpoints (like video generation) have stricter limits
-- Use exponential backoff when receiving 429 errors
+HeyGen 对 API 请求实施速率限制：
+- 每个 API 密钥适用标准速率限制
+- 某些端点（如视频生成）有更严格的限制
+- 收到 429 错误时使用指数退避
 
 ```typescript
 async function requestWithRetry(
@@ -224,9 +224,9 @@ async function requestWithRetry(
 }
 ```
 
-## Security Best Practices
+## 安全最佳实践
 
-1. **Never expose API keys in client-side code** - Always make API calls from a backend server
-2. **Use environment variables** - Don't hardcode API keys in source code
-3. **Rotate keys periodically** - Generate new API keys regularly
-4. **Monitor usage** - Check your HeyGen dashboard for unusual activity
+1. **切勿在客户端代码中暴露 API 密钥** - 始终从后端服务器发起 API 调用
+2. **使用环境变量** - 不要在源代码中硬编码 API 密钥
+3. **定期轮换密钥** - 定期生成新的 API 密钥
+4. **监控使用情况** - 查看 HeyGen 仪表盘，留意异常活动

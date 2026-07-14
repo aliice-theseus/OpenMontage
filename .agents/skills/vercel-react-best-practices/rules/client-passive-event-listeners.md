@@ -1,15 +1,15 @@
 ---
-title: Use Passive Event Listeners for Scrolling Performance
+title: 使用被动事件监听器提升滚动性能
 impact: MEDIUM
-impactDescription: eliminates scroll delay caused by event listeners
+impactDescription: 消除事件监听器导致的滚动延迟
 tags: client, event-listeners, scrolling, performance, touch, wheel
 ---
 
-## Use Passive Event Listeners for Scrolling Performance
+## 使用被动事件监听器提升滚动性能
 
-Add `{ passive: true }` to touch and wheel event listeners to enable immediate scrolling. Browsers normally wait for listeners to finish to check if `preventDefault()` is called, causing scroll delay.
+为触摸和滚轮事件监听器添加 `{ passive: true }` 以实现即时滚动。浏览器通常会等待监听器执行完毕以检查是否调用了 `preventDefault()`，这会导致滚动延迟。
 
-**Incorrect:**
+**不正确：**
 
 ```typescript
 useEffect(() => {
@@ -26,7 +26,7 @@ useEffect(() => {
 }, [])
 ```
 
-**Correct:**
+**正确：**
 
 ```typescript
 useEffect(() => {
@@ -43,6 +43,6 @@ useEffect(() => {
 }, [])
 ```
 
-**Use passive when:** tracking/analytics, logging, any listener that doesn't call `preventDefault()`.
+**何时使用 passive：** 追踪/分析、日志记录、任何不调用 `preventDefault()` 的监听器。
 
-**Don't use passive when:** implementing custom swipe gestures, custom zoom controls, or any listener that needs `preventDefault()`.
+**不要使用 passive：** 实现自定义滑动手势、自定义缩放控制或任何需要 `preventDefault()` 的监听器。

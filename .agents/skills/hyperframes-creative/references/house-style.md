@@ -1,73 +1,73 @@
-# House Style
+# 内务风格
 
-Creative direction for compositions when no design spec (`frame.md` or `design.md`) is provided. These are starting points — override anything that doesn't serve the content. When a design spec exists, its brand values take precedence; house-style fills gaps.
+当未提供设计规范（`frame.md` 或 `design.md`）时的合成创意方向。这些是起点——覆盖任何不服务于内容的设置。当存在设计规范时，其品牌值优先；内务风格填补空白。
 
-## Before Writing HTML
+## 在编写 HTML 之前
 
-1. **Interpret the prompt.** Generate real content. A recipe lists real ingredients. A HUD has real readouts.
-2. **Pick a palette.** Light or dark? Declare bg, fg, accent before writing code.
-3. **Pick typefaces.** Run the font discovery script in [references/typography.md](references/typography.md) — or pick a font you already know that fits the theme. The script broadens your options; it's not the only source.
+1. **解释提示。** 生成真实内容。食谱列出真实食材。HUD 有真实读数。
+2. **选择调色板。** 浅色还是深色？在编写代码前声明 bg、fg、accent。
+3. **选择字体。** 运行 [references/typography.md](references/typography.md) 中的字体发现脚本——或选择你已经知道且适合主题的字体。该脚本拓宽你的选择；它不是唯一来源。
 
-## Lazy Defaults to Question
+## 需质疑的惰性默认值
 
-These patterns are AI design tells — the first thing every LLM reaches for. If you're about to use one, pause and ask: is this a deliberate choice for THIS content, or am I defaulting?
+这些模式是 AI 设计标志——每个 LLM 首先会采用的东西。如果你即将使用其中一个，停下来问：这是为这个内容做的刻意选择，还是我在默认？
 
-- Gradient text (`background-clip: text` + gradient)
-- Left-edge accent stripes on cards/callouts
-- Cyan-on-dark / purple-to-blue gradients / neon accents
-- Pure `#000` or `#fff` (tint toward your accent hue instead)
-- Identical card grids (same-size cards repeated)
-- Everything centered with equal weight (lead the eye somewhere)
-- Banned fonts (see [references/typography.md](references/typography.md) for full list)
+- 渐变文字（`background-clip: text` + gradient）
+- 卡片/标注上的左边缘强调条纹
+- 深色背景上的青色 / 紫到蓝渐变 / 霓虹强调
+- 纯 `#000` 或 `#fff`（而是向你的强调色调偏移）
+- 相同的卡片网格（重复相同尺寸的卡片）
+- 所有内容居中且权重相等（引导视线到某处）
+- 禁用字体（完整列表见 [references/typography.md](references/typography.md)）
 
-If the content genuinely calls for one of these — centered layout for a solemn closing, cards for a real product UI mockup, a banned font because it's the perfect thematic match — use it. The goal is intentionality, not avoidance.
+如果内容确实需要其中之一——庄严结尾的居中布局、真实产品 UI 模拟的卡片、完美匹配主题的禁用字体——那就使用它。目标是意图性，而非回避。
 
-## Color
+## 颜色
 
-- Match light/dark to content: food, wellness, kids → light. Tech, cinema, finance → dark.
-- One accent hue. Same background across all scenes.
-- Tint neutrals toward your accent (even subtle warmth/coolness beats dead gray).
-- **Contrast:** enforced by `hyperframes validate` (WCAG AA). Text must be readable with decoratives removed.
-- Declare palette up front. Don't invent colors per-element.
+- 将浅/深与内容匹配：食物、健康、儿童 → 浅色。科技、电影、金融 → 深色。
+- 一个强调色调。所有场景使用相同的背景。
+- 将中性色向你的强调色偏移（即使是微妙的暖/冷也比死灰色好）。
+- **对比度：** 由 `hyperframes validate` 强制执行（WCAG AA）。移除装饰后文本必须可读。
+- 预先声明调色板。不要逐元素发明颜色。
 
-## Background Layer
+## 背景层
 
-Every scene needs visual depth — persistent decorative elements that stay visible while content animates in. Without these, scenes feel empty during entrance staggering.
+每个场景都需要视觉深度——在内容动画进入时保持可见的持久装饰元素。没有这些，场景在入场交错期间会感觉空洞。
 
-Ideas (mix and match, 2-5 per scene):
+想法（混搭，每场景 2-5 个）：
 
-- Radial glows (accent-tinted, low opacity, breathing scale)
-- Ghost text (theme words at 3-8% opacity, very large, slow drift)
-- Accent lines (hairline rules, subtle pulse)
-- Grain/noise overlay, geometric shapes, grid patterns
-- Thematic decoratives (orbit rings for space, vinyl grooves for music, grid lines for data)
+- 径向光晕（强调色色调，低不透明度，呼吸缩放）
+- 幽灵文字（主题词 3-8% 不透明度，非常大，缓慢漂移）
+- 强调线（发丝线，微妙脉动）
+- 颗粒/噪点叠加、几何形状、网格图案
+- 主题装饰（太空的轨道环、音乐的黑胶唱片槽、数据的网格线）
 
-All decoratives should have slow ambient GSAP animation — breathing, drift, pulse. Static decoratives feel dead.
+所有装饰元素应有缓慢的 GSAP 环境动画——呼吸、漂移、脉动。静态的装饰感觉是死的。
 
-**Decorative count vs motion count.** The "2-5 per scene" count refers to decorative _elements_. If a project's design spec says "single ambient motion per scene", it means one looping motion applied to these decoratives (a shared breath/drift/pulse) — not one element total. A scene with 4 decoratives sharing one breathing motion is correct; a scene with 1 decorative is under-dressed.
+**装饰数量 vs 运动数量。** "每场景 2-5 个"指的是装饰_元素_的数量。如果项目的设计规范说"每场景单一环境运动"，意味着应用于这些装饰元素的一个循环运动（共享的呼吸/漂移/脉动）——而不是总共只有一个元素。4 个装饰元素共享一个呼吸运动的场景是正确的；只有 1 个装饰的场景是装饰不足的。
 
-## Motion
+## 运动
 
-See [references/motion-principles.md](references/motion-principles.md) for full rules. Quick: 0.3–0.6s, vary eases, combine transforms on entrances, overlap entries.
+完整规则见 [references/motion-principles.md](references/motion-principles.md)。快速参考：0.3-0.6 秒，变化缓动，入场时组合变换，重叠入场。
 
-## Typography
+## 排版
 
-See [references/typography.md](references/typography.md) for full rules. Quick: 700-900 headlines / 300-400 body, serif + sans (not two sans), 60px+ headlines / 20px+ body.
+完整规则见 [references/typography.md](references/typography.md)。快速参考：700-900 标题 / 300-400 正文，衬线 + 无衬线（不是两种无衬线），60px+ 标题 / 20px+ 正文。
 
-## Palettes
+## 调色板
 
-Declare one background, one foreground, one accent before writing HTML.
+在编写 HTML 前声明一个背景、一个前景、一个强调色。
 
-| Category          | Use for                                       | File                                                       |
-| ----------------- | --------------------------------------------- | ---------------------------------------------------------- |
-| Bold / Energetic  | Product launches, social media, announcements | [palettes/bold-energetic.md](palettes/bold-energetic.md)   |
-| Warm / Editorial  | Storytelling, documentaries, case studies     | [palettes/warm-editorial.md](palettes/warm-editorial.md)   |
-| Dark / Premium    | Tech, finance, luxury, cinematic              | [palettes/dark-premium.md](palettes/dark-premium.md)       |
-| Clean / Corporate | Explainers, tutorials, presentations          | [palettes/clean-corporate.md](palettes/clean-corporate.md) |
-| Nature / Earth    | Sustainability, outdoor, organic              | [palettes/nature-earth.md](palettes/nature-earth.md)       |
-| Neon / Electric   | Gaming, tech, nightlife                       | [palettes/neon-electric.md](palettes/neon-electric.md)     |
-| Pastel / Soft     | Fashion, beauty, lifestyle, wellness          | [palettes/pastel-soft.md](palettes/pastel-soft.md)         |
-| Jewel / Rich      | Luxury, events, sophisticated                 | [palettes/jewel-rich.md](palettes/jewel-rich.md)           |
-| Monochrome        | Dramatic, typography-focused                  | [palettes/monochrome.md](palettes/monochrome.md)           |
+| 类别              | 用途                                        | 文件                                                         |
+| ----------------- | ------------------------------------------- | ------------------------------------------------------------ |
+| 大胆 / 活力        | 产品发布、社交媒体、公告                      | [palettes/bold-energetic.md](palettes/bold-energetic.md)     |
+| 温暖 / 编辑        | 讲故事、纪录片、案例研究                      | [palettes/warm-editorial.md](palettes/warm-editorial.md)     |
+| 深色 / 高级        | 科技、金融、奢华、电影感                      | [palettes/dark-premium.md](palettes/dark-premium.md)         |
+| 干净 / 企业        | 说明视频、教程、演示                          | [palettes/clean-corporate.md](palettes/clean-corporate.md)   |
+| 自然 / 大地        | 可持续、户外、有机                            | [palettes/nature-earth.md](palettes/nature-earth.md)         |
+| 霓虹 / 电子        | 游戏、科技、夜生活                            | [palettes/neon-electric.md](palettes/neon-electric.md)       |
+| 粉彩 / 柔和        | 时尚、美容、生活方式、健康                    | [palettes/pastel-soft.md](palettes/pastel-soft.md)           |
+| 宝石 / 丰富        | 奢华、活动、精致                              | [palettes/jewel-rich.md](palettes/jewel-rich.md)             |
+| 单色              | 戏剧性、排版聚焦                              | [palettes/monochrome.md](palettes/monochrome.md)             |
 
-Or derive from OKLCH — pick a hue, build bg/fg/accent at different lightnesses, tint everything toward that hue.
+或从 OKLCH 推导——选择一个色调，在不同明度下构建 bg/fg/accent，将所有内容向该色调偏移。

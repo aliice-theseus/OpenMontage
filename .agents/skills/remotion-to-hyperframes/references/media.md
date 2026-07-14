@@ -1,10 +1,8 @@
-# Media translation: Audio, Video, Img, IFrame, staticFile
+# 媒体翻译：Audio, Video, Img, IFrame, staticFile
 
-## Asset paths
+## 资源路径
 
-Remotion's `staticFile("x.png")` resolves to the project's `public/` directory.
-HF uses relative paths from the composition's `index.html`, conventionally
-`assets/`:
+Remotion 的 `staticFile("x.png")` 解析到项目的 `public/` 目录。HF 使用相对于合成 `index.html` 的路径，约定为 `assets/`：
 
 ```tsx
 <Img src={staticFile("logo.png")} />
@@ -14,9 +12,7 @@ HF uses relative paths from the composition's `index.html`, conventionally
 <img src="assets/logo.png" />
 ```
 
-When translating, copy the asset from `remotion-src/public/x` to
-`hf-src/assets/x`. Multiple files can be batched with a setup script;
-see T2's `setup.sh` for an example pattern.
+翻译时，将资源从 `remotion-src/public/x` 复制到 `hf-src/assets/x`。多个文件可以通过设置脚本批量处理；参见 T2 的 `setup.sh` 了解示例模式。
 
 ## `<Audio>`
 
@@ -34,21 +30,17 @@ see T2's `setup.sh` for an example pattern.
 ></audio>
 ```
 
-`data-start` and `data-duration` are required — the runtime needs them to
-schedule the audio. Default to the composition's full duration if Remotion
-didn't specify trim.
+`data-start` 和 `data-duration` 是必需的 — 运行时需要它们来调度音频。如果 Remotion 未指定修剪，默认为合成的完整时长。
 
-### Volume ramps
+### 音量渐变
 
 ```tsx
 <Audio src={staticFile("music.wav")} volume={(f) => interpolate(f, [0, 30], [0, 1])} />
 ```
 
-HF supports static `data-volume` only for now. Volume ramps need to be
-applied to the audio file at translation time (with ffmpeg `afade`) or the
-ramp is dropped with a translation note.
+HF 目前仅支持静态 `data-volume`。音量渐变需要在翻译时应用到音频文件（使用 ffmpeg `afade`），否则渐变会被丢弃并附带翻译说明。
 
-### Trim / playbackRate
+### 修剪 / 播放速率
 
 ```tsx
 <Audio src={staticFile("music.wav")} startFrom={60} endAt={180} playbackRate={1.5} />
@@ -57,7 +49,7 @@ ramp is dropped with a translation note.
 ```html
 <audio
   data-start="0"
-  data-duration="<resolved from trim>"
+  data-duration="<根据修剪解析>"
   data-trim-start="2"
   data-trim-end="6"
   data-playback-rate="1.5"
@@ -65,9 +57,9 @@ ramp is dropped with a translation note.
 ></audio>
 ```
 
-`startFrom` / `endAt` are frame indexes; convert to seconds.
+`startFrom` / `endAt` 是帧索引；转换为秒。
 
-## `<Video>` and `<OffthreadVideo>`
+## `<Video>` 和 `<OffthreadVideo>`
 
 ```tsx
 <Video src={staticFile("intro.mp4")} muted playsInline />
@@ -85,12 +77,9 @@ ramp is dropped with a translation note.
 ></video>
 ```
 
-`<OffthreadVideo>` is a Remotion-specific optimization for headless
-rendering. HF runs in headless Chrome already, so the off-thread variant
-collapses to a regular `<video>`.
+`<OffthreadVideo>` 是 Remotion 特有的无头渲染优化。HF 已经运行在无头 Chrome 中，因此离线程变体降级为普通的 `<video>`。
 
-`muted` and `playsinline` are required for the runtime to autoplay
-(browser policy). Always emit them.
+`muted` 和 `playsinline` 是运行时自动播放所必需的（浏览器策略）。始终生成它们。
 
 ## `<Img>`
 
@@ -102,8 +91,7 @@ collapses to a regular `<video>`.
 <img src="assets/logo.png" style="width: 200px; height: 200px;" />
 ```
 
-Width/height get rounded to integer px. If the original style has
-animated dimensions, the GSAP tween animates them — see [timing.md](timing.md).
+宽/高四舍五入为整数像素。如果原始样式有动画尺寸，GSAP 补间会对它们进行动画 — 参见 [timing.md](timing.md)。
 
 ## `<IFrame>`
 
@@ -115,11 +103,7 @@ animated dimensions, the GSAP tween animates them — see [timing.md](timing.md)
 <iframe src="https://example.com"></iframe>
 ```
 
-When HF detects a nested iframe in a composition, it auto-falls back to
-**screenshot mode** rather than the deterministic BeginFrame mode. This
-costs render performance but produces visibly-correct output. See
-[hyperframes-vs-remotion.mdx](https://github.com/heygen-com/hyperframes/blob/main/docs/guides/hyperframes-vs-remotion.mdx)
-for details.
+当 HF 在合成中检测到嵌套的 iframe 时，它会自动回退到**截图模式**而不是确定性的 BeginFrame 模式。这会牺牲渲染性能但产生视觉正确的输出。详情参见 [hyperframes-vs-remotion.mdx](https://github.com/heygen-com/hyperframes/blob/main/docs/guides/hyperframes-vs-remotion.mdx)。
 
 ## `delayRender()` / `continueRender()`
 
@@ -130,20 +114,13 @@ useEffect(() => {
 }, []);
 ```
 
-Drop. HF waits on asset readiness via the [Frame Adapter pattern](https://hyperframes.heygen.com/concepts/frame-adapters)
-— images, videos, fonts, and Lottie animations all signal load
-completion natively. There's nothing to do at the application level.
+丢弃。HF 通过 [Frame Adapter 模式](https://hyperframes.heygen.com/concepts/frame-adapters) 等待资源就绪 — 图像、视频、字体和 Lottie 动画都原生地发出加载完成信号。应用层无需做任何事。
 
-## When the asset isn't a file
+## 当资源不是文件时
 
-If Remotion's media source is a Buffer, dataURL, or URL.createObjectURL,
-the asset doesn't exist on disk and can't be copied via setup.sh. Two
-options:
+如果 Remotion 的媒体源是 Buffer、dataURL 或 URL.createObjectURL，资源在磁盘上不存在，无法通过 setup.sh 复制。两种选择：
 
-1. Materialize the asset at translation time — write the buffer to a file
-   in `hf-src/assets/`.
-2. Embed as a data URL directly in the HTML (`src="data:image/png;base64,..."`)
-   for small assets (< 100 KB).
+1. 在翻译时物化资源 — 将缓冲区写入 `hf-src/assets/` 中的文件。
+2. 对于小资源（< 100 KB），直接以 data URL 嵌入 HTML（`src="data:image/png;base64,..."`）。
 
-For audio/video Buffers, option 1 is preferred — base64-encoded media
-bloats the HTML and slows the renderer.
+对于音频/视频 Buffer，首选方案 1 — base64 编码的媒体会使 HTML 臃肿并减慢渲染器速度。

@@ -1,45 +1,40 @@
-# Research Director - Character Animation Pipeline
+# 研究导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Ground the character-animation plan in real references and current technique.
-For reference videos, start from `video_analysis_brief`: content, pacing, motion
-classification, keyframes, color, and production complexity.
+将角色动画方案建立在真实的参考素材和当前技术之上。对于参考视频，从 `video_analysis_brief` 入手：内容、节奏、运动分类、关键帧、色彩和制作复杂度。
 
-## Process
+## 流程
 
-1. Identify what the reference actually uses:
-   - rigged local animation,
-   - frame-by-frame traditional animation,
-   - video generation,
-   - still-image motion,
-   - mixed techniques.
-2. Research 3-5 relevant examples or techniques.
-3. Separate what the pipeline can reproduce locally from what requires manual
-   illustration, video generation, or a larger asset library.
-4. Record reusable animation primitives:
-   - walk cycle,
-   - blink,
-   - head turn,
-   - reach,
-   - wing flap,
-   - squash/stretch,
-   - camera pan/parallax,
-   - particles/weather.
+1. 确定参考素材实际使用的技术：
+   - 骨架本地动画，
+   - 逐帧传统动画，
+   - 视频生成，
+   - 静态图像运动，
+   - 混合技术。
+2. 研究 3-5 个相关示例或技术方案。
+3. 区分管线可以本地复现的部分与需要人工绘制、视频生成或更大资源库的部分。
+4. 记录可复用的动画原语：
+   - 走路循环，
+   - 眨眼，
+   - 转头，
+   - 伸手，
+   - 翅膀拍打，
+   - 挤压/拉伸，
+   - 摄像机平移/视差，
+   - 粒子/天气效果。
 
-## Output Guidance
+## 输出指导
 
-The `research_brief` should include:
+`research_brief` 应包含：
 
-- `character_animation_fit`: high/medium/low,
-- `reference_motion_type`,
-- `required_character_actions`,
-- `rig_complexity`,
-- `manual_asset_risks`,
-- `local_runtime_candidates`.
+- `character_animation_fit`：高/中/低，
+- `reference_motion_type`，
+- `required_character_actions`，
+- `rig_complexity`，
+- `manual_asset_risks`，
+- `local_runtime_candidates`。
 
-## Quality Bar
+## 质量门槛
 
-Be explicit when a reference is hand-drawn or frame-by-frame. The user can still
-choose an inspired local rigged style, but the proposal must not imply exact
-traditional-animation quality from an automatic rig.
+当参考素材是手绘或逐帧动画时，必须明确说明。用户仍然可以选择受其启发的本地骨架风格，但方案不得暗示自动骨架能达到精确的传统动画质量。

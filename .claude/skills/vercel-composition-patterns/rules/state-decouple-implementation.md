@@ -1,21 +1,21 @@
 ---
-title: Decouple State Management from UI
+title: 将状态管理与 UI 解耦
 impact: MEDIUM
-impactDescription: enables swapping state implementations without changing UI
+impactDescription: 无需更改 UI 即可切换状态实现
 tags: composition, state, architecture
 ---
 
-## Decouple State Management from UI
+## 将状态管理与 UI 解耦
 
-The provider component should be the only place that knows how state is managed.
-UI components consume the context interface—they don't know if state comes from
-useState, Zustand, or a server sync.
+Provider 组件应该是唯一知道状态管理方式的地方。
+UI 组件消费 context 接口——它们不知道状态来自
+useState、Zustand 还是服务器同步。
 
-**Incorrect (UI coupled to state implementation):**
+**错误（UI 耦合到状态实现）：**
 
 ```tsx
 function ChannelComposer({ channelId }: { channelId: string }) {
-  // UI component knows about global state implementation
+  // UI 组件了解全局状态实现
   const state = useGlobalChannelState(channelId)
   const { submit, updateInput } = useChannelSync(channelId)
 
@@ -31,10 +31,10 @@ function ChannelComposer({ channelId }: { channelId: string }) {
 }
 ```
 
-**Correct (state management isolated in provider):**
+**正确（状态管理隔离在 Provider 中）：**
 
 ```tsx
-// Provider handles all state management details
+// Provider 处理所有状态管理细节
 function ChannelProvider({
   channelId,
   children,
@@ -56,7 +56,7 @@ function ChannelProvider({
   )
 }
 
-// UI component only knows about the context interface
+// UI 组件只知道 context 接口
 function ChannelComposer() {
   return (
     <Composer.Frame>
@@ -69,7 +69,7 @@ function ChannelComposer() {
   )
 }
 
-// Usage
+// 用法
 function Channel({ channelId }: { channelId: string }) {
   return (
     <ChannelProvider channelId={channelId}>
@@ -79,10 +79,10 @@ function Channel({ channelId }: { channelId: string }) {
 }
 ```
 
-**Different providers, same UI:**
+**不同的 Provider，相同的 UI：**
 
 ```tsx
-// Local state for ephemeral forms
+// 临时表单的本地状态
 function ForwardMessageProvider({ children }) {
   const [state, setState] = useState(initialState)
   const forwardMessage = useForwardMessage()
@@ -97,7 +97,7 @@ function ForwardMessageProvider({ children }) {
   )
 }
 
-// Global synced state for channels
+// 频道的全局同步状态
 function ChannelProvider({ channelId, children }) {
   const { state, update, submit } = useGlobalChannel(channelId)
 
@@ -109,5 +109,5 @@ function ChannelProvider({ channelId, children }) {
 }
 ```
 
-The same `Composer.Input` component works with both providers because it only
-depends on the context interface, not the implementation.
+同一个 `Composer.Input` 组件可以同时与两个 Provider 一起工作，因为它只
+依赖于 context 接口，而非实现。

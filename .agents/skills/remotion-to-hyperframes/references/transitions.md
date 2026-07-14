@@ -1,12 +1,11 @@
-# Transitions translation: @remotion/transitions → HF crossfades / shader-transitions
+# 过渡动画翻译：@remotion/transitions → HF 交叉淡入淡出 / 着色器过渡
 
-The `@remotion/transitions` package is Remotion's library of pre-built
-scene-to-scene transitions. HF has two paths to translate them:
+`@remotion/transitions` 包是 Remotion 的预建场景间过渡库。HF 有两种翻译路径：
 
-1. **Manual GSAP crossfade** — for simple opacity/transform transitions. Free, no extra package.
-2. **HF shader-transitions package** — for visually-rich transitions that match the @remotion/transitions presets.
+1. **手动 GSAP 交叉淡入淡出** — 适用于简单的透明度/变换过渡。免费，无需额外包。
+2. **HF 着色器过渡包** — 适用于视觉丰富的过渡，匹配 @remotion/transitions 预设。
 
-## Pattern: `<TransitionSeries>` is `<Series>` with overlap
+## 模式：`<TransitionSeries>` 就是带重叠的 `<Series>`
 
 ```tsx
 <TransitionSeries>
@@ -23,66 +22,63 @@ scene-to-scene transitions. HF has two paths to translate them:
 </TransitionSeries>
 ```
 
-Translates to scenes that overlap by the transition duration:
+翻译为按过渡时长重叠的场景：
 
-- SceneA: [0, 60] = `data-start="0" data-duration="2"`
-- SceneB: [60-15, 60-15+60] = `data-start="1.5" data-duration="2"` (the transition window overlaps the end of A and start of B)
+- SceneA：[0, 60] = `data-start="0" data-duration="2"`
+- SceneB：[60-15, 60-15+60] = `data-start="1.5" data-duration="2"`（过渡窗口重叠了 A 的结尾和 B 的开头）
 
-Then drive the transition with GSAP:
+然后使用 GSAP 驱动过渡：
 
 ```js
-// Manual fade (presentation={fade()})
+// 手动淡入淡出 (presentation={fade()})
 tl.to(sceneA, { opacity: 0, duration: 0.5, ease: "none" }, 1.5);
 tl.fromTo(sceneB, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 1.5);
 ```
 
-## Presentation table
+## 过渡效果对照表
 
-| Remotion `presentation`            | HF translation                                                                            |
-| ---------------------------------- | ----------------------------------------------------------------------------------------- |
-| `fade()`                           | manual `gsap.to(opacity)` crossfade                                                       |
-| `slide({direction: "from-right"})` | `gsap.fromTo(translateX: "100%" → 0)` on incoming + `to(translateX: "-100%")` on outgoing |
-| `wipe({direction: "from-left"})`   | `gsap.fromTo(clip-path: inset(0 100% 0 0) → inset(0 0 0 0))` on incoming                  |
-| `clockWipe()`                      | use HF's `sdf-iris` shader-transition (`npx hyperframes add sdf-iris`)                    |
-| `flip()`                           | `gsap.to(rotateY)` 180° split between scenes                                              |
-| `cube()`                           | use HF's `cinematic-zoom` or build manually with `rotateY` + `transform-origin`           |
-| `iris()`                           | use HF's `sdf-iris` shader-transition                                                     |
-| `none()`                           | no transition; hard cut at the boundary                                                   |
+| Remotion `presentation`            | HF 翻译                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- |
+| `fade()`                           | 手动 `gsap.to(opacity)` 交叉淡入淡出                                                         |
+| `slide({direction: "from-right"})` | `gsap.fromTo(translateX: "100%" → 0)` 进入 + `to(translateX: "-100%")` 退出                  |
+| `wipe({direction: "from-left"})`   | `gsap.fromTo(clip-path: inset(0 100% 0 0) → inset(0 0 0 0))` 进入                            |
+| `clockWipe()`                      | 使用 HF 的 `sdf-iris` 着色器过渡（`npx hyperframes add sdf-iris`）                           |
+| `flip()`                           | `gsap.to(rotateY)` 在场景之间 180° 分割                                                      |
+| `cube()`                           | 使用 HF 的 `cinematic-zoom` 或使用 `rotateY` + `transform-origin` 手动构建                   |
+| `iris()`                           | 使用 HF 的 `sdf-iris` 着色器过渡                                                              |
+| `none()`                           | 无过渡；边界处硬切换                                                                         |
 
-## Timing translations
+## 时间翻译
 
 ```tsx
 linearTiming({durationInFrames: 15})              → ease: "none"
-linearTiming({durationInFrames: 15, easing: ...}) → ease per the easing table in timing.md
+linearTiming({durationInFrames: 15, easing: ...}) → 按 timing.md 中的缓动表对应缓动函数
 springTiming({config: {damping: 12}})             → ease: "back.out(1.4)" (~0.7 s)
 ```
 
-Convert `durationInFrames` to seconds (`/fps`).
+将 `durationInFrames` 转换为秒（`/fps`）。
 
-## When to use HF shader-transitions
+## 何时使用 HF 着色器过渡
 
-For transitions Remotion presets that have visually-rich GLSL equivalents
-(iris, ripple, zoom, glitch), use HF's [shader-transitions](https://hyperframes.heygen.com/catalog/blocks)
-package. They produce richer output than manual GSAP transforms.
+对于 Remotion 预设中具有视觉丰富的 GLSL 等效效果的过渡（iris、ripple、zoom、glitch），使用 HF 的 [shader-transitions](https://hyperframes.heygen.com/catalog/blocks) 包。它们产生比手动 GSAP 变换更丰富的输出。
 
 ```bash
 npx hyperframes add sdf-iris
 ```
 
-Then in the composition:
+然后在合成中：
 
 ```html
 <div id="iris-transition" class="hf-shader-transition" data-start="1.5" data-duration="0.5">
-  <!-- bound scenes via the shader-transition's data-from / data-to -->
+  <!-- 通过着色器过渡的 data-from / data-to 绑定场景 -->
 </div>
 ```
 
-Each shader-transition has its own data attributes; see the catalog page
-for the specific block.
+每个着色器过渡有其自己的 data 属性；查看目录页了解具体块。
 
-## When the source uses a custom Presentation
+## 当源码使用自定义 Presentation
 
-Remotion supports custom `presentation` implementations:
+Remotion 支持自定义 `presentation` 实现：
 
 ```tsx
 const customPresentation: PresentationComponent = ({
@@ -94,7 +90,7 @@ const customPresentation: PresentationComponent = ({
     <div
       style={
         {
-          /* compute transform from progress */
+          /* 从进度计算变换 */
         }
       }
     >
@@ -104,11 +100,6 @@ const customPresentation: PresentationComponent = ({
 };
 ```
 
-Translation: extract the math from the `style={...}` block and emit
-equivalent GSAP tweens. Specifically the transform formula maps directly
-to a `gsap.to(target, { transform: ... })` parameterized by `progress`.
+翻译：从 `style={...}` 块中提取数学计算并生成等价的 GSAP 补间动画。具体来说，变换公式直接映射到由 `progress` 参数化的 `gsap.to(target, { transform: ... })`。
 
-If the custom presentation uses `useCurrentFrame()` internally to
-animate something _outside_ the simple progress curve, treat the source
-as untranslatable and bow out to the runtime interop pattern (see
-[escape-hatch.md](escape-hatch.md)).
+如果自定义 presentation 在内部使用 `useCurrentFrame()` 来动画化 _超出_ 简单进度曲线的内容，则将源码视为不可翻译，并退出到运行时互操作模式（参见 [escape-hatch.md](escape-hatch.md)）。

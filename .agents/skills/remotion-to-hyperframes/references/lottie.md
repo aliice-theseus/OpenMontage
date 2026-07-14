@@ -1,12 +1,8 @@
-# Lottie translation: @remotion/lottie → HF lottie adapter
+# Lottie 翻译：@remotion/lottie → HF lottie 适配器
 
-Lottie animations are a clean translation case — HF has a built-in
-[Lottie adapter](https://github.com/heygen-com/hyperframes/blob/main/packages/core/src/runtime/adapters/lottie.ts)
-that supports both `lottie-web` and `@lottiefiles/dotlottie-web`. The
-adapter auto-discovers animations registered on `window.__hfLottie`
-and seeks them per-frame via `goToAndStop`.
+Lottie 动画是一个干净的翻译案例 — HF 有一个内置的 [Lottie 适配器](https://github.com/heygen-com/hyperframes/blob/main/packages/core/src/runtime/adapters/lottie.ts)，同时支持 `lottie-web` 和 `@lottiefiles/dotlottie-web`。适配器自动发现注册在 `window.__hfLottie` 上的动画，并通过 `goToAndStop` 逐帧定位。
 
-## Pattern
+## 模式
 
 ```tsx
 import { Lottie } from "@remotion/lottie";
@@ -19,7 +15,7 @@ export const MyComp = () => (
 );
 ```
 
-Translates to:
+翻译为：
 
 ```html
 <div id="stage" ...>
@@ -39,22 +35,20 @@ Translates to:
 </div>
 ```
 
-Key differences from a typical Lottie embed:
+与典型 Lottie 嵌入的关键区别：
 
-- `autoplay: false` — HF drives playback by seeking
-- `loop: false` typically (unless Remotion's `loop={true}`)
-- `window.__hfLottie.push(anim)` is what hooks the animation into HF's
-  per-frame seek
+- `autoplay: false` — HF 通过定位来驱动播放
+- `loop: false` 通常如此（除非 Remotion 的 `loop={true}`）
+- `window.__hfLottie.push(anim)` 是将动画钩入 HF 逐帧定位的机制
 
-## Asset handling
+## 资源处理
 
-Remotion bundles the animation JSON via webpack import. HF needs the JSON
-on disk under `assets/` and references it via path:
+Remotion 通过 webpack 导入打包动画 JSON。HF 需要 JSON 在磁盘上的 `assets/` 目录下，并通过路径引用：
 
-1. Copy `hello.json` from the Remotion project into `hf-src/assets/`.
-2. Reference as `path: "assets/hello.json"` in `loadAnimation`.
+1. 将 `hello.json` 从 Remotion 项目复制到 `hf-src/assets/`。
+2. 在 `loadAnimation` 中引用为 `path: "assets/hello.json"`。
 
-For dotlottie (binary) format, swap in `@lottiefiles/dotlottie-web`:
+对于 dotlottie（二进制）格式，替换为 `@lottiefiles/dotlottie-web`：
 
 ```html
 <script src="https://unpkg.com/@lottiefiles/dotlottie-web"></script>
@@ -70,13 +64,11 @@ For dotlottie (binary) format, swap in `@lottiefiles/dotlottie-web`:
 </script>
 ```
 
-The HF adapter handles both player APIs (it duck-types `goToAndStop`
-vs `setCurrentRawFrameValue` / `seek`).
+HF 适配器处理两种播放器 API（它通过鸭子类型识别 `goToAndStop` 与 `setCurrentRawFrameValue` / `seek`）。
 
-## Multiple Lottie animations
+## 多个 Lottie 动画
 
-Multiple `<Lottie>` instances in one composition work — push each one
-onto `window.__hfLottie` and the adapter will seek all of them in sync:
+一个合成中的多个 `<Lottie>` 实例可以工作 — 将每个实例推送到 `window.__hfLottie`，适配器将同步定位所有实例：
 
 ```js
 window.__hfLottie.push(anim1);
@@ -84,38 +76,18 @@ window.__hfLottie.push(anim2);
 window.__hfLottie.push(anim3);
 ```
 
-## Lottie source isn't actually translation-blocking
+## Lottie 源实际上不是翻译阻塞
 
-Lottie animations encode their own deterministic timeline. They're the
-_easiest_ part of a Remotion composition to translate because the
-animation logic is already self-contained — neither Remotion nor HF
-"animate" them, both just seek them. Translation cost is near-zero.
+Lottie 动画编码了它们自己确定性的时间线。它们是 Remotion 合成中最_容易_翻译的部分，因为动画逻辑已经是自包含的 — Remotion 和 HF 都不"动画化"它们，两者都只是定位它们。翻译成本接近于零。
 
-## After Effects → Lottie limitations
+## After Effects → Lottie 限制
 
-Lottie supports a subset of After Effects features. Expressions, most
-Effects (drop shadow, color overlay), all blend modes beyond Normal/Add/
-Multiply, luma mattes, and most 3D parameters are not supported. If the
-Remotion composition uses a Lottie file that depends on these, the
-animation will break in BOTH Remotion and HF — this isn't a translation
-problem, it's a Lottie limitation. See
-[airbnb/lottie/after-effects.md](https://github.com/airbnb/lottie/blob/master/after-effects.md)
-for the full supported feature list.
+Lottie 支持 After Effects 功能的一个子集。表达式、大多数效果（投影、颜色叠加）、Normal/Add/Multiply 之外的所有混合模式、亮度蒙版和大多数 3D 参数都不支持。如果 Remotion 合成使用了依赖这些功能的 Lottie 文件，动画在 Remotion 和 HF 中都会出现问题 — 这不是翻译问题，而是 Lottie 的限制。参见 [airbnb/lottie/after-effects.md](https://github.com/airbnb/lottie/blob/master/after-effects.md) 了解完整的功能支持列表。
 
-## Loop behavior
+## 循环行为
 
-Remotion's `loop={true}` plays the animation continuously. Translate to
-the player option only after checking the generated frames. The HF
-adapter seeks absolute composition time; it does not add modulo looping
-or playback-rate scaling on top of the player. For exact repeating
-cycles or non-default playback rates, bake the timing into the Lottie
-asset or author an explicit timeline around the Lottie layer and verify
-the rendered output.
+Remotion 的 `loop={true}` 会连续播放动画。只有在检查生成的帧之后，才将其翻译为播放器选项。HF 适配器定位绝对合成时间；它不会在播放器之上添加模运算循环或播放速率缩放。对于精确的重复循环或非默认播放速率，将时间烘焙到 Lottie 资源中，或围绕 Lottie 层编写显式的时间线，并验证渲染输出。
 
-## Performance note
+## 性能说明
 
-Per the [Lottie adapter](https://github.com/heygen-com/hyperframes/blob/main/packages/core/src/runtime/adapters/lottie.ts)
-docs: lottie-web's `goToAndStop(time, isFrame=false)` takes time in ms;
-the adapter passes `time * 1000` for precision. This is more accurate
-than passing frame numbers (especially for animations whose internal
-fps doesn't match the HF render fps).
+根据 [Lottie 适配器](https://github.com/heygen-com/hyperframes/blob/main/packages/core/src/runtime/adapters/lottie.ts) 文档：lottie-web 的 `goToAndStop(time, isFrame=false)` 接受以毫秒为单位的时间；适配器传递 `time * 1000` 以确保精度。这比传递帧号更精确（特别是对于内部 fps 与 HF 渲染 fps 不匹配的动画）。

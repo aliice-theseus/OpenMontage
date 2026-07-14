@@ -1,78 +1,78 @@
-# kinetic-type-beats — Kinetic-Type Beats
+# kinetic-type-beats — 动感排版节拍
 
-**intent**: A flat, centered, bold-type shot where the motion IS the word/phrase changing — the line either swaps tokens in place by hard cut, or builds a statement across full-screen beats (each with its own move) that lands a spring-pop payoff.
+**意图**：一个平面、居中、粗体排版的镜头，运动本身就是单词/短语的变化——该行要么通过硬切在原位交换标记，要么在全屏节拍中构建一个陈述（每个节拍有自己的动作），最终以一个弹簧弹出回报着陆。
 
-**roles served**
+**服务角色**
 
-- Hook (from `hook-kinetic-type-flash`): when one stationary line lands a punchy rhetorical question or "you keep doing X" callout and the in-place token swap itself is the joke.
-- Hook (from `hook-kinetic-type-escalation`): when ONE statement should escalate across distinct full-screen beats (each a different move) and punctuate on a spring-pop payoff element — a rising-intensity / "transform X into Y" opener.
-- Problem (from `problem-kinetic-type-beats`): when the script is 3–5 short pain statements (or a "what-if?" framing) that should each land alone, on a bare canvas, before the next replaces it — no product visible yet.
-- Product_Intro (from `product-intro-kinetic-type-namedrop`): when the hook IS the words — hard-cut through "Introducing…" / tagline / value beats and resolve on the brand name or logo.
-- Benefits (from `benefits-kinetic-type`): when "what you get" is a rapid-fire staccato montage — 8–12 short value phrases, each flashing and clearing before the next at high tempo.
-- CTA (from `cta-kinetic-type`): when the sign-off is a punchy closing line (or a short stack of value lines) that snaps/fades in beat-by-beat and lands on the brand lockup or URL — no spatial set, no clicked button.
-- Brand_Outro (from `brand-outro-kinetic-type-resolve`): when the close is a rapid center-channel barrage of single-word verbs asserting breadth, resolving on the brand's one defining word (motion-is-the-message, no logo lockup).
+- Hook（来自 `hook-kinetic-type-flash`）：当一个静止行落下一个有力的修辞问题或"你一直做 X"的标注，且原位标记交换本身就是笑点时。
+- Hook（来自 `hook-kinetic-type-escalation`）：当一个陈述应该跨不同的全屏节拍升级（每个节拍一个不同的动作），并在弹簧弹出回报元素上标点——一个上升强度/"将 X 转变为 Y"的开场。
+- Problem（来自 `problem-kinetic-type-beats`）：当脚本是 3–5 个简短的痛苦陈述（或"如果…"框架），每个应该单独落地，在空白 canvas 上，然后下一个替换它——尚未可见产品。
+- Product_Intro（来自 `product-intro-kinetic-type-namedrop`）：当钩子就是文字——通过"介绍…"/标语/价值节拍硬切并解析为品牌名称或 logo。
+- Benefits（来自 `benefits-kinetic-type`）：当"你得到什么"是一个快速连续的断奏蒙太奇——8–12 个简短的价值短语，每个快速闪烁并清除，下一个以高节奏到达。
+- CTA（来自 `cta-kinetic-type`）：当签退是一个有力结束语（或一短叠价值行），逐节拍弹出/淡入并着陆在品牌组合或 URL 上——无空间设置，无点击按钮。
+- Brand_Outro（来自 `brand-outro-kinetic-type-resolve`）：当结尾是一个快速的中央通道单字动词弹幕，断言广度，解析为品牌的一个定义词（运动即信息，无 logo 组合）。
 
-**duration**: 3.4–12s (Benefits fastest ~3.5–4s at 8–12 sub-0.5s beats; Brand_Outro ~3.6s; Problem longest 7–12s; CTA spans 3.6–11.7s with beat count)
+**时长**：3.4–12 秒（Benefits 最快 ~3.5–4 秒，8–12 个亚 0.5 秒节拍；Brand_Outro ~3.6 秒；Problem 最长 7–12 秒；CTA 随节拍数量跨越 3.6–11.7 秒）
 
-**shot structure** (flat, fixed center anchor; bold sans-serif text on a solid `[bg color]`; type/tokens are the only subject; camera locked unless a modifier is noted; two folded sub-shapes — **(A) fixed-line token swap** and **(B) multi-beat statement build**)
+**镜头结构**（平面、固定中心锚点；粗体无衬线文本在纯 `[bg color]` 上；字体/标记是唯一主体；摄像机锁定，除非注明修饰符；两个折叠子形态 — **(A) 固定行标记交换**和 **(B) 多节拍陈述构建**）
 
-- **Scene 1 (0.0–~1.0s) — first beat lands.** Solid `[bg color]` field. Bold `[type color]` text arrives dead-center via ONE entrance: type-on character-by-character with a trailing blinking caret, OR a hard-cut FLASH-in (no fade/slide), OR a per-word staggered fade/blur, OR an oversized word that smoothly SCALES DOWN to a small centered word. An optional `[accent color]` move plays on the key word(s): a left→right drawn underline / strike-through, a small particle/dot burst from behind the text, or a `[accent color]` selection-box framing the word.
-  - _Variant — Hook (flash)_: just the fixed `[hook line]` (or its first word) parks at center; no escalation move.
-  - _Variant — Hook (escalation)_: `[beat 1 text]` arrives big and scale-downs to centered, OR sits over a glowing `[motif]` with a slow camera push-in (see camera modifier); ends on a hard cut.
-  - _Variant — Problem_: centered `[pain line 1]` reveals in chunks across one or two lines with its `[accent]` underline / particle burst.
-  - _Variant — Product_Intro_: bold `[hook word, e.g. "Introducing"]` enters with a typographic accent (split-and-slide apart, drawn underline, or `[accent]` selection-box).
-  - _Variant — Brand_Outro_: optional single-frame flash of `[product UI / hero asset]` precedes the verb channel, then `[verb 1]` hard-cuts in centered.
+- **场景 1（0.0–~1.0 秒）——第一个节拍落地。** 纯 `[bg color]` 场。粗体 `[type color]` 文本通过**一个**入场方式在正中到达：带尾随闪烁光标的逐字输入，或硬切**闪现**进入（无淡入/滑动），或逐词错开淡入/模糊，或一个过大的单词平滑**缩小**到一个小居中词。一个可选的 `[accent color]` 动作在关键词上播放：从左到右绘制的下划线/删除线，从文本后的小粒子/点爆发，或一个 `[accent color]` 选择框框住单词。
+  - _变体 — Hook（闪现）_：只是固定的 `[hook line]`（或其第一个词）停在中心；无升级动作。
+  - _变体 — Hook（升级）_：`[beat 1 text]` 大号到达并缩放到居中，或坐在一个发光的 `[motif]` 之上，带缓慢摄像机推进（参见摄像机修饰）；以硬切结束。
+  - _变体 — Problem_：居中的 `[pain line 1]` 跨一行或两行分块揭示，带其 `[accent]` 下划线/粒子爆发。
+  - _变体 — Product_Intro_：粗体 `[hook word, e.g. "Introducing"]` 以排版重音进入（分裂并滑开，绘制下划线，或 `[accent]` 选择框）。
+  - _变体 — Brand_Outro_：可选单帧闪现 `[product UI / hero asset]` 在动词通道之前，然后 `[verb 1]` 硬切进入居中。
 
-- **Scene 2..N — beats replace each other in place (the engine).** The center anchor advances one beat at a time; nothing from the prior beat lingers. Choose the swap mechanism by sub-shape:
-  - **Sub-shape A (fixed-line token swap)**: the line stays fixed and only the variable slot changes by an instant hard CUT (no roll/scroll/blur) — `[token A]` → `[token B]` → `[token C]` — OR the final word(s) backspace out and a new word retypes (`[word A]` → `[word B]`). The rest of the line holds.
-  - **Sub-shape B (multi-beat statement build)**: each full-screen beat hard-cuts to a NEW background/line, and each gets its own distinct entrance/exit MOVE — springy scale-in/scale-out overshoot, 3D letter-tumble (glyphs scatter into a rotating depth cloud, then reassemble into the next phrase), motion-blur fly-in that resolves sharp at center, prior text accelerates/zooms past the camera while fading, letter-spacing collapse, or a bottom-up masked slide. Background may hard-flip `[bg A]`↔`[bg B]` on selected beats with `[type color]` inverting to stay legible.
-  - _Variant — Hook (escalation)_: beat 2 `[beat 2 text]` (more emphatic) snaps in; beat 3 `[beat 3 text]` (climax) holds, then a transition-out move on the type itself — a Z-dolly forward THROUGH an oversized glyph, OR a per-word karaoke highlight sweep lighting words left→right.
-  - _Variant — Problem_: each `[pain line k]` enters by chunk-reveal or motion-blur fly-in as the prior blurs/zooms off; an optional `[accent color]` interstitial word ("[what-if hook]") scales up from center, holds, then zooms past the camera and fades.
-  - _Variant — Product_Intro_: each `[tagline phrase]` is a hard-cut/push-through inverted-text beat with its own one-shot accent (strike-through, slider/toggle shapes sliding in, or a bg-invert cycle white→`[accent]`→black flipping fg/bg).
-  - _Variant — Benefits_: high tempo (~0.4s/beat) — each `[benefit phrase]` pops via springy scale-in/out or 3D letter-tumble; multiple bg light↔dark flips across the run with text-color invert.
-  - _Variant — CTA_: each `[value line]` → `[value line]` → `[CTA verb line]` clears by hard cut / zoom-blur cut through near-black / fade-out, then the next pops/fades/slides in. Optional `[accent motif]` draws on behind (rising line-graph trim-path, thin wireframe guides, gutter geometry tiles).
-  - _Variant — Brand_Outro_: a centered single `[verb / keyword]` HARD-CUTS to the next at a steady ~0.2s cadence (no fade/scale) over a continuous moving field (see camera modifier).
+- **场景 2..N——节拍在原位互相替换（引擎）。** 中心锚点每次前进一个节拍；前一节拍没有任何残留。按子形态选择交换机制：
+  - **子形态 A（固定行标记交换）**：行保持固定，只有变量槽通过瞬时硬**切**改变（无滚动/模糊）— `[token A]` → `[token B]` → `[token C]` — 或最后一个词退格删除，新词重新输入（`[word A]` → `[word B]`）。行的其余部分保持。
+  - **子形态 B（多节拍陈述构建）**：每个全屏节拍硬切到一个新的背景/行，每个都有自己独特的进入/退出**动作**——弹性缩放进入/缩放退出过冲，3D 字母翻滚（字形散开成旋转深度云，然后重新组装成下一个短语），运动模糊飞入，在中心清晰解析，先前文本加速/缩放经过摄像机同时淡出，字母间距塌缩，或从下到上的遮罩滑动。背景可以在选定节拍上硬翻转 `[bg A]`↔`[bg B]`，`[type color]` 反转以保持可读。
+  - _变体 — Hook（升级）_：节拍 2 `[beat 2 text]`（更有力）快照进入；节拍 3 `[beat 3 text]`（高潮）保持，然后在字体本身上的过渡退出动作——Z 推拉通过超大字形，或逐词卡拉 OK 高亮扫过从左到右点亮单词。
+  - _变体 — Problem_：每个 `[pain line k]` 通过块揭示或运动模糊飞入进入，同时前一个模糊/缩放退出；一个可选的 `[accent color]` 插词（"[what-if hook]"）从中心放大，保持，然后缩放经过摄像机并淡出。
+  - _变体 — Product_Intro_：每个 `[tagline phrase]` 是一个硬切/推进穿过反转文本节拍，带有自己的一次性重音（删除线，滑块/切换形状滑入，或背景反转循环白色→`[accent]`→黑色，翻转前景/背景）。
+  - _变体 — Benefits_：高节奏（~0.4 秒/节拍）— 每个 `[benefit phrase]` 通过弹性缩放进入/退出或 3D 字母翻滚弹出；运行期间多次背景亮↔暗翻转，文本颜色反转。
+  - _变体 — CTA_：每个 `[value line]` → `[value line]` → `[CTA verb line]` 通过硬切 / 缩放模糊切通过近黑色 / 淡出清除，然后下一个弹出/淡入/滑入。可选 `[accent motif]` 在背后绘制（上升线图裁切路径、细线框引导、隔断几何瓷砖）。
+  - _变体 — Brand_Outro_：一个居中的单 `[verb / keyword]` **硬切**到下一个，以稳定 ~0.2 秒节奏（无淡入/缩放），在连续移动场之上（参见摄像机修饰）。
 
-- **Scene N (final beat → end) — resolve and HOLD.** The last beat lands and holds to the end (settle only, no further scale-out). Resolution diverges by role:
-  - _Variant — Hook (flash)_: last token swap lands and holds; optional tiny punctuation/emphasis snap (`?` → `?!`, or fill snaps to `[accent color]`).
-  - _Variant — Hook (escalation)_: resolve on `[payoff bg]` — a `[payoff element]` (colored square / heart-eyes reaction emoji) SPRING-POPS in center; small `[accent motes]` drift outward; subtle settle.
-  - _Variant — Problem_: final `[pain line]` reveals (left→right swipe with leading-edge blur, OR letters explode radially then the resolving line fades up); holds the pain on screen.
-  - _Variant — Product_Intro_: resolve on the brand — `[logo mark]` / `[wordmark]` pops in centered (optional sting: liquid/ink splash, blob backing), OR the final value word holds inside an expanding-iris `[accent]` circle that scales to fill frame and hard-cuts the closing word through it.
-  - _Variant — Benefits_: the last `[benefit phrase]` arrives (optionally on the inverted bg) and SETTLES — does not scale/tumble back out.
-  - _Variant — CTA_: land on the lockup — `[logo mark]` SCALES UP small→full and holds, OR a `[logo]`/`[url]` builds segment-by-segment beside its icon. End-card holds dead static.
-  - _Variant — Brand_Outro_: hard cut to the `[resolve word / brand keyword]` (longest, still centered); HOLDS ~0.5s while the background field keeps moving.
+- **场景 N（最终节拍 → 结束）——解析并**保持**。最后一个节拍落地并保持到结束（仅稳定，无进一步缩出）。解析按角色分叉：
+  - _变体 — Hook（闪现）_：最后一个标记交换落地并保持；可选微小标点/强调快照（`?` → `?!`，或填充快照到 `[accent color]`）。
+  - _变体 — Hook（升级）_：解析在 `[payoff bg]` 上——一个 `[payoff element]`（彩色方块 / 爱心眼表情符号）在中心**弹簧弹出**；小 `[accent motes]` 向外漂移；微妙稳定。
+  - _变体 — Problem_：最终 `[pain line]` 揭示（从左到右滑动，前导边缘模糊，或字母径向爆炸然后解析行淡入）；在屏幕上保持痛苦。
+  - _变体 — Product_Intro_：解析为品牌 — `[logo mark]` / `[wordmark]` 在中心弹出（可选刺痛：液体/墨水飞溅，斑点背景），或最终价值词保持在扩大的虹膜 `[accent]` 圆圈内，该圆圈缩放到填满画面并通过它硬切结束语。
+  - _变体 — Benefits_：最后一个 `[benefit phrase]` 到达（可选在反转背景上）并**稳定**——不缩放/翻滚退出。
+  - _变体 — CTA_：着陆在组合上 — `[logo mark]` **放大**小→全并保持，或 `[logo]`/`[url]` 在其图标旁边逐段构建。结束卡片完全静止保持。
+  - _变体 — Brand_Outro_：硬切到 `[resolve word / brand keyword]`（最长，仍居中）；保持 ~0.5 秒，同时背景场继续移动。
 
-**motion vocabulary**: hard-cut / flash word swaps; in-place token cycle (instant cut, no roll/scroll/blur); type-on with trailing blinking caret; backspace-and-retype; per-word staggered fade/blur reveal; big→small scale-down; springy scale-in/scale-out overshoot; 3D letter-tumble scatter-and-reassemble; motion-blur fly-in / blur-off; prior text zoom-through-camera; letter-spacing collapse; bottom-up masked slide; drawn-on `[accent]` underline / strike-through; particle/dot burst from text; `[accent]` selection-box frame; bg-invert hard-flip with text-color invert; karaoke per-word highlight sweep; radial letter-explode; expanding-iris circle wipe-to-next; final spring-pop payoff element (square / emoji / logo mark); drifting `[accent]` motes / ambient shapes; segment-by-segment URL/wordmark build; final-token punctuation snap; settle-and-hold.
+**动词语汇**：硬切/闪现单词交换；原位标记循环（瞬时切，无滚动/模糊）；带尾随闪烁光标的输入；退格重输入；逐词错开淡入/模糊揭示；大→小缩小；弹性缩放进入/缩放退出过冲；3D 字母翻滚散开并重新组装；运动模糊飞入/模糊退出；先前文本缩放穿过摄像机；字母间距塌缩；从下到上遮罩滑动；绘制的 `[accent]` 下划线/删除线；从文本发出的粒子/点爆发；`[accent]` 选择框；背景反转硬翻转带文本颜色反转；逐词卡拉 OK 高亮扫过；径向字母爆炸；扩展虹膜圆圈擦除到下一个；最终弹簧弹出回报元素（方块/表情符号/logo 标记）；漂移的 `[accent]` 微粒/环境形状；逐段 URL/wordmark 构建；最终标记标点快照；稳定并保持。
 
-**rule mapping**
+**规则映射**
 
-- hard-cut / flash word swaps, in-place token cycle, whole-line state swaps at time thresholds → `discrete-text-sequence`
-- type-on character-by-character + blinking trailing caret → `discrete-text-sequence` (text/typing state progression) + `context-sensitive-cursor` (caret blink/color-switch)
-- backspace-and-retype final word(s) → `discrete-text-sequence` (typos/holds/backspace is explicitly in-scope)
-- one short distinct phrase per beat / script-driven phrase windows / word-by-word tagline assembly → `dynamic-content-sequencing`
-- percussive per-beat phrase entrances on a shared beat array (distinct entrance per phrase, steady cadence) → `kinetic-beat-slam` (best fit for the multi-beat statement-build engine and the ~0.2s Brand_Outro verb march)
-- per-word staggered fade/blur reveal → `kinetic-beat-slam` (per-phrase/per-word distinct entrances); the soft-focus blur component → `depth-of-field-blur` (selective-focus blur on the off-focus words)
-- big→small scale-down on a word; springy scale-in/scale-out overshoot → `spring-pop-entrance` (spring pop/settle) backed by `gsap-effects` for the plain scale tween
-- 3D letter-tumble scatter-into-depth-cloud then reassemble → `depth-scatter-assemble` (glyphs scatter into a 3D depth cloud and reassemble into the next phrase; combine w/ `3d-text-depth-layers` for the extruded read, or `hacker-flip-3d` for an in-place per-char flip flavor)
-- karaoke per-word highlight sweep synced across words → `asr-keyword-glow` (keyword glow+scale on a synced rail) OR `css-marker-patterns` (highlight sweep) — choose ASR-driven vs. static-timeline sweep
-- drawn-on `[accent]` underline / strike-through / loop / scribble under key word → `css-marker-patterns` (highlight sweep / circle / burst / scribble / sketchout)
-- particle/dot burst from behind text → `css-marker-patterns` (burst) backed by `gsap-effects`
-- `[accent]` selection-box frame around a word → `css-marker-patterns` (circle/box marker) + `gsap-effects`
-- bg-invert hard-flip (light↔dark / white→accent→black) with text-color invert → `discrete-text-sequence` (whole-text/state swap covers the synchronized fg/bg state change)
-- letter-spacing collapse; bottom-up masked slide → `gsap-effects` (tween letter-spacing / masked translate) + techniques: per-word kinetic typography / clip-path reveal
-- expanding-iris circle wipe that morphs the current word into the next at the same center → `scale-swap-transition` (morph two elements at same center)
-- final spring-pop payoff element (colored square / reaction emoji / logo mark) → `spring-pop-entrance` (or `physics-press-reaction` for a weightier pop)
-- drifting `[accent]` motes / ambient shapes / soft drifting gradient field beneath the type → `sine-wave-loop` (idle drift loop)
-- segment-by-segment URL / wordmark build beside its icon → `discrete-text-sequence` (segment-by-segment state reveal) or `dynamic-content-sequencing`
-- final-token punctuation / emphasis snap (`?`→`?!`, fill→accent) → `discrete-text-sequence`
-- settle-and-hold final frame → `spring-pop-entrance` (settle phase) / static hold (no rule needed)
-- motion-blur fly-in / blur-off / zoom-through-camera streak on type → `motion-blur-streak` (directional velocity blur on a fast fly-in / zoom-through; the heavy motion-blur smear resolves sharp at center)
-- radial letter-explode (glyphs explode outward radially then resolve) → `depth-scatter-assemble` (radial per-letter explode-and-resolve is in scope alongside the depth-cloud scatter)
-- 3D letter-tumble depth-cloud scatter-and-reassemble → `depth-scatter-assemble` (free tumbling depth-cloud that flies out and snaps back into the next phrase)
+- 硬切/闪现单词交换、原位标记循环、时间阈值处的整行状态交换 → `discrete-text-sequence`
+- 逐字输入 + 闪烁尾随光标 → `discrete-text-sequence`（文本/打字状态推进）+ `context-sensitive-cursor`（光标闪烁/颜色切换）
+- 最后一个词退格重输入 → `discrete-text-sequence`（错误/保持/退格明确在范围内）
+- 每个节拍一个简短的不同短语 / 脚本驱动的短语窗口 / 逐词标语组装 → `dynamic-content-sequencing`
+- 共享节拍数组上的打击式每节拍短语入场（每个短语不同的入场，稳定节奏）→ `kinetic-beat-slam`（最适合多节拍陈述构建引擎和 ~0.2 秒 Brand_Outro 动词行进）
+- 逐词错开淡入/模糊揭示 → `kinetic-beat-slam`（逐短语/逐词不同入场）；软焦模糊组件 → `depth-of-field-blur`（脱焦词上的选择聚焦模糊）
+- 单词上的大→小缩小；弹性缩放进入/缩放退出过冲 → `spring-pop-entrance`（弹簧弹出/稳定）由 `gsap-effects` 支持用于纯缩放补间
+- 3D 字母翻滚散开进入深度云然后重新组装 → `depth-scatter-assemble`（字形散开进入 3D 深度云并重新组装成下一个短语；与 `3d-text-depth-layers` 组合用于挤压读取，或 `hacker-flip-3d` 用于原位逐字符翻转风格）
+- 跨单词同步的逐词卡拉 OK 高亮扫过 → `asr-keyword-glow`（同步轨道上的关键词辉光+缩放）或 `css-marker-patterns`（高亮扫过）— 选择 ASR 驱动 vs 静态时间线扫过
+- 关键词下绘制的 `[accent]` 下划线/删除线/循环/涂鸦 → `css-marker-patterns`（高亮扫过/圆圈/爆发/涂鸦/素描出）
+- 从文本后的粒子/点爆发 → `css-marker-patterns`（爆发）由 `gsap-effects` 支持
+- 单词周围的 `[accent]` 选择框 → `css-marker-patterns`（圆圈/框标记）+ `gsap-effects`
+- 背景反转硬翻转（亮↔暗/白色→重音→黑色）带文本颜色反转 → `discrete-text-sequence`（全文本/状态交换覆盖同步的前景/背景状态变化）
+- 字母间距塌缩；从下到上遮罩滑动 → `gsap-effects`（补间字母间距/遮罩平移）+ techniques：逐词动感排版 / clip-path 揭示
+- 扩展虹膜圆圈擦除，在当前单词在相同中心变形成下一个 → `scale-swap-transition`（在同一中心变形两个元素）
+- 最终弹簧弹出回报元素（彩色方块/表情符号反应/logo 标记）→ `spring-pop-entrance`（或 `physics-press-reaction` 用于更重的弹出）
+- 漂移的 `[accent]` 微粒/环境形状/字体下柔和漂移渐变场 → `sine-wave-loop`（空闲漂移循环）
+- 图标旁的逐段 URL/wordmark 构建 → `discrete-text-sequence`（逐段状态揭示）或 `dynamic-content-sequencing`
+- 最终标记标点/强调快照（`?`→`?!`，填充→重音）→ `discrete-text-sequence`
+- 稳定并保持最终画面 → `spring-pop-entrance`（稳定阶段）/ 静态保持（无需规则）
+- 字体上的运动模糊飞入/模糊退出/缩放穿过摄像机条纹 → `motion-blur-streak`（快速飞入/缩放穿过上的方向速度模糊；重运动模糊拖影在中心清晰解析）
+- 径向字母爆炸（字形向外径向爆炸然后解析）→ `depth-scatter-assemble`（径向逐字母爆炸并解析在范围中，与深度云散开并列）
+- 3D 字母翻滚深度云散开并重新组装 → `depth-scatter-assemble`（自由翻滚深度云，飞出并快照回下一个短语）
 
-**camera modifier** (optional, layered over the flat shot; most variants are camera-locked)
+**摄像机修饰**（可选，叠加在平面镜头上；大多数变体摄像机锁定）
 
-- Slow continuous global zoom-in / uniform push-in running underneath the whole sequence (Problem, Brand_Outro) → `multi-phase-camera` (push phase) — gives parallax between the fixed type and a moving background field.
-- Camera dolly/zoom forward THROUGH an oversized glyph along Z as a beat transition-out (Hook escalation, Product_Intro push-through) → `coordinate-target-zoom` (target the glyph center) or `multi-phase-camera` (push).
-- Slow push-in on Scene 1 over a glowing `[motif]` (Hook escalation) → `multi-phase-camera` (push) or `coordinate-target-zoom`.
-- Note: the in-place token swap (sub-shape A) and most Benefits/Hook-flash/CTA variants are fully camera-static — the swap is the only motion.
+- 缓慢连续全局放大 / 在整个序列下运行的均匀推进（Problem、Brand_Outro）→ `multi-phase-camera`（推进阶段）— 在固定字体和移动背景场之间产生视差。
+- 摄像机推拉/沿 Z 向前推进通过超大字形作为节拍过渡退出（Hook 升级、Product_Intro 推进穿过）→ `coordinate-target-zoom`（目标字形中心）或 `multi-phase-camera`（推进）。
+- 场景 1 上在发光 `[motif]` 上的缓慢推进（Hook 升级）→ `multi-phase-camera`（推进）或 `coordinate-target-zoom`。
+- 注意：原位标记交换（子形态 A）和大多数 Benefits/Hook-flash/CTA 变体完全摄像机静止——交换是唯一的运动。

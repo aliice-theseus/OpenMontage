@@ -1,19 +1,19 @@
-# Design Adherence
+# 设计遵循
 
-Post-authoring verification that the composition follows the design spec. Run it after building, before serving the preview.
+创作后验证合成是否遵循设计规范。在构建后、提供预览前运行。
 
-If a design spec (`frame.md` / `design.md`) exists, read the HTML and check:
+如果存在设计规范（`frame.md` / `design.md`），阅读 HTML 并检查：
 
-1. **Colors** — every hex value in the composition appears in the spec's palette section (however the user labeled it: Colors, Palette, Theme, etc.). Flag any invented colors.
-2. **Typography** — font families and weights match the spec's type spec. No substitutions.
-3. **Corners** — border-radius values match the declared corner style, if specified.
-4. **Spacing** — padding and gap values fall within the declared density range, if specified.
-5. **Depth** — shadow usage matches the declared depth level, if specified (flat = none, subtle = light, layered = glows).
-6. **Avoidance rules** — if the spec has a section listing things to avoid (commonly "What NOT to Do", "Don'ts", "Anti-patterns", or "Do's and Don'ts"), verify none are present.
+1. **颜色** — 合成中的每个十六进制值都出现在规范的调色板部分（无论用户如何标记：Colors、Palette、Theme 等）。标记任何发明的颜色。
+2. **排版** — 字体系列和字重与规范的字体规范匹配。无替代。
+3. **圆角** — border-radius 值与声明的角落样式匹配（如果指定）。
+4. **间距** — padding 和 gap 值在声明的密度范围内（如果指定）。
+5. **深度** — 阴影使用与声明的深度级别匹配（如果指定，flat = 无，subtle = 浅，layered = 光晕）。
+6. **规避规则** — 如果规范有列出要避免的内容的部分（通常是"不要做什么"、"不该做"、"反模式"或"该做与不该做"），确认没有出现。
 
-Report violations as a checklist. Fix each one before serving.
+以清单形式报告违规。在提供预览前修复每个违规。
 
-If no design spec exists (house-style-only path), verify:
+如果不存在设计规范（仅 house-style 路径），验证：
 
-1. **Palette consistency** — the same bg, fg, and accent colors are used across all scenes. No per-scene color invention.
-2. **No lazy defaults** — check the composition against `house-style.md`'s "Lazy Defaults to Question" list. If any appear, they must be a deliberate choice for the content, not a default.
+1. **调色板一致性** — 所有场景中使用相同的 bg、fg 和强调色。没有逐场景的颜色发明。
+2. **没有惰性默认值** — 对照 `house-style.md` 的"需质疑的惰性默认值"列表检查合成。如果出现任何内容，它们必须是针对内容的刻意选择，而非默认值。

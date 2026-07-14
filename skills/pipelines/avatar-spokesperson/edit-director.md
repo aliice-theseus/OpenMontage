@@ -1,47 +1,47 @@
-# Edit Director - Avatar Spokesperson Pipeline
+# 剪辑总监 - 虚拟形象发言人管线
 
-## When To Use
+## 使用时机
 
-Turn the planned presenter scenes and produced assets into a coherent spokesperson timeline. The quality bar is steady delivery, readable support layers, and a clear CTA landing.
+将规划好的主持人场景和已制作的素材整合成连贯的发言人时间线。质量标准是稳定的节奏、可读的辅助层，以及清晰的 CTA 落地。
 
-## Process
+## 流程
 
-### 1. Cut The Presenter Track First
+### 1. 先剪辑主持人轨道
 
-Assemble the core spokesperson performance before adding support layers. If the presenter cut is weak, extra graphics will not rescue it.
+在添加辅助层之前，先组装核心发言人表演。如果主持人剪辑本身薄弱，额外的图形无法挽救。
 
-### 2. Add Support Layers Sparingly
+### 2. 有节制地添加辅助层
 
-Use overlays only where they help:
+仅在有助于表达的地方使用叠加层：
 
-- short proof points,
-- product names,
-- pricing or feature cards,
-- CTA reinforcement,
-- subtitles.
+- 简短证明点，
+- 产品名称，
+- 定价或功能卡片，
+- CTA 强化，
+- 字幕。
 
-### 3. Respect Spoken Rhythm
+### 3. 尊重口语节奏
 
-Keep pauses where they help emphasis. Do not trim so tightly that the avatar feels rushed or robotic.
+在有助于强调的地方保留停顿。不要剪辑得过于紧凑，以免让虚拟形象显得仓促或机械。
 
-### 4. Plan Deliverables Clearly
+### 4. 清晰规划交付物
 
-Recommended metadata keys:
+推荐元数据键：
 
 - `hero_cut_order`
 - `cta_frame_range`
 - `overlay_timing_map`
 - `variant_decisions`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the presenter remains the anchor,
-- overlays are timed cleanly,
-- scene transitions are calm and intentional,
-- the CTA lands once and clearly.
+- 主持人始终保持核心地位，
+- 叠加层时序干净利落，
+- 场景过渡平稳且有意图，
+- CTA 落地一次且清晰。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Overcutting to simulate energy.
-- Letting captions, side panels, and lower thirds compete for the same area.
-- Ending without a clean CTA hold.
+- 过度剪辑以模拟活力。
+- 让字幕、侧边面板和下方三分之一区域争抢同一空间。
+- 结束时没有清晰的 CTA 停留画面。

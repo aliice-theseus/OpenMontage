@@ -1,6 +1,6 @@
-# Monochrome
+# 单色
 
-Dramatic, typography-focused, serious content.
+戏剧性、排版聚焦、严肃内容。
 
 ```
 #F8F9FA #E9ECEF #DEE2E6 #CED4DA #ADB5BD #6C757D #495057 #343A40 #212529

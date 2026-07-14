@@ -1,7 +1,7 @@
 ---
 name: heygen
 description: |
-  [DEPRECATED] Use `create-video` for prompt-based video generation or `avatar-video` for precise avatar/scene control. This legacy skill combines both workflows — the newer focused skills provide clearer guidance.
+  [已弃用] 请使用 `create-video` 进行基于提示的视频生成，或使用 `avatar-video` 进行精确的虚拟角色/场景控制。此遗留技能将两种工作流合并——较新的专注技能提供更清晰的指导。
 homepage: https://docs.heygen.com/reference/generate-video-agent
 allowed-tools: mcp__heygen__*
 metadata:
@@ -12,92 +12,92 @@ metadata:
     primaryEnv: HEYGEN_API_KEY
 ---
 
-# HeyGen API (Deprecated)
+# HeyGen API（已弃用）
 
-> **This skill is deprecated.** Use the focused skills instead:
-> - **`create-video`** — Generate videos from a text prompt (Video Agent API)
-> - **`avatar-video`** — Build videos with specific avatars, voices, scripts, and scenes (v2 API)
+> **此技能已弃用。** 请改用专注技能：
+> - **`create-video`** —— 从文本提示生成视频（Video Agent API）
+> - **`avatar-video`** —— 使用特定虚拟角色、声音、脚本和场景构建视频（v2 API）
 
-This skill remains for backward compatibility but will be removed in a future release.
+此技能保留以便向后兼容，但将在未来版本中移除。
 
 ---
 
-AI avatar video creation API for generating talking-head videos, explainers, and presentations.
+用于生成AI虚拟角色说话头视频、讲解视频和演示文稿的API。
 
-## Tool Selection
+## 工具选择
 
-If HeyGen MCP tools are available (`mcp__heygen__*`), **prefer them** over direct HTTP API calls — they handle authentication and request formatting automatically.
+如果 HeyGen MCP 工具可用（`mcp__heygen__*`），**优先使用它们**而非直接 HTTP API 调用——它们会自动处理身份验证和请求格式。
 
-| Task | MCP Tool | Fallback (Direct API) |
+| 任务 | MCP 工具 | 回退方案（直接 API） |
 |------|----------|----------------------|
-| Generate video from prompt | `mcp__heygen__generate_video_agent` | `POST /v1/video_agent/generate` |
-| Check video status / get URL | `mcp__heygen__get_video` | `GET /v2/videos/{video_id}` |
-| List account videos | `mcp__heygen__list_videos` | `GET /v2/videos` |
-| Delete a video | `mcp__heygen__delete_video` | `DELETE /v2/videos/{video_id}` |
+| 从提示生成视频 | `mcp__heygen__generate_video_agent` | `POST /v1/video_agent/generate` |
+| 检查视频状态/获取URL | `mcp__heygen__get_video` | `GET /v2/videos/{video_id}` |
+| 列出账户视频 | `mcp__heygen__list_videos` | `GET /v2/videos` |
+| 删除视频 | `mcp__heygen__delete_video` | `DELETE /v2/videos/{video_id}` |
 
-If no HeyGen MCP tools are available, use direct HTTP API calls with `X-Api-Key: $HEYGEN_API_KEY` header as documented in the reference files.
+如果没有可用的 HeyGen MCP 工具，请按照参考文件中的说明，使用 `X-Api-Key: $HEYGEN_API_KEY` 头进行直接 HTTP API 调用。
 
-## Default Workflow
+## 默认工作流
 
-**Prefer Video Agent** for most video requests.
-Always use [prompt-optimizer.md](references/prompt-optimizer.md) guidelines to structure prompts with scenes, timing, and visual styles.
+**优先使用 Video Agent** 处理大多数视频请求。
+始终使用 [prompt-optimizer.md](references/prompt-optimizer.md) 指南来构建包含场景、时间和视觉样式的提示。
 
-**With MCP tools:**
-1. Write an optimized prompt using [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md)
-2. Call `mcp__heygen__generate_video_agent` with prompt and config (duration_sec, orientation, avatar_id)
-3. Call `mcp__heygen__get_video` with the returned video_id to poll status and get the download URL
+**使用 MCP 工具：**
+1. 使用 [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) 编写优化提示
+2. 调用 `mcp__heygen__generate_video_agent` 并传入提示和配置（duration_sec、orientation、avatar_id）
+3. 调用 `mcp__heygen__get_video` 并传入返回的 video_id 来轮询状态并获取下载 URL
 
-**Without MCP tools (direct API):**
-1. Write an optimized prompt using [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md)
-2. `POST /v1/video_agent/generate` — see [video-agent.md](references/video-agent.md)
-3. `GET /v2/videos/<id>` — see [video-status.md](references/video-status.md)
+**没有 MCP 工具（直接 API）：**
+1. 使用 [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) 编写优化提示
+2. `POST /v1/video_agent/generate` —— 详见 [video-agent.md](references/video-agent.md)
+3. `GET /v2/videos/<id>` —— 详见 [video-status.md](references/video-status.md)
 
-Only use v2/video/generate when user explicitly needs:
-- Exact script without AI modification
-- Specific voice_id selection
-- Different avatars/backgrounds per scene
-- Precise per-scene timing control
-- Programmatic/batch generation with exact specs
+仅在用户明确需要以下情况时使用 v2/video/generate：
+- 无需 AI 修改的精确脚本
+- 特定 voice_id 选择
+- 每个场景不同的虚拟角色/背景
+- 精确的每个场景时间控制
+- 具有精确规格的编程/批量生成
 
-## Quick Reference
+## 快速参考
 
-| Task | MCP Tool | Read |
+| 任务 | MCP 工具 | 阅读 |
 |------|----------|------|
-| Generate video from prompt (easy) | `mcp__heygen__generate_video_agent` | [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) → [video-agent.md](references/video-agent.md) |
-| Generate video with precise control | — | [video-generation.md](references/video-generation.md), [avatars.md](references/avatars.md), [voices.md](references/voices.md) |
-| Check video status / get download URL | `mcp__heygen__get_video` | [video-status.md](references/video-status.md) |
-| Add captions or text overlays | — | [captions.md](references/captions.md), [text-overlays.md](references/text-overlays.md) |
-| Transparent video for compositing | — | [video-generation.md](references/video-generation.md) (WebM section) |
-| Use with Remotion | — | [remotion-integration.md](references/remotion-integration.md) |
+| 从提示生成视频（简单） | `mcp__heygen__generate_video_agent` | [prompt-optimizer.md](references/prompt-optimizer.md) → [visual-styles.md](references/visual-styles.md) → [video-agent.md](references/video-agent.md) |
+| 精确控制生成视频 | — | [video-generation.md](references/video-generation.md)、[avatars.md](references/avatars.md)、[voices.md](references/voices.md) |
+| 检查视频状态/获取下载 URL | `mcp__heygen__get_video` | [video-status.md](references/video-status.md) |
+| 添加字幕或文本叠加 | — | [captions.md](references/captions.md)、[text-overlays.md](references/text-overlays.md) |
+| 用于合成的透明视频 | — | [video-generation.md](references/video-generation.md)（WebM 部分） |
+| 与 Remotion 配合使用 | — | [remotion-integration.md](references/remotion-integration.md) |
 
-## Reference Files
+## 参考文件
 
-### Foundation
-- [references/authentication.md](references/authentication.md) - API key setup and X-Api-Key header
-- [references/quota.md](references/quota.md) - Credit system and usage limits
-- [references/video-status.md](references/video-status.md) - Polling patterns and download URLs
-- [references/assets.md](references/assets.md) - Uploading images, videos, audio
+### 基础
+- [references/authentication.md](references/authentication.md) - API 密钥设置和 X-Api-Key 头
+- [references/quota.md](references/quota.md) - 积分系统和使用限制
+- [references/video-status.md](references/video-status.md) - 轮询模式和下载 URL
+- [references/assets.md](references/assets.md) - 上传图像、视频、音频
 
-### Core Video Creation
-- [references/avatars.md](references/avatars.md) - Listing avatars, styles, avatar_id selection
-- [references/voices.md](references/voices.md) - Listing voices, locales, speed/pitch
-- [references/scripts.md](references/scripts.md) - Writing scripts, pauses, pacing
-- [references/video-generation.md](references/video-generation.md) - POST /v2/video/generate and multi-scene videos
-- [references/video-agent.md](references/video-agent.md) - One-shot prompt video generation
-- [references/prompt-optimizer.md](references/prompt-optimizer.md) - Writing effective Video Agent prompts (core workflow + rules)
-- [references/visual-styles.md](references/visual-styles.md) - 20 named visual styles with full specs
-- [references/prompt-examples.md](references/prompt-examples.md) - Full production prompt example + ready-to-use templates
-- [references/dimensions.md](references/dimensions.md) - Resolution and aspect ratios
+### 核心视频创建
+- [references/avatars.md](references/avatars.md) - 列出虚拟角色、样式、avatar_id 选择
+- [references/voices.md](references/voices.md) - 列出声音、语言区域、速度/音调
+- [references/scripts.md](references/scripts.md) - 编写脚本、暂停、节奏
+- [references/video-generation.md](references/video-generation.md) - POST /v2/video/generate 和多场景视频
+- [references/video-agent.md](references/video-agent.md) - 一次性提示视频生成
+- [references/prompt-optimizer.md](references/prompt-optimizer.md) - 编写有效的 Video Agent 提示（核心工作流 + 规则）
+- [references/visual-styles.md](references/visual-styles.md) - 20种命名视觉样式及完整规格
+- [references/prompt-examples.md](references/prompt-examples.md) - 完整生产提示示例 + 即用模板
+- [references/dimensions.md](references/dimensions.md) - 分辨率和宽高比
 
-### Video Customization
-- [references/backgrounds.md](references/backgrounds.md) - Solid colors, images, video backgrounds
-- [references/text-overlays.md](references/text-overlays.md) - Adding text with fonts and positioning
-- [references/captions.md](references/captions.md) - Auto-generated captions and subtitles
+### 视频自定义
+- [references/backgrounds.md](references/backgrounds.md) - 纯色、图像、视频背景
+- [references/text-overlays.md](references/text-overlays.md) - 使用字体和定位添加文本
+- [references/captions.md](references/captions.md) - 自动生成字幕
 
-### Advanced Features
-- [references/templates.md](references/templates.md) - Template listing and variable replacement
-- [references/photo-avatars.md](references/photo-avatars.md) - Creating avatars from photos
-- [references/webhooks.md](references/webhooks.md) - Webhook endpoints and events
+### 高级功能
+- [references/templates.md](references/templates.md) - 模板列表和变量替换
+- [references/photo-avatars.md](references/photo-avatars.md) - 从照片创建虚拟角色
+- [references/webhooks.md](references/webhooks.md) - Webhook 端点和事件
 
-### Integration
-- [references/remotion-integration.md](references/remotion-integration.md) - Using HeyGen in Remotion compositions
+### 集成
+- [references/remotion-integration.md](references/remotion-integration.md) - 在 Remotion 合成中使用 HeyGen

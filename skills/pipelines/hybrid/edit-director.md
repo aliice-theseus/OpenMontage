@@ -1,55 +1,56 @@
-# Edit Director - Hybrid Pipeline
+# 剪辑导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-This stage creates the layered edit logic for a source-led video with support elements. The order matters: anchor cut first, support layers second.
+此阶段为包含支持元素的源主导视频创建分层剪辑逻辑。顺序至关重要：先做锚定剪辑，再做支持层。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/edit_decisions.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["assets"]["asset_manifest"]`, `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]` | Source/support assets and timeline intent |
-| Playbook | Active style playbook | Typography and motion consistency |
+| Schema | `schemas/artifacts/edit_decisions.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["assets"]["asset_manifest"]`, `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]` | 源素材/支持素材和时间线意图 |
+| Playbook | 当前样式 playbook | 排版和动效一致性 |
 
-## Process
+## 流程
 
-### 1. Lock The Anchor Cut First
+### 1. 先锁定锚定剪辑
 
-The viewer should understand the story before support overlays are added. If the anchor cut is weak, support layers will not save it.
+观众应在添加支持叠加层之前理解故事。如果锚定剪辑很弱，支持层也无法挽救。
 
-### 2. Add Support In Priority Order
+### 2. 按优先级顺序添加支持元素
 
-Typical order:
+典型顺序：
 
-1. subtitles,
-2. speaker or context labels,
-3. diagrams or stat cards,
-4. optional inserts,
-5. CTA elements.
+1. 字幕，
+2. 说话人或上下文标签，
+3. 图表或数据卡片，
+4. 可选插片，
+5. CTA 元素。
 
-### 3. Protect Readability
+### 3. 保护可读性
 
-Never stack too many support layers in one moment. If subtitles, labels, charts, and overlays collide, simplify.
+永远不要在单个时刻堆叠过多支持层。如果字幕、标签、图表和叠加层发生冲突，请简化。
 
-### 4. Use Metadata For Layering Logic
+### 4. 使用元数据定义分层逻辑
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `anchor_cut_notes`
 - `layer_order`
 - `overlay_windows`
 - `variant_edit_rules`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the anchor cut works on its own,
-- support layers clarify instead of distract,
-- mobile readability survives,
-- variants remain consistent.
+- 锚定剪辑本身就能独立成篇，
+- 支持层澄清而非分散注意力，
+- 移动端可读性良好，
+- 变体之间保持一致。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Trying to fix a weak cut with extra graphics.
-- Letting support layers compete with the source.
-- Building each platform variant as a separate editorial philosophy.
+- 试图用额外图形来修复弱的剪辑。
+- 让支持层与源素材竞争。
+- 每个平台变体都采用独立的剪辑理念。
+

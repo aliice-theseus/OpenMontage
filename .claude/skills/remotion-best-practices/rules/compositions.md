@@ -1,13 +1,13 @@
 ---
 name: compositions
-description: Defining compositions, stills, folders, default props and dynamic metadata
+description: 定义合成、静态图、文件夹、默认属性和动态元数据
 metadata:
   tags: composition, still, folder, props, metadata
 ---
 
-A `<Composition>` defines the component, width, height, fps and duration of a renderable video.
+`<Composition>` 定义了可渲染视频的组件、宽度、高度、帧率和时长。
 
-It normally is placed in the `src/Root.tsx` file.
+通常放置在 `src/Root.tsx` 文件中。
 
 ```tsx
 import { Composition } from "remotion";
@@ -27,10 +27,10 @@ export const RemotionRoot = () => {
 };
 ```
 
-## Default Props
+## 默认属性
 
-Pass `defaultProps` to provide initial values for your component.  
-Values must be JSON-serializable (`Date`, `Map`, `Set`, and `staticFile()` are supported).
+通过 `defaultProps` 为组件提供初始值。  
+值必须是 JSON 可序列化的（支持 `Date`、`Map`、`Set` 和 `staticFile()`）。
 
 ```tsx
 import { Composition } from "remotion";
@@ -56,12 +56,12 @@ export const RemotionRoot = () => {
 };
 ```
 
-Use `type` declarations for props rather than `interface` to ensure `defaultProps` type safety.
+对属性使用 `type` 声明而非 `interface`，以确保 `defaultProps` 的类型安全。
 
-## Folders
+## 文件夹
 
-Use `<Folder>` to organize compositions in the sidebar.  
-Folder names can only contain letters, numbers, and hyphens.
+使用 `<Folder>` 在侧边栏中组织合成。  
+文件夹名称只能包含字母、数字和连字符。
 
 ```tsx
 import { Composition, Folder } from "remotion";
@@ -84,9 +84,9 @@ export const RemotionRoot = () => {
 };
 ```
 
-## Stills
+## 静态图
 
-Use `<Still>` for single-frame images. It does not require `durationInFrames` or `fps`.
+使用 `<Still>` 表示单帧图片。它不需要 `durationInFrames` 或 `fps`。
 
 ```tsx
 import { Still } from "remotion";
@@ -99,9 +99,9 @@ export const RemotionRoot = () => {
 };
 ```
 
-## Calculate Metadata
+## 计算元数据
 
-Use `calculateMetadata` to make dimensions, duration, or props dynamic based on data.
+使用 `calculateMetadata` 根据数据动态设置尺寸、时长或属性。
 
 ```tsx
 import { Composition, CalculateMetadataFunction } from "remotion";
@@ -128,7 +128,7 @@ export const RemotionRoot = () => {
     <Composition
       id="MyComposition"
       component={MyComposition}
-      durationInFrames={100} // Placeholder, will be overridden
+      durationInFrames={100} // 占位值，将被覆盖
       fps={30}
       width={1080}
       height={1080}
@@ -139,11 +139,11 @@ export const RemotionRoot = () => {
 };
 ```
 
-The function can return `props`, `durationInFrames`, `width`, `height`, `fps`, and codec-related defaults. It runs once before rendering begins.
+该函数可以返回 `props`、`durationInFrames`、`width`、`height`、`fps` 和编解码器相关的默认值。它在渲染开始前运行一次。
 
-## Nesting compositions within another
+## 在合成中嵌套另一个合成
 
-To add a composition within another composition, you can use the `<Sequence>` component with a `width` and `height` prop to specify the size of the composition.
+要在另一个合成中添加一个合成，可以使用带 `width` 和 `height` 属性的 `<Sequence>` 组件来指定合成的尺寸。
 
 ```tsx
 <AbsoluteFill>

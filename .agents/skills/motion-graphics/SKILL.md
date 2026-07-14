@@ -1,84 +1,84 @@
 ---
 name: motion-graphics
 description: >
-  Use when the user wants a short, design-led motion graphic where motion is the
-  message: kinetic typography, stat or number count-up, chart/data-viz hit,
-  logo sting, brand lockup, lower-third, callout, social overlay, animated
-  headline/tweet/news item, motion poster, or quick captured-page highlight.
-  Usually under 10s and up to ~30s, with no narration arc, voice-over, or
-  live-action subject. Can render to MP4 or transparent overlay. Not for longer,
-  multi-scene, narrated, or brand-reel pieces (use general-video), narrated
-  website videos (website-to-video), topic explainers
-  (faceless-explainer), product promos (product-launch-video), PR videos
-  (pr-to-video), or captions on existing footage (embedded-captions). When unsure whether it's a
-  quick motion-first piece or a longer / narrated treatment, see /hyperframes.
+  当用户想要一个简短、以设计为主导的动态图形时使用，其中动态本身就是
+  信息：动态文字排版、统计数据或数字计数、图表/数据可视化、
+  标志片头、品牌组合、下方三分一标题、标注、社交覆盖层、动画
+  标题/推文/新闻条目、动态海报或快速捕获的页面高亮。
+  通常在10秒以内，最长约30秒，没有叙述弧、画外音或
+  真人拍摄对象。可渲染为MP4或透明覆盖层。不适用于更长、
+  多场景、带旁白或品牌短片（使用general-video）、带旁白
+  网站视频（website-to-video）、主题讲解
+  （faceless-explainer）、产品宣传（product-launch-video）、公关视频
+  （pr-to-video）或对现有素材加字幕（embedded-captions）。当不确定是
+  动态优先的短篇还是较长/带旁白的制作时，请参阅/hyperframes。
 metadata:
   {
     "tags": "orchestrator, motion-graphics, kinetic-type, data-viz, logo-reveal, lower-thirds, news, tweet, webpage, asset-fusion, short-form, overlay, no-narration",
   }
 ---
 
-# motion-graphics — dispatch entry
+# motion-graphics — 调度入口
 
-> **Confirm the route before Step 0.** This skill makes a **short, design-led, unnarrated motion graphic** (motion is the message; ~under 10s, no voice-over). A **longer, multi-scene, or narrated** treatment → `/general-video`; a **narrated video of a website** → `/website-to-video`; a **topic explainer** → `/faceless-explainer`; a **product promo** → `/product-launch-video`; **captions on existing footage** → `/embedded-captions`. **Out of scope**: live / at-render-time data, or footage it can't capture. Unsure motion-first-vs-narrated? **Read `/hyperframes` first.**
+> **在第0步之前确认路由。** 此技能制作**简短、以设计为主导、无旁白的动态图形**（动态本身就是信息；约10秒以内，无画外音）。**较长、多场景或带旁白**的制作→`/general-video`；**带旁白的网站视频**→`/website-to-video`；**主题讲解**→`/faceless-explainer`；**产品宣传**→`/product-launch-video`；**对现有素材加字幕**→`/embedded-captions`。**超出范围**：实时/渲染时数据，或无法捕获的素材。不确定是动态优先还是带旁白？**先阅读`/hyperframes`。**
 
-A short design-led motion graphic. **Asset-first**: decide the asset strategy and source real material _before_ designing the shot, then design the shot around what you have, then compose by reusing catalog capabilities. All artifacts go to `PROJECT_DIR = videos/<project-name>/` (created in Step 0); all paths below are relative to it.
+一个简短、以设计为主导的动态图形。**资产优先**：先决定资产策略并获取真实素材，然后围绕已有素材设计镜头，最后通过复用目录能力进行合成。所有工件保存到 `PROJECT_DIR = videos/<project-name>/`（在第0步创建）；以下所有路径均基于此目录。
 
-| Phase    | Execution                                                             | Primary artifact                                                 | Detailed flow                 |
-| -------- | --------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------------- |
-| init     | Bash                                                                  | `hyperframes.json`                                               | Step 0                        |
-| plan     | subagent — **decide search?** + classify + asset strategy             | `shot-plan.json` (draft: category, `asset_needs` queries, brief) | `agents/director.md` (Part 1) |
-| source ◇ | Bash — media-use resolve (**skip if `asset_needs` is empty**)         | `assets/` + `assets/index.md`                                    | `phases/source/guide.md`      |
-| design   | subagent — shot design around resolved assets                         | `shot-plan.json` (final: block(s) + layout + motion + positions) | `agents/director.md` (Part 2) |
-| build    | subagent — reuse-first composition                                    | `compositions/index.html`                                        | `agents/builder.md`           |
-| render   | Bash — `hyperframes render` (MP4, or `--format webm/mov` for overlay) | `renders/video.mp4`                                              | Step 5                        |
-| verify   | Bash — `lint` / `inspect` -> repair subagent on failure               | (fixes in place)                                                 | `agents/finalize.md`          |
+| 阶段    | 执行方式                                                            | 主要工件                                                  | 详细流程                      |
+| -------- | ------------------------------------------------------------------- | --------------------------------------------------------- | ----------------------------- |
+| init     | Bash                                                                | `hyperframes.json`                                        | 第0步                         |
+| plan     | 子代理 — **决定是否搜索？** + 分类 + 资产策略                        | `shot-plan.json`（草稿：分类、`asset_needs`查询、简报）  | `agents/director.md`（第1部分）|
+| source ◇ | Bash — 媒体使用解析（**如果`asset_needs`为空则跳过**）              | `assets/` + `assets/index.md`                             | `phases/source/guide.md`      |
+| design   | 子代理 — 围绕已解析资产进行镜头设计                                  | `shot-plan.json`（最终：block(s) + 布局 + 动态 + 位置）  | `agents/director.md`（第2部分）|
+| build    | 子代理 — 优先复用组合                                               | `compositions/index.html`                                 | `agents/builder.md`           |
+| render   | Bash — `hyperframes render`（MP4，或`--format webm/mov`用于覆盖层） | `renders/video.mp4`                                       | 第5步                         |
+| verify   | Bash — `lint`/`inspect` → 失败时修复子代理                          | （原地修复）                                              | `agents/finalize.md`          |
 
-`◇ source` runs only when the chosen category declares assets. Pure code/text categories (e.g. `kinetic-type`, most `charts`/`stat`) have `asset_needs: []` and skip straight from plan to design.
+`◇ source`仅在所选类别声明需要资产时运行。纯代码/文字类别（例如`kinetic-type`、大多数`charts`/`stat`）的`asset_needs: []`，直接从计划跳到设计。
 
-## Categories — split by the search decision
+## 类别 — 按搜索决策划分
 
-`plan`'s **first decision is: does this need a search?** That fork splits the categories into two groups; then the specific category is picked — for search-driven, **by the type of content the search returns**. Each category is one `categories/<id>/module.md` (its planning + build rules); the shared motion vocabulary lives in `references/motion-vocabulary.md` (→ `hyperframes-animation` rules/blueprints + registry blocks).
+`plan`的**第一个决策是：是否需要搜索？** 这个分支将类别分为两组；然后选择具体类别——对于搜索驱动的类别，**按搜索返回的内容类型选择**。每个类别是一个`categories/<id>/module.md`（其规划和构建规则）；共享的动态词汇表位于`references/motion-vocabulary.md`（→ `hyperframes-animation`规则/蓝图 + 注册表块）。
 
-**Form categories — no search; the user supplies the content:**
+**形式类别 — 无需搜索；用户提供内容：**
 
-| Category       | Intent                                         | Leans on                                                                    |
-| -------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| `kinetic-type` | punchy line / quote / title, motion-first text | `caption-*` blocks + animation rules                                        |
-| `stat`         | single hero number / count-up + ring           | `apple-money-count` / `rules/{counting-dynamic-scale, stat-bars-and-fills}` |
-| `charts`       | bar / line / pie / race / % from data          | `data-chart` block                                                          |
-| `logo-reveal`  | logo sting / brand lockup (user logo)          | `logo-outro` / `rules/svg-path-draw`                                        |
-| `lower-thirds` | name / title bars, callouts, social overlays   | `caption-*` + registry overlay blocks                                       |
+| 类别             | 意图                                        | 依赖                                                                      |
+| ---------------- | ------------------------------------------- | ------------------------------------------------------------------------- |
+| `kinetic-type`   | 有力的一句话/引用/标题，文字即主角           | `caption-*`块 + 动画规则                                                  |
+| `stat`           | 单个主角数字/计数 + 环形                    | `apple-money-count`/`rules/{counting-dynamic-scale, stat-bars-and-fills}` |
+| `charts`         | 条形/折线/饼图/竞赛/百分比数据              | `data-chart`块                                                            |
+| `logo-reveal`    | 标志片头/品牌组合（用户提供标志）            | `logo-outro`/`rules/svg-path-draw`                                        |
+| `lower-thirds`   | 名称/标题栏、标注、社交覆盖层               | `caption-*` + 注册表覆盖层块                                              |
 
-**Search-driven categories — search first, then animate by content type** (the RWA path):
+**搜索驱动的类别 — 先搜索，然后按内容类型动画化**（RWA路径）：
 
-| Returned content | Category       | Animation                                                      |
-| ---------------- | -------------- | -------------------------------------------------------------- |
-| webpage / link   | `webpage`      | webpage / UI animation (scroll, reveal, cursor, callouts)      |
-| news article     | `news`         | headline reveal + source card + key-fact callouts              |
-| tweet            | `tweet`        | animated tweet card                                            |
-| image / entity   | `asset-fusion` | the asset's geometry _becomes_ the chart (RWA diegetic fusion) |
+| 返回的内容         | 类别             | 动画方式                                                        |
+| ------------------ | ---------------- | --------------------------------------------------------------- |
+| 网页/链接          | `webpage`        | 网页/UI动画（滚动、揭示、光标、标注）                            |
+| 新闻文章           | `news`           | 标题揭示 + 来源卡片 + 关键事实标注                               |
+| 推文               | `tweet`          | 动画推文卡片                                                    |
+| 图片/实体          | `asset-fusion`   | 资产的几何形状_变成_图表（RWA叙事融合）                          |
 
-Build order: one at a time, coverage-first (rough is fine). `kinetic-type` ported from the prototype; the rest follow.
+构建顺序：一次一个，覆盖优先（粗糙即可）。`kinetic-type`从原型移植；其余后续跟进。
 
-## Prerequisites
+## 前置条件
 
-macOS Apple Silicon or Linux x64. System tools: `brew install node ffmpeg`. `npx hyperframes doctor` once. macOS GPU render: `export PRODUCER_BROWSER_GPU_MODE=hardware`.
+macOS Apple Silicon 或 Linux x64。系统工具：`brew install node ffmpeg`。运行一次`npx hyperframes doctor`。macOS GPU渲染：`export PRODUCER_BROWSER_GPU_MODE=hardware`。
 
-Optional keys (local fallbacks if unset) — only needed by categories that source/generate assets via media-use:
+可选密钥（未设置时使用本地回退）——仅当类别通过媒体使用搜索/生成资产时需要使用：
 
-| Key                                 | Used for                                                    | Fallback                        |
-| ----------------------------------- | ----------------------------------------------------------- | ------------------------------- |
-| `GEMINI_API_KEY` / `GOOGLE_API_KEY` | image generation (media-use resolve)                        | skip generate / search-only     |
-| (asset_scout / search providers)    | `webpage`/`news`/`tweet` + `asset-fusion` real-asset search | category degrades to asset-free |
+| 密钥                                 | 用途                                      | 回退                        |
+| ------------------------------------ | ----------------------------------------- | --------------------------- |
+| `GEMINI_API_KEY` / `GOOGLE_API_KEY`  | 图片生成（媒体使用解析）                  | 跳过生成 / 仅搜索           |
+| (asset_scout / 搜索提供方)           | `webpage`/`news`/`tweet` + `asset-fusion` 真实资产搜索 | 类别降级为无资产 |
 
-## Flow
+## 流程
 
-### Step 0 — Initialize
+### 第0步 — 初始化
 
-cwd is the agent workspace root; write all artifacts under `PROJECT_DIR = videos/<project-name>/`. `<project-name>`: use the dir the user gave, else a short kebab-case name from the intent (`<subject>-motion`). Not the workspace basename or a timestamp.
+当前工作目录为代理工作区根目录；所有工件写入 `PROJECT_DIR = videos/<project-name>/`。`<project-name>`：使用用户给定的目录，否则从意图中提取简短的短横线命名（`<subject>-motion`）。不要使用工作区基础名称或时间戳。
 
-Only when `$PROJECT_DIR/hyperframes.json` is absent:
+仅在 `$PROJECT_DIR/hyperframes.json` 不存在时：
 
 ```bash
 PROJECT_DIR="${MOTION_GRAPHICS_DIR:-videos/<project-name>}"
@@ -86,87 +86,87 @@ mkdir -p "$(dirname "$PROJECT_DIR")"
 npx hyperframes init "$PROJECT_DIR" --non-interactive --example=blank
 ```
 
-`init` checks the installed skills against the latest on GitHub and updates the global set if any are out of date.
+`init` 检查已安装的技能是否与 GitHub 上的最新版本一致，如有过期则更新全局技能集。
 
-**Constraints:** never `hyperframes init` in the workspace root; never nest another `hyperframes/` inside `PROJECT_DIR`; every Bash command (master + subagents) is a `(cd "$PROJECT_DIR" && ...)` subshell — never bare `cd`.
+**约束：** 绝不在工作区根目录执行 `hyperframes init`；绝不在 `PROJECT_DIR` 内嵌套另一个 `hyperframes/`；每个 Bash 命令（主代理 + 子代理）都是一个 `(cd "$PROJECT_DIR" && ...)` 子 shell — 绝不要裸用 `cd`。
 
-### Step 1 — Plan (subagent: Director Part 1)
+### 第1步 — 规划（子代理：Director 第1部分）
 
-Dispatch one subagent. prompt = full `agents/director.md` + `## Dispatch context` (`SKILL_DIR` / `PROJECT_DIR` / the user's request / `Schema: <SKILL_DIR>/references/shot-plan-ir.md`). It must:
+调度一个子代理。提示内容 = 完整 `agents/director.md` + `## 调度上下文`（`SKILL_DIR`/`PROJECT_DIR`/用户请求/`Schema: <SKILL_DIR>/references/shot-plan-ir.md`）。它必须：
 
-1. **Decide: does this need a search?** (the first fork)
-   - **No** → pick a **form category** (kinetic-type / stat / charts / logo-reveal / lower-thirds); content is user-supplied; `asset_needs: []`.
-   - **Yes** → emit a **search plan** into `asset_needs[]` (news / web / tweet / image; two-pole queries). The specific **search-driven category** (webpage / news / tweet / asset-fusion) is confirmed by the content type returned in Step 2, and finalized in Step 3.
-2. Write a draft `shot-plan.json` (envelope + chosen form category _or_ search intent + `asset_needs` + a one-paragraph shot brief). Schema: `references/shot-plan-ir.md`.
+1. **决定：是否需要搜索？**（第一个分支）
+   - **否** → 选择一个**形式类别**（kinetic-type / stat / charts / logo-reveal / lower-thirds）；内容由用户提供；`asset_needs: []`。
+   - **是** → 生成一个**搜索计划**到 `asset_needs[]`（news / web / tweet / image；两极查询）。具体的**搜索驱动类别**（webpage / news / tweet / asset-fusion）由第2步返回的内容类型确认，并在第3步最终确定。
+2. 编写草稿 `shot-plan.json`（概要 + 选定的形式类别 _或_ 搜索意图 + `asset_needs` + 一段镜头的简短说明）。模式：`references/shot-plan-ir.md`。
 
-Validation: `[ -s "$PROJECT_DIR/shot-plan.json" ] && echo ok || echo missing`.
+验证：`[ -s "$PROJECT_DIR/shot-plan.json" ] && echo ok || echo missing`。
 
-### Step 2 — Source ◇ (Bash: media-use, conditional)
+### 第2步 — 素材来源 ◇（Bash：媒体使用，条件执行）
 
-If `shot-plan.json.asset_needs` is non-empty, resolve assets (search / generate / fetch → frozen project-local paths + ledger). See `phases/source/guide.md` (wraps `media-use resolve`; the search-driven categories use the news/web/tweet/image search). If `asset_needs` is empty, **skip to Step 3**.
+如果 `shot-plan.json.asset_needs` 非空，则解析资产（搜索/生成/获取 → 冻结的项目本地路径 + 账本）。参见 `phases/source/guide.md`（封装 `media-use resolve`；搜索驱动类别使用新闻/网页/推文/图片搜索）。如果 `asset_needs` 为空，则**跳到第3步**。
 
 ```bash
-# illustrative — see phases/source/guide.md
+# 说明性 — 参见 phases/source/guide.md
 (cd "$PROJECT_DIR" && node <SKILL_DIR>/phases/source/resolve.mjs --plan ./shot-plan.json --out ./assets)
 ```
 
-Degrade gracefully: if a search/provider is unavailable, the category falls back to asset-free (note it in `context.log`).
+优雅降级：如果搜索/提供方不可用，类别回退为无资产（在 `context.log` 中记录）。
 
-### Step 3 — Design (subagent: Director Part 2)
+### 第3步 — 设计（子代理：Director 第2部分）
 
-Dispatch a subagent (prompt = `agents/director.md` Part 2 + dispatch context including the resolved `assets/index.md` if Step 2 ran + `catalog-map.md`). It designs the shot **around the available assets**: pick the catalog block(s) + the `hyperframes-animation` rules/blueprints, the layout, the motion, beats, and (for `asset-fusion`) the `element_positions` + eyedropper palette. Finalizes `shot-plan.json` (`content.block` + `content.customize` + per-category content).
+调度一个子代理（提示内容 = `agents/director.md` 第2部分 + 调度上下文，包括已解析的 `assets/index.md`（如果第2步已执行）+ `catalog-map.md`）。它**围绕可用资产**设计镜头：选择目录块 + `hyperframes-animation` 规则/蓝图、布局、动态、节拍，以及（对于 `asset-fusion`）`element_positions` + 取色板。最终确定 `shot-plan.json`（`content.block` + `content.customize` + 各类别特有内容）。
 
-### Step 4 — Build (subagent: Builder, reuse-first)
+### 第4步 — 构建（子代理：Builder，优先复用）
 
-Dispatch a subagent. prompt = full `agents/builder.md` + dispatch context (`shot-plan.json`, `catalog-map.md`, the category's `module.md`, `references/motion-vocabulary.md`, `references/builder-contract.md`). **Reuse-first**: `npx hyperframes add <block>` + customize in place; hand-author only gaps + the asset-fusion affordance. Output `compositions/index.html` honoring the HF contract (paused GSAP timeline on `window.__timelines`, `class="clip"` + stable ids, `tl.seek(0)`, deterministic).
+调度一个子代理。提示内容 = 完整 `agents/builder.md` + 调度上下文（`shot-plan.json`、`catalog-map.md`、该类别的 `module.md`、`references/motion-vocabulary.md`、`references/builder-contract.md`）。**优先复用**：`npx hyperframes add <block>` + 原地定制；仅手写空白 + asset-fusion 适配器。输出 `compositions/index.html`，遵守 HF 约定（暂停的 GSAP 时间线在 `window.__timelines` 上、`class="clip"` + 稳定的 id、`tl.seek(0)`、确定性）。
 
-### Step 5 — Render (Bash)
+### 第5步 — 渲染（Bash）
 
 ```bash
 (cd "$PROJECT_DIR" && npx hyperframes render . --skill=motion-graphics -q draft -o ./renders/video.mp4)
-# transparent overlay variant: --format webm  (or mov)
+# 透明覆盖层变体：--format webm（或 mov）
 ```
 
-### Step 6 — Verify (Bash → repair subagent on failure)
+### 第6步 — 验证（Bash → 失败时修复子代理）
 
 ```bash
 (cd "$PROJECT_DIR" && npx hyperframes lint . && npx hyperframes inspect .)
 ```
 
-exit 0 → done. On lint/inspect errors, dispatch the repair subagent (`agents/finalize.md`: snapshot QA + one in-place fix pass + re-render). Never change a fixed duration in repair.
+exit 0 → 完成。如有 lint/inspect 错误，调度修复子代理（`agents/finalize.md`：快照 QA + 一次原地修复 + 重新渲染）。修复时切勿更改固定的 `data-duration`。
 
-### Report + optional preview
+### 报告 + 可选预览
 
-Report the final output (`renders/video.mp4`, or the `.webm` / `.mov` overlay variant) + duration. **Don't open a preview during the run.** Offer one only on request, started **after** render so it serves the final file:
+报告最终输出（`renders/video.mp4`，或 `.webm`/`.mov` 覆盖层变体）+ 时长。**运行期间不要打开预览。** 仅在请求时提供，且在**渲染完成后**启动，以便提供最终文件：
 
 ```bash
-(cd "$PROJECT_DIR" && npx hyperframes preview)   # Studio UI; or `npx hyperframes play` for a shareable link
+(cd "$PROJECT_DIR" && npx hyperframes preview)   # Studio UI；或 `npx hyperframes play` 获取可分享链接
 ```
 
-Flags live in the `hyperframes-cli` skill (`references/preview-render.md`).
+标志位位于 `hyperframes-cli` 技能中（`references/preview-render.md`）。
 
-## Resume table
+## 恢复表
 
-| State                                                    | Continue from            |
-| -------------------------------------------------------- | ------------------------ |
-| no `shot-plan.json`                                      | Step 1 (plan)            |
-| `shot-plan.json` has `asset_needs`, no `assets/`         | Step 2 (source)          |
-| `shot-plan.json` final, no `compositions/index.html`     | Step 3/4 (design+build)  |
-| `compositions/index.html` exists, no `renders/video.mp4` | Step 5 (render) + Step 6 |
-| `renders/video.mp4` exists                               | Report + stop            |
+| 状态                                                    | 从何处继续            |
+| ------------------------------------------------------- | --------------------- |
+| 无 `shot-plan.json`                                     | 第1步（规划）         |
+| `shot-plan.json` 有 `asset_needs`，无 `assets/`         | 第2步（素材来源）     |
+| `shot-plan.json` 最终版，无 `compositions/index.html`   | 第3/4步（设计+构建）  |
+| `compositions/index.html` 存在，无 `renders/video.mp4`  | 第5步（渲染）+ 第6步  |
+| `renders/video.mp4` 存在                                | 报告 + 停止           |
 
-## Design notes (maintainers — execution does not read this)
+## 设计说明（维护者 — 执行时不读取此内容）
 
-- **Asset-first rationale:** sourcing is front-loaded and informs shot design (the RWA flow: analyze → search → review → compose). the search-driven categories (`webpage`/`news`/`tweet`) and `asset-fusion` both lean on media-use search (news/web/tweet/image), which is media-use's documented RWA lineage.
-- **Reuse-first:** the in-ecosystem analog of LLM-generated templates is "compose catalog blocks + `hyperframes-animation` rules". HF's paused GSAP timeline ≙ Remotion's `useCurrentFrame`.
-- **Category module contract:** one `categories/<id>/module.md` (planning + build), sharing `references/motion-vocabulary.md` (+ optional eval). Adding a category = drop the folder + register its classifier line in `agents/director.md` + its row in `catalog-map.md`; the phase pipeline is untouched.
-- **Directory shape:**
+- **资产优先理由：** 素材获取前置并指导镜头设计（RWA 流程：分析 → 搜索 → 审查 → 合成）。搜索驱动类别（`webpage`/`news`/`tweet`）和 `asset-fusion` 都依赖媒体使用搜索（新闻/网页/推文/图片），这是媒体使用文档化的 RWA 传统。
+- **优先复用：** 生态系统内的模板类比是"组合目录块 + `hyperframes-animation` 规则"。HF 暂停的 GSAP 时间线 ≙ Remotion 的 `useCurrentFrame`。
+- **类别模块约定：** 每个类别一个 `categories/<id>/module.md`（规划 + 构建），共享 `references/motion-vocabulary.md`（+ 可选评估）。添加类别 = 创建文件夹 + 在 `agents/director.md` 中注册其分类行 + 在 `catalog-map.md` 中添加其行；阶段流水线保持不变。
+- **目录结构：**
   ```
   videos/<project-name>/
     hyperframes.json  context.log
-    shot-plan.json            # the IR (Director output)
-    assets/  assets/index.md  # media-use output (if sourced)
-    compositions/index.html   # Builder output
+    shot-plan.json            # IR（Director 输出）
+    assets/  assets/index.md  # 媒体使用输出（如已获取素材）
+    compositions/index.html   # Builder 输出
     renders/video.mp4
   ```
-- **Registration:** in `hyperframes` router — add the "design-led short motion graphic" intent + Workflow description; carve the motion-graphics triggers out of `/general-video`; add reverse Do-NOT-use edges. See `motion-graphics-genre.md` §5-7.
+- **注册：** 在 `hyperframes` 路由中 — 添加"以设计为主导的简短动态图形"意图 + 工作流描述；从 `/general-video` 中切出 motion-graphics 触发条件；添加反向的请勿使用边。参见 `motion-graphics-genre.md` §5-7。

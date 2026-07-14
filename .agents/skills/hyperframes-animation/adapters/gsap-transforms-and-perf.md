@@ -1,67 +1,67 @@
-# Transforms and Performance
+# 变换与性能
 
-## Transform Aliases
+## 变换别名
 
-Prefer GSAP's transform aliases over raw `transform` strings:
+优先使用 GSAP 的变换别名而非原始 `transform` 字符串：
 
-| GSAP property               | Equivalent            |
-| --------------------------- | --------------------- |
-| `x`, `y`, `z`               | `translateX/Y/Z` (px) |
-| `xPercent`, `yPercent`      | `translateX/Y` in `%` |
-| `scale`, `scaleX`, `scaleY` | `scale`               |
-| `rotation`                  | `rotate` (deg)        |
-| `rotationX`, `rotationY`    | 3D rotate             |
-| `skewX`, `skewY`            | `skew`                |
-| `transformOrigin`           | `transform-origin`    |
+| GSAP 属性                    | 等价属性               |
+| ---------------------------- | ---------------------- |
+| `x`、`y`、`z`                | `translateX/Y/Z` (px)  |
+| `xPercent`、`yPercent`       | `translateX/Y` 百分比  |
+| `scale`、`scaleX`、`scaleY`  | `scale`                |
+| `rotation`                   | `rotate` (度)          |
+| `rotationX`、`rotationY`     | 3D 旋转                |
+| `skewX`、`skewY`             | `skew`                 |
+| `transformOrigin`            | `transform-origin`      |
 
-Aliases let GSAP track and interpolate each axis independently, which prevents accidental overwrites between separate tweens on the same element.
+别名让 GSAP 能够独立跟踪和插值每个轴，防止同一元素上不同补间之间的意外覆盖。
 
 ## autoAlpha
 
-Prefer `autoAlpha` over `opacity` for show/hide:
+在显示/隐藏时优先使用 `autoAlpha` 而非 `opacity`：
 
 ```javascript
 gsap.to(".panel", { autoAlpha: 0, duration: 0.4 });
 ```
 
-`autoAlpha: 0` sets both `opacity: 0` and `visibility: hidden`, which removes the element from hit-testing and accessibility tree at zero alpha — closer to "gone" than plain `opacity: 0`.
+`autoAlpha: 0` 同时设置 `opacity: 0` 和 `visibility: hidden`，在 alpha 为零时将元素从点击测试和可访问性树中移除——比单纯的 `opacity: 0` 更接近"消失"。
 
 ## clearProps
 
-Removes inline styles set by GSAP when the tween completes:
+在补间完成时移除 GSAP 设置的内联样式：
 
 ```javascript
 gsap.to(".item", { x: 100, rotation: 45, clearProps: "all" });
 gsap.to(".item", { x: 100, rotation: 45, clearProps: "rotation,x" });
 ```
 
-Useful at the end of an animation segment to hand the element back to CSS.
+在动画片段结束时有用，将元素交还给 CSS。
 
-## CSS Variables
+## CSS 变量
 
 ```javascript
 gsap.to(".chart", { "--hue": 180, duration: 1 });
 ```
 
-Animate any custom property. Works for color, length, number — anything CSS will interpolate.
+动画化任何自定义属性。适用于颜色、长度、数字——CSS 能插值的任何类型。
 
-## Relative and Directional Values
+## 相对值和方向值
 
-- Relative: `"+=20"`, `"-=10"`, `"*=2"`.
-- Directional rotation: `"360_cw"`, `"-170_short"`, `"90_ccw"` — controls which way the angle takes when going between two values.
+- 相对值：`"+=20"`、`"-=10"`、`"*=2"`。
+- 方向旋转：`"360_cw"`、`"-170_short"`、`"90_ccw"`——控制在两个值之间时角度选取的方向。
 
-## SVG Specifics
+## SVG 细节
 
-- `svgOrigin` sets transform origin in the SVG's global coordinate space (not the element's local box). **Do not** combine `svgOrigin` with `transformOrigin` on the same element — pick one.
-- Animate SVG transform attributes via the same alias names (`x`, `y`, `rotation`) — GSAP handles the SVG-specific quirks.
+- `svgOrigin` 在 SVG 的全局坐标空间（而非元素的局部盒模型）中设置变换原点。**不要**在同一元素上组合使用 `svgOrigin` 和 `transformOrigin`——选择其一。
+- 通过相同的别名名称（`x`、`y`、`rotation`）动画化 SVG 变换属性——GSAP 会处理 SVG 特有的细节。
 
-## Performance Rules
+## 性能规则
 
-### Prefer transforms and opacity
+### 优先使用 transforms 和 opacity
 
-Animating `x`, `y`, `scale`, `rotation`, `opacity` stays on the GPU compositor. Avoid `width`, `height`, `top`, `left`, `margin`, `padding` when transforms achieve the same effect.
+动画化 `x`、`y`、`scale`、`rotation`、`opacity` 保持在 GPU 合成器上。当 transforms 能达到相同效果时，避免使用 `width`、`height`、`top`、`left`、`margin`、`padding`。
 
-### will-change (sparingly)
+### will-change（谨慎使用）
 
 ```css
 .title {
@@ -69,11 +69,11 @@ Animating `x`, `y`, `scale`, `rotation`, `opacity` stays on the GPU compositor. 
 }
 ```
 
-Only on elements that _actually_ animate. Applied everywhere it becomes useless and burns memory.
+仅在实际**进行**动画的元素上使用。到处使用会使其失效并浪费内存。
 
-### gsap.quickTo for frequent updates (preview-only)
+### gsap.quickTo 用于频繁更新（仅预览）
 
-For high-frequency updates driven by **events** — pointer move, scroll, audio scrub — `quickTo` reuses the same tween instead of creating a new one each frame:
+对于由**事件**驱动的高频更新——指针移动、滚动、音频拖拽——`quickTo` 复用同一个补间而非每帧创建新的：
 
 ```javascript
 const xTo = gsap.quickTo("#cursor", "x", { duration: 0.4, ease: "power3" });
@@ -85,12 +85,12 @@ container.addEventListener("mousemove", (e) => {
 });
 ```
 
-> **Render mode has no input events.** The renderer seeks frame-by-frame; `mousemove`, `scroll`, etc. never fire. `quickTo`'s main use case applies in **live preview** in the browser only. For audio-reactive motion in renders, pre-extract audio data and drive the timeline declaratively (see `../rules/gsap-effects.md`).
+> **渲染模式没有输入事件。** 渲染器逐帧 seek；`mousemove`、`scroll` 等永远不会触发。`quickTo` 的主要用例仅在浏览器的**实时预览**中适用。对于渲染中的音频响应动画，预先提取音频数据并声明式驱动时间线（参见 `../rules/gsap-effects.md`）。
 
-### Stagger beats N tweens
+### Stagger 胜过 N 个补间
 
-One tween with `stagger` beats N tweens with manual delays for both readability and runtime cost.
+一个带 `stagger` 的补间在可读性和运行时成本上都优于 N 个带手动延迟的补间。
 
-### Cleanup
+### 清理
 
-In live preview, pause or `kill()` off-screen animations. Render mode is unaffected (the renderer drives time directly).
+在实时预览中，暂停或 `kill()` 掉屏幕外的动画。渲染模式不受影响（渲染器直接驱动时间）。

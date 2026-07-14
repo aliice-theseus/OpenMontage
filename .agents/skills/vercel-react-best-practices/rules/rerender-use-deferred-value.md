@@ -1,15 +1,15 @@
 ---
-title: Use useDeferredValue for Expensive Derived Renders
+title: 对昂贵的派生渲染使用 useDeferredValue
 impact: MEDIUM
-impactDescription: keeps input responsive during heavy computation
+impactDescription: 在重型计算期间保持输入响应
 tags: rerender, useDeferredValue, optimization, concurrent
 ---
 
-## Use useDeferredValue for Expensive Derived Renders
+## 对昂贵的派生渲染使用 useDeferredValue
 
-When user input triggers expensive computations or renders, use `useDeferredValue` to keep the input responsive. The deferred value lags behind, allowing React to prioritize the input update and render the expensive result when idle.
+当用户输入触发昂贵的计算或渲染时，使用 `useDeferredValue` 来保持输入响应。延迟的值会滞后，使 React 能够优先处理输入更新，并在空闲时渲染昂贵的结果。
 
-**Incorrect (input feels laggy while filtering):**
+**不正确（过滤时输入感觉卡顿）：**
 
 ```tsx
 function Search({ items }: { items: Item[] }) {
@@ -25,7 +25,7 @@ function Search({ items }: { items: Item[] }) {
 }
 ```
 
-**Correct (input stays snappy, results render when ready):**
+**正确（输入保持灵敏，结果就绪时渲染）：**
 
 ```tsx
 function Search({ items }: { items: Item[] }) {
@@ -48,12 +48,12 @@ function Search({ items }: { items: Item[] }) {
 }
 ```
 
-**When to use:**
+**何时使用：**
 
-- Filtering/searching large lists
-- Expensive visualizations (charts, graphs) reacting to input
-- Any derived state that causes noticeable render delays
+- 过滤/搜索大型列表
+- 响应输入的昂贵可视化（图表、图形）
+- 任何导致明显渲染延迟的派生状态
 
-**Note:** Wrap the expensive computation in `useMemo` with the deferred value as a dependency, otherwise it still runs on every render.
+**注意：** 将昂贵的计算包裹在 `useMemo` 中，并将延迟的值作为依赖，否则它仍然在每次渲染时执行。
 
-Reference: [React useDeferredValue](https://react.dev/reference/react/useDeferredValue)
+参考：[React useDeferredValue](https://react.dev/reference/react/useDeferredValue)

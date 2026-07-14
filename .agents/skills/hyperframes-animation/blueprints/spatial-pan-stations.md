@@ -1,37 +1,37 @@
-# spatial-pan-stations — Spatial Pan / Stations
+# spatial-pan-stations — 空间平移 / 站点
 
-**intent**: Pre-place a sequence of labeled stations on one oversized canvas, then traverse it with a single virtual camera — repeated lateral/diagonal pans that center each station in turn and reveal a callout at every stop, landing held on a final station.
+**意图**：在一个超大 canvas 上预先放置一系列标记的站点，然后用一个虚拟摄像机遍历它——重复的横向/对角平移依次居中每个站点，在每个停靠点揭示一个标注，最终在一个站点上保持着陆。
 
-**roles served**
+**服务角色**
 
-- Hook (from hook-pan-timeline / #1 Hook_02): a horizontal timeline of evenly-spaced milestones, left-panned beat by beat, each marker getting a spring-popped callout, landing on the present moment ("evolution / milestone walk leading up to us").
-- Problem (from problem-camera-pan-stations / #8 Problem_01): a connected web of pain "stations" linked by hand-drawn leading lines, diagonally panned station to station, ending on a tangled scribble knot ("too many disconnected steps — it's a mess").
-- Product_Intro (from concept-demo-decode-pan): a two-shot strip bridged by ONE lateral pan — shot 1 holds a static phrase whose accent word 3D-flap-DECODES (the concept lands), then the camera pans across the strip (with background parallax) into shot 2, where a cursor drives a live typing demo. Pairs this pan with `cursor-ui-demo`'s focal-locked tracked typing.
+- Hook（来自 hook-pan-timeline / #1 Hook_02）：一个水平时间线，均匀间隔的里程碑，逐节拍向左平移，每个标记获得一个弹簧弹出的标注，着陆在当下（"进化/里程碑行走引领我们到达这里"）。
+- Problem（来自 problem-camera-pan-stations / #8 Problem_01）：一个由手绘引导线连接的痛苦"站点"网络，站点间对角平移，结束在一个缠绕的涂鸦结上（"太多不连续的步骤——一团糟"）。
+- Product_Intro（来自 concept-demo-decode-pan）：一个由**一次**横向平移连接的双镜头条——镜头 1 保持一个静态短语，其重音词 3D 翻盖**解码**（概念落地），然后摄像机带着背景视差**平移**穿过条进入镜头 2，其中光标驱动实时打字演示。将此平移与 `cursor-ui-demo` 的焦点锁定跟踪打字配对。
 
-**duration**: 7–10s (union of Hook 8–10s, Problem ~7s, concept-demo ~7s)
+**时长**：7–10 秒（Hook 8–10 秒，Problem ~7 秒，concept-demo ~7 秒）
 
-**shot structure**
-One oversized flat canvas on a solid `[bg color]`; all stations/markers pre-placed in world space; `[accent color]` text + simple line-icons; one virtual `.world` camera pans ease-in-out between stops. Each station holds ~1.0s.
+**镜头结构**
+一个超大平面 canvas 在纯 `[bg color]` 上；所有站点/标记预先放置在全局空间中；`[accent color]` 文本 + 简单线条图标；一个虚拟 `.world` 摄像机缓入缓出在各停靠点之间平移。每个站点保持 ~1.0 秒。
 
-- Scene 1 (0.0–~1.0s): Camera opens on station 1 — `[label 1 / first step]` centered. A reveal lands on it (see variants). Camera then begins to PAN toward station 2, sliding station 1 out of frame.
-- Scene 2 → Scene N-1 (~1.0s each): Camera PANS (ease-in-out) to center the next station; on arrival its `[label k]` (+ optional `[secondary label]`) is REVEALED with the role reveal. Repeat per station.
-- Scene N (final, ~last beat): One last pan lands on the terminal station; the final `[callout / landing element]` reveals and HOLDS to the end. Camera goes static on the punchline.
+- 场景 1（0.0–~1.0 秒）：摄像机打开在站点 1 — `[label 1 / first step]` 居中。一个揭示落在其上（参见变体）。然后摄像机开始向站点 2 **平移**，将站点 1 滑出画面。
+- 场景 2 → 场景 N-1（每个 ~1.0 秒）：摄像机**平移**（缓入缓出）以居中下一个站点；到达时其 `[label k]`（+ 可选 `[secondary label]`）按角色风格**揭示**。每个站点重复。
+- 场景 N（最终，~最后一个节拍）：最后一次平移落在终端站点上；最终的 `[callout / landing element]` 揭示并**保持**到结束。摄像机在点睛之笔上静止。
 
-- Variant — Hook: stations sit as evenly-spaced `[markers]` on a thin horizontal `[timeline]` (lower third); pans are LEFT-only along the single axis (timeline scrolls left). Each callout is a bordered `[callout box]` + downward triangle (offset drop-shadow) that SPRING-POPS up (scale 0→100%, bouncy overshoot, transform-origin at triangle tip) reading `[label k]`; a `[secondary label, e.g. year]` fades in and RISES above it. Some mid markers arrive as plain static text revealed by the pan alone (no box). Final scene lands on the `[present-day label]`, springs, holds.
-- Variant — Problem: stations are scattered across a 2D web; pans are DIAGONAL, STEERED by `[accent color]` hand-drawn lines — each station has a rough write-on line/arrow that draws toward the next and the camera follows it (Scene 1 also draws a loop/circle around the headline's key word). Each station = a white `[line-icon]` above its `[label]`, revealed plainly by the pan (no spring box). Final scene: the accent line spirals into a dense chaotic SCRIBBLE KNOT centered on the field; camera holds static on the tangle (visual punchline).
+- 变体 — Hook：站点作为均匀间隔的 `[markers]` 坐在细水平 `[timeline]` 上（下方三分之一）；平移仅沿单轴向左（时间线向左滚动）。每个标注是一个带边框的 `[callout box]` + 向下三角形（带偏移投影），**弹簧弹出**（缩放 0→100%，弹跳过冲，transform-origin 在三角形尖端），显示 `[label k]`；一个 `[secondary label, e.g. year]` 淡入并在其上方**上升**。一些中间标记作为纯静态文本到达，仅由平移揭示（无框）。最终场景落在 `[present-day label]` 上，弹簧，保持。
+- 变体 — Problem：站点散布在 2D 网络上；平移是**对角**的，由 `[accent color]` 手绘线条**引导**——每个站点有一条粗略的书写线/箭头画向下一站，摄像机跟随它（场景 1 也在标题的关键词周围画一个循环/圆圈）。每个站点 = 白色 `[line-icon]` 在其 `[label]` 上方，由平移直接揭示（无弹簧框）。最终场景：重音线螺旋成一个密集混乱的**涂鸦结**，居中在场地上；摄像机在缠结上静止保持（视觉点睛之笔）。
 
-**motion vocabulary**
-repeated ease-in-out camera pans (horizontal-left for Hook, diagonal-steered for Problem) across one large static canvas; pre-placed stations sliding through frame via the pan; spring-overshoot callout pop with triangle-tip origin (Hook); rise-and-fade secondary label (Hook); plain labels/icons arriving via the pan alone; rough hand-drawn "write-on" leading lines/arrows + loop/circle key-word mark (Problem); terminal chaotic-scribble knot draw (Problem); static hold on the final station/punchline.
+**动词语汇**
+重复的缓入缓出摄像机平移（Hook 横向向左，Problem 对角引导）跨越一个大型静态 canvas；预先放置的站点通过平移滑过画面；弹簧过冲标注弹出，三角形尖端原点（Hook）；上升淡出辅助标签（Hook）；通过平移直接到达的普通标签/图标；粗略手绘"书写"引导线/箭头 + 循环/圆圈关键词标记（Problem）；终端混乱涂鸦结绘制（Problem）；最终站点/点睛之笔上的静态保持。
 
-**rule mapping**
+**规则映射**
 
-- camera pan / traverse across the canvas (primary) → `viewport-change` (single `.world` wrapper transform; PAN mode)
-- sequencing the repeated pan beats into stops → `multi-phase-camera`
-- centering each station as the pan target → `coordinate-target-zoom` (used as pan-to-target, no zoom)
-- spring-overshoot callout pop, triangle-tip origin (Hook) → `spring-pop-entrance`
-- rise-and-fade secondary label + plain per-station label/icon reveals via the pan → `discrete-text-sequence`
-- hand-drawn leading lines / arrows / loop-circle key-word mark / terminal scribble knot (Problem) → `svg-path-draw`
-- station line-icons (Problem) → `svg-icon-enrichment`
-- static hold on the final station / punchline → (no motion; sustained held frame, no rule needed)
+- 摄像机平移 / 跨越 canvas（主要）→ `viewport-change`（单个 `.world` 包裹变换；PAN 模式）
+- 将重复的平移节拍排序为停靠点 → `multi-phase-camera`
+- 将每个站点居中作为平移目标 → `coordinate-target-zoom`（用作平移至目标，无缩放）
+- 弹簧过冲标注弹出，三角形尖端原点（Hook）→ `spring-pop-entrance`
+- 上升淡出辅助标签 + 通过平移的普通每站点标签/图标揭示 → `discrete-text-sequence`
+- 手绘引导线 / 箭头 / 循环-圆圈关键词标记 / 终端涂鸦结（Problem）→ `svg-path-draw`
+- 站点线条图标（Problem）→ `svg-icon-enrichment`
+- 最终站点/点睛之笔上的静态保持 →（无运动；持续保持画面，无需规则）
 
-**camera modifier**: The pan IS the camera. One `.world` virtual-camera transform in PAN mode — `viewport-change` — sequenced across stops by `multi-phase-camera`, each stop targeted via `coordinate-target-zoom` (pan-to-target). No depth push-in (that distinguishes this from the cluster-push-in / dataviz-pushthrough blueprints).
+**摄像机修饰**：平移**就是**摄像机。一个 `.world` 虚拟摄像机变换在 PAN 模式下——`viewport-change`——由 `multi-phase-camera` 跨停靠点排序，每个停靠点通过 `coordinate-target-zoom` 定位（平移至目标）。无深度推进（这将其与集群推进 / 数据可视化推进蓝图区分）。

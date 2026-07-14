@@ -1,6 +1,6 @@
-# Neon / Electric
+# 霓虹 / 电子
 
-Gaming, tech, nightlife, Gen Z content.
+游戏、科技、夜生活、Z 世代内容。
 
 ```
 #F72585 #B5179E #7209B7 #560BAD #3A0CA3

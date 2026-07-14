@@ -1,19 +1,19 @@
 ---
-title: Prevent Hydration Mismatch Without Flickering
+title: 防止注水不匹配且不闪屏
 impact: MEDIUM
-impactDescription: avoids visual flicker and hydration errors
+impactDescription: 避免视觉闪烁和注水错误
 tags: rendering, ssr, hydration, localStorage, flicker
 ---
 
-## Prevent Hydration Mismatch Without Flickering
+## 防止注水不匹配且不闪屏
 
-When rendering content that depends on client-side storage (localStorage, cookies), avoid both SSR breakage and post-hydration flickering by injecting a synchronous script that updates the DOM before React hydrates.
+当渲染依赖于客户端存储（localStorage、cookies）的内容时，通过注入一个在 React 注水前同步更新 DOM 的脚本来避免 SSR 破坏和注水后闪烁。
 
-**Incorrect (breaks SSR):**
+**不正确（破坏 SSR）：**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-  // localStorage is not available on server - throws error
+  // localStorage 在服务端不可用 - 抛出错误
   const theme = localStorage.getItem('theme') || 'light'
   
   return (
@@ -24,16 +24,16 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 }
 ```
 
-Server-side rendering will fail because `localStorage` is undefined.
+服务端渲染会失败，因为 `localStorage` 未定义。
 
-**Incorrect (visual flickering):**
+**不正确（视觉闪烁）：**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState('light')
   
   useEffect(() => {
-    // Runs after hydration - causes visible flash
+    // 在注水后执行 - 导致可见闪烁
     const stored = localStorage.getItem('theme')
     if (stored) {
       setTheme(stored)
@@ -48,9 +48,9 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 }
 ```
 
-Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
+组件首先使用默认值（`light`）渲染，然后在注水后更新，导致错误内容的可见闪烁。
 
-**Correct (no flicker, no hydration mismatch):**
+**正确（无闪烁，无注水不匹配）：**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
@@ -77,6 +77,6 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 }
 ```
 
-The inline script executes synchronously before showing the element, ensuring the DOM already has the correct value. No flickering, no hydration mismatch.
+内联脚本在显示元素之前同步执行，确保 DOM 已经具有正确的值。无闪烁，无注水不匹配。
 
-This pattern is especially useful for theme toggles, user preferences, authentication states, and any client-only data that should render immediately without flashing default values.
+这种模式对于主题切换、用户偏好、身份验证状态和任何应立即渲染而不闪烁默认值的仅客户端数据特别有用。

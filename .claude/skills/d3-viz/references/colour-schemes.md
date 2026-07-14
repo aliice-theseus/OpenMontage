@@ -1,10 +1,10 @@
-# D3.js Colour Schemes and Palette Recommendations
+# D3.js 配色方案与调色板推荐
 
-Comprehensive guide to colour selection in data visualisation with d3.js.
+使用 d3.js 进行数据可视化时颜色选择的全面指南。
 
-## Built-in categorical colour schemes
+## 内置分类配色方案
 
-### Category10 (default)
+### Category10（默认）
 
 ```javascript
 d3.schemeCategory10
@@ -12,13 +12,13 @@ d3.schemeCategory10
 //  '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 ```
 
-**Characteristics:**
-- 10 distinct colours
-- Good colour-blind accessibility
-- Default choice for most categorical data
-- Balanced saturation and brightness
+**特点：**
+- 10 种不同颜色
+- 良好的色盲无障碍性
+- 大多数分类数据的默认选择
+- 饱和度和亮度均衡
 
-**Use cases:** General purpose categorical encoding, legend items, multiple data series
+**适用场景：** 通用分类编码、图例项、多数据系列
 
 ### Tableau10
 
@@ -26,246 +26,246 @@ d3.schemeCategory10
 d3.schemeTableau10
 ```
 
-**Characteristics:**
-- 10 colours optimised for data visualisation
-- Professional appearance
-- Excellent distinguishability
+**特点：**
+- 10 种针对数据可视化优化的颜色
+- 专业外观
+- 极佳的可区分性
 
-**Use cases:** Business dashboards, professional reports, presentations
+**适用场景：** 商业仪表盘、专业报告、演示文稿
 
 ### Accent
 
 ```javascript
 d3.schemeAccent
-// 8 colours with high saturation
+// 8 种高饱和度颜色
 ```
 
-**Characteristics:**
-- Bright, vibrant colours
-- High contrast
-- Modern aesthetic
+**特点：**
+- 明亮鲜艳的颜色
+- 高对比度
+- 现代美学
 
-**Use cases:** Highlighting important categories, modern web applications
+**适用场景：** 突出重要类别、现代 Web 应用
 
 ### Dark2
 
 ```javascript
 d3.schemeDark2
-// 8 darker, muted colours
+// 8 种较暗、柔和的颜色
 ```
 
-**Characteristics:**
-- Subdued palette
-- Professional appearance
-- Good for dark backgrounds
+**特点：**
+- 柔和的调色板
+- 专业外观
+- 适合深色背景
 
-**Use cases:** Dark mode visualisations, professional contexts
+**适用场景：** 深色模式可视化、专业场景
 
 ### Paired
 
 ```javascript
 d3.schemePaired
-// 12 colours in pairs of similar hues
+// 12 种颜色，成对相似色调
 ```
 
-**Characteristics:**
-- Pairs of light and dark variants
-- Useful for nested categories
-- 12 distinct colours
+**特点：**
+- 浅色和深色变体配对
+- 适用于嵌套类别
+- 12 种不同颜色
 
-**Use cases:** Grouped bar charts, hierarchical categories, before/after comparisons
+**适用场景：** 分组柱状图、分层类别、前后对比
 
-### Pastel1 & Pastel2
+### Pastel1 和 Pastel2
 
 ```javascript
-d3.schemePastel1 // 9 colours
-d3.schemePastel2 // 8 colours
+d3.schemePastel1 // 9 种颜色
+d3.schemePastel2 // 8 种颜色
 ```
 
-**Characteristics:**
-- Soft, low-saturation colours
-- Gentle appearance
-- Good for large areas
+**特点：**
+- 柔和、低饱和度颜色
+- 温和外观
+- 适合大面积使用
 
-**Use cases:** Background colours, subtle categorisation, calming visualisations
+**适用场景：** 背景颜色、细微分类、舒缓的可视化
 
-### Set1, Set2, Set3
+### Set1、Set2、Set3
 
 ```javascript
-d3.schemeSet1 // 9 colours - vivid
-d3.schemeSet2 // 8 colours - muted
-d3.schemeSet3 // 12 colours - pastel
+d3.schemeSet1 // 9 种颜色 - 鲜艳
+d3.schemeSet2 // 8 种颜色 - 柔和
+d3.schemeSet3 // 12 种颜色 - 粉彩
 ```
 
-**Characteristics:**
-- Set1: High saturation, maximum distinction
-- Set2: Professional, balanced
-- Set3: Subtle, many categories
+**特点：**
+- Set1：高饱和度，最大区分度
+- Set2：专业、均衡
+- Set3：微妙、多种类
 
-**Use cases:** Varied based on visual hierarchy needs
+**适用场景：** 根据视觉层次需求而变化
 
-## Sequential colour schemes
+## 顺序配色方案
 
-Sequential schemes map continuous data from low to high values using a single hue or gradient.
+顺序方案使用单一色相或渐变将连续数据从低值映射到高值。
 
-### Single-hue sequential
+### 单色相顺序
 
-**Blues:**
+**Blues（蓝色系）：**
 ```javascript
 d3.interpolateBlues
-d3.schemeBlues[9] // 9-step discrete version
+d3.schemeBlues[9] // 9 级离散版本
 ```
 
-**Other single-hue options:**
+**其他单色相选项：**
 - `d3.interpolateGreens` / `d3.schemeGreens`
 - `d3.interpolateOranges` / `d3.schemeOranges`
 - `d3.interpolatePurples` / `d3.schemePurples`
 - `d3.interpolateReds` / `d3.schemeReds`
 - `d3.interpolateGreys` / `d3.schemeGreys`
 
-**Use cases:**
-- Simple heat maps
-- Choropleth maps
-- Density plots
-- Single-metric visualisations
+**适用场景：**
+- 简单热力图
+- 等值线图
+- 密度图
+- 单一指标可视化
 
-### Multi-hue sequential
+### 多色相顺序
 
-**Viridis (recommended):**
+**Viridis（推荐）：**
 ```javascript
 d3.interpolateViridis
 ```
 
-**Characteristics:**
-- Perceptually uniform
-- Colour-blind friendly
-- Print-safe
-- No visual dead zones
-- Monotonically increasing perceived lightness
+**特点：**
+- 感知均匀
+- 色盲友好
+- 打印安全
+- 无视觉死区
+- 感知亮度单调递增
 
-**Other perceptually-uniform options:**
-- `d3.interpolatePlasma` - Purple to yellow
-- `d3.interpolateInferno` - Black to white through red/orange
-- `d3.interpolateMagma` - Black to white through purple
-- `d3.interpolateCividis` - Colour-blind optimised
+**其他感知均匀选项：**
+- `d3.interpolatePlasma` - 紫色到黄色
+- `d3.interpolateInferno` - 黑色到白色（经过红/橙）
+- `d3.interpolateMagma` - 黑色到白色（经过紫色）
+- `d3.interpolateCividis` - 色盲优化
 
-**Colour-blind accessible:**
+**色盲无障碍：**
 ```javascript
-d3.interpolateTurbo // Rainbow-like but perceptually uniform
-d3.interpolateCool  // Cyan to magenta
-d3.interpolateWarm  // Orange to yellow
+d3.interpolateTurbo // 类彩虹但感知均匀
+d3.interpolateCool  // 青色到洋红色
+d3.interpolateWarm  // 橙色到黄色
 ```
 
-**Use cases:**
-- Scientific visualisation
-- Medical imaging
-- Any high-precision data visualisation
-- Accessible visualisations
+**适用场景：**
+- 科学可视化
+- 医学影像
+- 任何高精度数据可视化
+- 无障碍可视化
 
-### Traditional sequential
+### 传统顺序
 
-**Yellow-Orange-Red:**
+**黄-橙-红：**
 ```javascript
 d3.interpolateYlOrRd
 d3.schemeYlOrRd[9]
 ```
 
-**Yellow-Green-Blue:**
+**黄-绿-蓝：**
 ```javascript
 d3.interpolateYlGnBu
 d3.schemeYlGnBu[9]
 ```
 
-**Other multi-hue:**
-- `d3.interpolateBuGn` - Blue to green
-- `d3.interpolateBuPu` - Blue to purple
-- `d3.interpolateGnBu` - Green to blue
-- `d3.interpolateOrRd` - Orange to red
-- `d3.interpolatePuBu` - Purple to blue
-- `d3.interpolatePuBuGn` - Purple to blue-green
-- `d3.interpolatePuRd` - Purple to red
-- `d3.interpolateRdPu` - Red to purple
-- `d3.interpolateYlGn` - Yellow to green
-- `d3.interpolateYlOrBr` - Yellow to orange-brown
+**其他多色相选项：**
+- `d3.interpolateBuGn` - 蓝色到绿色
+- `d3.interpolateBuPu` - 蓝色到紫色
+- `d3.interpolateGnBu` - 绿色到蓝色
+- `d3.interpolateOrRd` - 橙色到红色
+- `d3.interpolatePuBu` - 紫色到蓝色
+- `d3.interpolatePuBuGn` - 紫色到蓝绿色
+- `d3.interpolatePuRd` - 紫色到红色
+- `d3.interpolateRdPu` - 红色到紫色
+- `d3.interpolateYlGn` - 黄色到绿色
+- `d3.interpolateYlOrBr` - 黄色到橙棕色
 
-**Use cases:** Traditional data visualisation, familiar colour associations (temperature, vegetation, water)
+**适用场景：** 传统数据可视化、熟悉的颜色关联（温度、植被、水域）
 
-## Diverging colour schemes
+## 发散配色方案
 
-Diverging schemes highlight deviations from a central value using two distinct hues.
+发散方案使用两种不同的色相突出显示与中心值的偏差。
 
-### Red-Blue (temperature)
+### 红-蓝（温度）
 
 ```javascript
 d3.interpolateRdBu
 d3.schemeRdBu[11]
 ```
 
-**Characteristics:**
-- Intuitive temperature metaphor
-- Strong contrast
-- Clear positive/negative distinction
+**特点：**
+- 直观的温度隐喻
+- 强烈对比
+- 清晰的正/负区分
 
-**Use cases:** Temperature, profit/loss, above/below average, correlation
+**适用场景：** 温度、利润/亏损、高于/低于平均水平、相关性
 
-### Red-Yellow-Blue
+### 红-黄-蓝
 
 ```javascript
 d3.interpolateRdYlBu
 d3.schemeRdYlBu[11]
 ```
 
-**Characteristics:**
-- Three-colour gradient
-- Softer transition through yellow
-- More visual steps
+**特点：**
+- 三色渐变
+- 通过黄色实现更柔和的过渡
+- 更多视觉层次
 
-**Use cases:** When extreme values need emphasis and middle needs visibility
+**适用场景：** 需要强调极值且中间值需要可见性时
 
-### Other diverging schemes
+### 其他发散方案
 
-**Traffic light:**
+**交通灯：**
 ```javascript
-d3.interpolateRdYlGn // Red (bad) to green (good)
+d3.interpolateRdYlGn // 红色（差）到绿色（好）
 ```
 
-**Spectral (rainbow):**
+**光谱（彩虹）：**
 ```javascript
-d3.interpolateSpectral // Full spectrum
+d3.interpolateSpectral // 全光谱
 ```
 
-**Other options:**
-- `d3.interpolateBrBG` - Brown to blue-green
-- `d3.interpolatePiYG` - Pink to yellow-green
-- `d3.interpolatePRGn` - Purple to green
-- `d3.interpolatePuOr` - Purple to orange
-- `d3.interpolateRdGy` - Red to grey
+**其他选项：**
+- `d3.interpolateBrBG` - 棕色到蓝绿色
+- `d3.interpolatePiYG` - 粉色到黄绿色
+- `d3.interpolatePRGn` - 紫色到绿色
+- `d3.interpolatePuOr` - 紫色到橙色
+- `d3.interpolateRdGy` - 红色到灰色
 
-**Use cases:** Choose based on semantic meaning and accessibility needs
+**适用场景：** 根据语义含义和无障碍需求选择
 
-## Colour-blind friendly palettes
+## 色盲友好调色板
 
-### General guidelines
+### 通用指南
 
-1. **Avoid red-green combinations** (most common colour blindness)
-2. **Use blue-orange diverging** instead of red-green
-3. **Add texture or patterns** as redundant encoding
-4. **Test with simulation tools**
+1. **避免红绿组合**（最常见的色盲类型）
+2. **使用蓝橙发散**替代红绿
+3. **添加纹理或图案**作为冗余编码
+4. **使用模拟工具测试**
 
-### Recommended colour-blind safe schemes
+### 推荐色盲安全方案
 
-**Categorical:**
+**分类：**
 ```javascript
-// Okabe-Ito palette (colour-blind safe)
+// Okabe-Ito 调色板（色盲安全）
 const okabePalette = [
-  '#E69F00', // Orange
-  '#56B4E9', // Sky blue
-  '#009E73', // Bluish green
-  '#F0E442', // Yellow
-  '#0072B2', // Blue
-  '#D55E00', // Vermillion
-  '#CC79A7', // Reddish purple
-  '#000000'  // Black
+  '#E69F00', // 橙色
+  '#56B4E9', // 天蓝色
+  '#009E73', // 蓝绿色
+  '#F0E442', // 黄色
+  '#0072B2', // 蓝色
+  '#D55E00', // 朱红色
+  '#CC79A7', // 红紫色
+  '#000000'  // 黑色
 ];
 
 const colourScale = d3.scaleOrdinal()
@@ -273,51 +273,51 @@ const colourScale = d3.scaleOrdinal()
   .range(okabePalette);
 ```
 
-**Sequential:**
+**顺序：**
 ```javascript
-// Use Viridis, Cividis, or Blues
-d3.interpolateViridis  // Best overall
-d3.interpolateCividis  // Optimised for CVD
-d3.interpolateBlues    // Simple, safe
+// 使用 Viridis、Cividis 或 Blues
+d3.interpolateViridis  // 整体最佳
+d3.interpolateCividis  // 针对 CVD 优化
+d3.interpolateBlues    // 简单安全
 ```
 
-**Diverging:**
+**发散：**
 ```javascript
-// Use blue-orange instead of red-green
+// 使用蓝橙替代红绿
 d3.interpolateBrBG
 d3.interpolatePuOr
 ```
 
-## Custom colour palettes
+## 自定义调色板
 
-### Creating custom sequential
+### 创建自定义顺序
 
 ```javascript
 const customSequential = d3.scaleLinear()
   .domain([0, 100])
-  .range(['#e8f4f8', '#006d9c']) // Light to dark blue
-  .interpolate(d3.interpolateLab); // Perceptually uniform
+  .range(['#e8f4f8', '#006d9c']) // 浅蓝到深蓝
+  .interpolate(d3.interpolateLab); // 感知均匀
 ```
 
-### Creating custom diverging
+### 创建自定义发散
 
 ```javascript
 const customDiverging = d3.scaleLinear()
   .domain([0, 50, 100])
-  .range(['#ca0020', '#f7f7f7', '#0571b0']) // Red, grey, blue
+  .range(['#ca0020', '#f7f7f7', '#0571b0']) // 红、灰、蓝
   .interpolate(d3.interpolateLab);
 ```
 
-### Creating custom categorical
+### 创建自定义分类
 
 ```javascript
-// Brand colours
+// 品牌颜色
 const brandPalette = [
-  '#FF6B6B', // Primary red
-  '#4ECDC4', // Secondary teal
-  '#45B7D1', // Tertiary blue
-  '#FFA07A', // Accent coral
-  '#98D8C8'  // Accent mint
+  '#FF6B6B', // 主红色
+  '#4ECDC4', // 辅助青色
+  '#45B7D1', // 第三蓝色
+  '#FFA07A', // 强调珊瑚色
+  '#98D8C8'  // 强调薄荷色
 ];
 
 const colourScale = d3.scaleOrdinal()
@@ -325,38 +325,38 @@ const colourScale = d3.scaleOrdinal()
   .range(brandPalette);
 ```
 
-## Semantic colour associations
+## 语义颜色关联
 
-### Universal colour meanings
+### 通用颜色含义
 
-**Red:**
-- Danger, error, negative
-- High temperature
-- Debt, loss
+**红色：**
+- 危险、错误、负面
+- 高温
+- 负债、亏损
 
-**Green:**
-- Success, positive
-- Growth, vegetation
-- Profit, gain
+**绿色：**
+- 成功、正面
+- 增长、植被
+- 利润、收益
 
-**Blue:**
-- Trust, calm
-- Water, cold
-- Information, neutral
+**蓝色：**
+- 信任、冷静
+- 水、寒冷
+- 信息、中性
 
-**Yellow/Orange:**
-- Warning, caution
-- Energy, warmth
-- Attention
+**黄色/橙色：**
+- 警告、谨慎
+- 能量、温暖
+- 注意力
 
-**Grey:**
-- Neutral, inactive
-- Missing data
-- Background
+**灰色：**
+- 中性、非活跃
+- 缺失数据
+- 背景
 
-### Context-specific palettes
+### 上下文相关调色板
 
-**Financial:**
+**金融：**
 ```javascript
 const financialColours = {
   profit: '#27ae60',
@@ -366,13 +366,13 @@ const financialColours = {
 };
 ```
 
-**Temperature:**
+**温度：**
 ```javascript
 const temperatureScale = d3.scaleSequential(d3.interpolateRdYlBu)
-  .domain([40, -10]); // Hot to cold (reversed)
+  .domain([40, -10]); // 热到冷（反转）
 ```
 
-**Traffic/Status:**
+**交通/状态：**
 ```javascript
 const statusColours = {
   success: '#27ae60',
@@ -383,14 +383,14 @@ const statusColours = {
 };
 ```
 
-## Accessibility best practices
+## 无障碍最佳实践
 
-### Contrast ratios
+### 对比度比例
 
-Ensure sufficient contrast between colours and backgrounds:
+确保颜色和背景之间有足够的对比度：
 
 ```javascript
-// Good contrast example
+// 良好对比度示例
 const highContrast = {
   background: '#ffffff',
   text: '#2c3e50',
@@ -399,115 +399,115 @@ const highContrast = {
 };
 ```
 
-**WCAG guidelines:**
-- Normal text: 4.5:1 minimum
-- Large text: 3:1 minimum
-- UI components: 3:1 minimum
+**WCAG 指南：**
+- 普通文本：最小 4.5:1
+- 大号文本：最小 3:1
+- UI 组件：最小 3:1
 
-### Redundant encoding
+### 冗余编码
 
-Never rely solely on colour to convey information:
+永远不要仅依赖颜色来传达信息：
 
 ```javascript
-// Add patterns or shapes
+// 添加图案或形状
 const symbols = ['circle', 'square', 'triangle', 'diamond'];
 
-// Add text labels
-// Use line styles (solid, dashed, dotted)
-// Use size encoding
+// 添加文本标签
+// 使用线型（实线、虚线、点线）
+// 使用尺寸编码
 ```
 
-### Testing
+### 测试
 
-Test visualisations for colour blindness:
-- Chrome DevTools (Rendering > Emulate vision deficiencies)
-- Colour Oracle (free desktop application)
-- Coblis (online simulator)
+测试可视化是否存在色盲问题：
+- Chrome DevTools（渲染 > 模拟视觉缺陷）
+- Colour Oracle（免费桌面应用）
+- Coblis（在线模拟器）
 
-## Professional colour recommendations
+## 专业颜色推荐
 
-### Data journalism
+### 数据新闻
 
 ```javascript
-// Guardian style
+// Guardian 风格
 const guardianPalette = [
-  '#005689', // Guardian blue
-  '#c70000', // Guardian red
-  '#7d0068', // Guardian pink
-  '#951c75', // Guardian purple
+  '#005689', // 卫报蓝
+  '#c70000', // 卫报红
+  '#7d0068', // 卫报粉
+  '#951c75', // 卫报紫
 ];
 
-// FT style
+// FT 风格
 const ftPalette = [
-  '#0f5499', // FT blue
-  '#990f3d', // FT red
-  '#593380', // FT purple
-  '#262a33', // FT black
+  '#0f5499', // FT 蓝
+  '#990f3d', // FT 红
+  '#593380', // FT 紫
+  '#262a33', // FT 黑
 ];
 ```
 
-### Academic/Scientific
+### 学术/科学
 
 ```javascript
-// Nature journal style
+// Nature 期刊风格
 const naturePalette = [
-  '#0071b2', // Blue
-  '#d55e00', // Vermillion
-  '#009e73', // Green
-  '#f0e442', // Yellow
+  '#0071b2', // 蓝色
+  '#d55e00', // 朱红色
+  '#009e73', // 绿色
+  '#f0e442', // 黄色
 ];
 
-// Use Viridis for continuous data
+// 连续数据使用 Viridis
 const scientificScale = d3.scaleSequential(d3.interpolateViridis);
 ```
 
-### Corporate/Business
+### 企业/商业
 
 ```javascript
-// Professional, conservative
+// 专业、保守
 const corporatePalette = [
-  '#003f5c', // Dark blue
-  '#58508d', // Purple
-  '#bc5090', // Magenta
-  '#ff6361', // Coral
-  '#ffa600'  // Orange
+  '#003f5c', // 深蓝
+  '#58508d', // 紫色
+  '#bc5090', // 洋红色
+  '#ff6361', // 珊瑚色
+  '#ffa600'  // 橙色
 ];
 ```
 
-## Dynamic colour selection
+## 动态颜色选择
 
-### Based on data range
+### 基于数据范围
 
 ```javascript
 function selectColourScheme(data) {
   const extent = d3.extent(data);
   const hasNegative = extent[0] < 0;
   const hasPositive = extent[1] > 0;
-  
+
   if (hasNegative && hasPositive) {
-    // Diverging: data crosses zero
+    // 发散：数据跨越零
     return d3.scaleSequentialSymlog(d3.interpolateRdBu)
       .domain([extent[0], 0, extent[1]]);
   } else {
-    // Sequential: all positive or all negative
+    // 顺序：全正或全负
     return d3.scaleSequential(d3.interpolateViridis)
       .domain(extent);
   }
 }
 ```
 
-### Based on category count
+### 基于类别数量
 
 ```javascript
 function selectCategoricalScheme(categories) {
   const n = categories.length;
-  
+
   if (n <= 10) {
     return d3.scaleOrdinal(d3.schemeTableau10);
   } else if (n <= 12) {
     return d3.scaleOrdinal(d3.schemePaired);
   } else {
-    // For many categories, use sequential with quantize
+    // 对于多种类，使用带 quantize 的顺序方案
     return d3.scaleQuantize()
       .domain([0, n - 1])
       .range(d3.quantize(d3.interpolateRainbow, n));
@@ -515,50 +515,50 @@ function selectCategoricalScheme(categories) {
 }
 ```
 
-## Common colour mistakes to avoid
+## 常见颜色错误避免
 
-1. **Rainbow gradients for sequential data**
-   - Problem: Not perceptually uniform, hard to read
-   - Solution: Use Viridis, Blues, or other uniform schemes
+1. **对顺序数据使用彩虹渐变**
+   - 问题：感知不均匀，难以阅读
+   - 解决：使用 Viridis、Blues 或其他均匀方案
 
-2. **Red-green for diverging (colour blindness)**
-   - Problem: 8% of males can't distinguish
-   - Solution: Use blue-orange or purple-green
+2. **红绿用于发散（色盲问题）**
+   - 问题：8% 的男性无法区分
+   - 解决：使用蓝橙或紫绿
 
-3. **Too many categorical colours**
-   - Problem: Hard to distinguish and remember
-   - Solution: Limit to 5-8 categories, use grouping
+3. **过多分类颜色**
+   - 问题：难以区分和记忆
+   - 解决：限制在 5-8 个类别，使用分组
 
-4. **Insufficient contrast**
-   - Problem: Poor readability
-   - Solution: Test contrast ratios, use darker colours on light backgrounds
+4. **对比度不足**
+   - 问题：可读性差
+   - 解决：测试对比度比例，在浅色背景上使用更深颜色
 
-5. **Culturally inconsistent colours**
-   - Problem: Confusing semantic meaning
-   - Solution: Research colour associations for target audience
+5. **文化不一致的颜色**
+   - 问题：语义含义混淆
+   - 解决：研究目标受众的颜色关联
 
-6. **Inverted temperature scales**
-   - Problem: Counterintuitive (red = cold)
-   - Solution: Red/orange = hot, blue = cold
+6. **温度比例反转**
+   - 问题：反直觉（红=冷）
+   - 解决：红/橙=热，蓝=冷
 
-## Quick reference guide
+## 快速参考指南
 
-**Need to show...**
+**需要展示...**
 
-- **Categories (≤10):** `d3.schemeCategory10` or `d3.schemeTableau10`
-- **Categories (>10):** `d3.schemePaired` or group categories
-- **Sequential (general):** `d3.interpolateViridis`
-- **Sequential (scientific):** `d3.interpolateViridis` or `d3.interpolatePlasma`
-- **Sequential (temperature):** `d3.interpolateRdYlBu` (inverted)
-- **Diverging (zero):** `d3.interpolateRdBu` or `d3.interpolateBrBG`
-- **Diverging (good/bad):** `d3.interpolateRdYlGn` (inverted)
-- **Colour-blind safe (categorical):** Okabe-Ito palette (shown above)
-- **Colour-blind safe (sequential):** `d3.interpolateCividis` or `d3.interpolateBlues`
-- **Colour-blind safe (diverging):** `d3.interpolatePuOr` or `d3.interpolateBrBG`
+- **类别（≤10）：** `d3.schemeCategory10` 或 `d3.schemeTableau10`
+- **类别（>10）：** `d3.schemePaired` 或分组类别
+- **顺序（通用）：** `d3.interpolateViridis`
+- **顺序（科学）：** `d3.interpolateViridis` 或 `d3.interpolatePlasma`
+- **顺序（温度）：** `d3.interpolateRdYlBu`（反转）
+- **发散（零中心）：** `d3.interpolateRdBu` 或 `d3.interpolateBrBG`
+- **发散（好/坏）：** `d3.interpolateRdYlGn`（反转）
+- **色盲安全（分类）：** Okabe-Ito 调色板（如上所示）
+- **色盲安全（顺序）：** `d3.interpolateCividis` 或 `d3.interpolateBlues`
+- **色盲安全（发散）：** `d3.interpolatePuOr` 或 `d3.interpolateBrBG`
 
-**Always remember:**
-1. Test for colour-blindness
-2. Ensure sufficient contrast
-3. Use semantic colours appropriately
-4. Add redundant encoding (patterns, labels)
-5. Keep it simple (fewer colours = clearer visualisation)
+**始终记住：**
+1. 测试色盲问题
+2. 确保足够的对比度
+3. 合理使用语义颜色
+4. 添加冗余编码（图案、标签）
+5. 保持简洁（颜色越少，可视化越清晰）

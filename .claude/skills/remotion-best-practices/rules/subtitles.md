@@ -1,17 +1,17 @@
 ---
 name: subtitles
-description: subtitles and caption rules
+description: 字幕规则
 metadata:
   tags: subtitles, captions, remotion, json
 ---
 
-All captions must be processed in JSON. The captions must use the `Caption` type which is the following:
+所有字幕必须以 JSON 格式处理。字幕必须使用 `Caption` 类型，定义如下：
 
 ```ts
 import type { Caption } from "@remotion/captions";
 ```
 
-This is the definition:
+这是类型定义：
 
 ```ts
 type Caption = {
@@ -23,14 +23,14 @@ type Caption = {
 };
 ```
 
-## Generating captions
+## 生成字幕
 
-To transcribe video and audio files to generate captions, load the [./transcribe-captions.md](./transcribe-captions.md) file for more instructions.
+要转录视频和音频文件以生成字幕，请加载 [./transcribe-captions.md](./transcribe-captions.md) 文件获取更多说明。
 
-## Displaying captions
+## 显示字幕
 
-To display captions in your video, load the [./display-captions.md](./display-captions.md) file for more instructions.
+要在视频中显示字幕，请加载 [./display-captions.md](./display-captions.md) 文件获取更多说明。
 
-## Importing captions
+## 导入字幕
 
-To import captions from a .srt file, load the [./import-srt-captions.md](./import-srt-captions.md) file for more instructions.
+要从 .srt 文件导入字幕，请加载 [./import-srt-captions.md](./import-srt-captions.md) 文件获取更多说明。

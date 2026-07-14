@@ -1,246 +1,246 @@
 ---
 name: model-selection-guide
-description: Choosing the right FLUX model for your use case
+description: 根据使用场景选择适合的 FLUX 模型
 ---
 
-# FLUX Model Selection Guide
+# FLUX 模型选择指南
 
-Decision guide for selecting the optimal FLUX model based on your requirements.
+根据需求选择最佳 FLUX 模型的决策指南。
 
-## Quick Decision Matrix
+## 快速决策矩阵
 
-| Priority      | Recommended Model               |
-| ------------- | ------------------------------- |
-| Speed         | FLUX.2 [klein]                  |
-| Quality       | FLUX.2 [max]                    |
-| Balance       | FLUX.2 [pro]                    |
-| Typography    | FLUX.2 [flex]                   |
-| Image Editing | FLUX.2 [klein], [pro], or [max] |
-| Local/Free    | FLUX.2 [dev]                    |
-| Inpainting    | FLUX.1 Fill                     |
+| 优先级      | 推荐模型                       |
+| ---------- | ------------------------------ |
+| 速度       | FLUX.2 [klein]                  |
+| 质量       | FLUX.2 [max]                    |
+| 平衡       | FLUX.2 [pro]                    |
+| 排版       | FLUX.2 [flex]                   |
+| 图片编辑   | FLUX.2 [klein]、[pro] 或 [max]  |
+| 本地/免费  | FLUX.2 [dev]                    |
+| 图像修复   | FLUX.1 Fill                     |
 
-## Decision Tree
+## 决策树
 
 ```
-What's your primary need?
+你的主要需求是什么？
 
-├─ Generate images (text-to-image OR image editing)
-│   ├─ Need FASTEST possible generation?
-│   │   └─ FLUX.2 [klein] (supports up to 4 reference images)
+├─ 生成图片（文生图或图片编辑）
+│   ├─ 需要**最快**的生成？
+│   │   └─ FLUX.2 [klein]（支持最多 4 张参考图片）
 │   │
-│   ├─ Need HIGHEST quality output?
-│   │   └─ FLUX.2 [max] (supports up to 8-10 reference images)
+│   ├─ 需要**最高质量**输出？
+│   │   └─ FLUX.2 [max]（支持最多 8-10 张参考图片）
 │   │
-│   ├─ Need TEXT/TYPOGRAPHY in image?
-│   │   └─ FLUX.2 [flex] (supports up to 8 reference images)
+│   ├─ 图片中需要**文字/排版**？
+│   │   └─ FLUX.2 [flex]（支持最多 8 张参考图片）
 │   │
-│   ├─ Need BALANCED speed/quality?
-│   │   └─ FLUX.2 [pro] (supports up to 8 reference images)
+│   ├─ 需要**平衡的**速度/质量？
+│   │   └─ FLUX.2 [pro]（支持最多 8 张参考图片）
 │   │
-│   └─ Need LOCAL/FREE generation?
+│   └─ 需要**本地/免费**生成？
 │       └─ FLUX.2 [dev]
 │
-├─ Need REAL-TIME web information?
-│   └─ FLUX.2 [max] (grounding search)
+├─ 需要**实时**网络信息？
+│   └─ FLUX.2 [max]（grounding 搜索）
 │
-└─ FLUX.1 family (only use when explicitly asked by user)
-    ├─ FLUX.1 Kontext - context-aware editing
-    └─ FLUX.1 Fill - inpainting/object removal
+└─ FLUX.1 系列（仅在用户明确要求时使用）
+    ├─ FLUX.1 Kontext - 上下文感知编辑
+    └─ FLUX.1 Fill - 图像修复/物体移除
 ```
 
-**Note:** All FLUX.2 models natively support image-to-image editing via reference images. Simply provide your source image(s) as references and describe the desired changes.
+**注意：** 所有 FLUX.2 模型原生支持通过参考图片进行图生图编辑。只需提供源图片作为参考并描述所需更改。
 
-## Detailed Model Comparisons
+## 详细模型比较
 
-### By Speed
+### 按速度
 
-| Model             | Relative Speed | Best For                |
-| ----------------- | -------------- | ----------------------- |
-| FLUX.2 [klein] 4B | Fastest        | Rapid prototyping       |
-| FLUX.2 [klein] 9B | Very Fast      | Better quality previews |
-| FLUX.2 [pro]      | Medium         | Production workflows    |
-| FLUX.2 [flex]     | Medium         | Typography tasks        |
-| FLUX.2 [max]      | Slower         | Final hero images       |
+| 模型                | 相对速度   | 最适合                    |
+| ------------------ | --------- | ------------------------ |
+| FLUX.2 [klein] 4B  | 最快      | 快速原型开发               |
+| FLUX.2 [klein] 9B  | 非常快    | 更高质量预览               |
+| FLUX.2 [pro]       | 中等      | 生产工作流                 |
+| FLUX.2 [flex]      | 中等      | 排版任务                   |
+| FLUX.2 [max]       | 较慢      | 最终主视觉图片              |
 
-### By Quality
+### 按质量
 
-| Model             | Quality Level | Trade-off                  |
-| ----------------- | ------------- | -------------------------- |
-| FLUX.2 [max]      | Highest       | Slowest, most expensive    |
-| FLUX.2 [pro]      | High          | Good balance               |
-| FLUX.2 [flex]     | High (text)   | Specialized for typography |
-| FLUX.2 [klein] 9B | Good          | Fast, slightly less detail |
-| FLUX.2 [klein] 4B | Moderate      | Fastest, preview quality   |
+| 模型               | 质量等级    | 权衡                       |
+| ----------------- | ---------- | -------------------------- |
+| FLUX.2 [max]      | 最高       | 最慢、最贵                   |
+| FLUX.2 [pro]      | 高         | 良好平衡                     |
+| FLUX.2 [flex]     | 高（文字）  | 专为排版优化                 |
+| FLUX.2 [klein] 9B | 良好       | 快速、略少细节               |
+| FLUX.2 [klein] 4B | 中等       | 最快、预览质量               |
 
-### By Cost
+### 按成本
 
-> **Credit pricing:** 1 credit = $0.01 USD. FLUX.2 uses megapixel-based pricing.
+> **积分定价：** 1 积分 = $0.01 USD。FLUX.2 使用基于百万像素的定价。
 
-#### FLUX.2 Models
+#### FLUX.2 模型
 
-| Model             | 1st MP | +MP  | 1MP T2I | 1MP I2I | Volume Recommendation       |
-| ----------------- | ------ | ---- | ------- | ------- | --------------------------- |
-| FLUX.2 [klein] 4B | 1.4c   | 0.1c | $0.014  | $0.015  | High volume, previews       |
-| FLUX.2 [klein] 9B | 1.5c   | 0.2c | $0.015  | $0.017  | High volume, better quality |
-| FLUX.2 [pro]      | 3c     | 1.5c | $0.03   | $0.045  | Production workloads        |
-| FLUX.2 [max]      | 7c     | 3c   | $0.07   | $0.10   | Hero images, premium        |
-| FLUX.2 [flex]     | 5c     | 5c   | $0.05   | $0.10   | Typography                  |
-| FLUX.2 [dev]      | -      | -    | Free    | Free    | Local dev (non-commercial)  |
+| 模型               | 首个 MP | +MP  | 1MP T2I | 1MP I2I | 批量推荐                     |
+| ----------------- | ------- | ---- | ------- | ------- | ---------------------------- |
+| FLUX.2 [klein] 4B | 1.4c    | 0.1c | $0.014  | $0.015  | 大批量、预览                   |
+| FLUX.2 [klein] 9B | 1.5c    | 0.2c | $0.015  | $0.017  | 大批量、更高质量               |
+| FLUX.2 [pro]      | 3c      | 1.5c | $0.03   | $0.045  | 生产工作负载                   |
+| FLUX.2 [max]      | 7c      | 3c   | $0.07   | $0.10   | 主视觉图片、高端               |
+| FLUX.2 [flex]     | 5c      | 5c   | $0.05   | $0.10   | 排版                         |
+| FLUX.2 [dev]      | -       | -    | 免费    | 免费    | 本地开发（非商业）             |
 
-> **Pricing formula:** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)` in cents
+> **定价公式：** `(firstMP + (outputMP-1) * mpPrice) + (inputMP * mpPrice)` 单位：美分
 
-#### FLUX.1 Models
+#### FLUX.1 模型
 
-| Model                | Price/Image | Use Case                |
-| -------------------- | ----------- | ----------------------- |
-| FLUX.1 Kontext [pro] | $0.04       | Context-aware editing   |
-| FLUX.1 Kontext [max] | $0.08       | Max quality editing     |
-| FLUX1.1 [pro]        | $0.04       | Standard T2I            |
-| FLUX1.1 [pro] Ultra  | $0.06       | Ultra high-resolution   |
-| FLUX1.1 [pro] Raw    | $0.06       | Candid photography feel |
-| FLUX.1 Fill [pro]    | $0.05       | Inpainting              |
-| FLUX.1 [pro]         | $0.05       | Original pro model      |
+| 模型                     | 每张图片价格 | 使用场景               |
+| ------------------------ | ----------- | ---------------------- |
+| FLUX.1 Kontext [pro]     | $0.04       | 上下文感知编辑          |
+| FLUX.1 Kontext [max]     | $0.08       | 最高质量编辑            |
+| FLUX1.1 [pro]            | $0.04       | 标准 T2I               |
+| FLUX1.1 [pro] Ultra      | $0.06       | 超高分辨率              |
+| FLUX1.1 [pro] Raw        | $0.06       | 自然摄影风格            |
+| FLUX.1 Fill [pro]        | $0.05       | 图像修复                |
+| FLUX.1 [pro]             | $0.05       | 原始专业模型            |
 
-> Use [bfl.ai/pricing](https://bfl.ai/pricing) calculator for exact costs at different resolutions.
+> 使用 [bfl.ai/pricing](https://bfl.ai/pricing) 计算器获取不同分辨率下的精确成本。
 
-## Use Case Recommendations
+## 使用场景推荐
 
-### Creative Exploration / Ideation
+### 创意探索 / 构思
 
-**Recommended: FLUX.2 [klein]**
+**推荐：FLUX.2 [klein]**
 
-- Fast iterations
-- Quick concept testing
-- Mood board generation
-- Exploring prompt variations
+- 快速迭代
+- 快速概念测试
+- 情绪板生成
+- 探索提示词变体
 
-### Production Marketing Assets
+### 生产营销素材
 
-**Recommended: FLUX.2 [pro]**
+**推荐：FLUX.2 [pro]**
 
-- Consistent quality
-- Reasonable speed
-- Cost-effective at scale
-- Reliable for automation
+- 一致的质量
+- 合理的速度
+- 规模化成本效益
+- 可靠自动化
 
-### Hero Images / Premium Content
+### 主视觉图片 / 高级内容
 
-**Recommended: FLUX.2 [max]**
+**推荐：FLUX.2 [max]**
 
-- Maximum detail
-- Best coherence
-- Supports grounding search
-- Worth the premium for key visuals
+- 最大细节
+- 最佳连贯性
+- 支持 grounding 搜索
+- 关键视觉值得高端投入
 
-### Typography / Signage / Posters
+### 排版 / 标牌 / 海报
 
-**Recommended: FLUX.2 [flex]**
+**推荐：FLUX.2 [flex]**
 
-- Superior text rendering
-- Adjustable quality settings
-- Best for readable text
-- UI mockups and infographics
+- 卓越的文本渲染
+- 可调节质量设置
+- 最适合可读文本
+- UI 原型和信息图
 
-### Character Consistency
+### 角色一致性
 
-**Recommended: FLUX.2 [max] or [pro]**
+**推荐：FLUX.2 [max] 或 [pro]**
 
-- Multi-reference support (up to 8-10 images)
-- Best editing consistency
-- Maintains identity across scenes
-- Superior quality over FLUX.1 Kontext
+- 多参考支持（最多 8-10 张图片）
+- 最佳编辑一致性
+- 跨场景保持身份
+- 比 FLUX.1 Kontext 更高质量
 
-### Photo Editing / Retouching
+### 照片编辑 / 修图
 
-**Recommended: FLUX.2 [klein], [pro], or [max]**
+**推荐：FLUX.2 [klein]、[pro] 或 [max]**
 
-- Native image-to-image support via references
-- Style transfer
-- Object modification
-- Attribute changes
-- Better results than FLUX.1 Kontext
+- 通过参考原生支持图生图
+- 风格迁移
+- 物体修改
+- 属性更改
+- 比 FLUX.1 Kontext 效果更好
 
-### Real-Time Information
+### 实时信息
 
-**Recommended: FLUX.2 [max]**
+**推荐：FLUX.2 [max]**
 
-- Grounding search feature
-- Current events
-- Recent news visualization
-- Weather/location data
+- grounding 搜索功能
+- 当前事件
+- 近期新闻可视化
+- 天气/位置数据
 
-### Local Development / Testing
+### 本地开发 / 测试
 
-**Recommended: FLUX.2 [dev]**
+**推荐：FLUX.2 [dev]**
 
-- No API costs
-- Full control
-- Fine-tuning experiments
-- Offline capability
+- 无 API 成本
+- 完全控制
+- 微调实验
+- 离线能力
 
-### Editorial with Typography
-
-```
-1. FLUX.2 [max] - Generate base image (highest quality)
-2. FLUX.2 [flex] - Add text overlay pass
-```
-
-### Character-Consistent Series
+### 带排版的编辑内容
 
 ```
-1. FLUX.2 [max] - Create character reference
-2. FLUX.2 [max]/[pro] - Generate consistent variations using reference images
-3. FLUX.2 [klein] - Quick iteration on variations if needed
+1. FLUX.2 [max] - 生成基础图片（最高质量）
+2. FLUX.2 [flex] - 添加文字叠加层
 ```
 
-### E-commerce Product Pipeline
+### 角色一致系列
 
 ```
-1. FLUX.2 [pro] - Bulk product generations
-2. FLUX.2 [pro]/[klein] - Product variations (colors, angles) using references
-3. FLUX.2 [flex] - Add promotional text/pricing
+1. FLUX.2 [max] - 创建角色参考
+2. FLUX.2 [max]/[pro] - 使用参考图片生成一致变体
+3. FLUX.2 [klein] - 需要时快速迭代变体
 ```
 
-## Constraint-Based Selection
-
-### Limited Budget
-
-- **High volume**: FLUX.2 [klein] 4B
-- **Quality needed**: FLUX.2 [pro] (best value)
-
-### Tight Deadline
-
-- **Any task**: FLUX.2 [klein]
-- **Quality matters**: FLUX.2 [pro]
-
-### Maximum Quality Required
-
-- **Always**: FLUX.2 [max]
-
-### Text Must Be Readable
-
-- **Always**: FLUX.2 [flex]
-
-### Editing Existing Images
-
-- **Fast edits**: FLUX.2 [klein] with reference images
-- **Quality edits**: FLUX.2 [max] or [pro] with reference images
-- **Alternative**: FLUX.1 Kontext (FLUX.2 preferred)
-
-### Rate Limit Sensitivity
-
-- **Prefer**: FLUX.2 models (24 concurrent limit)
-- **Avoid**: FLUX.1 Kontext Max (6 concurrent limit)
-
-## Summary Cheat Sheet
+### 电商产品流程
 
 ```
-Speed?      → FLUX.2 [klein]
-Quality?    → FLUX.2 [max]
-Balance?    → FLUX.2 [pro]
-Text?       → FLUX.2 [flex]
-Edit?       → FLUX.2 [klein/pro/max] with reference images
-Free?       → FLUX.2 [dev]
+1. FLUX.2 [pro] - 批量产品生成
+2. FLUX.2 [pro]/[klein] - 使用参考的产品变体（颜色、角度）
+3. FLUX.2 [flex] - 添加促销文字/价格
 ```
 
-**Key insight:** All FLUX.2 models support image editing natively via reference images. FLUX.2 is recommended over FLUX.1 Kontext for editing tasks.
+## 基于约束的选择
+
+### 预算有限
+
+- **大批量**：FLUX.2 [klein] 4B
+- **需要质量**：FLUX.2 [pro]（最佳性价比）
+
+### 时间紧迫
+
+- **任何任务**：FLUX.2 [klein]
+- **质量重要**：FLUX.2 [pro]
+
+### 需要最高质量
+
+- **始终**：FLUX.2 [max]
+
+### 文本必须可读
+
+- **始终**：FLUX.2 [flex]
+
+### 编辑现有图片
+
+- **快速编辑**：FLUX.2 [klein] 配合参考图片
+- **高质量编辑**：FLUX.2 [max] 或 [pro] 配合参考图片
+- **备选**：FLUX.1 Kontext（推荐 FLUX.2）
+
+### 频率限制敏感
+
+- **推荐**：FLUX.2 模型（24 并发限制）
+- **避免**：FLUX.1 Kontext Max（6 并发限制）
+
+## 速查表
+
+```
+速度？      → FLUX.2 [klein]
+质量？      → FLUX.2 [max]
+平衡？      → FLUX.2 [pro]
+文字？      → FLUX.2 [flex]
+编辑？      → FLUX.2 [klein/pro/max] 配合参考图片
+免费？      → FLUX.2 [dev]
+```
+
+**关键洞察：** 所有 FLUX.2 模型原生支持通过参考图片进行图片编辑。对于编辑任务，推荐使用 FLUX.2 而非 FLUX.1 Kontext。

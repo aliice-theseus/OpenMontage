@@ -1,133 +1,133 @@
-# Lip Sync Usage for OpenMontage
+# OpenMontage 唇形同步使用指南
 
-> Sources: Wav2Lip paper (Prajwal et al. 2020), Wav2Lip-GAN documentation, OpenMontage
-> `tools/lip_sync.py` implementation
+> 来源：Wav2Lip 论文 (Prajwal et al. 2020)、Wav2Lip-GAN 文档、OpenMontage
+> `tools/lip_sync.py` 实现
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-DEFAULT MODEL:    wav2lip (faster, good sync accuracy)
-HIGHER QUALITY:   wav2lip_gan (better visual quality, slower)
-FACE PADDING:     [0, 10, 0, 0] (top, bottom, left, right)
-INPUT:            Video with visible face + audio to sync to
-RESIZE FACTOR:    1 = full res (best), 2 = half res (recommended for drafts)
-KEY RULE:         Use lip_sync for VIDEO input; use talking_head for PHOTO input
+默认模型：        wav2lip（更快，同步精度好）
+更高质量：        wav2lip_gan（更好的视觉质量，更慢）
+面部边距：        [0, 10, 0, 0]（上、下、左、右）
+输入：            面部可见的视频 + 要同步的音频
+缩放因子：        1 = 全分辨率（最佳），2 = 半分辨率（推荐草稿用）
+关键规则：         对视频输入使用 lip_sync；对照片输入使用 talking_head
 ```
 
-## When to Use lip_sync
+## 何时使用 lip_sync
 
-Lip sync is a **post-production** step. Use it after generating replacement audio.
+唇形同步是一个**后期制作**步骤。在生成替换音频后使用。
 
-- **Dubbing / localization** -- replace original speech with translated audio and match lips
-- **Audio replacement** -- re-record narration and sync to existing video
-- **Voice-over correction** -- fix mismatched audio/video timing
-- **NOT for photo-to-video** -- use the `talking_head` tool instead
+- **配音/本地化** — 用翻译后的音频替换原始语音并匹配嘴唇
+- **音频替换** — 重新录制旁白并同步到现有视频
+- **画外音修正** — 修复不匹配的音视频定时
+- **不是用于照片转视频** — 改为使用 `talking_head` 工具
 
-## CRITICAL DISTINCTION -- lip_sync vs talking_head
+## 关键区分 — lip_sync vs talking_head
 
 | | `lip_sync` | `talking_head` |
 |---|---|---|
-| **Input** | Existing VIDEO + new audio | Still PHOTO + audio |
-| **Output** | Video with synced lips | New video from photo |
-| **Use Case** | Dubbing, audio replacement | Avatar generation, spokesperson |
+| **输入** | 现有视频 + 新音频 | 静态照片 + 音频 |
+| **输出** | 嘴唇同步的视频 | 从照片生成的新视频 |
+| **使用场景** | 配音、音频替换 | 虚拟人生成、代言人 |
 
-**Decision rule:** If you already have video footage of the person speaking, use `lip_sync`. If you only have a photograph and want to make it talk, use `talking_head`.
+**决策规则：** 如果你已经有该人说话的视频素材，使用 `lip_sync`。如果你只有一张照片并想让它说话，使用 `talking_head`。
 
-## Model Selection Guide
+## 模型选择指南
 
-| Model | Quality | Speed | Best For |
-|-------|---------|-------|----------|
-| `wav2lip` | Good lip sync, may blur chin | Faster | Quick dubbing, drafts |
-| `wav2lip_gan` | Better visual quality around mouth | Slower | Final renders, close-ups |
+| 模型 | 质量 | 速度 | 最适合 |
+|------|------|------|--------|
+| `wav2lip` | 唇形同步好，可能模糊下巴 | 更快 | 快速配音、草稿 |
+| `wav2lip_gan` | 嘴部周围视觉质量更好 | 更慢 | 最终渲染、特写 |
 
-**Decision rule:** Use `wav2lip` for iteration and drafts. Switch to `wav2lip_gan` for final renders or any shot where the face is prominent (close-ups, medium shots). The quality difference is most visible in the mouth and chin region.
+**决策规则：** 迭代和草稿使用 `wav2lip`。最终渲染或任何面部突出的镜头（特写、中景）切换到 `wav2lip_gan`。质量差异在嘴部和下巴区域最为明显。
 
-## Input Requirements
+## 输入要求
 
-- Video must contain a clearly visible face throughout
-- Face should be front-facing or at most 30-degree angle
-- Minimum face size: ~100px across
-- Audio should be clean speech (not music or noise)
-- Audio length should roughly match video length (within 10%)
+- 视频必须在整个过程中包含清晰可见的面部
+- 面部应为正面或最多30度角度
+- 最小面部大小：约100px宽
+- 音频应为清晰的语音（非音乐或噪音）
+- 音频长度应大致匹配视频长度（相差10%以内）
 
-## Face Padding
+## 面部边距
 
-Face padding controls how much area around the detected face is included in the sync region. Format: `[top, bottom, left, right]`.
+面部边距控制在检测到的面部周围包含多少区域用于同步区域。格式：`[上, 下, 左, 右]`。
 
-| Scenario | Padding | Reason |
-|----------|---------|--------|
-| Default talking-head shot | `[0, 10, 0, 0]` | Works for 90% of footage |
-| Chin being cut off | Increase index 1 (bottom) | Extends the mask below the chin |
-| Forehead getting cropped | Increase index 0 (top) | Extends the mask above the forehead |
-| Face off-center in frame | Adjust indices 2, 3 (left, right) | Compensates for lateral offset |
+| 场景 | 边距 | 原因 |
+|------|------|------|
+| 默认说话人头像镜头 | `[0, 10, 0, 0]` | 适用于90%的素材 |
+| 下巴被切掉 | 增加索引1（底部） | 向下延伸遮罩到下巴以下 |
+| 前额被裁剪 | 增加索引0（顶部） | 向上延伸遮罩到前额以上 |
+| 面部在画面中偏离中心 | 调整索引2, 3（左, 右） | 补偿横向偏移 |
 
-Keep left/right at 0 unless the face is noticeably off-center in the frame.
+保持左/右为0，除非面部在画面中明显偏离中心。
 
-## Resize Factor
+## 缩放因子
 
-| Value | Resolution | Quality | Speed | Use Case |
-|-------|-----------|---------|-------|----------|
-| 1 | Full | Best | Slowest | Final renders |
-| 2 | Half | Good | Faster | Drafts, iteration |
-| 3+ | Reduced | Degraded | Fastest | Quick previews only |
+| 值 | 分辨率 | 质量 | 速度 | 使用场景 |
+|----|--------|------|------|----------|
+| 1 | 全 | 最佳 | 最慢 | 最终渲染 |
+| 2 | 半 | 好 | 更快 | 草稿、迭代 |
+| 3+ | 降低 | 降级 | 最快 | 仅快速预览 |
 
-**Recommendation:** Use `resize_factor=2` during iteration, `resize_factor=1` for final output.
+**建议：** 迭代期间使用 `resize_factor=2`，最终输出使用 `resize_factor=1`。
 
-## Common Workflows
+## 常见工作流程
 
-### 1. Localization Dubbing
+### 1. 本地化配音
 
-Translate a video into another language with matched lip movements.
+将视频翻译成另一种语言并匹配嘴唇运动。
 
 ```
 transcriber(video) --> transcript
-  --> translate script to target language
---> tts_selector(translated_script, target_language_voice)
-  --> lip_sync(original_video, translated_audio)
+  --> 将脚本翻译为目标语言
+--> tts_selector(翻译后的脚本, 目标语言语音)
+  --> lip_sync(原始视频, 翻译后的音频)
 ```
 
-### 2. Audio Re-Record
+### 2. 音频重新录制
 
-Replace narration audio and re-sync the speaker's lips.
+替换旁白音频并重新同步说话者的嘴唇。
 
 ```
-new_audio_recording
-  --> lip_sync(original_video, new_audio)
-  --> face_enhance (post-sync cleanup)
+新录音
+  --> lip_sync(原始视频, 新音频)
+  --> face_enhance（同步后清理）
   --> compose
 ```
 
-### 3. Multi-Language Output
+### 3. 多语言输出
 
-Produce multiple language versions from a single source video.
+从单个源视频制作多种语言版本。
 
 ```
-source_video
-  --> lip_sync(source_video, english_audio)   --> english_output
-  --> lip_sync(source_video, spanish_audio)   --> spanish_output
-  --> lip_sync(source_video, french_audio)    --> french_output
+源视频
+  --> lip_sync(源视频, 英语音频)   --> 英语输出
+  --> lip_sync(源视频, 西班牙语音频) --> 西班牙语输出
+  --> lip_sync(源视频, 法语音频)    --> 法语输出
 ```
 
-Keep the original video as the source for each language -- do not chain lip_sync outputs.
+保持原始视频作为每种语言的源 — 不要链式调用 lip_sync 输出。
 
-## Quality Checklist
+## 质量检查清单
 
-Before moving to the compose stage, verify each lip_sync output:
+在进入合成阶段前，验证每个 lip_sync 输出：
 
-- [ ] **Lip movements match the new audio naturally** -- no desync or lag
-- [ ] **No visual artifacts around the mouth/chin area** -- no blurring, smearing, or color mismatch
-- [ ] **Face region blends seamlessly with the rest of the frame** -- no visible boundary
-- [ ] **No temporal flickering between frames** -- smooth frame-to-frame transitions
-- [ ] **Audio-visual sync is tight** -- no perceptible delay between mouth movement and sound
+- [ ] **嘴唇运动与新音频自然匹配** — 无不同步或延迟
+- [ ] **嘴部/下巴区域无可见伪影** — 无模糊、涂抹或颜色不匹配
+- [ ] **面部区域与画面其余部分无缝融合** — 无可见边界
+- [ ] **帧间无时间闪烁** — 帧到帧过渡平滑
+- [ ] **音视频同步紧凑** — 嘴唇运动与声音之间无明显延迟
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When using the `lip_sync` tool in post-production:
+在后期制作中使用 `lip_sync` 工具时：
 
-1. **Generate the replacement audio FIRST** (`tts_selector`, `elevenlabs_tts`, `openai_tts`, or `piper_tts`), then lip sync -- lip_sync requires finished audio as input
-2. **Use `wav2lip` for drafts and iteration, `wav2lip_gan` for final renders** -- save processing time during the creative loop
-3. **Apply `face_enhance` AFTER lip_sync, not before** -- lip_sync modifies the face region, so enhancing before sync is wasted work
-4. **For localization workflows, keep the original video as source** and sync each language separately -- never chain lip_sync outputs
-5. **Check that audio length matches video length before syncing** -- trim or pad audio if needed to stay within 10% of video duration
-6. **Face padding `[0, 10, 0, 0]` works for 90% of talking-head footage** -- only adjust if you see cropping artifacts
-7. **For close-up shots, always use `wav2lip_gan`** -- the quality difference is visible at this framing
+1. **先生成替换音频**（`tts_selector`、`elevenlabs_tts`、`openai_tts` 或 `piper_tts`），再进行唇形同步 — lip_sync 需要已完成的音频作为输入
+2. **草稿和迭代使用 `wav2lip`，最终渲染使用 `wav2lip_gan`** — 在创作循环期间节省处理时间
+3. **在 lip_sync 之后应用 `face_enhance`，而不是之前** — lip_sync 修改面部区域，因此在同步前增强是无效工作
+4. **对于本地化工作流程，保持原始视频作为源**并分别同步每种语言 — 绝不链式调用 lip_sync 输出
+5. **在同步前检查音频长度是否匹配视频长度** — 如有必要修剪或填充音频以保持在视频时长的10%以内
+6. **面部边距 `[0, 10, 0, 0]` 适用于90%的说话人头像素材** — 只有看到裁剪伪影时才调整
+7. **特写镜头始终使用 `wav2lip_gan`** — 这种构图下质量差异可见

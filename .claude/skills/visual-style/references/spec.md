@@ -1,123 +1,123 @@
-# visual-style.md Format Specification
+# visual-style.md 格式规范
 
-**Version:** 1.0
-**Status:** Draft
+**版本：** 1.0
+**状态：** 草案
 
-## Overview
+## 概述
 
-A `visual-style.md` file is a Markdown document with YAML frontmatter that defines a complete visual design system. The format is designed to be:
+`visual-style.md` 文件是一个带有 YAML 前置元数据的 Markdown 文档，用于定义完整的视觉设计系统。该格式的设计目标：
 
-- **Human-readable** — Understandable in any text editor
-- **AI-consumable** — Every field directly usable by AI models
-- **Portable** — Works across any tool that reads the format
+- **人类可读** — 在任何文本编辑器中都能理解
+- **AI 可消费** — 每个字段都可以直接被 AI 模型使用
+- **可移植** — 可在任何支持该格式的工具之间通用
 
-## File Structure
+## 文件结构
 
 ```
 ---
-[YAML frontmatter]
+[YAML 前置元数据]
 ---
 
-[Markdown body sections]
+[Markdown 正文部分]
 ```
 
-## Required Fields
+## 必填字段
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `name` | string | Display name for the style |
-| `version` | string | Spec version (currently `1.0`) |
-| `style_prompt_short` | string | 1-2 sentence elevator pitch |
-| `style_prompt_full` | string | Full natural language generation prompt — **the most important field** |
-| `colors.primary` | array | At least 2 colors, each with `name`, `hex`, `role` |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `name` | string | 风格的显示名称 |
+| `version` | string | 规范版本（当前为 `1.0`） |
+| `style_prompt_short` | string | 1-2 句电梯游说 |
+| `style_prompt_full` | string | 完整的自然语言生成提示 — **最重要的字段** |
+| `colors.primary` | array | 至少 2 种颜色，每种包含 `name`、`hex`、`role` |
 
-## Optional Fields
+## 可选字段
 
-### Metadata
+### 元数据
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `tags` | array | Categorical tags (e.g., "iconic design", "retro tech") |
-| `author` | string | Credit for the style creator |
-| `source_url` | string | URL this style was extracted from |
-| `created` | string | ISO date (YYYY-MM-DD) |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `tags` | array | 分类标签（例如 "iconic design"、"retro tech"） |
+| `author` | string | 风格作者署名 |
+| `source_url` | string | 提取此风格的来源 URL |
+| `created` | string | ISO 日期 (YYYY-MM-DD) |
 
-### Colors
+### 颜色
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `colors.accent` | array | Accent colors with name/hex/role |
-| `colors.neutral` | array | Neutral colors with name/hex/role |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `colors.accent` | array | 强调色，含 name/hex/role |
+| `colors.neutral` | array | 中性色，含 name/hex/role |
 
-**Color object schema:**
+**颜色对象结构：**
 ```yaml
-- name: "Descriptive Name"
+- name: "描述性名称"
   hex: "#RRGGBB"
-  role: "how this color is used in the system"
+  role: "此颜色在系统中的使用方式"
 ```
 
-### Typography
+### 排版
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `typography.display` | object | Display/heading typography |
-| `typography.body` | object | Body text typography |
-| `typography.caption` | object | Caption/label typography |
-| `typography.rules` | array | Typography rules and constraints |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `typography.display` | object | 展示/标题排版 |
+| `typography.body` | object | 正文排版 |
+| `typography.caption` | object | 说明文字/标签排版 |
+| `typography.rules` | array | 排版规则和约束 |
 
-**Typography object schema:**
+**排版对象结构：**
 ```yaml
 display:
-  family: "Font Family Name"
+  family: "字体族名称"
   weight: "bold"
   style: "uppercase, tight tracking"
 ```
 
-### Layout
+### 布局
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `layout.grid` | string | Grid system description |
-| `layout.alignment` | string | Alignment approach |
-| `layout.aspect_ratio` | string | Default aspect ratio (e.g., "16:9") |
-| `layout.notes` | array | Additional layout guidelines |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `layout.grid` | string | 网格系统描述 |
+| `layout.alignment` | string | 对齐方式 |
+| `layout.aspect_ratio` | string | 默认宽高比（如 "16:9"） |
+| `layout.notes` | array | 额外布局指南 |
 
-### Motion
+### 动效
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `motion.transitions` | array | Transition types used |
-| `motion.animation_style` | string | Overall animation approach |
-| `motion.pacing` | string | Timing/rhythm description |
-| `motion.audio_cues` | array | Sound design notes |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `motion.transitions` | array | 使用的过渡类型 |
+| `motion.animation_style` | string | 整体动画方式 |
+| `motion.pacing` | string | 节奏/韵律描述 |
+| `motion.audio_cues` | array | 声音设计说明 |
 
-### Mood
+### 氛围
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `mood.keywords` | array | Mood/feeling keywords |
-| `mood.era` | string | Time period reference |
-| `mood.cultural_reference` | string | Cultural/historical context |
-| `mood.avoid` | array | **Anti-patterns** — things to explicitly avoid |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `mood.keywords` | array | 氛围/感受关键词 |
+| `mood.era` | string | 时代参考 |
+| `mood.cultural_reference` | string | 文化/历史背景 |
+| `mood.avoid` | array | **反模式** — 需明确避免的内容 |
 
-### Assets
+### 资源
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `assets.reference_images` | array | URLs to reference images |
-| `assets.gsep_elements` | array | URLs to overlay/graphic elements |
-| `assets.html_snippets` | array | URLs to HTML component examples |
-| `assets.color_palette_image` | object | URL to color palette visualization |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `assets.reference_images` | array | 参考图片 URL |
+| `assets.gsep_elements` | array | 叠加/图形元素 URL |
+| `assets.html_snippets` | array | HTML 组件示例 URL |
+| `assets.color_palette_image` | object | 调色板可视化图片 URL |
 
-**Important:** Assets are always URLs, never embedded binary data.
+**重要提示：** 资源始终使用 URL，绝不嵌入二进制数据。
 
-### Extensions
+### 扩展
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `x_*` | object | Namespaced tool-specific extensions |
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `x_*` | object | 命名空间化的工具特定扩展 |
 
-Example:
+示例：
 ```yaml
 x_heygen:
   video_id: "abc123"
@@ -127,49 +127,49 @@ x_figma:
   library_id: "xyz789"
 ```
 
-## Markdown Body Sections
+## Markdown 正文部分
 
-After the YAML frontmatter, include these optional Markdown sections:
+在 YAML 前置元数据之后，可包含以下可选的 Markdown 部分：
 
-### `## Connectors`
+### `## Connectors`（连接器）
 
-Tool-specific translation notes:
+工具特定的转换说明：
 
 ```markdown
 ## Connectors
 
 ### HeyGen Video Agent
-Feed `style_prompt_full` as the visual style block. Use `motion.transitions`
-for scene cuts. Orientation: landscape.
+将 `style_prompt_full` 作为视觉风格块输入。使用 `motion.transitions`
+进行场景切换。方向：横屏。
 
 ### HTML Slides
-Map colors to CSS variables. Use `typography.display` for h1-h3.
+将颜色映射到 CSS 变量。使用 `typography.display` 为 h1-h3 设置样式。
 ```
 
-### `## Design Principles`
+### `## Design Principles`（设计原则）
 
-Freeform design philosophy:
+自由形式的设计理念：
 
 ```markdown
 ## Design Principles
 
-Typography drives hierarchy. Color is used sparingly and intentionally.
-Every element snaps to a baseline grid. White space is a feature.
+排版驱动层级。颜色使用克制且有目的性。
+每个元素都对齐基线网格。留白是一种特色。
 ```
 
-### `## Extraction Notes`
+### `## Extraction Notes`（提取说明）
 
-Source documentation (when extracted):
+来源文档（提取时使用）：
 
 ```markdown
 ## Extraction Notes
 
-Extracted from https://example.com on 2026-03-12.
-Primary colors sampled from hero section.
-Typography identified via browser dev tools.
+提取自 https://example.com，日期 2026-03-12。
+主色采样自主视觉区域。
+排版通过浏览器开发者工具识别。
 ```
 
-## Complete Example
+## 完整示例
 
 ```yaml
 ---
@@ -288,37 +288,37 @@ Map to CSS: `--color-bg: #000`, `--color-text: #FFF`, `--color-accent: #0066FF`.
 Use Helvetica via system fonts or Google Fonts equivalent.
 ```
 
-## Validation
+## 验证
 
-A valid `visual-style.md` must have:
+一个有效的 `visual-style.md` 必须满足：
 
-1. Valid YAML frontmatter between `---` delimiters
-2. All required fields present
-3. `colors.primary` with at least 2 color objects
-4. Each color object with `name`, `hex`, and `role`
-5. `version` set to `1.0`
+1. 在 `---` 分隔符之间有有效的 YAML 前置元数据
+2. 包含所有必填字段
+3. `colors.primary` 至少包含 2 个颜色对象
+4. 每个颜色对象包含 `name`、`hex` 和 `role`
+5. `version` 设置为 `1.0`
 
-## Versioning
+## 版本管理
 
-The `version` field refers to the spec version, not the style version. When the spec changes:
+`version` 字段指的是规范版本，而非风格版本。当规范发生变化时：
 
-- **Minor changes** (new optional fields): Version stays `1.0`
-- **Breaking changes** (required field changes): Version increments to `2.0`
+- **小版本变更**（新增可选字段）：版本保持 `1.0`
+- **破坏性变更**（必填字段变更）：版本升至 `2.0`
 
-## Design Decisions
+## 设计决策
 
-### Why `style_prompt_full` is required
+### 为什么 `style_prompt_full` 是必填项
 
-Many AI tools only accept a text prompt. By requiring a complete, natural language description of the style, we ensure every `visual-style.md` file is immediately usable by any tool — even ones that don't parse the structured fields.
+许多 AI 工具只接受文本提示。通过要求提供完整的自然语言风格描述，我们确保每个 `visual-style.md` 文件可以立即被任何工具使用——即使是那些不解析结构化字段的工具。
 
-### Why no embedded binary data
+### 为什么不嵌入二进制数据
 
-URLs keep files small, versionable, and portable. Binary assets should be hosted externally and referenced by URL.
+URL 使文件保持小巧、可版本化且可移植。二进制资源应托管在外部并通过 URL 引用。
 
-### Why `x_*` namespacing
+### 为什么用 `x_*` 命名空间
 
-Different tools have different capabilities. The `x_` prefix allows tool-specific configuration without polluting the core schema. Examples: `x_heygen`, `x_figma`, `x_paper`.
+不同工具有不同的能力。`x_` 前缀允许工具特定配置而不污染核心模式。示例：`x_heygen`、`x_figma`、`x_paper`。
 
-### Why `mood.avoid`
+### 为什么有 `mood.avoid`
 
-Negative constraints are as important as positive ones. Telling an AI what NOT to do is often more effective than telling it what to do.
+负面约束与正面约束同等重要。告诉 AI 什么**不要**做往往比告诉它做什么更有效。

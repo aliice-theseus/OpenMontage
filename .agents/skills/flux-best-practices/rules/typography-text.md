@@ -1,241 +1,232 @@
 ---
 name: typography-text
-description: Prompting for text rendering and typography in FLUX
+description: FLUX 中文本渲染和排版的提示词
 ---
 
-# Typography and Text Prompting
+# 排版与文本提示词
 
-Guide to rendering text in FLUX images. Use FLUX.2 [flex] for best typography results.
+在 FLUX 图像中渲染文本的指南。使用 FLUX.2 [flex] 获取最佳排版效果。
 
-## Basic Syntax
+## 基本语法
 
-Always quote the exact text you want rendered:
-
-```
-A coffee shop chalkboard sign displaying "TODAY'S SPECIAL" in decorative script
-```
-
-## Core Rules
-
-### 1. Use Quotation Marks
+始终引用你想要渲染的精确文本：
 
 ```
-Correct: A poster with "HELLO WORLD" in bold letters
-Wrong: A poster with HELLO WORLD in bold letters
+咖啡店黑板标志以装饰性字体显示"TODAY'S SPECIAL"
 ```
 
-### 2. Specify Font Style
+## 核心规则
+
+### 1. 使用引号
 
 ```
-"ADVENTURE" in bold sans-serif typography
-"Welcome" in elegant cursive script
-"CHAPTER ONE" in classic serif typeface
-"CODE" in monospace terminal font
-"SALE!" in decorative display lettering
+正确：带有粗体"HELLO WORLD"的海报
+错误：带有粗体 HELLO WORLD 的海报
 ```
 
-### 3. Describe Size Hierarchy
+### 2. 指定字体风格
 
 ```
-Large headline "BREAKING NEWS" above smaller subtext "Details inside"
+"ADVENTURE" 使用粗体无衬线字体
+"Welcome" 使用优雅草书字体
+"CHAPTER ONE" 使用经典衬线字体
+"CODE" 使用等宽终端字体
+"SALE!" 使用装饰性展示字体
 ```
 
-### 4. Indicate Placement
+### 3. 描述尺寸层级
 
 ```
-"OPEN" sign centered in storefront window
-"EXIT" text positioned above doorway
-"Page 1" in bottom right corner
+大字标题"BREAKING NEWS"在上方，较小的副文本"Details inside"在下方
 ```
 
-### 5. Front-Load Text
-
-Place text descriptions early in the prompt for better accuracy:
+### 4. 指示位置
 
 ```
-Good: A sign reading "FRESH BREAD" in a bakery window...
-Less Good: A bakery window with a sign that says "FRESH BREAD"...
+"OPEN" 招牌位于店面窗户中央
+"EXIT" 文字位于门上方
+"Page 1" 在右下角
 ```
 
-## Font Style Categories
+### 5. 前置文字描述
 
-### Sans-Serif (Modern/Clean)
-```
-"MINIMAL" in clean geometric sans-serif, Swiss modernist style
-"TECH SUMMIT" in bold condensed grotesque typeface
-"future" in thin uppercase sans-serif, contemporary design
-```
+将文字描述放在提示词开头以获得更好的准确性：
 
-### Serif (Classic/Elegant)
 ```
-"The New Yorker" in traditional serif typeface, editorial masthead
-"LUXURY" in high-contrast Didone serif with thin/thick strokes
-"Wisdom" in old-style serif with subtle bracketed serifs
+好：面包店窗户上写着"FRESH BREAD"的招牌...
+较差：面包店的窗户上有一个写着"FRESH BREAD"的招牌...
 ```
 
-### Script/Cursive (Decorative)
+## 字体风格类别
+
+### 无衬线（现代/干净）
 ```
-"With Love" in flowing calligraphic script with flourishes
-"Signature" in connected brush script, casual elegance
-"Romance" in formal copperplate script, wedding invitation style
+"MINIMAL" 使用干净几何无衬线，瑞士现代主义风格
+"TECH SUMMIT" 使用粗体浓缩 grotesque 字体
+"future" 使用细体大写无衬线，当代设计
 ```
 
-### Display/Decorative
+### 衬线（经典/优雅）
 ```
-"ROCK CONCERT" in distressed vintage concert poster lettering
-"CIRCUS" in ornate Victorian display type with decorative elements
-"RETRO" in 1970s rounded bubble letters
-```
-
-### Handwritten
-```
-"Note to self" in casual handwritten style, slightly imperfect
-"Thanks!" in quick marker pen handwriting
-"ideas" in sketchy pencil handwriting
+"The New Yorker" 使用传统衬线字体，编辑刊头
+"LUXURY" 使用高对比度 Didone 衬线，粗细笔划
+"Wisdom" 使用旧风格衬线，微妙的托架衬线
 ```
 
-### Monospace
+### 手写/草书（装饰性）
 ```
-"CODE_COMPLETE" in terminal monospace, developer aesthetic
-"SYSTEM" in typewriter monospace, vintage tech
-"DEBUG" in LCD-style digital monospace
-```
-
-## Text Effects
-
-### Neon Signs
-```
-Glowing neon sign spelling "OPEN 24/7" in pink neon tubes with
-blue outline, slight glow and reflection, night scene
+"With Love" 使用流畅的书法字体，带花饰
+"Signature" 使用连笔刷字体，休闲优雅
+"Romance" 使用正式铜版草书，婚礼请柬风格
 ```
 
-### Metallic/3D
+### 展示/装饰
 ```
-"GOLD" in three-dimensional metallic gold letters with realistic
-reflections and subtle shadows, luxury aesthetic
-```
-
-### Embossed/Debossed
-```
-"PREMIUM" embossed into leather surface, subtle shadows showing
-the raised letterforms
+"ROCK CONCERT" 使用仿旧复古音乐会海报字体
+"CIRCUS" 使用华丽的维多利亚装饰字体
+"RETRO" 使用 1970 年代圆润气泡字母
 ```
 
-### Outlined
+### 手写
 ```
-"MODERN" in outline-only letters, no fill, thin white stroke
-on dark background
-```
-
-### Gradient Text
-```
-"SUMMER" with gradient fill from #FF6B6B (coral) at top to
-#4ECDC4 (teal) at bottom
+"Note to self" 使用休闲手写风格，略显不完美
+"Thanks!" 使用快速马克笔笔迹
+"ideas" 使用草稿铅笔字迹
 ```
 
-## Multi-Text Compositions
-
-### Poster Design
+### 等宽
 ```
-Event poster with "SUMMER FEST 2025" as large headline in bold
-condensed sans-serif at top, "JULY 15-17" as medium subheading
-in regular weight, "Central Park, NYC" as small body text at
-bottom, all in white text on #FF6B35 (sunset orange) background
+"CODE_COMPLETE" 使用终端等宽字体，开发者美学
+"SYSTEM" 使用打字机等宽字体，复古科技
+"DEBUG" 使用 LCD 风格数字等宽字体
 ```
 
-### Book Cover
+## 文字效果
+
+### 霓虹灯
 ```
-Book cover design: "THE GREAT GATSBY" in elegant art deco gold
-lettering centered in upper third, author name "F. SCOTT FITZGERALD"
-in smaller gold caps below, #1A1A2E (midnight blue) background
-with geometric gold accents
+发光的霓虹灯拼写"OPEN 24/7"，粉色霓虹管配蓝色轮廓，
+轻微发光和反光，夜晚场景
 ```
 
-### Magazine Cover
+### 金属/3D
 ```
-Fashion magazine cover with "VOGUE" in classic serif masthead at top,
-cover line "SPRING COLLECTION" in bold sans-serif, "The New Rules of Style"
-in lighter weight italic, all in white against dramatic portrait
+"GOLD" 使用三维金属金色字母，逼真的反光和微妙阴影，奢华美学
 ```
 
-### Signage
+### 浮雕/压印
 ```
-Vintage diner sign: "MEL'S DINER" in red neon script lettering,
-"OPEN" below in separate green neon block letters, chrome border,
-1950s Americana aesthetic
+"PREMIUM" 浮雕在皮革表面，微妙阴影显示凸起的字体形状
 ```
 
-### Business Card
+### 轮廓
 ```
-Minimalist business card with "JOHN SMITH" in medium weight sans-serif,
-"Creative Director" in lighter weight below, contact details in small
-type at bottom, #2C3E50 (dark blue) text on white background
+"MODERN" 仅轮廓字母，无填充，深色背景上细白色描边
 ```
 
-## Text Placement Strategies
-
-### Centered Composition
+### 渐变文字
 ```
-Centered text layout: "WELCOME" in large caps at center,
-perfectly balanced with equal margins
+"SUMMER" 渐变填充，从顶部 #FF6B6B（珊瑚）到底部 #4ECDC4（青色）
 ```
 
-### Left-Aligned
-```
-Left-aligned text block: "Company Name" as header,
-"Tagline goes here" below, flush left alignment
-```
+## 多文本组合
 
-### Text on Path
+### 海报设计
 ```
-"GOING IN CIRCLES" text following a circular path around
-the center of the design
+活动海报：顶部大字标题"SUMMER FEST 2025"使用粗体浓缩无衬线，
+中等副标题"JULY 15-17"常规字重，底部小号正文"Central Park, NYC"，
+所有文字为白色，背景 #FF6B35（日落橙）
 ```
 
-### Text Overlay
+### 书籍封面
 ```
-"ADVENTURE AWAITS" in bold white text overlaid on landscape
-photograph, positioned in lower third with slight shadow for readability
-```
-
-## Technical Considerations for [flex]
-
-### Steps Parameter
-- Higher steps (30-50) = better text quality
-- Lower steps (10-20) = faster, lower quality
-
-### Guidance Parameter
-- Higher guidance (6-10) = stricter prompt following
-- Lower guidance (1.5-4) = more creative interpretation
-
-### Recommended Settings
-```
-For clean typography: steps=50, guidance=7
-For artistic text: steps=30, guidance=4
+书籍封面设计："THE GREAT GATSBY" 优雅装饰艺术金色字体居中于上三分之一，
+下方作者名"F. SCOTT FITZGERALD"较小金色大写，
+#1A1A2E（午夜蓝）背景配几何金色装饰
 ```
 
-## Troubleshooting
-
-### Misspelled Words
-- Keep text short (1-4 words work best)
-- Use common words when possible
-- Repeat the exact text in the prompt
-
-### Illegible Text
-- Specify larger text size
-- Use simpler fonts (sans-serif)
-- Ensure high contrast with background
-- Use [flex] model
-
-### Wrong Font Style
-Be more specific:
+### 杂志封面
 ```
-Instead of: "text in a nice font"
-Use: "text in bold geometric sans-serif similar to Futura"
+时尚杂志封面：顶部"VOGUE"经典衬线刊头，
+封面行"SPRING COLLECTION"粗体无衬线，
+"The New Rules of Style"较细斜体，全部白色配戏剧性肖像
 ```
 
-### Text Not Appearing
-- Front-load text description in prompt
-- Put text in quotes
-- Specify exact placement
-- Reduce other prompt complexity
+### 标牌
+```
+复古餐厅招牌："MEL'S DINER" 红色霓虹草书字体，
+下方"OPEN"单独绿色霓虹块状字母，镀铬边框，1950 年代美式美学
+```
+
+### 名片
+```
+极简名片："JOHN SMITH" 中等字重无衬线，
+"Creative Director" 较轻字重在下方，底部小型联系方式，
+#2C3E50（深蓝）文字配白色背景
+```
+
+## 文字位置策略
+
+### 居中构图
+```
+居中文字布局："WELCOME" 大型大写字母在中央，完美平衡，边距均匀
+```
+
+### 左对齐
+```
+左对齐文字块："Company Name" 作为标题，
+"Tagline goes here" 在下方，左对齐
+```
+
+### 路径文字
+```
+"GOING IN CIRCLES" 文字沿圆形路径围绕设计中心排列
+```
+
+### 文字叠加
+```
+"ADVENTURE AWAITS" 粗体白色文字叠加在风景照片上，
+位于下三分之一处，轻微阴影以提高可读性
+```
+
+## [flex] 的技术考虑
+
+### 步数参数
+- 步数较高（30-50）= 更好的文字质量
+- 步数较低（10-20）= 更快，质量较低
+
+### 引导力度参数
+- 引导力度较高（6-10）= 更严格遵循提示词
+- 引导力度较低（1.5-4）= 更多创意解释
+
+### 推荐设置
+```
+干净排版：steps=50, guidance=7
+艺术文字：steps=30, guidance=4
+```
+
+## 故障排除
+
+### 拼写错误
+- 保持文本简短（1-4 个词效果最佳）
+- 尽可能使用常见词汇
+- 在提示词中重复确切的文字
+
+### 文字难以辨认
+- 指定更大的文字尺寸
+- 使用更简单的字体（无衬线）
+- 确保与背景高对比度
+- 使用 [flex] 模型
+
+### 字体风格错误
+要更具体：
+```
+不要说："text in a nice font"
+要说："text in bold geometric sans-serif similar to Futura"
+```
+
+### 文字未出现
+- 在提示词中前置文字描述
+- 将文字放在引号中
+- 指定精确位置
+- 减少其他提示词复杂度

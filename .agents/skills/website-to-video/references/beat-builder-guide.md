@@ -1,51 +1,51 @@
-# Beat Builder Guide
+# 节拍构建器指南
 
-You are building ONE beat of a multi-beat video composition. This file tells you what to read, how to build, how to verify, and how to report back.
+你在构建多节拍视频作品的一个节拍。此文件告诉你要阅读什么、如何构建、如何验证以及如何报告。
 
-## Step 1: Read and understand
+## 步骤 1：阅读和理解
 
-**Required (every beat):**
+**必需（每个节拍）：**
 
-1. **Load the `hyperframes` skill** — composition rules, data attributes, timeline contract, deterministic rendering. Read the whole skill.
-2. **[capabilities.md](capabilities.md)** — full inventory of HyperFrames capabilities (24 sections). Read the Table of Contents first, then deep-dive sections your beat needs.
-3. **The beat spec** the main agent gave you — concept, choreography, assets, brand values, timing.
+1. **加载 `hyperframes` 技能**——作品规则、数据属性、时间线约定、确定性渲染。阅读整个技能。
+2. **[capabilities.md](capabilities.md)**——HyperFrames 能力的完整清单（24 个章节）。首先阅读目录，然后深入你的节拍需要的章节。
+3. **主代理给你的节拍规格**——概念、编排、资源、品牌值、时序。
 
-**Read based on what your beat needs (pick relevant ones):**
+**根据你的节拍需要阅读（选择相关的）：**
 
-| Resource                                                                              | What it covers                                                                                                                | Read when                                         |
+| 资源 | 内容 | 何时阅读 |
 | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [techniques.md](../../hyperframes/references/techniques.md)                           | 13 primitive animation techniques: SVG path drawing, Canvas 2D, CSS 3D, kinetic type, variable fonts, MotionPath, etc.        | Beat uses any of these techniques                 |
-| [text-effects.md](../../hyperframes/references/text-effects.md)                       | 24 named text animations from `pixel-point/animate-text` (separate skill — load via `/animate-text` for specs)                | Beat has text animation                           |
-| [html-in-canvas-patterns.md](../../hyperframes/references/html-in-canvas-patterns.md) | HTML-in-Canvas: iPhone/MacBook mockups, liquid glass, magnetic, portal, shatter, text cursor                                  | Beat uses device mockups or WebGL effects on HTML |
-| [transitions.md](../../hyperframes/references/transitions.md)                         | Shader transition API, HyperShader.init() pattern, all 14 WebGL shaders                                                       | Beat has shader transitions                       |
-| [transitions/](../../hyperframes/references/transitions/)                             | 14 CSS transition category files: push, scale, dissolve, blur, 3D flip, light leak, distortion, grid, mechanical, destruction | Beat uses CSS transitions                         |
-| [css-patterns.md](../../hyperframes/references/css-patterns.md)                       | Text markers: highlight sweeps, hand-drawn circles, burst lines, scribble, sketchout                                          | Beat uses text emphasis/markers                   |
-| [audio-reactive.md](../../hyperframes/references/audio-reactive.md)                   | Bass→scale, mid→shape, treble→glow mappings                                                                                   | Beat reacts to music/audio                        |
-| [captions.md](../../hyperframes/references/captions.md)                               | Per-word karaoke, tone-adaptive styling, positioning                                                                          | Beat includes captions                            |
-| [typography.md](../../hyperframes/references/typography.md)                           | Font hierarchy, variable fonts, responsive type scaling                                                                       | Beat has complex typography                       |
-| [motion-principles.md](../../hyperframes/references/motion-principles.md)             | Velocity matching, easing philosophy, motion continuity                                                                       | Beat needs polished motion design                 |
-| [dynamic-techniques.md](../../hyperframes/references/dynamic-techniques.md)           | Counter animations, data-driven visuals, dynamic content                                                                      | Beat has counters or data visualization           |
-| [video-composition.md](../../hyperframes/references/video-composition.md)             | Frame composition, color presence, scale, density rules                                                                       | General composition quality                       |
+| [techniques.md](../../hyperframes/references/techniques.md) | 13 种原始动画技巧：SVG 路径绘制、Canvas 2D、CSS 3D、动态排版、可变字体、MotionPath 等。 | 节拍使用其中任何技巧 |
+| [text-effects.md](../../hyperframes/references/text-effects.md) | 来自 `pixel-point/animate-text` 的 24 个命名的文本动画（单独技能——通过 `/animate-text` 加载规格） | 节拍有文本动画 |
+| [html-in-canvas-patterns.md](../../hyperframes/references/html-in-canvas-patterns.md) | HTML-in-Canvas：iPhone/MacBook 模型、液态玻璃、磁性、传送门、粉碎、文本光标 | 节拍使用设备模型或 HTML 上的 WebGL 效果 |
+| [transitions.md](../../hyperframes/references/transitions.md) | 着色器过渡 API、HyperShader.init() 模式、所有 14 个 WebGL 着色器 | 节拍有着色器过渡 |
+| [transitions/](../../hyperframes/references/transitions/) | 14 个 CSS 过渡分类文件：push、scale、dissolve、blur、3D flip、light leak、distortion、grid、mechanical、destruction | 节拍使用 CSS 过渡 |
+| [css-patterns.md](../../hyperframes/references/css-patterns.md) | 文本标记：高亮扫光、手绘圆形、爆发线、涂鸦、草图轮廓 | 节拍使用文本强调/标记 |
+| [audio-reactive.md](../../hyperframes/references/audio-reactive.md) | 贝斯→缩放、中频→形状、高音→光晕映射 | 节拍对音乐/音频有反应 |
+| [captions.md](../../hyperframes/references/captions.md) | 逐词卡拉 OK、语调自适应样式、定位 | 节拍包括字幕 |
+| [typography.md](../../hyperframes/references/typography.md) | 字体层级、可变字体、响应式文本缩放 | 节拍有复杂的排版 |
+| [motion-principles.md](../../hyperframes/references/motion-principles.md) | 速度匹配、缓动理念、动效连续性 | 节拍需要精致的动效设计 |
+| [dynamic-techniques.md](../../hyperframes/references/dynamic-techniques.md) | 计数器动画、数据驱动视觉、动态内容 | 节拍有计数器或数据可视化 |
+| [video-composition.md](../../hyperframes/references/video-composition.md) | 画面构图、颜色存在感、比例、密度规则 | 一般作品质量 |
 
-**Other skills you can load if needed:**
+**如果需要，你可以加载的其他技能：**
 
-- `/gsap` or `/gsap-core`, `/gsap-timeline`, `/gsap-plugins` — deeper GSAP reference
-- `/animate-text` — curated text animation catalog with exact JSON specs
-- `/hyperframes-registry` — if you need to install and wire registry blocks
-- `/hyperframes-contrast` — audit color contrast (WCAG)
-- `/lottie`, `/three`, `/waapi`, `/animejs`, `/css-animations` — if beat uses these engines
+- `/gsap` 或 `/gsap-core`、`/gsap-timeline`、`/gsap-plugins`——更深入的 GSAP 参考
+- `/animate-text`——精选的文本动画目录，带有精确 JSON 规格
+- `/hyperframes-registry`——如果你需要安装和连接注册表块
+- `/hyperframes-contrast`——审计颜色对比度（WCAG）
+- `/lottie`、`/three`、`/waapi`、`/animejs`、`/css-animations`——如果节拍使用这些引擎
 
-**Always open the captured assets folder before designing the beat:**
+**在设计节拍之前，始终打开捕获的资源文件夹：**
 
-- `capture/assets/svgs/` — brand logos, icons, decorative marks. SVGs are infinitely scalable and stroke-animatable (path drawing, dash offset). A logo SVG drawing itself onto frame can carry an entire beat.
-- `capture/assets/` — hero illustrations, screenshots, product art, gradients, photography. These are first-class beat subjects, not background decoration. A breathing hero illustration with a single line of kinetic type is a complete shot.
-- VIEW every image before placing text on it. Check safe zones, contrast, actual content, where the focal point sits.
+- `capture/assets/svgs/`——品牌 Logo、图标、装饰标记。SVG 是无限可缩放且可描边动画的（路径绘制、虚线偏移）。Logo SVG 在帧上自行绘制可以承载整个节拍。
+- `capture/assets/`——英雄插画、截图、产品艺术、渐变、摄影。这些是一级节拍主题，不是背景装饰。一个呼吸的英雄插画配上一行动态文字就是一个完整的镜头。
+- **在放置文本之前查看每张图片。** 检查安全区域、对比度、实际内容、焦点在哪里。
 
-**If your beat spec names a captured asset, USE it.** Don't substitute a CSS recreation. The user captured these from the real brand site precisely so the video carries the brand's actual visual identity.
+**如果你的节拍规格命名了一个捕获的资源，使用它。** 不要用 CSS 重建替代它。用户从真实的品牌网站捕获这些，正是为了让视频承载品牌的实际视觉标识。
 
-## Step 2: Build the composition
+## 步骤 2：构建作品
 
-Save to the path the main agent specified (usually `compositions/beat-N-name.html`).
+保存到主代理指定的路径（通常是 `compositions/beat-N-name.html`）。
 
 ```html
 <template>
@@ -55,7 +55,7 @@ Save to the path the main agent specified (usually `compositions/beat-N-name.htm
       padding: 0;
       box-sizing: border-box;
     }
-    /* your styles */
+    /* 你的样式 */
   </style>
 
   <div
@@ -65,16 +65,16 @@ Save to the path the main agent specified (usually `compositions/beat-N-name.htm
     data-height="1080"
     style="width:1920px; height:1080px; position:relative; overflow:hidden; background:#YOUR_BG;"
   >
-    <!-- your elements -->
+    <!-- 你的元素 -->
   </div>
 
   <script>
     (function () {
-      var BEAT = 5.5; // MUST match data-duration on the host div in index.html
+      var BEAT = 5.5; // 必须与 index.html 中宿主 div 上的 data-duration 匹配
       window.__timelines = window.__timelines || {};
       var tl = gsap.timeline({ paused: true });
 
-      // your GSAP animations
+      // 你的 GSAP 动画
 
       window.__timelines["beat-N-name"] = tl;
     })();
@@ -82,182 +82,182 @@ Save to the path the main agent specified (usually `compositions/beat-N-name.htm
 </template>
 ```
 
-**Critical:** `data-composition-id`, `data-width`, `data-height` on the root div MUST match the host div in index.html.
+**关键：** 根 div 上的 `data-composition-id`、`data-width`、`data-height` 必须与 index.html 中的宿主 div 匹配。
 
-## Step 3: Lint
+## 步骤 3：Lint
 
 ```bash
 npx hyperframes lint .
 ```
 
-Fix ALL errors. Zero errors required.
+修复所有错误。要求零错误。
 
-## Step 4: Snapshot and verify
+## 步骤 4：快照和验证
 
 ```bash
 npx hyperframes snapshot . --frames 3
 ```
 
-**READ the contact sheet** (`snapshots/contact-sheet.jpg`). For each frame:
+**阅读联系表**（`snapshots/contact-sheet.jpg`）。对于每个帧：
 
-- Is content visible? (not black, blank, or loading)
-- Is text readable, properly positioned, correct font/color?
-- Are assets at the right size and position?
-- Does the animation state match the beat spec at this timestamp?
+- 内容是否可见？（不是黑色、空白或加载中）
+- 文本是否可读、位置正确、字体/颜色正确？
+- 资源是否在正确的大小和位置？
+- 动画状态是否与此时间戳的节拍规格匹配？
 
-**If anything is wrong:** fix, re-snapshot, re-check. You are done ONLY when every frame matches the spec.
+**如果有任何不对：** 修复，重新快照，重新检查。只有在每个帧都与规格匹配时你才算完成。
 
-## Step 5: Report back honestly
+## 步骤 5：诚实报告
 
-After lint passes, snapshots are taken, and you've fixed every issue you saw — report back to the main agent with concrete observations. Not "0 errors, looks good." That phrasing is what got prior videos shipped with mismatched brand colors, missing logos, and headlines too small to read.
+在 lint 通过、快照已拍摄并且你已修复所有看到的问题后——向主代理报告具体的观察结果。不是「0 错误，看起来不错。」那个措辞正是之前视频带着不匹配的品牌颜色、缺失的 Logo 和太小无法阅读的标题交付的原因。
 
-**The main agent will OPEN your composition file and read it top-to-bottom** to cross-check against DESIGN.md and STORYBOARD.md — does the brand bg/accent hex actually appear in your CSS, are the captured assets the storyboard called for actually referenced, is the headline ≥80px, does the GSAP timeline cover the full beat duration. You cannot pass that check by claiming things you didn't do; the file is on disk, the truth is in the file.
+**主代理将打开你的作品文件并自上而下阅读**以对照 DESIGN.md 和 STORYBOARD.md 进行交叉检查——品牌背景/强调十六进制是否实际出现在你的 CSS 中、故事板要求的捕获资源是否实际被引用、标题是否 ≥80px、GSAP 时间线是否覆盖完整的节拍时长。你不能通过声称你没有做的事情来通过那个检查；文件在磁盘上，真相在文件中。
 
-So in your report, name the hex codes you used, the captured asset paths you placed, the headline `font-size`, and the GSAP timeline's last `tl.fromTo(...)` timestamp. Brief, concrete, true. If anything diverges from DESIGN.md or the storyboard, say so explicitly — the main agent can decide whether to accept the divergence or send you back to fix it. Surprises caught at this hand-off cost minutes; surprises caught at Step 6 cost iterations.
+所以在你的报告中，命名你使用的十六进制代码、你放置的捕获资源路径、标题 `font-size` 以及 GSAP 时间线的最后一个 `tl.fromTo(...)` 时间戳。简短、具体、真实。如果有任何偏离 DESIGN.md 或故事板的地方，明确说出来——主代理可以决定是否接受偏离或让你回去修复。在这次交接中发现的意外花费数分钟；在步骤 6 发现的意外花费迭代。
 
-### FLAG protocol — required phrasing for non-blocking issues
+### FLAG 协议——非阻塞问题的必需措辞
 
-When you find any of these, surface them as **FLAGS** in your report, not as conditional suggestions:
+当你发现以下任何情况时，在报告中作为 **FLAG** 呈现，而不是作为条件建议：
 
-- Visual states that briefly look broken (empty containers, hanging elements, gap moments)
-- Spec ambiguities you had to resolve by guessing
-- Linter bugs you worked around
-- Tween values you changed from the spec because they wouldn't fit
+- 看起来短暂破损的视觉状态（空容器、悬挂元素、间隙时刻）
+- 你必须猜测才能解决的规格歧义
+- 你绕过的 Linter bug
+- 你从规格更改的动画值，因为它们不适合
 
-**Forbidden phrasing:** "if the X feels too long, you could...", "consider tweaking Y", "might want to..."
+**禁止措辞：**「如果 X 感觉太长，你可以……」、「考虑调整 Y」、「可能想……」
 
-**Required phrasing — concrete, actionable, with line numbers:**
-
-```
-FLAG: at beat-local t=1.2s the doc card is visible but its inner content is still
-       opacity 0 — a 0.4s empty-panel window.
-       RECOMMENDED FIX: pull title typewriter from 1.6s → 1.4s
-       in compositions/beat-5-name.html line 234.
-```
-
-The main agent MUST EITHER apply each FLAG's fix OR write a one-sentence rejection with reason. Silently dropping a FLAG is a verification failure that gets caught at Step 6 (or worse, in the user's preview).
-
-### Spec ambiguity — escalate, don't paper over
-
-If STORYBOARD.md gives you a transition or transformation but doesn't establish the **start** state, do NOT guess. Examples of ambiguity worth flagging:
-
-- "Row 1 transitions from Huly Blue to Huly Orange at 3.5s" — but Row 1's initial color isn't specified
-- "Headline grows" — but the start size isn't specified
-- "Cards slide in" — but the off-screen position isn't specified
-- "Subhead appears after the headline" — but exact timing offset isn't specified
-
-**Required action:** FLAG the ambiguity in your report verbatim:
+**必需措辞——具体、可操作、带有行号：**
 
 ```
-FLAG: STORYBOARD.md beat 3 says "Row 1 transitions blue → orange at 3.5s" but
-       Row 1's initial color is not specified anywhere. I interpreted Row 1 starts
-       blue and tweened to orange. CONFIRM or correct.
+FLAG：在节拍本地 t=1.2s 时，文档卡片可见但其内部内容仍然不透明度
+       为 0——一个 0.4s 的空面板窗口。
+       推荐的修复：将标题打字机从 1.6s → 1.4s
+       在 compositions/beat-5-name.html 第 234 行。
 ```
 
-The main agent then confirms or corrects before Step 6 advances. Picking an interpretation silently means the build looks "fine" while diverging from intent — and the user only notices in motion.
+主代理必须**要么**应用每个 FLAG 的修复**要么**写一句带有理由的拒绝。静默丢弃 FLAG 是会在步骤 6（或更糟，在用户的预览中）被发现的验证失败。
 
-### Sub-agent diagnoses are unverified claims, not facts
+### 规格歧义——上报，不要掩盖
 
-When a sub-agent reports "this is a linter false positive" / "this is a known bug" / "this attribute doesn't work as documented" — those are HYPOTHESES, not findings. Sub-agents diagnose from one symptom; they don't have repo-wide context.
+如果 STORYBOARD.md 给出了过渡或变换但没有建立**起始**状态，不要猜测。值得标记的歧义示例：
 
-Before propagating any sub-agent diagnosis (e.g., applying the same "workaround" to another beat, or telling the user "this is a known bug"), do ONE of:
+- 「第 1 行在 3.5s 从 Huly 蓝过渡到 Huly 橙」——但第 1 行的初始颜色未指定
+- 「标题增长」——但起始大小未指定
+- 「卡片滑入」——但屏幕外位置未指定
+- 「副标题在标题后出现」——但确切的时序偏移未指定
 
-1. **Verify by reading the source.** Open the file the sub-agent claims is buggy. Confirm the bug exists. Example: "I read `packages/core/src/lint/utils.ts:42` and confirmed the regex matches `url(\"data:image/svg+xml...\")` incorrectly. The workaround is to base64-encode the URI."
-2. **Disclose the unverified claim.** Don't suppress it — surface it. Example: "Sub-agent for beat 2 diagnosed `root_missing_composition_id` as a linter false positive on inline SVG data URIs. I applied the same workaround to beat 4 WITHOUT verifying the underlying claim. Worth filing as a regression against `packages/core/src/lint/utils.ts` to confirm."
+**必需的操作：** 在报告中逐字 FLAG 歧义：
 
-**Forbidden:** silently adopting the workaround pattern and presenting "lint passes" as evidence. If the workaround came from an unverified diagnosis, "lint passes because the diagnosis was correct AND I worked around it" and "lint passes because the diagnosis was wrong but the workaround happened to make the symptom disappear" are both possible. Without verification, you don't know which. The next session inherits the workaround AND the unverified diagnosis.
+```
+FLAG：STORYBOARD.md 节拍 3 说「第 1 行在 3.5s 从蓝色过渡到橙色」但
+       第 1 行的初始颜色在任何地方都未指定。我推断第 1 行以蓝色开始
+       并动画到橙色。确认或纠正。
+```
 
-### When you accept a sub-agent's divergence from spec — UPDATE the spec
+然后主代理在步骤 6 推进之前确认或纠正。默默地选择一个解释意味着构建看起来「很好」同时偏离了意图——而用户只在动效中注意到。
 
-If a sub-agent reports "I diverged from STORYBOARD.md because..." AND you accept the divergence, you MUST update STORYBOARD.md to reflect the actual implementation. Otherwise the spec lies about the artifact.
+### 子代理诊断是未验证的声明，不是事实
 
-Examples:
+当子代理报告「这是检查器误报」/「这是已知 bug」/「此属性不按文档工作」时——这些是**假设**，不是发现。子代理从一个症状诊断；他们没有仓库范围的上下文。
 
-- Sub-agent: "Storyboard says 'HULY' uppercase but the actual logo asset is lowercase 'huly'. I used lowercase." Accept → edit STORYBOARD.md beat N to say "huly" lowercase. Note the change inline.
-- Sub-agent: "Storyboard says cells at 56px but they read too small at 1920×1080. I used 96px." Accept → edit STORYBOARD.md beat N's cell size to 96px.
-- Sub-agent: "Storyboard says SFX at t=4.7s but the visual moment lands at t=5.2s; I aligned SFX to the visual." Accept → edit STORYBOARD.md SFX line to t=5.2s.
+在传播任何子代理诊断之前（例如，将相同的「变通方案」应用到另一个节拍，或告诉用户「这是已知的 bug」），做**之一**：
 
-**Forbidden:** accepting the divergence silently and leaving the storyboard with the wrong spec. The next session reading STORYBOARD.md will trust it as ground truth. The spec is a contract; if you break the contract, update the contract.
+1. **通过阅读源代码验证。** 打开子代理声称有 bug 的文件。确认 bug 存在。示例：「我阅读了 `packages/core/src/lint/utils.ts:42` 并确认了正则表达式错误地匹配了 `url(\"data:image/svg+xml...\")`。变通方案是对 URI 进行 base64 编码。」
+2. **披露未验证的声明。** 不要压制它——呈现出来。示例：「节拍 2 的子代理将 `root_missing_composition_id` 诊断为内联 SVG 数据 URI 上的检查器误报。我将相同的变通方案应用到了节拍 4，**而没有验证底层声明**。值得作为回归问题归档到 `packages/core/src/lint/utils.ts` 以确认。」
+
+**禁止：** 静默采用变通方案模式并呈现「lint 通过」作为证据。如果变通方案来自未验证的诊断，「lint 通过是因为诊断正确并且我绕过了它」和「lint 通过是因为诊断错误但变通方案碰巧使症状消失」都是可能的。没有验证，你不知道是哪种。下一个会话继承了变通方案**和**未验证的诊断。
+
+### 当你接受子代理偏离规格时——更新规格
+
+如果子代理报告「我偏离了 STORYBOARD.md 因为……」**并且**你接受了偏离，你**必须**更新 STORYBOARD.md 以反映实际实现。否则规格在产物上撒谎。
+
+示例：
+
+- 子代理：「故事板说 'HULY' 大写但实际 Logo 资源是小写 'huly'。我使用了小写。」接受 → 编辑 STORYBOARD.md 节拍 N 说 'huly' 小写。内联注明更改。
+- 子代理：「故事板说单元格为 56px 但在 1920×1080 下读起来太小。我使用了 96px。」接受 → 编辑 STORYBOARD.md 节拍 N 的单元格大小为 96px。
+- 子代理：「故事板说 SFX 在 t=4.7s 但视觉时刻落在 t=5.2s；我将 SFX 对齐到视觉。」接受 → 编辑 STORYBOARD.md SFX 行为 t=5.2s。
+
+**禁止：** 静默接受偏离并留下带有错误规格的故事板。下一个阅读 STORYBOARD.md 的会话将信任它作为地面实况。规格是合约；如果你打破了合约，更新合约。
 
 ---
 
-## Continuous motion — the most important rule
+## 持续动效——最重要的规则
 
-A beat is a SHOT in a film, not a webpage with entrance animations. Your GSAP timeline should have events spread across the ENTIRE beat duration — not just entrance tweens in the first 1-2 seconds followed by nothing. If an element is on screen, it should be doing something. After elements enter, add continuous hold motion: camera dolly, parallax layers moving at different speeds, secondary elements appearing mid-beat, real depth shifts.
+节拍是电影中的**镜头**，而不是带有入场动画的网页。你的 GSAP 时间线应该有分布在**整个**节拍时长的事件——不仅仅是前 1-2 秒的入场动画，然后什么都没有。如果一个元素在屏幕上，它应该在做某些事。在元素进入后，添加持续的保持动效：相机推近、不同速度移动的视差层、节拍中途出现的次要元素、真正的深度变化。
 
-## You are building a SHOT, not a webpage
+## 你在构建一个镜头，而不是一个网页
 
-The storyboard tells you the shot framing (close-up / medium / wide / etc.) and the camera move. Implement them. A beat is a moment, not a screenshot. The distinction is **what the camera is doing**, not whether the subject is a UI element or a logo — a tight push-in on a real product screenshot is a shot; a centered card on a parked camera is a webpage.
+故事板告诉你镜头景框（特写 / 中景 / 广角 / 等）和相机运动。实现它们。节拍是一个时刻，而不是一个截图。区别在于**相机在做什么**，而不是主体是 UI 元素还是 Logo——在真实产品截图上紧推是一个镜头；在停泊的相机上的居中卡片是一个网页。
 
-**Patterns that turn a shot back into a webpage:**
+**将镜头变回网页的模式：**
 
-These are defaults to avoid, **not absolute prohibitions.** If the storyboard genuinely calls for "the kanban app interface" or "the browser chrome" as the subject of a specific beat (a product tour, a "this is how it works" demo, a stylized window mockup for the closer), then build it. The rule is: don't reach for these patterns by default when the storyboard didn't ask for them.
+这些是要避免的默认设置，**不是绝对禁止。** 如果故事板真正要求「看板应用界面」或「浏览器 chrome」作为特定节拍的主题（产品巡览、「这是如何工作的」演示、结尾的风格化窗口模型），那么就构建它。规则是：当故事板没有要求时，不要默认使用这些模式。
 
-- ⚠ **macOS / browser window chrome reproduced in CSS** — traffic-light dots, URL bars, browser tabs. Fine when the storyboard makes the chrome the subject (e.g. "stylized macOS window framing the product UI" for a closer). NOT fine when it's a frame you added around a card "to make it look like an app."
-- ⚠ **Full webpage layout** (sidebar + header + footer + main content area) — fine when the beat is genuinely a product tour shot. NOT fine when the beat was supposed to be about _the kanban moment_ and you defaulted to drawing the whole app around it.
-- ❌ **Parked-camera composition** — centered card with 60–120px margins on all sides and no camera move. Almost always wrong. Either give it a real push-in / dolly / parallax, or reframe.
-- ❌ **"Hold with breathing"** implemented as `y: ±1–2px` or `scale: 1.01` — invisible at 1920×1080+ scale. If continuous motion is required, use camera dolly (scale 1.0 → 1.05), parallax pan (x/y ±30–80px), or progressive reveals.
-- ❌ **Hover-state simulations** — videos have no hover. If the brand uses hover effects, show the BEFORE and AFTER as discrete frames in the timeline.
-- ❌ **Counter pulses + dot pulses + tiny scale wobbles** as the only motion during the hold — these are "I ran out of ideas" filler.
+- ⚠ **在 CSS 中重现的 macOS / 浏览器窗口 chrome**——信号灯点、URL 栏、浏览器标签。当故事板使 chrome 成为主题时没问题（例如「框架产品 UI 的风格化 macOS 窗口」用于结尾）。当它是你在卡片周围添加的框架「以使其看起来像应用」时**不**好。
+- ⚠ **完整网页布局**（侧边栏 + 页眉 + 页脚 + 主要内容区域）——当节拍真正是产品巡览镜头时没问题。当节拍应该是关于_看板的时刻_而你默认绘制了周围整个应用时**不**好。
+- ❌ **停泊相机作品**——四面 60–120px 边距的居中卡片，没有相机运动。几乎总是错的。要么给它一个真正的推近/推远/视差，要么重新构图。
+- ❌ **「带呼吸的保持」**实现为 `y: ±1–2px` 或 `scale: 1.01`——在 1920×1080+ 比例下不可见。如果需要持续动效，使用相机推近（scale 1.0 → 1.05）、视差平移（x/y ±30–80px）或渐进揭示。
+- ❌ **悬停状态模拟**——视频没有悬停。如果品牌使用悬停效果，将 BEFORE 和 AFTER 显示为时间线中的离散帧。
+- ❌ **计数器脉冲 + 点脉冲 + 小缩放摆动**作为保持期间唯一的动效——这些是「我想不出主意了」的填充物。
 
-The test: if the storyboard says _"this beat is the product tour, viewer sees the app interface"_, building a CSS dashboard with chrome is correct. If the storyboard says _"this beat is the kanban moment, single card sliding home"_, drawing the full app around it is wrong. Read the beat spec carefully.
+测试：如果故事板说_「此节拍是产品巡览，观众看到应用界面」_，构建带有 chrome 的 CSS 仪表板是正确的。如果故事板说_「此节拍是看板时刻，单张卡片滑入到位」_，围绕它绘制完整应用是错误的。仔细阅读节拍规格。
 
-**Patterns that ARE shots (do these freely):**
+**属于镜头的模式（自由使用这些）：**
 
-- ✅ **Captured SVG logo drawing itself stroke-by-stroke** (DrawSVG / path dashoffset) — a complete opener or stinger.
-- ✅ **Captured hero illustration with camera dolly** — push-in from 1.0 → 1.08 over 4s, focal element holds frame.
-- ✅ **Captured product screenshot with parallax layers** — separate the foreground UI from background panels and move them at different speeds, or use HTML-in-Canvas for an iPhone/MacBook mockup.
-- ✅ **Captured asset as the bed, kinetic type as the punchline** — the brand's hero image holds the frame while a one-line message arrives, splits, reflows.
-- ✅ **Composed-from-divs UI moment** when the beat is specifically about that UI's interaction (a card sliding into a column, a search result resolving) — this is the legit case for CSS-only composition.
+- ✅ **捕获的 SVG Logo 逐笔绘制自身**（DrawSVG / path dashoffset）——完整的开场或收尾。
+- ✅ **带相机推近的捕获英雄插画**——4s 内从 1.0 推到 1.08，焦点元素保持画面。
+- ✅ **带视差层的捕获产品截图**——将前景 UI 与背景面板分开，以不同速度移动它们，或使用 HTML-in-Canvas 制作 iPhone/MacBook 模型。
+- ✅ **捕获资源作为底垫，动态排版作为点睛之笔**——品牌的英雄图像保持画面，同时一行信息到达、分割、重新排列。
+- ✅ **当节拍专门关于该 UI 的交互时（卡片滑入列、搜索结果解析），从 div 组合的 UI 时刻**——这是仅 CSS 作品的合法情况。
 
-**Required motion magnitudes** (anything smaller is invisible at video scale):
+**所需的动效幅度**（小于此在视频比例下不可见）：
 
-| Motion type     | Minimum magnitude                           |
+| 动效类型 | 最小幅度 |
 | --------------- | ------------------------------------------- |
-| Translate (y/x) | 30px (entrance) / 8px (drift during hold)   |
-| Scale           | 0.05 change (1.0 → 1.05 or larger)          |
-| Opacity         | full 0 → 1 or vice versa for reveals        |
-| Rotate          | 4° minimum to read (Dutch angles, ticks)    |
-| Camera dolly    | scale 1.0 → 1.06 minimum over beat duration |
+| 平移（y/x） | 30px（入场）/ 8px（保持期间的漂移） |
+| 缩放 | 0.05 变化（1.0 → 1.05 或更大） |
+| 不透明度 | 完整 0 → 1 或反之用于揭示 |
+| 旋转 | 最小 4° 才能读出来（荷兰角、刻度） |
+| 相机推近 | 节拍时长内缩放 1.0 → 1.06 最小 |
 
-**Required cinematography per beat** (the storyboard should give you these; if it doesn't, escalate):
+**每个节拍所需的电影摄影**（故事板应该给你这些；如果没有，上报）：
 
-- A **shot type** (close-up / medium / wide / over-the-shoulder / Dutch)
-- A **camera move** (dolly in/out, push, parallax pan, orbit, rack focus)
-- A **depth strategy** (what's foreground / midground / background)
-- A **purpose** (what specific feeling or noticing the shot delivers)
+- 一个**镜头类型**（特写 / 中景 / 广角 / 过肩 / 荷兰角）
+- 一个**相机运动**（推近/推远、推进、视差平移、环绕、焦距转移）
+- 一个**深度策略**（什么是前景 / 中景 / 背景）
+- 一个**目的**（这个镜头传递什么特定的感觉或注意点）
 
-If any are missing from the beat spec, the beat is under-defined. Don't fill the gap with "centered layout + breathing" — re-read the spec, and if it's genuinely missing, ask the main agent.
+如果有任何缺失于节拍规格，节拍定义不足。不要用「居中布局 + 呼吸」填补空白——重新阅读规格，如果确实缺失，询问主代理。
 
-## Rules
+## 规则
 
-- SCRIPT PLACEMENT: scripts inside `<template>`, never after `</template>`. Scripts outside see no DOM.
-- GSAP FROM TRAP: never `gsap.from(el, {opacity:0})` with CSS `opacity:0`. It animates 0→0. Use `tl.fromTo()`.
-- STYLE: avoid CSS `opacity:0` on GSAP-animated elements. Use GSAP fromTo for initial states.
-- ASSET PATHS: project-root-relative. `capture/assets/file.png` ✅ `../capture/assets/file.png` ❌
-- SVG VIA IMG: `<img src="logo.svg">` can't inherit CSS color. Inline SVG or `filter: brightness(0) invert(1)`.
-- CSS CENTERING: no `transform: translate(-50%, -50%)` with GSAP transforms. Use flexbox or `xPercent/yPercent`.
-- QUERYSELECTOR: `document.getElementById("id")` with null guards. No method calls without null check.
-- CHARACTER SPANS: `display:inline-block` on spaces collapses them. Use `&nbsp;` or per-word spans.
-- COUNTERS: no `onUpdate` for numeric counters — use discrete `tl.set(el, {textContent: "42"}, 2.5)` at timestamps. `onUpdate` and `tl.call()` ARE supported for canvas/WebGL rendering loops and character-by-character typing — see capabilities.md §10.
-- TIMELINE: `window.__timelines["beat-N-name"] = tl` synchronously. Key = `data-composition-id`.
-- DETERMINISTIC: no `Math.random()`, `Date.now()`, `requestAnimationFrame`, `repeat:-1`.
-- Always `tl.fromTo()` not `tl.from()` for entrances.
-- Never stack two transform tweens on same element at same time.
-- FONTS: copy the `@font-face` block VERBATIM from DESIGN.md's Fonts section. Do NOT guess which `.woff2` file belongs to which family — capture filenames are content-hashed (`14d7ce3e41dcbb66-s.p.woff2`) and there is no visible mapping. If DESIGN.md doesn't include exact `src:` paths per family, STOP and ask the main agent to add them; never pair an arbitrary `.woff2` file with a family name from memory.
+- 脚本位置：脚本在 `<template>` 内部，永远不要在 `</template>` 之后。在外的脚本看不到 DOM。
+- GSAP FROM 陷阱：永远不要用 CSS `opacity:0` 写 `gsap.from(el, {opacity:0})`。它动画 0→0。使用 `tl.fromTo()`。
+- 样式：避免在 GSAP 动画化的元素上使用 CSS `opacity:0`。使用 GSAP fromTo 处理初始状态。
+- 资源路径：相对于项目根目录。`capture/assets/file.png` ✅ `../capture/assets/file.png` ❌
+- 通过 IMG 的 SVG：`<img src="logo.svg">` 不能继承 CSS 颜色。使用内联 SVG 或 `filter: brightness(0) invert(1)`。
+- CSS 居中：不要使用 `transform: translate(-50%, -50%)` 与 GSAP 变换一起。使用 flexbox 或 `xPercent/yPercent`。
+- QUERYSELECTOR：使用 `document.getElementById("id")` 并加 null 保护。没有空检查就不能调用方法。
+- 字符跨度：`display:inline-block` 会折叠空格。使用 `&nbsp;` 或逐词跨度。
+- 计数器：数值计数器不要使用 `onUpdate`——在时间戳处使用离散的 `tl.set(el, {textContent: "42"}, 2.5)`。`onUpdate` 和 `tl.call()` 对于 canvas/WebGL 渲染循环和逐字打字是**被支持的**——参见 capabilities.md §10。
+- 时间线：`window.__timelines["beat-N-name"] = tl` 同步。键 = `data-composition-id`。
+- 确定性：没有 `Math.random()`、`Date.now()`、`requestAnimationFrame`、`repeat:-1`。
+- 始终使用 `tl.fromTo()` 而不是 `tl.from()` 用于入场。
+- 永远不要在同一时间对同一元素堆叠两个 transform 动画。
+- 字体：从 DESIGN.md 的字体部分**逐字**复制 `@font-face` 块。不要猜测哪个 `.woff2` 文件属于哪个家族——捕获的文件名是内容哈希的（`14d7ce3e41dcbb66-s.p.woff2`），没有可见的映射。如果 DESIGN.md 不包含每个家族的精确 `src:` 路径，停止并让主代理添加它们；永远不要凭记忆将任意的 `.woff2` 文件与家族名称配对。
 
-## Easing — pick per intent
+## 缓动——按意图选择
 
-Do NOT default to `power2.out` on everything.
+不要在所有内容上默认使用 `power2.out`。
 
-| Intent          | GSAP Ease             | Use for                              |
+| 意图 | GSAP 缓动 | 用于 |
 | --------------- | --------------------- | ------------------------------------ |
-| Snap (iOS feel) | `power4.out`          | Hero text, UI elements               |
-| Whip overshoot  | `back.out(1.7)`       | Numbers, badges, impact              |
-| Soft land       | `expo.out`            | Per-word reveals, gentle entrances   |
-| Mechanical      | `power1.out`          | Terminal text, code typing           |
-| Bounce settle   | `elastic.out(1, 0.5)` | Counters, CTA buttons                |
-| Dramatic        | `expo.inOut`          | Full-screen statements, hero reveals |
-| Drift           | `"none"`              | Parallax, Ken Burns, camera drift    |
+| 快照（iOS 感觉） | `power4.out` | 英雄文本、UI 元素 |
+| 鞭打过冲 | `back.out(1.7)` | 数字、徽章、冲击 |
+| 软着陆 | `expo.out` | 逐词揭示、温和入场 |
+| 机械 | `power1.out` | 终端文本、代码打字 |
+| 弹跳稳定 | `elastic.out(1, 0.5)` | 计数器、CTA 按钮 |
+| 戏剧性 | `expo.inOut` | 全屏陈述、英雄揭示 |
+| 漂移 | `"none"` | 视差、Ken Burns、相机漂移 |
 
-Staggered items: `power4.out` with `stagger: 0.08` to `0.15`.
+交错项目：`power4.out` 使用 `stagger: 0.08` 到 `0.15`。

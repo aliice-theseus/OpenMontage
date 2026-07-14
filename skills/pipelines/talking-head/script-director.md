@@ -1,67 +1,67 @@
-# Script Director — Talking Head Pipeline
+# 脚本导演 —  Talking Head 流水线
 
-## When to Use
+## 使用时机
 
-You have a brief and raw talking-head footage. Your job is to transcribe the footage and structure it into a script artifact with timestamped sections.
+你已获得一份简报和原始 talking-head 素材。你的任务是将素材转录成文字，并将其组织成带时间戳章节的脚本产物。
 
-Unlike the explainer pipeline (which writes a script from scratch), you're extracting and structuring existing speech.
+与讲解类流水线（从头编写脚本）不同，你的工作是提取和结构化已有的语音内容。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["idea"]["brief"]` | Content context |
-| Tools | `transcriber` (WhisperX) | Speech-to-text with timestamps |
+| 模式 | `schemas/artifacts/script.schema.json` | 产物校验 |
+| 前置产物 | `state.artifacts["idea"]["brief"]` | 内容上下文 |
+| 工具 | `transcriber` (WhisperX) | 语音转文字并带时间戳 |
 
-## Process
+## 流程
 
-### Step 1: Transcribe
+### 步骤 1: 转录
 
-Use the transcriber tool to get word-level timestamps:
-- Model: `large-v3` for best quality, `base` for speed
-- Enable word-level alignment for precise timing
-- Note language detection result
+使用转录工具获取字级时间戳：
+- 模型：`large-v3` 获得最佳质量，`base` 获得更快速度
+- 启用字级对齐以获得精确时序
+- 记录语言检测结果
 
-### Step 2: Segment into Sections
+### 步骤 2: 分段
 
-Group the transcript into logical sections:
-- Detect topic changes by content
-- Respect natural pauses (> 1.5s silence = potential section break)
-- Each section gets: id, text, start_seconds, end_seconds
+将转录文本按逻辑章节分组：
+- 通过内容检测主题变化
+- 依据自然停顿（> 1.5 秒静默 = 潜在分段点）
+- 每个章节包含：id、文本、起始秒数、结束秒数
 
-### Step 3: Enhance Section Metadata
+### 步骤 3: 增强章节元数据
 
-For each section, add:
-- Enhancement cues (where overlays, b-roll, or text cards could go)
-- Speaker notes (emphasis, pace changes detected in audio)
+为每个章节添加：
+- 增强提示（可放置叠加层、B-roll 或文字卡片的位置）
+- 演讲者备注（音频中检测到的重点、节奏变化）
 
-### Step 4: Build Script Artifact
+### 步骤 4: 构建脚本产物
 
-Assemble the structured script with:
-- Total duration (from transcript)
-- All sections with timestamps
-- Enhancement cues per section
+组装结构化的脚本，包含：
+- 总时长（来自转录）
+- 所有章节及其时间戳
+- 每章节的增强提示
 
-### Step 5: Self-Evaluate
+### 步骤 5: 自我评估
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Transcription accuracy** | Are the words correct? (Spot-check a few sections) |
-| **Timestamp accuracy** | Do section boundaries align with actual speech? |
-| **Coverage** | Does the script span the full footage duration? |
+| **转录准确度** | 文字是否正确？（抽查几个章节） |
+| **时间戳准确度** | 章节边界与实际语音对齐吗？ |
+| **覆盖率** | 脚本是否覆盖了整个素材时长？ |
 
-### Step 6: Submit
+### 步骤 6: 提交
 
-Validate the script against the schema and persist via checkpoint.
+根据模式校验脚本，并通过检查点持久化。
 
-### Mid-Production Fact Verification
+### 中期事实核查
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在编写脚本时遇到不确定的信息：
+- 使用 `web_search` 在将事实性声明写入脚本前进行核实
+- 使用 `web_search` 查找参考图片以确保视觉准确性
+- 在决策日志中记录核查结果：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+脚本中的每条事实性声明都应能追溯到 `research_brief`。
+如果你做出了一条不在研究材料中的声明，请进行额外研究并
+添加来源。不要编造统计数据、日期或归属信息。

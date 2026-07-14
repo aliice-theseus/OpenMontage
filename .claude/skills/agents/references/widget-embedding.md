@@ -1,59 +1,59 @@
-# Widget Embedding
+# 小组件嵌入
 
-Add a voice AI agent to any website with the ElevenLabs conversation widget.
+使用 ElevenLabs 对话小组件将语音 AI 代理添加到任何网站。
 
-## Basic Embed
+## 基础嵌入
 
 ```html
 <elevenlabs-convai agent-id="your-agent-id"></elevenlabs-convai>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 ```
 
-This creates a floating button that users can click to start a voice conversation.
+这将创建一个浮动按钮，用户可以点击开始语音对话。
 
-> **Note:** Widgets currently require public agents with authentication disabled. For authenticated flows, use the SDKs.
+> **注意：** 小组件目前需要公开代理，且认证已禁用。对于需要认证的流程，请使用 SDK。
 
-## Widget Attributes
+## 小组件属性
 
-### Required
+### 必需
 
-| Attribute | Description |
+| 属性 | 描述 |
 |-----------|-------------|
-| `agent-id` | Your ElevenLabs agent ID |
-| `signed-url` | Alternative to `agent-id` when using signed URLs |
+| `agent-id` | 您的 ElevenLabs 代理 ID |
+| `signed-url` | 使用签名 URL 时替代 `agent-id` |
 
-### Appearance
+### 外观
 
-| Attribute | Description | Default |
+| 属性 | 描述 | 默认值 |
 |-----------|-------------|---------|
-| `avatar-image-url` | URL for agent avatar image | ElevenLabs logo |
-| `avatar-orb-color-1` | Primary orb gradient color | `#2792dc` |
-| `avatar-orb-color-2` | Secondary orb gradient color | `#9ce6e6` |
+| `avatar-image-url` | 代理头像图片的 URL | ElevenLabs 标志 |
+| `avatar-orb-color-1` | 主要球体渐变颜色 | `#2792dc` |
+| `avatar-orb-color-2` | 次要球体渐变颜色 | `#9ce6e6` |
 
-### Text Labels
+### 文本标签
 
-| Attribute | Description | Default |
+| 属性 | 描述 | 默认值 |
 |-----------|-------------|---------|
-| `action-text` | Tooltip when hovering | "Talk to AI" |
-| `start-call-text` | Button to start call | "Start call" |
-| `end-call-text` | Button to end call | "End call" |
-| `expand-text` | Expand chat button | "Open" |
-| `collapse-text` | Collapse chat button | "Close" |
-| `listening-text` | Listening state label | "Listening..." |
-| `speaking-text` | Speaking state label | "Assistant speaking" |
+| `action-text` | 悬停时的工具提示 | "与 AI 对话" |
+| `start-call-text` | 开始通话按钮 | "开始通话" |
+| `end-call-text` | 结束通话按钮 | "结束通话" |
+| `expand-text` | 展开聊天按钮 | "打开" |
+| `collapse-text` | 折叠聊天按钮 | "关闭" |
+| `listening-text` | 聆听状态标签 | "正在聆听..." |
+| `speaking-text` | 说话状态标签 | "助手正在说话" |
 
-### Behavior
+### 行为
 
-| Attribute | Description | Default |
+| 属性 | 描述 | 默认值 |
 |-----------|-------------|---------|
-| `variant` | Widget style: `compact` or `expanded` | `compact` |
-| `server-location` | Server region (`us`, `eu-residency`, `in-residency`, `global`) | `us` |
-| `dismissible` | Allow the user to minimize the widget | `false` |
-| `disable-banner` | Hide "Powered by ElevenLabs" | `false` |
+| `variant` | 小组件样式：`compact` 或 `expanded` | `compact` |
+| `server-location` | 服务器区域（`us`、`eu-residency`、`in-residency`、`global`） | `us` |
+| `dismissible` | 允许用户最小化小组件 | `false` |
+| `disable-banner` | 隐藏"由 ElevenLabs 提供" | `false` |
 
-## Examples
+## 示例
 
-### Custom Avatar
+### 自定义头像
 
 ```html
 <elevenlabs-convai
@@ -62,7 +62,7 @@ This creates a floating button that users can click to start a voice conversatio
 ></elevenlabs-convai>
 ```
 
-### Custom Colors
+### 自定义颜色
 
 ```html
 <elevenlabs-convai
@@ -72,18 +72,18 @@ This creates a floating button that users can click to start a voice conversatio
 ></elevenlabs-convai>
 ```
 
-### Custom Text
+### 自定义文本
 
 ```html
 <elevenlabs-convai
   agent-id="your-agent-id"
-  action-text="Chat with our AI assistant"
-  start-call-text="Begin conversation"
-  end-call-text="Hang up"
+  action-text="与我们的 AI 助手聊天"
+  start-call-text="开始对话"
+  end-call-text="挂断"
 ></elevenlabs-convai>
 ```
 
-### Expanded Variant
+### 展开变体
 
 ```html
 <elevenlabs-convai
@@ -92,7 +92,7 @@ This creates a floating button that users can click to start a voice conversatio
 ></elevenlabs-convai>
 ```
 
-### Full Customization
+### 完全自定义
 
 ```html
 <elevenlabs-convai
@@ -100,17 +100,17 @@ This creates a floating button that users can click to start a voice conversatio
   avatar-image-url="https://example.com/support-agent.png"
   avatar-orb-color-1="#4f46e5"
   avatar-orb-color-2="#818cf8"
-  action-text="Talk to Support"
-  start-call-text="Start voice chat"
-  end-call-text="End conversation"
-  expand-text="Open assistant"
-  collapse-text="Minimize"
+  action-text="联系支持"
+  start-call-text="开始语音聊天"
+  end-call-text="结束对话"
+  expand-text="打开助手"
+  collapse-text="最小化"
 ></elevenlabs-convai>
 ```
 
-## CSS Customization
+## CSS 自定义
 
-The widget uses Shadow DOM but exposes CSS custom properties:
+小组件使用 Shadow DOM，但暴露 CSS 自定义属性：
 
 ```css
 elevenlabs-convai {
@@ -119,16 +119,16 @@ elevenlabs-convai {
 }
 ```
 
-### Positioning
+### 定位
 
-By default, the widget appears in the bottom-right corner. Override with CSS:
+默认情况下，小组件出现在右下角。使用 CSS 覆盖：
 
 ```css
 elevenlabs-convai {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  /* Or position differently */
+  /* 或使用不同定位 */
   left: 20px;
   right: auto;
 }
@@ -142,9 +142,9 @@ elevenlabs-convai {
 }
 ```
 
-## JavaScript Control
+## JavaScript 控制
 
-Access the widget element to control it programmatically:
+访问小组件元素以编程方式控制它：
 
 ```html
 <elevenlabs-convai id="my-widget" agent-id="your-agent-id"></elevenlabs-convai>
@@ -152,26 +152,26 @@ Access the widget element to control it programmatically:
 <script>
   const widget = document.getElementById("my-widget");
 
-  // Start a conversation
+  // 开始对话
   widget.startConversation();
 
-  // End the conversation
+  // 结束对话
   widget.endConversation();
 
-  // Listen for events
+  // 监听事件
   widget.addEventListener("conversationStarted", () => {
-    console.log("Conversation started");
+    console.log("对话已开始");
   });
 
   widget.addEventListener("conversationEnded", () => {
-    console.log("Conversation ended");
+    console.log("对话已结束");
   });
 </script>
 ```
 
-### Custom Trigger Button
+### 自定义触发按钮
 
-Hide the default widget and use your own button:
+隐藏默认小组件并使用自己的按钮：
 
 ```html
 <style>
@@ -181,22 +181,22 @@ Hide the default widget and use your own button:
 </style>
 
 <button onclick="document.getElementById('widget').startConversation()">
-  Talk to AI
+  与 AI 对话
 </button>
 
 <elevenlabs-convai id="widget" agent-id="your-agent-id"></elevenlabs-convai>
 ```
 
-## Authentication
+## 认证
 
-For agents with authentication enabled, pass a signed URL:
+对于启用了认证的代理，传递签名 URL：
 
 ```html
 <elevenlabs-convai id="widget" agent-id="your-agent-id"></elevenlabs-convai>
 
 <script>
   async function startAuthenticatedConversation() {
-    // Get signed URL from your backend
+    // 从后端获取签名 URL
     const response = await fetch("/api/get-signed-url");
     const { signedUrl } = await response.json();
 
@@ -207,7 +207,7 @@ For agents with authentication enabled, pass a signed URL:
 </script>
 ```
 
-Your backend:
+您的后端：
 
 ```python
 @app.get("/api/get-signed-url")
@@ -218,19 +218,19 @@ def get_signed_url():
     return {"signedUrl": signed_url.signed_url}
 ```
 
-## Mobile Considerations
+## 移动端注意事项
 
-### Responsive Positioning
+### 响应式定位
 
 ```css
-/* Desktop: bottom-right */
+/* 桌面端：右下角 */
 elevenlabs-convai {
   position: fixed;
   bottom: 20px;
   right: 20px;
 }
 
-/* Mobile: full-width bottom */
+/* 移动端：底部全宽 */
 @media (max-width: 768px) {
   elevenlabs-convai {
     bottom: 0;
@@ -241,46 +241,46 @@ elevenlabs-convai {
 }
 ```
 
-### Touch-Friendly
+### 触控友好
 
-The widget is touch-optimized by default. For better mobile UX:
+小组件默认支持触控优化。为获得更好的移动端体验：
 
 ```css
 @media (max-width: 768px) {
   elevenlabs-convai {
-    /* Larger touch target */
+    /* 更大的触控目标 */
     transform: scale(1.1);
     transform-origin: bottom right;
   }
 }
 ```
 
-## Multiple Widgets
+## 多个小组件
 
-You can have multiple widgets for different agents:
+您可以为不同代理设置多个小组件：
 
 ```html
 <elevenlabs-convai
   agent-id="support-agent-id"
-  action-text="Support"
+  action-text="支持"
   style="right: 20px"
 ></elevenlabs-convai>
 
 <elevenlabs-convai
   agent-id="sales-agent-id"
-  action-text="Sales"
+  action-text="销售"
   style="right: 100px"
 ></elevenlabs-convai>
 ```
 
-## Framework Integration
+## 框架集成
 
 ### React
 
 ```jsx
 function App() {
   useEffect(() => {
-    // Load widget script
+    // 加载小组件脚本
     const script = document.createElement("script");
     script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
     script.async = true;
@@ -336,24 +336,24 @@ export default function Page() {
 }
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Widget Not Appearing
+### 小组件不显示
 
-1. Check that the agent ID is correct
-2. Verify the script is loaded (check Network tab)
-3. Check for JavaScript errors in console
-4. Ensure no CSS is hiding the widget
+1. 检查代理 ID 是否正确
+2. 验证脚本是否已加载（检查网络标签页）
+3. 检查控制台是否有 JavaScript 错误
+4. 确保没有 CSS 隐藏小组件
 
-### Audio Issues
+### 音频问题
 
-1. Ensure HTTPS (microphone requires secure context)
-2. Check browser permissions for microphone
-3. Test in a supported browser (Chrome, Firefox, Safari, Edge)
+1. 确保使用 HTTPS（麦克风需要安全上下文）
+2. 检查浏览器的麦克风权限
+3. 在支持的浏览器中测试（Chrome、Firefox、Safari、Edge）
 
-### CORS Errors
+### CORS 错误
 
-If using authentication, ensure your domain is in the agent's allowlist:
+如果使用认证，确保您的域名在代理的白名单中：
 
 ```python
 platform_settings={

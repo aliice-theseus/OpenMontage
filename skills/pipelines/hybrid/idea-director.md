@@ -1,35 +1,35 @@
-# Idea Director - Hybrid Pipeline
+# 创意导演 - 混合流水线
 
-## When To Use
+## 使用时机
 
-Use this pipeline when the project combines real source media with support visuals: interviews plus diagrams, footage plus overlays, screen recording plus branded graphics, or source-led edits with generated inserts.
+当项目结合真实源素材与支持视觉内容时使用此流水线：访谈加图表、视频片段加叠加层、屏幕录制加品牌图形，或源主导剪辑加生成插片。
 
-Hybrid is not a catch-all. Your first job is to define what stays primary.
+混合并非万能方案。你的首要任务是定义什么内容保持主导地位。
 
-## Runtime Selection (MANDATORY — present both runtimes)
+## 运行时选择（必选 — 呈现两种运行时）
 
-Before locking the production plan, decide `render_runtime` with the user. Hybrid supports BOTH Remotion and HyperFrames; neither is an auto-default. Follow the contract in AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)":
+在锁定制作计划之前，与用户一起决定 `render_runtime`。混合流水线同时支持 Remotion 和 HyperFrames；两者均非自动默认选项。遵循 AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)" 中的约定：
 
-1. Query `video_compose.get_info()["render_engines"]`. If both `remotion` and `hyperframes` are `True`, present both to the user with brief-specific analysis:
-   - **Remotion** — fits when source footage dominates and support layers are React scene components (chart, callout, text card). Remotion composes video clips + React overlays in one pass via `<OffthreadVideo>`.
-   - **HyperFrames** — fits when support layers are HTML/GSAP-native (kinetic callouts, registry blocks, typographic overlays) and source footage is embedded as `<video class="clip">`.
-2. Recommend one with rationale tied to the anchor medium and the shape of the support layer.
-3. Wait for explicit user approval.
-4. Log the choice in `decision_log` as a `render_runtime_selection` decision with BOTH runtimes in `options_considered`.
+1. 查询 `video_compose.get_info()["render_engines"]`。如果 `remotion` 和 `hyperframes` 均为 `True`，则向用户呈现两者，并附上针对该 brief 的分析：
+   - **Remotion** — 适用于源素材占主导且支持层为 React 场景组件（图表、标注、文本卡片）的情况。Remotion 通过 `<OffthreadVideo>` 在一次渲染中合成视频片段 + React 叠加层。
+   - **HyperFrames** — 适用于支持层为 HTML/GSAP 原生内容（动态标注、注册块、排版叠加）且源素材通过 `<video class="clip">` 嵌入的情况。
+2. 根据锚定媒介和支持层的形态推荐一个，并说明理由。
+3. 等待用户明确批准。
+4. 在 `decision_log` 中将选择记录为 `render_runtime_selection` 决策，`options_considered` 中必须包含两种运行时。
 
-A `render_runtime_selection` decision with only one runtime in `options_considered` when both were available is a CRITICAL reviewer finding.
+如果两者都可用但 `options_considered` 中只有一种运行时，则 `render_runtime_selection` 决策将被审稿人视为 CRITICAL 问题。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/hybrid-video-best-practices.md`
 - `skills/creative/storytelling.md`
 - `skills/creative/video-editing.md`
 
-## Process
+## 流程
 
-### 1. Choose The Anchor Medium
+### 1. 选择锚定媒介
 
-Pick the storytelling anchor:
+选择故事讲述的锚定方式：
 
 - `talking_head`
 - `broll_footage`
@@ -37,33 +37,33 @@ Pick the storytelling anchor:
 - `still_sequence`
 - `narration_led_graphics`
 
-### 2. Define Support Layers
+### 2. 定义支持层
 
-Possible support layers:
+可能的支持层：
 
-- subtitles,
-- diagrams,
-- code visuals,
-- stat cards,
-- generated inserts,
-- narration,
-- music.
+- 字幕，
+- 图表，
+- 代码视觉化，
+- 数据卡片，
+- 生成插片，
+- 旁白，
+- 音乐。
 
-Each support layer should solve a specific problem, not just decorate the timeline.
+每个支持层应解决特定问题，而不仅仅是装饰时间线。
 
-### 3. Decide The Deliverable Mix
+### 3. 决定交付物组合
 
-Common outputs:
+常见输出：
 
-- hero cut,
-- vertical cutdown,
-- square cutdown,
-- chaptered version,
-- ad variant.
+- 主剪版本，
+- 竖屏缩减版，
+- 方形缩减版，
+- 分章节版本，
+- 广告变体。
 
-### 4. Build The Brief
+### 4. 构建 Brief
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `anchor_medium`
 - `source_inventory`
@@ -72,15 +72,16 @@ Recommended metadata keys:
 - `missing_capabilities`
 - `fallback_policy`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- the anchor medium is explicit,
-- support layers are justified,
-- the deliverable mix fits the source inventory,
-- missing capabilities are surfaced early.
+- 锚定媒介明确，
+- 支持层有合理依据，
+- 交付物组合匹配源素材清单，
+- 缺失能力尽早暴露。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Calling everything hybrid without defining a primary medium.
-- Planning support layers before understanding the source.
-- Treating optional generated inserts as guaranteed.
+- 什么都叫混合，却没有定义主要媒介。
+- 在了解源素材之前就规划支持层。
+- 将可选的生成插片视为必然存在的资源。
+

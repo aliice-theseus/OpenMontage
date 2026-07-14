@@ -1,20 +1,14 @@
-# Sequencing translation: Sequence, Series, Composition root
+# 序列翻译：Sequence, Series, Composition 根节点
 
-How Remotion's nested `Sequence` tree maps to HF's flat `data-start` /
-`data-duration` markup with a single paused GSAP timeline.
+Remotion 的嵌套 `Sequence` 树如何映射到 HF 平面的 `data-start` / `data-duration` 标记，以及单个暂停的 GSAP 时间线。
 
-## The core idea
+## 核心思想
 
-Remotion's `<Sequence from={F} durationInFrames={D}>` is a coordinate
-transform: it shifts `useCurrentFrame()` by `F` and clips the child
-component to the window `[F, F+D]`. HF doesn't have a per-element
-"current frame" — there's a single composition seek time and the
-runtime hides/shows elements based on their `data-start` / `data-duration`.
+Remotion 的 `<Sequence from={F} durationInFrames={D}>` 是一个坐标变换：它将 `useCurrentFrame()` 偏移 `F`，并将子组件裁剪到窗口 `[F, F+D]`。HF 没有每个元素的"当前帧" — 只有一个合成的 seek 时间，运行时根据元素的 `data-start` / `data-duration` 隐藏/显示元素。
 
-Result: the nested tree flattens into a list of siblings on the same
-parent, each with their own time window.
+结果：嵌套树展平为同一父级下的同级元素列表，每个元素都有自己的时间窗口。
 
-## `<Composition>` → root `#stage`
+## `<Composition>` → 根节点 `#stage`
 
 ```tsx
 <Composition
@@ -37,14 +31,13 @@ parent, each with their own time window.
   data-width="1280"
   data-height="720"
 >
-  <!-- composition content -->
+  <!-- 合成内容 -->
 </div>
 ```
 
-`data-start="0"` is required on `#stage` (the runtime needs it to anchor
-playback; missing it triggers a lint warning).
+`#stage` 上必须要有 `data-start="0"`（运行时需要它来锚定播放；缺失会触发 lint 警告）。
 
-## `<AbsoluteFill>` → positioned div
+## `<AbsoluteFill>` → 绝对定位的 div
 
 ```tsx
 <AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>...children...</AbsoluteFill>
@@ -54,10 +47,9 @@ playback; missing it triggers a lint warning).
 <div style="position:absolute;inset:0;background-color:#0a0a0a;">...children...</div>
 ```
 
-`AbsoluteFill` is just a styled div in Remotion. Translate to a div with
-`position:absolute; inset:0` and copy through any other style props.
+`AbsoluteFill` 在 Remotion 中只是一个带样式的 div。翻译为带有 `position:absolute; inset:0` 的 div，并复制任何其他样式属性。
 
-## `<Sequence>` → time-windowed div
+## `<Sequence>` → 带时间窗口的 div
 
 ```tsx
 <Sequence from={0} durationInFrames={90}>
@@ -67,17 +59,15 @@ playback; missing it triggers a lint warning).
 
 ```html
 <div data-start="0" data-duration="3" data-track-index="0">
-  <!-- TitleCard children inlined -->
+  <!-- TitleCard 子元素内联 -->
 </div>
 ```
 
-Convert frames to seconds: `from/fps`, `durationInFrames/fps`. Pick a
-`data-track-index` per parallel rendering layer (background = 0,
-overlays = 1, audio = 2, etc.). Sequential scenes can share an index.
+将帧转换为秒：`from/fps`、`durationInFrames/fps`。每个并行渲染层选择一个 `data-track-index`（背景 = 0、叠加层 = 1、音频 = 2 等）。顺序场景可以共享同一个索引。
 
-## Nested `<Sequence>` flattens
+## 嵌套的 `<Sequence>` 展平
 
-Remotion adds offsets when sequences nest:
+当序列嵌套时，Remotion 会累加偏移量：
 
 ```tsx
 <Sequence from={60} durationInFrames={120}>
@@ -87,18 +77,17 @@ Remotion adds offsets when sequences nest:
 </Sequence>
 ```
 
-The inner sequence's effective window is `[60+30, 60+30+60] = [90, 150]`.
+内部序列的有效窗口是 `[60+30, 60+30+60] = [90, 150]`。
 
-Translate by computing the sum and emitting one HF div with the resolved
-window:
+翻译时计算总和，生成一个具有解析后窗口的 HF div：
 
 ```html
 <div data-start="3" data-duration="2" data-track-index="0">
-  <!-- ImageScene children -->
+  <!-- ImageScene 子元素 -->
 </div>
 ```
 
-## `<Series>` → siblings with sequential offsets
+## `<Series>` → 带顺序偏移的同级元素
 
 ```tsx
 <Series>
@@ -114,8 +103,7 @@ window:
 </Series>
 ```
 
-Each `Sequence.Sequence` lives in the next time slot. Emit siblings
-with `data-start` accumulating:
+每个 `Sequence.Sequence` 位于下一个时间槽。生成累加 `data-start` 的同级元素：
 
 ```html
 <div data-start="0" data-duration="2" data-track-index="0">A</div>
@@ -123,27 +111,25 @@ with `data-start` accumulating:
 <div data-start="6" data-duration="3" data-track-index="0">C</div>
 ```
 
-## Crossfading scene boundaries
+## 场景边界的交叉淡入淡出
 
-Remotion `<Sequence>` shows/hides at hard boundaries by default. HF does
-the same — but if your composition needs a smooth fade between scenes,
-you have to drive opacity explicitly with GSAP at the boundary:
+Remotion `<Sequence>` 默认在硬边界处显示/隐藏。HF 也是如此 — 但如果你的合成需要在场景之间平滑淡入淡出，你必须使用 GSAP 在边界处显式驱动透明度：
 
 ```js
 const tl = gsap.timeline({ paused: true });
 tl.set(scene1, { opacity: 1 }, 0);
-tl.set(scene1, { opacity: 0 }, 2); // hard cut at 2s
+tl.set(scene1, { opacity: 0 }, 2); // 在 2 秒处硬切换
 tl.set(scene2, { opacity: 1 }, 2);
 ```
 
-For a 0.5 s crossfade:
+对于 0.5 秒的交叉淡入淡出：
 
 ```js
 tl.to(scene1, { opacity: 0, duration: 0.5 }, 1.5);
 tl.to(scene2, { opacity: 1, duration: 0.5 }, 1.5);
 ```
 
-For Remotion `<TransitionSeries>` translations see [transitions.md](transitions.md).
+关于 Remotion `<TransitionSeries>` 的翻译，参见 [transitions.md](transitions.md)。
 
 ## `<Loop>`
 
@@ -153,20 +139,16 @@ For Remotion `<TransitionSeries>` translations see [transitions.md](transitions.
 </Loop>
 ```
 
-HF doesn't have a `<Loop>` primitive. Translate to a GSAP timeline with
-`repeat: -1`:
+HF 没有 `<Loop>` 原语。翻译为带有 `repeat: -1` 的 GSAP 时间线：
 
 ```js
 const spinTl = gsap.timeline({ paused: true, repeat: -1, repeatRefresh: false });
 spinTl.to(spinner, { rotate: 360, duration: 1.0, ease: "none" });
-// Embed in the main composition timeline at the right offset:
+// 在正确的偏移处嵌入主合成时间线：
 mainTl.add(spinTl, 3);
 ```
 
-This is fragile — Remotion's `<Loop>` resets internal state every iteration,
-which GSAP repeat does too, but if the looped child has its own animation,
-you need to be careful that GSAP's `repeatRefresh` is on or off as needed.
-For most simple "spin forever" cases this is fine.
+这有点脆弱 — Remotion 的 `<Loop>` 在每次迭代时重置内部状态，GSAP 的 repeat 也是如此，但如果循环子元素有自己的动画，你需要小心地根据需要打开或关闭 GSAP 的 `repeatRefresh`。对于大多数简单的"永远旋转"情况，这是可以的。
 
 ## `<Freeze>`
 
@@ -176,20 +158,16 @@ For most simple "spin forever" cases this is fine.
 </Freeze>
 ```
 
-Drop the wrapper. `<Freeze>` pins `useCurrentFrame()` at a constant for
-the children — but in HF, the children's animation is already driven by
-explicit GSAP tweens, so freeze translates to "don't tween this element".
+丢弃包装器。`<Freeze>` 将子元素的 `useCurrentFrame()` 固定为一个常数值 — 但在 HF 中，子元素的动画已经由显式的 GSAP 补间驱动，因此 freeze 翻译为"不对这个元素做补间"。
 
-## Multiple parallel tracks
+## 多个并行轨道
 
-When you have a background video + overlay text + audio playing
-simultaneously, use distinct `data-track-index` values:
+当你有背景视频 + 叠加文本 + 音频同时播放时，使用不同的 `data-track-index` 值：
 
 ```html
-<div data-track-index="0">background video</div>
-<div data-track-index="1">overlay text</div>
+<div data-track-index="0">背景视频</div>
+<div data-track-index="1">叠加文本</div>
 <audio data-track-index="2" ...></audio>
 ```
 
-The runtime picks track ordering from the index. See [media.md](media.md)
-for media-specific track conventions.
+运行时从索引中确定轨道顺序。参见 [media.md](media.md) 了解媒体特定的轨道约定。

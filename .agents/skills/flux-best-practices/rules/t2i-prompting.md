@@ -1,230 +1,224 @@
 ---
 name: t2i-prompting
-description: Text-to-image prompting patterns and techniques
+description: 文生图提示词模式与技巧
 ---
 
-# Text-to-Image (T2I) Prompting
+# 文生图（T2I）提示词编写
 
-Comprehensive guide to crafting effective text-to-image prompts for FLUX models.
+为 FLUX 模型编写有效文生图提示词的综合指南。
 
-## Prompt Structure Framework
+## 提示词结构框架
 
-### Basic Formula
+### 基本公式
 ```
-[Subject] + [Action] + [Style] + [Context] + [Lighting] + [Technical]
-```
-
-### Expanded Framework
-```
-[Main Subject] - who/what is the focus
-[Attributes] - characteristics, details, clothing
-[Action/Pose] - what they're doing
-[Environment] - where, setting, background
-[Style/Medium] - artistic approach
-[Lighting] - light source, quality, mood
-[Composition] - framing, camera angle
-[Technical] - camera, lens, film stock
+[主体] + [动作] + [风格] + [上下文] + [光照] + [技术参数]
 ```
 
-## Subject Types
-
-### People/Portraits
+### 扩展框架
 ```
-A distinguished professor in his 60s with silver hair and round spectacles,
-wearing a tweed jacket with leather elbow patches, deep-set thoughtful eyes,
-slight smile suggesting hidden wisdom
-```
-
-### Animals
-```
-A majestic snow leopard with piercing blue-grey eyes, thick spotted fur
-dusted with snowflakes, powerful muscular build, alert posture on a
-rocky outcrop
+[主要主体] - 谁/什么是焦点
+[属性] - 特征、细节、服装
+[动作/姿态] - 他们正在做什么
+[环境] - 地点、场景、背景
+[风格/媒介] - 艺术手法
+[光照] - 光源、质量、情绪
+[构图] - 取景、摄影角度
+[技术参数] - 相机、镜头、胶片
 ```
 
-### Objects/Products
+## 主体类型
+
+### 人物/肖像
 ```
-A vintage Leica M3 camera with worn brass edges showing decades of use,
-black leather covering with patina, sitting on weathered wooden table
+一位六十多岁的杰出教授，银发圆眼镜，穿着带皮革肘垫的粗花呢夹克，
+深邃思考的眼睛，嘴角微带笑意，暗示着隐藏的智慧
 ```
 
-### Landscapes
+### 动物
 ```
-A dramatic fjord at dawn, steep granite cliffs rising from mirror-still
-water, wisps of morning mist, distant snow-capped peaks catching first
-golden light
-```
-
-### Architecture
-```
-A brutalist concrete apartment building in late afternoon light, geometric
-shadows creating abstract patterns, warm sunlight contrasting with cool
-grey concrete
+一只雄伟的雪豹，锐利的蓝灰色眼睛，厚实的斑点皮毛上沾着雪花，
+强壮的肌肉线条，在岩石露头上保持警觉的姿态
 ```
 
-## Style Categories
-
-### Photorealistic
-
-#### Modern Digital
+### 物品/产品
 ```
-shot on Sony A7IV, clean and sharp, high dynamic range, professional color grading
+一台复古徕卡 M3 相机，黄铜边缘因数十年使用而磨损，
+黑色皮革覆面带着岁月的包浆，放置在风化木桌上
 ```
 
-#### Film Photography
+### 风景
 ```
-shot on Kodak Portra 400, natural film grain, organic colors, slight warmth
-```
-
-#### Vintage Digital (2000s)
-```
-early digital camera aesthetic, slight noise, flash photography, candid feel
+黎明时分戏剧性的峡湾，陡峭的花岗岩峭壁从如镜的水面升起，
+几缕晨雾，远处白雪皑皑的山峰捕捉到第一缕金光
 ```
 
-#### 80s Film
+### 建筑
 ```
-80s film photography, film grain, warm color cast, soft focus, nostalgic
-```
-
-### Artistic Styles
-
-#### Oil Painting
-```
-classical oil painting style, visible brushstrokes, rich colors, dramatic lighting
+一座粗野主义混凝土公寓楼在午后光线下，几何阴影形成抽象图案，
+温暖的阳光与冷灰色混凝土形成对比
 ```
 
-#### Watercolor
+## 风格类别
+
+### 照片级写实
+
+#### 现代数码
 ```
-delicate watercolor painting, soft edges, transparent washes, paper texture visible
+Sony A7IV 拍摄，干净锐利，高动态范围，专业调色
 ```
 
-#### Digital Art
+#### 胶片摄影
 ```
-polished digital illustration, clean lines, vibrant colors, professional concept art
-```
-
-#### Anime/Manga
-```
-anime style, large expressive eyes, clean linework, cel shading, vibrant palette
+Kodak Portra 400 拍摄，自然胶片颗粒，有机色彩，轻微暖调
 ```
 
-## Lighting Patterns
-
-### Portrait Lighting
+#### 复古数码（2000 年代）
 ```
-Rembrandt lighting - 45 degree key light creating triangle shadow on cheek
-Butterfly lighting - overhead key creating shadow under nose
-Split lighting - 90 degree side light, half face in shadow
-Loop lighting - slight angle creating small nose shadow
+早期数码相机美学，轻微噪点，闪光摄影，抓拍感
 ```
 
-### Natural Lighting
+#### 80 年代胶片
 ```
-Golden hour - warm, soft, directional light 1 hour before sunset
-Blue hour - cool, ambient light just after sunset
-Overcast - soft, even, diffused lighting
-Harsh midday - strong contrast, defined shadows
+80 年代胶片摄影，胶片颗粒，暖色调，柔焦，怀旧
 ```
 
-### Atmospheric
+### 艺术风格
+
+#### 油画
 ```
-Volumetric light - visible light rays through fog/dust
-Rim lighting - backlight creating edge glow
-Practical lighting - visible light sources in scene
-Neon glow - colorful artificial urban lighting
+古典油画风格，可见笔触，丰富色彩，戏剧性光线
 ```
 
-## Camera and Lens Simulation
-
-### Camera Bodies
+#### 水彩画
 ```
-Shot on Hasselblad X2D - medium format, exceptional detail
-Shot on Canon 5D Mark IV - professional DSLR quality
-Shot on Leica M10 - rangefinder character, smooth tonality
-Shot on iPhone 15 Pro - computational photography look
+精致水彩画，柔和边缘，透明水彩层，可见纸张纹理
 ```
 
-### Lens Characteristics
+#### 数字艺术
 ```
-85mm f/1.4 - classic portrait, creamy bokeh
-24mm f/2.8 - wide angle, environmental
-50mm f/1.2 - natural perspective, shallow DOF
-135mm f/2 - compressed perspective, smooth background
-Macro lens - extreme close-up detail
-Tilt-shift lens - miniature effect or architectural correction
+精致的数字插画，干净线条，鲜艳色彩，专业概念艺术
 ```
 
-### Technical Settings
+#### 动漫/漫画
 ```
-f/1.4 - extremely shallow depth of field
-f/2.8 - moderate background blur
-f/8 - sharp throughout, landscape
-f/16 - maximum sharpness, long exposure
-ISO 100 - clean, no noise
-ISO 3200 - visible grain, low light
+动漫风格，大大的有表现力的眼睛，干净线条，赛璐珞着色，鲜艳调色板
 ```
 
-## Composition Techniques
+## 光照模式
 
-### Framing
+### 肖像光照
 ```
-extreme close-up - filling frame with detail
-close-up - head and shoulders
-medium shot - waist up
-full shot - entire body
-wide shot - subject in environment
-establishing shot - location focus
+伦勃朗光 - 45 度主光在脸颊上形成三角形阴影
+蝴蝶光 - 头顶主光在鼻子下形成阴影
+分割光 - 90 度侧光，半张脸在阴影中
+循环光 - 轻微角度形成小鼻影
 ```
 
-### Angles
+### 自然光照
 ```
-eye level - natural, relatable
-low angle - powerful, imposing
-high angle - diminished, overview
-Dutch angle - tension, unease
-bird's eye - pattern, layout
-worm's eye - dramatic upward view
+黄金时刻 - 日落前 1 小时的温暖柔和定向光
+蓝色时刻 - 日落后凉爽的环境光
+阴天 - 柔和均匀的漫射光
+正午强光 - 高对比度，明显阴影
 ```
 
-### Composition Rules
+### 氛围光照
 ```
-rule of thirds - subject at intersection points
-centered composition - symmetry, stability
-leading lines - guiding eye to subject
-frame within frame - natural framing elements
-negative space - minimalist, breathing room
-```
-
-## Complete Example Prompts
-
-### Editorial Portrait
-```
-A fashion editorial portrait of a young woman with striking features and
-high cheekbones, wearing an avant-garde geometric collar in silver, dramatic
-side lighting creating strong shadows, shot on Hasselblad with 100mm lens
-at f/2.8, studio background with subtle gradient, high fashion magazine style
+体积光 - 透过雾/尘埃的可见光线
+轮廓光 - 逆光形成边缘发光
+现场光 - 场景中的可见光源
+霓虹光芒 - 多彩的人造城市灯光
 ```
 
-### Product Photography
+## 相机与镜头模拟
+
+### 相机型号
 ```
-A premium wireless headphone product shot, matte black finish with rose gold
-accents, floating at slight angle against pure white background, soft even
-lighting eliminating harsh shadows, reflection visible on glossy surface below,
-commercial catalog style, ultra sharp focus throughout
+哈苏 X2D 拍摄 - 中画幅，卓越细节
+佳能 5D Mark IV 拍摄 - 专业单反质量
+徕卡 M10 拍摄 - 旁轴特色，平滑色调
+iPhone 15 Pro 拍摄 - 计算摄影风格
 ```
 
-### Landscape
+### 镜头特性
 ```
-A misty morning in ancient redwood forest, towering trees disappearing into
-fog above, ferns covering forest floor in layers of green, single shaft of
-golden sunlight breaking through canopy, shot on large format camera, rich
-detail in bark textures, Ansel Adams inspired black and white with deep tones
+85mm f/1.4 - 经典人像，奶油散景
+24mm f/2.8 - 广角，环境
+50mm f/1.2 - 自然透视，浅景深
+135mm f/2 - 压缩透视，平滑背景
+微距镜头 - 极端特写细节
+移轴镜头 - 微缩效果或建筑校正
 ```
 
-### Architectural
+### 技术设置
 ```
-Modern minimalist beach house at golden hour, floor-to-ceiling glass walls
-reflecting sunset colors, clean white concrete and natural wood, infinity
-pool merging with ocean horizon, architectural photography style, wide angle
-showing full structure, warm evening light
+f/1.4 - 极浅景深
+f/2.8 - 中等背景模糊
+f/8 - 全程锐利，风景
+f/16 - 最大清晰度，长时间曝光
+ISO 100 - 干净，无噪点
+ISO 3200 - 可见颗粒，低光
+```
+
+## 构图技巧
+
+### 取景
+```
+极端特写 - 用细节填满画面
+特写 - 头部和肩部
+中景 - 腰部以上
+全景 - 整个身体
+广角 - 主体在环境中
+定场镜头 - 地点聚焦
+```
+
+### 角度
+```
+平视 - 自然，亲切
+低角度 - 强大，威严
+高角度 - 减弱，俯瞰
+荷兰角 - 紧张，不安
+鸟瞰 - 图案，布局
+虫眼 - 戏剧性的向上视角
+```
+
+### 构图规则
+```
+三分法 - 主体在交叉点
+中心构图 - 对称，稳定
+引导线 - 引导视线到主体
+画中画 - 自然取景元素
+负空间 - 极简，呼吸空间
+```
+
+## 完整示例提示词
+
+### 时尚编辑肖像
+```
+一位年轻女性的时尚编辑肖像照，五官鲜明颧骨高挑，
+穿着银色前卫几何领饰，戏剧性的侧光形成强烈阴影，
+使用哈苏相机 100mm f/2.8 拍摄，工作室背景带微妙渐变，
+高级时尚杂志风格
+```
+
+### 产品摄影
+```
+一款高级无线耳机产品照，哑光黑色饰面配玫瑰金点缀，
+在纯白背景下以微倾角度悬浮，柔和均匀的光线消除硬阴影，
+下方光泽表面可见倒影，商品目录风格，全程超锐利对焦
+```
+
+### 风景
+```
+古老红杉林中一个雾蒙蒙的早晨，高耸的树木消失在雾中，
+蕨类植物层层覆盖林间地面，一束金色阳光穿透树冠，
+使用大画幅相机拍摄，树皮质感细腻丰富，
+安塞尔·亚当斯风格的黑白摄影，色调深邃
+```
+
+### 建筑
+```
+现代极简海滩别墅在金色时刻，落地玻璃墙反射日落色彩，
+干净的白色混凝土和天然木材，无边泳池与海洋地平线融为一体，
+建筑摄影风格，广角展示全貌，温暖的傍晚光线
 ```

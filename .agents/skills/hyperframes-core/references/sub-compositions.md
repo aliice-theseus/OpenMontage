@@ -1,10 +1,10 @@
-# Sub-Compositions
+# 子合成
 
-A sub-composition is a separate HTML file embedded in a host composition. HyperFrames loads it, seeks it independently, and composites the result into the host at `data-start`.
+子合成是嵌入宿主合成中的单独 HTML 文件。HyperFrames 加载它，独立定位它，并将结果合成到宿主的 `data-start` 处。
 
-## Host Wiring
+## 宿主连接
 
-In the host composition, the sub-composition appears as a clip with `data-composition-src`:
+在宿主合成中，子合成显示为带有 `data-composition-src` 的剪辑：
 
 ```html
 <div
@@ -19,21 +19,21 @@ In the host composition, the sub-composition appears as a clip with `data-compos
 ></div>
 ```
 
-- `data-composition-id` on the host must match the internal `data-composition-id` of the file at `data-composition-src`.
-- The host clip needs its own `data-start`, `data-duration`, `data-track-index`, `data-width`, `data-height`.
+- 宿主上的 `data-composition-id` 必须与 `data-composition-src` 处文件的内部 `data-composition-id` 匹配。
+- 宿主剪辑需要自己的 `data-start`、`data-duration`、`data-track-index`、`data-width`、`data-height`。
 
-## Sub-Composition File Structure
+## 子合成文件结构
 
-### Mental model — what the runtime actually does
+### 心智模型 — 运行时实际做什么
 
-When a host loads a sub-composition via `data-composition-src`, the runtime:
+当宿主通过 `data-composition-src` 加载子合成时，运行时：
 
-1. `fetch`es the HTML file.
-2. Parses it with `DOMParser`.
-3. **Finds the `<template>` element and clones ONLY its contents into the host slot.**
-4. Everything **outside** the `<template>` (including the entire `<head>`) is **discarded**.
+1. `fetch` HTML 文件。
+2. 使用 `DOMParser` 解析它。
+3. **找到 `<template>` 元素并仅将其中内容克隆到宿主插槽中。**
+4. `<template>` **外部**的一切（包括整个 `<head>`）都被**丢弃**。
 
-So `<template>` is not just a wrapper — it is the **transport container**. If a node needs to exist in the live render, it must be inside `<template>`. Full stop.
+因此 `<template>` 不仅仅是一个包装器 — 它是**传输容器**。如果节点需要在实时渲染中存在，它必须在 `<template>` 内部。句号。
 
 ### File shape
 

@@ -1,15 +1,15 @@
 ---
 name: get-audio-duration
-description: Getting the duration of an audio file in seconds with Mediabunny
+description: 使用 Mediabunny 获取音频文件时长（秒）
 metadata:
   tags: duration, audio, length, time, seconds, mp3, wav
 ---
 
-# Getting audio duration with Mediabunny
+# 使用 Mediabunny 获取音频时长
 
-Mediabunny can extract the duration of an audio file. It works in browser, Node.js, and Bun environments.
+Mediabunny 可以提取音频文件的时长。它可在浏览器、Node.js 和 Bun 环境中使用。
 
-## Getting audio duration
+## 获取音频时长
 
 ```tsx title="get-audio-duration.ts"
 import { Input, ALL_FORMATS, UrlSource } from "mediabunny";
@@ -27,16 +27,16 @@ export const getAudioDuration = async (src: string) => {
 };
 ```
 
-## Usage
+## 使用方法
 
 ```tsx
 const duration = await getAudioDuration("https://remotion.media/audio.mp3");
-console.log(duration); // e.g. 180.5 (seconds)
+console.log(duration); // 例如 180.5（秒）
 ```
 
-## Using with staticFile in Remotion
+## 在 Remotion 中与 staticFile 一起使用
 
-Make sure to wrap the file path in `staticFile()`:
+确保将文件路径包裹在 `staticFile()` 中：
 
 ```tsx
 import { staticFile } from "remotion";
@@ -44,15 +44,15 @@ import { staticFile } from "remotion";
 const duration = await getAudioDuration(staticFile("audio.mp3"));
 ```
 
-## In Node.js and Bun
+## 在 Node.js 和 Bun 中
 
-Use `FileSource` instead of `UrlSource`:
+使用 `FileSource` 替代 `UrlSource`：
 
 ```tsx
 import { Input, ALL_FORMATS, FileSource } from "mediabunny";
 
 const input = new Input({
   formats: ALL_FORMATS,
-  source: new FileSource(file), // File object from input or drag-drop
+  source: new FileSource(file), // 来自输入或拖放的文件对象
 });
 ```

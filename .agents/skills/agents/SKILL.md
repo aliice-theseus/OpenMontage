@@ -1,35 +1,35 @@
 ---
 name: agents
-description: Build voice AI agents with ElevenLabs. Use when creating voice assistants, customer service bots, interactive voice characters, or any real-time voice conversation experience.
+description: 使用 ElevenLabs 构建语音 AI 代理。在创建语音助手、客服机器人、交互式语音角色或任何实时语音对话体验时使用。
 license: MIT
-compatibility: Requires internet access and an ElevenLabs API key (ELEVENLABS_API_KEY).
+compatibility: 需要互联网连接和 ElevenLabs API 密钥（ELEVENLABS_API_KEY）。
 metadata: {"openclaw": {"requires": {"env": ["ELEVENLABS_API_KEY"]}, "primaryEnv": "ELEVENLABS_API_KEY"}}
 ---
 
-# ElevenLabs Agents Platform
+# ElevenLabs 代理平台
 
-Build voice AI agents with natural conversations, multiple LLM providers, custom tools, and easy web embedding.
+使用自然对话、多种 LLM 提供商、自定义工具和简单的 Web 嵌入构建语音 AI 代理。
 
-> **Setup:** See [Installation Guide](references/installation.md) for CLI and SDK setup.
+> **设置：** 请参阅 [安装指南](references/installation.md) 了解 CLI 和 SDK 设置。
 
-## Quick Start with CLI
+## CLI 快速入门
 
-The ElevenLabs CLI is the recommended way to create and manage agents:
+ElevenLabs CLI 是创建和管理代理的推荐方式：
 
 ```bash
-# Install CLI and authenticate
+# 安装 CLI 并进行身份验证
 npm install -g @elevenlabs/cli
 elevenlabs auth login
 
-# Initialize project and create an agent
+# 初始化项目并创建代理
 elevenlabs agents init
 elevenlabs agents add "My Assistant" --template complete
 
-# Push to ElevenLabs platform
+# 推送到 ElevenLabs 平台
 elevenlabs agents push
 ```
 
-**Available templates:** `complete`, `minimal`, `voice-only`, `text-only`, `customer-service`, `assistant`
+**可用模板：** `complete`、`minimal`、`voice-only`、`text-only`、`customer-service`、`assistant`
 
 ### Python
 
@@ -88,9 +88,9 @@ curl -X POST "https://api.elevenlabs.io/v1/convai/agents/create?enable_versionin
   -d '{"name": "My Assistant", "conversation_config": {"agent": {"first_message": "Hello!", "language": "en", "prompt": {"prompt": "You are helpful.", "llm": "gemini-2.0-flash"}}, "tts": {"voice_id": "JBFqnCBsd6RMkjVDRZzb"}}}'
 ```
 
-## Starting Conversations
+## 开始对话
 
-**Server-side (Python):** Get signed URL for client connection:
+**服务器端（Python）：** 获取客户端连接的有符号 URL：
 ```python
 signed_url = client.conversational_ai.conversations.get_signed_url(
     agent_id="your-agent-id",
@@ -98,7 +98,7 @@ signed_url = client.conversational_ai.conversations.get_signed_url(
 )
 ```
 
-**Client-side (JavaScript):**
+**客户端（JavaScript）：**
 ```javascript
 import { Conversation } from "@elevenlabs/client";
 
@@ -111,49 +111,49 @@ const conversation = await Conversation.startSession({
 });
 ```
 
-**React Hook:**
+**React Hook：**
 ```typescript
 import { useConversation } from "@elevenlabs/react";
 
 const conversation = useConversation({ onMessage: (msg) => console.log(msg) });
-// Get a signed URL for the target environment from your backend, then:
+// 从后端获取目标环境的有符号 URL，然后：
 await conversation.startSession({ signedUrl: token });
 ```
 
-## Configuration
+## 配置
 
-| Provider | Models |
-|----------|--------|
-| OpenAI | `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo` |
+| 提供商    | 模型 |
+|-----------|------|
+| OpenAI    | `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo` |
 | Anthropic | `claude-sonnet-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4`, `claude-haiku-4-5`, `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-haiku` |
-| Google | `gemini-3.1-flash-lite-preview`, `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`, `gemini-2.0-flash`, `gemini-2.0-flash-lite` |
+| Google    | `gemini-3.1-flash-lite-preview`, `gemini-3-pro-preview`, `gemini-3-flash-preview`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`, `gemini-2.0-flash`, `gemini-2.0-flash-lite` |
 | ElevenLabs | `glm-45-air-fp8`, `qwen3-30b-a3b`, `gpt-oss-120b` |
-| Custom | `custom-llm` (bring your own endpoint) |
+| 自定义    | `custom-llm`（自带端点） |
 
-Use `GET /v1/convai/llm/list` to inspect the current model catalog, including deprecation state, token/context limits, and capability flags such as image-input support.
+使用 `GET /v1/convai/llm/list` 查看当前模型目录，包括弃用状态、令牌/上下文限制以及图片输入支持等能力标志。
 
-**Popular voices:** `JBFqnCBsd6RMkjVDRZzb` (George), `EXAVITQu4vr4xnSDxMaL` (Sarah), `onwK4e9ZLuTAKqWW03F9` (Daniel), `XB0fDUnXU5powFXDhCwa` (Charlotte)
+**热门语音：** `JBFqnCBsd6RMkjVDRZzb`（George）、`EXAVITQu4vr4xnSDxMaL`（Sarah）、`onwK4e9ZLuTAKqWW03F9`（Daniel）、`XB0fDUnXU5powFXDhCwa`（Charlotte）
 
-**Turn eagerness:** `patient` (waits longer for user to finish), `normal`, or `eager` (responds quickly)
+**抢话程度：** `patient`（等待用户说完更长时间）、`normal` 或 `eager`（快速响应）
 
-See [Agent Configuration](references/agent-configuration.md) for all options.
+所有选项请参阅 [代理配置](references/agent-configuration.md)。
 
-## Tools
+## 工具
 
-Extend agents with webhook, client, or built-in system tools. Tools are defined inside `conversation_config.agent.prompt`:
+通过 webhook、客户端或内置系统工具扩展代理。工具定义在 `conversation_config.agent.prompt` 内：
 
-Workspace environment variables can resolve per-environment server tool URLs, headers, and auth connections, and runtime system variables such as `{{system__conversation_history}}` can pass full conversation context into tool calls when needed.
+工作区环境变量可以解析每个环境下的服务器工具 URL、请求头和认证连接，运行时系统变量如 `{{system__conversation_history}}` 可在需要时将完整对话上下文传递到工具调用中。
 
 ```python
 "prompt": {
     "prompt": "You are a helpful assistant that can check the weather.",
     "llm": "gemini-2.0-flash",
     "tools": [
-        # Webhook: server-side API call
+        # Webhook：服务器端 API 调用
         {"type": "webhook", "name": "get_weather", "description": "Get weather",
          "api_schema": {"url": "https://api.example.com/weather", "method": "POST",
              "request_body_schema": {"type": "object", "properties": {"location": {"type": "string"}}, "required": ["location"]}}},
-        # Client: runs in the browser
+        # Client：在浏览器中运行
         {"type": "client", "name": "show_product", "description": "Display a product",
          "parameters": {"type": "object", "properties": {"productId": {"type": "string"}}, "required": ["productId"]}}
     ],
@@ -164,7 +164,7 @@ Workspace environment variables can resolve per-environment server tool URLs, he
 }
 ```
 
-**Client tools** run in browser:
+**客户端工具**在浏览器中运行：
 ```javascript
 clientTools: {
   show_product: async ({ productId }) => {
@@ -174,22 +174,22 @@ clientTools: {
 }
 ```
 
-See [Client Tools Reference](references/client-tools.md) for complete documentation.
+完整文档请参阅 [客户端工具参考](references/client-tools.md)。
 
-## Widget Embedding
+## Widget 嵌入
 
 ```html
 <elevenlabs-convai agent-id="your-agent-id"></elevenlabs-convai>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 ```
 
-Customize with attributes: `avatar-image-url`, `action-text`, `start-call-text`, `end-call-text`.
+使用属性自定义：`avatar-image-url`、`action-text`、`start-call-text`、`end-call-text`。
 
-See [Widget Embedding Reference](references/widget-embedding.md) for all options.
+所有选项请参阅 [Widget 嵌入参考](references/widget-embedding.md)。
 
-## Outbound Calls
+## 外呼电话
 
-Make outbound phone calls using your agent via Twilio integration:
+通过 Twilio 集成使用代理拨打外呼电话：
 
 ### Python
 
@@ -222,67 +222,67 @@ curl -X POST "https://api.elevenlabs.io/v1/convai/twilio/outbound-call" \
   -d '{"agent_id": "your-agent-id", "agent_phone_number_id": "your-phone-number-id", "to_number": "+1234567890", "call_recording_enabled": true}'
 ```
 
-See [Outbound Calls Reference](references/outbound-calls.md) for configuration overrides and dynamic variables.
+配置覆盖和动态变量请参阅 [外呼电话参考](references/outbound-calls.md)。
 
-## Managing Agents
+## 管理代理
 
-### Using CLI (Recommended)
+### 使用 CLI（推荐）
 
 ```bash
-# List agents and check status
+# 列出代理并检查状态
 elevenlabs agents list
 elevenlabs agents status
 
-# Import agents from platform to local config
-elevenlabs agents pull                      # Import all agents
-elevenlabs agents pull --agent <agent-id>   # Import specific agent
+# 从平台导入代理到本地配置
+elevenlabs agents pull                      # 导入所有代理
+elevenlabs agents pull --agent <agent-id>   # 导入指定代理
 
-# Push local changes to platform
-elevenlabs agents push              # Upload configurations
-elevenlabs agents push --dry-run    # Preview changes first
+# 将本地更改推送到平台
+elevenlabs agents push              # 上传配置
+elevenlabs agents push --dry-run    # 先预览更改
 
-# Add tools
+# 添加工具
 elevenlabs tools add-webhook "Weather API"
 elevenlabs tools add-client "UI Tool"
 ```
 
-### Project Structure
+### 项目结构
 
-The CLI creates a project structure for managing agents:
+CLI 创建一个用于管理代理的项目结构：
 
 ```
 your_project/
-├── agents.json       # Agent definitions
-├── tools.json        # Tool configurations
-├── tests.json        # Test configurations
-├── agent_configs/    # Individual agent configs
-├── tool_configs/     # Individual tool configs
-└── test_configs/     # Individual test configs
+├── agents.json       # 代理定义
+├── tools.json        # 工具配置
+├── tests.json        # 测试配置
+├── agent_configs/    # 单个代理配置
+├── tool_configs/     # 单个工具配置
+└── test_configs/     # 单个测试配置
 ```
 
-### SDK Examples
+### SDK 示例
 
 ```python
-# List
+# 列出
 agents = client.conversational_ai.agents.list()
 
-# Get
+# 获取
 agent = client.conversational_ai.agents.get(agent_id="your-agent-id")
 
-# Update (partial - only include fields to change)
+# 更新（部分 - 仅包含要更改的字段）
 client.conversational_ai.agents.update(agent_id="your-agent-id", name="New Name")
 client.conversational_ai.agents.update(agent_id="your-agent-id",
     conversation_config={
         "agent": {"prompt": {"prompt": "New instructions", "llm": "claude-sonnet-4"}}
     })
 
-# Delete
+# 删除
 client.conversational_ai.agents.delete(agent_id="your-agent-id")
 ```
 
-See [Agent Configuration](references/agent-configuration.md) for all configuration options and SDK examples.
+所有配置选项和 SDK 示例请参阅 [代理配置](references/agent-configuration.md)。
 
-## Error Handling
+## 错误处理
 
 ```python
 try:
@@ -291,12 +291,12 @@ except Exception as e:
     print(f"API error: {e}")
 ```
 
-Common errors: **401** (invalid key), **404** (not found), **422** (invalid config), **429** (rate limit)
+常见错误：**401**（无效密钥）、**404**（未找到）、**422**（无效配置）、**429**（速率限制）
 
-## References
+## 参考文档
 
-- [Installation Guide](references/installation.md) - SDK setup and migration
-- [Agent Configuration](references/agent-configuration.md) - All config options and CRUD examples
-- [Client Tools](references/client-tools.md) - Webhook, client, and system tools
-- [Widget Embedding](references/widget-embedding.md) - Website integration
-- [Outbound Calls](references/outbound-calls.md) - Twilio phone call integration
+- [安装指南](references/installation.md) - SDK 设置和迁移
+- [代理配置](references/agent-configuration.md) - 所有配置选项和 CRUD 示例
+- [客户端工具](references/client-tools.md) - Webhook、客户端和系统工具
+- [Widget 嵌入](references/widget-embedding.md) - 网站集成
+- [外呼电话](references/outbound-calls.md) - Twilio 电话集成

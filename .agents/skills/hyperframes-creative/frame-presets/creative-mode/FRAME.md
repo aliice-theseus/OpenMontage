@@ -2,11 +2,11 @@
 version: alpha
 name: Creative Mode — Frame (video / frame layer)
 description: >
-  Video-first companion to Creative Mode's design.md. The unit is the frame (1920×1080),
-  not the slide-in-a-deck. Atoms are identical and sacred — warm cream canvas, 4px ink
-  borders, hard offset shadows (no blur), Archivo Black uppercase at 0.92 line-height,
-  JetBrains Mono taxonomy, Space Grotesk body, the four-accent palette. Composition,
-  frame scale, and aspect-ratio behavior are rewritten for the frame. Motion is out of scope.
+  Creative Mode 的 design.md 的视频优先伴侣。单位是帧 (1920×1080)，
+  不是幻灯片中的一页。原子相同且神圣 — 暖奶油画布、4px 墨水色
+  边框、硬偏移阴影（无模糊）、Archivo Black 大写 0.92 行高、
+  JetBrains Mono 分类、Space Grotesk 正文、四强调色调色板。构图、
+  帧比例和宽高比行为已为帧重写。运动不在此范围。
 unit: the frame — 1920×1080 primary; 9:16 and 1:1 documented
 principle: atoms are sacred · composition is free · numbers come from the script
 
@@ -122,15 +122,11 @@ components:
     description: "Decorative figure; pairs with a green panel for shape contrast."
 ---
 
-# Creative Mode — Frame (video / frame layer)
+# Creative Mode — 帧（视频 / 帧层）
 
-## Overview
+## 概述
 
-Creative Mode at frame scale is a **neo-brutalist editorial poster in motion's clothing** — warm
-cream paper, near-black ink, and four accents that collide at full saturation. Every frame is one
-flat color-blocked composition: no gradients, no blurred shadows, no rounded cards (save the one
-pill chip). Depth is **hard offset shadow** (a solid same-direction duplicate) or **color-block
-contrast**, never light.
+帧尺度下的 Creative Mode 是一个**新粗野主义编辑海报披着运动的外衣** — 暖奶油纸、近黑墨水色和四种全饱和碰撞的强调色。每帧是一个平面色块构图：无渐变、无模糊阴影、无圆角卡片（除了一个药丸碎片）。深度是**硬偏移阴影**（实色同向复制）或**色块对比**，从不是光线。
 
 The display voice is **Archivo Black in strict uppercase at 0.92 line-height** — letters overlap
 their own cap height; that tightness is the brand. **JetBrains Mono** carries every label, kicker,
@@ -138,149 +134,112 @@ counter, and axis as a "technical artifact" register. **Space Grotesk** carries 
 The frame is loud by construction and calm by restraint: two or three accents per frame, the green
 ground reserved for a single closing plate, the hard shadow spent on one featured element only.
 
-**Key characteristics at frame scale:**
+**帧尺度的关键特征：**
 
-- **Cream ground** (`{colors.cream}`) on nearly every frame; `{colors.green}` reserved for the closing plate.
-- **0.4cqw (4px @1920) ink borders** on every structural element; 0.3cqw internal rules.
-- **Hard offset shadow** (≈1.25cqw, orange+ink) on one featured block per frame — never blurred.
-- **Archivo Black uppercase**, 0.92 line-height, always; sentence-case Archivo Black does not exist.
-- **Two or three accents per frame**, never all four; collisions are the design.
-- **One pill chip** (999px) per frame as the sole rounded element.
+- **奶油背景**（`{colors.cream}`）在几乎每帧上；`{colors.green}` 专用于结束板。
+- **0.4cqw (4px @1920) 墨水色边框** 在每个结构元素上；0.3cqw 内部规则线。
+- **硬偏移阴影**（≈1.25cqw，橙色+墨水）在每帧一个特色块上 — 从不模糊。
+- **Archivo Black 大写**，始终 0.92 行高；不存在句首大写的 Archivo Black。
+- **每帧两到三个强调色**，从不全四种；碰撞即是设计。
+- **每帧一个药丸芯片**（999px）作为唯一圆角元素。
 
-### Frame Craft Bar
+### 帧工艺条
 
-Three eyeball tests gate every frame before any structural check:
+三项目测检查在任何结构检查前把关每帧：
 
-- **Squint** — exactly one element dominates, at **3–6× its nearest neighbor** (a chasm, not a ramp): the `display-hero`/`display-xl` claim or the `stat-num` figure, never two rival headlines.
-- **Silence** — sparse frames (cover, claim, closer) read **45–60% empty**; the **stat grid and comparison ledger are the one dense exception**. Never fill a sparse frame to look complete.
-- **Restraint** — the scarce gestures fire **once per frame**: at most one hard-offset shadow, two-to-three accents (never all four), the green ground reserved for the single closing plate.
-- **Reference** — aim at a **Risograph editorial poster / punk-zine spread** (flat ink-bordered blocks, one big claim, vast cream); failure looks like a **rounded, soft-shadowed SaaS feature grid**.
+- **眯眼测试** — 恰好一个元素占主导，以 **3–6 倍于最近邻元素**（深渊，而非阶梯）：`display-hero`/`display-xl` 声明或 `stat-num` 数字，绝不两个竞争的标题。
+- **留白测试** — 稀疏帧（封面、声明、结束板）呈现 **45–60% 空白**；**统计网格和对比账簍是唯一密集的例外**。绝不填充稀疏帧以看起来完整。
+- **克制测试** — 稀缺的手法每帧只用一次：最多一个硬偏移阴影，两到三个强调色（从不全四种），绿色背景专用于单一结束板。
+- **参照测试** — 瞄准**Risograph 编辑海报 / 扮酷杂志张页**（平面墨边块、一个大声明、广阔奶油）；失败看起来像**圆角、柔和阴影的 SaaS 功能网格**。
 
-## The Frame
+## 帧
 
-- **Primary:** 1920×1080 (16:9). All display sizes authored in **`cqw`** (`px ÷ 1920 × 100 = cqw`).
-- **Vertical:** 1080×1920 (9:16). **Square:** 1080×1080 (1:1).
-- **Safe area:** chrome at `3.3cqw` (64px) inset; content at `5cqw` (96px) gutter. No load-bearing element crosses the `3.3cqw` line.
+- **主尺寸：** 1920×1080 (16:9)。所有展示尺寸以 **`cqw`** 为单位编写（`px ÷ 1920 × 100 = cqw`）。
+- **竖版：** 1080×1920 (9:16)。**方版：** 1080×1080 (1:1)。
+- **安全区域：** 铬色为 `3.3cqw` (64px) 内缩进；内容为 `5cqw` (96px) 沟槽。无承重元素跨越 `3.3cqw` 线。
 
-**The container law (load-bearing).** Every frame ground sets `container-type: size`. ALL
-frame-relative units are `cqw`/`cqh` (1cqw = 1% of the frame's width), resolved against that
-ground — **never `vw`.** `vw` measures the page viewport, so a frame inflates whenever it isn't
-rendered full-screen; `cqw` resolves against the frame at any render size. This is why every size
-in the display ramp is `cqw`.
+**容器法则（承重规则）。** 每个帧背景设置 `container-type: size`。所有帧相对单位都是 `cqw`/`cqh`（1cqw = 帧宽度的 1%），以那个背景为基准解析 — **绝不用 `vw`。** `vw` 测量页面视口，因此帧在非全屏渲染时会膨胀；`cqw` 在任何渲染尺寸下都相对于帧解析。这就是为什么展示阶梯中的所有尺寸都是 `cqw`。
 
-## Colors
+## 颜色
 
-Tokens identical to the source. At frame scale: `{colors.cream}` is the **ground**, `{colors.ink}`
-is borders + type, and the four accents (`green` / `pink` / `orange` / `yellow`) are **flat fills
-rationed two-to-three per frame.** `{colors.orange}` is also the hard-shadow color. `{colors.green}`
-doubles as the single closing-plate ground — its rarity is the impact. Never introduce a fifth
-accent; never use pure white; never gradient.
+色值令牌与源文件一致。在帧尺度下：`{colors.cream}` 是**背景**，`{colors.ink}`
+是边框 + 字体，四种强调色（`green` / `pink` / `orange` / `yellow`）是**每帧配给两到三种的平面填充**。`{colors.orange}` 也是硬阴影颜色。`{colors.green}`
+兼作单一结束板背景 — 其稀有性即是冲击力。绝不引入第五种强调色；绝不使用纯白色；绝不使用渐变。
 
-## Typography
+## 排版
 
-Two ramps. The **reading ramp** (body, mono labels, table heads) holds px+cqw for chrome and copy.
-The **display/hero ramp** is frame-native and authored in `cqw` — from `display-head` (4.2cqw) up
-to `display-hero` (15.5cqw) for a wordmark cover.
+两个阶梯。**阅读阶梯**（正文、单位标签、表格标题）使用 px+cqw 用于铬色和文案。**展示/英雄阶梯** 是帧原生的，以 `cqw` 为单位编写 — 从 `display-head` (4.2cqw) 到 `display-hero` (15.5cqw)，用于品牌字标封面。
 
-- **Legibility floor:** any load-bearing line ≥ **1.4cqw (≈27px@1920)**. Mono chrome at 1.15cqw is colophon only.
-- **Fit-to-measure:** a headline's size tracks its line length. Cap the headline block at **≤ 78cqw** and never touch the safe margin. ≤3 words → `display-hero`/`display-xl`; 4–6 words → `display-lg`; 7+ words → `display-head`. Short lines go big; long lines step down.
-- **Uppercase + 0.92 line-height on all Archivo Black**, always. Mono carries 0.06–0.14em tracking. Never letter-space Archivo Black beyond the encoded −0.01em; never set body centered.
+- **可读性底线：** 任何承重行 ≥ **1.4cqw (≈27px@1920)**。单位铬色在 1.15cqw 仅为版权信息。
+- **按篇幅调整：** 标题的字号跟踪其行长。将标题块限制在 **≤ 78cqw**，绝不触及安全边距。≤3 词 → `display-hero`/`display-xl`；4–6 词 → `display-lg`；7+ 词 → `display-head`。短行用大字；长行降级。
+- **所有 Archivo Black 始终大写 + 0.92 行高**。单位字体使用 0.06–0.14em 字距。绝不将 Archivo Black 字距超过编码的 −0.01em；绝不将正文居中设置。
 
-## Depth & Surface
+## 深度与表面
 
-Zero blur. Two depth devices only:
+零模糊。仅两种深度手法：
 
-- **Hard offset shadow** — a solid duplicate offset ≈1.25cqw in X and Y (`box-shadow: 1.25cqw 1.25cqw 0 {colors.orange}, 1.25cqw 1.25cqw 0 0.2cqw {colors.ink}`). **One featured block per frame** (marker, stamp). Diagram stacks may use a 0.95cqw ink-only offset.
-- **Color-block contrast** — cream on cream-2, ink on cream, accent on cream. No shadow needed when contrast carries.
+- **硬偏移阴影** — 在 X 和 Y 方向上约 1.25cqw 的实色复制偏移（`box-shadow: 1.25cqw 1.25cqw 0 {colors.orange}, 1.25cqw 1.25cqw 0 0.2cqw {colors.ink}`）。**每帧一个特色块**（marker、stamp）。图解堆叠可使用 0.95cqw 纯墨水偏移。
+- **色块对比** — 奶油在 cream-2 上，墨水在奶油上，强调色在奶油上。当对比足以承载时无需阴影。
 
-**Ceiling:** no blurred shadow, no gradient, no glow, anywhere.
+**天花板规则：** 无模糊阴影、无渐变、无发光，任何地方都不得使用。
 
-## Shapes
+## 形状
 
-- **0 radius** on every structural element — stat cells, step cards, table cells, markers, panels.
-- **50%** on decorative circles, stamp inner ring, the meta dot.
-- **999px** on the topbar pill chip only — the single rounded exception.
-- **Rotation** only at the fixed brand angles: badge −4deg, stamp −6deg.
+- 每个结构元素 **0 圆角** — 统计单元、步骤卡片、表格单元、标记、面板。
+- **50%** 在装饰圆圈、印章内环、元数据圆点上。
+- **999px** 仅在顶部栏药丸芯片上 — 唯一圆角例外。
+- **旋转** 仅在固定品牌角度上：badge −4°，stamp −6°。
 
-## Components
+## 组件
 
-- **frame-chrome** — the mono topbar + meta footer. Present on most frames; dropped only on a pure full-bleed wordmark beat if it competes.
-- **stat-cell / step-card** — ink-bordered flat-fill blocks; step sequences end on green.
-- **marker-block** — the one hard-shadow featured callout per frame.
-- **kicker-block** — inverted ink eyebrow chip; **badge-rotated** — −4deg yellow annotation; **pill-badge** — the lone rounded chip.
-- **stamp** — the −6deg closing seal. **comparison-table** — cream-2 ledger with ink head row.
-- **decorative-circle** — yellow disc for shape contrast against a green panel.
+- **frame-chrome** — 单位顶部栏 + 元数据底部栏。几乎每帧都有；仅当纯全出血品牌字标节拍与之竞争时才省略。
+- **stat-cell / step-card** — 墨边平面填充块；步骤序列以绿色结束。
+- **marker-block** — 每帧一个硬阴影特色引出块。
+- **kicker-block** — 反色墨水眉标芯片；**badge-rotated** — −4° 黄色注释；**pill-badge** — 唯一圆角芯片。
+- **stamp** — −6° 结束封印。**comparison-table** — cream-2 账簍，带墨色标题行。
+- **decorative-circle** — 黄色圆盘，用于与绿色面板形成形状对比。
 
-## Frame Treatments
+## 帧处理方案
 
-> Recipe per plate: ground · container · composes · focal · chrome · accent · silence · Fixed/Free · density.
-> Authored at 1920×1080. Lean centered; vary the anchor; one idea per frame.
+> 每块板的配方：背景 · 容器 · 组成 · 焦点 · 铬色 · 强调 · 留白 · 固定/自由 · 密度。
+> 在 1920×1080 下编写。偏向居中；变化锚点；每帧一个想法。
 
-### 1 · Wordmark Cover (identity · move: full-frame lockup · centered)
+### 1 · 品牌字标封面（标识 · 动势：全帧锁定 · 居中）
 
-**Ground** `{colors.cream}`, `frame-pad`. **Container** grid, chrome top/bottom, focal centered.
-**Composes** frame-chrome, the wordmark. **Focal** the two-line wordmark at `display-hero`
-(15.5cqw), centered, second line in an accent (`{colors.pink}`/`orange`). **Chrome** mono topbar
-(section label + pill) and meta footer (descriptor + 01•NN). **Accent** the second-line color only;
-optionally one corner decorative-circle bleeding off an edge. **Silence** ~55% empty cream.
-**Fixed** Archivo Black uppercase 0.84 lh, one accent on the wordmark, square corners. **Free** which
-accent, line break, whether a circle bleeds a corner. **Density** sparse.
+**背景** `{colors.cream}`，`frame-pad`。**容器** 网格，铬色顶部/底部，焦点居中。**组成** frame-chrome、品牌字标。**焦点** `display-hero`(15.5cqw)的两行品牌字标，居中，第二行为强调色（`{colors.pink}`/`orange`）。**铬色** 单位顶部栏（节目标签 + 药丸）和元数据底部栏（描述符 + 01•NN）。**强调** 仅第二行颜色；可选一个角落装饰圆出血边缘。**留白** ~55% 空白奶油。**固定** Archivo Black 大写 0.84 lh，品牌字标上一个强调色，方角。**自由** 哪种强调色、换行、圆是否出血角落。**密度** 稀疏。
 
-### 2 · Big Claim (oversized statement · move: scale · left)
+### 2 · 大声明（超大声明 · 动势：比例 · 左对齐）
 
-**Ground** one full-bleed accent (`{colors.pink}`/`green`/`orange`), `content-gutter`. **Container**
-flex, claim left-anchored and vertically centered. **Composes** kicker-block, the claim. **Focal**
-a 2–3 line claim at `display-xl`/`display-lg`, ink on the accent (ink-on-fire — never white).
-**Chrome** small ink kicker-block above the claim; mono meta footer. **Accent** the ground IS the
-accent; no second accent competes. **Silence** ~45% of the colored field empty. **Fixed** ink type
-on accent, fit-to-measure sizing, no shadow on type. **Free** the claim, which accent ground, which
-word breaks. **Density** sparse — one idea.
+**背景** 全出血强调色（`{colors.pink}`/`green`/`orange`），`content-gutter`。**容器** flex，声明左锚定且垂直居中。**组成** kicker-block、声明。**焦点** `display-xl`/`display-lg` 的 2–3 行声明，强调色上的墨水色（火上墨 — 从不白色）。**铬色** 声明上方的小墨色 kicker-block；单位元数据底部栏。**强调** 背景本身就是强调色；无第二个强调色竞争。**留白** ~45% 的有色区域空白。**固定** 强调色上的墨水字体、按篇幅调整尺寸、字体无阴影。**自由** 声明、哪种强调色背景、哪些换行。**密度** 稀疏 — 一个想法。
 
-### 3 · Stat Grid (catalog · move: density — the one dense frame · centered)
+### 3 · 统计网格（目录 · 动势：密度 — 唯一密集帧 · 居中）
 
-**Ground** `{colors.cream}`, `content-gutter`. **Container** grid: a centered `display-head` over a
-3-up row of stat-cells. **Composes** frame-chrome, 3× stat-cell. **Focal** the row of three
-ink-bordered cells (green / pink / orange), each a `stat-num` + mono label. **Chrome** mono topbar +
-meta. **Accent** the three cell fills (the named density exception — three accents allowed here).
-**Silence** ~25% — tight by design. **Fixed** 0.4cqw borders, square corners, no per-cell shadow,
-mono labels. **Free** the three figures+labels, head copy, which three accents. **Density** dense-exception.
+**背景** `{colors.cream}`，`content-gutter`。**容器** 网格：居中的 `display-head` 上方有一行 3 列统计单元。**组成** frame-chrome、3× stat-cell。**焦点** 三个墨边单元的行（绿色 / 粉色 / 橙色），每个包含 `stat-num` + 单位标签。**铬色** 单位顶部栏 + 元数据。**强调** 三个单元填充（名义密集例外 — 此处允许三个强调色）。**留白** ~25% — 设计上紧凑。**固定** 0.4cqw 边框、方角、无单单元阴影、单位标签。**自由** 三个数字+标签、标题文案、哪三种强调色。**密度** 密集例外。
 
-### 4 · Closing Plate (closer · move: ground-swap · centered)
+### 4 · 结束板（收尾 · 动势：背景交换 · 居中）
 
-**Ground** `{colors.green}` (the single green frame of the run), `frame-pad`. **Focal** a 2-line
-sign-off at `display-lg` in `{colors.cream}`, centered. **Composes** frame-chrome (cream variant),
-stamp. **Chrome** cream mono topbar + meta. **Accent** one `{colors.pink}` stamp rotated −6deg in
-a corner, cream ring + stamp-num. **Silence** ~55% empty green. **Fixed** green ground reserved to
-this beat, cream-on-green type, one stamp. **Free** sign-off copy, stamp text, stamp corner. **Density** sparse.
+**背景** `{colors.green}`（整套帧中唯一的绿色帧），`frame-pad`。**焦点** `{colors.cream}` 中的 `display-lg` 两行结尾语，居中。**组成** frame-chrome（奶油变体）、stamp。**铬色** 奶油色单位顶部栏 + 元数据。**强调** 一个在角落旋转 −6° 的 `{colors.pink}` stamp，奶油环 + stamp-num。**留白** ~55% 空白绿色。**固定** 绿色背景专用于此节拍，奶油色在绿上字体，一个stamp。**自由** 结尾语文案、stamp文字、stamp角落。**密度** 稀疏。
 
-### 5 · Featured Marker (callout · move: hard-shadow focal · left/asymmetric)
+### 5 · 特色标记（呼出 · 动势：硬阴影焦点 · 左对齐/非对称）
 
-**Ground** `{colors.cream}`. **Composes** frame-chrome, marker-block, optional body-md support line.
-**Focal** the pink marker-block with the signature orange+ink hard offset shadow, set asymmetrically.
-**Accent** pink block + orange shadow (two accents). **Silence** ~50%. **Fixed** exactly one hard
-shadow on the frame, 0.4cqw borders. **Free** marker copy, block position, optional support line.
-**Density** sparse.
+**背景** `{colors.cream}`。**组成** frame-chrome、marker-block、可选 body-md 支撑行。**焦点** 粉色 marker-block，带有标志性的橙色+墨水硬偏移阴影，非对称设置。**强调** 粉色块 + 橙色阴影（两个强调色）。**留白** ~50%。**固定** 每帧恰好一个硬阴影，0.4cqw 边框。**自由** marker 文案、块位置、可选支撑行。**密度** 稀疏。
 
-### 6 · Comparison Ledger (data · move: matrix · left)
+### 6 · 对比账簍（数据 · 动势：矩阵 · 左对齐）
 
-**Ground** `{colors.cream}`, `content-gutter`. **Composes** frame-chrome, comparison-table.
-**Focal** the cream-2 table with ink head row; one column fill (pink or green) marks the winner.
-**Accent** the single column fill. **Silence** tight — the second density exception. **Fixed**
-cream-2 fill, 0.3cqw internal rules, ink head row with cream Archivo labels. **Free** rows, which
-column fills, copy. **Density** dense-exception.
+**背景** `{colors.cream}`，`content-gutter`。**组成** frame-chrome、comparison-table。**焦点** cream-2 表格，带墨色标题行；一列填充（粉色或绿色）标记胜出者。**强调** 单列填充。**留白** 紧凑 — 第二个密集例外。**固定** cream-2 填充、0.3cqw 内部规则线、墨色标题行带奶油 Archivo 标签。**自由** 行、哪列填充、文案。**密度** 密集例外。
 
-## Composition Rules
+## 构图规则
 
-### Do
+### 应做
 
-- Compose around **one idea per frame**, focal element **3–5× its neighbors** (squint test).
-- **Lean centered** — cover, claim, stat grid, and closer all center their focal element; reserve left/asymmetric for the marker and ledger.
-- Keep sparse frames **45–60% empty**; only the stat grid and ledger run dense.
-- Use **two or three accents per frame**; reserve `{colors.green}` ground for the closing plate.
-- Spend the hard offset shadow on **one featured block per frame**.
-- Size headlines **fit-to-measure**; render Archivo Black uppercase at 0.92 lh.
+- 构图围绕**每帧一个想法**，焦点元素 **3–5 倍于其邻元素**（眯眼测试）。
+- **偏向居中** — 封面、声明、统计网格和结束板均居中其焦点元素；左对齐/非对称留给 marker 和 ledger。
+- 保持稀疏帧 **45–60% 空白**；仅统计网格和 ledger 运行密集。
+- 使用**每帧两到三个强调色**；将 `{colors.green}` 背景专用于结束板。
+- 将硬偏移阴影用于**每帧一个特色块**。
+- 标题尺寸 **按篇幅调整**；Archivo Black 大写且 0.92 lh。
 
-### Don't
+### 应做n't
 
 - Don't round corners (except the pill chip); don't gradient, blur, or glow.
 - Don't set Archivo Black in sentence case or letter-space it beyond −0.01em.
@@ -289,45 +248,41 @@ column fills, copy. **Density** dense-exception.
 - Don't blow a headline edge-to-edge — step the ramp down for long lines.
 - Don't put two hard shadows on one frame.
 
-## Aspect-Ratio Behavior
+## 宽高比行为
 
-| Treatment         | 16:9                            | 9:16                         | 1:1                      |
+| 处理方案         | 16:9                            | 9:16                         | 1:1                      |
 | ----------------- | ------------------------------- | ---------------------------- | ------------------------ |
-| Wordmark Cover    | two lines centered              | stacked taller, circle top   | centered, tighter        |
-| Big Claim         | claim left, full accent         | claim top, accent full       | claim centered           |
-| Stat Grid         | head over 3-up row              | head top, 3 stacked          | head top, 2×2 (4th cell) |
-| Closing Plate     | sign-off centered, stamp corner | stacked, stamp below         | centered, stamp corner   |
-| Featured Marker   | marker asymmetric               | marker centered, shadow down | marker centered          |
-| Comparison Ledger | full-width table                | table scrolls to fewer cols  | 2-col table              |
+| 品牌字标封面    | 两行居中              | 堆叠加高，圆圈顶部   | 居中更紧凑        |
+| 大声明         | 声明左对齐，全强调         | 声明顶部，强调满幅       | 声明居中           |
+| 统计网格         | 标题在上 3列行              | 标题顶部，3列堆叠          | 标题顶部，2×2（第4单元） |
+| 结束板     | 结尾语居中，stamp角落 | 堆叠，stamp在下方         | 居中，stamp角落   |
+| 特色标记   | marker 非对称               | marker 居中，阴影向下 | marker 居中          |
+| 对比账簍 | 全宽表格                | 表格滚动到更少列  | 2列表格              |
 
-Safe area holds the `3.3cqw` chrome inset on the short edge for every ratio; re-step display per
-ratio so no load-bearing line drops below the 1.4cqw floor.
+安全区域在每种比例的短边上保持 `3.3cqw` 铬色内缩进；根据比例调整展示字号阶梯，确保承重行不低于 1.4cqw 底线。
 
-## Approved Entities
+## 批准的实体
 
-No real customers, logos, or vendors are defined in the source — render any such mark as a
-placeholder. Products/sections are content-agnostic; the system supplies geometry, not brands.
+源文件中未定义真实客户、标志或供应商 — 任何此类标记均渲染为占位符。产品/节目与内容无关；系统提供几何结构，而非品牌。
 
-## Numerals & Claims (hard rule)
+## 数字与断言（硬性规则）
 
-Never invent figures, percentages, counts, or dates at frame scale. Render data slots as
-`— figure —`, `{metric}`, `N×`. Real numerals appear only when the script supplies them — the stat
-grid and ledger especially carry placeholders, not fabricated values.
+绝不在帧尺度上编造数字、百分比、计数或日期。将数据槽位渲染为 `— figure —`、`{metric}`、`N×`。真实数字仅当脚本提供时才出现 — 统计网格和 ledger 尤其使用占位符，而非虚构值。
 
-## Pre-Render Self-Audit
+## 渲染前自查
 
-- **Squint** — one element dominates at 3–5× its neighbor, else rescale.
-- **Silence** — sparse frames 45–60% empty; only stat grid / ledger run dense.
-- **Accents** — two or three per frame, never all four; green ground only on the closer.
-- **Depth** — 0 blur; at most one hard offset shadow; color-block contrast otherwise.
-- **Geometry** — square corners except the pill; rotation only at −4/−6deg.
-- **Type** — Archivo Black uppercase 0.92 lh, fit-to-measure, ≥1.4cqw on load-bearing lines.
-- **Anchor** — centered default; left/asymmetric only on marker + ledger; no 3 consecutive frames share an anchor.
-- **Fabrication** — every numeral traces to the script, else placeholder.
+- **眯眼测试** — 一个元素以 3–5 倍于其邻元素占主导，否则重新调整尺寸。
+- **留白测试** — 稀疏帧 45–60% 空白；仅统计网格 / ledger 运行密集。
+- **强调色** — 每帧两到三个，从不全四种；绿色背景仅在结束板上。
+- **深度** — 0 模糊；最多一个硬偏移阴影；否则使用色块对比。
+- **几何** — 方角（除药丸外）；旋转仅在 −4/−6°。
+- **字体** — Archivo Black 大写 0.92 lh，按篇幅调整，承重行 ≥1.4cqw。
+- **锚点** — 默认居中；左对齐/非对称仅用于 marker + ledger；无连续 3 帧共享同一锚点。
+- **虚构** — 每个数字来源于脚本，否则为占位符。
 
-## Known Gaps
+## 已知差距
 
-- **Motion intentionally out of scope.** frame.md specifies composition only; timing and transitions are a later stage. The closing green is described as a _plate_, not a transition.
-- **Archivo Black requires Google Fonts**; fallback is `sans-serif`. CJK pairing (Noto Serif SC 900 / NSC 400) carries over from the source's CJK section.
-- **9:16 / 1:1 are guidance**, not pixel-locked; verify the legibility floor per ratio.
-- Decorative geometry (circle, stamp, stacked blocks) is CSS-only; no external imagery is required.
+- **运动设计有意不在范围之内。** frame.md 仅指定构图；时间和过渡是后续阶段。结束绿被描述为一块“板”，而非一个过渡。
+- **Archivo Black 需要 Google Fonts**；备用为 `sans-serif`。CJK 配对（Noto Serif SC 900 / NSC 400）继承自源文件的 CJK 部分。
+- **9:16 / 1:1 为指导性**，非像素锁定；验证每种比例下的可读性底线。
+- 装饰性几何图形（圆圈、印章、堆叠块）为纯 CSS；无需外部图像。

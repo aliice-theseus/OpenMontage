@@ -1,107 +1,107 @@
-# Publish Director — Explainer Pipeline
+# 发布导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the Publisher for a generated explainer video. You have a `render_report` with the final video file. Your job is to prepare the video for distribution: generate SEO metadata, create thumbnails, package exports, and log the publish event.
+你是生成式解说视频的发布者。你有一个包含最终视频文件的 `render_report`。你的工作是准备视频以进行分发：生成 SEO 元数据、创建缩略图、打包导出、记录发布事件。
 
-This is where a great video reaches its audience. Without proper metadata and packaging, even the best content gets buried.
+这是一个好视频触及观众的地方。没有正确的元数据和打包，即使最好的内容也会被埋没。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["compose"]["render_report"]`, `state.artifacts["proposal"]["proposal_packet"]`, `state.artifacts["research"]["research_brief"]` | Video file and original proposal |
-| Playbook | Active style playbook | Visual style for thumbnail |
+| 模式 | `schemas/artifacts/publish_log.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["compose"]["render_report"]`、`state.artifacts["proposal"]["proposal_packet"]`、`state.artifacts["research"]["research_brief"]` | 视频文件和原始提案 |
+| 剧本 | 活动风格剧本 | 缩略图的视觉风格 |
 
-## Process
+## 流程
 
-### Step 1: Gather Context
+### 步骤 1：收集上下文
 
-Collect everything needed for metadata:
-- **Proposal packet**: title, hook, key points, target platform, tone
-- **Render report**: output path, duration, resolution
-- **Script**: section summaries for description/chapters
+收集元数据所需的一切：
+- **提案包**：标题、hook、关键点、目标平台、基调
+- **渲染报告**：输出路径、时长、分辨率
+- **脚本**：章节摘要用于描述/章节
 
-### Step 2: Generate SEO Metadata
+### 步骤 2：生成 SEO 元数据
 
-**Title** (max 60 characters for YouTube):
-- Include the primary keyword from the proposal packet
-- Lead with a hook or number
-- Avoid clickbait but be compelling
-- Examples: "Vector Databases Explained in 60 Seconds" > "About Vector Databases"
+**标题**（YouTube 最多 60 个字符）：
+- 包含提案包中的主要关键词
+- 以 hook 或数字开头
+- 避免点击诱饵但要引人注目
+- 示例："向量数据库在 60 秒内解释" > "关于向量数据库"
 
-**Description** (first 150 chars are critical — shown in search):
-- Opening line: restate the hook with the main value proposition
-- Body: key topics covered, with relevant keywords naturally included
-- Chapters: timestamp markers for each major section (from script sections)
-- Call to action: subscribe/like/follow
-- Links: relevant resources mentioned in the video
+**描述**（前 150 个字符至关重要 — 在搜索中显示）：
+- 开头句：用主要价值主张重申 hook
+- 正文：覆盖的关键主题，自然包含相关关键词
+- 章节：每个主要部分的时间戳标记（来自脚本章节）
+- 行动号召：订阅/点赞/关注
+- 链接：视频中提到的相关资源
 
-**Tags/Keywords** (platform-dependent):
-- 5-10 specific tags derived from proposal packet's key_points
-- Mix broad and specific: "machine learning" + "vector database tutorial"
-- Include the topic, format ("explainer"), and related terms
+**标签/关键词**（取决于平台）：
+- 5-10 个从提案包的关键点派生的特定标签
+- 混合广泛和具体："机器学习"+"向量数据库教程"
+- 包括主题、格式（"解说片"）和相关术语
 
-**Hashtags** (for social platforms):
-- 3-5 relevant hashtags
-- Mix trending and niche
+**话题标签**（用于社交平台）：
+- 3-5 个相关话题标签
+- 混合热门和小众
 
-### Step 3: Generate Thumbnail Concept
+### 步骤 3：生成缩略图概念
 
-Describe a thumbnail that:
-1. Uses the playbook's visual style
-2. Features the video's core concept visually
-3. Includes 3-5 words of text (the hook or key stat)
-4. Has high contrast and is readable at small sizes
-5. Uses the playbook's accent colors for text
+描述一个缩略图，它：
+1. 使用剧本的视觉风格
+2. 在视觉上展示视频的核心概念
+3. 包含 3-5 个词的文字（hook 或关键统计数据）
+4. 具有高对比度，小尺寸可读
+5. 使用剧本的强调色用于文字
 
 ```json
 {
   "thumbnail": {
-    "concept": "Split screen: left side shows slow SQL query (red X), right shows fast vector search (green check). Large text: '100x FASTER'",
-    "text_overlay": "100x FASTER",
-    "style_notes": "Use playbook accent colors, bold Inter font, dark background"
+    "concept": "分屏：左侧显示慢速 SQL 查询（红色 X），右侧显示快速向量搜索（绿色勾）。大字：'快 100 倍'",
+    "text_overlay": "快 100 倍",
+    "style_notes": "使用剧本强调色，粗体 Inter 字体，深色背景"
   }
 }
 ```
 
-*Note: Actual thumbnail generation happens via image_selector if available, otherwise it's a concept for manual creation.*
+*注意：实际的缩略图生成通过 image_selector 进行（如果可用），否则是一个用于手动创建的概念。*
 
-### Step 4: Create Chapter Markers
+### 步骤 4：创建章节标记
 
-From the script sections, generate YouTube-style chapters:
+来自脚本章节，生成 YouTube 风格的章节：
 
 ```
-0:00 - Introduction
-0:15 - What are Vector Databases?
-0:45 - How Embeddings Work
-1:20 - The Search Algorithm
-1:55 - Real-World Examples
-2:30 - When to Use Vector DBs
+0:00 - 引言
+0:15 - 什么是向量数据库？
+0:45 - 嵌入如何工作
+1:20 - 搜索算法
+1:55 - 真实世界示例
+2:30 - 何时使用向量数据库
 ```
 
-Each chapter maps to a script section's `start_seconds`.
+每个章节映射到一个脚本章节的 `start_seconds`。
 
-### Step 5: Package Export
+### 步骤 5：打包导出
 
-Create the export directory structure:
+创建导出目录结构：
 
 ```
 exports/
   <project_name>/
     video/
-      output.mp4            # Final rendered video
+      output.mp4            # 最终渲染的视频
     metadata/
-      metadata.json         # All SEO metadata
-      chapters.txt          # Chapter markers
-      description.txt       # Ready-to-paste description
-      tags.txt              # One tag per line
+      metadata.json         # 所有 SEO 元数据
+      chapters.txt          # 章节标记
+      description.txt       # 即贴即用的描述
+      tags.txt              # 每行一个标签
     thumbnails/
-      concept.json          # Thumbnail concept (or generated image)
+      concept.json          # 缩略图概念（或生成的图像）
 ```
 
-### Step 6: Build Publish Log
+### 步骤 6：构建发布日志
 
 ```json
 {
@@ -112,7 +112,7 @@ exports/
       "status": "draft",
       "timestamp": "2024-01-15T10:30:00Z",
       "metadata": {
-        "title": "Vector Databases Explained in 60 Seconds",
+        "title": "向量数据库在 60 秒内解释",
         "description_length": 450,
         "tags_count": 8,
         "chapters_count": 6,
@@ -125,28 +125,28 @@ exports/
 }
 ```
 
-### Step 7: Self-Evaluate
+### 步骤 7：自我评估
 
-Score (1-5):
+评分（1-5）：
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **SEO quality** | Would this title and description rank well for the topic? |
-| **Description completeness** | Does the description include chapters, CTA, and keywords? |
-| **Thumbnail concept** | Would this thumbnail stand out in a feed? |
-| **Export package** | Is everything a creator needs in the export directory? |
-| **Platform fit** | Is metadata tailored to the target platform? |
+| **SEO 质量** | 这个标题和描述会在此主题上排名好吗？ |
+| **描述完整性** | 描述是否包含章节、CTA 和关键词？ |
+| **缩略图概念** | 这个缩略图会在信息流中突出吗？ |
+| **导出包** | 创作者需要的所有内容是否都在导出目录中？ |
+| **平台匹配** | 元数据是否针对目标平台定制？ |
 
-If any dimension scores below 3, revise.
+如果任何维度得分低于 3，修订。
 
-### Step 8: Submit
+### 步骤 8：提交
 
-Validate the publish_log against the schema and persist via checkpoint.
+对照模式验证 publish_log 并通过检查点持久化。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Generic titles**: "Video About X" loses to "X Explained in 60 Seconds" every time. Be specific and compelling.
-- **No chapters**: YouTube rewards videos with chapters. Always include them.
-- **Description keyword stuffing**: Write for humans first, search engines second. Natural language with keywords woven in.
-- **Forgetting the CTA**: Every description should end with a call to action.
-- **Wrong platform format**: YouTube descriptions differ from TikTok captions. Tailor to the target platform.
+- **通用标题**："关于 X 的视频"每次都输给"X 在 60 秒内解释"。具体且引人注目。
+- **没有章节**：YouTube 奖励带章节的视频。始终包含它们。
+- **描述关键词堆砌**：首先为人类写，搜索引擎第二。自然语言，巧妙融入关键词。
+- **忘记 CTA**：每个描述应以行动号召结尾。
+- **错误的平台格式**：YouTube 描述与 TikTok 字幕不同。针对目标平台定制。

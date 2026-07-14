@@ -1,16 +1,15 @@
 ---
-title: Do not wrap a simple expression with a primitive result type in useMemo
+title: 不要将具有原始结果类型的简单表达式包裹在 useMemo 中
 impact: LOW-MEDIUM
-impactDescription: wasted computation on every render
+impactDescription: 每次渲染浪费计算
 tags: rerender, useMemo, optimization
 ---
 
-## Do not wrap a simple expression with a primitive result type in useMemo
+## 不要将具有原始结果类型的简单表达式包裹在 useMemo 中
 
-When an expression is simple (few logical or arithmetical operators) and has a primitive result type (boolean, number, string), do not wrap it in `useMemo`.
-Calling `useMemo` and comparing hook dependencies may consume more resources than the expression itself.
+当表达式很简单（几个逻辑或算术运算符）并且结果类型是原始类型（boolean、number、string）时，不要将其包裹在 `useMemo` 中。调用 `useMemo` 和比较钩子依赖可能比表达式本身消耗更多的资源。
 
-**Incorrect:**
+**不正确：**
 
 ```tsx
 function Header({ user, notifications }: Props) {
@@ -19,17 +18,17 @@ function Header({ user, notifications }: Props) {
   }, [user.isLoading, notifications.isLoading])
 
   if (isLoading) return <Skeleton />
-  // return some markup
+  // 渲染一些标记
 }
 ```
 
-**Correct:**
+**正确：**
 
 ```tsx
 function Header({ user, notifications }: Props) {
   const isLoading = user.isLoading || notifications.isLoading
 
   if (isLoading) return <Skeleton />
-  // return some markup
+  // 渲染一些标记
 }
 ```

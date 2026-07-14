@@ -1,51 +1,51 @@
-# Tracks and Clips
+# 轨道与剪辑
 
-Clips are timed children of the composition root. Tracks are a temporal-overlap concept, not a visual-stacking concept.
+剪辑是合成根的定时子元素。轨道是一个时间重叠概念，而非视觉层叠概念。
 
-## What is a Clip
+## 什么是剪辑
 
-A clip is any DOM element with `data-start`, `data-duration` (where required), and `data-track-index`. Common kinds:
+剪辑是任何带有 `data-start`、`data-duration`（需要时）和 `data-track-index` 的 DOM 元素。常见类型：
 
-- **Visual `<div>` clips** — scenes, cards, overlays. Always require `data-duration`.
-- **Sub-composition hosts** — `<div>` with `data-composition-src`. Always require `data-duration`.
-- **Video clips** — `<video>` with `muted` and `playsinline`. Duration can default to media length.
-- **Audio clips** — `<audio>`. Duration can default to media length.
-- **Image clips** — `<img>`. Always require `data-duration`.
+- **视觉 `<div>` 剪辑** — 场景、卡片、叠加层。始终需要 `data-duration`。
+- **子合成宿主** — 带有 `data-composition-src` 的 `<div>`。始终需要 `data-duration`。
+- **视频剪辑** — 带有 `muted` 和 `playsinline` 的 `<video>`。时长可以默认为媒体长度。
+- **音频剪辑** — `<audio>`。时长可以默认为媒体长度。
+- **图片剪辑** — `<img>`。始终需要 `data-duration`。
 
-Add `class="clip"` to authored visual clips so tooling and examples can find them.
+为创作的视觉剪辑添加 `class="clip"`，以便工具和示例可以找到它们。
 
-## Tracks Are Temporal, Not Visual
+## 轨道是时间性的，而非视觉性的
 
-`data-track-index` controls **temporal overlap**, not paint order:
+`data-track-index` 控制**时间重叠**，而非绘制顺序：
 
-- **Two clips on the same `data-track-index`** must NOT overlap in time. `hyperframes lint` flags this.
-- **Visual layering (front/back)** is controlled by CSS `z-index`, not by track index.
+- **同一 `data-track-index` 上的两个剪辑**不能在时间上重叠。`hyperframes lint` 会标记此问题。
+- **视觉层级（前/后）** 由 CSS `z-index` 控制，而非轨道索引。
 
-A clip on track `5` is not "above" a clip on track `1` — it's just on a different audio/visual lane in time. Use CSS for layering, tracks for sequencing.
+轨道 `5` 上的剪辑并不"高于"轨道 `1` 上的剪辑 — 它只是在时间上处于不同的音频/视觉通道中。使用 CSS 进行层叠，使用轨道进行排序。
 
-## Picking a Track Index
+## 选择轨道索引
 
-There's no fixed convention, but common patterns:
+没有固定的约定，但常见模式：
 
-- **Track 0** — base video (e.g. an A-roll).
-- **Track 1+** — visual scenes, overlays, captions.
-- **Higher tracks (e.g. 10+)** — audio clips, separated from visual tracks to keep linting clear.
+- **轨道 0** — 基础视频（例如 A-roll）。
+- **轨道 1+** — 视觉场景、叠加层、字幕。
+- **较高轨道（例如 10+）** — 音频剪辑，与视觉轨道分开以保持 lint 检查清晰。
 
-When adding a new clip to an existing composition:
+向现有合成添加新剪辑时：
 
-1. Find an existing track that has no overlap with your new clip's `[data-start, data-start + data-duration)` range.
-2. Or pick a fresh track index.
-3. Never overlap two clips on the same track — the linter will fail and the render is undefined.
+1. 找到一个现有轨道，其与新剪辑的 `[data-start, data-start + data-duration)` 范围没有重叠。
+2. 或者选择一个新的轨道索引。
+3. 绝不在同一轨道上重叠两个剪辑 — linter 会失败，渲染结果不确定。
 
-## Clip Time Inside the Composition
+## 合成内的剪辑时间
 
-`data-start` is in seconds, measured from the start of the _composition_. For sub-compositions, the sub-composition's internal timeline (its own `data-duration` and child clips) runs from `data-start` to `data-start + data-duration` of the host.
+`data-start` 以秒为单位，从_合成_的开始处测量。对于子合成，子合成的内部时间线（其自身的 `data-duration` 和子剪辑）从宿主的 `data-start` 到 `data-start + data-duration` 运行。
 
-`data-media-start` (on `<video>`/`<audio>`) is an offset _into the source media_. Use it to skip the first few seconds of a media file without trimming the file itself.
+`data-media-start`（在 `<video>`/`<audio>` 上）是_进入源媒体_的偏移量。使用它可以跳过媒体文件的前几秒，而无需修剪文件本身。
 
-## Relative Timing
+## 相对计时
 
-`data-start` accepts a clip ID instead of a number, meaning "start when that clip ends". Add `+ N` / `- N` to offset; negative produces overlap (useful for crossfades).
+`data-start` 接受剪辑 ID 而不是数字，意思是"在该剪辑结束时开始"。添加 `+ N` / `- N` 来偏移；负数产生重叠（对交叉淡入淡出有用）。
 
 ```html
 <video id="intro" data-start="0" data-duration="10" data-track-index="0" src="..."></video>
@@ -66,11 +66,11 @@ When adding a new clip to an existing composition:
 ></video>
 ```
 
-Rules:
+规则：
 
-- References resolve **inside the same composition only** — cannot reach into a parent or sibling sub-composition.
-- The referenced clip must have a **known duration** (explicit `data-duration` or inferred from media). Otherwise the reference cannot resolve.
-- **No circular references** — `A → B → A` is rejected. Cycles are detected and error out.
-- A value that parses as a number is always treated as absolute seconds. Otherwise the resolver expects `<id>`, `<id> + <number>`, or `<id> - <number>` (whitespace optional).
-- References can chain (`A → B → C`). Keep chains under 3-4 levels for readability.
-- Negative offsets create overlap; overlapping clips must be on **different tracks**, same-track overlap is rejected.
+- 引用**仅在同一合成内**解析 — 不能进入父级或同级子合成。
+- 被引用的剪辑必须有**已知时长**（显式 `data-duration` 或从媒体推断）。否则引用无法解析。
+- **无循环引用** — `A → B → A` 被拒绝。检测到循环会报错。
+- 解析为数字的值始终被视为绝对秒数。否则解析器期望 `<id>`、`<id> + <number>` 或 `<id> - <number>`（空格可选）。
+- 引用可以链式（`A → B → C`）。保持链在 3-4 级以内以提高可读性。
+- 负偏移产生重叠；重叠的剪辑必须在**不同轨道**上，同轨道重叠被拒绝。

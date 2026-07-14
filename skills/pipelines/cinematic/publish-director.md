@@ -1,56 +1,56 @@
-# Publish Director - Cinematic Pipeline
+# 发布导演 - 电影化流水线
 
-## When To Use
+## 适用场景
 
-Package the cinematic piece and any cutdowns so the hero version stays clear and the distribution intent is obvious.
+打包电影化作品及其精简版本，确保主版本清晰明确，分发意图一目了然。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/publish_log.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["compose"]["render_report"]`, `state.artifacts["proposal"]["proposal_packet"]`, `state.artifacts["research"]["research_brief"]`, `state.artifacts["script"]["script"]` | Final outputs and beat map |
-| Playbook | Active style playbook | Tone and naming consistency |
+| 模式 | `schemas/artifacts/publish_log.schema.json` | 制品验证 |
+| 前置产物 | `state.artifacts["compose"]["render_report"]`, `state.artifacts["proposal"]["proposal_packet"]`, `state.artifacts["research"]["research_brief"]`, `state.artifacts["script"]["script"]` | 最终输出和节拍图 |
+| 手册 | 当前风格手册 | 调性和命名一致性 |
 
-## Process
+## 流程
 
-### 1. Separate Hero And Derivatives
+### 1. 区分主版本和衍生版本
 
-Typical deliverables:
+典型的交付物：
 
-- hero trailer or brand film,
-- teaser cut,
-- social cutdown,
-- poster-frame or thumbnail concept.
+- 主预告片或品牌影片，
+- 预告精简版，
+- 社交媒体精简版，
+- 海报帧或缩略图概念。
 
-### 2. Match Metadata To Tone
+### 2. 元数据匹配调性
 
-Packaging should reflect the actual mood:
+打包应反映实际情绪：
 
-- dramatic,
-- premium,
-- mysterious,
-- reflective,
-- urgent.
+- 戏剧性，
+- 高端，
+- 神秘，
+- 沉思，
+- 紧迫。
 
-### 3. Preserve Editorial Truth
+### 3. 保留编辑真相
 
-Store in `publish_log.metadata`:
+存储在 `publish_log.metadata` 中：
 
 - `hero_output`
 - `derivative_outputs`
 - `poster_frame_notes`
 - `distribution_notes`
 
-### 4. Quality Gate
+### 4. 质量门禁
 
-- hero export is clearly identified,
-- derivative exports are labeled by purpose,
-- metadata fits the tone,
-- the package is usable without manual cleanup.
+- 主版本输出清晰标识，
+- 衍生版本输出按用途标签区分，
+- 元数据符合调性，
+- 打包成果无需手动清理即可使用。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Mixing teaser and hero outputs without clear naming.
-- Writing generic metadata that ignores the mood.
-- Treating all cutdowns as interchangeable.
+- 预告精简版和主版本输出混在一起，没有清晰命名。
+- 编写忽略情绪的通用元数据。
+- 将所有精简版本视为可互换。

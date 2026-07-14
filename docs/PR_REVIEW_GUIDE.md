@@ -1,437 +1,388 @@
-# Pull Request Review Guide
+# Pull Request 审查指南
 
-This guide is for community reviewers, maintainers, and AI assistants reviewing
-OpenMontage pull requests. It is a review framework, not a closed checklist.
-Use it to structure the review, then keep looking for issues that are specific
-to the PR in front of you.
+本指南供社区审查者、维护者和 AI 助手在审查 OpenMontage Pull Request 时使用。它是一个审查框架，而非封闭的检查清单。用它来组织审查，然后继续寻找你所审查的 PR 特有的问题。
 
-OpenMontage is an agent-orchestrated video production system. Many PRs affect
-more than the file they edit: a provider change can affect tool discovery,
-selector routing, setup instructions, pipeline decisions, cost reporting, and
-the user-visible production flow. Good reviews protect those contracts.
+OpenMontage 是一个代理编排的视频制作系统。许多 PR 的影响范围超过其编辑的文件：提供商变更可能影响工具发现、选择器路由、设置说明、流水线决策、成本报告和用户可见的制作流程。好的审查能保护这些契约。
 
-## Review Mindset
+## 审查心态
 
-Start with these questions:
+从这些问题开始：
 
-- Does this PR move OpenMontage in the right direction?
-- Is the scope focused, or is it mixing unrelated changes?
-- Can a user, maintainer, or agent understand the behavior after this lands?
-- Does the PR preserve the agent-first architecture?
-- Does it introduce regressions in provider discovery, pipeline artifacts, or
-  rendering behavior?
-- Are tests and docs updated at the same level as the behavior change?
-- Are there security, privacy, dependency, or supply-chain concerns?
+- 这个 PR 是否将 OpenMontage 朝着正确的方向推进？
+- 范围是否聚焦，还是混杂了无关的变更？
+- 用户、维护者或代理能否理解此变更后的行为？
+- PR 是否保留了代理优先的架构？
+- 它是否在提供商发现、流水线工件或渲染行为中引入了回归？
+- 测试和文档是否与行为变更保持同等级别的更新？
+- 是否存在安全、隐私、依赖或供应链方面的问题？
 
-The answer can be "useful, but not merge-ready." That is a good review outcome
-when the idea is aligned but the implementation needs cleanup.
+答案可以是"有用，但尚未达到合并标准"。当想法一致但实现需要清理时，这也是一个好的审查结果。
 
-## Review Outputs
+## 审查输出
 
-A useful review should usually produce one of these outcomes:
+一个有价值的审查通常应产生以下结果之一：
 
-- **Approve**: the PR is useful, focused, tested, and low-risk enough to merge.
-- **Comment**: the PR is promising but needs cleanup before approval.
-- **Request changes**: the PR has blockers that would create regressions,
-  break contracts, or mislead users.
-- **Close or redirect**: the PR is not aligned, mostly noise, or belongs in an
-  issue/discussion before code.
+- **批准**：PR 有用、聚焦、经过测试，且风险足够低，可以合并。
+- **评论**：PR 有前景，但需要清理后才能批准。
+- **请求变更**：PR 存在阻碍因素，可能导致回归、破坏契约或误导用户。
+- **关闭或重定向**：PR 方向不一致、大多是噪音，或应在编写代码之前放入 issue/讨论中。
 
-Avoid rubber-stamp approvals. Also avoid turning every concern into a blocker.
-Name the actual severity and explain the impact.
+避免橡皮图章式的批准。同时也要避免将每个问题都变成阻碍因素。明确指出实际严重程度并解释影响。
 
-## General Review Areas
+## 通用审查领域
 
-### Project Direction
+### 项目方向
 
-Check whether the PR solves a real OpenMontage problem.
+检查 PR 是否解决了真实的 OpenMontage 问题。
 
-- Does it improve video production quality, reliability, speed, portability,
-  provider coverage, local execution, docs, tests, or contributor experience?
-- Does it duplicate an existing path without improving it?
-- Is it a speculative feature with no clear user workflow?
-- Does it introduce maintenance burden disproportionate to the value?
+- 它是否改善了视频制作的质量、可靠性、速度、可移植性、提供商覆盖范围、本地执行、文档、测试或贡献者体验？
+- 它是否重复了现有路径却没有改进？
+- 这是一个没有明确用户工作流的投机性功能吗？
+- 它是否引入了与价值不相称的维护负担？
 
-### Scope Hygiene
+### 范围卫生
 
-Noise makes reviews unsafe.
+噪音使审查变得不安全。
 
-- Are unrelated files changed?
-- Are lockfiles changed only when dependencies actually changed?
-- Are generated files, screenshots, binary assets, or local artifacts included
-  without reason?
-- Are docs/test fixes bundled with feature work in a way that hides risk?
-- Is the branch stale against latest `main`?
+- 是否更改了无关的文件？
+- 锁定文件是否仅在依赖项实际变更时才变更？
+- 是否无理由地包含了生成的文件、截图、二进制资源或本地构建产物？
+- 文档/测试修复是否与功能工作捆绑在一起，从而隐藏了风险？
+- 分支相对于最新的 `main` 是否过时？
 
-If a PR is useful but noisy, ask for a narrower diff before deep approval.
+如果 PR 有用但含有噪音，请在深度批准之前要求缩小差异范围。
 
-### Regression Risk
+### 回归风险
 
-Look beyond the changed file.
+关注变更文件之外的影响。
 
-- Does the change affect existing users or only add a new optional path?
-- Does it alter default provider selection, fallback behavior, or setup menus?
-- Does it change schemas, artifacts, or pipeline stage contracts?
-- Does it change rendering output, timing, audio, captions, or file paths?
-- Does it create silent fallback behavior where the user should be told?
+- 此变更是否仅影响现有用户，还是仅添加了一个新的可选路径？
+- 它是否更改了默认提供商选择、回退行为或设置菜单？
+- 它是否更改了模式、工件或流水线阶段契约？
+- 它是否更改了渲染输出、时序、音频、字幕或文件路径？
+- 它是否创建了应告知用户的静默回退行为？
 
-### Security and Supply Chain
+### 安全和供应链
 
-Review security issues factually and with evidence. Do not make public claims
-about a contributor's intent. If you see suspicious code, describe the behavior
-and risk.
+实事求是地审查安全问题，并提供证据。不要对贡献者的意图做出公开声明。如果发现可疑代码，请描述行为和风险。
 
-Check for:
+检查以下内容：
 
-- New network calls, uploads, telemetry, or background processes
-- Secret exfiltration risks, `.env` reads, token logging, or unsafe debug output
-- Shell execution, `subprocess`, dynamic imports, `eval`, `exec`, or generated
-  code execution
-- Dependency additions, install scripts, package-lock churn, or broad version
-  ranges
-- Unsafe file deletion, path traversal, archive extraction, or writes outside
-  the expected project directory
-- Remote model downloads or provider calls that are not surfaced in metadata
-- Prompt injection surfaces where external content could instruct the agent
+- 新的网络调用、上传、遥测或后台进程
+- 密钥泄露风险、`.env` 读取、令牌日志记录或不安全的调试输出
+- Shell 执行、`subprocess`、动态导入、`eval`、`exec` 或生成的代码执行
+- 依赖项添加、安装脚本、package-lock 变动或宽泛的版本范围
+- 不安全的文件删除、路径遍历、归档提取或写入预期项目目录之外
+- 未在元数据中呈现的远程模型下载或提供商调用
+- 外部内容可能指示代理的提示注入面
 
-Use language like:
+使用类似以下语言：
 
-- "I found a security blocker: this command executes user-controlled input."
-- "This dependency change needs justification before merge."
-- "I did not find an actionable security issue in the reviewed diff."
+- "我发现了一个安全阻碍：此命令执行用户控制的输入。"
+- "此依赖项变更需要在合并前提供理由。"
+- "在审查的差异中，我没有发现可操作的安全问题。"
 
-Avoid public phrasing like:
+避免使用类似以下的公开措辞：
 
-- "No malicious intent."
-- "This author is safe."
-- "This is definitely harmless."
+- "没有恶意意图。"
+- "此作者是安全的。"
+- "这绝对是无害的。"
 
-### Performance and Resource Use
+### 性能和资源使用
 
-OpenMontage works with video, audio, image generation, and local models. Small
-code changes can create large runtime costs.
+OpenMontage 处理视频、音频、图像生成和本地模型。小的代码变更可能产生大的运行时成本。
 
-- Does the PR add repeated model loads instead of reusing state?
-- Does it download large files without clear setup/status messaging?
-- Does it increase render time, memory, VRAM, disk, or network use?
-- Does it change frame extraction, composition, encoding, or audio processing
-  in a way that could slow common paths?
-- Are resource profiles and cost estimates realistic?
+- PR 是否添加了重复的模型加载而不是复用状态？
+- 它是否在未明确设置/状态消息的情况下下载大文件？
+- 它是否增加了渲染时间、内存、VRAM、磁盘或网络使用？
+- 它是否以可能减慢常见路径的方式改变了帧提取、合成、编码或音频处理？
+- 资源配置和成本估算是否切合实际？
 
-## OpenMontage Architecture Checks
+## OpenMontage 架构检查
 
-### Agent-First Architecture
+### 代理优先架构
 
-OpenMontage's control plane is the agent following markdown skills and YAML
-manifests. Python should provide tools and persistence, not hidden orchestration.
+OpenMontage 的控制平面是遵循 Markdown 技能和 YAML 清单的代理。Python 应提供工具和持久化，而非隐藏的编排。
 
-Flag PRs that:
+对以下情况标记 PR：
 
-- Add Python orchestrators for creative decisions, stage transitions, or review
-  policy
-- Hide provider/model/runtime decisions inside code without user visibility
-- Bypass pipeline manifests, stage director skills, checkpoints, or review
-- Move quality policy into ad hoc code instead of documented instructions
+- 添加用于创意决策、阶段转换或审查策略的 Python 编排器
+- 在代码中隐藏提供商/模型/运行时决策而用户无法看到
+- 绕过流水线清单、阶段导演技能、检查点或审查
+- 将质量策略移入临时代码而非文档化的说明中
 
-Good PRs keep intelligence in instructions and contracts, with Python handling
-well-bounded execution.
+好的 PR 将智能放在说明和契约中，Python 处理边界明确的执行。
 
-### Tool Contract
+### 工具契约
 
-Every tool should inherit from `tools/base_tool.py` and satisfy the `BaseTool`
-contract.
+每个工具应从 `tools/base_tool.py` 继承并满足 `BaseTool` 契约。
 
-For new or changed tools, review:
+对于新的或变更的工具，审查：
 
 - `name`, `version`, `tier`, `capability`, `provider`
 - `runtime`, `stability`, `execution_mode`, `determinism`
-- `dependencies` using supported prefixes such as `cmd:`, `env:`, `python:`
+- 使用支持的前缀如 `cmd:`, `env:`, `python:` 的 `dependencies`
 - `install_instructions`
-- `input_schema`, `output_schema`, and artifact behavior
+- `input_schema`, `output_schema` 和工件行为
 - `supports`, `best_for`, `not_good_for`
 - `resource_profile`
 - `retry_policy`
-- `fallback` and `fallback_tools`
+- `fallback` 和 `fallback_tools`
 - `agent_skills`
 - `user_visible_verification`
-- `estimate_cost()` and `estimate_runtime()` where relevant
-- `execute()` returning a `ToolResult`
+- 相关的 `estimate_cost()` 和 `estimate_runtime()`
+- 返回 `ToolResult` 的 `execute()`
 
-Metadata is user-facing. If setup, offline behavior, cost, model downloads, or
-hardware requirements are inaccurate, the provider menu and agent planning will
-mislead users.
+元数据是面向用户的。如果设置、离线行为、成本、模型下载或硬件要求不准确，提供商菜单和代理规划将误导用户。
 
-### Tool Registry and Discovery
+### 工具注册表和发现
 
-Tool discovery flows through `tools/tool_registry.py`. Avoid hardcoded tool
-lists unless there is a strong reason.
+工具发现通过 `tools/tool_registry.py` 进行。除非有充分理由，否则避免硬编码的工具列表。
 
-Check:
+检查：
 
-- Does the tool register through normal package discovery?
-- Does it use the right `capability` so selectors can find it?
-- Does `get_status()` report availability accurately?
-- Does an import failure in one optional provider break unrelated discovery?
-- Does the provider menu show useful setup instructions?
-- Does the PR accidentally make unavailable tools look configured?
+- 工具是否通过正常的包发现机制注册？
+- 它是否使用正确的 `capability` 以便选择器能找到它？
+- `get_status()` 是否准确报告可用性？
+- 一个可选提供商的导入失败是否会破坏无关的发现？
+- 提供商菜单是否显示有用的设置说明？
+- PR 是否意外使不可用的工具看起来已配置好？
 
-Useful commands:
+有用的命令：
 
 ```bash
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.capability_catalog(), indent=2))"
 python -c "from tools.tool_registry import registry; import json; registry.discover(); print(json.dumps(registry.provider_menu_summary(), indent=2))"
 ```
 
-### Selectors and Providers
+### 选择器和提供商
 
-Selectors route capability-level requests to provider tools:
+选择器将能力级请求路由到提供商工具：
 
 - `tts_selector`
 - `image_selector`
 - `video_selector`
 
-When reviewing selector or provider changes:
+审查选择器或提供商变更时：
 
-- Confirm the provider has the correct `capability`.
-- Confirm selector input names map to provider input names.
-- Confirm provider-specific options do not get silently ignored.
-- Confirm user preference is respected when explicit.
-- Confirm unavailable providers do not block available alternatives.
-- Confirm ranking/fallback changes are tested.
-- Confirm the selector still returns useful alternatives and reasoning.
+- 确认提供商具有正确的 `capability`。
+- 确认选择器输入名称映射到提供商输入名称。
+- 确认提供商特定选项不会被静默忽略。
+- 确认显式提供的用户偏好得到尊重。
+- 确认不可用的提供商不会阻止可用的替代方案。
+- 确认排名/回退变更加以测试。
+- 确认选择器仍返回有用的替代方案和理由。
 
-Adding a provider should usually not require selector code changes. If it does,
-the PR should explain why.
+添加提供商通常不应需要选择器代码变更。如果需要，PR 应解释原因。
 
-### Pipeline Manifests and Stage Skills
+### 流水线清单和阶段技能
 
-Pipeline manifests live in `pipeline_defs/`. Stage instructions live in
-`skills/pipelines/`.
+流水线清单位于 `pipeline_defs/`。阶段说明位于 `skills/pipelines/`。
 
-For pipeline changes, check:
+对于流水线变更，检查：
 
-- Manifest schema validity
-- Stage order and stage names
-- `produces` artifacts
+- 清单模式的有效性
+- 阶段顺序和阶段名称
+- `produces` 工件
 - `tools_available`
 - `review_focus`
 - `success_criteria`
 - `checkpoint_required`
 - `human_approval_default`
-- Matching stage director skills
-- Tests in `tests/contracts/` or `tests/pipelines/`
+- 匹配的阶段导演技能
+- `tests/contracts/` 或 `tests/pipelines/` 中的测试
 
-The manifest and the stage skill must agree. If the manifest says a stage
-produces `scene_plan`, the director skill should actually guide creation of a
-valid `scene_plan`.
+清单和阶段技能必须一致。如果清单说某个阶段产生 `scene_plan`，导演技能应实际指导创建有效的 `scene_plan`。
 
-### Canonical Artifacts and Schemas
+### 规范工件和模式
 
-Artifacts in `schemas/artifacts/` are contracts between stages.
+`schemas/artifacts/` 中的工件是阶段之间的契约。
 
-When reviewing schema or artifact changes:
+审查模式或工件变更时：
 
-- Does every producer still write valid artifacts?
-- Does every consumer still understand the artifact?
-- Are required fields justified?
-- Are migrations or backward compatibility needed?
-- Do tests cover valid and invalid examples?
-- Does the checkpoint protocol still work with the changed artifact?
+- 每个生产者是否仍写入有效的工件？
+- 每个消费者是否仍能理解该工件？
+- 必填字段是否有理由？
+- 是否需要迁移或向后兼容？
+- 测试是否覆盖了有效和无效的示例？
+- 检查点协议是否仍然适用于变更后的工件？
 
-Schema changes are high-impact. Treat them as cross-pipeline changes unless the
-PR proves otherwise.
+模式变更影响重大。除非 PR 证明并非如此，否则将其视为跨流水线变更。
 
-### Checkpoints and Review Policy
+### 检查点和审查策略
 
-OpenMontage uses checkpoints for resume, human approval, audit trails, and
-stage gating.
+OpenMontage 使用检查点进行恢复、人工审批、审计追踪和阶段门控。
 
-Check:
+检查：
 
-- Does the PR preserve checkpoint status semantics?
-- Does it avoid skipping required human approval?
-- Does it preserve cost snapshots and review metadata where expected?
-- Does it avoid writing incomplete canonical artifacts as completed stages?
-- Does it align with `skills/meta/checkpoint-protocol.md`?
-- Does it align with `skills/meta/reviewer.md`?
+- PR 是否保留了检查点状态的语义？
+- 它是否避免跳过必需的人工审批？
+- 它是否在预期的地方保留了成本快照和审查元数据？
+- 它是否避免将不完整的规范工件写入已完成阶段？
+- 它是否与 `skills/meta/checkpoint-protocol.md` 一致？
+- 它是否与 `skills/meta/reviewer.md` 一致？
 
-Review logic should remain instruction-driven unless the PR is adding a narrow
-mechanical validator.
+审查逻辑应保持指令驱动，除非 PR 添加的是狭窄的机械验证器。
 
-### Composition Runtimes
+### 合成运行时
 
-OpenMontage can compose with Remotion, HyperFrames, or FFmpeg. Runtime choices
-are user-visible production decisions.
+OpenMontage 可以使用 Remotion、HyperFrames 或 FFmpeg 进行合成。运行时选择是面向用户的生产决策。
 
-For render/composition PRs, check:
+对于渲染/合成 PR，检查：
 
-- Does `video_compose` preserve explicit `render_runtime` routing?
-- Are Remotion, HyperFrames, and FFmpeg paths considered where relevant?
-- Does the PR avoid silent runtime swaps?
-- Are runtime availability errors surfaced as blockers?
-- Are Node, FFmpeg, `npx`, and package requirements checked accurately?
-- Do render reports contain enough evidence to debug failures?
-- Are browser previews treated as QA/debug artifacts when the production render
-  path is different?
+- `video_compose` 是否保留了显式的 `render_runtime` 路由？
+- 是否在相关时考虑了 Remotion、HyperFrames 和 FFmpeg 路径？
+- PR 是否避免了静默的运行时切换？
+- 运行时可用性错误是否作为阻碍因素呈现？
+- Node、FFmpeg、`npx` 和包要求是否被准确检查？
+- 渲染报告是否包含足够的证据来调试失败？
+- 当生产渲染路径不同时，浏览器预览是否被视为 QA/调试工件？
 
-Silent downgrades from motion-led production to still-led fallback are review
-findings, not harmless implementation details.
+从运动主导的生产静默降级为静帧主导的回退是审查发现事项，而非无害的实现细节。
 
-### Cost, Budget, and Paid Providers
+### 成本、预算和付费提供商
 
-OpenMontage should not silently spend money or imply a paid provider is free.
+OpenMontage 不应静默花钱或暗示付费提供商是免费的。
 
-Check:
+检查：
 
-- Does the tool estimate cost accurately enough for planning?
-- Are first-time paid provider uses visible to the user?
-- Does the provider doc mention pricing/free-tier caveats?
-- Does fallback from paid to free, or free to paid, require user visibility?
-- Are model downloads, hosted endpoints, or cloud GPU usage described honestly?
+- 工具的成本估算是否足够准确以供规划？
+- 首次使用的付费提供商对用户是否可见？
+- 提供商文档是否提及定价/免费层注意事项？
+- 从付费到免费或免费到付费的回退是否需要用户可见？
+- 模型下载、托管端点或云 GPU 使用是否被诚实地描述？
 
-### Docs and User-Facing Claims
+### 文档和面向用户的声明
 
-Docs are part of the product. Provider setup docs often drive agent behavior.
+文档是产品的一部分。提供商设置文档通常驱动代理行为。
 
-Check:
+检查：
 
-- Does the PR update `docs/PROVIDERS.md` when adding a provider?
-- Does `docs/ARCHITECTURE.md` need an update for architectural changes?
-- Are setup instructions accurate on macOS, Windows, and Linux where claimed?
-- Do docs distinguish API keys, local installs, model downloads, and cached
-  offline operation?
-- Are package versions and model versions clearly separated?
-- Are limitations stated plainly?
+- PR 在添加提供商时是否更新了 `docs/PROVIDERS.md`？
+- `docs/ARCHITECTURE.md` 是否需要针对架构变更进行更新？
+- 声明的 macOS、Windows 和 Linux 设置说明是否准确？
+- 文档是否区分了 API 密钥、本地安装、模型下载和缓存的离线操作？
+- 包版本和模型版本是否清晰分离？
+- 限制是否被直白地陈述？
 
-## Scenario-Specific Review Prompts
+## 场景特定审查提示
 
-### New Provider or Tool
+### 新提供商或工具
 
-Ask:
+提问：
 
-- Is this provider useful for OpenMontage workflows?
-- Does it add real coverage or just duplicate an existing provider?
-- Is the provider internationally known, nationally or regionally important,
-  or otherwise clearly valuable to OpenMontage users?
-- Is the tool discoverable through the registry?
-- Does the matching selector discover and route to it?
-- Are provider inputs compatible with selector inputs?
-- Does status checking reflect real availability?
-- Are setup docs, dependencies, cost, network, and cache behavior accurate?
-- Does it have focused tests?
-- Does it avoid importing heavyweight dependencies at module import time?
-- Are generated artifacts written to expected paths?
+- 此提供商对 OpenMontage 工作流有用吗？
+- 它是否增加了真正的覆盖范围，还是仅仅重复了现有的提供商？
+- 该提供商在国际上是否知名、在某个国家或地区是否重要，或者对 OpenMontage 用户有明显价值？
+- 该工具是否能通过注册表被发现？
+- 匹配的选择器是否能发现并路由到它？
+- 提供商输入是否与选择器输入兼容？
+- 状态检查是否反映真实的可用性？
+- 设置文档、依赖项、成本、网络和缓存行为是否准确？
+- 它是否有聚焦的测试？
+- 它是否避免在模块导入时导入重量级依赖？
+- 生成的工件是否写入预期的路径？
 
-Minimum expected coverage:
+最低预期覆盖范围：
 
-- Tool metadata/contract test
-- Registry discovery test
-- Status behavior test with dependencies mocked when needed
-- Selector/routing test if it joins a selector-backed capability
-- Docs update for user-visible providers
+- 工具元数据/契约测试
+- 注册表发现测试
+- 在需要时模拟依赖的状态行为测试
+- 如果加入选择器支持的能力，则进行选择器/路由测试
+- 面向用户提供商的文档更新
 
-Provider viability matters. OpenMontage should not become a grab bag of
-unmaintained or one-off integrations. A provider does not need to be globally
-dominant, but it should have a clear reason to belong here.
+提供商可行性很重要。OpenMontage 不应成为未经维护或一次性集成的杂货袋。提供商不一定需要全球主导地位，但它应有明确的理由存在于这里。
 
-Consider:
+考虑：
 
-- Is there evidence of an active user base, maintained API docs, SDK support,
-  or community adoption?
-- Is it widely used internationally, or meaningfully popular in a specific
-  national, regional, language, or industry market?
-- Does it unlock a capability, language, price point, region, quality tier,
-  compliance posture, or local/offline workflow that existing providers do not
-  cover well?
-- Are pricing, quotas, API access, model availability, and terms clear enough
-  for contributors to test and maintain the integration?
-- Is the provider likely to remain usable over the next six months?
-- Does the provider's value justify the maintenance burden it adds?
+- 是否有活跃用户群、已维护的 API 文档、SDK 支持或社区采纳的证据？
+- 它是否在国际上广泛使用，或在特定的国家、地区、语言或行业市场中有重要意义？
+- 它是否解锁了现有提供商未能很好覆盖的能力、语言、价格点、地区、质量等级、合规状态或本地/离线工作流？
+- 定价、配额、API 访问、模型可用性和条款是否足够清晰，以便贡献者测试和维护集成？
+- 该提供商在未来六个月内是否可能仍可用？
+- 提供商的价值是否证明了其增加的维护负担？
 
-### Selector Change
+### 选择器变更
 
-Ask:
+提问：
 
-- Does it still auto-discover providers?
-- Does it avoid hardcoded provider lists?
-- Does it preserve explicit user preference?
-- Does it handle unavailable providers cleanly?
-- Does it explain the selected provider?
-- Does it preserve alternatives considered?
-- Does it map shared inputs to provider-specific inputs?
+- 它是否仍能自动发现提供商？
+- 它是否避免了硬编码的提供商列表？
+- 它是否保留了显式的用户偏好？
+- 它是否干净地处理不可用的提供商？
+- 它是否解释了所选提供商？
+- 它是否保留了所考虑的替代方案？
+- 它是否将共享输入映射到提供商特定的输入？
 
-### Local GPU or Model Runtime Change
+### 本地 GPU 或模型运行时变更
 
-Ask:
+提问：
 
-- Is the hardware requirement accurate?
-- Does CPU/MPS/CUDA behavior match the implementation?
-- Are dtype choices safe for each device?
-- Are model downloads and cache behavior documented?
-- Does the resource profile reflect realistic RAM, VRAM, and disk needs?
-- Does setup avoid pretending local GPU install is a one-minute API-key fix?
+- 硬件要求是否准确？
+- CPU/MPS/CUDA 行为是否与实现匹配？
+- 每个设备的 dtype 选择是否安全？
+- 模型下载和缓存行为是否已记录？
+- 资源配置是否反映了现实的 RAM、VRAM 和磁盘需求？
+- 设置是否避免了让本地 GPU 安装看起来像是一分钟的 API 密钥修复？
 
-### Render Runtime Change
+### 渲染运行时变更
 
-Ask:
+提问：
 
-- Does it preserve runtime choice in `edit_decisions.render_runtime`?
-- Does it avoid fallback without user-visible approval?
-- Are Remotion and HyperFrames contracts respected?
-- Are smoke tests or render probes included?
-- Does final output get validated with ffprobe/frame/audio checks where relevant?
+- 它是否保留了 `edit_decisions.render_runtime` 中的运行时选择？
+- 它是否避免了未经用户可见批准的静默回退？
+- Remotion 和 HyperFrames 契约是否得到尊重？
+- 是否包含了冒烟测试或渲染探查？
+- 最终输出是否在相关时通过 ffprobe/帧/音频检查进行了验证？
 
-### Pipeline or Skill Change
+### 流水线或技能变更
 
-Ask:
+提问：
 
-- Does the manifest still validate?
-- Do stage skills exist and match stage names?
-- Are `review_focus` and `success_criteria` meaningful?
-- Are canonical artifacts valid?
-- Are human approval gates correct?
-- Are tests updated?
+- 清单是否仍然有效？
+- 阶段技能是否存在并与阶段名称匹配？
+- `review_focus` 和 `success_criteria` 是否有意义？
+- 规范工件是否有效？
+- 人工审批关卡是否正确？
+- 测试是否已更新？
 
-### Schema Change
+### 模式变更
 
-Ask:
+提问：
 
-- Which producers and consumers are affected?
-- Is the field required or optional?
-- Do existing checkpoints/artifacts still work?
-- Are tests updated for both valid and invalid data?
-- Does the change need a migration note?
+- 哪些生产者和消费者受到影响？
+- 字段是必填还是可选？
+- 现有的检查点/工件是否仍然有效？
+- 测试是否针对有效和无效数据都进行了更新？
+- 变更是否需要迁移说明？
 
-### Dependency or Lockfile Change
+### 依赖项或锁定文件变更
 
-Ask:
+提问：
 
-- Is the dependency necessary for the PR?
-- Is the lockfile change proportional?
-- Are install scripts or transitive packages risky?
-- Is the package maintained and appropriately licensed?
-- Does it work on the supported Python/Node versions?
-- Are version bounds too loose or too strict?
+- 该依赖项是否为 PR 所必需？
+- 锁定文件的变更是否成比例？
+- 安装脚本或传递包是否存在风险？
+- 该包是否得到维护且具有适当的许可证？
+- 它是否能在支持的 Python/Node 版本上工作？
+- 版本范围是过宽还是过严？
 
-### Docs-Only Change
+### 仅文档变更
 
-Ask:
+提问：
 
-- Is the doc technically accurate?
-- Does it match current code and registry behavior?
-- Does it overpromise provider quality, cost, offline operation, or platform
-  support?
-- Does it point users to the right setup and troubleshooting path?
+- 文档在技术上是否准确？
+- 它是否匹配当前的代码和注册表行为？
+- 它是否过分承诺了提供商质量、成本、离线操作或平台支持？
+- 它是否将用户引导到正确的设置和故障排除路径？
 
-Docs-only PRs can still create regressions by teaching users or agents the
-wrong behavior.
+仅文档的 PR 仍可能通过教导用户或代理错误行为而导致回归。
 
-## Testing Expectations
+## 测试期望
 
-Pick tests based on risk. Do not require expensive integration tests for every
-small doc fix, but do require evidence for changed behavior.
+根据风险选择测试。不要要求对每个小的文档修复都进行昂贵的集成测试，但对于变更的行为要求有证据。
 
-Common checks:
+常见检查：
 
 ```bash
 python -m pytest tests/contracts -q
@@ -440,89 +391,79 @@ python -m pytest tests/qa -q
 python -m py_compile path/to/changed_file.py
 ```
 
-For provider PRs, focused mocked tests are often better than expensive live API
-tests. Live-provider QA is useful when credentials and cost are acceptable, but
-the contract should not depend on a maintainer having every provider configured.
+对于提供商 PR，聚焦的模拟测试通常比昂贵的实时 API 测试更好。在凭证和成本可接受时，实时提供商 QA 是有用的，但契约不应依赖于维护者配置了每个提供商。
 
-If tests cannot be run, the review should say why and what risk remains.
+如果测试无法运行，审查应说明原因以及剩余的风险。
 
-## PR Comment Guidance
+## PR 评论指导
 
-Good review comments are specific, evidence-based, and actionable.
+好的审查评论是具体、基于证据且可操作的。
 
-Prefer:
+推荐：
 
-- "This test fails with the current branch: `...`"
-- "This provider will not be discovered because `capability` is set to `...`."
-- "This setup claim is misleading because first run downloads model weights."
-- "Please split the lockfile churn from this provider change."
+- "此测试在当前分支上失败：`...`"
+- "此提供商不会被发现，因为 `capability` 被设置为 `...`。"
+- "此设置声明具有误导性，因为首次运行会下载模型权重。"
+- "请将锁定文件变动与此提供商变更分开。"
 
-Avoid:
+避免：
 
-- Vague comments like "clean this up"
-- Personal comments about the contributor
-- Public speculation about intent
-- Overclaiming safety
-- Long lists of nits when there is a clear blocker
+- 模糊的评论如"清理一下"
+- 关于贡献者的个人评论
+- 对意图的公开猜测
+- 过度声称安全性
+- 当存在明确的阻碍因素时列出冗长的琐碎问题
 
-When a PR has several issues, prefer one consolidated comment. It helps the
-author fix everything in one pass. Use inline comments for exact line-level
-bugs that need code context.
+当 PR 有多个问题时，倾向于一个合并评论。这有助于作者一次性修复所有问题。对于需要代码上下文的精确行级错误，请使用内联评论。
 
-Suggested public language for security review:
+建议的审查安全公开语言：
 
-- "I found an actionable security issue in this diff."
-- "This area needs a security review before merge."
-- "I did not find an actionable security issue in the reviewed diff."
+- "我在此差异中找到了一个可操作的安全问题。"
+- "此区域在合并前需要安全审查。"
+- "在审查的差异中，我没有找到可操作的安全问题。"
 
-Do not state or imply that a contributor has or lacks malicious intent. Review
-the code and behavior.
+不要陈述或暗示贡献者有或没有恶意意图。审查代码和行为。
 
-## Maintainer and AI-Agent Workflow
+## 维护者和 AI 代理工作流
 
-This section is public so contributors understand how reviews are performed.
-It is a workflow, not a limit on reviewer judgment.
+本节是公开的，以便贡献者了解审查是如何进行的。这是一个工作流，而不是对审查者判断的限制。
 
-For a full review:
+对于完整审查：
 
-1. Fetch latest `main`.
-2. Check out the PR in a clean worktree.
-3. Inspect PR metadata: title, linked issues, changed files, author notes, and
-   prior comments.
-4. Review the diff for scope, usefulness, and architecture fit.
-5. Identify the PR scenario: provider, selector, pipeline, schema, runtime,
-   docs, tests, dependency, or mixed.
-6. Apply the relevant scenario prompts from this guide.
-7. Run focused tests or explain why they were not run.
-8. Check docs and user-facing claims against implementation.
-9. Check security, dependency, and supply-chain risk.
-10. Write findings ordered by severity.
-11. Decide: approve, comment, request changes, or close/redirect.
+1. 获取最新的 `main`。
+2. 在干净的工作树中检出 PR。
+3. 检查 PR 元数据：标题、关联的 issue、变更的文件、作者说明和先前的评论。
+4. 审查差异的范围、有用性和架构匹配度。
+5. 确定 PR 场景：提供商、选择器、流水线、模式、运行时、文档、测试、依赖项或混合。
+6. 应用本指南中的相关场景提示。
+7. 运行聚焦的测试，或解释为什么没有运行。
+8. 检查文档和面向用户的声明是否与实现匹配。
+9. 检查安全、依赖和供应链风险。
+10. 按严重程度排序撰写发现。
+11. 决定：批准、评论、请求变更或关闭/重定向。
 
-For AI-assisted review, ask the agent to report evidence, not just conclusions:
+对于 AI 辅助审查，要求代理报告证据而不仅仅是结论：
 
-- Commands run and their results
-- Files inspected
-- Architecture contracts touched
-- Risks that remain unverified
-- Exact merge blockers
+- 运行的命令及其结果
+- 检查过的文件
+- 涉及的架构契约
+- 仍未验证的风险
+- 确切的合并阻碍因素
 
-Do not approve from a summary alone. The reviewer or agent should inspect the
-diff and relevant project contracts.
+不要仅凭摘要批准。审查者或代理应检查差异和相关的项目契约。
 
-## Merge-Readiness Rubric
+## 合并就绪评估标准
 
-Before approving, confirm:
+在批准之前，确认：
 
-- The PR is useful and aligned with project direction.
-- The diff is focused and free of unrelated churn.
-- Architecture contracts are preserved.
-- Tests cover the behavior at the right level.
-- Docs match user-visible behavior.
-- Security and supply-chain risks have been considered.
-- Performance, cost, and resource claims are realistic.
-- The branch is current enough that review findings are still valid.
-- Remaining risks are acceptable and stated.
+- PR 有用且与项目方向一致。
+- 差异聚焦且没有无关的变动。
+- 架构契约得到保留。
+- 测试在适当的级别覆盖了行为。
+- 文档与面向用户的行为匹配。
+- 安全和供应链风险已被考虑。
+- 性能、成本和资源声明切合实际。
+- 分支足够新，审查发现仍然有效。
+- 剩余风险是可接受的且已说明。
 
-Approving does not mean the PR is perfect. It means the change is useful,
-understood, appropriately tested, and safe enough to land.
+批准并不意味着 PR 是完美的。这意味着变更有用、可理解、经过适当测试且足够安全可以落地。

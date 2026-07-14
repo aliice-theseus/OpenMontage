@@ -1,15 +1,14 @@
 ---
-title: Avoid Boolean Prop Proliferation
+title: 避免布尔属性泛滥
 impact: CRITICAL
-impactDescription: prevents unmaintainable component variants
+impactDescription: 防止不可维护的组件变体
 tags: composition, props, architecture
 ---
 
-## Avoid Boolean Prop Proliferation
+## 避免布尔属性泛滥
 
-Don't add boolean props like `isThread`, `isEditing`, `isDMThread` to customize
-component behavior. Each boolean doubles possible states and creates
-unmaintainable conditional logic. Use composition instead.
+不要添加像 `isThread`、`isEditing`、`isDMThread` 这样的布尔属性来自定义
+组件行为。每个布尔值会使可能的状态加倍，并创建不可维护的条件逻辑。改用组合。
 
 **Incorrect (boolean props create exponential complexity):**
 

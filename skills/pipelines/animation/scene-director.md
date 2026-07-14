@@ -1,83 +1,83 @@
-# Scene Director - Animation Pipeline
+# 场景导演 — 动画管线
 
-## When To Use
+## 使用时机
 
-You are converting the script into a feasible animation plan. This is the stage that decides whether the project feels designed or chaotic.
+你将剧本转换为可行的动画计划。这个阶段决定了项目是感觉经过精心设计还是杂乱无章。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/scene_plan.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["script"]["script"]`, `state.artifacts["proposal"]["proposal_packet"]` | Beat map and tool path |
-| Playbook | Active style playbook | Palette, typography, motion consistency |
+| Schema | `schemas/artifacts/scene_plan.schema.json` | 产物验证 |
+| 前置产物 | `state.artifacts["script"]["script"]`、`state.artifacts["proposal"]["proposal_packet"]` | 节拍映射和工具路径 |
+| 样式手册 | 活跃的样式手册 | 调色板、排版、运动一致性 |
 
-## Process
+## 流程
 
-### 1. Make An Animatic-Minded Plan
+### 1. 制定动画分镜思维的计划
 
-For each scene, define:
+为每个场景定义：
 
-- what appears first,
-- what changes,
-- what is held,
-- how the scene exits.
+- 什么先出现，
+- 什么变化，
+- 什么保持不变，
+- 场景如何退出。
 
-### 2. Limit Transition Families
+### 2. 限制转场系列
 
-Choose a small set of transition meanings:
+选择一小组转场含义：
 
-- cut,
-- fade,
-- slide,
-- transform.
+- 切，
+- 淡入淡出，
+- 滑动，
+- 变换。
 
-### 3. Match Scene Type To Tool Path
+### 3. 匹配场景类型到工具路径
 
-Use:
+使用：
 
-- `diagram` scenes for structured explanation,
-- `animation` scenes for motion-first sequences,
-- `text_card` for clean high-impact copy moments,
-- `generated` only where needed.
+- `diagram` 场景用于结构化解释，
+- `animation` 场景用于运动优先的序列，
+- `text_card` 用于干净的高冲击力文案时刻，
+- `generated` 仅在需要时使用。
 
-**For `image_animation` approach (anime/illustration style):**
+**对于 `image_animation` 方法（动漫/插画风格）：**
 
-Use `anime_scene` type for each scene. Plan:
+为每个场景使用 `anime_scene` 类型。规划：
 
-- **Images per scene**: 2-3 images built from the same visual system and nearby seeds for crossfade effect
-- **Camera motion**: choose from `zoom-in`, `zoom-out`, `pan-left`, `pan-right`, `ken-burns`, `drift-up`, `drift-down`, `parallax`, `static` — vary per scene to prevent monotony
-- **Particle type**: choose from `fireflies`, `petals`, `sparkles`, `mist`, `light-rays` — match to scene mood
-- **Lighting**: optional `lightingFrom`/`lightingTo` gradient for atmospheric shifts within the scene
-- **Vignette**: `true` for cinematic framing (default), `false` for bright/open scenes
-- **Scene duration**: 4-7 seconds per scene. Longer scenes need more images for crossfade variety.
+- **每场景图像数量**：2-3 张图像，基于相同的视觉系统和相近的种子构建，用于交叉淡入淡出效果
+- **镜头运动**：从 `zoom-in`、`zoom-out`、`pan-left`、`pan-right`、`ken-burns`、`drift-up`、`drift-down`、`parallax`、`static` 中选择——每场景变化以防止单调
+- **粒子类型**：从 `fireflies`、`petals`、`sparkles`、`mist`、`light-rays` 中选择——匹配场景情绪
+- **光照**：可选的 `lightingFrom`/`lightingTo` 渐变，用于场景内的氛围变化
+- **暗角**：`true` 用于电影感构图（默认），`false` 用于明亮/开放场景
+- **场景时长**：每场景 4-7 秒。更长的场景需要更多图像以实现交叉淡入的多样性。
 
-**Scene variety rules for image_animation:**
-- Don't use the same camera motion for consecutive scenes
-- Alternate between warm and cool particle types
-- Mix close-up and wide establishing shots
-- Use overlays (`hero_title`, `section_title`) to add narrative structure
+**image_animation 的场景多样性规则：**
+- 不要对连续场景使用相同的镜头运动
+- 在暖色和冷色粒子类型之间交替
+- 混合特写和宽幅定场镜头
+- 使用叠加层（`hero_title`、`section_title`）增加叙事结构
 
-**JSON prop name mapping** (use these exact field names in the composition JSON):
+**JSON 属性名映射**（在合成 JSON 中使用这些确切的字段名）：
 
-| Concept | JSON Field | Example Values |
+| 概念 | JSON 字段 | 示例值 |
 |---------|-----------|----------------|
-| Camera motion | `animation` | `"zoom-in"`, `"pan-right"`, `"ken-burns"` |
-| Particle effect | `particles` | `"fireflies"`, `"sparkles"`, `"mist"` |
-| Particle color | `particleColor` | `"#FFE082"` |
-| Particle density | `particleCount` | `20` (range: 1-50) |
-| Particle brightness | `particleIntensity` | `0.5` (range: 0-1) |
-| Lighting start | `lightingFrom` | `"rgba(255,200,100,0.15)"` or `"transparent"` |
-| Lighting end | `lightingTo` | `"rgba(255,107,157,0.08)"` or `"transparent"` |
-| Cinematic edge darken | `vignette` | `true` / `false` |
-| Scene background | `backgroundColor` | theme-derived value such as `"#0A0A1A"` or `"#F6F1E8"` |
+| 镜头运动 | `animation` | `"zoom-in"`、`"pan-right"`、`"ken-burns"` |
+| 粒子效果 | `particles` | `"fireflies"`、`"sparkles"`、`"mist"` |
+| 粒子颜色 | `particleColor` | `"#FFE082"` |
+| 粒子密度 | `particleCount` | `20`（范围：1-50） |
+| 粒子亮度 | `particleIntensity` | `0.5`（范围：0-1） |
+| 光照起始 | `lightingFrom` | `"rgba(255,200,100,0.15)"` 或 `"transparent"` |
+| 光照结束 | `lightingTo` | `"rgba(255,107,157,0.08)"` 或 `"transparent"` |
+| 电影感边缘暗化 | `vignette` | `true` / `false` |
+| 场景背景 | `backgroundColor` | 主题派生的值，如 `"#0A0A1A"` 或 `"#F6F1E8"` |
 
-Reference: `remotion-composer/public/demo-props/mori-no-seishin.json` — 6 scenes using this pattern.
-Reference: `remotion-composer/public/demo-props/deep-ocean.json` — 6 underwater scenes with different palette.
+参考：`remotion-composer/public/demo-props/mori-no-seishin.json`——6 个场景使用此模式。
+参考：`remotion-composer/public/demo-props/deep-ocean.json`——6 个水下场景，不同调色板。
 
-### 4. Use Metadata For Timing Rules
+### 4. 使用元数据表达时机规则
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `animatic_rules`
 - `transition_rules`
@@ -85,31 +85,31 @@ Recommended metadata keys:
 - `tool_path_map`
 - `reusable_motifs`
 
-### 5. 5-Aspect Scene-Plan Checklist
+### 5. 场景计划 5 维度检查清单
 
-> Every scene must specify all five aspects, BUT the load shifts with the scene's `animation_mode`. Manim and other diagrammatic/programmatic scenes care most about **Subject** and **Spatial Framing** — Camera and Subject Motion in the cinematographic sense often map to N/A or to abstract equivalents. AI-video / `image_animation` / `anime_scene` scenes care about all five and behave like cinematic shots. Marking an aspect as N/A is allowed but must be explicit per scene; silent omission is forbidden.
+> 每个场景必须指定全部五个维度，但侧重点随场景的 `animation_mode` 而转移。Manim 和其他图表/程序化场景最关心**主体**和**空间构图**——电影摄影意义上的镜头和主体运动通常映射为 N/A 或抽象等价物。AI 视频 / `image_animation` / `anime_scene` 场景关心所有五个维度，行为类似于电影镜头。将某个维度标记为 N/A 是允许的，但必须在每个场景中明确说明；禁止静默省略。
 >
-> 1. **Subject** — type + key visual attributes; for Manim, the equation/object/graph being foregrounded; for `anime_scene`, the character or environment in focus.
-> 2. **Subject Motion** — for Manim, the order of `Create`/`Transform`/`FadeIn` and what each animation conveys; for AI-video, the actions and interactions in temporal order.
-> 3. **Scene** — overlays (separately!) + POV + setting + time of day + scene dynamics. For Manim, "setting" is the canvas background + axis style; for `anime_scene`, the environment + lighting gradient.
-> 4. **Spatial Framing** — shot size + position-in-frame + depth (FG/MG/BG) + camera-height-relative; and how those CHANGE. Manim cares about layout grid + element positions; AI-video cares about full cinematographic framing.
-> 5. **Camera** — playback speed → lens distortion → height → angle → focus/DoF → steadiness → movement. For Manim and pure motion-graphics, default to N/A unless using a virtual camera move (`MoveCamera`, `self.frame`). For `anime_scene` and AI-video, specify fully.
+> 1. **主体（Subject）**——类型 + 关键视觉属性；对于 Manim，是指被前景化的方程/对象/图形；对于 `anime_scene`，是指焦点所在的角色或环境。
+> 2. **主体运动（Subject Motion）**——对于 Manim，是指 `Create`/`Transform`/`FadeIn` 的顺序以及每个动画传达的内容；对于 AI 视频，是指按时间顺序的动作和交互。
+> 3. **场景（Scene）**——叠加层（单独列出！）+ 视角 + 设定 + 时段 + 场景动态。对于 Manim，"设定"是画布背景 + 坐标轴样式；对于 `anime_scene`，是环境 + 光照渐变。
+> 4. **空间构图（Spatial Framing）**——镜头尺寸 + 画面内位置 + 深度（前景/中景/背景）+ 相机相对高度；以及这些如何**变化**。Manim 关心布局网格 + 元素位置；AI 视频关心完整的电影摄影构图。
+> 5. **镜头（Camera）**——播放速度 → 镜头畸变 → 高度 → 角度 → 对焦/景深 → 稳定度 → 运动。对于 Manim 和纯动态图形，除非使用虚拟镜头移动（`MoveCamera`、`self.frame`），否则默认为 N/A。对于 `anime_scene` 和 AI 视频，完整指定。
 >
-> Tie this back to `animation_mode` in scene metadata: a Manim scene that lists Camera fully is over-specified; an AI-video scene that omits Camera is under-specified. See `skills/creative/video-gen-prompting.md` for the primitive vocabulary.
+> 将这些与场景元数据中的 `animation_mode` 关联：一个 Manim 场景如果完整列出镜头维度就是过度指定；一个 AI 视频场景如果省略镜头维度就是指定不足。参见 `skills/creative/video-gen-prompting.md` 了解原始词汇。
 
-> **Overlays callout.** Overlays (titles, subtitles, HUD, watermarks, framing graphics, lower-thirds, `hero_title`, `section_title`, `provider_chip`) are NOT part of the scene's foreground/midground/background depth axis. List them separately in scene metadata (`overlays: [...]`) with content and placement. Never describe an overlay as "in the foreground" — that confuses both downstream tools and any video-understanding model that re-analyzes the output.
+> **叠加层说明。** 叠加层（标题、字幕、HUD、水印、构图图形、下部三分一、`hero_title`、`section_title`、`provider_chip`）不属于场景的前景/中景/背景深度轴。在场景元数据中单独列出（`overlays: [...]`），包含内容和位置。绝不要将叠加层描述为"在前景中"——这会使下游工具和任何重新分析输出的视频理解模型都感到困惑。
 
-### 6. Quality Gate
+### 6. 质量关卡
 
-- every scene has a clear timing intent,
-- the 5-aspect checklist is satisfied for the scene's `animation_mode` (with explicit N/A where appropriate),
-- overlays live under `overlays:`, never inside the framing description,
-- the transition system is limited and meaningful,
-- the tool path is explicit,
-- the sequence feels like one designed system.
+- 每个场景都有清晰的时机意图，
+- 5 维度检查清单满足场景的 `animation_mode`（适当位置有明确的 N/A），
+- 叠加层位于 `overlays:` 下，绝不在构图描述内部，
+- 转场系统有限且有意义，
+- 工具路径明确，
+- 序列感觉像一个设计好的系统。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Adding a new transition idea in every scene.
-- Planning scenes that have no realistic production path.
-- Overanimating text-heavy scenes.
+- 在每个场景中添加新的转场想法。
+- 规划没有现实制作路径的场景。
+- 过度动画化文本密集的场景。

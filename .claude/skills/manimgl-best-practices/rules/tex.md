@@ -1,34 +1,34 @@
-# ManimGL LaTeX (Tex Class)
+# ManimGL LaTeX（Tex 类）
 
-## Tex vs MathTex
+## Tex 与 MathTex 的区别
 
-**Important:** ManimGL uses `Tex` class (not `MathTex` like ManimCE).
+**重要：** ManimGL 使用 `Tex` 类（而不是 ManimCE 的 `MathTex`）。
 
 ```python
-# ManimGL - use Tex with capital R raw strings
+# ManimGL - 使用带大写 R 原始字符串的 Tex
 formula = Tex(R"\int_0^1 x^2 \, dx = \frac{1}{3}")
 
-# NOT like ManimCE:
-# formula = MathTex(r"\int...")  # Wrong for ManimGL
+# 不要像 ManimCE 那样：
+# formula = MathTex(r"\int...")  # 在 ManimGL 中错误
 ```
 
-## Raw Strings with Capital R
+## 带大写 R 的原始字符串
 
-Always use capital `R` for raw strings to avoid escaping issues:
+始终使用大写 `R` 作为原始字符串，以避免转义问题：
 
 ```python
-# Good - capital R
+# 正确 — 大写 R
 Tex(R"\frac{a}{b}")
 Tex(R"\vec{v}")
 Tex(R"\sum_{n=1}^{\infty}")
 
-# Also works but less readable
+# 也可以用，但可读性较差
 Tex("\\frac{a}{b}")
 ```
 
-## Color Mapping with t2c
+## 使用 t2c 进行颜色映射
 
-Use `t2c` (tex_to_color) parameter to color specific parts:
+使用 `t2c`（tex_to_color）参数为特定部分着色：
 
 ```python
 equation = Tex(
@@ -37,7 +37,7 @@ equation = Tex(
 )
 ```
 
-For more complex coloring:
+更复杂的着色：
 
 ```python
 formula = Tex(
@@ -52,7 +52,7 @@ formula = Tex(
 
 ## set_color_by_tex
 
-Color parts after creation:
+创建后为部分着色：
 
 ```python
 formula = Tex(R"\sum_{n=1}^{\infty} \frac{1}{n^2}")
@@ -60,39 +60,39 @@ formula.set_color_by_tex("n", BLUE)
 formula.set_color_by_tex(R"\infty", YELLOW)
 ```
 
-## Isolating Substrings
+## 隔离子串
 
-Get parts of a formula for animation:
+获取公式的某些部分用于动画：
 
 ```python
 formula = Tex(R"a^2 + b^2 = c^2")
 
-# Access by index
+# 通过索引访问
 a_squared = formula[0]  # "a^2"
 
-# Or use isolate parameter
+# 或使用 isolate 参数
 formula = Tex(
     R"a^2", "+", R"b^2", "=", R"c^2",
 )
-# Now formula[0] is "a^2", formula[1] is "+", etc.
+# 现在 formula[0] 是 "a^2"，formula[1] 是 "+"，等等
 ```
 
-## Text vs Tex
+## Text 与 Tex 的区别
 
 ```python
-# Regular text
+# 常规文本
 text = Text("Hello World")
 
-# LaTeX math
+# LaTeX 数学
 math = Tex(R"\pi \approx 3.14159")
 
-# Mixed (use TexText for text in math context)
+# 混合（在数学上下文中使用 TexText）
 mixed = TexText("The value of ", R"$\pi$", " is important")
 ```
 
 ## TexText
 
-For text that may contain inline math:
+用于可能包含内联数学的文本：
 
 ```python
 sentence = TexText(
@@ -101,7 +101,7 @@ sentence = TexText(
 )
 ```
 
-## Aligned Equations
+## 对齐方程
 
 ```python
 equations = Tex(R"""
@@ -112,59 +112,59 @@ equations = Tex(R"""
 """)
 ```
 
-## Common LaTeX Symbols
+## 常用 LaTeX 符号
 
 ```python
-# Greek letters
+# 希腊字母
 Tex(R"\alpha, \beta, \gamma, \delta, \theta, \phi, \pi")
 
-# Operators
+# 运算符
 Tex(R"\sum, \prod, \int, \oint, \partial")
 
-# Relations
+# 关系符
 Tex(R"\leq, \geq, \neq, \approx, \equiv")
 
-# Sets
+# 集合
 Tex(R"\in, \subset, \cup, \cap, \emptyset")
 
-# Arrows
+# 箭头
 Tex(R"\rightarrow, \leftarrow, \Rightarrow, \Leftrightarrow")
 
-# Fractions
+# 分数
 Tex(R"\frac{a}{b}, \dfrac{a}{b}")
 
-# Roots
+# 根号
 Tex(R"\sqrt{x}, \sqrt[3]{x}")
 
-# Matrices
+# 矩阵
 Tex(R"\begin{pmatrix} a & b \\ c & d \end{pmatrix}")
 ```
 
-## Font Size
+## 字体大小
 
 ```python
-# Use font_size parameter
+# 使用 font_size 参数
 small = Tex(R"\pi", font_size=24)
 large = Tex(R"\pi", font_size=72)
 
-# Or scale after creation
+# 或创建后缩放
 small.scale(1.5)
 ```
 
-## Backstroke for Readability
+## 用于可读性的背景描边
 
-When placing text over colored backgrounds:
+当文本放在彩色背景上时：
 
 ```python
 label = Tex(R"f(x)")
-label.set_backstroke(BLACK, 5)  # Black outline
+label.set_backstroke(BLACK, 5)  # 黑色轮廓
 ```
 
-## Debugging LaTeX
+## 调试 LaTeX
 
-If LaTeX doesn't render:
+如果 LaTeX 无法渲染：
 
-1. Check for missing packages in your LaTeX installation
-2. Try simpler expressions first
-3. Check the intermediate `.tex` files in the output directory
-4. Use `\text{}` for regular text inside math
+1. 检查 LaTeX 安装中是否缺少必要的包
+2. 先尝试更简单的表达式
+3. 检查输出目录中的中间 `.tex` 文件
+4. 在数学环境中使用 `\text{}` 表示常规文本

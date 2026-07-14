@@ -1,110 +1,107 @@
-# Script Director — Explainer Pipeline
+# 脚本导演 — 解说片流水线
 
-## When to Use
+## 使用时机
 
-You are the Script Writer for a generated explainer video. You have a `brief` artifact from the Idea Explorer. Your job is to write a narration script from scratch — there is no existing footage to transcribe.
+你是生成式解说视频的脚本作者。你有一个来自创意探索者的 `brief` 工件。你的工作是从头开始写一个旁白脚本 — 没有需要转录的现有素材。
 
-The script is the backbone of the video. Every visual, every scene, every audio cue flows from what you write here. A mediocre script cannot be saved by great visuals.
+脚本是视频的骨干。每个视觉、每个场景、每个音频提示都源自你在这里写的内容。一个平庸的脚本无法被出色的视觉效果拯救。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/script.schema.json` | Artifact validation |
-| Prior artifact | `proposal_packet` | Selected concept with title, hook, key_points, core_message, tone, narrative_structure, duration |
-| Prior artifact | `research_brief` (optional but high-value) | Data points, audience insights, expert quotes — ground the script in real facts |
-| Playbook | Active style playbook from `proposal_packet.selected_concept.suggested_playbook` | Voice style, pacing rules |
-| Meta skill | `skills/meta/voice-performance-director.md` | Structured TTS delivery cues for natural, expressive narration |
-| Layer 3 | TTS provider skills (check `agent_skills` on the selected TTS tool) | TTS capabilities for speaker directions |
+| 模式 | `schemas/artifacts/script.schema.json` | 工件验证 |
+| 前置工件 | `proposal_packet` | 选定的概念，包含标题、hook、key_points、core_message、基调、narrative_structure、时长 |
+| 前置工件 | `research_brief`（可选但高价值） | 数据点、受众洞见、专家引述 — 将脚本建立在真实事实上 |
+| 剧本 | 来自 `proposal_packet.selected_concept.suggested_playbook` 的活动风格剧本 | 声音风格、节奏规则 |
+| 元技能 | `skills/meta/voice-performance-director.md` | 结构化的 TTS 交付提示，用于自然、表现力的旁白 |
+| 第 3 层 | TTS 提供者技能（在选定的 TTS 工具上检查 `agent_skills`） | 用于说话者指示的 TTS 能力 |
 
-## Process
+## 流程
 
-### Step 1: Absorb the Proposal and Research
+### 步骤 1：吸收提案和研究
 
-Read the `proposal_packet.selected_concept` carefully. Extract:
-- **Target duration** — this is your word budget (see timing table below)
-- **Hook** — your opening must deliver on this promise
-- **Key points** — these must all be covered in the script
-- **Core message** — the one thing the viewer should remember
-- **Tone** — shapes word choice, sentence length, formality
-- **Target audience** — shapes complexity and assumed knowledge
-- **Narrative structure** — the structural approach (myth_busting, journey, data_narrative, etc.)
+仔细阅读 `proposal_packet.selected_concept`。提取：
+- **目标时长** — 这是你的字数预算（见下面的计时表）
+- **Hook** — 你的开场必须兑现这个承诺
+- **关键点** — 这些必须在脚本中全部覆盖
+- **核心信息** — 观众应该记住的一件事
+- **基调** — 塑造词语选择、句子长度、正式程度
+- **目标受众** — 塑造复杂性和假定知识
+- **叙事结构** — 结构方法（破除迷思、旅程、数据叙事等）
 
-Then read the `research_brief` for grounding material:
-- **`data_points`** — specific statistics and facts to weave into the script. Use claims with `surprise_factor: "surprising"` or `"counterintuitive"` as retention anchors.
-- **`audience_insights.misconceptions`** — if the narrative structure is `myth_busting`, these are your myth/reality pairs.
-- **`audience_insights.common_questions`** — address these directly in the script where they naturally fit.
-- **`expert_voices`** — quotable experts add authority. Use sparingly — one or two per script.
-- **`trending.recent_developments`** — if timely, reference them to make the content feel current.
+然后阅读 `research_brief` 获取基础材料：
+- **`data_points`** — 具体统计数据和事实，编织到脚本中。使用具有 `surprise_factor: "surprising"` 或 `"counterintuitive"` 的声明作为留存锚点。
+- **`audience_insights.misconceptions`** — 如果叙事结构是 `myth_busting`，这些是你的迷思/现实对照。
+- **`audience_insights.common_questions`** — 在脚本中直接处理这些问题，放在它们自然适合的地方。
+- **`expert_voices`** — 可引用的专家增加权威性。有节制地使用 — 每个脚本一两个。
+- **`trending.recent_developments`** — 如果有时效性，引用它们使内容感觉新鲜。
 
-**The research_brief is your cheat sheet.** Every fact, every surprising stat, every misconception is pre-verified and sourced. Use them. A script that cites "73% of developers..." (from research) is more compelling than one that says "many developers..."
+**research_brief 是你的速查表。** 每个事实、每个惊人数据、每个误解都已预先验证并标明来源。使用它们。引用"73% 的开发者……"（来自研究）的脚本比说"许多开发者……"的脚本更引人注目。
 
-### Step 2: Deepen Research Where Needed
+### 步骤 2：在需要处深化研究
 
-The Research Director has already done the heavy lifting — you have a `research_brief` full of sourced facts. Your job here is targeted:
+研究导演已经完成了繁重的工作 — 你有一个充满来源化事实的 `research_brief`。你的工作是针对性的：
 
-1. **Verify and update**: If any data point from the research_brief feels stale or uncertain, re-search to confirm.
-2. **Fill script-specific gaps**: The research gives you broad facts. You may need a specific analogy, a precise technical detail, or a better example for a particular section.
-3. **Find the best explanation**: How do the best educators (3Blue1Brown, Kurzgesagt, Fireship, Veritasium) explain this concept? What analogies work?
-4. **Source quotable moments**: If the research_brief's expert_voices section has useful quotes, use them. If not, search for one strong quote to anchor a key section.
+1. **验证和更新**：如果 research_brief 中的任何数据点感觉过时或不确定，重新搜索确认。
+2. **填补脚本特定的空白**：研究给你广泛的事实。你可能需要一个特定的类比、一个精确的技术细节、或一个特定章节的更好示例。
+3. **找到最佳解释**：最好的教育家（3Blue1Brown、Kurzgesagt、Fireship、Veritasium）如何解释这个概念？哪些类比有效？
+4. **寻找可引用的时刻**：如果 research_brief 的 expert_voices 部分有有用的引用，使用它们。如果没有，搜索一个强有力的引用来锚定一个关键章节。
 
-**Do NOT duplicate the Research Director's work.** If the research_brief already has 6 data points, you don't need to find 6 more. Focus on script-level needs: the right word, the right analogy, the right sequence.
+**不要重复研究导演的工作。** 如果 research_brief 已经有 6 个数据点，你不需要再找 6 个。专注于脚本层面的需求：合适的词、合适的类比、合适的顺序。
 
-### Step 3: Plan the Narrative Arc
+### 步骤 3：规划叙事弧线
 
-Before writing prose, plan the structure. Every explainer script follows a dramatic arc:
+在写散文之前，规划结构。每个解说脚本都遵循一个戏剧性弧线：
 
 ```
-HOOK (0-5s)     → Grab attention. Question, bold claim, or surprising fact.
-                   NEVER: "In this video, we'll learn about..."
-                   NEVER: "Hey guys, welcome back..."
+HOOK（0-5 秒）     → 吸引注意力。问题、大胆声明或惊人事实。
+                    绝对不要："在这个视频中，我们将学习……"
+                    绝对不要："嘿大家好，欢迎回来……"
 
-SETUP (5-15s)   → Why should the viewer care? Create a knowledge gap.
-                   Show the problem or the question. Make them NEED the answer.
+SETUP（5-15 秒）   → 为什么观众应该关心？创建一个知识缺口。
+                    展示问题或疑问。让他们需要答案。
 
-BUILD (15-Xs)   → Progressive revelation. Each section builds on the last.
-                   Use "therefore / but" transitions, NOT "and then."
-                   South Park rule: "This happened, THEREFORE that happened,
-                   BUT then this complication arose..."
+BUILD（15-X 秒）   → 渐进揭示。每个章节建立在前一个之上。
+                    使用"因此/但是"过渡，不是"然后"。
+  South Park 规则："这发生了，因此那发生了，
+                    但是然后出现了这个复杂情况……"
 
-CLIMAX (X-5s before end) → The "aha" moment. Everything clicks into place.
-                            This is the payoff for the setup's knowledge gap.
+CLIMAX（X-结束前 5 秒） → "啊哈"时刻。一切归位。
+                          这是对 SETUP 知识缺口的回报。
 
-LANDING (last 5s) → Quick recap of core message + CTA.
-                     Don't introduce new information here.
+LANDING（最后 5 秒） → 核心信息快速回顾 + CTA。
+                       不要在此引入新信息。
 ```
 
-Map each of the brief's `key_points` to a specific section in the BUILD phase.
+将概要的每个 `key_points` 映射到 BUILD 阶段的特定章节。
 
-### Step 4: Write the Script
+### 步骤 4：写脚本
 
-Before writing sections, create a top-level `voice_performance` plan using
-`skills/meta/voice-performance-director.md`. The plan must describe the vocal
-intent, pacing profile, energy curve, pause policy, and which section should be
-used for TTS sample approval. Do not leave this as a vague "natural voice" note.
+在写章节之前，使用 `skills/meta/voice-performance-director.md` 创建一个顶级的 `voice_performance` 计划。该计划必须描述声音意图、节奏配置文件、能量曲线、暂停策略，以及哪个章节应用于 TTS 样本批准。不要将其留下为模糊的"自然声音"说明。
 
-Write each section with these fields:
+用以下字段写每个章节：
 
 ```json
 {
   "id": "s1",
   "label": "Hook",
-  "text": "Your database searches every single row. Every. Single. One. What if it didn't have to?",
+  "text": "你的数据库搜索每一行。每。一。行。如果它不需要呢？",
   "start_seconds": 0,
   "end_seconds": 5,
-  "speaker_directions": "Emphasize 'every single row' with measured pacing. Brief pause before the question.",
+  "speaker_directions": "用有节奏的停顿强调'每一行'。在问题前短暂停顿。",
   "delivery_cues": {
     "pace": "measured",
     "energy": "curious",
-    "emphasis_words": ["every", "single"],
+    "emphasis_words": ["每", "一"],
     "pause_after_seconds": 0.6,
-    "delivery_note": "Let the repetition feel intentional, then soften into the question.",
-    "provider_text": "Your database searches every single row. Every. Single. One. <break time=\"0.6s\"/> What if it didn't have to?"
+    "delivery_note": "让重复感觉有意，然后软化进入问题。",
+    "provider_text": "你的数据库搜索每一行。每。一。行。<break time=\"0.6s\"/>如果它不需要呢？"
   },
   "enhancement_cues": [
     {
       "type": "animation",
-      "description": "Database table with rows highlighted one by one, slowing down as count increases",
+      "description": "数据库表，行逐一高亮，随着计数增加而减慢",
       "timestamp_seconds": 1
     }
   ],
@@ -112,62 +109,57 @@ Write each section with these fields:
 }
 ```
 
-#### Timing Estimation
+#### 时间估算
 
-| Pace | Words/minute | Use when |
+| 节奏 | 词/分钟 | 使用时机 |
 |------|-------------|----------|
-| Conversational | ~150 wpm | Default for most explainers |
-| Contemplative | ~120 wpm | Complex topics, need processing time |
-| Energetic | ~180 wpm | Short-form, high-energy, TikTok/Reels |
-| Technical | ~130 wpm | Code walkthroughs, architecture deep-dives |
+| 对话式 | ~150 wpm | 大多数解说片默认 |
+| 沉思式 | ~120 wpm | 复杂主题，需要处理时间 |
+| 精力充沛 | ~180 wpm | 短格式、高能量、TikTok/Reels |
+| 技术性 | ~130 wpm | 代码讲解、架构深度解析 |
 
-**Word budget by duration:**
-- 30s video → ~65-75 words
-- 60s video → ~130-150 words
-- 90s video → ~195-225 words
-- 120s video → ~260-300 words
+**按时长的字数预算：**
+- 30 秒视频 → ~65-75 词
+- 60 秒视频 → ~130-150 词
+- 90 秒视频 → ~195-225 词
+- 120 秒视频 → ~260-300 词
 
-Count your words. If you're 20%+ over budget, the TTS will either rush or exceed duration. Cut ruthlessly.
+数一数你的词。如果你超出预算 20%+，TTS 要么会赶要么会超时。无情地删减。
 
-#### Speaker Directions
+#### 说话者指示
 
-Write directions that TTS can actually implement. Prefer structured
-`delivery_cues` over prose-only `speaker_directions`:
+写 TTS 实际能实现的指示。优先使用结构化的 `delivery_cues` 而不是纯散文式的 `speaker_directions`：
 
-| Direction | TTS Implementation |
+| 指示 | TTS 实现 |
 |-----------|-------------------|
-| "Speak slowly, with emphasis" | Lower speed setting, stability boost |
-| "Excited, picking up pace" | Higher speed, higher style setting |
-| "Pause for 1 second" | SSML `<break time="1s"/>` |
-| "Whisper" | SSML whisper tag (model-dependent) |
-| "Emphasize THIS word" | Note for post-processing or SSML emphasis |
+| "慢慢说，带强调" | 较低速度设置，稳定性提升 |
+| "兴奋，加快节奏" | 较高速度，较高风格设置 |
+| "暂停 1 秒" | SSML `<break time="1s"/>` |
+| "低语" | SSML 低语标签（取决于模型） |
+| "强调这个词" | 为后处理或 SSML 强调注明 |
 
-Avoid directions TTS can't do: "smile while speaking", "gesture toward screen", "look at camera."
+避免 TTS 无法做到的指示："说话时微笑"、"对着屏幕做手势"、"看镜头"。
 
-**Expressive narration rule:** every narration-led section must include at
-least two concrete cues among `pace`, `energy`, `emphasis_words`,
-`pause_before_seconds`, `pause_after_seconds`, `delivery_note`, or
-`provider_text`. Use `provider_text` when punctuation or SSML break tags are
-needed to make the read sound human.
+**表现力旁白规则：** 每个旁白主导的章节必须包含 `pace`、`energy`、`emphasis_words`、`pause_before_seconds`、`pause_after_seconds`、`delivery_note` 或 `provider_text` 中至少两个具体提示。当需要标点或 SSML 中断标签使朗读听起来像人话时，使用 `provider_text`。
 
-#### Enhancement Cues
+#### 增强提示
 
-Every section should have at least one enhancement cue. These tell the Scene Planner and Asset Generator what visuals to create.
+每个章节应有至少一个增强提示。这些告诉场景规划者和资产生成者创建什么视觉。
 
-| Cue Type | When to Use | Example |
+| 提示类型 | 使用时机 | 示例 |
 |----------|-------------|---------|
-| `overlay` | Key term, definition, label | "Show 'embedding' definition overlay" |
-| `diagram` | Process, architecture, flow | "Mermaid flowchart: query → encode → search → rank" |
-| `stat_card` | Surprising number or comparison | "Display: 1ms vs 500ms search time" |
-| `animation` | Concept that needs motion to understand | "Animate vectors moving through high-dimensional space" |
-| `code_snippet` | Code example | "Show Python: `results = collection.query(embedding)`" |
-| `broll` | Real-world context | "Show examples of apps using vector search" |
+| `overlay` | 关键术语、定义、标签 | "显示'嵌入'定义叠加" |
+| `diagram` | 过程、架构、流程 | "Mermaid 流程图：query → encode → search → rank" |
+| `stat_card` | 惊人数字或比较 | "显示：1ms vs 500ms 搜索时间" |
+| `animation` | 需要运动才能理解的概念 | "动画显示向量在高维空间中移动" |
+| `code_snippet` | 代码示例 | "显示 Python：`results = collection.query(embedding)`" |
+| `broll` | 真实世界上下文 | "展示使用向量搜索的应用示例" |
 
-**Density rule**: At least one enhancement cue every 8-10 seconds. A 60-second video should have 6-8 cues minimum. Viewers disengage if the visual doesn't change.
+**密度规则**：每 8-10 秒至少一个增强提示。60 秒视频应有至少 6-8 个提示。如果视觉不变化，观众会失去兴趣。
 
-#### Pronunciation Guides
+#### 发音指南
 
-For technical terms, acronyms, and non-English words:
+对于技术术语、缩略词和非英语单词：
 
 ```json
 {"word": "FAISS", "phonetic": "FACE"},
@@ -175,78 +167,76 @@ For technical terms, acronyms, and non-English words:
 {"word": "cosine", "phonetic": "CO-sign"}
 ```
 
-### Step 5: Validate Against Playbook
+### 步骤 5：对照剧本验证
 
-Read the active style playbook and verify:
+阅读活动风格剧本并验证：
 
-| Playbook Field | Script Impact |
+| 剧本字段 | 脚本影响 |
 |----------------|---------------|
-| `identity.pace` | Match word density. `contemplative` = fewer words, longer pauses |
-| `audio.voice_style` | Shape tone of speaker directions |
-| `voice_performance` | Confirm pacing, pauses, and energy curve are explicit enough for TTS |
-| `motion.pacing_rules` | E.g., "hold establishing shots for 2s minimum" affects section timing |
-| `identity.mood` | Word choice: `warm` uses casual language; `professional` uses precise language |
+| `identity.pace` | 匹配词密度。`contemplative` = 更少词，更长停顿 |
+| `audio.voice_style` | 塑造说话者指示的基调 |
+| `voice_performance` | 确认节奏、停顿和能量曲线对 TTS 足够明确 |
+| `motion.pacing_rules` | 例如，"定场镜头至少保持 2 秒"影响章节计时 |
+| `identity.mood` | 词语选择：`warm` 使用随意语言；`professional` 使用精确语言 |
 
-### Step 6: Self-Evaluate
+### 步骤 6：自我评估
 
-Score your script (1-5):
+为你的脚本评分（1-5）：
 
-| Criterion | Question |
+| 标准 | 问题 |
 |-----------|----------|
-| **Hook power** | Would someone stop scrolling in the first 3 seconds? |
-| **Word count accuracy** | Within ±10% of target for the duration? |
-| **Narrative flow** | Does each section build on the last? "Therefore/but" not "and then"? |
-| **Enhancement density** | At least one cue every 8-10 seconds? |
-| **Voice performance** | Are pauses, emphasis, pace, and sample section explicit? |
-| **Jargon management** | Technical terms explained or have pronunciation guides? |
-| **Climax payoff** | Does the aha moment deliver on the hook's promise? |
-| **CTA relevance** | Is the call to action specific and actionable? |
+| **Hook 力量** | 有人会在前 3 秒停止滚动吗？ |
+| **词数准确性** | 在目标时长 ±10% 以内？ |
+| **叙事流畅性** | 每个章节是否建立在前一个之上？"因此/但是"不是"然后"？ |
+| **增强密度** | 每 8-10 秒至少一个提示？ |
+| **声音表现** | 停顿、强调、节奏和样本章节是否明确？ |
+| **行话管理** | 技术术语有解释或有发音指南？ |
+| **高潮回报** | 啊哈时刻是否兑现了 hook 的承诺？ |
+| **CTA 相关性** | 行动号召是否具体且可操作？ |
 
-If any dimension scores below 3, revise before submitting.
+如果任何维度得分低于 3，在提交前修订。
 
-### Step 7: Submit
+### 步骤 7：提交
 
-Call `handle_explainer_script(state, {"script": script_json})` to validate and persist.
+调用 `handle_explainer_script(state, {"script": script_json})` 以验证并持久化。
 
-### Mid-Production Fact Verification
+### 制作中的事实验证
 
-If you encounter uncertainty during script writing:
-- Use `web_search` to verify factual claims before committing them to the script
-- Use `web_search` to find reference images for visual accuracy
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在写脚本过程中遇到不确定性：
+- 使用 `web_search` 验证事实性声明，然后再将其写入脚本
+- 使用 `web_search` 查找参考图像以验证视觉准确性
+- 在决策日志中记录验证：`category="visual_accuracy_check"`
 
-Every factual claim in the script should be traceable to the `research_brief`.
-If you make a claim that isn't in the research, do additional research and
-add the source. Do not invent statistics, dates, or attributions.
+脚本中的每个事实性声明应可追溯到 `research_brief`。如果你做出了研究中没有的声明，进行额外研究并添加来源。不要编造统计数据、日期或归属。
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Writing too many words**: The #1 failure. TTS pacing is fixed. If you write 250 words for a 60-second video, either the audio will be rushed or the video will be 100 seconds. Count your words.
-- **Front-loading information**: The hook should create curiosity, not dump information. "HTTPS uses TLS 1.3 with AEAD ciphers" is a terrible opening. "The padlock icon doesn't mean what you think it means" is compelling.
-- **Missing enhancement cues**: A script without visual direction is a podcast script. Every section needs at least one cue telling the visual team what to show.
-- **Generic speaker directions**: "Read naturally" is useless. "Start measured and precise, then accelerate through the list to convey scale" is actionable.
-- **Forgetting the audience**: A script for CTOs should use different words than one for high schoolers, even if covering the same concept.
-- **No transitions between sections**: Each section should have a logical bridge to the next. The viewer should never think "wait, why are we talking about this now?"
+- **写太多词**：#1 失败。TTS 节奏是固定的。如果你为 60 秒的视频写了 250 个词，要么音频会赶，要么视频会变成 100 秒。数你的词。
+- **前载信息**：Hook 应该创造好奇心，而不是倾倒信息。"HTTPS 使用带有 AEAD 密码的 TLS 1.3"是一个糟糕的开场。"锁图标的意思不是你以为的那样"是引人注目的。
+- **缺少增强提示**：没有视觉指导的脚本是播客脚本。每个章节需要至少一个提示告诉视觉团队展示什么。
+- **通用的说话者指示**："自然朗读"是无用的。"以有节奏和精确开始，然后加速通过列表以传达规模"是可操作的。
+- **忘记受众**：给 CTO 的脚本应使用与给高中生不同的词，即使覆盖相同的概念。
+- **章节之间没有过渡**：每个章节应有逻辑桥接到下一个。观众绝不应想"等等，为什么我们现在说这个？"
 
-## Example: Well-Written Section
+## 示例：写好的章节
 
 ```json
 {
   "id": "s3",
-  "label": "The Core Idea",
-  "text": "Instead of matching keywords, vector databases convert everything — text, images, audio — into lists of numbers called embeddings. Similar things get similar numbers. So finding related content becomes a math problem: which numbers are closest?",
+  "label": "核心概念",
+  "text": "不是匹配关键词，向量数据库将一切——文本、图像、音频——转换为称为嵌入的数字列表。相似的东西获得相似的数字。所以找到相关内容变成了一个数学问题：哪些数字最接近？",
   "start_seconds": 15,
   "end_seconds": 28,
-  "speaker_directions": "Measured pace through 'text, images, audio' with slight pause between each. Speed up slightly on 'similar things get similar numbers' — it should feel like a revelation. Brief pause before the final question.",
+  "speaker_directions": "通过'文本、图像、音频'用节奏停顿，每个之间短暂停顿。在'相似的东西获得相似的数字'时稍微加速——应该感觉像一个启示。在最终问题前短暂停顿。",
   "enhancement_cues": [
     {
       "type": "animation",
-      "description": "Show text/image/audio icons transforming into number arrays (embeddings). Arrays cluster by similarity in a 2D space.",
+      "description": "显示文本/图像/音频图标转换为数字数组（嵌入）。数组在 2D 空间中按相似度聚类。",
       "timestamp_seconds": 16
     },
     {
       "type": "stat_card",
-      "description": "Display: 'Everything becomes numbers. Similar things → similar numbers.'",
+      "description": "显示：'一切都变成数字。相似的东→ 相似的数字。'",
       "timestamp_seconds": 22
     }
   ],

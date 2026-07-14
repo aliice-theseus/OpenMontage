@@ -1,13 +1,13 @@
 ---
 name: text-overlays
-description: Adding text overlays with fonts and positioning to HeyGen videos
+description: 在 HeyGen 视频中添加带字体和定位的文字叠加
 ---
 
-# Text Overlays
+# 文字叠加
 
-Add text overlays to your HeyGen videos for titles, captions, lower thirds, and other on-screen text elements.
+在 HeyGen 视频中添加文字叠加层，用于标题、字幕、下三分之一等屏幕文字元素。
 
-## Basic Text Overlay
+## 基本文字叠加
 
 ```typescript
 const videoConfig = {
@@ -29,57 +29,57 @@ const videoConfig = {
       },
     },
   ],
-  // Text overlay configuration (if supported in your API tier)
-  // Note: Availability varies by plan
+  // 文字叠加配置（如果 API 套餐支持）
+  // 注意：可用性因套餐而异
 };
 ```
 
-## Text Overlay Configuration
+## 文字叠加配置
 
-Text overlays typically support these properties:
+文字叠加通常支持以下属性：
 
 ```typescript
 interface TextOverlay {
   text: string;
-  x: number;          // X position (pixels or percentage)
-  y: number;          // Y position (pixels or percentage)
-  width?: number;     // Text box width
-  height?: number;    // Text box height
+  x: number;          // X 位置（像素或百分比）
+  y: number;          // Y 位置（像素或百分比）
+  width?: number;     // 文本框宽度
+  height?: number;    // 文本框高度
   font_family?: string;
   font_size?: number;
   font_color?: string;
   background_color?: string;
   text_align?: "left" | "center" | "right";
   duration?: {
-    start: number;    // Start time in seconds
-    end: number;      // End time in seconds
+    start: number;    // 开始时间（秒）
+    end: number;      // 结束时间（秒）
   };
 }
 ```
 
-## Positioning Text
+## 定位文字
 
-### Coordinate System
+### 坐标系统
 
-- **Origin**: Top-left corner (0, 0)
-- **X-axis**: Increases to the right
-- **Y-axis**: Increases downward
-- **Units**: Typically pixels or percentage of video dimensions
+- **原点**：左上角 (0, 0)
+- **X 轴**：向右增加
+- **Y 轴**：向下增加
+- **单位**：通常为像素或视频尺寸的百分比
 
-### Common Positions
+### 常见位置
 
-For a 1920x1080 video:
+对于 1920x1080 视频：
 
-| Position | X | Y | Description |
+| 位置 | X | Y | 描述 |
 |----------|---|---|-------------|
-| Top-left | 50 | 50 | Upper left corner |
-| Top-center | 960 | 50 | Top center |
-| Top-right | 1870 | 50 | Upper right corner |
-| Center | 960 | 540 | Dead center |
-| Bottom-left | 50 | 1030 | Lower third left |
-| Bottom-center | 960 | 1030 | Lower third center |
+| 左上角 | 50 | 50 | 左上角 |
+| 顶部居中 | 960 | 50 | 顶部中央 |
+| 右上角 | 1870 | 50 | 右上角 |
+| 居中 | 960 | 540 | 正中央 |
+| 左下角 | 50 | 1030 | 下三分之一左侧 |
+| 底部居中 | 960 | 1030 | 下三分之一居中 |
 
-### Position Helper Function
+### 位置辅助函数
 
 ```typescript
 interface Position {
@@ -107,9 +107,9 @@ function getTextPosition(
 }
 ```
 
-## Font Styling
+## 字体样式
 
-### Available Font Properties
+### 可用字体属性
 
 ```typescript
 const textStyle = {
@@ -122,24 +122,24 @@ const textStyle = {
 };
 ```
 
-### Common Font Families
+### 常见字体族
 
-| Font | Style | Use Case |
+| 字体 | 样式 | 使用场景 |
 |------|-------|----------|
-| Arial | Sans-serif | Clean, universal |
-| Helvetica | Sans-serif | Modern, professional |
-| Times New Roman | Serif | Traditional, formal |
-| Georgia | Serif | Elegant, readable |
-| Roboto | Sans-serif | Modern, digital |
-| Open Sans | Sans-serif | Friendly, accessible |
+| Arial | 无衬线 | 干净、通用 |
+| Helvetica | 无衬线 | 现代、专业 |
+| Times New Roman | 衬线 | 传统、正式 |
+| Georgia | 衬线 | 优雅、可读性强 |
+| Roboto | 无衬线 | 现代、数字 |
+| Open Sans | 无衬线 | 友好、易访问 |
 
-## Common Text Overlay Patterns
+## 常见文字叠加模式
 
-### Title Card
+### 标题卡片
 
 ```typescript
 const titleOverlay = {
-  text: "Product Demo",
+  text: "产品演示",
   x: 960,
   y: 540,
   font_family: "Arial",
@@ -153,7 +153,7 @@ const titleOverlay = {
 };
 ```
 
-### Lower Third (Name/Title)
+### 下三分之一（姓名/头衔）
 
 ```typescript
 const lowerThirdOverlay = {
@@ -172,11 +172,11 @@ const lowerThirdOverlay = {
 };
 ```
 
-### Call to Action
+### 行动号召
 
 ```typescript
 const ctaOverlay = {
-  text: "Visit example.com",
+  text: "访问 example.com",
   x: 960,
   y: 1000,
   font_family: "Arial",
@@ -190,7 +190,7 @@ const ctaOverlay = {
 };
 ```
 
-## Creating Text Overlay Templates
+## 创建文字叠加模板
 
 ```typescript
 interface TextOverlayTemplate {
@@ -248,7 +248,7 @@ function createTextOverlay(
   const template = templates.find((t) => t.name === templateName);
 
   if (!template) {
-    throw new Error(`Template "${templateName}" not found`);
+    throw new Error(`未找到模板 "${templateName}"`);
   }
 
   return {
@@ -261,33 +261,33 @@ function createTextOverlay(
 }
 ```
 
-## Timing Text Overlays
+## 文字叠加时序
 
-Coordinate text appearance with your script:
+将文字出现时间与脚本同步：
 
 ```typescript
-// Script with timing markers
+// 带时间标记的脚本
 const script = `
-Hello and welcome. [0:00 - 0:03]
-Let me show you our features. [0:03 - 0:08]
-First, we have analytics. [0:08 - 0:15]
-Get started today! [0:15 - 0:20]
+大家好，欢迎。 [0:00 - 0:03]
+让我展示我们的功能。 [0:03 - 0:08]
+首先，我们有分析功能。 [0:08 - 0:15]
+今天就加入我们！ [0:15 - 0:20]
 `;
 
-// Matching text overlays
+// 匹配的文字叠加
 const overlays = [
   {
-    text: "Welcome",
+    text: "欢迎",
     duration: { start: 0, end: 3 },
     ...titleStyle,
   },
   {
-    text: "Feature Overview",
+    text: "功能概述",
     duration: { start: 3, end: 8 },
     ...subtitleStyle,
   },
   {
-    text: "Analytics Dashboard",
+    text: "分析仪表盘",
     duration: { start: 8, end: 15 },
     ...lowerThirdStyle,
   },
@@ -299,18 +299,18 @@ const overlays = [
 ];
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Readability** - Use sufficient contrast between text and background
-2. **Size** - Ensure text is large enough to read on mobile devices
-3. **Duration** - Give viewers enough time to read (rule of thumb: 3 seconds minimum)
-4. **Positioning** - Don't overlap with the avatar's face
-5. **Consistency** - Use consistent fonts and styles throughout
-6. **Accessibility** - Consider color-blind friendly palettes
+1. **可读性** - 使用足够的文字/背景对比度
+2. **大小** - 确保文字在移动设备上也足够大
+3. **时长** - 给观众足够的阅读时间（经验法则：至少 3 秒）
+4. **定位** - 不要与头像的脸部重叠
+5. **一致性** - 在整个视频中使用一致的字体和样式
+6. **可访问性** - 考虑色盲友好的调色板
 
-## Limitations
+## 限制
 
-- Text overlay support varies by subscription tier
-- Some advanced styling options may not be available via API
-- Complex animations may require post-production tools
-- For auto-generated captions, see [captions.md](captions.md)
+- 文字叠加支持因订阅套餐而异
+- 某些高级样式选项可能无法通过 API 使用
+- 复杂动画可能需要后期制作工具
+- 如需自动生成字幕，请参见 [captions.md](captions.md)

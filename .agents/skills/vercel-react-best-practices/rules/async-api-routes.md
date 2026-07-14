@@ -1,15 +1,15 @@
 ---
-title: Prevent Waterfall Chains in API Routes
+title: 防止 API 路由中的瀑布链
 impact: CRITICAL
-impactDescription: 2-10× improvement
+impactDescription: 2-10× 改进
 tags: api-routes, server-actions, waterfalls, parallelization
 ---
 
-## Prevent Waterfall Chains in API Routes
+## 防止 API 路由中的瀑布链
 
-In API routes and Server Actions, start independent operations immediately, even if you don't await them yet.
+在 API 路由和 Server Actions 中，立即启动独立操作，即使你还没有 await 它们。
 
-**Incorrect (config waits for auth, data waits for both):**
+**不正确（config 等待 auth，data 等待两者）：**
 
 ```typescript
 export async function GET(request: Request) {
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 }
 ```
 
-**Correct (auth and config start immediately):**
+**正确（auth 和 config 立即启动）：**
 
 ```typescript
 export async function GET(request: Request) {
@@ -35,4 +35,4 @@ export async function GET(request: Request) {
 }
 ```
 
-For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).
+对于具有更复杂依赖链的操作，使用 `better-all` 自动最大化并行度（参见基于依赖的并行化）。

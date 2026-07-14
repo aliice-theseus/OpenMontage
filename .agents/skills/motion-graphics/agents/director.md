@@ -1,53 +1,53 @@
-# Motion-Graphics Director
+# 动态图形导演
 
-Turn a request into a `shot-plan.json` for a short (~3–30s) **design-led motion graphic**. You run in **two parts** around the asset-sourcing step: **Part 1 (plan)** before sourcing, **Part 2 (design)** after. You do NOT write composition code — that's the Builder. Schema: `references/shot-plan-ir.md`.
+将请求转换为一个 `shot-plan.json`，用于制作简短（约3–30秒）**以设计为主导的动态图形**。您在资产获取步骤前后**分两部分**运行：**第1部分（规划）** 在获取素材之前，**第2部分（设计）** 在获取素材之后。您不编写合成代码 — 那是 Builder 的工作。模式：`references/shot-plan-ir.md`。
 
-## Part 1 — Plan (before sourcing)
+## 第1部分 — 规划（获取素材前）
 
-Emit a DRAFT `shot-plan.json`.
+生成一个草稿 `shot-plan.json`。
 
-0. **Decide first: does this need a search?** No → a **form category** (user supplies content). Yes → emit a search plan; the specific **search-driven category** (`webpage` / `news` / `tweet` / `asset-fusion`) is confirmed by what the search returns (Step 2 → finalized in Part 2).
+0. **首先决定：是否需要搜索？** 否 → 一个**形式类别**（用户提供内容）。是 → 生成搜索计划；具体的**搜索驱动类别**（`webpage`/`news`/`tweet`/`asset-fusion`）由搜索返回的结果确认（第2步 → 在第2部分最终确定）。
 
-1. **Classify** — form categories by intent below; search-driven categories are picked post-search:
+1. **分类** — 按意图划分形式类别如下；搜索驱动类别在搜索后选择：
 
-   | Category       | Pick when…                                                                                                                                                                         |
-   | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | `kinetic-type` | a punchy line / quote / title; text is the hero                                                                                                                                    |
-   | `stat`         | a single hero number / count-up                                                                                                                                                    |
-   | `charts`       | bar / line / pie / race / % from data                                                                                                                                              |
-   | `logo-reveal`  | a logo sting / brand lockup (user supplies the logo)                                                                                                                               |
-   | `lower-thirds` | name/title bars, callouts, social overlays                                                                                                                                         |
-   | `maps`         | a geographic shot — highlight regions, connect places, zoom to a location. Sub-fork: **vector** (D3, stylized) vs **basemap** (baked MapLibre — real satellite/dark/zoom-to-place) |
-   | `webpage`      | highlight / animate a real captured web page or UI _(search-driven)_                                                                                                               |
-   | `news`         | a news article → article-highlight: blur → zoom into keyword _(search-driven)_                                                                                                     |
-   | `tweet`        | a tweet → animated card _(search-driven)_                                                                                                                                          |
-   | `asset-fusion` | a real photo/asset's geometry _becomes_ the chart _(search-driven)_                                                                                                                |
+   | 类别             | 何时选择                                                                                                                                    |
+   | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `kinetic-type`   | 有力的一句话/引用/标题；文字是主角                                                                                                           |
+   | `stat`           | 单个主角数字/计数                                                                                                                            |
+   | `charts`         | 条形/折线/饼图/竞赛/百分比数据                                                                                                               |
+   | `logo-reveal`    | 标志片头/品牌组合（用户提供标志）                                                                                                            |
+   | `lower-thirds`   | 名称/标题栏、标注、社交覆盖层                                                                                                                |
+   | `maps`           | 地理镜头 — 高亮区域、连接地点、缩放到某位置。子分支：**矢量**（D3，风格化）vs **底图**（烘焙的 MapLibre — 真实卫星/暗色/缩放到位置）         |
+   | `webpage`        | 高亮/动画化一个真实捕获的网页或UI _（搜索驱动）_                                                                                             |
+   | `news`           | 新闻文章 → 文章高亮：模糊 → 缩放到关键词 _（搜索驱动）_                                                                                     |
+   | `tweet`          | 推文 → 动画卡片 _（搜索驱动）_                                                                                                               |
+   | `asset-fusion`   | 真实照片/资产的几何形状_变成_图表 _（搜索驱动）_                                                                                             |
 
-   If genuinely ambiguous between two, ask exactly one question. Then load `categories/<id>/module.md` for that category's specifics.
+   如果确实在两者之间模棱两可，只问一个问题。然后加载该类别的 `categories/<id>/module.md` 以了解其具体内容。
 
-2. **Asset strategy → `asset_needs[]`.** Each item: `{ role, kind: image|icon|logo|svg|news|web|tweet, query|source, treatment }`.
-   - asset-free (`kinetic-type`, most `stat`/`charts`) → `asset_needs: []`.
-   - `maps` → **vector** lane: `asset_needs: []` (D3/TopoJSON, runs live in HF). **basemap** lane (satellite/dark/zoom-to-place): `asset_needs: [{ type: "map-bake", … }]` (baked in Source — see `categories/maps/module.md`).
-   - `webpage` / `news` / `tweet` → search the real source (page / article / tweet) + a supporting image. **Two-pole queries only**: atomic (1–3 words, composable: portraits, logos, objects) OR specific (5–15 words: a news event, a tweet). Never the middle. A failed specific query is dropped, not broadened.
-   - `asset-fusion` → search or generate one hero asset.
-   - `logo-reveal` → user-supplied logo (`source`).
+2. **资产策略 → `asset_needs[]`**。每个项目：`{ role, kind: image|icon|logo|svg|news|web|tweet, query|source, treatment }`。
+   - 无资产（`kinetic-type`、大多数 `stat`/`charts`）→ `asset_needs: []`。
+   - `maps` → **矢量**轨道：`asset_needs: []`（D3/TopoJSON，在 HF 中实时运行）。**底图**轨道（卫星/暗色/缩放到位置）：`asset_needs: [{ type: "map-bake", … }]`（在素材来源阶段烘焙 — 参见 `categories/maps/module.md`）。
+   - `webpage`/`news`/`tweet` → 搜索真实来源（页面/文章/推文）+ 辅助图片。**仅两极查询**：原子级（1–3个词，可组合：肖像、标志、物体）或具体级（5–15个词：新闻事件、推文）。绝不要中间值。失败的具体查询被丢弃，不扩大范围。
+   - `asset-fusion` → 搜索或生成一个主角资产。
+   - `logo-reveal` → 用户提供的标志（`source`）。
 
-3. **Envelope**: `duration_s` (3–30), `fps` (30), `canvas` (default 1080×1920; 16:9 / 1:1 per platform), `style`, `palette` (hex list, or `"derive-from-asset"`), `font` (from the HF embed list), `beats`, `export` (`mp4` | `alpha-overlay`).
+3. **概要**：`duration_s`（3–30）、`fps`（30）、`canvas`（默认 1080×1920；按平台 16:9 / 1:1）、`style`、`palette`（十六进制列表，或 `"derive-from-asset"`）、`font`（来自 HF 嵌入列表）、`beats`、`export`（`mp4` | `alpha-overlay`）。
 
-4. **Shot brief**: one paragraph — what the viewer experiences + the single dominant motion idea.
+4. **镜头简报**：一段描述 — 观看者体验到的内容 + 单一主导动态创意。
 
-## Part 2 — Design (after sourcing)
+## 第2部分 — 设计（获取素材后）
 
-Given the draft + resolved `assets/index.md` (if Step 2 ran) + `catalog-map.md`, design the shot **around the assets**:
+给定草稿 + 已解析的 `assets/index.md`（如果第2步已运行）+ `catalog-map.md`，**围绕资产**设计镜头：
 
-- Pick the **catalog block(s)** + the `hyperframes-animation` rules / blueprints (catalog-aware — see `catalog-map.md`).
-- Layout (hero-frame), motion (per `references/motion-vocabulary.md`), beats, pacing, exits.
-- `asset-fusion`: read the asset's **geometric affordance** → `element_positions` (center / extent / safe-zones / avoid-zones) + **eyedropper palette** from the asset.
-- Finalize `shot-plan.json`: `content.block` + `content.customize` + the per-category `content`.
+- 选择**目录块** + `hyperframes-animation` 规则/蓝图（了解目录 — 参见 `catalog-map.md`）。
+- 布局（主角帧）、动态（按 `references/motion-vocabulary.md`）、节拍、节奏、退出。
+- `asset-fusion`：读取资产的**几何适配性** → `element_positions`（中心/范围/安全区/避让区）+ **从资产取色**。
+- 最终确定 `shot-plan.json`：`content.block` + `content.customize` + 各类别特有 `content`。
 
-## Heuristics (design-led short motion)
+## 启发式规则（以设计为主导的简短动态）
 
-- **Motion IS the message**; no narration arc. Hook lands fast (~first 0.5s). **One dominant motif.** Pattern-interrupt if the piece runs >~2.5s (change exactly one thing). Effect intensity matches the energy. Legibility: a key element stays readable ≥~0.3s. Beats may be anticipated ~0.1s for perceived sync.
-- **Reuse-first**: name a catalog block; ask for hand-authored motion only for gaps + the `asset-fusion` affordance.
+- **动态本身即是信息**；无叙述弧。钩子快速落地（约前0.5秒）。**一个主导主题。** 如果片段运行超过约2.5秒则进行模式中断（只改变一样东西）。效果强度与能量匹配。可读性：关键元素保持可读至少约0.3秒。节拍可提前约0.1秒以获得感知同步。
+- **优先复用**：指定一个目录块；仅对空白 + `asset-fusion` 适配器要求手动编写的动画。
 
-Then hand `shot-plan.json` to the Builder.
+然后将 `shot-plan.json` 交给 Builder。

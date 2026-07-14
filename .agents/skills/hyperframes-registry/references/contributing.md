@@ -1,31 +1,31 @@
-# Contributing a Block or Component to the Registry
+# 向注册表贡献块或组件
 
-Guide the user from idea to merged PR for a new registry block or component.
+引导用户从想法到合并 PR，用于新的注册表块或组件。
 
-## Workflow
+## 工作流
 
 ```
-1. Clarify → 2. Scaffold → 3. Build → 4. Validate → 5. Preview → 6. Ship
+1. 澄清 → 2. 脚手架 → 3. 构建 → 4. 验证 → 5. 预览 → 6. 发布
 ```
 
-### Step 1: Clarify
+### 步骤 1：澄清
 
-Ask what they're building. The registry has two item types:
+询问他们在构建什么。注册表有两种项目类型：
 
-- **Block** (`registry/blocks/`, type `hyperframes:block`) — a full standalone composition with fixed dimensions and duration. Caption styles, VFX effects, title cards, lower thirds.
-- **Component** (`registry/components/`, type `hyperframes:component`) — a reusable snippet with no fixed dimensions or duration. CSS effects, text treatments, overlays that adapt to any composition size.
+- **块**（`registry/blocks/`，类型 `hyperframes:block`）——具有固定尺寸和时长的完整独立作品。字幕样式、VFX 效果、标题卡、下方三分之一。
+- **组件**（`registry/components/`，类型 `hyperframes:component`）——没有固定尺寸或时长的可重用片段。CSS 效果、文本处理、适应任何作品大小的叠加。
 
-Then ask:
+然后询问：
 
-- One-sentence description of the effect
-- Visual reference (URL, screenshot, or description)
-- Who uses this and when?
+- 效果的一句话描述
+- 视觉参考（URL、截图或描述）
+- 谁在什么时候使用它？
 
-### Step 2: Scaffold
+### 步骤 2：脚手架
 
-Create the registry structure:
+创建注册表结构：
 
-**For blocks:**
+**对于块：**
 
 ```
 registry/blocks/{block-name}/
@@ -33,7 +33,7 @@ registry/blocks/{block-name}/
   registry-item.json
 ```
 
-**For components:**
+**对于组件：**
 
 ```
 registry/components/{component-name}/
@@ -41,126 +41,89 @@ registry/components/{component-name}/
   registry-item.json
 ```
 
-**Naming convention:**
+**命名约定：**
 
-| Item name        | ID prefix | Example IDs            |
+| 项目名称 | ID 前缀 | 示例 ID |
 | ---------------- | --------- | ---------------------- |
-| `cap-hormozi`    | `hz`      | `hz-cg-0`, `hz-cw-3`   |
-| `cap-typewriter` | `tw`      | `tw-cg-0`, `tw-ch-0-5` |
-| `vfx-chrome`     | `vc`      | `vc-canvas`            |
+| `cap-hormozi` | `hz` | `hz-cg-0`、`hz-cw-3` |
+| `cap-typewriter` | `tw` | `tw-cg-0`、`tw-ch-0-5` |
+| `vfx-chrome` | `vc` | `vc-canvas` |
 
-Use a 2-3 letter prefix. ALL element IDs must use this prefix to avoid collisions in sub-compositions.
+使用 2-3 字母前缀。所有元素 ID 必须使用此前缀以避免在子作品中冲突。
 
-**registry-item.json** — use the canonical templates in [templates.md](templates.md) (block and component variants, both with all required fields).
+### 步骤 3：构建
 
-### Step 3: Build
+根据类型应用正确的模板。参见 [templates.md](templates.md) 获取可复制粘贴的起始模板。
 
-Apply the correct template based on type. See [templates.md](templates.md) for copy-paste starters.
+#### 字幕块
 
-#### Caption blocks
+**不可协商的字幕规则：**
 
-**Non-negotiable caption rules:**
+- 字体：比例字体**最小 96px**。等宽字体**可接受 64-72px**（更宽的字符需要较小尺寸）。
+- 可读性：`-webkit-text-stroke: 2-3px` 或多层 `text-shadow`
+- 溢出：在每个组上调用 `window.__hyperframes.fitTextFontSize()`
+- 卡拉 OK：通过 `tl.to(wordEl, { color/scale }, WORDS[wi].start)` 高亮活跃词
+- 硬清除：在每个组上使用 `tl.set(groupEl, { opacity: 0, visibility: "hidden" }, g.end)`
+- **永远不要在 `tl.set(el, { opacity: 1 })` 的相同位置使用 `tl.from(el, { opacity: 0 })`**——from 会覆盖 set。改用 `tl.to`。
 
-- Font: **96px minimum** for proportional fonts. **64-72px acceptable for monospace** (wider characters need less size).
-- Readability: `-webkit-text-stroke: 2-3px` OR multi-layer `text-shadow`
-- Overflow: call `window.__hyperframes.fitTextFontSize()` on every group
-- Karaoke: highlight active word via `tl.to(wordEl, { color/scale }, WORDS[wi].start)`
-- Hard kill: `tl.set(groupEl, { opacity: 0, visibility: "hidden" }, g.end)` on EVERY group
-- **Never use `tl.from(el, { opacity: 0 })` at the same position as `tl.set(el, { opacity: 1 })`** — the from clobbers the set. Use `tl.to` instead.
-
-**Per-character animation** (typewriter, scramble):
-
-- Wrap each character in `<span>` with ID `{prefix}-ch-{group}-{char}`
-- Stagger via `tl.set` at computed intervals from word timestamps
-- Cursors/decorative elements: use `tl.set` at intervals — NOT CSS animation (not seekable)
-
-**Positioning variants:**
-
-- Centered: `display: flex; align-items: center; justify-content: center;`
-- Lower-third: `position: absolute; bottom: 100px; left: 0; width: 100%; text-align: center;`
-- Left-aligned: `position: absolute; bottom: 100px; left: 120px; text-align: left;`
-
-#### VFX blocks (Three.js)
-
-- Use `three@0.147.0` from CDN (global script)
-- `tl.eventCallback("onUpdate", renderScene); renderScene();` — NO requestAnimationFrame
-- State proxy pattern: GSAP animates plain JS object, render function reads it
-- Seeded PRNG (`mulberry32`) for randomness
-
-#### All types
-
-- `data-composition-id` MUST match `window.__timelines["id"]`
-- All element IDs prefixed with block abbreviation
-- `gsap.timeline({ paused: true })` — always paused
-- No `Math.random()`, no `Date.now()`
-
-### Step 4: Validate
+### 步骤 4：验证
 
 ```bash
-hyperframes lint                    # 0 errors required
-hyperframes validate --no-contrast  # 0 console errors required
+hyperframes lint                    # 需要 0 错误
+hyperframes validate --no-contrast  # 需要 0 控制台错误
 ```
 
-### Step 5: Preview
+### 步骤 5：预览
 
 ```bash
-# Render preview video
+# 渲染预览视频
 hyperframes render -o preview.mp4
 
-# Snapshot for visual QA
+# 快照用于视觉 QA
 hyperframes snapshot --at "1.0,3.0,5.0,7.0"
 
-# Publish to hyperframes.dev for review
+# 发布到 hyperframes.dev 供审核
 npx hyperframes publish
 ```
 
-**Catalog preview image** — The catalog card uses a PNG at `docs/images/catalog/{kind}/{name}.png` (where `{kind}` is `blocks` or `components`). Generate it from a snapshot, then:
+### 步骤 6：发布
 
-- **HeyGen internal contributors:** run `scripts/upload-docs-images.sh` (requires AWS profile `engineering-767398024897`)
-- **External contributors:** attach the preview MP4 to your PR description. A maintainer will generate and upload the catalog image before merging.
-
-### Step 6: Ship
-
-**All steps are required. Missing any one produces a broken catalog entry.**
-
-`{kind}` is `blocks` or `components` depending on what you built in Step 1.
+**所有步骤都是必需的。缺少任何一个都会产生破损的目录条目。**
 
 ```bash
-# 1. Create branch
+# 1. 创建分支
 git checkout -b feat/registry-{name}
 
-# 2. Format HTML
+# 2. 格式化 HTML
 npx oxfmt registry/{kind}/{name}/*.html
 
-# 3. Update registry/registry.json — add entry to the "items" array:
-#    { "name": "{name}", "type": "hyperframes:block" }  (or "hyperframes:component")
+# 3. 更新 registry/registry.json — 向 "items" 数组添加条目：
+#    { "name": "{name}", "type": "hyperframes:block" }  (或 "hyperframes:component")
 
-# 4. Generate catalog docs page
+# 4. 生成目录文档页面
 npx tsx scripts/generate-catalog-pages.ts
 
-# 5. Publish to hyperframes.dev so reviewers can preview
+# 5. 发布到 hyperframes.dev 以便审阅者预览
 npx hyperframes publish
 
-# 6. Stage everything
+# 6. 暂存所有内容
 git add registry/{kind}/{name}/ registry/registry.json docs/catalog/
 
-# 7. Commit
-git commit -m "feat(registry): add {name} — {one sentence}"
+# 7. 提交
+git commit -m "feat(registry): 添加 {name} — {一句话描述}"
 
-# 8. Push and open PR with hyperframes.dev link
+# 8. 推送并打开带 hyperframes.dev 链接的 PR
 git push origin feat/registry-{name}
 gh pr create --title "feat(registry): {name}" --body "preview: {hyperframes.dev-url}"
 ```
 
-**If you don't have a GitHub account:** you need one to open a PR. Sign up at https://github.com/signup, then run `gh auth login`.
+## 质量关卡
 
-## Quality Gate
-
-- [ ] `hyperframes lint` → 0 errors
-- [ ] `hyperframes validate` → 0 console errors
-- [ ] `npx oxfmt --check` passes
-- [ ] `registry/registry.json` updated with new entry
-- [ ] `scripts/generate-catalog-pages.ts` run (docs page generated)
-- [ ] `npx hyperframes publish` run (claim your project URL)
-- [ ] Preview MP4 attached to PR (external) or catalog PNG uploaded (internal)
-- [ ] All IDs unique and prefixed
+- [ ] `hyperframes lint` → 0 错误
+- [ ] `hyperframes validate` → 0 控制台错误
+- [ ] `npx oxfmt --check` 通过
+- [ ] `registry/registry.json` 已更新新条目
+- [ ] `scripts/generate-catalog-pages.ts` 已运行（文档页面已生成）
+- [ ] `npx hyperframes publish` 已运行（声明你的项目 URL）
+- [ ] 预览 MP4 已附加到 PR（外部）或目录 PNG 已上传（内部）
+- [ ] 所有 ID 唯一且带前缀

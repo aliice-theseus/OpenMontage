@@ -1,125 +1,125 @@
-# Narrative Patterns for Math Explainers
+# 数学讲解视频的叙事模式
 
-Common structures used in effective 3Blue1Brown-style videos.
+高效 3Blue1Brown 风格视频中常用的结构。
 
-## Pattern 1: Mystery → Investigation → Resolution
+## 模式 1：谜团 → 探究 → 解答
 
-**Structure:**
-1. Present a puzzling result or paradox
-2. Investigate why it's true through visual exploration
-3. Reveal the underlying principle
-4. Show how the principle generalizes
+**结构：**
+1. 提出一个令人费解的结果或悖论
+2. 通过视觉探索研究为什么它是对的
+3. 揭示背后的原理
+4. 展示该原理如何泛化
 
-**Example topics:** Euler's identity, Bayes theorem, infinite series paradoxes
+**示例主题：** 欧拉恒等式、贝叶斯定理、无穷级数悖论
 
-**Opening hooks:**
-- "What does it even mean to raise a number to an imaginary power?"
-- "This equation looks wrong, but it's actually true..."
-- "Most people get this probability question wrong..."
-
----
-
-## Pattern 2: Build Up → Payoff
-
-**Structure:**
-1. Introduce simple building blocks
-2. Combine them to create something complex
-3. Show the beautiful/surprising result
-4. Reflect on why it works
-
-**Example topics:** Fourier series, neural networks, linear algebra
-
-**Opening hooks:**
-- "Let's start with something simple..."
-- "Each piece here is easy, but together they do something remarkable..."
+**开场钩子：**
+- "将一个数提升到虚数幂究竟意味着什么？"
+- "这个等式看起来是错的，但它实际上是正确的..."
+- "大多数人对这个概率问题的回答是错的..."
 
 ---
 
-## Pattern 3: Two Perspectives → Unity
+## 模式 2：构建 → 回报
 
-**Structure:**
-1. Show concept from perspective A (e.g., algebraic)
-2. Show same concept from perspective B (e.g., geometric)
-3. Reveal they're the same thing
-4. Explore implications of this connection
+**结构：**
+1. 引入简单的构建块
+2. 组合它们以创建复杂的东西
+3. 展示优美/令人惊讶的结果
+4. 反思它为什么有效
 
-**Example topics:** Dot product, determinants, complex multiplication
+**示例主题：** 傅里叶级数、神经网络、线性代数
 
-**Opening hooks:**
-- "There are two ways to think about this..."
-- "These seem like completely different ideas, but..."
-
----
-
-## Pattern 4: Wrong → Less Wrong → Right
-
-**Structure:**
-1. Present common misconception or naive approach
-2. Show why it fails
-3. Refine the approach
-4. Arrive at correct understanding
-
-**Example topics:** Limits, probability distributions, definitions
-
-**Opening hooks:**
-- "Your first instinct here is probably wrong..."
-- "The obvious approach doesn't quite work..."
+**开场钩子：**
+- "让我们从简单的东西开始..."
+- "这里的每一部分都很简单，但放在一起它们做着非凡的事情..."
 
 ---
 
-## Pattern 5: Specific → General
+## 模式 3：双视角 → 统一
 
-**Structure:**
-1. Solve a specific concrete example
-2. Notice patterns in the solution
-3. Abstract to general principle
-4. Apply to new situations
+**结构：**
+1. 从视角 A 展示概念（例如代数）
+2. 从视角 B 展示同一概念（例如几何）
+3. 揭示它们是同一回事
+4. 探索这种关联的含义
 
-**Example topics:** Derivatives, group theory, algorithm analysis
+**示例主题：** 点积、行列式、复数乘法
 
-**Opening hooks:**
-- "Let's work through a specific example..."
-- "Once you see the pattern here, it shows up everywhere..."
-
----
-
-## Pattern 6: History as Narrative
-
-**Structure:**
-1. Present the problem as historically encountered
-2. Follow the journey of discovery
-3. Show key insights that led to breakthroughs
-4. Connect to modern understanding
-
-**Example topics:** Calculus, cryptography, quantum mechanics
-
-**Opening hooks:**
-- "Imagine you're a mathematician in the 1600s..."
-- "This problem stumped the greatest minds for centuries..."
+**开场钩子：**
+- "有两种方式来看待这个问题..."
+- "这些看起来是完全不同的想法，但是..."
 
 ---
 
-## Combining Patterns
+## 模式 4：错误 → 较不错误 → 正确
 
-Most effective videos combine multiple patterns:
-- Mystery hook + Build Up explanation
-- Two Perspectives + Specific → General examples
-- Wrong → Right + History narrative
+**结构：**
+1. 提出常见的误解或天真的方法
+2. 展示它为什么失败
+3. 改进方法
+4. 达到正确的理解
 
-## Pacing Guidelines
+**示例主题：** 极限、概率分布、定义
 
-| Video Length | Intro Hook | Main Content | Recap/Implications |
+**开场钩子：**
+- "你的第一直觉可能是错的..."
+- "显而易见的方法不太行得通..."
+
+---
+
+## 模式 5：具体 → 一般
+
+**结构：**
+1. 解决一个具体的示例
+2. 发现解决方案中的模式
+3. 抽象为一般原理
+4. 应用到新情况
+
+**示例主题：** 导数、群论、算法分析
+
+**开场钩子：**
+- "让我们通过一个具体的例子来学习..."
+- "一旦你看到这里的模式，它就会到处出现..."
+
+---
+
+## 模式 6：历史叙事
+
+**结构：**
+1. 以历史中遇到问题的方式呈现
+2. 跟随发现的旅程
+3. 展示导致突破的关键见解
+4. 连接到现代理解
+
+**示例主题：** 微积分、密码学、量子力学
+
+**开场钩子：**
+- "想象你是一位 17 世纪的数学家..."
+- "这个问题困住了最伟大的头脑几个世纪..."
+
+---
+
+## 组合模式
+
+最高效的视频通常结合了多种模式：
+- 谜团钩子 + 构建式解释
+- 双视角 + 具体到一般的示例
+- 错误到正确 + 历史叙事
+
+## 节奏指南
+
+| 视频长度 | 开场钩子 | 主要内容 | 回顾/引申 |
 |--------------|------------|--------------|-------------------|
-| 5-10 min     | 30-60s     | 4-8 min      | 30-60s            |
-| 15-20 min    | 1-2 min    | 12-16 min    | 1-2 min           |
-| 30+ min      | 2-3 min    | 24-26 min    | 2-4 min           |
+| 5-10 分钟 | 30-60 秒 | 4-8 分钟 | 30-60 秒 |
+| 15-20 分钟 | 1-2 分钟 | 12-16 分钟 | 1-2 分钟 |
+| 30 分钟以上 | 2-3 分钟 | 24-26 分钟 | 2-4 分钟 |
 
-## Emotional Arc
+## 情感弧线
 
-Every video should have emotional beats:
+每个视频都应有情感节拍：
 
-1. **Curiosity** (opening) - Why should I care?
-2. **Confusion** (early) - This is harder than it looks
-3. **Partial clarity** (middle) - I'm starting to see...
-4. **Aha moment** (climax) - Oh! That's beautiful!
-5. **Satisfaction** (end) - Now I truly understand
+1. **好奇心**（开场） - 我为什么要在意？
+2. **困惑**（早期） - 这比看起来难
+3. **部分清晰**（中期） - 我开始明白了...
+4. **顿悟时刻**（高潮） - 哦！这太美了！
+5. **满足感**（结尾） - 现在我真正理解了

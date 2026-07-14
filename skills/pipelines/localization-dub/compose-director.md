@@ -1,65 +1,65 @@
-# Compose Director - Localization Dub Pipeline
+# 合成导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Render the localized outputs. The quality bar is intelligibility, timing coherence, and clear version labeling across every language package.
+渲染本地化输出。质量标准是可理解性、时序连贯性和每个语言包的清晰版本标签。
 
-## Runtime Routing (HARD CONSTRAINT — Remotion or FFmpeg only)
+## 运行时路由（硬性约束 — 仅限 Remotion 或 FFmpeg）
 
-Phase 1 deferred from HyperFrames. `edit_decisions.render_runtime` must be `"remotion"` or `"ffmpeg"`. Localization depends on Remotion's caption stack (per-locale subtitle burn) and, when dubbing with lip-sync, on the Remotion TalkingHead pipeline. HyperFrames has no parity for either in Phase 1.
+第一阶段从 HyperFrames 推迟。`edit_decisions.render_runtime` 必须为 `"remotion"` 或 `"ffmpeg"`。本地化依赖于 Remotion 的字幕栈（按地区字幕烧录），当配音带唇形同步时，还依赖于 Remotion TalkingHead 流水线。HyperFrames 在第一阶段对两者均无对等功能。
 
-- If `edit_decisions.render_runtime == "hyperframes"`, stop. Re-open the idea stage and surface the constraint — don't silently rewrite the runtime.
-- Per AGENT_GUIDE.md → "Present Both Composition Runtimes (HARD RULE)": the pipeline's constraint does NOT skip the conversation. Present the constraint to the user so they know HyperFrames exists but isn't viable here. Log a `render_runtime_selection` decision with hyperframes `rejected_because: "caption + lip-sync parity deferred on localization-dub"`.
-- Pass `proposal_packet`/`brief` to `video_compose.execute()` for end-to-end runtime-swap detection.
+- 如果 `edit_decisions.render_runtime == "hyperframes"`，停止。重新打开 idea 阶段并呈现约束条件 — 不要默默重写运行时。
+- 根据 AGENT_GUIDE.md → "呈现两种合成运行时（硬性规则）"：流水线的约束条件并不能跳过与用户的沟通。向用户说明约束条件，让他们知道 HyperFrames 存在但在此处不可用。记录一个 `render_runtime_selection` 决策，其中 hyperframes 的 `rejected_because: "caption + lip-sync parity deferred on localization-dub"`。
+- 将 `proposal_packet`/`brief` 传递给 `video_compose.execute()` 以实现端到端运行时切换检测。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/render_report.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["edit"]["edit_decisions"]`, `state.artifacts["assets"]["asset_manifest"]` | Locale-specific render instructions |
-| Tools | `video_compose`, `audio_mixer`, `video_trimmer`, `audio_enhance` | Final render and audio finishing |
-| Playbook | Active style playbook | Subtitle placement and output quality |
+| 模式 | `schemas/artifacts/render_report.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["edit"]["edit_decisions"]`, `state.artifacts["assets"]["asset_manifest"]` | 按地区渲染指令 |
+| 工具 | `video_compose`、`audio_mixer`、`video_trimmer`、`audio_enhance` | 最终渲染和音频后期 |
+| 剧本 | 活跃的风格剧本 | 字幕位置和输出质量 |
 
-## Process
+## 流程
 
-### 1. Render By Locale
+### 1. 按地区渲染
 
-Treat each target language as its own deliverable set. Keep names and output directories explicit.
+将每种目标语言视为一组独立的交付物。确保名称和输出目录明确。
 
-### 2. Expect Timing Adjustments
+### 2. 预期时序调整
 
-Allow for:
+预留以下情况的空间：
 
-- subtitle reflow,
-- dub-audio duration drift,
-- longer CTA holds,
-- optional trims or coverage sections.
+- 字幕重排
+- 配音音频时长偏差
+- 较长的行动号召（CTA）停留时间
+- 可选的修剪或覆盖段落
 
-### 3. Verify Every Locale
+### 3. 验证每个地区
 
-Record important findings in:
+在以下位置记录重要发现：
 
 - `render_report.verification_notes`
 - `render_report.warnings`
 - `render_report.metadata.locale_notes`
 
-Check:
+检查：
 
-- intelligibility,
-- subtitle fit,
-- obvious sync drift,
-- version labeling.
+- 可理解性
+- 字幕适配
+- 明显的同步偏差
+- 版本标签
 
-### 4. Quality Gate
+### 4. 质量门禁
 
-- each locale output exists,
-- the dub and subtitle timing are acceptable,
-- labels and filenames are unambiguous,
-- warnings are preserved.
+- 每个地区的输出都存在
+- 配音和字幕时序可接受
+- 标签和文件名无歧义
+- 警告得以保留
 
-## Common Pitfalls
+## 常见陷阱
 
-- Rendering all locales as if they were timing-identical.
-- Forgetting to re-check subtitle line length after translation.
-- Naming outputs in ways that hide the locale or treatment mode.
+- 将所有地区视为时序一致来渲染
+- 翻译后忘记重新检查字幕行长度
+- 命名输出时隐藏了地区或处理模式信息

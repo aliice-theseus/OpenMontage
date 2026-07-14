@@ -5,80 +5,80 @@ description: One-shot prompt video generation with HeyGen Video Agent API
 
 # Video Agent API
 
-The Video Agent API generates complete videos from a single text prompt. Unlike the standard video generation API which requires detailed scene-by-scene configuration, Video Agent automatically handles script writing, avatar selection, visuals, voiceover, pacing, and captions.
+Video Agent API 从单个文本提示词生成完整视频。与需要逐场景详细配置的标准视频生成 API 不同，Video Agent 自动处理脚本编写、虚拟形象选择、视觉效果、配音、节奏和字幕。
 
-## MCP Tool (Preferred)
+## MCP 工具（首选）
 
-If the HeyGen MCP server is connected, use `mcp__heygen__generate_video_agent` instead of direct API calls:
+如果已连接 HeyGen MCP 服务器，请使用 `mcp__heygen__generate_video_agent` 代替直接 API 调用：
 
 ```
-Tool: mcp__heygen__generate_video_agent
-Parameters:
-  prompt: "<optimized prompt from prompt-optimizer.md>"
+工具：mcp__heygen__generate_video_agent
+参数：
+  prompt: "<来自 prompt-optimizer.md 的优化提示词>"
   config:
-    duration_sec: 90          # optional, 5-300
-    avatar_id: "avatar_id"    # optional, agent selects if omitted
-    orientation: "landscape"   # optional, "landscape" or "portrait"
-  files:                       # optional
+    duration_sec: 90          # 可选，5-300
+    avatar_id: "avatar_id"    # 可选，省略则由 AI 选择
+    orientation: "landscape"   # 可选，"landscape" 或 "portrait"
+  files:                       # 可选
     - asset_id: "uploaded_asset_id"
 ```
 
-Then check status with `mcp__heygen__get_video` using the returned `video_id`.
+然后使用返回的 `video_id` 通过 `mcp__heygen__get_video` 检查状态。
 
-The prompt quality is still the critical factor — always follow [prompt-optimizer.md](prompt-optimizer.md) regardless of whether you use MCP or direct API.
+提示词质量仍然是关键因素——无论使用 MCP 还是直接 API，都要遵循 [prompt-optimizer.md](prompt-optimizer.md) 的指南。
 
-## When to Use Video Agent vs Standard API
+## 何时使用 Video Agent vs 标准 API
 
-| Use Case | Recommended API |
+| 使用场景 | 推荐 API |
 |----------|-----------------|
-| Quick video from idea | Video Agent |
-| Precise control over scenes, avatars, timing | Standard v2/video/generate |
-| Automated content generation at scale | Video Agent |
-| Specific avatar with exact script | Standard v2/video/generate |
-| Prototype or draft video | Video Agent |
-| Brand-consistent production video | Standard v2/video/generate |
+| 从创意快速生成视频 | Video Agent |
+| 精确控制场景、虚拟形象、时间 | 标准 v2/video/generate |
+| 大规模自动化内容生成 | Video Agent |
+| 特定虚拟形象配合精确脚本 | 标准 v2/video/generate |
+| 原型或草稿视频 | Video Agent |
+| 品牌一致的生产级视频 | 标准 v2/video/generate |
 
-## Before You Call This API
+## 在调用此 API 之前
 
-**Required step:** Optimize your prompt using [prompt-optimizer.md](prompt-optimizer.md) before generating a video. The difference between mediocre and professional results depends entirely on prompt quality.
+**必要步骤：** 在生成视频前使用 [prompt-optimizer.md](prompt-optimizer.md) 优化提示词。平庸与专业效果之间的差距完全取决于提示词质量。
 
-Quick checklist:
-1. Define visual style (colors, aesthetic) — see [visual-styles.md](visual-styles.md)
-2. Structure scenes with specific scene types
-3. Write VO script at ~150 words/minute
-4. Specify media types for each scene (Motion Graphics, Stock, AI-generated)
+快速检查清单：
+1. 定义视觉风格（颜色、美学）——参见 [visual-styles.md](visual-styles.md)
+2. 使用特定场景类型构建场景结构
+3. 以约 150 字/分钟的速度编写画外音脚本
+4. 为每个场景指定媒体类型（动态图形、素材、AI 生成）
 
-## Direct API Endpoint
+## 直接 API 端点
 
 ```
 POST https://api.heygen.com/v1/video_agent/generate
 ```
 
-## Request Fields
+## 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `prompt` | string | ✓ | Text prompt describing the video you want |
-| `config` | object | | Configuration options (see below) |
-| `files` | array | | Asset files to reference in generation |
-| `callback_id` | string | | Custom ID for tracking. **Requires `callback_url` to also be set** — omit both if you don't need webhooks |
-| `callback_url` | string | | Webhook URL for completion notification |
+| `prompt` | string | ✓ | 描述所需视频的文本提示词 |
+| `config` | object | | 配置选项（见下方） |
+| `files` | array | | 生成中需引用的资产文件 |
+| `callback_id` | string | | 用于跟踪的自定义 ID。**同时需要设置 `callback_url`** — 不需要 webhook 时省略两者 |
+| `callback_url` | string | | 完成通知的 Webhook URL |
 
-### Config Object
+### Config 对象
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `duration_sec` | integer | Approximate duration in seconds (5-300) |
-| `avatar_id` | string | Specific avatar to use (optional - agent selects if not provided) |
-| `orientation` | string | `"portrait"` or `"landscape"` |
+| `duration_sec` | integer | 大致时长，单位秒（5-300） |
+| `avatar_id` | string | 要使用的特定虚拟形象（可选——未提供则由 AI 选择） |
+| `orientation` | string | `"portrait"` 或 `"landscape"` |
 
-### Files Array
+### Files 数组
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `asset_id` | string | Asset ID of uploaded file to reference |
+| `asset_id` | string | 要引用的上传文件的资产 ID |
 
-## Response Format
+## 响应格式
 
 ```json
 {
@@ -89,14 +89,14 @@ POST https://api.heygen.com/v1/video_agent/generate
 }
 ```
 
-## curl Example
+## curl 示例
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/video_agent/generate" \
   -H "X-Api-Key: $HEYGEN_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "prompt": "Create a 60-second product demo video for a new AI-powered calendar app. The tone should be professional but friendly, targeting busy professionals. Highlight the smart scheduling feature and time zone handling."
+    "prompt": "为一个新的 AI 驱动日历应用创建一段 60 秒的产品演示视频。语气专业但友好，面向忙碌的职场人士。突出智能排程功能和时区处理。"
   }'
 ```
 
@@ -104,8 +104,8 @@ curl -X POST "https://api.heygen.com/v1/video_agent/generate" \
 
 ```typescript
 interface VideoAgentConfig {
-  duration_sec?: number;      // 5-300 seconds
-  avatar_id?: string;         // Optional: specific avatar
+  duration_sec?: number;      // 5-300 秒
+  avatar_id?: string;         // 可选：特定虚拟形象
   orientation?: "portrait" | "landscape";
 }
 
@@ -114,10 +114,10 @@ interface VideoAgentFile {
 }
 
 interface VideoAgentRequest {
-  prompt: string;             // Required
+  prompt: string;             // 必填
   config?: VideoAgentConfig;
   files?: VideoAgentFile[];
-  callback_id?: string;       // Requires callback_url if set
+  callback_id?: string;       // 设置时需要 callback_url
   callback_url?: string;
 }
 
@@ -153,7 +153,7 @@ async function generateWithVideoAgent(
   const json: VideoAgentResponse = await response.json();
 
   if (json.error) {
-    throw new Error(`Video Agent failed: ${json.error}`);
+    throw new Error(`Video Agent 失败：${json.error}`);
   }
 
   return json.data.video_id;
@@ -197,26 +197,26 @@ def generate_with_video_agent(
 
     data = response.json()
     if data.get("error"):
-        raise Exception(f"Video Agent failed: {data['error']}")
+        raise Exception(f"Video Agent 失败：{data['error']}")
 
     return data["data"]["video_id"]
 ```
 
-## Examples
+## 示例
 
-### Basic: Prompt Only
+### 基础：仅提示词
 
 ```typescript
 const videoId = await generateWithVideoAgent(
-  "Create a 30-second welcome video for new employees at a tech startup. Keep it energetic and modern."
+  为科技创业公司的新员工创建一段 30 秒的欢迎视频。保持活力和现代感。"
 );
 ```
 
-### With Duration and Orientation
+### 带时长和方向
 
 ```typescript
 const videoId = await generateWithVideoAgent(
-  "Explain the benefits of cloud computing for small businesses. Use simple language and real-world examples.",
+  "解释云计算对小型企业的好处。使用通俗语言和实际案例。",
   {
     duration_sec: 90,
     orientation: "landscape"
@@ -224,11 +224,11 @@ const videoId = await generateWithVideoAgent(
 );
 ```
 
-### With Specific Avatar
+### 带特定虚拟形象
 
 ```typescript
 const videoId = await generateWithVideoAgent(
-  "Present quarterly sales results. Professional tone, data-focused.",
+  "展示季度销售业绩。专业语气，数据导向。",
   {
     duration_sec: 120,
     avatar_id: "josh_lite3_20230714",
@@ -237,16 +237,16 @@ const videoId = await generateWithVideoAgent(
 );
 ```
 
-### With Reference Files
+### 带参考文件
 
-Upload assets first, then reference them:
+先上传资产，然后引用它们：
 
 ```typescript
-// 1. Upload reference materials (see assets.md)
+// 1. 上传参考资料（参见 assets.md）
 const logoAssetId = await uploadFile("./company-logo.png", "image/png");
 const productImageId = await uploadFile("./product-screenshot.png", "image/png");
 
-// 2. Generate video with references
+// 2. 使用参考文件生成视频
 const response = await fetch(
   "https://api.heygen.com/v1/video_agent/generate",
   {
@@ -256,7 +256,7 @@ const response = await fetch(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      prompt: "Create a product demo video showcasing our new dashboard feature. Use the uploaded screenshots as visual references.",
+      prompt: "创建一个展示我们新仪表板功能的产品演示视频。使用上传的截图作为视觉参考。",
       config: {
         duration_sec: 60,
         orientation: "landscape"
@@ -270,41 +270,41 @@ const response = await fetch(
 );
 ```
 
-## Writing Effective Prompts
+## 编写高效提示词
 
-See **[prompt-optimizer.md](prompt-optimizer.md)** for comprehensive prompt writing guidance.
+参见 **[prompt-optimizer.md](prompt-optimizer.md)** 获取全面的提示词编写指南。
 
-The prompt optimizer covers:
-- Prompt complexity levels (basic → scene-by-scene)
-- Visual style taxonomy and color specification
-- Media type selection (Motion Graphics vs Stock vs AI-generated)
-- Scene structure and timing calculations
-- Ready-to-use templates for common video types
+提示词优化器涵盖以下内容：
+- 提示词复杂度级别（基础 → 逐场景）
+- 视觉风格分类和颜色规范
+- 媒体类型选择（动态图形 vs 素材 vs AI 生成）
+- 场景结构和时间计算
+- 常见视频类型的即用模板
 
-## Checking Video Status
+## 检查视频状态
 
-Video Agent returns a `video_id` - use the standard status endpoint to check progress:
+Video Agent 返回一个 `video_id`——使用标准状态端点检查进度：
 
 ```typescript
-// Same polling as standard video generation
+// 与标准视频生成相同的轮询方式
 const videoUrl = await waitForVideo(videoId);
 ```
 
-See [video-status.md](video-status.md) for polling implementation.
+轮询实现参见 [video-status.md](video-status.md)。
 
-## Comparison: Video Agent vs Standard API
+## 对比：Video Agent vs 标准 API
 
-### Video Agent Request
+### Video Agent 请求
 ```typescript
-// Simple: describe what you want
+// 简单：描述您想要的内容
 const videoId = await generateWithVideoAgent(
-  "Create a 60-second tutorial on setting up two-factor authentication. Professional tone, step-by-step."
+  "创建一个 60 秒的教程，介绍如何设置双因素认证。专业语气，分步讲解。"
 );
 ```
 
-### Equivalent Standard API Request
+### 等效的标准 API 请求
 ```typescript
-// Complex: specify every detail
+// 复杂：指定每个细节
 const videoId = await generateVideo({
   video_inputs: [
     {
@@ -315,7 +315,7 @@ const videoId = await generateVideo({
       },
       voice: {
         type: "text",
-        input_text: "Welcome to this tutorial on two-factor authentication...",
+        input_text: "欢迎收看本教程，了解双因素认证...",
         voice_id: "1bd001e7e50f421d891986aad5158bc8",
       },
       background: {
@@ -323,25 +323,25 @@ const videoId = await generateVideo({
         value: "#1a1a2e",
       },
     },
-    // ... more scenes for each step
+    // ... 每个步骤的更多场景
   ],
   dimension: { width: 1920, height: 1080 },
 });
 ```
 
-## Limitations
+## 局限性
 
-- Less control over exact script wording
-- Avatar selection may vary if not specified
-- Scene composition is automated
-- May not match precise brand guidelines
-- Duration is approximate, not exact
+- 对确切脚本措辞的控制较少
+- 虚拟形象选择可能因未指定而变化
+- 场景组成是自动化的
+- 可能无法精确匹配品牌指南
+- 时长是近似值，非精确值
 
-## Best Practices
+## 最佳实践
 
-1. **Be specific in prompts** - More detail = better results
-2. **Specify duration** - Use `config.duration_sec` for predictable length
-3. **Lock avatar if needed** - Use `config.avatar_id` for consistency
-4. **Upload reference files** - Help agent understand your brand/product
-5. **Iterate on prompts** - Refine based on results
-6. **Use for drafts** - Video Agent is great for quick iterations before final production
+1. **提示词要具体** - 更多细节 = 更好的结果
+2. **指定时长** - 使用 `config.duration_sec` 获得可预测长度
+3. **必要时锁定虚拟形象** - 使用 `config.avatar_id` 保持一致性
+4. **上传参考文件** - 帮助 AI 理解您的品牌/产品
+5. **迭代优化提示词** - 根据结果进行调整
+6. **用于草稿** - Video Agent 非常适合在最终制作前快速迭代

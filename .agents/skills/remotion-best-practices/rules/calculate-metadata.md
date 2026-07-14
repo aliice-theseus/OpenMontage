@@ -1,13 +1,13 @@
 ---
 name: calculate-metadata
-description: Dynamically set composition duration, dimensions, and props
+description: 动态设置合成的时长、尺寸和属性
 metadata:
   tags: calculateMetadata, duration, dimensions, props, dynamic
 ---
 
-# Using calculateMetadata
+# 使用 calculateMetadata
 
-Use `calculateMetadata` on a `<Composition>` to dynamically set duration, dimensions, and transform props before rendering.
+在 `<Composition>` 上使用 `calculateMetadata` 来动态设置时长、尺寸，并在渲染前转换属性。
 
 ```tsx
 <Composition
@@ -22,9 +22,9 @@ Use `calculateMetadata` on a `<Composition>` to dynamically set duration, dimens
 />
 ```
 
-## Setting duration based on a video
+## 根据视频设置时长
 
-Use the [`getVideoDuration`](./get-video-duration.md) and [`getVideoDimensions`](./get-video-dimensions.md) skills to get the video duration and dimensions:
+使用 [`getVideoDuration`](./get-video-duration.md) 和 [`getVideoDimensions`](./get-video-dimensions.md) 技能获取视频时长和尺寸：
 
 ```tsx
 import { CalculateMetadataFunction } from "remotion";
@@ -41,9 +41,9 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-## Matching dimensions of a video
+## 匹配视频的尺寸
 
-Use the [`getVideoDimensions`](./get-video-dimensions.md) skill to get the video dimensions:
+使用 [`getVideoDimensions`](./get-video-dimensions.md) 技能获取视频尺寸：
 
 ```tsx
 import { CalculateMetadataFunction } from "remotion";
@@ -62,7 +62,7 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-## Setting duration based on multiple videos
+## 根据多个视频设置时长
 
 ```tsx
 const calculateMetadata: CalculateMetadataFunction<Props> = async ({
@@ -84,9 +84,9 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-## Setting a default outName
+## 设置默认输出文件名
 
-Set the default output filename based on props:
+根据属性设置默认输出文件名：
 
 ```tsx
 const calculateMetadata: CalculateMetadataFunction<Props> = async ({
@@ -98,9 +98,9 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-## Transforming props
+## 转换属性
 
-Fetch data or transform props before rendering:
+在渲染前获取数据或转换属性：
 
 ```tsx
 const calculateMetadata: CalculateMetadataFunction<Props> = async ({
@@ -119,16 +119,16 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({
 };
 ```
 
-The `abortSignal` cancels stale requests when props change in the Studio.
+当 Studio 中的属性发生变化时，`abortSignal` 会取消过时的请求。
 
-## Return value
+## 返回值
 
-All fields are optional. Returned values override the `<Composition>` props:
+所有字段都是可选的。返回值会覆盖 `<Composition>` 的属性：
 
-- `durationInFrames`: Number of frames
-- `width`: Composition width in pixels
-- `height`: Composition height in pixels
-- `fps`: Frames per second
-- `props`: Transformed props passed to the component
-- `defaultOutName`: Default output filename
-- `defaultCodec`: Default codec for rendering
+- `durationInFrames`：帧数
+- `width`：合成宽度（像素）
+- `height`：合成高度（像素）
+- `fps`：每秒帧数
+- `props`：传递给组件的转换后属性
+- `defaultOutName`：默认输出文件名
+- `defaultCodec`：渲染的默认编码器

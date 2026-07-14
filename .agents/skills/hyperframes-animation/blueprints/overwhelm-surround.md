@@ -1,28 +1,28 @@
-# overwhelm-surround — Overwhelm / Close-In
+# overwhelm-surround — 压倒 / 聚拢
 
-**intent**: Convey overwhelm by accumulation. Recognizable subjects assemble, density markers scatter in to amplify "look how much," then the central subject morphs into the viewer's own avatar and elements close in from ALL sides — the frame feels surrounded, not zoomed-into. The emotional arc is recognition → claustrophobia.
+**意图**：通过累积传达压倒感。可识别的主题组装，密度标记散入以放大"看有多少"，然后中心主题变形为观看者自己的头像，元素从**所有**方向聚拢——画面感觉被包围，而非被放大。情感弧线是识别→幽闭恐惧。
 
-**roles served**
+**服务角色**
 
-- Problem (from `problem-mockup-overwhelm`): when the problem beat must first show "too many tools / too much surface area" and then put **the viewer inside it** — a literal swap of subject (product → person) followed by a closing-in that feels invasive. Reach for it when the pain is "you're buried," not "this metric is bad" (that's `dataviz-countup`).
+- Problem（来自 `problem-mockup-overwhelm`）：当问题节拍必须首先展示"太多工具/太多表面积"，然后将**观看者置于其中**——主题的字面替换（产品→人），随后是让人觉得侵入的聚拢。当痛点是"你被埋没"时使用，而非"这个指标很差"（那是 `dataviz-countup`）。
 
-**duration**: 6–9s
+**时长**：6–9 秒
 
-**shot structure** (a `[bg]` canvas; recognizable surfaces first, the viewer's avatar revealed underneath, then a radial crowd)
+**镜头结构**（一个 `[bg]` canvas；首先可识别的表面，其下揭示观看者的头像，然后径向群体）
 
-- **Scene 1 (0.0–~1.6s) — recognizable assembly.** Three `[product mockups / surfaces]` assemble into something the viewer knows — staggered scale-in, the **center** one full-size, the two flanks smaller (~0.86). Each rides a low-amplitude float so they feel like live context, not a static collage. Camera static.
-- **Scene 2 (~1.6–3.0s) — density amplifies.** `[platform icons / logos]` scatter in around the mockups (staggered), used purely as **density markers** — "look how much surface area," not animated dials.
-- **Scene 3 (~3.0–4.6s) — the morph (signature move).** The CENTER mockup MORPHS: its content fades out, the container reshapes, and the viewer's `[avatar]` is revealed **underneath** — a literal swap of subject, product → person.
-- **Scene 4 (~4.6–end) — close-in.** `[task bubbles / demands]` close in from ALL sides toward the avatar (radial staggered entry). The avatar **stays put** while the bubbles invade — the claustrophobia comes from being surrounded, never from a camera push. Holds on the crowded state.
+- **场景 1（0.0–~1.6 秒）——可识别的组装。** 三个 `[product mockups / surfaces]` 组装成观看者知道的东西——错开放大，**中心**一个全尺寸，两个侧翼较小（~0.86）。每个都带有低幅度浮动，使它们感觉像动态上下文，而非静态拼贴。摄像机静止。
+- **场景 2（~1.6–3.0 秒）——密度放大。** `[platform icons / logos]` 散入模拟周围（错开），纯粹用作**密度标记**——"看有多少表面积"，而非动画化的刻度盘。
+- **场景 3（~3.0–4.6 秒）——变形（标志性动作）。** 中心的模拟**变形**：其内容淡出，容器重塑，观看者的 `[avatar]` 在**其下**被揭示——主题的字面替换，产品→人。
+- **场景 4（~4.6–结束）——聚拢。** `[task bubbles / demands]` 从**所有**方向向头像聚拢（径向错开进入）。头像**保持不动**，而气泡侵入——幽闭恐惧来自被包围，绝非来自摄像机推进。在拥挤状态上保持。
 
-**motion vocabulary**: staggered scale-in assembly; resting-scale-preserving low float; density-marker icon scatter; content-fade → container-reshape → reveal-anchor-beneath morph; radial close-in entry from all compass points; held crowded end-state.
+**动词语汇**：错开放大组装；保持缩放的低浮动；密度标记图标散开；内容淡出 → 容器重塑 → 揭示下锚点的变形；径向从所有方向聚拢进入；保持拥挤结束状态。
 
-**rule mapping**
+**规则映射**
 
-- staggered mockup + icon entries (smooth settle onto their resting scale) → `spring-pop-entrance` (smooth-settle register) backed by `gsap-effects`
-- platform icons as density markers (positions pre-baked, scale/opacity only — NOT internal-parts animation) → `svg-icon-enrichment` (its DOM contract only)
-- center mockup → avatar morph (HF forbids `width`/`height` tweens → drive the reshape on `scaleX`/`scaleY`, anchor = the avatar layer rendered beneath) → `card-morph-anchor`
-- radial bubble close-in (positions baked once via `cos`/`sin`, staggered entry) → `gsap-effects` (radial layout) + `spring-pop-entrance` (per-bubble arrival)
-- low-amplitude float on background mockups/icons → `sine-wave-loop` (low-amplitude register — subtle jitter that composes onto each element's resting scale, never a `fromTo` yoyo that re-tweens to its start)
+- 错开模拟 + 图标进入（平滑稳定到其休息缩放）→ `spring-pop-entrance`（平滑稳定寄存器）由 `gsap-effects` 支持
+- 平台图标作为密度标记（位置预烘焙，仅缩放/不透明度——非内部部件动画）→ `svg-icon-enrichment`（仅其 DOM 约定）
+- 中心模拟 → 头像变形（HF 禁止 `width`/`height` 补间 → 在 `scaleX`/`scaleY` 上驱动重塑，锚点 = 下面渲染的头像层）→ `card-morph-anchor`
+- 径向气泡聚拢（通过 `cos`/`sin` 烘焙一次位置，错开进入）→ `gsap-effects`（径向布局）+ `spring-pop-entrance`（每个气泡到达）
+- 背景模拟/图标上的低幅度浮动 → `sine-wave-loop`（低幅度寄存器——细微抖动，组合到每个元素的休息缩放上，从不是重新补间到其起始的 `fromTo` yoyo）
 
-**camera modifier**: camera-static — the close-in must read as the world crowding the subject, so the frame holds; a push-in would convert "surrounded" into "zoomed-into" and kill the claustrophobia.
+**摄像机修饰**：摄像机静止——聚拢必须读作世界拥挤向主体，因此画面保持；推进会将"被包围"转换为"被放大"，破坏幽闭恐惧。

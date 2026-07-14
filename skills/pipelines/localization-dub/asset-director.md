@@ -1,45 +1,45 @@
-# Asset Director - Localization Dub Pipeline
+# 资产导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-This stage produces the localized asset kit: translated subtitle files, dubbed audio, optional lip-sync renders, and any language-specific replacements needed for the final outputs.
+此阶段生成本地化资产套件：翻译后的字幕文件、配音音频、可选的唇形同步渲染以及最终输出所需的任何特定语言替换内容。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层 | 资源 | 用途 |
 |-------|----------|---------|
-| Schema | `schemas/artifacts/asset_manifest.schema.json` | Artifact validation |
-| Prior artifacts | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | Language plan and transcript package |
-| Tools | `tts_selector`, `subtitle_gen`, `lip_sync`, `audio_enhance` — `tts_selector` auto-discovers all available TTS providers from the registry | Dubbed audio, subtitle, and optional lip-sync production |
-| Playbook | Active style playbook | Subtitle and replacement-text rules |
+| 模式 | `schemas/artifacts/asset_manifest.schema.json` | 工件验证 |
+| 前置工件 | `state.artifacts["scene_plan"]["scene_plan"]`, `state.artifacts["script"]["script"]`, `state.artifacts["idea"]["brief"]` | 语言计划和转录包 |
+| 工具 | `tts_selector`、`subtitle_gen`、`lip_sync`、`audio_enhance` — `tts_selector` 从注册表中自动发现所有可用的 TTS 提供商 | 配音音频、字幕和可选唇形同步制作 |
+| 剧本 | 活跃的风格剧本 | 字幕和替换文本规则 |
 
-## Process
+## 流程
 
-### 1. Produce Subtitle Assets First
+### 1. 首先生成字幕资产
 
-Create the subtitle or caption package for each language. This gives a reviewable fallback even if dubbed-audio generation or lip sync is blocked.
+为每种语言创建字幕或隐藏字幕包。即使配音音频生成或唇形同步受阻，这也能提供可审核的备选方案。
 
-### 1b. Hero Scene Sample (Mandatory)
+### 1b. 主角场景样本（强制）
 
-Before batch asset generation:
-1. Identify the hero scene (the visual peak of the video)
-2. Generate ONE sample dubbed audio clip for that scene in the target language
-3. Present it: "This is the voice direction for the most important scene. Does this match what you're imagining? I'll generate the rest in this style."
-4. Wait for approval before proceeding to batch generation
+在批量资产生成之前：
+1. 确定主角场景（视频的视觉高潮部分）
+2. 为目标语言中的该场景生成**一个**配音音频样本片段
+3. 呈现给用户："这是最重要场景的语音方向。是否符合你的预期？我将按此风格生成其余内容。"
+4. 等待批准后再进行批量生成
 
-This prevents the most expensive mistake: generating 10+ dubbed assets in a direction the user doesn't like.
+这可以防止最昂贵的错误：生成 10 多个用户不喜欢的配音资产。
 
-### 2. Generate Dubbed Audio Per Language
+### 2. 按语言生成配音音频
 
-Use the approved translated script package, not raw machine output. Record which voice or synthesis path was used for each language.
+使用已批准的翻译剧本包，而非原始机器输出。记录每种语言使用了哪种语音或合成路径。
 
-### 3. Treat Lip Sync As Optional
+### 3. 将唇形同步视为可选
 
-Only generate lip-sync assets for scenes and languages that actually need it. If the tool path is blocked, record that and keep the dub-audio path alive.
+仅对确实需要的场景和语言生成唇形同步资产。如果工具路径受阻，记录此情况并保持配音音频路径可用。
 
-### 4. Use Metadata For Localization Truth
+### 4. 使用元数据维护本地化真相
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `subtitle_assets_by_language`
 - `dub_audio_assets_by_language`
@@ -48,45 +48,44 @@ Recommended metadata keys:
 - `pronunciation_warnings`
 - `blocked_assets`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- subtitle assets exist,
-- dubbed audio assets exist for planned dub outputs,
-- lip-sync remains explicitly optional,
-- every referenced file exists.
+- 字幕资产存在
+- 为计划配音输出准备的配音音频资产存在
+- 唇形同步保持明确的可选性
+- 每个引用的文件都存在
 
-### Mid-Production Fact Verification
+### 中期制作事实核查
 
-If you encounter uncertainty during asset generation:
-- Use `web_search` to verify visual accuracy of subjects (e.g. what does this building actually look like?)
-- Use `web_search` to find reference images before generating illustrations
-- Log verification in the decision log: `category="visual_accuracy_check"`
+如果在资产生成过程中遇到不确定的内容：
+- 使用 `web_search` 验证主题的视觉准确性（例如，这座建筑实际上长什么样？）
+- 使用 `web_search` 在生成插图前查找参考图片
+- 在决策日志中记录核查情况：`category="visual_accuracy_check"`
 
-Visual accuracy matters. If the script mentions a specific place, person, or object,
-verify what it actually looks like before generating images. Don't rely on
-the AI model's training data — it may be wrong or outdated.
+视觉准确性至关重要。如果剧本中提到了特定的地点、人物或物体，
+在生成图像前验证其实际外观。不要依赖 AI 模型的训练数据 —
+它可能是错误或过时的。
 
-## Common Pitfalls
+## 常见陷阱
 
-- Generating dubbed audio before finalizing translation review.
-- Treating lip sync as mandatory for every language.
-- Failing to record which language asset maps to which voice and subtitle set.
+- 在最终确定翻译审核之前生成配音音频
+- 将唇形同步视为每种语言的必需项
+- 未能记录每种语言资产对应的语音和字幕集
 
+## 遇到不确定情况时
 
-## When You Do Not Know How
+如果遇到不确定的生成技术、提供商行为或提示模式：
 
-If you encounter a generation technique, provider behavior, or prompting pattern you are unsure about:
+1. **搜索网络**了解当前最佳实践 — 模型和 API 频繁变更，代理的训练数据可能已过时
+2. **检查 `.agents/skills/`** 中是否存在现有的第 3 层知识（特定提供商的提示指南、API 模式）
+3. **如果两者均无帮助**，在 `projects/<project-name>/skills/<name>.md` 编写项目级技能文档，记录所学内容
+4. **在技能中引用来源 URL**，使知识可追溯
+5. **记录**在决策日志中：`category: "capability_extension"`，`subject: "learned technique: <name>"`
 
-1. **Search the web** for current best practices — models and APIs change frequently, and the agent's training data may be stale
-2. **Check `.agents/skills/`** for existing Layer 3 knowledge (provider-specific prompting guides, API patterns)
-3. **If neither helps**, write a project-scoped skill at `projects/<project-name>/skills/<name>.md` documenting what you learned
-4. **Reference source URLs** in the skill so the knowledge is traceable
-5. **Log it** in the decision log: `category: "capability_extension"`, `subject: "learned technique: <name>"`
+以下方面尤其重要：
+- **视频生成提示** — 模型响应的特定词汇表随版本变化
+- **图像模型参数** — FLUX、DALL-E、Imagen 的最优设置各不相同且在不断演变
+- **音频提供商特性** — 语音克隆、音乐生成和 TTS 各有模型特定的最佳实践
+- **Remotion 组件模式** — 新的合成技术随框架发展不断涌现
 
-This is especially important for:
-- **Video generation prompting** — models respond to specific vocabularies that change with each version
-- **Image model parameters** — optimal settings for FLUX, DALL-E, Imagen differ and evolve
-- **Audio provider quirks** — voice cloning, music generation, and TTS each have model-specific best practices
-- **Remotion component patterns** — new composition techniques emerge as the framework evolves
-
-Do not rely on stale knowledge. When in doubt, search first.
+不要依赖过时知识。不确定时，先搜索。

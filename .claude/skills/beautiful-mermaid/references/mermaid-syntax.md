@@ -1,8 +1,8 @@
-# Mermaid Syntax Reference
+# Mermaid 语法参考
 
-Quick reference for generating valid Mermaid diagram code.
+生成有效 Mermaid 图表代码的快速参考。
 
-## Flowchart
+## 流程图
 
 ```mermaid
 graph TD
@@ -13,38 +13,38 @@ graph TD
     D --> E
 ```
 
-### Direction
-- `TD` / `TB` - Top to bottom
-- `BT` - Bottom to top
-- `LR` - Left to right
-- `RL` - Right to left
+### 方向
+- `TD` / `TB` - 从上到下
+- `BT` - 从下到上
+- `LR` - 从左到右
+- `RL` - 从右到左
 
-### Node Shapes
-- `A[Text]` - Rectangle
-- `A(Text)` - Rounded rectangle
-- `A([Text])` - Stadium/pill
-- `A[[Text]]` - Subroutine
-- `A[(Text)]` - Cylinder (database)
-- `A((Text))` - Circle
-- `A>Text]` - Asymmetric
-- `A{Text}` - Diamond (decision)
-- `A{{Text}}` - Hexagon
-- `A[/Text/]` - Parallelogram
-- `A[\Text\]` - Parallelogram alt
-- `A[/Text\]` - Trapezoid
-- `A[\Text/]` - Trapezoid alt
+### 节点形状
+- `A[Text]` - 矩形
+- `A(Text)` - 圆角矩形
+- `A([Text])` - 体育场/药丸形
+- `A[[Text]]` - 子程序
+- `A[(Text)]` - 圆柱体（数据库）
+- `A((Text))` - 圆形
+- `A>Text]` - 不对称
+- `A{Text}` - 菱形（决策）
+- `A{{Text}}` - 六边形
+- `A[/Text/]` - 平行四边形
+- `A[\Text\]` - 平行四边形替代
+- `A[/Text\]` - 梯形
+- `A[\Text/]` - 梯形替代
 
-### Edge Styles
-- `A --> B` - Arrow
-- `A --- B` - Line
-- `A -.-> B` - Dotted arrow
-- `A ==> B` - Thick arrow
-- `A -->|text| B` - Arrow with label (preferred)
-- `A ---|text| B` - Line with label (preferred)
+### 边样式
+- `A --> B` - 箭头
+- `A --- B` - 线条
+- `A -.-> B` - 虚线箭头
+- `A ==> B` - 粗箭头
+- `A -->|text| B` - 带标签的箭头（推荐）
+- `A ---|text| B` - 带标签的线条（推荐）
 
-**Important**: Always use pipe syntax `-->|label|` for edge labels. The space-dash syntax `-- label -->` can cause incomplete renders.
+**重要提示**：始终使用管道语法 `-->|label|` 表示边标签。空格-破折号语法 `-- label -->` 可能导致渲染不完整。
 
-### Subgraphs
+### 子图
 ```mermaid
 graph TD
     subgraph Group1 [Label]
@@ -56,7 +56,7 @@ graph TD
     B --> C
 ```
 
-## Sequence Diagram
+## 时序图
 
 ```mermaid
 sequenceDiagram
@@ -68,19 +68,19 @@ sequenceDiagram
     B-->>-A: Done
 ```
 
-### Arrow Types
-- `->>` - Solid arrow
-- `-->>` - Dashed arrow
-- `-x` - Solid with x
-- `--x` - Dashed with x
-- `-)` - Solid open arrow
-- `--)` - Dashed open arrow
+### 箭头类型
+- `->>` - 实线箭头
+- `-->>` - 虚线箭头
+- `-x` - 实线带 X
+- `--x` - 虚线带 X
+- `-)` - 实线开放箭头
+- `--)` - 虚线开放箭头
 
-### Activations
-- `+` after arrow activates participant
-- `-` after arrow deactivates participant
+### 激活
+- `+` 在箭头后激活参与者
+- `-` 在箭头后停用参与者
 
-### Notes and Boxes
+### 备注和框
 ```mermaid
 sequenceDiagram
     Note over A,B: Shared note
@@ -90,7 +90,7 @@ sequenceDiagram
     end
 ```
 
-### Loops and Conditionals
+### 循环和条件
 ```mermaid
 sequenceDiagram
     loop Every minute
@@ -106,7 +106,7 @@ sequenceDiagram
     end
 ```
 
-## State Diagram
+## 状态图
 
 ```mermaid
 stateDiagram-v2
@@ -118,7 +118,7 @@ stateDiagram-v2
     Done --> [*]
 ```
 
-### Composite States
+### 复合状态
 ```mermaid
 stateDiagram-v2
     state Active {
@@ -130,7 +130,7 @@ stateDiagram-v2
     Active --> Idle : deactivate
 ```
 
-### Notes
+### 备注
 ```mermaid
 stateDiagram-v2
     State1 : Description here
@@ -139,7 +139,7 @@ stateDiagram-v2
     end note
 ```
 
-## Class Diagram
+## 类图
 
 ```mermaid
 classDiagram
@@ -154,30 +154,30 @@ classDiagram
     Animal <|-- Dog : extends
 ```
 
-### Relationships
-- `<|--` - Inheritance
-- `*--` - Composition
-- `o--` - Aggregation
-- `-->` - Association
-- `--` - Link (solid)
-- `..>` - Dependency
-- `..|>` - Realisation
-- `..` - Link (dashed)
+### 关系
+- `<|--` - 继承
+- `*--` - 组合
+- `o--` - 聚合
+- `-->` - 关联
+- `--` - 链接（实线）
+- `..>` - 依赖
+- `..|>` - 实现
+- `..` - 链接（虚线）
 
-### Cardinality
+### 基数
 ```mermaid
 classDiagram
     Customer "1" --> "*" Order
     Order "1" --> "1..*" LineItem
 ```
 
-### Visibility
-- `+` Public
-- `-` Private
-- `#` Protected
-- `~` Package/Internal
+### 可见性
+- `+` 公开
+- `-` 私有
+- `#` 受保护
+- `~` 包/内部
 
-## Entity-Relationship Diagram
+## 实体关系图
 
 ```mermaid
 erDiagram
@@ -186,17 +186,17 @@ erDiagram
     PRODUCT }|..|{ LINE-ITEM : "ordered in"
 ```
 
-### Relationship Types
-- `||` - Exactly one
-- `|{` - One or more
-- `o{` - Zero or more
-- `o|` - Zero or one
+### 关系类型
+- `||` - 恰好一个
+- `|{` - 一个或多个
+- `o{` - 零个或多个
+- `o|` - 零个或一个
 
-### Identifying vs Non-identifying
-- `--` - Identifying (solid)
-- `..` - Non-identifying (dashed)
+### 标识与非标识
+- `--` - 标识（实线）
+- `..` - 非标识（虚线）
 
-### Attributes
+### 属性
 ```mermaid
 erDiagram
     CUSTOMER {
@@ -211,25 +211,25 @@ erDiagram
     }
 ```
 
-## Styling
+## 样式
 
-### CSS Classes
+### CSS 类
 ```mermaid
 graph TD
     A:::highlight --> B
     classDef highlight fill:#f96,stroke:#333
 ```
 
-### Inline Styles
+### 内联样式
 ```mermaid
 graph TD
     A --> B
     style A fill:#bbf,stroke:#333
 ```
 
-## Tips
+## 技巧
 
-1. **Escape special characters**: Use quotes for labels with special chars: `A["Label with (parens)"]`
-2. **Multi-line labels**: Use `<br/>` for line breaks
-3. **Comments**: Use `%%` for comments that won't render
-4. **IDs vs Labels**: Node IDs should be simple, labels can be complex: `node1["Complex Label Here"]`
+1. **转义特殊字符**：使用引号为含特殊字符的标签添加引号：`A["Label with (parens)"]`
+2. **多行标签**：使用 `<br/>` 实现换行
+3. **注释**：使用 `%%` 添加不会渲染的注释
+4. **ID 与标签**：节点 ID 应简洁，标签可以复杂：`node1["Complex Label Here"]`

@@ -1,6 +1,6 @@
-# Bold / Energetic
+# 大胆 / 活力
 
-Product launches, social media, announcements, high-energy content.
+产品发布、社交媒体、公告、高能量内容。
 
 ```
 #FFBE0B #FB5607 #FF006E #8338EC #3A86FF

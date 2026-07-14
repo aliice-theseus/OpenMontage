@@ -1,15 +1,15 @@
 ---
-title: Dynamic Imports for Heavy Components
+title: 对重型组件使用动态导入
 impact: CRITICAL
-impactDescription: directly affects TTI and LCP
+impactDescription: 直接影响 TTI 和 LCP
 tags: bundle, dynamic-import, code-splitting, next-dynamic
 ---
 
-## Dynamic Imports for Heavy Components
+## 对重型组件使用动态导入
 
-Use `next/dynamic` to lazy-load large components not needed on initial render.
+使用 `next/dynamic` 懒加载初始渲染不需要的大型组件。
 
-**Incorrect (Monaco bundles with main chunk ~300KB):**
+**错误做法（Monaco 与主 chunk 打包，约 300KB）：**
 
 ```tsx
 import { MonacoEditor } from './monaco-editor'
@@ -19,7 +19,7 @@ function CodePanel({ code }: { code: string }) {
 }
 ```
 
-**Correct (Monaco loads on demand):**
+**正确做法（Monaco 按需加载）：**
 
 ```tsx
 import dynamic from 'next/dynamic'

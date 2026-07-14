@@ -3,39 +3,39 @@ name: dimensions
 description: Resolution options (720p/1080p) and aspect ratios for HeyGen videos
 ---
 
-# Video Dimensions and Resolution
+# 视频尺寸与分辨率
 
-HeyGen supports various video dimensions and aspect ratios to fit different platforms and use cases.
+HeyGen 支持多种视频尺寸和宽高比，以适应不同平台和用例。
 
-## Standard Resolutions
+## 标准分辨率
 
-### Landscape (16:9)
+### 横屏（16:9）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用途 |
 |------------|-------|--------|----------|
-| 720p | 1280 | 720 | Standard quality, faster processing |
-| 1080p | 1920 | 1080 | High quality, most common |
+| 720p | 1280 | 720 | 标准质量，处理速度更快 |
+| 1080p | 1920 | 1080 | 高质量，最常用 |
 
-### Portrait (9:16)
+### 竖屏（9:16）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用途 |
 |------------|-------|--------|----------|
-| 720p | 720 | 1280 | Mobile-first content |
-| 1080p | 1080 | 1920 | High quality vertical |
+| 720p | 720 | 1280 | 移动优先内容 |
+| 1080p | 1080 | 1920 | 高质量竖屏 |
 
-### Square (1:1)
+### 方形（1:1）
 
-| Resolution | Width | Height | Use Case |
+| 分辨率 | 宽度 | 高度 | 用途 |
 |------------|-------|--------|----------|
-| 720p | 720 | 720 | Social media posts |
-| 1080p | 1080 | 1080 | High quality square |
+| 720p | 720 | 720 | 社交媒体帖子 |
+| 1080p | 1080 | 1080 | 高质量方形 |
 
-## Setting Dimensions
+## 设置尺寸
 
 ### TypeScript
 
 ```typescript
-// Landscape 1080p
+// 横屏 1080p
 const landscapeConfig = {
   video_inputs: [...],
   dimension: {
@@ -44,7 +44,7 @@ const landscapeConfig = {
   }
 };
 
-// Portrait 1080p
+// 竖屏 1080p
 const portraitConfig = {
   video_inputs: [...],
   dimension: {
@@ -53,7 +53,7 @@ const portraitConfig = {
   }
 };
 
-// Square 1080p
+// 方形 1080p
 const squareConfig = {
   video_inputs: [...],
   dimension: {
@@ -66,7 +66,7 @@ const squareConfig = {
 ### curl
 
 ```bash
-# Landscape 1080p
+# 横屏 1080p
 curl -X POST "https://api.heygen.com/v2/video/generate" \
   -H "X-Api-Key: $HEYGEN_API_KEY" \
   -H "Content-Type: application/json" \
@@ -79,7 +79,7 @@ curl -X POST "https://api.heygen.com/v2/video/generate" \
   }'
 ```
 
-## Dimension Helper Functions
+## 尺寸辅助函数
 
 ```typescript
 type AspectRatio = "16:9" | "9:16" | "1:1" | "4:3" | "4:5";
@@ -117,20 +117,20 @@ function getDimensions(aspectRatio: AspectRatio, quality: Quality): Dimensions {
   return configs[aspectRatio][quality];
 }
 
-// Usage
+// 使用示例
 const youTubeDimensions = getDimensions("16:9", "1080p");
 const tikTokDimensions = getDimensions("9:16", "1080p");
 const instagramDimensions = getDimensions("1:1", "1080p");
 ```
 
-## Platform-Specific Recommendations
+## 平台特定推荐
 
 ### YouTube
 
 ```typescript
 const youtubeConfig = {
   video_inputs: [...],
-  dimension: { width: 1920, height: 1080 }, // 16:9 landscape
+  dimension: { width: 1920, height: 1080 }, // 16:9 横屏
 };
 ```
 
@@ -139,16 +139,16 @@ const youtubeConfig = {
 ```typescript
 const shortFormConfig = {
   video_inputs: [...],
-  dimension: { width: 1080, height: 1920 }, // 9:16 portrait
+  dimension: { width: 1080, height: 1920 }, // 9:16 竖屏
 };
 ```
 
-### Instagram Feed Post
+### Instagram 信息流帖子
 
 ```typescript
 const instagramFeedConfig = {
   video_inputs: [...],
-  dimension: { width: 1080, height: 1080 }, // 1:1 square
+  dimension: { width: 1080, height: 1080 }, // 1:1 方形
 };
 ```
 
@@ -157,7 +157,7 @@ const instagramFeedConfig = {
 ```typescript
 const linkedinConfig = {
   video_inputs: [...],
-  dimension: { width: 1920, height: 1080 }, // 16:9 landscape preferred
+  dimension: { width: 1920, height: 1080 }, // 推荐 16:9 横屏
 };
 ```
 
@@ -166,13 +166,13 @@ const linkedinConfig = {
 ```typescript
 const twitterConfig = {
   video_inputs: [...],
-  dimension: { width: 1280, height: 720 }, // 16:9, 720p is common
+  dimension: { width: 1280, height: 720 }, // 16:9，常用 720p
 };
 ```
 
-## Avatar IV Dimensions
+## Avatar IV 尺寸
 
-For Avatar IV (photo-based avatars), dimensions are set via orientation:
+对于 Avatar IV（基于照片的虚拟形象），通过方向设置尺寸：
 
 ```typescript
 type VideoOrientation = "portrait" | "landscape" | "square";
@@ -189,58 +189,58 @@ function getAvatarIVDimensions(orientation: VideoOrientation): Dimensions {
 }
 ```
 
-## Custom Dimensions
+## 自定义尺寸
 
-HeyGen supports custom dimensions within limits:
+HeyGen 支持在限制范围内的自定义尺寸：
 
 ```typescript
 const customConfig = {
   video_inputs: [...],
   dimension: {
     width: 1600,
-    height: 900  // Custom 16:9 at non-standard resolution
+    height: 900  // 自定义 16:9 非标准分辨率
   }
 };
 ```
 
-### Dimension Constraints
+### 尺寸限制
 
-- **Minimum**: 128px on any side
-- **Maximum**: 4096px on any side
-- **Must be even numbers**: Both width and height must be divisible by 2
+- **最小值**：任意边不少于 128px
+- **最大值**：任意边不超过 4096px
+- **必须为偶数**：宽度和高度都必须能被 2 整除
 
 ```typescript
 function validateDimensions(width: number, height: number): boolean {
   if (width < 128 || height < 128) {
-    throw new Error("Dimensions must be at least 128px");
+    throw new Error("尺寸必须至少为 128px");
   }
   if (width > 4096 || height > 4096) {
-    throw new Error("Dimensions cannot exceed 4096px");
+    throw new Error("尺寸不能超过 4096px");
   }
   if (width % 2 !== 0 || height % 2 !== 0) {
-    throw new Error("Dimensions must be even numbers");
+    throw new Error("尺寸必须为偶数");
   }
   return true;
 }
 ```
 
-## Resolution vs. Credit Cost
+## 分辨率与积分消耗
 
-Higher resolutions may consume more credits:
+更高的分辨率可能消耗更多积分：
 
-| Resolution | Relative Cost |
+| 分辨率 | 相对成本 |
 |------------|---------------|
-| 720p | Base rate |
-| 1080p | ~1.5x base rate |
+| 720p | 基础费率 |
+| 1080p | 约基础费率的 1.5 倍 |
 
-Consider using 720p for drafts and testing, then 1080p for final output.
+建议草稿和测试阶段使用 720p，最终输出使用 1080p。
 
-## Background Considerations
+## 背景注意事项
 
-Match background image/video dimensions to your video dimensions:
+确保背景图片/视频的尺寸与视频尺寸匹配：
 
 ```typescript
-// For 1080p landscape video
+// 适用于 1080p 横屏视频
 const config = {
   video_inputs: [
     {
@@ -248,7 +248,7 @@ const config = {
       voice: {...},
       background: {
         type: "image",
-        url: "https://example.com/1920x1080-background.jpg" // Match video dimensions
+        url: "https://example.com/1920x1080-background.jpg" // 匹配视频尺寸
       }
     }
   ],
@@ -256,7 +256,7 @@ const config = {
 };
 ```
 
-## Creating a Video Config Factory
+## 创建视频配置工厂
 
 ```typescript
 interface VideoConfigOptions {
@@ -278,7 +278,7 @@ function createVideoConfig(options: VideoConfigOptions) {
 
   const dimension = platformDimensions[options.platform];
 
-  // Scale down for 720p if requested
+  // 如果请求 720p，则按比例缩小
   if (options.quality === "720p") {
     dimension.width = Math.round((dimension.width * 720) / 1080);
     dimension.height = Math.round((dimension.height * 720) / 1080);
@@ -303,9 +303,9 @@ function createVideoConfig(options: VideoConfigOptions) {
   };
 }
 
-// Usage
+// 使用示例
 const tiktokVideo = createVideoConfig({
-  script: "Hey everyone! Check this out!",
+  script: "大家好！看看这个！",
   avatarId: "josh_lite3_20230714",
   voiceId: "1bd001e7e50f421d891986aad5158bc8",
   platform: "tiktok",

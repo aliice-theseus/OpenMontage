@@ -1,13 +1,13 @@
 ---
 name: elevenlabs
-description: Generate AI voiceovers, sound effects, and music using ElevenLabs APIs. Use when creating audio content for videos, podcasts, or games. Triggers include generating voiceovers, narration, dialogue, sound effects from descriptions, background music, soundtrack generation, voice cloning, or any audio synthesis task.
+description: 使用 ElevenLabs API 生成 AI 画外音、音效和音乐。适用于为视频、播客或游戏创建音频内容。触发场景包括生成画外音、旁白、对话、文本描述的音效、背景音乐、配乐生成、语音克隆或任何音频合成任务。
 ---
 
-# ElevenLabs Audio Generation
+# ElevenLabs 音频生成
 
-Requires `ELEVENLABS_API_KEY` in `.env`.
+需要在 `.env` 中设置 `ELEVENLABS_API_KEY`。
 
-## Text-to-Speech
+## 文本转语音
 
 ```python
 from elevenlabs.client import ElevenLabs
@@ -30,60 +30,60 @@ audio = client.text_to_speech.convert(
 save(audio, "voiceover.mp3")
 ```
 
-### Models
+### 模型
 
-| Model | Quality | SSML Support | Notes |
+| 模型 | 质量 | SSML 支持 | 说明 |
 |-------|---------|--------------|-------|
-| `eleven_multilingual_v2` | Highest consistency | None | Stable, production-ready, 29 languages |
-| `eleven_flash_v2_5` | Good | `<break>`, `<phoneme>` | Fast, supports pause/pronunciation tags |
-| `eleven_turbo_v2_5` | Good | `<break>`, `<phoneme>` | Fastest latency |
-| `eleven_v3` | Most expressive | None | Alpha — unreliable, needs prompt engineering |
+| `eleven_multilingual_v2` | 最高一致性 | 无 | 稳定、生产就绪，29 种语言 |
+| `eleven_flash_v2_5` | 良好 | `<break>`、`<phoneme>` | 快速，支持暂停/发音标签 |
+| `eleven_turbo_v2_5` | 良好 | `<break>`、`<phoneme>` | 最低延迟 |
+| `eleven_v3` | 最具表现力 | 无 | Alpha — 不可靠，需要提示工程 |
 
-**Choose:** multilingual_v2 for reliability, flash/turbo for SSML control, v3 for maximum expressiveness (expect retakes).
+**选择建议：** multilingual_v2 用于可靠性，flash/turbo 用于 SSML 控制，v3 用于最大表现力（预期需要重录）。
 
-### Voice Settings by Style
+### 按风格的语音设置
 
-| Style | stability | similarity | style | speed |
+| 风格 | stability | similarity | style | speed |
 |-------|-----------|------------|-------|-------|
-| Natural/professional | 0.75-0.85 | 0.9 | 0.0-0.1 | 1.0 |
-| Conversational | 0.5-0.6 | 0.85 | 0.3-0.4 | 0.9-1.0 |
-| Energetic/YouTuber | 0.3-0.5 | 0.75 | 0.5-0.7 | 1.0-1.1 |
+| 自然/专业 | 0.75-0.85 | 0.9 | 0.0-0.1 | 1.0 |
+| 对话式 | 0.5-0.6 | 0.85 | 0.3-0.4 | 0.9-1.0 |
+| 充满活力/YouTuber | 0.3-0.5 | 0.75 | 0.5-0.7 | 1.0-1.1 |
 
-### Pauses Between Sections
+### 段落间暂停
 
-**With flash/turbo models:** Use SSML break tags inline:
+**使用 flash/turbo 模型：** 在文本中内联使用 SSML break 标签：
 ```
 ...end of section. <break time="1.5s" /> Start of next...
 ```
-Max 3 seconds per break. Excessive breaks can cause speed artifacts.
+每次 break 最多 3 秒。过多的 break 可能导致速度伪影。
 
-**With multilingual_v2 / v3:** No SSML support. Options:
-- Paragraph breaks (blank lines) — creates ~0.3-0.5s natural pause
-- Post-process with ffmpeg: split audio and insert silence
+**使用 multilingual_v2 / v3：** 不支持 SSML。可选方案：
+- 段落分隔（空行）— 产生约 0.3-0.5s 的自然停顿
+- 后期用 ffmpeg 处理：分割音频并插入静音
 
-**WARNING:** `...` (ellipsis) is NOT a reliable pause — it can be vocalized as a word/sound. Do not use ellipsis as a pause mechanism.
+**警告：** `...`（省略号）不是可靠的暂停 — 它可能被发声为单词/声音。请勿将省略号用作暂停机制。
 
-### Pronunciation Control
+### 发音控制
 
-**Phonetic spelling (any model):** Write words as you want them pronounced:
+**拼写发音（任何模型）：** 按期望发音的方式书写单词：
 - `Janus` → `Jan-us`
 - `nginx` → `engine-x`
-- Use dashes, capitals, apostrophes to guide pronunciation
+- 使用连字符、大写字母、撇号引导发音
 
-**SSML phoneme tags (flash/turbo only):**
+**SSML 音素标签（仅 flash/turbo）：**
 ```
 <phoneme alphabet="ipa" ph="ˈdʒeɪnəs">Janus</phoneme>
 ```
 
-### Iterative Workflow
+### 迭代工作流程
 
-1. Generate → listen → identify pronunciation/pacing issues
-2. Adjust: phonetic spellings, break tags, voice settings
-3. Regenerate. If pauses aren't precise enough, add silence in post with ffmpeg rather than fighting the TTS engine.
+1. 生成 → 听取 → 识别发音/节奏问题
+2. 调整：拼写发音、break 标签、语音设置
+3. 重新生成。如果暂停不够精确，在后期用 ffmpeg 添加静音，而不是与 TTS 引擎斗争。
 
-## Voice Cloning
+## 语音克隆
 
-### Instant Voice Clone
+### 即时语音克隆
 
 ```python
 with open("sample.mp3", "rb") as f:
@@ -95,17 +95,17 @@ with open("sample.mp3", "rb") as f:
 print(f"Voice ID: {voice.voice_id}")
 ```
 
-- Use `client.voices.ivc.create()` (not `client.voices.clone()`)
-- Pass file handles in binary mode (`"rb"`), not paths
-- Convert m4a first: `ffmpeg -i input.m4a -codec:a libmp3lame -qscale:a 2 output.mp3`
-- Multiple samples (2-3 clips) improve accuracy
-- Save voice ID for reuse
+- 使用 `client.voices.ivc.create()`（而非 `client.voices.clone()`）
+- 以二进制模式（`"rb"`）传入文件句柄，而非路径
+- 先转换 m4a：`ffmpeg -i input.m4a -codec:a libmp3lame -qscale:a 2 output.mp3`
+- 多个样本（2-3 个片段）可提高准确度
+- 保存语音 ID 以便重复使用
 
-**Professional Voice Clone:** Requires Creator plan+, 30+ min audio. See [reference.md](reference.md).
+**专业语音克隆：** 需要 Creator 以上计划，至少 30 分钟音频。请参见 [reference.md](reference.md)。
 
-## Sound Effects
+## 音效
 
-Max 22 seconds per generation.
+每次生成最长 22 秒。
 
 ```python
 result = client.text_to_sound_effects.convert(
@@ -118,11 +118,11 @@ with open("thunder.mp3", "wb") as f:
         f.write(chunk)
 ```
 
-**Prompt tips:** Be specific — "Heavy footsteps on wooden floorboards, slow and deliberate, with creaking"
+**提示词技巧：** 具体描述 — "Heavy footsteps on wooden floorboards, slow and deliberate, with creaking"
 
-## Music Generation
+## 音乐生成
 
-10 seconds to 5 minutes. Use `client.music.compose()` (not `.generate()`).
+10 秒到 5 分钟。使用 `client.music.compose()`（而非 `.generate()`）。
 
 ```python
 result = client.music.compose(
@@ -135,36 +135,36 @@ with open("music.mp3", "wb") as f:
         f.write(chunk)
 ```
 
-**Prompt structure:** Genre, mood, instruments, tempo, use case. Add "no vocals" or use `force_instrumental=True` for background music.
+**提示词结构：** 风格、情绪、乐器、节奏、使用场景。添加"no vocals"或使用 `force_instrumental=True` 用于背景音乐。
 
-## Remotion Integration
+## Remotion 集成
 
-### Complete Workflow: Script to Synchronized Scene
+### 完整工作流程：脚本到同步场景
 
 ```
 VOICEOVER-SCRIPT.md → voiceover.py → public/audio/ → Remotion composition
         ↓                  ↓               ↓                 ↓
-  Scene narration    Generate MP3    Audio files     <Audio> component
-  with durations     per scene       with timing     synced to scenes
+  场景旁白           生成 MP3       音频文件          <Audio> 组件
+  带时长             每个场景       带时间信息        与场景同步
 ```
 
-### Step 1: Generate Per-Scene Audio
+### 步骤 1：生成逐场景音频
 
-Use the toolkit's voiceover tool to generate audio for each scene:
+使用工具包的画外音工具为每个场景生成音频：
 
 ```bash
-# Generate voiceover files for each scene
+# 为每个场景生成画外音文件
 python tools/voiceover.py --scene-dir public/audio/scenes --json
 
-# Output:
+# 输出：
 # public/audio/scenes/
 #   ├── scene-01-title.mp3
 #   ├── scene-02-problem.mp3
 #   ├── scene-03-solution.mp3
-#   └── manifest.json  (durations for each file)
+#   └── manifest.json  （每个文件的时长）
 ```
 
-The `manifest.json` contains timing info:
+`manifest.json` 包含时间信息：
 ```json
 {
   "scenes": [
@@ -176,28 +176,28 @@ The `manifest.json` contains timing info:
 }
 ```
 
-### Step 2: Use Audio in Remotion Composition
+### 步骤 2：在 Remotion 合成中使用音频
 
 ```tsx
 // src/Composition.tsx
 import { Audio, staticFile, Series, useVideoConfig } from 'remotion';
 
-// Import scene components
+// 导入场景组件
 import { TitleSlide } from './scenes/TitleSlide';
 import { ProblemSlide } from './scenes/ProblemSlide';
 import { SolutionSlide } from './scenes/SolutionSlide';
 
-// Scene durations (from manifest.json, converted to frames at 30fps)
+// 场景时长（来自 manifest.json，30fps 下换算为帧数）
 const SCENE_DURATIONS = {
-  title: Math.ceil(4.2 * 30),      // 126 frames
-  problem: Math.ceil(12.8 * 30),   // 384 frames
-  solution: Math.ceil(15.3 * 30),  // 459 frames
+  title: Math.ceil(4.2 * 30),      // 126 帧
+  problem: Math.ceil(12.8 * 30),   // 384 帧
+  solution: Math.ceil(15.3 * 30),  // 459 帧
 };
 
 export const MainComposition: React.FC = () => {
   return (
     <>
-      {/* Scene sequence */}
+      {/* 场景序列 */}
       <Series>
         <Series.Sequence durationInFrames={SCENE_DURATIONS.title}>
           <TitleSlide />
@@ -210,19 +210,19 @@ export const MainComposition: React.FC = () => {
         </Series.Sequence>
       </Series>
 
-      {/* Audio track - plays continuously across all scenes */}
+      {/* 音轨 - 在所有场景中连续播放 */}
       <Audio src={staticFile('audio/voiceover.mp3')} volume={1} />
 
-      {/* Optional: Background music at lower volume */}
+      {/* 可选：较低音量的背景音乐 */}
       <Audio src={staticFile('audio/music.mp3')} volume={0.15} />
     </>
   );
 };
 ```
 
-### Step 3: Per-Scene Audio (Alternative)
+### 步骤 3：逐场景音频（替代方案）
 
-For more control, add audio to each scene individually:
+如需更多控制，可单独为每个场景添加音频：
 
 ```tsx
 // src/scenes/ProblemSlide.tsx
@@ -232,20 +232,20 @@ export const ProblemSlide: React.FC = () => {
   const frame = useCurrentFrame();
 
   return (
-    <div style={{ /* slide styles */ }}>
+    <div style={{ /* 幻灯片样式 */ }}>
       <h1>The Problem</h1>
-      {/* Scene content */}
+      {/* 场景内容 */}
 
-      {/* Audio starts when this scene starts (frame 0 of this sequence) */}
+      {/* 音频在此场景开始时播放（此序列的第 0 帧） */}
       <Audio src={staticFile('audio/scenes/scene-02-problem.mp3')} />
     </div>
   );
 };
 ```
 
-### Syncing Visuals to Voiceover
+### 将画面与画外音同步
 
-Calculate scene duration from audio, not the other way around:
+根据音频计算场景时长，而非反过来：
 
 ```tsx
 // src/config/timing.ts
@@ -253,23 +253,23 @@ import manifest from '../../public/audio/scenes/manifest.json';
 
 const FPS = 30;
 
-// Convert audio durations to frame counts
+// 将音频时长转换为帧数
 export const sceneDurations = manifest.scenes.reduce((acc, scene) => {
   const name = scene.file.replace(/^scene-\d+-/, '').replace('.mp3', '');
   acc[name] = Math.ceil(scene.duration * FPS);
   return acc;
 }, {} as Record<string, number>);
 
-// Usage in composition:
+// 在合成中使用：
 // <Series.Sequence durationInFrames={sceneDurations.title}>
 ```
 
-### Audio Timing Patterns
+### 音频计时模式
 
 ```tsx
 import { Audio, Sequence, interpolate, useCurrentFrame } from 'remotion';
 
-// Fade in audio
+// 音频淡入
 export const FadeInAudio: React.FC<{ src: string; fadeFrames?: number }> = ({
   src,
   fadeFrames = 30
@@ -281,7 +281,7 @@ export const FadeInAudio: React.FC<{ src: string; fadeFrames?: number }> = ({
   return <Audio src={src} volume={volume} />;
 };
 
-// Delayed audio start
+// 延迟音频开始
 export const DelayedAudio: React.FC<{ src: string; delayFrames: number }> = ({
   src,
   delayFrames
@@ -291,14 +291,14 @@ export const DelayedAudio: React.FC<{ src: string; delayFrames: number }> = ({
   </Sequence>
 );
 
-// Usage:
+// 用法：
 // <FadeInAudio src={staticFile('audio/music.mp3')} fadeFrames={60} />
 // <DelayedAudio src={staticFile('audio/sfx/whoosh.mp3')} delayFrames={45} />
 ```
 
-### Voiceover + Demo Video Sync
+### 画外音 + 演示视频同步
 
-When a scene has both voiceover and demo video:
+当场景同时包含画外音和演示视频时：
 
 ```tsx
 import { Audio, OffthreadVideo, staticFile, useVideoConfig } from 'remotion';
@@ -306,9 +306,9 @@ import { Audio, OffthreadVideo, staticFile, useVideoConfig } from 'remotion';
 export const DemoScene: React.FC = () => {
   const { durationInFrames, fps } = useVideoConfig();
 
-  // Calculate playback rate to fit demo into voiceover duration
-  const demoDuration = 45; // seconds (original demo length)
-  const sceneDuration = durationInFrames / fps; // seconds (from voiceover)
+  // 计算播放速率，使演示视频适配画外音时长
+  const demoDuration = 45; // 秒（原始演示长度）
+  const sceneDuration = durationInFrames / fps; // 秒（来自画外音）
   const playbackRate = demoDuration / sceneDuration;
 
   return (
@@ -323,7 +323,7 @@ export const DemoScene: React.FC = () => {
 };
 ```
 
-### Error Handling
+### 错误处理
 
 ```tsx
 import { Audio, staticFile, delayRender, continueRender } from 'remotion';
@@ -341,7 +341,7 @@ export const SafeAudio: React.FC<{ src: string }> = ({ src }) => {
     };
     audio.onerror = () => {
       console.error(`Failed to load audio: ${src}`);
-      continueRender(handle); // Continue without audio rather than hang
+      continueRender(handle); // 继续渲染而不阻塞
     };
   }, [src, handle]);
 
@@ -350,27 +350,27 @@ export const SafeAudio: React.FC<{ src: string }> = ({ src }) => {
 };
 ```
 
-### Toolkit Command: /generate-voiceover
+### 工具包命令：/generate-voiceover
 
-The `/generate-voiceover` command handles the full workflow:
+`/generate-voiceover` 命令处理完整工作流程：
 
 ```
 /generate-voiceover
 
-1. Reads VOICEOVER-SCRIPT.md
-2. Extracts narration for each scene
-3. Generates audio via ElevenLabs API
-4. Saves to public/audio/scenes/
-5. Creates manifest.json with durations
-6. Updates project.json with timing info
+1. 读取 VOICEOVER-SCRIPT.md
+2. 提取每个场景的旁白
+3. 通过 ElevenLabs API 生成音频
+4. 保存到 public/audio/scenes/
+5. 创建 manifest.json 含时长信息
+6. 更新 project.json 含时间信息
 ```
 
-## Popular Voices
+## 流行语音
 
-- George: `JBFqnCBsd6RMkjVDRZzb` (warm narrator)
-- Rachel: `21m00Tcm4TlvDq8ikWAM` (clear female)
-- Adam: `pNInz6obpgDQGcFmaJgB` (professional male)
+- George：`JBFqnCBsd6RMkjVDRZzb`（温暖旁白）
+- Rachel：`21m00Tcm4TlvDq8ikWAM`（清晰女声）
+- Adam：`pNInz6obpgDQGcFmaJgB`（专业男声）
 
-List all: `client.voices.get_all()`
+列出所有：`client.voices.get_all()`
 
-For full API docs, see [reference.md](reference.md).
+完整 API 文档请参见 [reference.md](reference.md)。

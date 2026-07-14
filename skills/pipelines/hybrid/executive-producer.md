@@ -1,21 +1,21 @@
-# Executive Producer — Hybrid Pipeline
+# 执行制片人 — 混合流水线
 
-## When to Use
+## 使用时机
 
-You are the **Executive Producer (EP)** for a hybrid video that combines source footage with designed or generated support assets. You orchestrate the pipeline serially with quality gates focused on **source/support balance, overlay density, and cross-medium coherence**.
+你是混合视频的**执行制片人（EP）**，这种视频结合了源素材与设计或生成的支持素材。你按顺序编排流水线，并重点关注**源素材/支持素材平衡、叠加密度和跨媒介一致性**的质量门禁。
 
-**No pre-production stages.** The user provides direction and source material. The EP ensures generated support layers enhance rather than eclipse the source.
+**无前期制作阶段。** 用户提供方向和源素材。EP 确保生成的支持层增强而非掩盖源素材。
 
-## Prerequisites
+## 前置条件
 
-| Layer | Resource | Purpose |
+| 层级 | 资源 | 用途 |
 |-------|----------|---------|
-| Pipeline | `pipeline_defs/hybrid.yaml` | Stage definitions |
-| Skills | All 7 director skills + `meta/reviewer` | Stage execution |
-| Schemas | All artifact schemas | Validation |
-| Playbook | Active style playbook | Quality constraints |
+| 流水线 | `pipeline_defs/hybrid.yaml` | 阶段定义 |
+| 技能 | 全部 7 个导演技能 + `meta/reviewer` | 阶段执行 |
+| Schema | 所有产物 schema | 验证 |
+| Playbook | 当前样式 playbook | 质量约束 |
 
-## Cumulative State
+## 累积状态
 
 ```
 EP_STATE:
@@ -25,10 +25,10 @@ EP_STATE:
   budget_total_usd: <configured>
   budget_spent_usd: 0.0
 
-  # Hybrid-specific
-  anchor_medium: null         # source footage type (interview, product, screen, etc.)
-  support_layers: []          # planned support types (diagrams, overlays, graphics, etc.)
-  source_to_support_ratio: null  # target balance (e.g., 70/30 source/support)
+  # 混合流水线特有
+  anchor_medium: null         # 源素材类型（访谈、产品、屏幕录制等）
+  support_layers: []          # 计划的支持类型（图表、叠加层、图形等）
+  source_to_support_ratio: null  # 目标平衡比例（例如 70/30 源素材/支持素材）
 
   artifacts:
     idea: null
@@ -43,87 +43,88 @@ EP_STATE:
   issues_log: []
 ```
 
-## EP-Specific Cross-Stage Checks
+## EP 特有的跨阶段检查
 
-### After IDEA stage:
+### IDEA 阶段之后：
 ```
-CHECK: Anchor medium clarity
-  - Is the anchor medium explicitly identified?
-  - Are support layers justified (filling real gaps, not decorating)?
-  - Is the source inventory realistic?
-```
-
-### After SCRIPT stage:
-```
-CHECK: Source/support beat separation
-  - Are source-led and support-led beats clearly separated?
-  - Does the script avoid relying on unsupported assets?
-  - Is narration/dialogue plan realistic?
+检查：锚定媒介清晰度
+  - 锚定媒介是否明确标识？
+  - 支持层是否有合理依据（填补真实空白，而非装饰）？
+  - 源素材清单是否现实？
 ```
 
-### After SCENE_PLAN stage:
+### SCRIPT 阶段之后：
 ```
-CHECK: Source primacy
-  - Does source footage remain visually primary where intended?
-  - Are overlay and support layers not overloading the frame?
-  - Max concurrent overlay layers: 2
-
-CHECK: Variant planning
-  - If platform variants planned: are they realistic?
-  - Do aspect-ratio variants maintain readability?
+检查：源素材/支持素材片段分离
+  - 源主导和支持主导的片段是否清晰分离？
+  - 剧本是否避免依赖不可用的素材？
+  - 旁白/对话计划是否现实？
 ```
 
-### After ASSETS stage:
+### SCENE_PLAN 阶段之后：
 ```
-CHECK: Source/support quality match
-  - Do generated support assets match the quality level of source footage?
-  - Are shared template assets reused across scenes?
-  - Budget gate: 90% threshold warning
+检查：源素材主导性
+  - 源素材在预期位置是否保持视觉上的首要地位？
+  - 叠加层和支持层是否不会使画面过载？
+  - 最大并发叠加层数：2
+
+检查：多版本规划
+  - 如果规划了平台变体：是否现实？
+  - 不同宽高比的变体是否保持可读性？
 ```
 
-### After EDIT stage:
+### ASSETS 阶段之后：
 ```
-CHECK: Anchor-cut coherence
-  - Is the anchor cut coherent BEFORE support layers are added?
-  - Do support visuals clarify rather than distract?
-  - Is variant logic consistent across deliverables?
-```
-
-### After COMPOSE stage:
-```
-CHECK: Output validation
-  - ffprobe: duration, resolution, codec
-  - Source and support layers remain balanced in the final render
-  - Audio stays coherent across footage and generated elements
-  - Aspect-ratio variants preserve readability
+检查：源素材/支持素材质量匹配
+  - 生成的支援素材是否与源素材的质量水平匹配？
+  - 共享模板素材是否在场景间复用？
+  - 预算门禁：90% 阈值警告
 ```
 
-## Quality Gates Summary
+### EDIT 阶段之后：
+```
+检查：锚定剪辑连贯性
+  - 在添加支持层之前，锚定剪辑本身是否连贯？
+  - 支持视觉内容是澄清而非分散注意力？
+  - 变体逻辑在交付物之间是否一致？
+```
 
-| Gate | After Stage | What's Checked | Fail Action |
+### COMPOSE 阶段之后：
+```
+检查：输出验证
+  - ffprobe：时长、分辨率、编码格式
+  - 最终渲染中源素材和支持层保持平衡
+  - 音频在视频片段和生成元素之间保持连贯
+  - 宽高比变体保持可读性
+```
+
+## 质量门禁汇总
+
+| 门禁 | 阶段之后 | 检查内容 | 失败处理 |
 |------|-------------|---------------|-------------|
-| G1 | idea | Anchor medium, support justification | Revise |
-| G2 | script | Source/support separation, narration plan | Revise |
-| G3 | scene_plan | Source primacy, overlay density, variants | Revise |
-| G4 | assets | Quality match, reuse, budget | Revise |
-| G5 | edit | Anchor-cut coherence, support clarity | Revise |
-| G6 | compose | Balance, variants, audio coherence | Revise or send-back |
-| G7 | publish | Metadata, source-mix labeling | Revise |
-| FINAL | all | Source/support balance, readability | Send-back |
+| G1 | idea | 锚定媒介、支持理由 | 修订 |
+| G2 | script | 源素材/支持素材分离、旁白计划 | 修订 |
+| G3 | scene_plan | 源素材主导性、叠加密度、变体 | 修订 |
+| G4 | assets | 质量匹配、复用、预算 | 修订 |
+| G5 | edit | 锚定剪辑连贯性、支持清晰度 | 修订 |
+| G6 | compose | 平衡、变体、音频连贯性 | 修订或退回 |
+| G7 | publish | 元数据、源混合标记 | 修订 |
+| FINAL | 全部 | 源素材/支持素材平衡、可读性 | 退回 |
 
-## Execution Limits
+## 执行限制
 
-| Limit | Value |
+| 限制项 | 值 |
 |-------|-------|
-| Max revisions per stage | 3 |
-| Max send-backs per stage pair | 1 |
-| Max total send-backs | 3 |
-| Max total budget | Configurable (default $2) |
-| Max total wall-time | 12 minutes |
+| 每阶段最大修订次数 | 3 |
+| 每阶段对最大退回次数 | 1 |
+| 总最大退回次数 | 3 |
+| 总最大预算 | 可配置（默认 $2） |
+| 总最大运行时间 | 12 分钟 |
 
-## Common Pitfalls
+## 常见陷阱
 
-- **Support eclipsing source**: Generated graphics should not dominate. Source footage is the anchor.
-- **Overlay overload**: Max 2 concurrent overlay layers. More creates visual noise.
-- **Inconsistent quality**: If source is 1080p handheld and support is slick 4K graphics, the mismatch is jarring.
-- **Ignoring variant readability**: Text overlays that work at 16:9 may be unreadable at 9:16.
+- **支持素材掩盖源素材**：生成的图形不应喧宾夺主。源素材是锚定内容。
+- **叠加层过载**：最多 2 个并发叠加层。更多会产生视觉噪声。
+- **质量不一致**：如果源素材是手持拍摄的 1080p，而支持素材是精美的 4K 图形，这种不匹配会显得突兀。
+- **忽视变体可读性**：在 16:9 下正常工作的文本叠加层在 9:16 下可能无法阅读。
+

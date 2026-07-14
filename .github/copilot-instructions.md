@@ -1,9 +1,9 @@
 # OpenMontage
 
-**MANDATORY: Read [`AGENT_GUIDE.md`](../AGENT_GUIDE.md) before responding to ANY user message.**
+**强制要求：在回复任何用户消息之前，必须阅读 [`AGENT_GUIDE.md`](../AGENT_GUIDE.md)。**
 
-Do not act on the user's request until you have read AGENT_GUIDE.md.
-It contains routing rules that determine your first action based on what the user asked.
-Skipping it WILL cause you to take the wrong action.
+在阅读 `AGENT_GUIDE.md` 之前，请勿对用户的请求采取行动。
+该文件包含路由规则，决定你根据用户提问应采取的首要操作。
+跳过此步骤将导致你采取错误的操作。
 
-There are no instructions in this file. All instructions are in AGENT_GUIDE.md.
+本文件中没有其他说明。所有说明均在 `AGENT_GUIDE.md` 中。

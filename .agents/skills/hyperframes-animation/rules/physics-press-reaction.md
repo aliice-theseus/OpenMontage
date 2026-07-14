@@ -1,22 +1,22 @@
 ---
 name: physics-press-reaction
-description: Cursor + element synchronized press via subtractive spring forces — cursor lands on element, both compress together, then release. Distinct from press-release-spring (which has no cursor).
+description: 光标 + 元素通过减法弹簧力同步按下 — 光标着陆在元素上，两者一起压缩，然后释放。与 press-release-spring（没有光标）不同。
 metadata:
   tags: spring, click, physics, cursor, subtractive, interaction, synchronized
 ---
 
-# Physics Press Reaction (Cursor + Element Synced)
+# 物理按下反应（光标 + 元素同步）
 
-Models a real click: a cursor approaches a button, lands, and both compress IN SYNC, then release together. Two distinct timing events (down-frame and up-frame) bound by spring forces. Distinct from [press-release-spring](press-release-spring.md) (which has no cursor — just a press happening); this rule is the COMBINED cursor + element behavior.
+模拟真实点击：光标接近按钮，着陆，两者同步压缩，然后一起释放。两个不同的时间事件（按下帧和释放帧）由弹簧力约束。与 [press-release-spring](press-release-spring.md)**不同**（没有光标 — 只是一个按下发生）；此规则是**组合的**光标 + 元素行为。
 
-## How It Works
+## 工作原理
 
-A single `PRESS_INTENSITY` value drives both cursor and button together:
+一个单一的 `PRESS_INTENSITY` 值同时驱动光标和按钮：
 
-- **press down**: both compress to `1 - PRESS_INTENSITY`
-- **release**: both spring back to 1.0 with overshoot
+- **按下**：两者压缩到 `1 - PRESS_INTENSITY`
+- **释放**：两者以过冲弹回 1.0
 
-The cursor ALSO translates to the button's center during the approach phase BEFORE press starts. After release, the cursor may move on (next interaction) or hold.
+光标在按下开始前的接近阶段也**平移**到按钮中心。释放后，光标可以继续移动（下一个交互）或保持。
 
 ## HTML
 
@@ -36,7 +36,7 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     </button>
     <div class="brand">{Brand}</div>
   </div>
-  <!-- Cursor lives at scene-root level so it can translate freely -->
+  <!-- 光标位于场景根级别，以便自由平移 -->
   <svg class="cursor" id="cursor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M3 2 L21 12 L12 13 L7 22 Z"
@@ -97,20 +97,20 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
   color: {brandColor};
   text-transform: uppercase;
 }
-/* Cursor — absolute, positioned by GSAP */
+/* 光标 — 绝对定位，由 GSAP 定位 */
 .cursor {
   position: absolute;
   width: CURSOR_SIZE;
   height: CURSOR_SIZE;
   pointer-events: none;
   z-index: 100;
-  /* initial position is set by gsap.set() */
-  transform-origin: 0 0; /* arrow point is the click point */
+  /* 初始位置由 gsap.set() 设置 */
+  transform-origin: 0 0; /* 箭头尖端是点击点 */
   filter: {cursorDropShadow};
 }
 ```
 
-## GSAP Timeline
+## GSAP 时间线
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -118,13 +118,13 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  // Position cursor initially off-target (off-screen or far corner).
+  // 初始将光标定位在目标外（屏幕外或远角）。
   gsap.set("#cursor", { x: CURSOR_START_X, y: CURSOR_START_Y });
 
-  // The button's screen center, in composition coordinates.
+  // 按钮的屏幕中心，在组合坐标中。
   const BUTTON_CENTER = { x: BUTTON_CENTER_X, y: BUTTON_CENTER_Y };
 
-  // Phase 1 — cursor approaches button
+  // 阶段 1 — 光标接近按钮
   tl.to(
     "#cursor",
     {
@@ -136,7 +136,7 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     APPROACH_START,
   );
 
-  // Phase 2 — coordinated press down (button + cursor both scale to 1 - PRESS_INTENSITY)
+  // 阶段 2 — 协调按下（按钮 + 光标都缩放到 1 - PRESS_INTENSITY）
   tl.to(
     ["#btn", "#cursor"],
     {
@@ -147,7 +147,7 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     PRESS_DOWN_AT,
   );
 
-  // Phase 3 — release (both spring back to 1.0 with overshoot)
+  // 阶段 3 — 释放（两者以过冲弹回 1.0）
   tl.to(
     ["#btn", "#cursor"],
     {
@@ -158,7 +158,7 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     RELEASE_AT,
   );
 
-  // Phase 4 — inner glow during press (boxShadow change synced to press scale)
+  // 阶段 4 — 按下期间内部辉光（boxShadow 变化与按下缩放同步）
   tl.to(
     "#btn",
     {
@@ -178,14 +178,14 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     RELEASE_AT,
   );
 
-  // Brand fades in early (context)
+  // 品牌提前淡入（上下文）
   tl.from(
     ".brand",
     { opacity: 0, y: BRAND_REVEAL_Y_PX, duration: BRAND_REVEAL_DUR, ease: "power3.out" },
     BRAND_REVEAL_AT,
   );
 
-  // Cursor optionally moves off after press (or holds for dwell)
+  // 光标可选在按下后移开（或保持停留）
   tl.to(
     "#cursor",
     { x: CURSOR_EXIT_X, y: CURSOR_EXIT_Y, duration: CURSOR_EXIT_DUR, ease: "power2.out" },
@@ -196,19 +196,19 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
 </script>
 ```
 
-## Variations
+## 变体
 
-### Multiple-element chain press
+### 多元素链式按下
 
-Cursor presses button A → button A triggers swap → cursor moves to button B → presses again. Each press is one full down-release sub-routine.
+光标按下按钮 A → 按钮 A 触发交换 → 光标移动到按钮 B → 再次按下。每次按下是一个完整的按下-释放子程序。
 
-### Hold press (continuous pressure)
+### 保持按下（持续压力）
 
-Insert a `HOLD_DUR` window between press-down and release. Cursor scale stays at `1 - PRESS_INTENSITY`, button scale stays at `1 - PRESS_INTENSITY`, inner glow stays on. Suggests "thinking" or "loading."
+在按下和释放之间插入一个 `HOLD_DUR` 窗口。光标缩放保持在 `1 - PRESS_INTENSITY`，按钮缩放保持在 `1 - PRESS_INTENSITY`，内部辉光保持。暗示"思考中"或"加载中"。
 
-### Synchronized inner-glow pulse
+### 同步内部辉光脉冲
 
-During the hold phase, the inner glow pulses (sin-driven). Suggests "processing":
+在保持阶段，内部辉光脉冲（正弦驱动）。暗示"处理中"：
 
 ```js
 const holdGlow = { p: 0 };
@@ -228,123 +228,123 @@ tl.to(
 );
 ```
 
-## How to Choose Values
+## 如何选择值
 
-### Timing (seconds)
+### 时间（秒）
 
-- **APPROACH_START** — when the cursor begins moving toward the button.
-  - Range: 0-0.3 s (small lead-in is fine; long delays read as a dead frame)
-- **APPROACH_DUR** — cursor approach duration.
-  - Range: 0.7-1.3 s; faster reads as urgent, slower as deliberate
-- **PRESS_DOWN_AT** — when the press fires.
-  - Constraints: MUST equal `APPROACH_START + APPROACH_DUR` so the cursor arrives exactly when the press begins (avoids "tapping on air")
-- **PRESS_DOWN_DUR** — compression duration.
-  - Range: 0.1-0.25 s
-- **RELEASE_AT** — when the release fires.
-  - Constraints: must be > `PRESS_DOWN_AT + PRESS_DOWN_DUR`; an optional brief hold (0.05-0.4 s, or `HOLD_DUR` for the Hold-press variation) for "thinking" interactions
-- **RELEASE_DUR** — release spring duration.
-  - Range: 0.4-0.7 s (long enough for the overshoot to settle)
-- **BRAND_REVEAL_AT** — when the brand line fades in.
-  - Constraints: must be < `PRESS_DOWN_AT` (context precedes interaction)
-- **BRAND_REVEAL_DUR** — brand fade-in duration.
-  - Range: 0.4-0.8 s
-- **CURSOR_EXIT_AT / CURSOR_EXIT_DUR** — optional outbound cursor motion after release.
-  - Constraints: `CURSOR_EXIT_AT` must be ≥ `RELEASE_AT + RELEASE_DUR` so the cursor exits AFTER the press settles, not during
+- **APPROACH_START** — 光标开始向按钮移动的时间。
+  - 范围：0-0.3 秒（小的引导没问题；长延迟读作死帧）
+- **APPROACH_DUR** — 光标接近时长。
+  - 范围：0.7-1.3 秒；更快读作紧急，更慢读作慎重
+- **PRESS_DOWN_AT** — 按下触发时间。
+  - 约束：必须等于 `APPROACH_START + APPROACH_DUR`，使光标在按下开始时精确到达（避免"在空中点击"）
+- **PRESS_DOWN_DUR** — 压缩时长。
+  - 范围：0.1-0.25 秒
+- **RELEASE_AT** — 释放触发时间。
+  - 约束：必须 > `PRESS_DOWN_AT + PRESS_DOWN_DUR`；可选短暂保持（0.05-0.4 秒，或保持按下变体的 `HOLD_DUR`）用于"思考"交互
+- **RELEASE_DUR** — 释放弹簧时长。
+  - 范围：0.4-0.7 秒（足够长让过冲稳定）
+- **BRAND_REVEAL_AT** — 品牌行淡入时间。
+  - 约束：必须 < `PRESS_DOWN_AT`（上下文在交互之前）
+- **BRAND_REVEAL_DUR** — 品牌淡入时长。
+  - 范围：0.4-0.8 秒
+- **CURSOR_EXIT_AT / CURSOR_EXIT_DUR** — 释放后可选的光标外向运动。
+  - 约束：`CURSOR_EXIT_AT` 必须 ≥ `RELEASE_AT + RELEASE_DUR`，使光标在按下稳定后**才**退出，而非期间
 
-### Physics
+### 物理
 
-- **PRESS_INTENSITY** — how deep the press compression goes.
-  - Range: 0.05 (subtle) - 0.10 (standard) - 0.15 (heavy)
-  - Applied as `scale: 1 - PRESS_INTENSITY` on both cursor and button (single GSAP target array)
-- **BOUNCE_FACTOR** — `back.out(${BOUNCE_FACTOR})` overshoot on the release.
-  - Range: 1.6 (soft) - 2.0 (firm) - 2.4 (cartoony)
+- **PRESS_INTENSITY** — 按下压缩的深度。
+  - 范围：0.05（微妙）- 0.10（标准）- 0.15（重）
+  - 应用为光标和按钮上的 `scale: 1 - PRESS_INTENSITY`（单个 GSAP 目标数组）
+- **BOUNCE_FACTOR** — 释放上的 `back.out(${BOUNCE_FACTOR})` 过冲。
+  - 范围：1.6（柔和）- 2.0（坚定）- 2.4（卡通）
 
-### Positioning
+### 定位
 
-- **CURSOR_START_X / CURSOR_START_Y** — initial cursor position in composition coordinates.
-  - Constraints: off-screen or in a corner far from the button so the approach reads as motion-in, not a teleport
-- **BUTTON_CENTER_X / BUTTON_CENTER_Y** — the button's measured screen-space center.
-  - Source: measured at composition coordinates; for `place-items: center` at 1920×1080 this is `(960, 540)`
-- **CURSOR_EXIT_X / CURSOR_EXIT_Y** — where the cursor moves after release (if used).
-  - Range: any off-stage or out-of-the-way position
-- **BRAND_REVEAL_Y_PX** — brand initial y offset.
-  - Range: 8-20 px
+- **CURSOR_START_X / CURSOR_START_Y** — 光标在组合坐标中的初始位置。
+  - 约束：在屏幕外或远离按钮的角落，使接近读作运动进入，而非传送
+- **BUTTON_CENTER_X / BUTTON_CENTER_Y** — 按钮在屏幕空间中测量的中心。
+  - 来源：在组合坐标中测量；对于 1920×1080 下的 `place-items: center`，这是 `(960, 540)`
+- **CURSOR_EXIT_X / CURSOR_EXIT_Y** — 释放后光标移动的位置（如果使用）。
+  - 范围：任何舞台外或不碍事的位置
+- **BRAND_REVEAL_Y_PX** — 品牌初始 y 偏移。
+  - 范围：8-20 px
 
-### Layout / typography
+### 布局 / 排版
 
-- **STACK_GAP** — gap between button and brand line.
-  - Range: 40-96 px
-- **BTN_PADDING_V / BTN_PADDING_H** — button padding.
-  - Range: V 24-40 px, H 60-100 px (horizontal padding 2-3× vertical reads as pill-shaped CTA)
-- **BTN_INNER_GAP** — gap between icon and label inside the button.
-  - Range: 16-32 px
-- **BTN_RADIUS** — button corner radius.
-  - Range: 20-40 px, or `BTN_PADDING_V + BTN_FONT_SIZE/2` for fully rounded ends
-- **BTN_FONT_SIZE / BTN_ICON_SIZE** — typographic sizes inside the button.
-  - Range: font 60-100 px at 1080p; icon ~1.0-1.1× font size
-- **BTN_TRACKING** — letter-spacing on uppercase button text.
-  - Range: 4-12 px
-- **BRAND_SIZE / BRAND_TRACKING** — brand line typography.
-  - Range: 40-60 px, tracking 8-16 px
-- **CURSOR_SIZE** — cursor SVG size.
-  - Range: 48-96 px at 1080p
+- **STACK_GAP** — 按钮和品牌行之间的间距。
+  - 范围：40-96 px
+- **BTN_PADDING_V / BTN_PADDING_H** — 按钮填充。
+  - 范围：V 24-40 px，H 60-100 px（水平填充 2-3× 垂直读作胶囊形 CTA）
+- **BTN_INNER_GAP** — 按钮内部图标和标签之间的间距。
+  - 范围：16-32 px
+- **BTN_RADIUS** — 按钮圆角半径。
+  - 范围：20-40 px，或 `BTN_PADDING_V + BTN_FONT_SIZE/2` 用于完全圆角端部
+- **BTN_FONT_SIZE / BTN_ICON_SIZE** — 按钮内部的排版尺寸。
+  - 范围：1080p 下字体 60-100 px；图标 ~1.0-1.1× 字体大小
+- **BTN_TRACKING** — 大写按钮文本的字母间距。
+  - 范围：4-12 px
+- **BRAND_SIZE / BRAND_TRACKING** — 品牌行排版。
+  - 范围：40-60 px，间距 8-16 px
+- **CURSOR_SIZE** — 光标 SVG 大小。
+  - 范围：1080p 下 48-96 px
 
-### Hold-press variation
+### 保持按下变体
 
-- **HOLD_DUR** — hold window between press down and release.
-  - Range: 0.3-0.8 s
-- **HOLD_START_AT** — when the glow pulse begins.
-  - Constraints: typically equal to `PRESS_DOWN_AT + PRESS_DOWN_DUR`
-- **GLOW_PULSE_CYCLES** — number of full sine cycles across `HOLD_DUR`.
-  - Range: 1-4 (more cycles read as faster "processing")
-- **GLOW_BASE_ALPHA** — center of the alpha pulse.
-  - Range: 0.15-0.3
-- **GLOW_PULSE_AMP** — peak deviation from `GLOW_BASE_ALPHA`.
-  - Range: 0.1-0.2; must satisfy `GLOW_BASE_ALPHA - GLOW_PULSE_AMP ≥ 0`
-- **GLOW_BLUR** — inset glow blur radius (px).
-  - Range: 24-48 px
+- **HOLD_DUR** — 按下和释放之间的保持窗口。
+  - 范围：0.3-0.8 秒
+- **HOLD_START_AT** — 辉光脉冲开始时间。
+  - 约束：通常等于 `PRESS_DOWN_AT + PRESS_DOWN_DUR`
+- **GLOW_PULSE_CYCLES** — 在 `HOLD_DUR` 内的完整正弦周期数。
+  - 范围：1-4（更多周期读作更快的"处理"）
+- **GLOW_BASE_ALPHA** — 阿尔法脉冲的中心值。
+  - 范围：0.15-0.3
+- **GLOW_PULSE_AMP** — 与 `GLOW_BASE_ALPHA` 的峰值偏差。
+  - 范围：0.1-0.2；必须满足 `GLOW_BASE_ALPHA - GLOW_PULSE_AMP ≥ 0`
+- **GLOW_BLUR** — 内部辉光模糊半径（px）。
+  - 范围：24-48 px
 
-### Tokens
+### 标记
 
-- **{sceneBg}** — background gradient/color
-- **{font}** — typographic stack
-- **{btnBg}** — button background (typically gradient toward an accent hue)
-- **{btnTextColor}** — button text color
-- **{btnRestingShadow}** / **{btnPressedShadow}** — outer + inset box-shadow strings for the resting and pressed states
-- **{brandColor}** — accent brand color
-- **{cursorFill}** / **{cursorStroke}** — cursor SVG fill and stroke
-- **{cursorDropShadow}** — `filter: drop-shadow(...)` value for cursor depth
-- **{Brand}** — brand line copy
-- **{ctaCopy}** / **{ctaIcon}** — button label and inline icon glyph
+- **{sceneBg}** — 背景渐变/颜色
+- **{font}** — 排版栈
+- **{btnBg}** — 按钮背景（通常朝向重音色调的渐变）
+- **{btnTextColor}** — 按钮文本颜色
+- **{btnRestingShadow}** / **{btnPressedShadow}** — 休息和按下状态的外部和内部 box-shadow 字符串
+- **{brandColor}** — 重音品牌颜色
+- **{cursorFill}** / **{cursorStroke}** — 光标 SVG 填充和描画
+- **{cursorDropShadow}** — 光标深度的 `filter: drop-shadow(...)` 值
+- **{Brand}** — 品牌行文案
+- **{ctaCopy}** / **{ctaIcon}** — 按钮标签和内联图标字形
 
-## Key Principles
+## 关键原则
 
-- **Same press scale on cursor AND button** — physical synchronicity. If only the button scales, the cursor appears to "tap on air"; if only the cursor scales, the button feels disconnected.
-- **Cursor arrives BEFORE press starts** — there must be a clear moment of "cursor over target" before scale change. Otherwise the press is unattributed.
-- **`back.out(${BOUNCE_FACTOR})` for release** — both elements need spring overshoot together. Linear release loses the tactile feel.
-- **Inner glow appears DURING press, fades on release** — visual confirmation of contact. Outer shadow shrinks (pushed-in), inner glow appears (energy concentrated).
-- **Cursor `pointer-events: none`** — the cursor is decorative; if it captures events, hover/click behaviors on button below break.
-- **Cursor `transform-origin: 0 0`** — the arrow's tip is the click point, not its center. Scale around the tip keeps the click point stable.
-- **Climax dwell ≥1 s** — after release, the comp must continue ≥1 s. The press is a beat; viewer needs time to see the result.
+- **光标和按钮上相同的按下缩放** — 物理同步性。如果只有按钮缩放，光标看起来"在空中点击"；如果只有光标缩放，按钮感觉断开连接。
+- **光标在按下开始前到达** — 在缩放变化之前必须有清晰的"光标在目标上"时刻。否则按下是未归属的。
+- **释放使用 `back.out(${BOUNCE_FACTOR})`** — 两个元素需要一起弹簧过冲。线性释放失去触觉感。
+- **内部辉光在按下期间出现，释放时淡出** — 接触的视觉确认。外部阴影缩小（推入），内部辉光出现（能量集中）。
+- **光标 `pointer-events: none`** — 光标是装饰性的；如果它捕获事件，下方按钮的悬停/点击行为会损坏。
+- **光标 `transform-origin: 0 0`** — 箭头的尖端是点击点，不是其中心。围绕尖端缩放保持点击点稳定。
+- **高潮停留 ≥1 秒** — 释放后，组合必须继续 ≥1 秒。按下是一个节拍；观看者需要时间看到结果。
 
-## Critical Constraints
+## 关键约束
 
-- **Timeline must be paused**: `gsap.timeline({ paused: true })`
-- **Registry key = `data-composition-id`**
-- **No CSS `transition`** on either cursor or button — competes with GSAP
-- **Cursor SVG with `pointer-events: none`**
-- **`will-change: transform`** on button (and cursor if desired)
-- **`up-frame > down-frame`** — release MUST come after press; otherwise the comp shows release without press
-- **Don't use real `mouseenter` / `click` events** — HF is a render context, not a UI; everything must run via the timeline
+- **时间线必须暂停**：`gsap.timeline({ paused: true })`
+- **注册键 = `data-composition-id`**
+- **光标或按钮上无 CSS `transition`** — 与 GSAP 竞争
+- **光标 SVG 带 `pointer-events: none`**
+- **按钮上设置 `will-change: transform`**（光标如果需要也可设置）
+- **`释放帧 > 按下帧`** — 释放必须在按下之后；否则组合显示无按下的释放
+- **不要使用真实的 `mouseenter` / `click` 事件** — HF 是渲染上下文，不是 UI；一切必须通过时间线运行
 
-## Combinations
+## 组合
 
-- [press-release-spring.md](press-release-spring.md) — the BUTTON-only press variant; this rule layers cursor on top
-- [cursor-click-ripple.md](cursor-click-ripple.md) — adds a ripple effect at the click point
-- [scale-swap-transition.md](scale-swap-transition.md) — the press TRIGGERS the swap
+- [press-release-spring.md](press-release-spring.md) — **仅按钮**按下变体；此规则在其上叠加光标
+- [cursor-click-ripple.md](cursor-click-ripple.md) — 在点击点添加涟漪效果
+- [scale-swap-transition.md](scale-swap-transition.md) — 按下**触发**交换
 
-## Pairs with HF skills
+## 与 HF 技能配对
 
-- `/hyperframes-animation` — coordinated multi-target tweens via array
-- `/hyperframes-core` — composition wiring
+- `/hyperframes-animation` — 通过数组的协调多目标补间
+- `/hyperframes-core` — 组合接线
 - `/hyperframes-cli` — `hyperframes lint`

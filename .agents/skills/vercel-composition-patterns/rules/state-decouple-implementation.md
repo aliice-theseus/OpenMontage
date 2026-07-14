@@ -1,15 +1,14 @@
 ---
-title: Decouple State Management from UI
+title: 将状态管理与 UI 解耦
 impact: MEDIUM
-impactDescription: enables swapping state implementations without changing UI
+impactDescription: 无需更改 UI 即可切换状态实现
 tags: composition, state, architecture
 ---
 
-## Decouple State Management from UI
+## 将状态管理与 UI 解耦
 
-The provider component should be the only place that knows how state is managed.
-UI components consume the context interface—they don't know if state comes from
-useState, Zustand, or a server sync.
+Provider 组件应该是唯一知道状态如何管理的地方。
+UI 组件消费上下文接口—它们不知道状态来自 useState、Zustand 还是服务器同步。
 
 **Incorrect (UI coupled to state implementation):**
 

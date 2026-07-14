@@ -1,30 +1,30 @@
 <!--
-Thanks for contributing to OpenMontage! Please fill in the sections below.
-Keep PRs focused — one logical change per PR is easier to review and merge.
+感谢您为 OpenMontage 做出贡献！请填写以下各部分。
+保持 PR 专注——每个 PR 一个逻辑变更，更易于审查和合并。
 -->
 
-## Summary
+## 摘要
 
-<!-- What does this PR do, and why? -->
+<!-- 此 PR 做了什么，以及为什么？ -->
 
-## Related issue
+## 相关问题
 
-<!-- Link the issue this closes, e.g. "Closes #123". Use "Refs #123" if it only relates. -->
+<!-- 链接此 PR 关闭的 issue，例如 "Closes #123"。如果仅相关，请使用 "Refs #123"。 -->
 Closes #
 
-## Changes
+## 变更内容
 
-<!-- Bullet the notable changes. -->
+<!-- 列出显著变更。 -->
 -
 
-## Testing
+## 测试方法
 
-<!-- How did you verify this? Commands run, manual steps, platforms checked. -->
+<!-- 你是如何验证的？运行的命令、手动步骤、已验证的平台。 -->
 -
 
-## Checklist
+## 检查清单
 
-- [ ] The change is focused on a single logical concern.
-- [ ] I ran the relevant tests locally (`make test-contracts` / `make test`) where applicable.
-- [ ] I updated docs/README if behavior or usage changed.
-- [ ] No unrelated files (build artifacts, local config) are included in the diff.
+- [ ] 变更专注于单一逻辑关注点。
+- [ ] 我在适用时本地运行了相关测试（`make test-contracts` / `make test`）。
+- [ ] 如果行为或用法发生变化，我更新了 docs/README。
+- [ ] 差异中没有包含无关文件（构建产物、本地配置）。

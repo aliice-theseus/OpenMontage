@@ -1,15 +1,15 @@
 ---
 name: get-video-dimensions
-description: Getting the width and height of a video file with Mediabunny
+description: 使用 Mediabunny 获取视频文件的宽度和高度
 metadata:
   tags: dimensions, width, height, resolution, size, video
 ---
 
-# Getting video dimensions with Mediabunny
+# 使用 Mediabunny 获取视频尺寸
 
-Mediabunny can extract the width and height of a video file. It works in browser, Node.js, and Bun environments.
+Mediabunny 可以提取视频文件的宽度和高度。它适用于浏览器、Node.js 和 Bun 环境。
 
-## Getting video dimensions
+## 获取视频尺寸
 
 ```tsx
 import { Input, ALL_FORMATS, UrlSource } from "mediabunny";
@@ -34,24 +34,24 @@ export const getVideoDimensions = async (src: string) => {
 };
 ```
 
-## Usage
+## 用法
 
 ```tsx
 const dimensions = await getVideoDimensions("https://remotion.media/video.mp4");
-console.log(dimensions.width); // e.g. 1920
-console.log(dimensions.height); // e.g. 1080
+console.log(dimensions.width); // 例如 1920
+console.log(dimensions.height); // 例如 1080
 ```
 
-## Using with local files
+## 与本地文件一起使用
 
-For local files, use `FileSource` instead of `UrlSource`:
+对于本地文件，使用 `FileSource` 代替 `UrlSource`：
 
 ```tsx
 import { Input, ALL_FORMATS, FileSource } from "mediabunny";
 
 const input = new Input({
   formats: ALL_FORMATS,
-  source: new FileSource(file), // File object from input or drag-drop
+  source: new FileSource(file), // 来自输入或拖放的文件对象
 });
 
 const videoTrack = await input.getPrimaryVideoTrack();
@@ -59,7 +59,7 @@ const width = videoTrack.displayWidth;
 const height = videoTrack.displayHeight;
 ```
 
-## Using with staticFile in Remotion
+## 在 Remotion 中使用 staticFile
 
 ```tsx
 import { staticFile } from "remotion";

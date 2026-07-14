@@ -1,143 +1,143 @@
-# ManimGL Animations
+# ManimGL 动画
 
-## Animation System Overview
+## 动画系统概述
 
-ManimGL's animation system is built around the `Animation` base class. Specialized subclasses handle creation, transformation, and indication effects.
+ManimGL 的动画系统围绕 `Animation` 基类构建。专门的子类处理创建、变换和指示效果。
 
-## Playing Animations
+## 播放动画
 
 ```python
-# Single animation
+# 单个动画
 self.play(ShowCreation(circle))
 
-# Multiple animations simultaneously
+# 同时多个动画
 self.play(
     ShowCreation(circle),
     Write(text),
 )
 
-# With run_time
+# 带 run_time
 self.play(ShowCreation(circle), run_time=2)
 
-# With rate function
+# 带速率函数
 self.play(ShowCreation(circle), rate_func=smooth)
 ```
 
-## Creation Animations
+## 创建动画
 
-| Animation | Description |
+| 动画 | 描述 |
 |-----------|-------------|
-| `ShowCreation` | Draw a VMobject's path (NOT `Create` like in ManimCE) |
-| `Write` | Write text or LaTeX |
-| `DrawBorderThenFill` | Draw outline then fill |
-| `FadeIn` | Fade in with optional direction |
-| `FadeOut` | Fade out with optional direction |
-| `GrowFromCenter` | Scale up from center |
-| `GrowFromPoint` | Scale up from a point |
-| `GrowArrow` | Specialized for arrows |
+| `ShowCreation` | 绘制 VMobject 的路径（不是 ManimCE 中的 `Create`） |
+| `Write` | 写入文本或 LaTeX |
+| `DrawBorderThenFill` | 先绘制边框再填充 |
+| `FadeIn` | 淡入，可选方向 |
+| `FadeOut` | 淡出，可选方向 |
+| `GrowFromCenter` | 从中心放大 |
+| `GrowFromPoint` | 从某点放大 |
+| `GrowArrow` | 专门用于箭头 |
 
 ```python
-# ShowCreation for paths
+# ShowCreation 用于路径
 self.play(ShowCreation(circle))
 
-# Write for text
+# Write 用于文本
 self.play(Write(Tex(R"\pi")))
 
-# FadeIn with direction
+# FadeIn 带方向
 self.play(FadeIn(square, shift=UP))
 ```
 
-## Transform Animations
+## 变换动画
 
-| Animation | Description |
+| 动画 | 描述 |
 |-----------|-------------|
-| `Transform` | Morph one mobject into another (modifies original) |
-| `ReplacementTransform` | Replace source with target |
-| `TransformMatchingShapes` | Match similar shapes |
-| `TransformMatchingTex` | Match LaTeX parts |
-| `FadeTransform` | Fade while transforming |
-| `MoveToTarget` | Move to mobject's `.target` |
+| `Transform` | 将一个 mobject 变形为另一个（修改原对象） |
+| `ReplacementTransform` | 用目标对象替换源对象 |
+| `TransformMatchingShapes` | 匹配相似形状 |
+| `TransformMatchingTex` | 匹配 LaTeX 部分 |
+| `FadeTransform` | 变换时淡出 |
+| `MoveToTarget` | 移动到 mobject 的 `.target` |
 
 ```python
-# Transform (modifies circle, becomes square)
+# Transform（修改 circle，变为 square）
 self.play(Transform(circle, square))
 
-# ReplacementTransform (removes circle, adds square)
+# ReplacementTransform（移除 circle，添加 square）
 self.play(ReplacementTransform(circle, square))
 
-# Using .target
+# 使用 .target
 circle.generate_target()
 circle.target.shift(RIGHT * 2)
 circle.target.set_color(RED)
 self.play(MoveToTarget(circle))
 ```
 
-## Indication Animations
+## 指示动画
 
-| Animation | Description |
+| 动画 | 描述 |
 |-----------|-------------|
-| `Indicate` | Flash/pulse to draw attention |
-| `ShowPassingFlash` | Flash along a path |
-| `Flash` | Burst of light |
-| `Circumscribe` | Draw circle/rect around |
-| `Wiggle` | Wiggle the mobject |
-| `FlashAround` | Flash effect around object |
+| `Indicate` | 闪烁/脉冲以吸引注意 |
+| `ShowPassingFlash` | 沿路径闪烁 |
+| `Flash` | 光爆发 |
+| `Circumscribe` | 在周围画圆/矩形 |
+| `Wiggle` | 摆动对象 |
+| `FlashAround` | 对象周围闪光效果 |
 
 ```python
 self.play(Indicate(important_text))
 self.play(FlashAround(equation, run_time=2))
 ```
 
-## Movement Animations
+## 移动动画
 
 ```python
-# Using .animate syntax
+# 使用 .animate 语法
 self.play(circle.animate.shift(RIGHT * 2))
 self.play(circle.animate.scale(2).set_color(RED))
 
-# Rotate
+# 旋转
 self.play(Rotate(square, PI/2))
-self.play(Rotate(square, 90 * DEGREES))  # Same thing
+self.play(Rotate(square, 90 * DEGREES))  # 同上
 
-# MoveAlongPath
+# MoveAlongPath（沿路径移动）
 path = Line(LEFT, RIGHT)
 self.play(MoveAlongPath(dot, path))
 ```
 
-## LaggedStart and Groups
+## LaggedStart 和组
 
 ```python
-# Staggered animations
+# 交错动画
 self.play(LaggedStart(
     *[ShowCreation(mob) for mob in mobjects],
     lag_ratio=0.2
 ))
 
-# AnimationGroup for simultaneous
+# AnimationGroup 用于同时
 self.play(AnimationGroup(
     ShowCreation(circle),
     Write(text),
-    lag_ratio=0  # Simultaneous
+    lag_ratio=0  # 同时
 ))
 
-# Succession for sequential
+# Succession 用于顺序
 self.play(Succession(
     ShowCreation(circle),
     Write(text),
 ))
 ```
 
-## Animation Parameters
+## 动画参数
 
-Common parameters for all animations:
+所有动画的通用参数：
 
-| Parameter | Description |
+| 参数 | 描述 |
 |-----------|-------------|
-| `run_time` | Duration in seconds |
-| `rate_func` | Easing function (smooth, linear, etc.) |
-| `lag_ratio` | Stagger ratio for grouped animations |
-| `remover` | Remove mobject after animation |
-| `introducer` | Add mobject at animation start |
+| `run_time` | 持续时间（秒） |
+| `rate_func` | 缓动函数（smooth, linear 等） |
+| `lag_ratio` | 组动画的交错比例 |
+| `remover` | 动画结束后移除 mobject |
+| `introducer` | 在动画开始时添加 mobject |
 
 ```python
 self.play(
@@ -147,20 +147,20 @@ self.play(
 )
 ```
 
-## Rate Functions
+## 速率函数
 
-Common rate functions:
-- `smooth` - Default smooth easing
-- `linear` - Constant speed
-- `rush_into` - Fast start, slow end
-- `rush_from` - Slow start, fast end
-- `there_and_back` - Go and return
-- `double_smooth` - Extra smooth
+常见的速率函数：
+- `smooth` - 默认平滑缓动
+- `linear` - 恒定速度
+- `rush_into` - 快开始，慢结束
+- `rush_from` - 慢开始，快结束
+- `there_and_back` - 去并返回
+- `double_smooth` - 额外平滑
 
-## Waiting
+## 等待
 
 ```python
-self.wait()       # Default pause
-self.wait(2)      # 2 second pause
-self.wait(0.5)    # Half second
+self.wait()       # 默认暂停
+self.wait(2)      # 2秒暂停
+self.wait(0.5)    # 半秒
 ```

@@ -1,341 +1,341 @@
-# Step 6: Validate & Deliver
+# 步骤 6：验证与交付
 
-This is the quality gate. Before the user sees anything, YOU verify that the video matches the storyboard, the creative direction from Step 2, and DESIGN.md. Deliver something you'd be proud to post with your name on it.
+这是质量关卡。在用户看到任何内容之前，**你**验证视频是否与故事板、步骤 2 的创意方向和 DESIGN.md 匹配。交付你会自豪地署名发布的东西。
 
-## Definition of Done — required before ANY preview or summary
+## 完成定义——在任何预览或总结之前必需
 
-**You may not say the video is ready, looks good, or present a preview URL until every item below is checked.** No exceptions. Do not summarize your impressions — paste the actual evidence for each.
+**在检查完每一项之前，你不能说视频已准备就绪、看起来不错或展示预览 URL。** 无例外。不要总结你的印象——粘贴每个项的实际证据。
 
-Score each item 1–5. If any item scores below 3, fix it before continuing. **Do not rush these.** Each checkbox is its own pass through the artifacts — slow down, look at every frame, write the actual observation, not a summary impression.
+每个项评分 1–5。如果任何项评分低于 3，在继续之前修复。**不要急于完成这些。** 每个复选框都是通过产物的独立检查——慢下来，查看每一帧，写出实际观察结果，而不是总结印象。
 
 ```
-[ ] Every beat HTML read top-to-bottom    → see "Per-beat file read" below; paste the per-beat verdict
-[ ] Lint: zero errors                     → paste the lint output (not "lint passed")
-[ ] Snapshot taken, N frames confirmed    → state the exact frame count
-[ ] descriptions.md read in full          → quote the WORST frame Gemini described, verbatim
-[ ] Contact sheet viewed cell-by-cell     → for EACH beat, one sentence: what's in frame, what's moving, what brand assets are present
-[ ] No mid-video dark frames              → state explicitly which frames (if any) are dark and why
-[ ] Brand assets actually visible         → for each beat, name which captured SVG / illustration / screenshot is on screen and at what timestamp. If a beat shows zero captured assets, justify why.
-[ ] Audio duration matches video ±0.5s    → paste both numbers
-[ ] animation-map.json generated          → run `node <repo-root>/skills/hyperframes/scripts/animation-map.mjs <project-dir>`; confirm every beat has events listed and no bbox/flag warnings
-[ ] w2h-verify report                     → run `node <repo-root>/skills/website-to-video/scripts/w2h-verify.mjs <project-dir>`; paste the FULL output (every row, every percent) verbatim into your final user-facing summary — see "w2h-verify — the source of truth" below
-[ ] Audio + motion verification done      → see "Audio + motion verification" below; played the full preview, confirmed SFX lands at storyboard timestamps
-[ ] Critic sub-agent run                  → paste its single biggest quality gap finding, verbatim
+[ ] 每个节拍 HTML 自上而下阅读    → 参见下面的「逐节拍文件阅读」；粘贴逐节拍判定
+[ ] Lint：零错误                     → 粘贴 lint 输出（不是「lint 通过」）
+[ ] 快照已拍摄，N 帧已确认    → 说明确切的帧数
+[ ] descriptions.md 已完整阅读          → 逐字引用 Gemini 描述的**最差**帧
+[ ] 联系表已逐单元格查看     → 为**每个**节拍写一句话：帧里有什么、什么在动、哪些品牌资源存在
+[ ] 视频中没有暗色帧              → 明确说明哪些帧（如果有）是暗的以及原因
+[ ] 品牌资源实际可见         → 为每个节拍，命名哪些捕获的 SVG/插画/截图在屏幕上，在什么时间戳。如果一个节拍显示零个捕获资源，说明原因。
+[ ] 音频时长匹配视频 ±0.5s    → 粘贴两个数字
+[ ] animation-map.json 已生成          → 运行 `node <repo-root>/skills/hyperframes/scripts/animation-map.mjs <project-dir>`；确认每个节拍都有列出的事件且没有 bbox/flag 警告
+[ ] w2h-verify 报告                     → 运行 `node <repo-root>/skills/website-to-video/scripts/w2h-verify.mjs <project-dir>`；将完整输出（每一行、每个百分比）逐字粘贴到面向用户的最终总结中——参见下面的「w2h-verify——真相来源」
+[ ] 音频 + 动效验证已完成      → 参见下面的「音频 + 动效验证」；已播放完整预览，确认 SFX 落在故事板时间戳上
+[ ] 批评者子代理已运行                  → 粘贴其最大的质量差距发现，逐字引用
 ```
 
-### w2h-verify — the source of truth
+### w2h-verify——真相来源
 
-The skill ran for months on agents reading "REQUIRED" and skipping anyway. The verify script ends that — it computes facts the agent cannot fudge:
+该技能运行了数月，代理阅读「必需」却仍然跳过。验证脚本结束了这一点——它计算代理无法篡改的事实：
 
-- **Required artifacts present** (STORYBOARD.md, DESIGN.md, SCRIPT.md, index.html)
-- **Brand visuals used** — at least 1 beat must reference a captured `hero-*`, `image-*`, or `svgs/*.svg` asset (logo doesn't count). Catches the "9% asset usage / brand isn't visually present" failure.
-- **Headline font-size** — per-beat, the largest CSS `font-size` must be ≥80px. Catches the "headlines too small to read" failure that surfaces later as inspect `clipped_text` errors.
-- **Timeline coverage** — per-beat, GSAP event positions must span ≥70% of the beat's `data-duration`. Catches "webpage not shot" failures where the beat has entrance tweens then goes static.
-- **Shader transitions consistency** — shaders declared in STORYBOARD.md must appear in index.html (with HyperShader runtime present, not just as SFX file references).
-- **SFX timestamp drift** — storyboard `t=X.Xs` vs index.html `data-start=X.X`, picks the closest index timestamp per file for multi-timestamp SFX.
-- **Beat duration consistency** — storyboard's beat ranges (`B4 — Name | 16.600 – 21.000s |`) must match `data-duration` in index.html within ±0.5s. Catches storyboard staleness.
-- **Rendered MP4 existence** — INFO only; flagged when claiming verified motion without rendering.
+- **必需产物存在**（STORYBOARD.md、DESIGN.md、SCRIPT.md、index.html）
+- **品牌视觉已使用**——至少 1 个节拍必须引用捕获的 `hero-*`、`image-*` 或 `svgs/*.svg` 资源（Logo 不算）。捕获了「9% 资源使用率 / 品牌在视觉上不存在」的失败。
+- **标题字体大小**——每个节拍，最大的 CSS `font-size` 必须 ≥80px。捕获了「标题太小无法阅读」的失败，该失败后来作为 inspect `clipped_text` 错误出现。
+- **时间线覆盖**——每个节拍，GSAP 事件位置必须覆盖节拍 `data-duration` 的 ≥70%。捕获了「网页不是镜头」的失败，其中节拍有入口动画然后变为静态。
+- **着色器过渡一致性**——STORYBOARD.md 中声明的着色器必须出现在 index.html 中（带有 HyperShader 运行时存在，而不仅仅是作为 SFX 文件引用）。
+- **SFX 时间戳漂移**——故事板 `t=X.Xs` vs index.html `data-start=X.X`，对多时间戳的 SFX 选择每个文件最接近的索引时间戳。
+- **节拍时长一致性**——故事板的节拍范围（`B4 — 名称 | 16.600 – 21.000s |`）必须与 index.html 中的 `data-duration` 在 ±0.5s 内匹配。捕获了故事板过时的问题。
+- **渲染的 MP4 存在**——仅信息；当声称已验证动效而没有渲染时标记。
 
-Run it as the LAST gate in your DoD pass, after fixing everything else:
+在 DoD 检查的最后一个关卡运行它，在修复所有其他问题之后：
 
 ```bash
 node <repo-root>/skills/website-to-video/scripts/w2h-verify.mjs <project-dir>
 ```
 
-(Locate the repo root from a project subdirectory: `find "$HOME" -path '*/skills/website-to-video/scripts/w2h-verify.mjs' -maxdepth 10 2>/dev/null | head -1`.)
+（从项目子目录定位仓库根目录：`find "$HOME" -path '*/skills/website-to-video/scripts/w2h-verify.mjs' -maxdepth 10 2>/dev/null | head -1`。）
 
-**The script's output is the deliverable.** Paste the entire report — the table, the percentages, the FAIL lines — verbatim into your final user-facing summary, in the "What I verified" / "What I did NOT verify" section. The user will read it directly. You don't get to summarize, simplify, or omit rows.
+**脚本的输出是交付物。** 将完整报告——表格、百分比、失败行——逐字粘贴到面向用户的最终总结中的「我验证的内容」/「我未验证的内容」部分。用户将直接阅读它。你不能总结、简化或省略行。
 
-**If any row says FAIL:**
+**如果任何行显示失败：**
 
-- Either fix the underlying issue and re-run until the row says PASS
-- Or include the FAIL row verbatim in your final summary's "What I did NOT verify" section with a one-sentence explanation of why you chose not to fix it
+- 要么修复根本问题并重新运行，直到行显示通过
+- 要么在最终总结的「我未验证的内容」部分中包含失败行（逐字），并附上一句话说明为什么你选择不修复它
 
-**Forbidden:**
+**禁止：**
 
-- Hand-writing your own verification summary that doesn't match the script's output
-- Cherry-picking which rows to include
-- Replacing percentages with adjectives ("most assets used" instead of "8%")
-- Running the script, seeing FAIL, and not mentioning it
+- 手写自己的不与脚本输出匹配的验证总结
+- 挑拣要包含的行
+- 用形容词替代百分比（「使用了大多数资源」而不是「8%」）
+- 运行脚本，看到失败，却不提及它
 
-The script's exit code is 0 (all pass) or 1 (one or more fail). If you ship with exit=1, the user knows from the report exactly what they're getting.
+脚本的退出码是 0（全部通过）或 1（一个或多个失败）。如果你以 exit=1 交付，用户从报告中精确知道他们得到了什么。
 
-### Per-beat file read
+### 逐节拍文件阅读
 
-This is what verification means now: you open each `compositions/beat-N.html` and read it top-to-bottom against DESIGN.md and STORYBOARD.md. Step 5 already required this once before advancing here — repeat it here as the final check, in case fixes during Step 5 introduced new problems.
+这就是现在验证的含义：你打开每个 `compositions/beat-N.html` 并对照 DESIGN.md 和 STORYBOARD.md 自上而下阅读。步骤 5 在前进到此之前已经要求一次——在此处重复作为最终检查，以防步骤 5 期间的修复引入了新问题。
 
-For each beat, write a per-beat verdict in this form:
+对于每个节拍，以此形式写一个逐节拍判定：
 
 ```
-Beat N (Ns–Ns) — <name>
-  CSS bg: <hex> (DESIGN.md says <hex>, matches: yes/no)
-  CSS accent: <hex> (DESIGN.md says <hex>, matches: yes/no)
-  Headline font-size: <px> (≥80: yes/no)
-  Captured assets referenced: <list of paths from <img>, inline SVG, background-image> (storyboard called for: <list>)
-  GSAP timeline coverage: events from <first t> to <last t>, beat duration <N>s (full coverage: yes/no)
-  Storyboard alignment: <one sentence — does this beat deliver what its STORYBOARD.md section described>
-  VERDICT: PASS / NEEDS FIX (<what specifically>)
+节拍 N（Ns–Ns）— <名称>
+  CSS 背景：<十六进制>（DESIGN.md 说 <十六进制>，匹配：是/否）
+  CSS 强调色：<十六进制>（DESIGN.md 说 <十六进制>，匹配：是/否）
+  标题字体大小：<px>（≥80：是/否）
+  引用的捕获资源：<来自 <img>、内联 SVG、background-image 的路径列表>（故事板要求：<列表>）
+  GSAP 时间线覆盖：事件从 <第一个 t> 到 <最后一个 t>，节拍时长 <N>s（完全覆盖：是/否）
+  故事板对齐：<一句话——此节拍是否交付了其 STORYBOARD.md 部分描述的内容>
+  判定：通过 / 需要修复（<具体内容>）
 ```
 
-The pre-fix-era flow took longer specifically because it caught these problems. Don't trade the careful look for a green checkmark.
+修复前的流程花费更长时间，正是因为它捕获了这些问题。不要用仔细查看换取绿色勾号。
 
-**Why this matters:** The natural tendency is to look at a contact sheet, see that content is present, and declare it done. That is not verification — that is pattern-matching to a completion signal. Verification means opening every file the sub-agents produced, reading every line, and reporting the raw result. "Frame 7 at 14.2s shows the Raycast logo SVG drawing its final stroke at 0.85 opacity against #07080A, the headline 'Crush your sprint' has settled in 96px Inter SemiBold below" is evidence. "The video looks great" is not.
+**为什么这很重要：** 自然倾向是查看联系表，看到内容存在，然后宣布完成。那不是验证——那是模式匹配到一个完成信号。验证意味着打开子代理生成的每个文件，阅读每一行，并报告原始结果。「帧 7 在 14.2s 显示 Raycast Logo SVG 以 0.85 不透明度在 #07080A 上绘制其最后一笔，标题「Crush your sprint」已稳定在 96px Inter SemiBold 下方」是证据。「视频看起来很棒」不是。
 
 ---
 
 ## Lint + Validate + Snapshot
 
-The `hyperframes` skill (which you loaded in Step 5) already covers the mechanics of linting, validating, and snapshotting. Follow those rules — run lint, validate, take snapshots scaled to the video length (formula: `max(beats × 3, ceil(duration_seconds / 2))`). Fix errors. This step adds the **pipeline-specific verification** on top of that.
+`hyperframes` 技能（你在步骤 5 已加载）已经涵盖了检查、验证和快照的机制。遵循那些规则——运行 lint、validate、拍摄按视频长度缩放的快照（公式：`max(节拍数 × 3, ceil(时长_秒 / 2))`）。修复错误。此步骤在此基础上添加了**流水线特定的验证**。
 
-**Errors:** Fix ALL of them. These are real problems — missing timeline registration, broken scripts, missing assets.
+**错误：** 修复所有。这些是真正的问题——缺少时间线注册、破损的脚本、缺失的资源。
 
-**Warnings:** Read each one and decide. Some are real quality issues you must fix:
+**警告：** 阅读每条并做决定。有些是必须修复的真正质量问题：
 
-- **GSAP tween overlaps** — elements fighting over the same property = visual glitches
-- **Unscoped selectors** — will target elements in ALL compositions when bundled, causing data loss
-- **Missing `class="clip"`** — element visible for entire video instead of its scheduled time
-- **Missing `data-start` on root** — playback won't begin
+- **GSAP 动画重叠**——元素争抢同一属性 = 视觉故障
+- **无作用域选择器**——会在打包时针对所有作品中的元素，导致数据丢失
+- **缺少 `class="clip"`**——元素在视频全程可见，而不是其调度时间
+- **根上缺少 `data-start`**——播放不会开始
 
-Some are style suggestions you can safely ignore:
+有些是你可以安全忽略的风格建议：
 
-- **File too large** — composition works fine, just harder to read
-- **Deprecated attributes** (data-layer, data-end) — still work, just not preferred
-- **Dense tracks** — informational, not a bug
+- **文件太大**——作品工作正常，只是更难阅读
+- **已弃用的属性**（data-layer、data-end）——仍然工作，只是不推荐
+- **密集轨道**——信息性，不是 bug
 
-**WCAG contrast warnings — per-warning verification, not blanket dismissal.**
+**WCAG 对比警告——逐警告验证，不是一概而过。**
 
-The validator samples text colors at fixed timestamps. Elements at `opacity: 0` (pre-entrance) or mid-fade get measured as if fully visible — real false positives exist. BUT this is a per-warning judgment, not a blanket excuse.
+验证器在固定时间戳采样文本颜色。处于 `opacity: 0`（进入前）或淡入淡出中的元素会被当作完全可见测量——存在真正的误报。但这是逐警告的判断，不是一概而过的借口。
 
-**For EACH warning the validator emits, paste this block in your verdict:**
+**对于验证器发出的每个警告，在你的判定中粘贴此块：**
 
 ```
-Warning N: <quote the validator output verbatim>
-  Element: <selector>
-  Sampled timestamp: t=<n>
-  At t=<n>, is this element on-screen at full opacity? (yes/no — confirm by viewing snapshot at that timestamp)
-  Verdict: REAL ISSUE / SAMPLING ARTIFACT (justify in one sentence)
-  Action: <hex change at line N>  OR  NONE because <reason>
+警告 N：<逐字引用验证器输出>
+  元素：<选择器>
+  采样时间戳：t=<n>
+  在 t=<n> 时，此元素是否在全不透明度下在屏幕上？（是/否——通过查看该时间戳的快照确认）
+  判定：真正的问题 / 采样伪影（一句话说明）
+  操作：<第 N 行的十六进制更改> 或 无，因为 <原因>
 ```
 
-**Forbidden:** writing "the N warnings are mostly transition-window false positives" without per-warning evidence. That phrasing alone fails the gate. The validator does not report 158 warnings as a group — it reports them individually, and you verify them individually.
+**禁止：** 写上「N 个警告主要是过渡窗口误报」而没有逐警告证据。仅那个措辞就使关卡失败。验证器不是作为一个组报告 158 个警告——它单独报告它们，你单独验证它们。
 
-Don't blindly ignore. Don't blindly fix. Verify each.
+不要盲目忽略。不要盲目修复。逐条验证。
 
-## Visual Verification (snapshot)
+## 视觉验证（快照）
 
-After lint and validate pass, capture snapshot frames to SEE your own output. **Take many snapshots — as much as you can actually read and view all of them without hitting diminishing returns**. This is your only visual feedback before the user sees the project. You wanna be honored and proud of what you give to the user.
+在 lint 和 validate 通过后，捕获快照帧来**看到**你自己的输出。**拍摄很多快照——尽量多到你实际能阅读和查看所有，而不至于收益递减。** 这是在用户看到项目之前你唯一的视觉反馈。你要为你给用户的东西感到自豪。
 
-Scale snapshot count to the video — not a fixed number. Formula: `max(beats × 3, ceil(duration_seconds / 2))`. A 3-beat 10s video: max(9, 5) = 9 frames. An 8-beat 60s video: max(24, 30) = 30 frames. Aim for at least 3 frames per beat: entrance, hold, and near-exit.
+将快照数量缩放到视频——而不是固定数字。公式：`max(节拍数 × 3, ceil(时长_秒 / 2))`。一个 3 节拍 10s 视频：max(9, 5) = 9 帧。一个 8 节拍 60s 视频：max(24, 30) = 30 帧。目标是每个节拍至少 3 帧：入场、保持和接近退出。
 
 ```bash
-# The CLI auto-loads .env from the current working directory, so a
-# .env file in <project-dir> with GEMINI_API_KEY=... is enough — no
-# explicit `export` needed. If you've set GEMINI_API_KEY in your shell
-# environment, that works too.
+# CLI 从当前工作目录自动加载 .env，因此
+# <project-dir> 中包含 GEMINI_API_KEY=... 的 .env 文件就足够了——不需要
+# 显式 `export`。如果你已经在 shell 环境中设置了 GEMINI_API_KEY，
+# 那也可以。
 npx hyperframes snapshot <project-dir> --frames <N>
 
-# Pass a custom question to Gemini instead of the default prompt:
+# 传递自定义问题给 Gemini 而不是默认提示：
 npx hyperframes snapshot <project-dir> --frames <N> \
-  --describe "Is the brand logo visible in every beat? Is any beat showing a black or blank frame?"
+  --describe "品牌 Logo 在每个节拍中是否可见？是否有任何节拍显示黑色或空白帧？"
 ```
 
-Output lands in `<project-dir>/snapshots/`. Gemini writes `snapshots/descriptions.md` automatically.
+输出在 `<project-dir>/snapshots/` 中。Gemini 自动写入 `snapshots/descriptions.md`。
 
-**If `descriptions.md` is missing or empty after the snapshot:** `GEMINI_API_KEY` was not set — confirm it's in `<project-dir>/.env` (the CLI loads .env from CWD) or in your shell environment. Re-run after fixing.
+**如果 `descriptions.md` 在快照后缺失或为空：** `GEMINI_API_KEY` 未设置——确认它在 `<project-dir>/.env` 中（CLI 从 CWD 加载 .env）或你的 shell 环境中。修复后重新运行。
 
-**Fallback if Gemini is genuinely unavailable** (no key, key invalid, or quota exhausted): use your own image-reading capability to inspect each frame in `snapshots/` directly. For each frame, write one sentence describing what's on screen — focus on the dimensions Gemini would catch (blank/dark frames, missing brand assets, text legibility, layout problems). Save these descriptions as `snapshots/descriptions.md` yourself so the rest of the checklist still has a single source of truth. State explicitly in your verdict that descriptions were agent-authored, not Gemini-authored, so the user knows to spot-check.
+**如果 Gemini 真正不可用的回退**（无密钥、密钥无效或配额耗尽）：使用你自己的图像阅读能力直接检查 `snapshots/` 中的每个帧。对于每个帧，写一句话描述屏幕上的内容——关注 Gemini 会捕获的维度（空白/暗色帧、缺失的品牌资源、文本可读性、布局问题）。自己将这些描述保存为 `snapshots/descriptions.md`，以便清单的其余部分仍然有单一真相来源。在你的判定中明确说明描述是代理撰写的，不是 Gemini 撰写的，以便用户知道要抽查。
 
-**Gemini descriptions will flag two frames as "blank/black" — these two are expected and not bugs:**
+**Gemini 描述会将两个帧标记为「空白/黑色」——这两个是预期的，不是 bug：**
 
-- `frame-00-at-0.0s.png` — always dark, animations haven't started
-- The last frame of the video — always dark, the s-end dummy scene is intentionally invisible
+- `frame-00-at-0.0s.png`——总是暗的，动画尚未开始
+- 视频的最后一帧——总是暗的，s-end 虚拟场景有意不可见
 
-Every other frame described as "black," "blank," "no visible content," or "loading screen" in the middle of the video IS a bug. Investigate and fix it.
+每一帧被描述为「黑色」、「空白」、「无可视内容」或视频中部的「加载屏幕」**是**真正的 bug。调查并修复它。
 
-**Two required reads — both, not one. Then a per-beat verdict.**
+**两个必需的读取——两者都要，不是只有一个。然后逐节拍判定。**
 
-1. **Read `snapshots/descriptions.md`** — Gemini's objective written analysis of every frame. Read every line. Do not skim.
+1. **阅读 `snapshots/descriptions.md`**——Gemini 对每个帧的客观书面分析。阅读每一行。不要浏览。
 
-2. **View `snapshots/contact-sheet.jpg` cell-by-cell.** Not a glance. Look at every cell, name what's in it. Past agents have reported "contact sheet looks good" after a single scan and missed: a beat that was visually black for 80% of its duration, a logo placed off-screen, a headline clipped at the canvas edge, captions running off the bottom. The contact sheet is the only place these failures are visible together. **For each cell, write one sentence: what's in frame, what's moving, which brand assets are present, anything that looks wrong.** If you find yourself wanting to summarize the contact sheet as a whole, stop and go back to cell-by-cell.
+2. **逐单元格查看 `snapshots/contact-sheet.jpg`。** 不是一瞥。查看每个单元格，说出里面有什么。过去的代理在一次扫描后报告「联系表看起来不错」，错过了：一个在其时长 80% 中视觉是黑色的节拍、一个放在屏幕外的 Logo、一个在画布边缘被裁剪的标题、一个从底部跑出去的字幕。联系表是这些失败唯一一起可见的地方。**对于每个单元格，写一句话：帧里有什么、什么在动、哪些品牌资源存在、任何看起来不对的地方。** 如果你发现自己想要将联系表整体总结，停下来，回到逐单元格。
 
-After reading both, write a per-beat verdict for every beat:
-
-```
-Beat 1 (0.0s–4.5s): [what Gemini described] | [what contact sheet shows] | PASS / NEEDS FIX
-Beat 2 (4.0s–9.5s): ...
-Beat 3 ...
-CTA beat: ...
-```
-
-A beat PASSES only if:
-
-- Gemini description matches what STORYBOARD.md says should be happening
-- Contact sheet shows visible content (not black, not blank, not loading)
-- Brand colors/fonts visible
-- No elements clipped or mispositioned
-
-A beat that "has some content" does not automatically pass. Compare against what was _planned_, not just "something is there."
-
-**If any beat fails: fix it, re-snapshot, re-read descriptions.md, re-write the per-beat verdict from scratch.** Do not carry forward old verdicts after a fix — re-evaluate everything because fixes can break adjacent beats.
-
-**Keep iterating until every beat passes.** There is no time limit. A video with one black CTA beat is not done.
-
-## Critic Sub-Agent — do not skip
-
-**This is not optional. Run it after your per-beat verdicts all pass — before you start preview.**
-
-Spawn a sub-agent with this exact prompt:
+在阅读两者之后，为每个节拍写一个逐节拍判定：
 
 ```
-You are a senior motion designer and creative director reviewing a brand video before it ships. You have high standards and have seen hundreds of these.
-
-Read these files:
-- STORYBOARD.md (what was planned)
-- DESIGN.md (brand rules)
-- snapshots/descriptions.md (what Gemini sees in each frame)
-- snapshots/contact-sheet.jpg (view it)
-
-Score each dimension 1–5. Be specific — name the beat and timestamp for every problem you identify.
-
-1. **Beat execution** (1–5): Does every beat deliver what STORYBOARD.md planned? Name any beat that underdelivers and what exactly is wrong.
-2. **Brand accuracy** (1–5): Does this feel made for THIS brand specifically, or could it be for any company? Name one element that is distinctly on-brand and one that is generic.
-3. **Captured asset utilization** (1–5): The user captured the brand's actual SVG logos, hero illustrations, and screenshots into `capture/assets/`. Are they on screen in this video, or did the agents recreate everything from divs and CSS? List which captured assets appear in which beats. If beats are missing them, flag it — a video that recreates everything in CSS is generic, not branded.
-4. **Visual quality** (1–5): Any blank frames, clipped text, centering failures, invisible elements? Cite exact frame timestamps.
-5. **Motion design** (1–5): Do animations feel intentional and polished, or default and mechanical? Name the weakest transition and why.
-6. **CTA beat** (1–5): Is the final beat clear, centered, readable, and does it hold long enough? Describe exactly what is visible on the CTA frame.
-
-End with: What is the single most important fix before this ships? Name the beat, the element, and the specific change.
-
-If you cannot find any problems and want to score everything 4–5, you are not looking hard enough. Look again.
+节拍 1（0.0s–4.5s）：[Gemini 描述的内容] | [联系表显示的内容] | 通过 / 需要修复
+节拍 2（4.0s–9.5s）：...
+节拍 3 ...
+CTA 节拍：...
 ```
 
-Read every score. Fix anything below 3 before showing the user. If the CTA scores below 3, fix the CTA. Do not rationalize low scores as "the user can decide."
+一个节拍通过**仅当**：
 
-## Audio + motion verification — three paths, pick one
+- Gemini 的描述与 STORYBOARD.md 说应该发生的内容匹配
+- 联系表显示可见内容（不是黑色、空白或加载中）
+- 品牌颜色/字体可见
+- 没有元素被裁剪或位置错误
 
-Snapshots are silent stills. 18 PNG snapshots from a 30s 30fps video = 18/900 = 2% of frames. The other 98% — including all motion, all transitions, all audio — is unverified by snapshots alone. "Confirmed via snapshot" is not coverage.
+一个「有一些内容」的节拍不会自动通过。对照_计划_的内容进行比较，而不是只是「有些东西在那里。」
 
-You MUST do ONE of these three paths before declaring done:
+**如果任何节拍失败：修复它，重新快照，重新阅读 descriptions.md，从头重新写逐节拍判定。** 不要在修复后携带旧的判定——重新评估一切，因为修复可能破坏相邻的节拍。
 
-### Path 1 (preferred): Play the preview
+**继续迭代直到每个节拍通过。** 没有时间限制。一个 CTA 节拍是黑色的视频不是完成的。
 
-Open the Studio URL in a browser via Playwright (or another browser tool you have). Play start-to-end at 1.0× speed (NOT scrubbed). Confirm:
+## 批评者子代理——不要跳过
+
+**这不是可选的。在你的逐节拍判定全部通过后运行它——在你开始预览之前。**
+
+使用这个精确提示启动一个子代理：
 
 ```
-[ ] Played full video front-to-back at 1.0× — actually played, not scrubbed
-[ ] For each SFX in STORYBOARD.md: sound lands at the visual moment within ±0.1s
-    (Beat N SFX `<file>`: storyboard says t=<x>s → heard at t=<y>s → drift <z>s)
-[ ] Narration delivers the right line per beat (no off-by-one or missing lines)
-[ ] No moments where audio is present but visual is mid-transition unintentionally
-[ ] Audio audible and not clipped/peaked
+你是一位高级动效设计师和创意总监，在视频交付前审核品牌视频。你标准很高，见过数百个这样的视频。
+
+读取这些文件：
+- STORYBOARD.md（计划的内容）
+- DESIGN.md（品牌规则）
+- snapshots/descriptions.md（Gemini 在每个帧中看到的内容）
+- snapshots/contact-sheet.jpg（查看它）
+
+为每个维度评分 1–5。要具体——为你识别的每个问题命名节拍和时间戳。
+
+1. **节拍执行**（1–5）：每个节拍是否交付了 STORYBOARD.md 计划的内容？命名任何交付不足的节拍以及具体问题。
+2. **品牌准确性**（1–5）：这是否感觉是为此品牌专门制作的，还是可以为任何公司制作？命名一个明显的品牌元素和一个通用的元素。
+3. **捕获资源利用率**（1–5）：用户将品牌的实际 SVG Logo、英雄插画和截图捕获到 `capture/assets/` 中。它们在这个视频的屏幕上了吗，还是代理用 div 和 CSS 重建了一切？列出哪些捕获的资源出现在哪些节拍中。如果节拍缺少它们，标记出来——用 CSS 重建一切的视频是通用的，不是品牌的。
+4. **视觉质量**（1–5）：是否有空白帧、裁剪的文本、居中失败、不可见的元素？引用确切帧时间戳。
+5. **动效设计**（1–5）：动画感觉有意且精致，还是默认和机械？命名最弱的过渡以及原因。
+6. **CTA 节拍**（1–5）：最终节拍是否清晰、居中、可读，并且保持时间足够长？精确描述 CTA 帧上可见的内容。
+
+以以下内容结尾：在这个发布之前最重要的修复是什么？命名节拍、元素和具体更改。
+
+如果你找不到任何问题并想将一切都评为 4–5，你没有足够仔细地查看。再看一次。
 ```
 
-### Path 2: Render a low-res MP4 and read it frame-by-frame
+阅读每个评分。修复任何低于 3 的内容，然后再展示给用户。如果 CTA 评分低于 3，修复 CTA。不要将低评分合理化作为「用户可以决定。」
 
-When Playwright isn't available, render at 540p (fast — ~30s for a 30s video) and read the MP4:
+## 音频 + 动效验证——三条路径，选一条
+
+快照是无声的静帧。来自 30s 30fps 视频的 18 个 PNG 快照 = 18/900 = 2% 的帧。其他 98%——包括所有动效、所有过渡、所有音频——仅通过快照是未验证的。「通过快照确认」不是覆盖。
+
+你必须**做**这三条路径中的**一条**才能宣布完成：
+
+### 路径 1（首选）：播放预览
+
+通过 Playwright（或你有的另一个浏览器工具）在浏览器中打开 Studio URL。以 1.0× 速度从头到尾播放（**不是**擦除）。确认：
+
+```
+[ ] 以 1.0× 速度从头到尾播放完整视频——实际上是播放，不是擦除
+[ ] 对于 STORYBOARD.md 中的每个 SFX：声音在 ±0.1s 内落在视觉时刻
+    （节拍 N SFX `<文件>`：故事板说 t=<x>s → 听到在 t=<y>s → 漂移 <z>s）
+[ ] 旁白在每个节拍传递正确的行（没有错位或缺失行）
+[ ] 没有音频存在但视觉意外处于过渡中的时刻
+[ ] 音频可听且没有裁剪/削波
+```
+
+### 路径 2：渲染低分辨率 MP4 并逐帧阅读
+
+当 Playwright 不可用时，以 540p 渲染（快——30s 视频约 30s）并阅读 MP4：
 
 ```bash
 node /<repo-root>/packages/cli/dist/cli.js render <project-dir> \
   --width 960 --height 540 --quality medium
 ```
 
-Then sample the resulting MP4 at minimum 5fps (use `ffmpeg -i <mp4> -r 5 frames/frame-%04d.png` if needed). Read those frames sequentially. For each SFX moment in STORYBOARD.md, find the corresponding frame and confirm the visual matches.
+然后以至少 5fps 采样生成的 MP4（如果需要，使用 `ffmpeg -i <mp4> -r 5 frames/frame-%04d.png`）。顺序阅读这些帧。对于 STORYBOARD.md 中的每个 SFX 时刻，找到对应的帧并确认视觉匹配。
 
-### Path 3 (last resort): Explicit deferred disclosure with quantified gap
+### 路径 3（最后手段）：带有量化差距的显式延期披露
 
-If neither Path 1 nor Path 2 is possible in this session, your final summary MUST contain this verbatim:
+如果此会话中路径 1 和路径 2 都不可行，你的最终总结**必须**逐字包含此内容：
 
 ```
-**Audio + motion verification: NOT POSSIBLE in this session.**
-- Snapshots cover: <N> frames out of <video_duration × fps> total (<percentage>% coverage)
-- NOT verified: motion between snapshots, SFX/visual timing alignment, shader transition smoothness, audio mix levels, narration sync to beats
-- Recommended user action: open the preview URL above and play start-to-end; flag anything that feels off
+**音频 + 动效验证：此会话中无法完成。**
+- 快照覆盖：<N> 帧 / 共 <视频时长 × fps> 帧（<百分比>% 覆盖率）
+- 未验证：快照之间的动效、SFX/视觉时间对齐、着色器过渡平滑度、音频混音电平、旁白与节拍同步
+- 建议用户操作：打开上面的预览 URL 并从头到尾播放；标记任何感觉不对的内容
 ```
 
-**Forbidden everywhere:**
+**各处禁止：**
 
-- "Confirmed via snapshot" or "snapshots look right" as audio/motion evidence
-- "Preview is running, looks good" without actually playing it
-- Path 3 disclosure that omits the quantified coverage gap (the percentage is mandatory)
+- 「已通过快照确认」或「快照看起来正确」作为音频/动效证据
+- 「预览正在运行，看起来不错」而没有实际播放
+- 省略了量化覆盖差距的路径 3 披露（百分比是强制的）
 
-## Preview (always do this)
+## 预览（始终执行此操作）
 
-Always start the preview so the user can see and scrub through the project:
+始终启动预览，以便用户可以看到和擦除项目：
 
 ```bash
 npx hyperframes preview
 ```
 
-The Studio URL is the deliverable. In your final response, always include it:
+Studio URL 是交付物。在你的最终响应中，始终包含它：
 
 ```text
 http://localhost:<port>/#project/<project-name>
 ```
 
-Use the actual port and project name from the preview command output. Do NOT present `index.html` as the project link — that's the source file. The user-facing project is the running Studio preview.
+使用预览命令输出中的实际端口和项目名称。不要将 `index.html` 呈现为项目链接——那是源文件。面向用户的项目是运行中的 Studio 预览。
 
-### Honest disclosure — REQUIRED in your final summary
+### 诚实披露——在最终总结中必需
 
-Your final message to the user MUST end with these two sections, even if everything passed. Both sections appear AFTER the preview URL, BEFORE you stop talking.
+你给用户的最终消息**必须**以这两个部分结束，即使所有内容都通过了。两个部分都出现在预览 URL 之后、你停止说话之前。
 
 ```
-**What I verified:**
-- <one bullet per DoD item that passed, with the actual evidence cited inline>
-  (e.g. "Lint: zero errors — output pasted above")
-  (e.g. "Per-beat read: 7/7 beats PASS, evidence blocks above")
-  (e.g. "WCAG: 3 warnings flagged, all 3 verified as sampling artifacts — see verdicts above")
+**我验证的内容：**
+- <每个通过的 DoD 项一条，带有内联引用的实际证据>
+  （例如「Lint：零错误——输出已粘贴在上面」）
+  （例如「逐节拍阅读：7/7 节拍通过，证据块在上面」）
+  （例如「WCAG：3 个警告被标记，所有 3 个已验证为采样伪影——参见上面的判定」）
 
-**What I did NOT verify (spot-check these):**
-- <one bullet per item you skipped, deferred, or could not complete — and why>
-  (e.g. "Audio + motion verification deferred — no Playwright in this session. SFX timing is computed but unconfirmed in playback.")
-  (e.g. "animation-map.json skipped — script not found at expected path; manually confirmed timeline coverage in per-beat reads instead.")
-  (e.g. "Beat 5 has a 0.4s window where the doc card is visible but contents are still opacity 0 — sub-agent flagged it, I chose not to fix because it was below my threshold; worth your eye.")
+**我未验证的内容（请抽查这些）：**
+- <每个你跳过、推迟或无法完成的项目一条——以及原因>
+  （例如「音频 + 动效验证已推迟——此会话中没有 Playwright。SFX 时序已计算但未经播放确认。」）
+  （例如「animation-map.json 已跳过——脚本未在预期路径找到；改为在逐节拍阅读中手动确认时间线覆盖。」）
+  （例如「节拍 5 有一个 0.4s 窗口，其中文档卡片可见但其内容仍为 opacity 0——子代理已标记，我选择不修复因为它在我的阈值以下；值得你留意。」）
 ```
 
-The user reads this section to know what to spot-check.
+用户阅读此部分以了解要抽查什么。
 
-**UNACCEPTABLE final summaries:**
+**不可接受的最终总结：**
 
-- "Looks great, ready to ship" (no disclosure)
-- "All checks pass" (when one was actually skipped)
-- "Sub-agents confirmed everything" (delegating trust without verifying)
-- Omitting the "What I did NOT verify" section because you happened to verify everything (still include it — write "None" if true, but the section header must appear).
+- 「看起来很棒，准备交付」（没有披露）
+- 「所有检查通过」（当其中一个实际被跳过时）
+- 「子代理确认了一切」（委托信任而不验证）
+- 因为你碰巧验证了所有内容而省略「我未验证的内容」部分（仍然包含它——如果为真，写「无」，但部分标题必须出现）。
 
-Lying or omitting here is worse than skipping a check honestly. A short user spot-check beats a hidden broken video every time.
+在此处撒谎或省略比诚实跳过检查更糟。一个简短的用户抽查每次都胜过隐藏的破损视频。
 
-## Render (on-demand only)
+## 渲染（仅按需）
 
-**Do NOT render automatically.** Preview is the delivery — the user scrubs, spots tweaks, and you iterate. Rendering takes minutes per pass and is wasted if the user wants changes.
+**不要自动渲染。** 预览是交付——用户擦除、发现调整点，你迭代。渲染每次需要数分钟，如果用户想要更改就是浪费。
 
-Only render when the user **explicitly asks** — "render it", "make the final", "export the MP4", "I'm happy, produce the file."
+只有当用户**明确要求**时才渲染——「渲染它」、「制作最终版」、「导出 MP4」、「我很满意，生成文件。」
 
-When rendering, **always specify quality and resolution explicitly.** Don't use defaults silently — pick the right settings for the use case and tell the user what you're rendering:
+渲染时，**始终明确指定质量和分辨率。** 不要静默使用默认值——为用例选择正确的设置并告诉用户你在渲染什么：
 
 ```bash
-# Standard quality, 1080p landscape (default for most videos)
+# 标准质量，1080p 横屏（大多数视频的默认）
 npx hyperframes render --skill=website-to-video --output renders/<name>.mp4 --quality standard --fps 30
 
-# High quality for final delivery
+# 最终交付的高质量
 npx hyperframes render --skill=website-to-video --output renders/<name>.mp4 --quality high --fps 30
 
-# Portrait for Instagram Stories / TikTok
+# Instagram Stories / TikTok 的竖屏
 npx hyperframes render --skill=website-to-video --output renders/<name>.mp4 --quality standard --fps 30 --resolution portrait
 
-# 4K for premium output
+# 高级输出的 4K
 npx hyperframes render --skill=website-to-video --output renders/<name>.mp4 --quality high --fps 30 --resolution 4k
 ```
 
-**Available options:**
+**可用选项：**
 
-| Flag              | Values                                                                                     | Notes                                                                              |
+| 标志 | 值 | 说明 |
 | ----------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| `--quality`       | `draft`, `standard`, `high`                                                                | draft = fast/low, standard = balanced, high = slow/best                            |
-| `--fps`           | `24`, `30`, `60`                                                                           | 30 is standard, 24 for cinematic feel, 60 for smooth motion                        |
-| `--resolution`    | `landscape` (1920×1080), `portrait` (1080×1920), `landscape-4k` (3840×2160), `portrait-4k` | Aliases: `1080p`, `4k`, `uhd`                                                      |
-| `--format`        | `mp4`, `webm`, `mov`, `png-sequence`                                                       | mp4 default. mov/webm for transparency. png-sequence for AE/Nuke                   |
-| `--output`        | path                                                                                       | Always set to `renders/<project-name>.mp4` for readable names                      |
-| `--gpu`           | flag                                                                                       | Use GPU encoding if available (faster)                                             |
-| `--crf`           | integer                                                                                    | Override encoder quality (lower = better, mutually exclusive with --video-bitrate) |
-| `--video-bitrate` | e.g. `10M`                                                                                 | Target bitrate (mutually exclusive with --crf)                                     |
+| `--quality` | `draft`、`standard`、`high` | draft = 快/低，standard = 平衡，high = 慢/好 |
+| `--fps` | `24`、`30`、`60` | 30 是标准，24 用于电影感，60 用于流畅动效 |
+| `--resolution` | `landscape`（1920×1080）、`portrait`（1080×1920）、`landscape-4k`（3840×2160）、`portrait-4k` | 别名：`1080p`、`4k`、`uhd` |
+| `--format` | `mp4`、`webm`、`mov`、`png-sequence` | mp4 默认。mov/webm 用于透明度。png-sequence 用于 AE/Nuke |
+| `--output` | path | 始终设置为 `renders/<project-name>.mp4` 以获得可读名称 |
+| `--gpu` | flag | 如果可用，使用 GPU 编码（更快） |
+| `--crf` | integer | 覆盖编码器质量（越低越好，与 --video-bitrate 互斥） |
+| `--video-bitrate` | e.g. `10M` | 目标比特率（与 --crf 互斥） |
 
-Tell the user what you're rendering and why: "Rendering at standard quality, 1080p landscape, 30fps — this gives good quality with reasonable render time. Want me to use high quality or 4K instead?"
+告诉用户你在渲染什么以及原因：「以标准质量、1080p 横屏、30fps 渲染——这提供了良好的质量和合理的渲染时间。想要我改用高质量或 4K 吗？」

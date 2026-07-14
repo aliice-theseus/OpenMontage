@@ -1,24 +1,24 @@
 ---
-title: Use after() for Non-Blocking Operations
+title: 使用 after() 进行非阻塞操作
 impact: MEDIUM
-impactDescription: faster response times
+impactDescription: 更快的响应时间
 tags: server, async, logging, analytics, side-effects
 ---
 
-## Use after() for Non-Blocking Operations
+## 使用 after() 进行非阻塞操作
 
-Use Next.js's `after()` to schedule work that should execute after a response is sent. This prevents logging, analytics, and other side effects from blocking the response.
+使用 Next.js 的 `after()` 来安排在响应发送后执行的工作。这可以防止日志记录、分析和其他副作用阻塞响应。
 
-**Incorrect (blocks response):**
+**错误做法（阻塞响应）：**
 
 ```tsx
 import { logUserAction } from '@/app/utils'
 
 export async function POST(request: Request) {
-  // Perform mutation
+  // 执行修改操作
   await updateDatabase(request)
   
-  // Logging blocks the response
+  // 日志记录阻塞响应
   const userAgent = request.headers.get('user-agent') || 'unknown'
   await logUserAction({ userAgent })
   
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 }
 ```
 
-**Correct (non-blocking):**
+**正确做法（非阻塞）：**
 
 ```tsx
 import { after } from 'next/server'
@@ -37,10 +37,10 @@ import { headers, cookies } from 'next/headers'
 import { logUserAction } from '@/app/utils'
 
 export async function POST(request: Request) {
-  // Perform mutation
+  // 执行修改操作
   await updateDatabase(request)
   
-  // Log after response is sent
+  // 在响应发送后记录日志
   after(async () => {
     const userAgent = (await headers()).get('user-agent') || 'unknown'
     const sessionCookie = (await cookies()).get('session-id')?.value || 'anonymous'
@@ -55,19 +55,19 @@ export async function POST(request: Request) {
 }
 ```
 
-The response is sent immediately while logging happens in the background.
+响应立即发送，而日志记录在后台进行。
 
-**Common use cases:**
+**常见用例：**
 
-- Analytics tracking
-- Audit logging
-- Sending notifications
-- Cache invalidation
-- Cleanup tasks
+- 分析追踪
+- 审计日志
+- 发送通知
+- 缓存失效
+- 清理任务
 
-**Important notes:**
+**重要说明：**
 
-- `after()` runs even if the response fails or redirects
-- Works in Server Actions, Route Handlers, and Server Components
+- `after()` 即使响应失败或重定向也会运行
+- 适用于 Server Actions、Route Handlers 和 Server Components
 
-Reference: [https://nextjs.org/docs/app/api-reference/functions/after](https://nextjs.org/docs/app/api-reference/functions/after)
+参考：[https://nextjs.org/docs/app/api-reference/functions/after](https://nextjs.org/docs/app/api-reference/functions/after)

@@ -1,32 +1,32 @@
-# ManimCE Usage for OpenMontage
+# OpenMontage 的 ManimCE 使用指南
 
-> Sources: ManimCE documentation, 3Blue1Brown FAQ/conventions, Theorem of Beethoven tutorials,
-> existing Layer 3 skill at `.agents/skills/manimce-best-practices/`
+> 来源：ManimCE 文档、3Blue1Brown FAQ/约定、Theorem of Beethoven 教程、
+> 现有 Layer 3 技能位于 `.agents/skills/manimce-best-practices/`
 
-## Quick Reference Card
+## 快速参考卡
 
 ```
-RENDER QUALITY:   -qh (1080p60) for YouTube  |  -qm (720p30) for drafts
-BACKGROUND:       Dark (#1a1a2e or BLACK)
-MAX ELEMENTS:     3-4 new visual elements revealed simultaneously
-PACING:           One concept per scene, build incrementally
-EQUATION WRITE:   1.5-2.0s run_time
-SHAPE CREATE:     0.8-1.2s run_time
-WAIT AFTER:       1.0-2.0s (longer for complex equations)
-2D vs 3D:         Default to 2D. 3D only when spatial relationship IS the concept.
+渲染质量：        -qh（1080p60）用于 YouTube  |  -qm（720p30）用于草稿
+背景：            深色（#1a1a2e 或 BLACK）
+最大元素：        同时揭示3-4个新视觉元素
+节奏：            每个场景一个概念，逐步构建
+方程写入：        1.5-2.0秒 run_time
+形状创建：        0.8-1.2秒 run_time
+之后等待：        1.0-2.0秒（复杂方程更久）
+2D vs 3D：        默认使用2D。仅当空间关系本身就是概念时使用3D。
 ```
 
-## Render Settings for OpenMontage
+## OpenMontage 的渲染设置
 
-| Flag | Resolution | FPS | Use Case |
-|------|-----------|-----|----------|
-| `-ql` | 480x360 | 15 | Development/testing |
-| `-qm` | 1280x720 | 30 | Draft review |
-| `-qh` | 1920x1080 | 60 | Standard YouTube upload |
-| `-qp` | 2560x1440 | 60 | High-quality export |
-| `-qk` | 3840x2160 | 60 | 4K archival/premium |
+| 标志 | 分辨率 | FPS | 使用场景 |
+|------|--------|-----|----------|
+| `-ql` | 480x360 | 15 | 开发/测试 |
+| `-qm` | 1280x720 | 30 | 草稿审查 |
+| `-qh` | 1920x1080 | 60 | 标准 YouTube 上传 |
+| `-qp` | 2560x1440 | 60 | 高质量导出 |
+| `-qk` | 3840x2160 | 60 | 4K 归档/高级 |
 
-For OpenMontage's YouTube landscape profile (1920x1080/30fps), render at `-qh` and transcode to 30fps, or set custom config:
+对于 OpenMontage 的 YouTube 横向配置（1920x1080/30fps），以 `-qh` 渲染并转码为30fps，或设置自定义配置：
 
 ```ini
 [CLI]
@@ -35,68 +35,68 @@ pixel_height = 1080
 frame_rate = 30
 ```
 
-## Animation Timing
+## 动画计时
 
-| Animation Type | `run_time` | Rate Function | Notes |
-|---------------|-----------|---------------|-------|
-| Equation write (`Write`) | 1.5-2.0s | `smooth` (default) | Give viewers time to parse LaTeX |
-| Equation transform | 1.5s | `smooth` | Use `TransformMatchingTex` for derivations |
-| Shape creation (`Create`) | 0.8-1.2s | `smooth` | `Create()` or `DrawBorderThenFill()` |
-| Color highlight | 0.5s | `smooth` | Brief attention call |
-| Camera zoom | 1.5-2.0s | `ease_in_out_cubic` | Smooth entry/exit |
-| Staggered reveals | `lag_ratio=0.1-0.2` | — | `LaggedStart` for grid/list reveals |
-| Wait after reveal | 1.0-2.0s | — | Longer for complex equations |
-| Fast cut / punctuation | 0.3-0.5s | `rush_from` | Between concepts |
+| 动画类型 | `run_time` | 速率函数 | 说明 |
+|----------|-----------|----------|------|
+| 方程写入（`Write`） | 1.5-2.0秒 | `smooth`（默认） | 给观众时间解析 LaTeX |
+| 方程变换 | 1.5秒 | `smooth` | 推导使用 `TransformMatchingTex` |
+| 形状创建（`Create`） | 0.8-1.2秒 | `smooth` | `Create()` 或 `DrawBorderThenFill()` |
+| 颜色高亮 | 0.5秒 | `smooth` | 短暂注意力引导 |
+| 相机缩放 | 1.5-2.0秒 | `ease_in_out_cubic` | 平滑进入/退出 |
+| 错开揭示 | `lag_ratio=0.1-0.2` | — | 网格/列表揭示使用 `LaggedStart` |
+| 揭示后等待 | 1.0-2.0秒 | — | 复杂方程更长 |
+| 快速切换/标点 | 0.3-0.5秒 | `rush_from` | 概念之间 |
 
-## Scene Composition
+## 场景构成
 
-### Pacing Rule (3Blue1Brown Convention)
+### 节奏规则（3Blue1Brown 约定）
 
-- **One concept per scene** — build incrementally
-- Show the simple version first, then `Transform` it into the complex version
-- Never reveal more than **3-4 new visual elements** simultaneously
-- Use `self.wait(1.5)` after every major reveal
+- **每个场景一个概念** — 逐步构建
+- 先展示简单版本，然后 `Transform` 为复杂版本
+- 永远不要同时揭示超过 **3-4个新视觉元素**
+- 每个主要揭示后使用 `self.wait(1.5)`
 
-### 2D vs 3D Decision
+### 2D vs 3D 决策
 
-**Use 2D** (`Scene` or `MovingCameraScene`) for:
-- Equation derivations, graph plots, number lines, matrices
-- 2D vector spaces (even for "high dimensions" — project down)
-- State diagrams, flowcharts, timelines
+**使用2D**（`Scene` 或 `MovingCameraScene`）用于：
+- 方程推导、图表绘制、数轴、矩阵
+- 2D向量空间（即使是"高维" — 投影下来）
+- 状态图、流程图、时间线
 
-**Use 3D** (`ThreeDScene`) only when:
-- Visualizing surfaces (`z = f(x,y)`), volumes, or 3D vector fields
-- The spatial relationship IS the concept (cross products, surface normals)
-- You need camera orbit to reveal hidden structure
+**仅当以下情况使用3D**（`ThreeDScene`）：
+- 可视化曲面（`z = f(x,y)`）、体积或3D向量场
+- 空间关系本身就是概念（叉积、法向量）
+- 需要相机环绕以揭示隐藏结构
 
-**Performance:** 3D uses CPU-only Cairo rendering — 5-10x slower than 2D.
+**性能：** 3D使用仅CPU的 Cairo 渲染 — 比2D慢5-10倍。
 
-## Color Usage
+## 颜色使用
 
-| Semantic Role | Color | Manim Constant |
-|--------------|-------|----------------|
-| Variable being solved | Yellow | `YELLOW` |
-| Matrix / operator | Red | `RED` |
-| Eigenvector / result | Teal | `TEAL` |
-| Known constant | Blue | `BLUE_C` |
-| Annotation / label | Green | `GREEN` |
-| De-emphasis / background | Grey 50% | `GREY`, `opacity=0.5` |
-| Error / wrong path | Dark red | `RED_E` |
+| 语义角色 | 颜色 | Manim 常量 |
+|----------|------|-------------|
+| 正在求解的变量 | 黄色 | `YELLOW` |
+| 矩阵/运算符 | 红色 | `RED` |
+| 特征向量/结果 | 蓝绿色 | `TEAL` |
+| 已知常量 | 蓝色 | `BLUE_C` |
+| 注释/标签 | 绿色 | `GREEN` |
+| 淡化/背景 | 灰色50% | `GREY`, `opacity=0.5` |
+| 错误/错误路径 | 深红色 | `RED_E` |
 
-**Accessibility:** Avoid red-green only distinctions. Use brightness variation (`_A` through `_E` shades) alongside hue changes.
+**可访问性：** 避免仅靠红绿区分。使用亮度变化（`_A` 到 `_E` 色阴影）配合色调变化。
 
-**Background:** Always use dark backgrounds (`BLACK` or `#1a1a2e`) for video output.
+**背景：** 视频输出始终使用深色背景（`BLACK` 或 `#1a1a2e`）。
 
-## Applying to OpenMontage
+## 应用于 OpenMontage
 
-When using the `math_animate` tool:
+使用 `math_animate` 工具时：
 
-1. **Render at `-qh`** (1080p60) for final output, `-qm` for drafts
-2. **One concept per scene** — break complex proofs into multiple Manim scenes
-3. **Use timing table above** — don't rush equations (1.5-2.0s for writes)
-4. **Wait after reveals** — `self.wait(1.5)` minimum after key insights
-5. **Dark background** — set `background_color=BLACK` in config
-6. **Use color semantically** — yellow for unknowns, blue for knowns, red for operators
-7. **Default to 2D** — only use `ThreeDScene` when 3D is essential to understanding
-8. **Stagger complex reveals** — `LaggedStart` with `lag_ratio=0.15` for lists/grids
-9. **Sync to narration** — the scene's total duration should match the narration segment timing from the script
+1. **以 `-qh` 渲染**（1080p60）用于最终输出，`-qm` 用于草稿
+2. **每个场景一个概念** — 将复杂证明分解为多个 Manim 场景
+3. **使用上方的计时表** — 不要急于展示方程（写入1.5-2.0秒）
+4. **揭示后等待** — 关键洞察后至少 `self.wait(1.5)`
+5. **深色背景** — 在配置中设置 `background_color=BLACK`
+6. **语义化使用颜色** — 未知数用黄色，已知数用蓝色，运算符用红色
+7. **默认使用2D** — 仅当3D对理解至关重要时才使用 `ThreeDScene`
+8. **错开复杂揭示** — 列表/网格使用 `LaggedStart` 搭配 `lag_ratio=0.15`
+9. **与旁白同步** — 场景总时长应匹配脚本中旁白段落的计时

@@ -3,21 +3,21 @@ name: backgrounds
 description: Solid colors, images, and video backgrounds for HeyGen videos
 ---
 
-# Video Backgrounds
+# 视频背景
 
-HeyGen supports various background types to customize the appearance of your avatar videos.
+HeyGen 支持多种背景类型，用于自定义虚拟形象视频的外观。
 
-## Background Types
+## 背景类型
 
-| Type | Description |
+| 类型 | 描述 |
 |------|-------------|
-| `color` | Solid color background |
-| `image` | Static image background |
-| `video` | Looping video background |
+| `color` | 纯色背景 |
+| `image` | 静态图片背景 |
+| `video` | 循环视频背景 |
 
-## Color Backgrounds
+## 纯色背景
 
-The simplest option - use a solid color:
+最简单的选项——使用纯色：
 
 ```typescript
 const videoConfig = {
@@ -42,19 +42,19 @@ const videoConfig = {
 };
 ```
 
-### Common Color Values
+### 常用颜色值
 
-| Color | Hex Value | Use Case |
+| 颜色 | Hex 值 | 用例 |
 |-------|-----------|----------|
-| White | `#FFFFFF` | Clean, professional |
-| Black | `#000000` | Dramatic, cinematic |
-| Blue | `#0066CC` | Corporate, trustworthy |
-| Green | `#00FF00` | Chroma key (for compositing) |
-| Gray | `#808080` | Neutral, modern |
+| 白色 | `#FFFFFF` | 干净、专业 |
+| 黑色 | `#000000` | 戏剧化、电影感 |
+| 蓝色 | `#0066CC` | 企业、可信赖 |
+| 绿色 | `#00FF00` | 色度键（用于合成） |
+| 灰色 | `#808080` | 中性、现代 |
 
-### Using Transparent/Green Screen
+### 使用透明/绿幕
 
-For compositing in post-production:
+用于后期制作合成：
 
 ```typescript
 background: {
@@ -63,11 +63,11 @@ background: {
 }
 ```
 
-## Image Backgrounds
+## 图片背景
 
-Use a static image as background:
+使用静态图片作为背景：
 
-### From URL
+### 从 URL
 
 ```typescript
 const videoConfig = {
@@ -92,9 +92,9 @@ const videoConfig = {
 };
 ```
 
-### From Uploaded Asset
+### 从已上传资源
 
-First upload your image, then use the asset URL:
+先上传图片，然后使用资源 URL：
 
 ```typescript
 // 1. Upload the image
@@ -115,16 +115,16 @@ const videoConfig = {
 };
 ```
 
-### Image Requirements
+### 图片要求
 
-- **Formats**: JPEG, PNG
-- **Recommended size**: Match video dimensions (e.g., 1920x1080 for 1080p)
-- **Aspect ratio**: Should match video aspect ratio
-- **File size**: Under 10MB recommended
+- **格式**：JPEG、PNG
+- **推荐尺寸**：匹配视频尺寸（例如 1080p 使用 1920x1080）
+- **宽高比**：应与视频宽高比匹配
+- **文件大小**：建议 10MB 以下
 
-## Video Backgrounds
+## 视频背景
 
-Use a looping video as background:
+使用循环视频作为背景：
 
 ```typescript
 const videoConfig = {
@@ -149,16 +149,16 @@ const videoConfig = {
 };
 ```
 
-### Video Requirements
+### 视频要求
 
-- **Format**: MP4 (H.264 codec recommended)
-- **Looping**: Video will loop if shorter than avatar content
-- **Audio**: Background video audio is typically muted
-- **File size**: Under 100MB recommended
+- **格式**：MP4（推荐 H.264 编码）
+- **循环**：如果视频比虚拟形象内容短，会自动循环
+- **音频**：背景视频音频通常会被静音
+- **文件大小**：建议 100MB 以下
 
-## Different Backgrounds Per Scene
+## 每个场景不同背景
 
-Use different backgrounds for each scene:
+为每个场景使用不同的背景：
 
 ```typescript
 const multiBackgroundConfig = {
@@ -218,7 +218,7 @@ const multiBackgroundConfig = {
 };
 ```
 
-## Background Helper Functions
+## 背景辅助函数
 
 ### TypeScript
 
@@ -252,18 +252,18 @@ const backgrounds = {
 };
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Match dimensions** - Background should match video dimensions
-2. **Consider avatar position** - Leave space where avatar will appear
-3. **Use contrasting colors** - Ensure avatar is visible against background
-4. **Optimize file sizes** - Compress images/videos for faster processing
-5. **Test with green screen** - For professional post-production workflows
-6. **Keep backgrounds simple** - Avoid distracting elements behind the avatar
+1. **匹配尺寸** - 背景应匹配视频尺寸
+2. **考虑虚拟形象位置** - 为虚拟形象的显示位置留出空间
+3. **使用对比色** - 确保虚拟形象在背景上清晰可见
+4. **优化文件大小** - 压缩图片/视频以加快处理速度
+5. **使用绿幕测试** - 用于专业后期制作工作流
+6. **保持背景简洁** - 避免虚拟形象后面出现分散注意力的元素
 
-## Common Issues
+## 常见问题
 
-### Background Not Showing
+### 背景不显示
 
 ```typescript
 // Wrong: missing url/value
@@ -278,9 +278,9 @@ background: {
 }
 ```
 
-### Aspect Ratio Mismatch
+### 宽高比不匹配
 
-If your background doesn't match the video dimensions, it may be cropped or stretched. Always match your background aspect ratio to your video dimensions:
+如果背景与视频尺寸不匹配，可能会被裁剪或拉伸。始终保持背景宽高比与视频尺寸一致：
 
 ```typescript
 // For 1920x1080 video
@@ -290,6 +290,6 @@ If your background doesn't match the video dimensions, it may be cropped or stre
 // Use 1080x1920 background image
 ```
 
-### Video Background Audio
+### 视频背景音频
 
-Background video audio is typically muted to avoid conflicting with the avatar's voice. If you need background music, add it as a separate audio track in post-production.
+背景视频的音频通常会被静音，以避免与虚拟形象的声音冲突。如果您需要背景音乐，请在后期制作中作为单独的音频轨道添加。

@@ -1,68 +1,68 @@
-# Prompt Expansion
+# 提示扩展
 
-Run on every composition. Expansion is not about lengthening a short prompt — it's about grounding the user's intent against the design spec (`frame.md` or `design.md`) and `house-style.md` and producing a consistent intermediate that every downstream agent reads the same way.
+在每个合成上运行。扩展不是关于延长简短提示——而是将用户的意图锚定在设计规范（`frame.md` 或 `design.md`）和 `house-style.md` 上，并生成每个下游代理都以相同方式读取的一致中间产物。
 
-Runs AFTER design direction is established (Step 1). The expansion consumes the design spec (`frame.md` or `design.md`, if present) and produces output that cites its exact values.
+在设计方向确定后（步骤 1）运行。扩展消耗设计规范（`frame.md` 或 `design.md`，如果存在）并生成引用其精确值的输出。
 
-## Prerequisites
+## 前置条件
 
-Read before generating:
+生成前阅读：
 
-- the design spec — `frame.md` → `design.md` → `DESIGN.md` (read the first that exists) — extract brand colors, fonts, mood, and constraints. The expansion cites these exact values (hex codes, font names); it does not invent new ones.
-- `references/beat-direction.md` — per-beat planning format (concept, mood, choreography verbs, transitions, depth layers, rhythm). The expansion outputs each scene using this format.
-- `references/video-composition.md` — video-medium rules for density, scale, and color presence. The expansion applies these automatically.
-- `house-style.md` — its rules for Background Layer (2-5 decoratives), Color, Motion, Typography apply to every scene. The expansion writes output that conforms to them.
+- 设计规范 — `frame.md` → `design.md` → `DESIGN.md`（读取第一个存在的）— 提取品牌颜色、字体、情绪和约束。扩展引用这些确切的值（十六进制代码、字体名称）；它不发明新的。
+- `references/beat-direction.md` — 逐节拍规划格式（概念、情绪、编排动词、过渡、深度层、节奏）。扩展使用此格式输出每个场景。
+- `references/video-composition.md` — 视频媒介的密度、比例和色彩存在感规则。扩展自动应用这些规则。
+- `house-style.md` — 其关于背景层（2-5 个装饰元素）、颜色、运动、排版的规则适用于每个场景。扩展编写符合它们的输出。
 
-If no design spec (`frame.md` or `design.md`) exists yet, run Step 1 (Design system) first. Expansion without a design context produces generic scene breakdowns that later agents ignore.
+如果尚不存在设计规范（`frame.md` 或 `design.md`），请先运行步骤 1（设计系统）。没有设计上下文的扩展会产生通用的场景分解，后续代理会忽略它们。
 
-## Why always run it
+## 为什么始终运行它
 
-**The expansion is never pass-through.** Every user prompt — no matter how detailed — is a _seed_. The expansion's job is to enrich it into a fully-realized per-scene production spec that the scene subagents can build from directly.
+**扩展永远不会是透传。** 每个用户提示——无论多么详细——都是一个_种子_。扩展的工作是将其丰富为完全实现的逐场景制作规范，场景子代理可以直接从中构建。
 
-Even a detailed 7-scene brief lacks things only the expansion adds:
+即使是一个详细的 7 场景简报也缺少只有扩展才能添加的内容：
 
-- **Atmosphere layers per scene** (required 2–5 from house-style: radial glows, ghost type, hairline rules, grain, thematic decoratives) — the user's prompt almost never lists these; expansion adds them.
-- **Secondary motion for every decorative** — breath, drift, pulse, orbit. A decorative without ambient motion feels dead.
-- **Micro-details that make a scene feel real** — registration marks, tick indicators, monospace coord labels, typographic accents, code snippets in the background, grid patterns. Things the user didn't think to request.
-- **Transition choreography at the object level** — not "crossfade" but "X expands outward and becomes Y". Specific duration, ease, and morph source/target.
-- **Pacing beats within each scene** — where tension builds, where a hold lets the viewer breathe, where the accent word lands.
-- **Exact hex values, typography parameters, ease choices** from the design spec — no vagueness left for the scene subagent to guess.
+- **每场景的氛围层**（house-style 要求的 2-5 个：径向光晕、幽灵文字、发丝线、颗粒、主题装饰）— 用户的提示几乎从不列出这些；扩展添加它们。
+- **每个装饰元素的次级运动** — 呼吸、漂移、脉动、轨道。没有环境运动的装饰感觉是死的。
+- **让场景感觉真实的微观细节** — 注册标记、刻度指示器、等宽坐标标签、排版重音、背景中的代码片段、网格图案。用户没想到要请求的东西。
+- **对象级别的过渡编排** — 不是"交叉淡入淡出"而是"X 向外扩展并变成 Y"。特定的时长、缓动和变形源/目标。
+- **每个场景内的节奏节拍** — 张力在哪里积累，停留在哪里让观众呼吸，重音词落在哪里。
+- **来自设计规范的确切十六进制值、排版参数、缓动选择** — 不给场景子代理留下任何模糊猜测的空间。
 
-Expansion's job on a detailed prompt is not to summarize or pass through — it's to **take what the user wrote and make it richer**. The user's content stays; the atmosphere, ambient motion, and micro-details are added on top. That's what makes the difference between a scene that matches the brief and a scene that feels alive.
+扩展在详细提示上的工作不是总结或透传——而是**获取用户编写的内容并使其更丰富**。用户的内容保留；氛围、环境运动和微观细节在其上添加。这就是符合简报的场景与感觉有生命力的场景之间的区别。
 
-The quality gap between a single-pass composition and a multi-scene-pipeline composition comes from this step. Expansion front-loads the richness so every scene subagent builds from a rich brief, not a terse one.
+单次通过合成与多场景流水线合成之间的质量差距来自于这一步。扩展预先加载丰富性，使每个场景子代理从丰富的简报构建，而不是简短的。
 
-**Do not skip. Do not pass through.** Single-scene compositions and trivial edits are the only exceptions.
+**不要跳过。不要透传。** 单场景合成和琐碎编辑是唯一的例外。
 
-## What to generate
+## 要生成什么
 
-Expand into a full production prompt with these sections:
+扩展为完整的制作提示，包含以下部分：
 
-1. **Title + style block** — cite the design spec's exact hex values, font names, and mood. Do NOT invent a palette — quote what the design provides.
+1. **标题 + 风格块** — 引用设计规范的确切十六进制值、字体名称和情绪。不要发明调色板——引用设计提供的值。
 
-2. **Rhythm declaration** — name the scene rhythm before detailing any scene. Example: `hook-PUNCH-breathe-CTA` or `slow-build-BUILD-PEAK-breathe-CTA`. Use `references/beat-direction.md` for rhythm templates by video type.
+2. **节奏声明** — 在详细描述任何场景之前命名场景节奏。示例：`hook-PUNCH-breathe-CTA` 或 `slow-build-BUILD-PEAK-breathe-CTA`。使用 `references/beat-direction.md` 获取按视频类型分类的节奏模板。
 
-3. **Global rules** — parallax layers, micro-motion requirements, transition style, primary + accent transitions. Match energy to mood (calm → slow eases, high → snappy eases).
+3. **全局规则** — 视差层、微运动要求、过渡风格、主要 + 强调过渡。将能量与情绪匹配（平静 → 慢缓动，高能 → 干脆缓动）。
 
-4. **Per-scene beats** — for each scene, use the beat-direction format:
-   - **Concept** — the big idea in 2-3 sentences. What visual WORLD? What metaphor? What should the viewer FEEL?
-   - **Mood direction** — cultural/design references, not hex codes. ("Bauhaus color studies", "cinematic title sequence", "editorial calm")
-   - **Depth layers** — BG (2-5 decoratives with ambient motion), MG (content), FG (accents, structural elements, micro-details). 8-10 total elements per scene per video-composition.md.
-   - **Animation choreography** — specific verbs per element. High: SLAMS, CRASHES. Medium: CASCADE, SLIDES. Low: floats, types on, counts up. Every element gets a verb. If you can't name the verb, the element is not yet designed.
-   - **Transition out** — shader or CSS, with specific type and parameters. Not "crossfade" but "blur crossfade, 0.4s, power2.inOut."
+4. **逐场景节拍** — 对于每个场景，使用节拍方向格式：
+   - **概念** — 2-3 句话的大想法。什么视觉世界？什么隐喻？观众应该感受到什么？
+   - **情绪方向** — 文化/设计参考，而非十六进制代码。（"包豪斯色彩研究"、"电影片头序列"、"编辑平静"）
+   - **深度层** — BG（2-5 个带环境运动的装饰元素）、MG（内容）、FG（重音、结构元素、微观细节）。根据 video-composition.md，每场景总共 8-10 个元素。
+   - **动画编排** — 每个元素的特定动词。高能：撞击、粉碎。中能：级联、滑入。低能：浮动、打字、计数。每个元素都有一个动词。如果你无法命名动词，该元素尚未设计。
+   - **过渡退出** — 着色器或 CSS，带有特定类型和参数。不是"交叉淡入淡出"而是"模糊交叉淡入淡出，0.4s，power2.inOut。"
 
-5. **Recurring motifs** — visual threads across scenes from the brand palette.
+5. **重复主题** — 来自品牌调色板的跨场景视觉线索。
 
-6. **Negative prompt** — what to avoid, informed by the design spec's constraints if present.
+6. **负面提示** — 要避免的内容，根据设计规范的约束（如果存在）。
 
-## Output
+## 输出
 
-Write the expanded prompt to `.hyperframes/expanded-prompt.md` in the project directory. Do NOT dump it into the chat — it will be hundreds of lines.
+将扩展后的提示写入项目目录中的 `.hyperframes/expanded-prompt.md`。不要将其转储到聊天中——它会有数百行。
 
-Tell the user:
+告知用户：
 
-> "I've expanded your prompt into a full production breakdown. Review it here: `.hyperframes/expanded-prompt.md`
+> "我已将你的提示扩展为完整的制作分解。在此处查看：`.hyperframes/expanded-prompt.md`
 >
-> It has [N] scenes across [duration] seconds with specific visual elements, transitions, and pacing. Edit anything you want, then let me know when you're ready to proceed."
+> 它有 [N] 个场景，时长 [duration] 秒，包含特定的视觉元素、过渡和节奏。编辑任何你想要的内容，然后告诉我你准备好继续了。"
 
-Only move to construction after the user approves or says to continue.
+只有在用户批准或说继续后，才进入构建阶段。

@@ -1,29 +1,26 @@
-# Sections
+# 章节
 
-This file defines all sections, their ordering, impact levels, and descriptions.
-The section ID (in parentheses) is the filename prefix used to group rules.
+本文件定义了所有章节、其顺序、影响级别和描述。
+章节 ID（括号内）是用于分组规则的文件名前缀。
 
 ---
 
-## 1. Component Architecture (architecture)
+## 1. 组件架构 (architecture)
 
-**Impact:** HIGH  
-**Description:** Fundamental patterns for structuring components to avoid prop
-proliferation and enable flexible composition.
+**影响：** 高  
+**描述：** 构建组件的基本模式，以避免属性泛滥并实现灵活的组合。
 
-## 2. State Management (state)
+## 2. 状态管理 (state)
 
-**Impact:** MEDIUM  
-**Description:** Patterns for lifting state and managing shared context across
-composed components.
+**影响：** 中  
+**描述：** 在组合组件中提升状态和管理共享 context 的模式。
 
-## 3. Implementation Patterns (patterns)
+## 3. 实现模式 (patterns)
 
-**Impact:** MEDIUM  
-**Description:** Specific techniques for implementing compound components and
-context providers.
+**影响：** 中  
+**描述：** 实现复合组件和 context Provider 的具体技术。
 
-## 4. React 19 APIs (react19)
+## 4. React 19 API (react19)
 
-**Impact:** MEDIUM  
-**Description:** React 19+ only. Don't use `forwardRef`; use `use()` instead of `useContext()`.
+**影响：** 中  
+**描述：** 仅 React 19+。不要使用 `forwardRef`；使用 `use()` 替代 `useContext()`。

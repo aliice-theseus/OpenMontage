@@ -1,10 +1,10 @@
-# Variables and Media
+# 变量与媒体
 
-Two separate concerns, grouped because both control "what flows in from outside the HTML": runtime parameters (variables) and external media files (video/audio).
+两个独立关注点，因为都控制"从 HTML 外部流入的内容"而组合在一起：运行时参数（变量）和外部媒体文件（视频/音频）。
 
-## Variables
+## 变量
 
-Declare variables on the `<html>` element with `data-composition-variables`. Each declaration needs `id`, `type`, `label`, and `default`:
+在 `<html>` 元素上使用 `data-composition-variables` 声明变量。每个声明需要 `id`、`type`、`label` 和 `default`：
 
 ```html
 <html
@@ -15,7 +15,7 @@ Declare variables on the `<html>` element with `data-composition-variables`. Eac
 ></html>
 ```
 
-Read resolved values once during initialization:
+在初始化期间一次性读取解析后的值：
 
 ```js
 const { title, accent } = window.__hyperframes.getVariables();
@@ -23,36 +23,36 @@ document.getElementById("title").textContent = title;
 document.documentElement.style.setProperty("--accent", accent);
 ```
 
-### Variable Rules
+### 变量规则
 
-- Supported types and their extra options (consumed by Studio's editing UI):
-  - `string` — optional `placeholder`, `maxLength`
-  - `number` — optional `min`, `max`, `step`, `unit`
-  - `color` — none
-  - `boolean` — none
-  - `enum` — **required** `options: [{ "value": "...", "label": "..." }, ...]`
-- Always provide useful `default` values so preview works without CLI overrides.
-- Use `data-variable-values='{"title":"Pro"}'` on sub-composition hosts for per-instance overrides.
-- Use `npx hyperframes render --variables '{"title":"Q4 Report"}'` or `--variables-file` for render-time overrides.
-- Add `--strict-variables` in CI: turns undeclared keys, type mismatches, and enum values not in `options` into errors instead of warnings.
-- Read values once during init, not on every animation tick — variables don't change mid-render.
-- Media color grading can use exact variable references inside `data-color-grading` JSON. Use `$gradingPreset` or `${gradingIntensity}` as the whole field value; the runtime resolves it from the current composition's variables before applying the shader grading.
+- 支持的类型及其额外选项（供 Studio 编辑 UI 使用）：
+  - `string` — 可选 `placeholder`、`maxLength`
+  - `number` — 可选 `min`、`max`、`step`、`unit`
+  - `color` — 无
+  - `boolean` — 无
+  - `enum` — **必需** `options: [{ "value": "...", "label": "..." }, ...]`
+- 始终提供有用的 `default` 值，以便预览无需 CLI 覆盖即可工作。
+- 在子合成宿主上使用 `data-variable-values='{"title":"Pro"}'` 实现按实例覆盖。
+- 使用 `npx hyperframes render --variables '{"title":"Q4 Report"}'` 或 `--variables-file` 实现渲染时覆盖。
+- 在 CI 中添加 `--strict-variables`：将未声明的键、类型不匹配和不在 `options` 中的枚举值转换为错误而非警告。
+- 在初始化期间一次性读取值，而不是在每个动画帧上读取——变量在渲染过程中不会变化。
+- 媒体调色可以在 `data-color-grading` JSON 内部使用精确的变量引用。使用 `$gradingPreset` 或 `${gradingIntensity}` 作为整个字段值；运行时会先解析当前合成的变量，再应用着色器调色。
 
-### Two JSON Shapes (Easy to Confuse)
+### 两种 JSON 形态（容易混淆）
 
-- `data-composition-variables` is an **array of declarations** (the schema): `[{id, type, label, default}, ...]`
-- `--variables` and `data-variable-values` are **objects keyed by id** (the values): `{ title: "Q4", accent: "#fff" }`
+- `data-composition-variables` 是一个**声明数组**（模式定义）：`[{id, type, label, default}, ...]`
+- `--variables` 和 `data-variable-values` 是**以 id 为键的对象**（实际值）：`{ title: "Q4", accent: "#fff" }`
 
-## Media
+## 媒体
 
-**NON-NEGOTIABLE: `<video>`/`<audio>` must be a DIRECT child of the host composition root (`index.html`).** The runtime only registers + drives media that is a direct root child. Media placed inside a sub-composition `<template>`, or wrapped in any intermediate `<div>`, is never seeked/decoded → renders blank (paper/white) or black. `lint`/`validate`/`inspect` do not catch this; per-frame `snapshot` shows the blank panel.
+**不可协商：`<video>`/`<audio>` 必须是宿主合成根（`index.html`）的直接子元素。** 运行时仅注册和驱动作为根直接子元素的媒体。放置在子合成 `<template>` 内部或包裹在任何中间 `<div>` 中的媒体，永远不会被 seek/解码 → 渲染为空白或黑色。`lint`/`validate`/`inspect` 不会捕获此问题；逐帧 `snapshot` 会显示空白面板。
 
-Consequences:
+后果：
 
-- A scene-specific clip still lives at the host root, not in the scene's sub-comp. The sub-comp keeps only the frame/shell; the media is a sibling host element positioned over it.
-- A sub-composition **cannot reach or animate host elements** — neither `document.querySelector("#host-id")` nor a gsap selector string (`tl.to("#host-id", …)`) resolves across the boundary; a sub-comp timeline only drives its own subtree. So **all per-scene motion on host media (scale/opacity/morph/tilt/breathing) must be authored on the MAIN timeline in `index.html`, at GLOBAL time** (scene-local time + the scene slot's `data-start`). For 3D tilt without a perspective parent, use gsap `transformPerspective` on the element. See `composition-patterns.md` archetype B.
+- 场景特定的片段仍然存在于宿主根中，而不是场景的子合成中。子合成只保留框架/外壳；媒体是位于其上方的宿主同级元素。
+- 子合成**无法触及或驱动宿主元素**——`document.querySelector("#host-id")` 和 gsap 选择器字符串（`tl.to("#host-id", …)）都无法跨越边界解析；子合成时间线仅驱动其自身的子树。因此，**宿主媒体上的所有每场景动效（缩放/透明度/变形/倾斜/呼吸）必须在 `index.html` 的主时间线上以全局时间编写**（场景本地时间 + 场景插槽的 `data-start`）。对于没有透视父元素的 3D 倾斜，请对元素使用 gsap `transformPerspective`。参见 `composition-patterns.md` 原型 B。
 
-Video elements must be muted and inline. Audio must be a separate `<audio>` element, even when it uses the same source file.
+视频元素必须设置为 muted（静音）和 inline（内联）。音频必须是一个独立的 `<audio>` 元素，即使它使用与视频相同的源文件。
 
 ```html
 <video
@@ -76,15 +76,15 @@ Video elements must be muted and inline. Audio must be a separate `<audio>` elem
 ></audio>
 ```
 
-### Media Rules
+### 媒体规则
 
-- **Do not** call `video.play()`, `audio.play()`, pause, or seek in composition code. HyperFrames owns playback.
-- **Do not** place media inside a sub-comp `<template>` or any wrapper `<div>` — direct host-root child only (see above), else it never decodes.
-- **Do not** drive host media from a sub-comp timeline — it has no effect. Drive it from the main timeline at global time.
-- **Do not** animate timed media element dimensions; animate a non-timed wrapper instead.
-- **Do not** nest video inside a timed wrapper. Put timing on the media element or keep the wrapper untimed.
-- Add `crossorigin="anonymous"` for external media that needs canvas capture or pixel inspection.
-- Audio always lives on a separate `<audio>` element — even if its source file is the same as a `<video>`. The `<video>` is muted; the `<audio>` carries sound.
-- For volume fades/ducking, animate `volume` on the timeline (`tl.to("#bgm", { volume: 0, duration: 1 }, "outro")`) rather than swapping `data-volume`. The runtime probes the timeline's volume keyframes and applies them identically in preview and render; `data-volume` is the static baseline for elements no tween touches.
+- **不要**在合成代码中调用 `video.play()`、`audio.play()`、暂停或 seek。HyperFrames 拥有播放控制权。
+- **不要**将媒体放置在子合成 `<template>` 或任何包装 `<div>` 内部——只能是宿主的直接子元素（见上文），否则永远不会解码。
+- **不要**从子合成时间线驱动宿主媒体——这不起作用。应从主时间线以全局时间驱动。
+- **不要**对计时媒体元素尺寸做动画；应改为对非计时包装器做动画。
+- **不要**将视频嵌套在计时包装器内。将时间设置在媒体元素上，或保持包装器无计时。
+- 对于需要画布捕获或像素检查的外部媒体，添加 `crossorigin="anonymous"`。
+- 音频始终位于独立的 `<audio>` 元素上——即使其源文件与 `<video>` 相同。`<video>` 是静音的；`<audio>` 承载声音。
+- 对于音量淡入淡出/闪避，在时间线上对 `volume` 做动画（`tl.to("#bgm", { volume: 0, duration: 1 }, "outro")`），而不是交换 `data-volume`。运行时会探查时间线的音量关键帧，并在预览和渲染中一致地应用它们；`data-volume` 是没有补间触及的元素的静态基线。
 
-For media duration: `<video>` and `<audio>` can omit `data-duration` if the media's intrinsic length is known and you want the full clip. Otherwise provide `data-duration` explicitly.
+关于媒体时长：如果已知媒体的固有长度且希望使用完整片段，`<video>` 和 `<audio>` 可以省略 `data-duration`。否则请显式提供 `data-duration`。

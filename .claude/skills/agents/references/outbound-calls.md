@@ -1,49 +1,49 @@
-# Outbound Calls
+# 外呼电话
 
-Make outbound phone calls using your ElevenLabs agent via Twilio integration.
+通过 Twilio 集成使用您的 ElevenLabs 代理进行外呼电话。
 
-## Prerequisites
+## 前提条件
 
-1. A configured ElevenLabs agent
-2. A Twilio phone number linked to your agent (obtain `agent_phone_number_id` from ElevenLabs dashboard)
-3. Your ElevenLabs API key
+1. 一个已配置的 ElevenLabs 代理
+2. 一个链接到代理的 Twilio 电话号码（从 ElevenLabs 仪表板获取 `agent_phone_number_id`）
+3. 您的 ElevenLabs API 密钥
 
-## Basic Usage
+## 基本用法
 
-See the [main agents skill](../SKILL.md#outbound-calls) for basic Python, JavaScript, and cURL examples.
+基本的 Python、JavaScript 和 cURL 示例请参见[主代理技能](../SKILL.md#outbound-calls)。
 
-## Request Parameters
+## 请求参数
 
-| Parameter | Type | Required | Description |
+| 参数 | 类型 | 必填 | 描述 |
 |-----------|------|----------|-------------|
-| `agent_id` | string | Yes | The ID of your ElevenLabs agent |
-| `agent_phone_number_id` | string | Yes | The ID of the Twilio phone number linked to your agent |
-| `to_number` | string | Yes | The destination phone number (E.164 format) |
-| `conversation_initiation_client_data` | object | No | Override conversation settings for this call |
-| `call_recording_enabled` | boolean | No | Whether to let Twilio record the call |
-| `telephony_call_config` | object | No | Telephony call settings like ringing timeout |
+| `agent_id` | string | 是 | 您的 ElevenLabs 代理 ID |
+| `agent_phone_number_id` | string | 是 | 链接到代理的 Twilio 电话号码 ID |
+| `to_number` | string | 是 | 目标电话号码（E.164 格式） |
+| `conversation_initiation_client_data` | object | 否 | 覆盖此次呼叫的对话设置 |
+| `call_recording_enabled` | boolean | 否 | 是否让 Twilio 录制通话 |
+| `telephony_call_config` | object | 否 | 电话呼叫设置，如响铃超时 |
 
-## Response
+## 响应
 
 ```json
 {
   "success": true,
-  "message": "Call initiated successfully",
+  "message": "呼叫已成功发起",
   "conversation_id": "conv_abc123",
   "callSid": "CA1234567890abcdef"
 }
 ```
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |-------|------|-------------|
-| `success` | boolean | Whether the call was initiated successfully |
-| `message` | string | Status message |
-| `conversation_id` | string | ElevenLabs conversation ID for tracking |
-| `callSid` | string | Twilio Call SID for reference |
+| `success` | boolean | 呼叫是否成功发起 |
+| `message` | string | 状态消息 |
+| `conversation_id` | string | ElevenLabs 对话 ID，用于跟踪 |
+| `callSid` | string | Twilio 呼叫 SID，供参考 |
 
-## Customizing the Call
+## 自定义呼叫
 
-Override agent settings for a specific call using `conversation_initiation_client_data`:
+使用 `conversation_initiation_client_data` 覆盖特定呼叫的代理设置：
 
 ### Python
 
@@ -56,7 +56,7 @@ response = client.conversational_ai.twilio.outbound_call(
     conversation_initiation_client_data={
         "conversation_config_override": {
             "agent": {
-                "first_message": "Hello! This is a reminder about your appointment tomorrow.",
+                "first_message": "你好！这是关于您明天预约的提醒。",
                 "language": "en"
             },
             "tts": {
@@ -64,8 +64,8 @@ response = client.conversational_ai.twilio.outbound_call(
             }
         },
         "dynamic_variables": {
-            "customer_name": "John",
-            "appointment_time": "2:00 PM"
+            "customer_name": "张三",
+            "appointment_time": "下午 2:00"
         }
     }
 )
@@ -82,7 +82,7 @@ const response = await client.conversationalAi.twilio.outboundCall({
   conversationInitiationClientData: {
     conversationConfigOverride: {
       agent: {
-        firstMessage: "Hello! This is a reminder about your appointment tomorrow.",
+        firstMessage: "你好！这是关于您明天预约的提醒。",
         language: "en",
       },
       tts: {
@@ -90,56 +90,56 @@ const response = await client.conversationalAi.twilio.outboundCall({
       },
     },
     dynamicVariables: {
-      customer_name: "John",
-      appointment_time: "2:00 PM",
+      customer_name: "张三",
+      appointment_time: "下午 2:00",
     },
   },
 });
 ```
 
-## Configuration Overrides
+## 配置覆盖
 
-### Agent Settings
+### 代理设置
 
-| Option | Type | Description |
+| 选项 | 类型 | 描述 |
 |--------|------|-------------|
-| `first_message` | string | Custom greeting for this call |
-| `language` | string | Language code (e.g., "en", "es", "fr") |
-| `prompt` | object | Override agent prompt and LLM settings |
+| `first_message` | string | 此次呼叫的自定义问候语 |
+| `language` | string | 语言代码（例如 "en"、"es"、"fr"） |
+| `prompt` | object | 覆盖代理提示词和 LLM 设置 |
 
-### TTS Settings
+### TTS 设置
 
-| Option | Type | Description |
+| 选项 | 类型 | 描述 |
 |--------|------|-------------|
-| `voice_id` | string | Voice ID to use for this call |
-| `stability` | number | Voice stability (0.0-1.0) |
-| `similarity_boost` | number | Voice similarity boost (0.0-1.0) |
-| `speed` | number | Speech speed multiplier |
+| `voice_id` | string | 此次呼叫使用的音色 ID |
+| `stability` | number | 语音稳定性（0.0-1.0） |
+| `similarity_boost` | number | 语音相似度增强（0.0-1.0） |
+| `speed` | number | 语速倍数 |
 
-### Telephony Call Configuration
+### 电话呼叫配置
 
-| Option | Type | Description |
+| 选项 | 类型 | 描述 |
 |--------|------|-------------|
-| `ringing_timeout_secs` | integer | How long to ring the recipient before giving up (default: `60`) |
+| `ringing_timeout_secs` | integer | 响铃多久后放弃（默认：`60`） |
 
-### Dynamic Variables
+### 动态变量
 
-Pass custom data to your agent's prompt using `dynamic_variables`. Reference them in your agent's prompt with `{{variable_name}}` syntax.
+使用 `dynamic_variables` 将自定义数据传递给代理的提示词。在代理的提示词中使用 `{{variable_name}}` 语法引用它们。
 
-When assigning dynamic variables, you can use the `sanitize` option to remove sensitive values from tool responses before they are sent to the LLM and transcript, while still allowing variable assignment:
+分配动态变量时，您可以使用 `sanitize` 选项，在工具响应发送到 LLM 和转录文本之前移除敏感值，同时仍然允许变量赋值：
 
-| Field | Type | Default | Description |
+| 字段 | 类型 | 默认值 | 描述 |
 |-------|------|---------|-------------|
-| `sanitize` | boolean | `false` | If true, the assignment's value is removed from tool responses before sending to LLM/transcript but still processed for variable assignment |
+| `sanitize` | boolean | `false` | 如果为 true，该赋值在发送到 LLM/转录文本之前从工具响应中移除，但变量赋值仍会被处理 |
 
-## Complete Example
+## 完整示例
 
 ```python
 from elevenlabs import ElevenLabs
 
 client = ElevenLabs()
 
-# Make personalized outbound calls
+# 发起个性化外呼
 customers = [
     {"name": "Alice", "phone": "+1234567890", "balance": "$150.00"},
     {"name": "Bob", "phone": "+0987654321", "balance": "$75.50"},
@@ -155,7 +155,7 @@ for customer in customers:
             conversation_initiation_client_data={
                 "conversation_config_override": {
                     "agent": {
-                        "first_message": f"Hello {customer['name']}, this is a friendly reminder about your account."
+                        "first_message": f"你好 {customer['name']}，这是关于您账户的友好提醒。"
                     }
                 },
                 "dynamic_variables": {
@@ -164,7 +164,7 @@ for customer in customers:
                 }
             }
         )
-        print(f"Called {customer['name']}: {response.conversation_id}")
+        print(f"已呼叫 {customer['name']}：{response.conversation_id}")
     except Exception as e:
-        print(f"Failed to call {customer['name']}: {e}")
+        print(f"呼叫 {customer['name']} 失败：{e}")
 ```

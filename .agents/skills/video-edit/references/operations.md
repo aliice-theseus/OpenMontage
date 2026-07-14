@@ -1,29 +1,29 @@
-# Operations Reference
+# 操作参考
 
-Detailed ffmpeg recipes for every operation. Each section shows the command, explains key flags, and lists common variations.
+每个操作的详细 ffmpeg 配方。每个部分显示命令、解释关键标志并列出常见变体。
 
 ---
 
 ## info
 
-Get full metadata about a video file using ffprobe.
+使用 ffprobe 获取视频文件的完整元数据。
 
 ```bash
 ffprobe -v quiet -print_format json -show_format -show_streams video.mp4
 ```
 
-**Key flags:**
-- `-v quiet` — suppress banner/log noise, output only the requested data.
-- `-print_format json` — output as JSON (easy to parse). Also accepts `csv`, `flat`, `ini`.
-- `-show_format` — container-level info: duration, bitrate, format name, size.
-- `-show_streams` — per-stream info: codec, resolution, frame rate, sample rate, channels.
+**关键标志：**
+- `-v quiet` — 抑制横幅/日志噪音，仅输出请求的数据。
+- `-print_format json` — 输出为 JSON（易于解析）。也接受 `csv`、`flat`、`ini`。
+- `-show_format` — 容器级别信息：时长、比特率、格式名称、大小。
+- `-show_streams` — 每个流的信息：编解码器、分辨率、帧率、采样率、声道数。
 
-**Variations:**
+**变体：**
 ```bash
-# Duration only (seconds, as plain text)
+# 仅时长（秒，纯文本）
 ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 video.mp4
 
-# Resolution only
+# 仅分辨率
 ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 video.mp4
 ```
 
@@ -31,25 +31,25 @@ ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s
 
 ## trim
 
-Cut a segment from a video using stream copy (no re-encoding, very fast).
+使用流复制从视频中剪切片段（无需重新编码，非常快）。
 
 ```bash
 ffmpeg -y -ss 00:00:30 -to 00:01:45 -i video.mp4 -c copy trimmed.mp4
 ```
 
-**Key flags:**
-- `-ss <time>` — seek to start position. Placed before `-i` for fast input seeking.
-- `-to <time>` — stop at this timestamp (absolute). Alternative: `-t <duration>` for relative duration.
-- `-c copy` — copy streams without re-encoding. Fast but cuts only on keyframes (may be off by a few frames).
+**关键标志：**
+- `-ss <time>` — 定位到开始位置。放在 `-i` 之前可快速输入定位。
+- `-to <time>` — 在此时间戳停止（绝对）。替代方案：`-t <duration>` 表示相对时长。
+- `-c copy` — 复制流而不重新编码。速度快但只剪切在关键帧上（可能偏差几帧）。
 
-**Timestamps** accept `HH:MM:SS`, `HH:MM:SS.mmm`, `MM:SS`, or raw seconds (`90`, `90.5`).
+**时间戳**接受 `HH:MM:SS`、`HH:MM:SS.mmm`、`MM:SS` 或原始秒数（`90`、`90.5`）。
 
-**Variations:**
+**变体：**
 ```bash
-# By duration instead of end time
+# 按持续时间而非结束时间
 ffmpeg -y -ss 00:00:30 -t 75 -i video.mp4 -c copy trimmed.mp4
 
-# Frame-accurate trim (re-encodes, slower but exact)
+# 帧精确修剪（重新编码，较慢但准确）
 ffmpeg -y -ss 00:00:30 -to 00:01:45 -i video.mp4 -c:v libx264 -c:a aac trimmed.mp4
 ```
 
@@ -57,27 +57,27 @@ ffmpeg -y -ss 00:00:30 -to 00:01:45 -i video.mp4 -c:v libx264 -c:a aac trimmed.m
 
 ## concat
 
-Join multiple video files into a single file.
+将多个视频文件合并为一个文件。
 
 ```bash
-# Step 1: Create a concat list file
+# 步骤 1：创建连接列表文件
 printf "file '%s'\n" clip1.mp4 clip2.mp4 clip3.mp4 > list.txt
 
-# Step 2: Concat with stream copy
+# 步骤 2：使用流复制连接
 ffmpeg -y -f concat -safe 0 -i list.txt -c copy joined.mp4
 ```
 
-**Key flags:**
-- `-f concat` — use the concat demuxer.
-- `-safe 0` — allow absolute paths in the file list.
-- `-c copy` — copy streams without re-encoding. Requires all inputs to share the same codec, resolution, and frame rate.
+**关键标志：**
+- `-f concat` — 使用 concat demuxer。
+- `-safe 0` — 允许文件列表中的绝对路径。
+- `-c copy` — 复制流而不重新编码。要求所有输入共享相同的编解码器、分辨率和帧率。
 
-**Variations:**
+**变体：**
 ```bash
-# Re-encode to normalize mismatched clips (slower)
+# 重新编码以标准化不匹配的剪辑（较慢）
 ffmpeg -y -f concat -safe 0 -i list.txt -c:v libx264 -c:a aac joined.mp4
 
-# Inline concat without a file (only for same-format files)
+# 无文件的内联连接（仅对相同格式的文件有效）
 ffmpeg -y -i "concat:part1.ts|part2.ts" -c copy joined.ts
 ```
 
@@ -85,7 +85,7 @@ ffmpeg -y -i "concat:part1.ts|part2.ts" -c copy joined.ts
 
 ## resize
 
-Resize a video to specific dimensions with aspect-ratio-preserving padding.
+将视频调整为特定尺寸，保留宽高比并添加填充。
 
 ```bash
 ffmpeg -y -i video.mp4 \
@@ -93,21 +93,21 @@ ffmpeg -y -i video.mp4 \
   -c:a copy resized.mp4
 ```
 
-**Key flags:**
-- `-vf` — video filter chain.
-- `scale=W:H:force_original_aspect_ratio=decrease` — scale down to fit within WxH, preserving aspect ratio.
-- `pad=W:H:(ow-iw)/2:(oh-ih)/2:black` — pad to exact WxH with centered black bars.
-- `-c:a copy` — copy audio without re-encoding.
+**关键标志：**
+- `-vf` — 视频滤镜链。
+- `scale=W:H:force_original_aspect_ratio=decrease` — 缩小以适合 WxH，保留宽高比。
+- `pad=W:H:(ow-iw)/2:(oh-ih)/2:black` — 填充到精确 WxH，居中黑条。
+- `-c:a copy` — 复制音频而不重新编码。
 
-**Variations:**
+**变体：**
 ```bash
-# Scale to width, auto-calculate height (maintains aspect ratio)
+# 缩放到宽度，自动计算高度（保持宽高比）
 ffmpeg -y -i video.mp4 -vf "scale=1280:-2" -c:a copy resized.mp4
 
-# Scale to height, auto-calculate width
+# 缩放到高度，自动计算宽度
 ffmpeg -y -i video.mp4 -vf "scale=-2:720" -c:a copy resized.mp4
 
-# Custom dimensions without padding (stretches)
+# 自定义尺寸不填充（拉伸）
 ffmpeg -y -i video.mp4 -vf "scale=1280:720" -c:a copy resized.mp4
 ```
 
@@ -115,26 +115,26 @@ ffmpeg -y -i video.mp4 -vf "scale=1280:720" -c:a copy resized.mp4
 
 ## speed
 
-Change playback speed of both video and audio.
+更改视频和音频的播放速度。
 
 ```bash
-# 2x faster
+# 2 倍快放
 ffmpeg -y -i video.mp4 -filter:v "setpts=0.5*PTS" -filter:a "atempo=2.0" fast.mp4
 
-# Half speed (slow motion)
+# 半速（慢动作）
 ffmpeg -y -i video.mp4 -filter:v "setpts=2.0*PTS" -filter:a "atempo=0.5" slow.mp4
 ```
 
-**Key flags:**
-- `-filter:v "setpts=N*PTS"` — multiply presentation timestamps. `0.5` = 2x faster, `2.0` = half speed. Formula: `N = 1 / speed_factor`.
-- `-filter:a "atempo=F"` — adjust audio speed. Preserves pitch. Only supports values between 0.5 and 2.0.
+**关键标志：**
+- `-filter:v "setpts=N*PTS"` — 乘以显示时间戳。`0.5` = 2 倍快，`2.0` = 半速。公式：`N = 1 / speed_factor`。
+- `-filter:a "atempo=F"` — 调整音频速度。保持音调。仅支持 0.5 到 2.0 之间的值。
 
-**For factors outside 0.5-2.0**, chain multiple atempo filters:
+**对于 0.5-2.0 范围外的因子**，链式多个 atempo 滤镜：
 ```bash
-# 4x faster
+# 4 倍快放
 ffmpeg -y -i video.mp4 -filter:v "setpts=0.25*PTS" -filter:a "atempo=2.0,atempo=2.0" fast4x.mp4
 
-# 0.25x (very slow)
+# 0.25 倍（非常慢）
 ffmpeg -y -i video.mp4 -filter:v "setpts=4.0*PTS" -filter:a "atempo=0.5,atempo=0.5" slow025x.mp4
 ```
 
@@ -142,34 +142,34 @@ ffmpeg -y -i video.mp4 -filter:v "setpts=4.0*PTS" -filter:a "atempo=0.5,atempo=0
 
 ## extract-audio
 
-Extract the audio track from a video file.
+从视频文件中提取音轨。
 
 ```bash
 ffmpeg -y -i video.mp4 -vn -acodec libmp3lame audio.mp3
 ```
 
-**Key flags:**
-- `-vn` — disable video (audio only output).
-- `-acodec <codec>` — audio codec to use.
+**关键标志：**
+- `-vn` — 禁用视频（仅音频输出）。
+- `-acodec <codec>` — 要使用的音频编解码器。
 
-**Audio codec map:**
+**音频编解码器映射：**
 
-| Format | Codec flag       |
-|--------|------------------|
-| mp3    | `libmp3lame`     |
-| wav    | `pcm_s16le`      |
-| aac    | `aac`            |
-| flac   | `flac`           |
+| 格式 | 编解码器标志       |
+|------|------------------|
+| mp3  | `libmp3lame`     |
+| wav  | `pcm_s16le`      |
+| aac  | `aac`            |
+| flac | `flac`           |
 
-**Variations:**
+**变体：**
 ```bash
-# Extract as WAV (lossless)
+# 提取为 WAV（无损）
 ffmpeg -y -i video.mp4 -vn -acodec pcm_s16le audio.wav
 
-# Extract as AAC
+# 提取为 AAC
 ffmpeg -y -i video.mp4 -vn -acodec aac audio.aac
 
-# Copy audio codec as-is (fastest, keeps original format)
+# 按原样复制音频编解码器（最快，保持原始格式）
 ffmpeg -y -i video.mp4 -vn -acodec copy audio.aac
 ```
 
@@ -177,25 +177,25 @@ ffmpeg -y -i video.mp4 -vn -acodec copy audio.aac
 
 ## replace-audio
 
-Replace a video's audio track with a different audio file.
+用不同的音频文件替换视频的音轨。
 
 ```bash
 ffmpeg -y -i video.mp4 -i audio.mp3 -c:v copy -map 0:v:0 -map 1:a:0 -shortest output.mp4
 ```
 
-**Key flags:**
-- `-i video.mp4 -i audio.mp3` — two inputs: video (index 0) and audio (index 1).
-- `-c:v copy` — copy video stream without re-encoding.
-- `-map 0:v:0` — take video from the first input.
-- `-map 1:a:0` — take audio from the second input.
-- `-shortest` — stop when the shorter input ends.
+**关键标志：**
+- `-i video.mp4 -i audio.mp3` — 两个输入：视频（索引 0）和音频（索引 1）。
+- `-c:v copy` — 复制视频流而不重新编码。
+- `-map 0:v:0` — 从第一个输入取视频。
+- `-map 1:a:0` — 从第二个输入取音频。
+- `-shortest` — 在较短的输入结束时停止。
 
-**Variations:**
+**变体：**
 ```bash
-# Remove audio entirely (silent video)
+# 完全移除音频（静音视频）
 ffmpeg -y -i video.mp4 -c:v copy -an silent.mp4
 
-# Mix original audio with new audio (overlay, not replace)
+# 混合原始音频和新音频（叠加，非替换）
 ffmpeg -y -i video.mp4 -i music.mp3 \
   -filter_complex "[0:a][1:a]amix=inputs=2:duration=first[a]" \
   -map 0:v -map "[a]" -c:v copy mixed.mp4
@@ -205,38 +205,38 @@ ffmpeg -y -i video.mp4 -i music.mp3 \
 
 ## overlay
 
-Add an image overlay (watermark, logo) on top of a video.
+在视频上添加图片叠加（水印、logo）。
 
 ```bash
-# Bottom-right corner (10px padding)
+# 右下角（10px 内边距）
 ffmpeg -y -i video.mp4 -i logo.png \
   -filter_complex "overlay=W-w-10:H-h-10" -c:a copy watermarked.mp4
 ```
 
-**Key flags:**
-- `-filter_complex "overlay=X:Y"` — position the overlay image at coordinates X,Y.
-- `-c:a copy` — copy audio without re-encoding.
+**关键标志：**
+- `-filter_complex "overlay=X:Y"` — 在坐标 X,Y 处定位叠加图片。
+- `-c:a copy` — 复制音频而不重新编码。
 
-**Position expressions:**
+**位置表达式：**
 
-| Position     | Expression              |
-|--------------|-------------------------|
-| Top-left     | `overlay=10:10`         |
-| Top-right    | `overlay=W-w-10:10`     |
-| Bottom-left  | `overlay=10:H-h-10`    |
-| Bottom-right | `overlay=W-w-10:H-h-10` |
-| Center       | `overlay=(W-w)/2:(H-h)/2` |
+| 位置     | 表达式              |
+|----------|---------------------|
+| 左上     | `overlay=10:10`     |
+| 右上     | `overlay=W-w-10:10` |
+| 左下     | `overlay=10:H-h-10` |
+| 右下     | `overlay=W-w-10:H-h-10` |
+| 居中     | `overlay=(W-w)/2:(H-h)/2` |
 
-`W`/`H` = video dimensions, `w`/`h` = overlay image dimensions.
+`W`/`H` = 视频尺寸，`w`/`h` = 叠加图片尺寸。
 
-**Variations:**
+**变体：**
 ```bash
-# With opacity (semi-transparent watermark)
+# 带透明度（半透明水印）
 ffmpeg -y -i video.mp4 -i logo.png \
   -filter_complex "[1:v]format=rgba,colorchannelmixer=aa=0.5[ovr];[0:v][ovr]overlay=W-w-10:10" \
   -c:a copy watermarked.mp4
 
-# Overlay only during a time range (show from 5s to 15s)
+# 仅在特定时间范围内叠加（从 5s 到 15s 显示）
 ffmpeg -y -i video.mp4 -i logo.png \
   -filter_complex "overlay=10:10:enable='between(t,5,15)'" -c:a copy watermarked.mp4
 ```
@@ -245,26 +245,26 @@ ffmpeg -y -i video.mp4 -i logo.png \
 
 ## compress
 
-Reduce video file size.
+减小视频文件大小。
 
-### CRF-based (simple, recommended)
+### CRF 基础（简单，推荐）
 
 ```bash
 ffmpeg -y -i video.mp4 -crf 23 -preset medium -c:a copy compressed.mp4
 ```
 
-**Key flags:**
-- `-crf <int>` — Constant Rate Factor. Lower = better quality, larger file. 0 = lossless, 18 = visually lossless, 23 = default, 28 = smaller/lower quality.
-- `-preset <speed>` — encoding speed/compression tradeoff: `ultrafast`, `superfast`, `veryfast`, `faster`, `fast`, `medium`, `slow`, `slower`, `veryslow`. Slower = smaller file at same quality.
-- `-c:a copy` — copy audio as-is.
+**关键标志：**
+- `-crf <int>` — 恒定速率因子。越低 = 质量越好、文件越大。0 = 无损，18 = 视觉无损，23 = 默认，28 = 较小/较低质量。
+- `-preset <speed>` — 编码速度/压缩权衡：`ultrafast`、`superfast`、`veryfast`、`faster`、`fast`、`medium`、`slow`、`slower`、`veryslow`。越慢 = 相同质量下文件越小。
+- `-c:a copy` — 按原样复制音频。
 
-### Target file size
+### 目标文件大小
 
-To hit a specific file size, calculate the required video bitrate:
+要命中特定文件大小，请计算所需的视频比特率：
 
 ```bash
-# Formula: video_bitrate = (target_MB * 8 * 1024) / duration_seconds - audio_bitrate
-# Example: 25MB target, 120s video, 128kbps audio
+# 公式：video_bitrate = (target_MB * 8 * 1024) / duration_seconds - audio_bitrate
+# 示例：25MB 目标、120s 视频、128kbps 音频
 # video_bitrate = (25 * 8 * 1024) / 120 - 128 = 1578 kbps
 
 ffmpeg -y -i video.mp4 \
@@ -273,12 +273,12 @@ ffmpeg -y -i video.mp4 \
   compressed.mp4
 ```
 
-**Variations:**
+**变体：**
 ```bash
-# Aggressive compression (smaller, lower quality)
+# 激进压缩（更小，质量较低）
 ffmpeg -y -i video.mp4 -crf 28 -preset slow -c:a copy small.mp4
 
-# High quality (larger file)
+# 高质量（文件较大）
 ffmpeg -y -i video.mp4 -crf 18 -preset slow -c:a copy hq.mp4
 ```
 
@@ -286,35 +286,35 @@ ffmpeg -y -i video.mp4 -crf 18 -preset slow -c:a copy hq.mp4
 
 ## convert
 
-Convert a video to a different container format.
+将视频转换为不同的容器格式。
 
 ```bash
 ffmpeg -y -i video.mov output.mp4
 ```
 
-ffmpeg infers the output format from the file extension. For most conversions, this is all you need.
+ffmpeg 从文件扩展名推断输出格式。对于大多数转换，这就是您需要的全部。
 
-**Supported formats:** mp4, mov, avi, mkv, webm, gif.
+**支持的格式：** mp4、mov、avi、mkv、webm、gif。
 
-### GIF conversion (high quality, two-pass palette)
+### GIF 转换（高质量，两遍调色板）
 
 ```bash
-# Step 1: Generate optimized palette
+# 步骤 1：生成优化调色板
 ffmpeg -y -i video.mp4 -vf "fps=15,scale=480:-1:flags=lanczos,palettegen" palette.png
 
-# Step 2: Use palette for high-quality GIF
+# 步骤 2：使用调色板进行高质量 GIF
 ffmpeg -y -i video.mp4 -i palette.png \
   -filter_complex "fps=15,scale=480:-1:flags=lanczos[x];[x][1:v]paletteuse" output.gif
 
-# Clean up
+# 清理
 rm palette.png
 ```
 
-**Variations:**
+**变体：**
 ```bash
-# Quick GIF (lower quality, single pass)
+# 快速 GIF（较低质量，单遍）
 ffmpeg -y -i video.mp4 -vf "fps=10,scale=320:-1" output.gif
 
-# Convert to WebM (VP9)
+# 转换为 WebM (VP9)
 ffmpeg -y -i video.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -c:a libopus output.webm
 ```

@@ -1,18 +1,18 @@
 ---
-title: Avoid Layout Thrashing
+title: 避免布局颠簸
 impact: MEDIUM
-impactDescription: prevents forced synchronous layouts and reduces performance bottlenecks
+impactDescription: 防止强制同步布局并减少性能瓶颈
 tags: javascript, dom, css, performance, reflow, layout-thrashing
 ---
 
-## Avoid Layout Thrashing
+## 避免布局颠簸
 
-Avoid interleaving style writes with layout reads. When you read a layout property (like `offsetWidth`, `getBoundingClientRect()`, or `getComputedStyle()`) between style changes, the browser is forced to trigger a synchronous reflow.
+避免在样式写入和布局读取之间交替。当你在样式更改之间读取布局属性（如 `offsetWidth`、`getBoundingClientRect()` 或 `getComputedStyle()`）时，浏览器被迫触发同步回流。
 
-**This is OK (browser batches style changes):**
+**这是可以的（浏览器批处理样式更改）：**
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Each line invalidates style, but browser batches the recalculation
+  // 每行都使样式失效，但浏览器会批处理重新计算
   element.style.width = '100px'
   element.style.height = '200px'
   element.style.backgroundColor = 'blue'
@@ -20,45 +20,45 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**Incorrect (interleaved reads and writes force reflows):**
+**不正确（交替读写强制回流）：**
 ```typescript
 function layoutThrashing(element: HTMLElement) {
   element.style.width = '100px'
-  const width = element.offsetWidth  // Forces reflow
+  const width = element.offsetWidth  // 强制回流
   element.style.height = '200px'
-  const height = element.offsetHeight  // Forces another reflow
+  const height = element.offsetHeight  // 再次强制回流
 }
 ```
 
-**Correct (batch writes, then read once):**
+**正确（批处理写入，然后一次读取）：**
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Batch all writes together
+  // 将所有写入批处理在一起
   element.style.width = '100px'
   element.style.height = '200px'
   element.style.backgroundColor = 'blue'
   element.style.border = '1px solid black'
   
-  // Read after all writes are done (single reflow)
+  // 在所有写入完成后读取（单次回流）
   const { width, height } = element.getBoundingClientRect()
 }
 ```
 
-**Correct (batch reads, then writes):**
+**正确（批处理读取，然后写入）：**
 ```typescript
 function avoidThrashing(element: HTMLElement) {
-  // Read phase - all layout queries first
+  // 读取阶段 - 先执行所有布局查询
   const rect1 = element.getBoundingClientRect()
   const offsetWidth = element.offsetWidth
   const offsetHeight = element.offsetHeight
   
-  // Write phase - all style changes after
+  // 写入阶段 - 之后再执行所有样式更改
   element.style.width = '100px'
   element.style.height = '200px'
 }
 ```
 
-**Better: use CSS classes**
+**更好的做法：使用 CSS 类**
 ```css
 .highlighted-box {
   width: 100px;
@@ -75,16 +75,16 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**React example:**
+**React 示例：**
 ```tsx
-// Incorrect: interleaving style changes with layout queries
+// 不正确：在样式更改和布局查询之间交替
 function Box({ isHighlighted }: { isHighlighted: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
     if (ref.current && isHighlighted) {
       ref.current.style.width = '100px'
-      const width = ref.current.offsetWidth // Forces layout
+      const width = ref.current.offsetWidth // 强制布局
       ref.current.style.height = '200px'
     }
   }, [isHighlighted])
@@ -92,7 +92,7 @@ function Box({ isHighlighted }: { isHighlighted: boolean }) {
   return <div ref={ref}>Content</div>
 }
 
-// Correct: toggle class
+// 正确：切换类
 function Box({ isHighlighted }: { isHighlighted: boolean }) {
   return (
     <div className={isHighlighted ? 'highlighted-box' : ''}>
@@ -102,6 +102,6 @@ function Box({ isHighlighted }: { isHighlighted: boolean }) {
 }
 ```
 
-Prefer CSS classes over inline styles when possible. CSS files are cached by the browser, and classes provide better separation of concerns and are easier to maintain.
+尽可能优先使用 CSS 类而非内联样式。CSS 文件由浏览器缓存，类提供了更好的关注点分离且更易于维护。
 
-See [this gist](https://gist.github.com/paulirish/5d52fb081b3570c81e3a) and [CSS Triggers](https://csstriggers.com/) for more information on layout-forcing operations.
+有关强制布局操作的更多信息，请参阅[此 gist](https://gist.github.com/paulirish/5d52fb081b3570c81e3a) 和 [CSS Triggers](https://csstriggers.com/)。

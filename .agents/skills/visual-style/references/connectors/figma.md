@@ -1,138 +1,138 @@
-# Figma Connector
+# Figma 连接器
 
-Apply a `visual-style.md` to generate Figma styles and components.
+将 `visual-style.md` 应用于生成 Figma 样式和组件。
 
-## Overview
+## 概述
 
-This connector maps `visual-style.md` fields to Figma's style system: color styles, text styles, effect styles, and layout grids.
+此连接器将 `visual-style.md` 字段映射到 Figma 的样式系统：颜色样式、文本样式、效果样式和布局网格。
 
-## Field Mapping
+## 字段映射
 
-| visual-style.md field | Figma output |
+| visual-style.md 字段 | Figma 输出 |
 |-----------------------|--------------|
-| `colors.primary` | Color styles (`brand/primary`, `brand/secondary`) |
-| `colors.accent` | Color styles (`accent/primary`, `accent/secondary`) |
-| `colors.neutral` | Color styles (`neutral/100`, `neutral/200`, etc.) |
-| `typography.display` | Text style (`heading/display`) |
-| `typography.body` | Text style (`body/default`, `body/large`) |
-| `typography.caption` | Text style (`label/default`, `label/small`) |
-| `typography.rules` | Design review checklist |
-| `layout.grid` | Layout grid preset |
-| `layout.aspect_ratio` | Frame dimensions |
-| `mood.avoid` | Design review checklist |
-| `assets.reference_images` | Style guide frame |
+| `colors.primary` | 颜色样式（`brand/primary`、`brand/secondary`）|
+| `colors.accent` | 颜色样式（`accent/primary`、`accent/secondary`）|
+| `colors.neutral` | 颜色样式（`neutral/100`、`neutral/200` 等）|
+| `typography.display` | 文本样式（`heading/display`）|
+| `typography.body` | 文本样式（`body/default`、`body/large`）|
+| `typography.caption` | 文本样式（`label/default`、`label/small`）|
+| `typography.rules` | 设计审查检查清单 |
+| `layout.grid` | 布局网格预设 |
+| `layout.aspect_ratio` | 框架尺寸 |
+| `mood.avoid` | 设计审查检查清单 |
+| `assets.reference_images` | 样式指南框架 |
 
-## Color Styles
+## 颜色样式
 
-Generate Figma color styles from the `colors` object:
+从 `colors` 对象生成 Figma 颜色样式：
 
 ```
-Folder: brand/
+文件夹：brand/
   - brand/black         → colors.primary[0].hex
   - brand/white         → colors.primary[1].hex
 
-Folder: accent/
+文件夹：accent/
   - accent/primary      → colors.accent[0].hex
-  - accent/secondary    → colors.accent[1].hex (if exists)
+  - accent/secondary    → colors.accent[1].hex（如存在）
 
-Folder: neutral/
+文件夹：neutral/
   - neutral/light       → colors.neutral[0].hex
   - neutral/dark        → colors.neutral[1].hex
 ```
 
-**Naming convention:** Use the `role` field for style descriptions.
+**命名惯例：** 使用 `role` 字段作为样式描述。
 
-## Text Styles
+## 文本样式
 
-Generate Figma text styles from `typography`:
+从 `typography` 生成 Figma 文本样式：
 
 ```
-Folder: heading/
+文件夹：heading/
   - heading/display
-    Font: typography.display.family
-    Weight: typography.display.weight
-    Size: 48px (or derive from style)
+    字体：typography.display.family
+    字重：typography.display.weight
+    大小：48px（或从样式推导）
 
-Folder: body/
+文件夹：body/
   - body/default
-    Font: typography.body.family
-    Weight: typography.body.weight
-    Size: 16px
+    字体：typography.body.family
+    字重：typography.body.weight
+    大小：16px
 
-Folder: label/
+文件夹：label/
   - label/default
-    Font: typography.caption.family
-    Weight: typography.caption.weight
-    Size: 12px
+    字体：typography.caption.family
+    字重：typography.caption.weight
+    大小：12px
 ```
 
-## Layout Grids
+## 布局网格
 
-Generate layout grid presets from `layout.grid`:
+从 `layout.grid` 生成布局网格预设：
 
 ```
-"12 columns" →
-  Columns: 12
-  Type: Stretch
-  Margin: 64px
-  Gutter: 24px
+"12 列" →
+  列数：12
+  类型：拉伸
+  边距：64px
+  间距：24px
 
-"8-point grid" →
-  Rows: Count
-  Height: 8px
+"8 点网格" →
+  行数：计数
+  高度：8px
 
-"Strict modular grid" →
-  Both columns AND rows enabled
+"严格的模块化网格" →
+  同时启用列 AND 行
 ```
 
-## Style Guide Frame
+## 样式指南框架
 
-Create a style guide frame that documents the system:
+创建记录系统的样式指南框架：
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │  [name]                                             │
 │  [style_prompt_short]                               │
 ├─────────────────────────────────────────────────────┤
-│  COLORS                                             │
+│  颜色                                               │
 │  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐                │
 │  │████│ │████│ │████│ │████│ │████│                │
 │  └────┘ └────┘ └────┘ └────┘ └────┘                │
-│  Primary  Secondary  Accent   Neutral              │
+│  主色    辅助色   强调色   中性色                    │
 ├─────────────────────────────────────────────────────┤
-│  TYPOGRAPHY                                         │
+│  排版                                               │
 │                                                     │
-│  Display Heading                                    │
+│  展示标题                                           │
 │  [typography.display.family] [weight]               │
 │                                                     │
-│  Body text paragraph                                │
+│  正文字段                                           │
 │  [typography.body.family] [weight]                  │
 │                                                     │
-│  CAPTION / LABEL                                    │
+│  说明文字 / 标签                                    │
 │  [typography.caption.family] [weight]               │
 ├─────────────────────────────────────────────────────┤
-│  RULES                                              │
+│  规则                                               │
 │  ✓ [typography.rules[0]]                           │
 │  ✓ [typography.rules[1]]                           │
 │                                                     │
-│  AVOID                                              │
+│  避免                                               │
 │  ✗ [mood.avoid[0]]                                 │
 │  ✗ [mood.avoid[1]]                                 │
 └─────────────────────────────────────────────────────┘
 ```
 
-## Workflow
+## 工作流
 
-1. **Read the style** — Load the `visual-style.md` file
-2. **Create color styles** — One style per color in the palette
-3. **Create text styles** — Display, body, and caption styles
-4. **Set up layout grid** — Create grid presets
-5. **Build style guide frame** — Document the system
-6. **Add reference images** — Import `assets.reference_images` if available
+1. **读取风格** — 加载 `visual-style.md` 文件
+2. **创建颜色样式** — 调色板中每种颜色一个样式
+3. **创建文本样式** — 展示、正文和说明文字样式
+4. **设置布局网格** — 创建网格预设
+5. **构建样式指南框架** — 记录系统
+6. **添加参考图片** — 导入 `assets.reference_images`（如可用）
 
-## Figma Plugin Integration
+## Figma 插件集成
 
-If building a Figma plugin that reads `visual-style.md`:
+如果构建读取 `visual-style.md` 的 Figma 插件：
 
 ```typescript
 interface VisualStyle {
@@ -151,7 +151,7 @@ interface VisualStyle {
     caption: TypographyStyle;
     rules?: string[];
   };
-  // ... other fields
+  // ... 其他字段
 }
 
 interface Color {
@@ -167,9 +167,9 @@ interface TypographyStyle {
 }
 ```
 
-## Tips
+## 技巧
 
-- **Font availability** — Check that `typography.*.family` fonts are available in Figma (Google Fonts or locally installed)
-- **Color organization** — Use folders to group color styles by purpose
-- **Style descriptions** — Use the `role` field as the style description
-- **Design review** — Create a checklist from `typography.rules` and `mood.avoid`
+- **字体可用性** — 检查 `typography.*.family` 字体在 Figma 中是否可用（Google Fonts 或本地安装）
+- **颜色组织** — 使用文件夹按用途对颜色样式进行分组
+- **样式描述** — 使用 `role` 字段作为样式描述
+- **设计审查** — 从 `typography.rules` 和 `mood.avoid` 创建检查清单

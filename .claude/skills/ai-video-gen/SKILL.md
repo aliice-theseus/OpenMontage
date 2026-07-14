@@ -1,7 +1,7 @@
 ---
 name: ai-video-gen
 description: |
-  Generate AI videos from text prompts using multiple provider gateways. Use when: (1) Generating videos from text descriptions, (2) Creating AI-generated video clips for content production, (3) Image-to-video generation with a reference image, (4) Choosing between video generation providers (VEO, Kling, Sora, Runway, Seedance, MiniMax). Supports two gateways: HeyGen API and fal.ai API.
+  使用多个提供商网关从文本提示生成 AI 视频。在以下情况下使用：(1) 从文本描述生成视频，(2) 为内容制作创建 AI 生成的视频片段，(3) 使用参考图片进行图生视频生成，(4) 在视频生成提供商（VEO、Kling、Sora、Runway、Seedance、MiniMax）之间进行选择。支持两个网关：HeyGen API 和 fal.ai API。
 allowed-tools: mcp__heygen__*
 metadata:
   openclaw:
@@ -11,27 +11,27 @@ metadata:
         - FAL_KEY
 ---
 
-# Video Generation (Multi-Gateway)
+# 视频生成（多网关）
 
-Generate AI videos from text prompts. Supports multiple providers via two API gateways:
+从文本提示生成 AI 视频。支持通过两个 API 网关使用多个提供商：
 
-| Gateway | Env Variable | Providers | Tool |
+| 网关 | 环境变量 | 提供商 | 工具 |
 |---------|-------------|-----------|------|
-| **fal.ai** | `FAL_KEY` | **Seedance 2.0** (standard + fast), Kling v3/v2.1, MiniMax, VEO | `seedance_video`, `kling_video`, `minimax_video`, `veo_video` |
-| **HeyGen** | `HEYGEN_API_KEY` | VEO 3.1, Kling Pro, Sora v2, Runway Gen-4, Seedance Pro / Lite (1.x) | `heygen_video` |
+| **fal.ai** | `FAL_KEY` | **Seedance 2.0**（标准 + 快速）、Kling v3/v2.1、MiniMax、VEO | `seedance_video`, `kling_video`, `minimax_video`, `veo_video` |
+| **HeyGen** | `HEYGEN_API_KEY` | VEO 3.1、Kling Pro、Sora v2、Runway Gen-4、Seedance Pro / Lite（1.x） | `heygen_video` |
 
-**Preferred premium default — Seedance 2.0.** When any premium gateway is configured (`FAL_KEY` → `seedance_video`, or HeyGen's Video Agent / Avatar Shots path), Seedance 2.0 is the preferred default for cinematic, trailer, and high-fidelity clip work. It is the only model in the fleet with **single-pass native synchronized audio, multi-shot generation, director-level camera control, and lip-sync from quoted dialogue**, and it ranks #1 on Artificial Analysis Elo as of early 2026. Switch off it only when the user has a specific reason (budget, provider preference, stylistic fit like VEO for photoreal landscape or Kling for specific anime look). See Layer 3 `seedance-2-0` for the authoritative prompting and parameter guide.
+**首选高级默认 — Seedance 2.0。** 当配置了任何高级网关时（`FAL_KEY` → `seedance_video`，或 HeyGen 的视频代理/Avatar Shots 路径），Seedance 2.0 是电影、预告片和高保真片段工作的首选默认模型。它是整个产品线中唯一具有**单次原生同步音频、多镜头生成、导演级相机控制和引用对话唇形同步**的模型，截至 2026 年初在 Artificial Analysis Elo 排名第一。仅在用户有特定原因时才切换到其他模型（预算限制、提供商偏好、风格适配，如 VEO 适合逼真风景，Kling 适合特定动漫风格）。有关权威的提示和参数指南，请参见第 3 层 `seedance-2-0`。
 
-**IMPORTANT:** Always use `video_selector` instead of calling provider tools directly. The selector handles availability checks, cost comparison, and automatic fallback, and its scoring engine already biases toward Seedance 2.0 for cinematic intent.
+**重要提示：** 始终使用 `video_selector` 而非直接调用提供商工具。选择器会处理可用性检查、成本比较和自动回退，其评分引擎已对电影意图偏向 Seedance 2.0。
 
-## Authentication
+## 认证
 
-Use whichever configured gateway best matches the user's available providers and cost/quality goals.
+使用与用户可用提供商和成本/质量目标最匹配的已配置网关。
 
-- **HeyGen:** Set `HEYGEN_API_KEY` to access the multi-model gateway.
-- **fal.ai:** Set `FAL_KEY` to access Kling, MiniMax, and Veo through fal.ai.
+- **HeyGen：** 设置 `HEYGEN_API_KEY` 以访问多模型网关。
+- **fal.ai：** 设置 `FAL_KEY` 以通过 fal.ai 访问 Kling、MiniMax 和 Veo。
 
-Do not describe either gateway as the default or top choice without checking the registry and current task fit first.
+未经检查注册表和当前任务适配性，不要描述任何一个网关为默认或首选选择。
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/workflows/executions" \
@@ -40,48 +40,48 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
   -d '{"workflow_type": "GenerateVideoNode", "input": {"prompt": "A drone shot flying over a coastal city at sunset"}}'
 ```
 
-## Default Workflow
+## 默认工作流
 
-1. Call `POST /v1/workflows/executions` with `workflow_type: "GenerateVideoNode"` and your prompt
-2. Receive a `execution_id` in the response
-3. Poll `GET /v1/workflows/executions/{id}` every 10 seconds until status is `completed`
-4. Use the returned `video_url` from the output
+1. 调用 `POST /v1/workflows/executions`，使用 `workflow_type: "GenerateVideoNode"` 和你的提示
+2. 在响应中收到 `execution_id`
+3. 每 10 秒轮询 `GET /v1/workflows/executions/{id}`，直到状态为 `completed`
+4. 使用输出中返回的 `video_url`
 
-## Execute Video Generation
+## 执行视频生成
 
-### Endpoint
+### 端点
 
 `POST https://api.heygen.com/v1/workflows/executions`
 
-### Request Fields
+### 请求字段
 
-| Field | Type | Req | Description |
+| 字段 | 类型 | 必填 | 描述 |
 |-------|------|:---:|-------------|
-| `workflow_type` | string | Y | Must be `"GenerateVideoNode"` |
-| `input.prompt` | string | Y | Text description of the video to generate |
-| `input.provider` | string | | Video generation provider (default: `"veo_3_1"`). See Providers below. |
-| `input.aspect_ratio` | string | | Aspect ratio (default: `"16:9"`). Common values: `"16:9"`, `"9:16"`, `"1:1"` |
-| `input.reference_image_url` | string | | Reference image URL for image-to-video generation |
-| `input.tail_image_url` | string | | Tail image URL for last-frame guidance |
-| `input.config` | object | | Provider-specific configuration overrides |
+| `workflow_type` | string | Y | 必须为 `"GenerateVideoNode"` |
+| `input.prompt` | string | Y | 要生成视频的文本描述 |
+| `input.provider` | string | | 视频生成提供商（默认：`"veo_3_1"`）。参见下面的提供商列表。 |
+| `input.aspect_ratio` | string | | 宽高比（默认：`"16:9"`）。常用值：`"16:9"`、`"9:16"`、`"1:1"` |
+| `input.reference_image_url` | string | | 用于图生视频的参考图片 URL |
+| `input.tail_image_url` | string | | 用于最后一帧引导的尾部图片 URL |
+| `input.config` | object | | 提供商特定的配置覆盖 |
 
-### Providers
+### 提供商
 
-| Provider | Value | Description |
+| 提供商 | 值 | 描述 |
 |----------|-------|-------------|
-| VEO 3.1 | `"veo_3_1"` | Google VEO 3.1 (default, highest quality) |
-| VEO 3.1 Fast | `"veo_3_1_fast"` | Faster VEO 3.1 variant |
+| VEO 3.1 | `"veo_3_1"` | Google VEO 3.1（默认，最高质量） |
+| VEO 3.1 快速 | `"veo_3_1_fast"` | 更快的 VEO 3.1 变体 |
 | VEO 3 | `"veo3"` | Google VEO 3 |
-| VEO 3 Fast | `"veo3_fast"` | Faster VEO 3 variant |
+| VEO 3 快速 | `"veo3_fast"` | 更快的 VEO 3 变体 |
 | VEO 2 | `"veo2"` | Google VEO 2 |
-| Kling Pro | `"kling_pro"` | Kling Pro model |
-| Kling V2 | `"kling_v2"` | Kling V2 model |
+| Kling Pro | `"kling_pro"` | Kling Pro 模型 |
+| Kling V2 | `"kling_v2"` | Kling V2 模型 |
 | Sora V2 | `"sora_v2"` | OpenAI Sora V2 |
 | Sora V2 Pro | `"sora_v2_pro"` | OpenAI Sora V2 Pro |
 | Runway Gen-4 | `"runway_gen4"` | Runway Gen-4 |
 | Seedance Lite | `"seedance_lite"` | Seedance Lite |
 | Seedance Pro | `"seedance_pro"` | Seedance Pro |
-| LTX Distilled | `"ltx_distilled"` | LTX Distilled (fastest) |
+| LTX Distilled | `"ltx_distilled"` | LTX Distilled（最快） |
 
 ### curl
 
@@ -176,7 +176,7 @@ def generate_video(
     return data["data"]["execution_id"]
 ```
 
-### Response Format
+### 响应格式
 
 ```json
 {
@@ -187,9 +187,9 @@ def generate_video(
 }
 ```
 
-## Check Status
+## 检查状态
 
-### Endpoint
+### 端点
 
 `GET https://api.heygen.com/v1/workflows/executions/{execution_id}`
 
@@ -200,7 +200,7 @@ curl -X GET "https://api.heygen.com/v1/workflows/executions/node-gw-v1d2e3o4" \
   -H "X-Api-Key: $HEYGEN_API_KEY"
 ```
 
-### Response Format (Completed)
+### 响应格式（已完成）
 
 ```json
 {
@@ -218,7 +218,7 @@ curl -X GET "https://api.heygen.com/v1/workflows/executions/node-gw-v1d2e3o4" \
 }
 ```
 
-## Polling for Completion
+## 轮询完成
 
 ```typescript
 async function generateVideoAndWait(
@@ -227,7 +227,7 @@ async function generateVideoAndWait(
   pollIntervalMs = 10000
 ): Promise<{ video_url: string; video_id: string; asset_id: string }> {
   const executionId = await generateVideo(input);
-  console.log(`Submitted video generation: ${executionId}`);
+  console.log(`已提交视频生成: ${executionId}`);
 
   const startTime = Date.now();
   while (Date.now() - startTime < maxWaitMs) {
@@ -245,21 +245,21 @@ async function generateVideoAndWait(
           asset_id: data.output.asset_id,
         };
       case "failed":
-        throw new Error(data.error?.message || "Video generation failed");
+        throw new Error(data.error?.message || "视频生成失败");
       case "not_found":
-        throw new Error("Workflow not found");
+        throw new Error("工作流未找到");
       default:
         await new Promise((r) => setTimeout(r, pollIntervalMs));
     }
   }
 
-  throw new Error("Video generation timed out");
+  throw new Error("视频生成超时");
 }
 ```
 
-## Usage Examples
+## 使用示例
 
-### Simple Text-to-Video
+### 简单文生视频
 
 ```bash
 curl -X POST "https://api.heygen.com/v1/workflows/executions" \
@@ -273,7 +273,7 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
   }'
 ```
 
-### Image-to-Video
+### 图生视频
 
 ```json
 {
@@ -286,7 +286,7 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
 }
 ```
 
-### Vertical Format for Social Media
+### 社交媒体竖屏格式
 
 ```json
 {
@@ -299,7 +299,7 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
 }
 ```
 
-### Fast Generation with LTX
+### 使用 LTX 快速生成
 
 ```json
 {
@@ -311,12 +311,12 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
 }
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Be descriptive in prompts** — include camera movement, lighting, style, and mood details
-2. **Default to Seedance 2.0 (via `seedance_video`) for cinematic and motion-led work** when `FAL_KEY` is set — single-pass synced audio, multi-shot, lip-sync, director-level camera. Use VEO 3.1 / Sora V2 Pro when the user specifically wants Google or OpenAI motion character; use `ltx_distilled` or `veo3_fast` only when speed is the hard constraint
-3. **Use reference images** for image-to-video generation — great for animating product photos or still images
-4. **Video generation is the slowest workflow** — allow up to 5 minutes, poll every 10 seconds
-5. **Aspect ratio matters** — use `9:16` for social media stories/reels, `16:9` for landscape, `1:1` for square
-6. **Output includes `asset_id`** — use this to reference the generated video in other HeyGen workflows
-7. **Output URLs are temporary** — download or save generated videos promptly
+1. **在提示中详细描述** — 包含摄像机运动、灯光、风格和情绪细节
+2. **对于电影和运动导向的工作，默认使用 Seedance 2.0（通过 `seedance_video`）** 当 `FAL_KEY` 已设置时 — 单次同步音频、多镜头、唇形同步、导演级摄像机。当用户明确需要 Google 或 OpenAI 的动作角色时使用 VEO 3.1 / Sora V2 Pro；仅在速度是硬约束时使用 `ltx_distilled` 或 `veo3_fast`
+3. **使用参考图片** 进行图生视频 — 非常适合将产品照片或静态图片动画化
+4. **视频生成是最慢的工作流** — 等待最多 5 分钟，每 10 秒轮询一次
+5. **宽高比很重要** — 社交媒体故事/短视频使用 `9:16`，横屏使用 `16:9`，正方形使用 `1:1`
+6. **输出包含 `asset_id`** — 可用于在其他 HeyGen 工作流中引用生成的视频
+7. **输出 URL 是临时的** — 及时下载或保存生成的视频

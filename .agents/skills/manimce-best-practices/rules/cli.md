@@ -1,201 +1,201 @@
 ---
 name: cli
-description: Command-line interface, rendering options, and quality flags
+description: 命令行界面、渲染选项和质量标志
 metadata:
   tags: cli, render, quality, preview, command, terminal
 ---
 
 # Manim CLI
 
-The `manim` command-line interface for rendering scenes.
+用于渲染场景的 `manim` 命令行界面。
 
-## Basic Usage
+## 基本用法
 
 ```bash
-# Render a scene
+# 渲染场景
 manim file.py SceneName
 
-# With preview (opens video after rendering)
+# 带预览（渲染后打开视频）
 manim -p file.py SceneName
 
-# Preview with low quality (fast)
+# 低质量预览（快速）
 manim -pql file.py SceneName
 ```
 
-## Quality Flags
+## 质量标志
 
-Quality presets for different use cases:
+适用于不同用例的质量预设：
 
 ```bash
-# Low Quality: 854x480, 15fps (fast for testing)
+# 低质量：854x480, 15fps（快速测试）
 manim -ql file.py SceneName
 
-# Medium Quality: 1280x720, 30fps
+# 中等质量：1280x720, 30fps
 manim -qm file.py SceneName
 
-# High Quality: 1920x1080, 60fps
+# 高质量：1920x1080, 60fps
 manim -qh file.py SceneName
 
-# 2K Quality: 2560x1440, 60fps
+# 2K 质量：2560x1440, 60fps
 manim -qp file.py SceneName
 
-# 4K Quality: 3840x2160, 60fps
+# 4K 质量：3840x2160, 60fps
 manim -qk file.py SceneName
 ```
 
-### Common Combinations
+### 常见组合
 
 ```bash
-# Preview + Low Quality (development workflow)
+# 预览 + 低质量（开发工作流）
 manim -pql file.py SceneName
 
-# Preview + High Quality (final check)
+# 预览 + 高质量（最终检查）
 manim -pqh file.py SceneName
 ```
 
-## Preview Flag
+## 预览标志
 
 ```bash
-# -p: Open video after rendering
+# -p：渲染后打开视频
 manim -p file.py SceneName
 
-# Without -p: Render only (no auto-open)
+# 无 -p：仅渲染（不自动打开）
 manim file.py SceneName
 ```
 
-## Rendering Multiple Scenes
+## 渲染多个场景
 
 ```bash
-# Render all scenes in file
+# 渲染文件中的所有场景
 manim -a file.py
 
-# Render specific scenes
+# 渲染指定场景
 manim file.py Scene1 Scene2 Scene3
 ```
 
-## Output Options
+## 输出选项
 
-### Save Last Frame Only
+### 仅保存最后一帧
 
 ```bash
-# -s: Save only the last frame as PNG
+# -s：仅将最后一帧保存为 PNG
 manim -s file.py SceneName
 
-# With quality
+# 带质量
 manim -sql file.py SceneName
 ```
 
-### Output Format
+### 输出格式
 
 ```bash
-# GIF output
+# GIF 输出
 manim --format gif file.py SceneName
 
-# PNG sequence
+# PNG 序列
 manim --format png file.py SceneName
 
-# WebM (default is MP4)
+# WebM（默认为 MP4）
 manim --format webm file.py SceneName
 ```
 
-### Custom Output Directory
+### 自定义输出目录
 
 ```bash
 manim -o custom_name file.py SceneName
 manim --media_dir /path/to/output file.py SceneName
 ```
 
-## Frame Control
+## 帧控制
 
 ```bash
-# Start from specific animation number
+# 从特定动画编号开始
 manim -n 5 file.py SceneName
 
-# Render frames from animation 3 to 7
+# 渲染动画 3 到 7 帧
 manim -n 3,7 file.py SceneName
 ```
 
-## Resolution and FPS
+## 分辨率和帧率
 
 ```bash
-# Custom resolution
+# 自定义分辨率
 manim -r 1920,1080 file.py SceneName
 
-# Custom frame rate
+# 自定义帧率
 manim --fps 24 file.py SceneName
 
-# Both
+# 同时设置
 manim -r 1280,720 --fps 30 file.py SceneName
 ```
 
-## Transparency
+## 透明背景
 
 ```bash
-# Render with transparent background
+# 使用透明背景渲染
 manim -t file.py SceneName
 ```
 
-## Renderer Selection
+## 渲染器选择
 
 ```bash
-# Cairo renderer (default, 2D)
+# Cairo 渲染器（默认，2D）
 manim --renderer cairo file.py SceneName
 
-# OpenGL renderer (3D, faster preview)
+# OpenGL 渲染器（3D，更快预览）
 manim --renderer opengl file.py SceneName
 ```
 
-## Other Useful Flags
+## 其他有用标志
 
 ```bash
-# Verbose output
+# 详细输出
 manim -v DEBUG file.py SceneName
 
-# Quiet mode
+# 安静模式
 manim -v WARNING file.py SceneName
 
-# Show progress bar
+# 显示进度条
 manim --progress_bar display file.py SceneName
 
-# Disable caching
+# 禁用缓存
 manim --disable_caching file.py SceneName
 
-# Write to movie even if no animations
+# 即使无动画也写入视频
 manim --write_to_movie file.py SceneName
 ```
 
-## Help
+## 帮助
 
 ```bash
-# Show all options
+# 显示所有选项
 manim --help
 
-# Show render command options
+# 显示渲染命令选项
 manim render --help
 ```
 
-## Other Commands
+## 其他命令
 
 ```bash
-# Check installation and dependencies
+# 检查安装和依赖
 manim checkhealth
 
-# Initialize new project
+# 初始化新项目
 manim init
 
-# Show config values
+# 显示配置值
 manim cfg show
 
-# Write current config to file
+# 将当前配置写入文件
 manim cfg write
 
-# List installed plugins
+# 列出已安装的插件
 manim plugins -l
 ```
 
-## Jupyter Notebook Support
+## Jupyter Notebook 支持
 
-Use the `%%manim` cell magic in Jupyter notebooks:
+在 Jupyter notebook 中使用 `%%manim` 单元格魔术命令：
 
 ```python
 %%manim -qm -v WARNING MyScene
@@ -205,28 +205,28 @@ class MyScene(Scene):
         self.play(Create(circle))
 ```
 
-Flags work the same as CLI (`-qm`, `-ql`, etc.).
+标志用法与 CLI 相同（`-qm`、`-ql` 等）。
 
-## Typical Development Workflow
+## 典型开发工作流
 
 ```bash
-# 1. Develop with fast preview
+# 1. 快速预览开发
 manim -pql scene.py MyScene
 
-# 2. Check at medium quality
+# 2. 中等质量检查
 manim -pqm scene.py MyScene
 
-# 3. Final render at high quality
+# 3. 最终高质量渲染
 manim -qh scene.py MyScene
 
-# 4. Create GIF for sharing
+# 4. 创建 GIF 用于分享
 manim --format gif -qm scene.py MyScene
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use -pql for development** - Fast iteration cycle
-2. **Use -qh for final output** - Good quality, reasonable render time
-3. **Use -s for thumbnails** - Quick last-frame capture
-4. **Use -a sparingly** - Renders everything, can be slow
-5. **Use --format gif for demos** - Easy to share and embed
+1. **开发使用 -pql** - 快速迭代周期
+2. **最终输出使用 -qh** - 良好质量，合理渲染时间
+3. **缩略图使用 -s** - 快速最后一帧捕获
+4. **谨慎使用 -a** - 渲染所有内容，可能很慢
+5. **演示使用 --format gif** - 易于分享和嵌入

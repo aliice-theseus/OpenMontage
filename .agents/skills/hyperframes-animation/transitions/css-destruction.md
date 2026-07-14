@@ -1,95 +1,69 @@
-## Destruction
+## 破坏
 
-### Page Burn
+### 页面灼烧
 
-The outgoing scene literally burns away from a corner. A fire front expands with noise-based irregular edges, a canvas draws the scorched char line at the burn boundary, and individual text characters/elements chip off and fall with gravity as the fire reaches them. The incoming scene reveals behind the burn.
+退出场景字面意义上从一个角烧掉。火线以基于噪声的不规则边缘扩展，一个 canvas 在灼烧边界绘制烧焦炭线，单个文本字符/元素在火焰到达时脱落并带重力下落。进入场景在灼烧后揭示。
 
-This transition has three systems working together:
+此过渡有三个系统协同工作：
 
-1. **Fire geometry** — a radial front expanding from a corner (e.g., bottom-right) with noise-based irregularity for organic edges
-2. **Scene clipping** — the outgoing scene uses an SVG clip-path (with `fill-rule: evenodd`) that cuts a hole matching the fire front. As the fire expands, more of the scene is clipped away. All content (text, images, lines) burns with the page — no separate debris.
-3. **Scorched edge** — a `<canvas>` overlay draws a radial gradient fringe at the fire boundary to simulate charring
+1. **火焰几何** — 从一个角（例如右下角）扩展的径向前沿，带基于噪声的不规则性以获得有机边缘
+2. **场景裁剪** — 退出场景使用 SVG clip-path（带 `fill-rule: evenodd`），裁切匹配火焰前沿的孔。随着火焰扩展，更多场景被裁剪掉。所有内容（文本、图像、线条）随页面灼烧 — 无单独的碎片。
+3. **烧焦边缘** — 一个 `<canvas>` 叠加层在火焰边界绘制径向渐变边缘以模拟烧焦
 
-**When to use:** Dramatic reveals, edgy/destructive mood, gaming, cyberpunk. This is the most dramatic transition in the catalog — reserve it for hero moments.
+**何时使用：** 戏剧性揭示、前卫/破坏性情绪、游戏、赛博朋克。这是目录中最戏剧性的过渡 — 保留给主角时刻。
 
-**Requirements:**
+**要求：**
 
-- A `<canvas>` element for the burn edge overlay
-- A noise function for organic fire edge geometry
-- SVG clip-path with evenodd fill-rule for the inverted clip
+- 用于灼烧边缘叠加的 `<canvas>` 元素
+- 用于有机火焰边缘几何的噪声函数
+- 带 evenodd fill-rule 的 SVG clip-path 用于反向裁剪
 
-**Fire geometry (deterministic noise):**
+**火焰几何（确定性噪声）：**
 
 ```js
 function noise(x) {
-  var ix = Math.floor(x),
-    fx = x - ix;
+  var ix = Math.floor(x), fx = x - ix;
   var a = Math.sin(ix * 127.1 + 311.7) * 43758.5453;
   var b = Math.sin((ix + 1) * 127.1 + 311.7) * 43758.5453;
   var t = fx * fx * (3 - 2 * fx);
   return a - Math.floor(a) + (b - Math.floor(b) - (a - Math.floor(a))) * t;
 }
-
-function fireRadiusAtAngle(angle, progress) {
-  var base = progress * maxRadius;
-  return (
-    base +
-    noise(angle * 3 + progress * 4) * 50 +
-    noise(angle * 8 + progress * 9) * 20 +
-    noise(angle * 15 + progress * 15) * 8
-  );
-}
 ```
 
-**Incoming scene timing:** The incoming scene should NOT be visible during the burn. As the fire consumes the outgoing scene, **black shows through the holes** — this is the dramatic part. The viewer watches content being destroyed against blackness.
+**场景裁剪（SVG clipPath，偶数奇填充规则）：**
 
-At ~90% through the burn, the incoming scene fades in SLOWLY from black — the background first, then content staggered. Use long, gentle fades (`power1.out`, 0.8-1.2s durations) so it feels like the new scene materializes from darkness, not a hard swap.
+```html
+<svg width="0" height="0"><defs>
+  <clipPath id="burn-clip" clipPathUnits="objectBoundingBox">
+    <path id="burn-path" fill-rule="evenodd"
+      d="M1,1 L1,0 L0,0 L0,1 Z M1,1 L0.95,0.95 ..." />
+  </clipPath>
+</defs></svg>
+```
+
+外部路径覆盖整个画面。内部路径（燃烧孔）从火角收缩。偶数奇填充规则使画面在孔内被裁剪掉，外部保留。
+
+**驱动脚本：**
 
 ```js
-// Scene 2 stays at opacity: 0 during the burn — black behind the fire
-tl.set("#s2-title", { opacity: 0 }, T);
-tl.set("#s2-subtitle", { opacity: 0 }, T);
+var burnState = { wp: 1 }; // 1 = 未灼烧，0 = 完全灼烧
+var burnDuration = 1.2;
+var burnStart = T;
 
-// At 90% through, scene bg fades in slowly from black
-var contentReveal = T + BURN_DURATION * 0.9;
-tl.to("#scene2", { opacity: 1, duration: 1.2, ease: "power1.out" }, contentReveal);
-
-// Content fades in staggered on top, even slower
-tl.to("#s2-title", { opacity: 1, duration: 1.0, ease: "power1.out" }, contentReveal + 0.5);
-tl.to("#s2-subtitle", { opacity: 1, duration: 0.8, ease: "power1.out" }, contentReveal + 0.7);
+tl.to(burnState, {
+  wp: 0,
+  duration: burnDuration,
+  ease: "power1.in",
+  onUpdate: function() {
+    var p = 1 - burnState.wp; // 0→1 灼烧进度
+    buildBurnPath(p, "#burn-path"); // 更新剪辑路径
+    drawCharLayer(p); // 绘制烧焦边缘 canvas
+  }
+}, burnStart);
+// 进入场景在灼烧接近完成时从黑色淡入
+tl.fromTo(new, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, burnStart + burnDuration * 0.9);
+// 在灼烧完成时隐藏退出场景
+tl.set(old, { opacity: 0, clipPath: "none" }, burnStart + burnDuration);
 ```
 
-**Content burns with the page — no falling debris.** The clip-path on scene1 IS the effect — as the fire shape expands, everything behind the fire edge (text, images, lines) disappears naturally. Don't clone elements, don't create falling debris. The content is part of the page being consumed. The scorched canvas edge provides the visual char line at the burn boundary.
-
-**Hide scene1 via `tl.set` at burn end — NEVER in `onComplete`.** Using `onComplete` to hide scene1 is not reversible when scrubbing. Instead, use a `tl.set` at the exact burn end time:
-
-```js
-tl.to(
-  burnState,
-  {
-    progress: 1,
-    duration: BURN_DURATION,
-    ease: "none",
-    onUpdate: function () {
-      var wp = burnState.progress;
-      var scene1 = document.getElementById("scene1");
-      if (wp <= 0) {
-        scene1.style.clipPath = "none"; // fully visible when rewound
-      } else if (wp < 1) {
-        scene1.style.clipPath = buildClipPath(wp);
-      }
-      drawEdge(wp);
-    },
-    // NO onComplete — use tl.set instead
-  },
-  T,
-);
-
-// Hide scene1 at exact burn end — reversible via timeline
-tl.set("#scene1", { opacity: 0 }, T + BURN_DURATION);
-tl.set("#scene1", { clipPath: "none" }, T + BURN_DURATION);
-```
-
-The `onUpdate` handles clip-path and canvas edge per-frame. The `tl.set` handles the final hide — and GSAP automatically reverses it when scrubbing backward, restoring scene1 to `opacity: 1`.
-
-The `onUpdate` callback is the key — it runs every frame to advance the clip-path and canvas edge in sync with the timeline.
+**注意：** `clipPath` 必须通过 `onUpdate` 中的 `setAttribute` 更新（非 GSAP 补间）。`onUpdate` 必须在 `wp <= 0` 时恢复 `clipPath: "none"` 以支持倒带 — `tl.set(old, { clipPath: "none" }, ...)` 不做这件事；它必须在 `onUpdate` 内部发生。

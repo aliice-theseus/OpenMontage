@@ -1,66 +1,66 @@
-# Narration & Script
+# 旁白与脚本
 
-How to write narration scripts for video compositions. Read when the composition includes voiceover or TTS.
+如何为视频合成编写旁白脚本。当合成包含画外音或 TTS 时阅读。
 
-## Pacing
+## 节奏
 
-- **2.5 words per second** is natural speaking pace
-- 15s = ~37 words. 30s = ~75 words. 60s = ~150 words
-- Leave room for pauses. Silence between sentences is a feature, not dead air
-- The script should feel SHORTER than the video — visual breathing room matters
+- **每秒 2.5 个词**是自然的说话速度
+- 15 秒 ≈ 37 词。30 秒 ≈ 75 词。60 秒 ≈ 150 词
+- 为停顿留出空间。句子之间的静默是一种特性，不是死寂
+- 脚本应感觉比视频**更短**——视觉呼吸空间很重要
 
-## Tone
+## 语气
 
-Write like a person, not a brochure:
+像人一样写作，而不是宣传册：
 
-- Use contractions: "it's", "you'll", "that's", "we've"
-- Vary sentence length — short punchy phrases mixed with longer flowing ones
-- Read it out loud. If it sounds robotic, rewrite it
-- Avoid jargon unless the audience expects it
+- 使用缩写："it's"、"you'll"、"that's"、"we've"
+- 变化句子长度——短促有力的短语与较长的流畅句子混合
+- 大声读出来。如果听起来像机器人，就重写
+- 除非受众期望，否则避免使用行话
 
-## Number Pronunciation
+## 数字发音
 
-Write what you want the voice to say. TTS reads literally.
+写出你希望语音说的内容。TTS 会逐字读取。
 
-| In the product | Write in script as                |
-| -------------- | --------------------------------- |
-| 135+           | more than one hundred thirty five |
-| $1.9T          | nearly two trillion dollars       |
-| 99.999%        | ninety nine point nine percent    |
-| 200M+          | over two hundred million          |
-| 10x            | ten times                         |
-| API            | A P I                             |
-| stripe.com     | stripe dot com                    |
+| 产品中显示 | 脚本中写作                     |
+| ---------- | ------------------------------ |
+| 135+       | more than one hundred thirty five |
+| $1.9T      | nearly two trillion dollars       |
+| 99.999%    | ninety nine point nine percent    |
+| 200M+      | over two hundred million          |
+| 10x        | ten times                         |
+| API        | A P I                             |
+| stripe.com | stripe dot com                    |
 
-The visual can show the exact figure while the voice rounds it.
+视觉可以显示确切数字，而语音将其四舍五入。
 
-## Structure
+## 结构
 
-For product videos:
+对于产品视频：
 
-1. **Hook** — what's surprising or impressive about this product? A bold claim, a provocative question, a contrast, or a striking number. This is the opening line. **Vary the hook type** — don't default to a stat every time.
-2. **Story** — what does the product do? Who uses it? Keep it concrete.
-3. **Proof** — stats, customer names, social proof. Real numbers from the product.
-4. **CTA** — what should the viewer do? "Start building at stripe dot com."
+1. **钩子** — 这个产品有什么令人惊讶或印象深刻的地方？一个大胆的主张、一个挑衅性的问题、一个对比或一个惊人的数字。这是开场白。**变化钩子类型** — 不要每次都默认为统计数据。
+2. **故事** — 产品做什么？谁使用它？保持具体。
+3. **证明** — 统计数据、客户名称、社交证明。来自产品的真实数据。
+4. **CTA（行动号召）** — 观众应该做什么？"Start building at stripe dot com。"
 
-Not every video needs all four. A 15-second social ad might be Hook + Proof + CTA. A 60-second product tour uses all four with more Story.
+并非每个视频都需要全部四个。一个 15 秒的社交广告可能只有钩子 + 证明 + CTA。一个 60 秒的产品演示使用全部四个，故事部分更丰富。
 
-## The Opening Line
+## 开场白
 
-The most important sentence in the video. It must create tension, curiosity, or surprise in the first 3 seconds.
+视频中最重要的句子。它必须在头 3 秒内创造张力、好奇心或惊喜。
 
-Patterns that work:
+有效的模式：
 
-- **A bold claim**: "The financial infrastructure that powers the internet economy."
-- **A question that provokes**: "What if your database could think?"
-- **A contrast**: "Your AI agent already knows how to make videos. It just needs the right format."
-- **A number that shocks**: "Nearly two trillion dollars." (Use sparingly — not every video should open with a stat.)
+- **一个大胆的主张**："支撑互联网经济的金融基础设施。"
+- **一个挑衅的问题**："如果你的数据库能思考呢？"
+- **一个对比**："你的 AI 代理已经知道如何制作视频。它只需要正确的格式。"
+- **一个令人震惊的数字**："近两万亿美元。"（谨慎使用——不是每个视频都该以统计数据开场。）
 
-If the opening is generic ("Welcome to Stripe" / "Introducing our product"), start over.
+如果开场很通用（"欢迎使用 Stripe" / "介绍我们的产品"），重新开始。
 
-## Example
+## 示例
 
-From a 62-second product launch video (team reference):
+来自一个 62 秒的产品发布视频（团队参考）：
 
 ```
 Your AI agent already knows how to make videos.
@@ -89,4 +89,4 @@ Watch it build.
 Hyperframes. Go make something.
 ```
 
-Note: ~140 words for 62 seconds — that's 2.3 words/sec, leaving room for pauses and visual breathing.
+注意：62 秒约 140 词——即每秒 2.3 词，为停顿和视觉呼吸留出空间。

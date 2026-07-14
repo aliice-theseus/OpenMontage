@@ -1,65 +1,65 @@
-# Scene Director - Localization Dub Pipeline
+# 场景导演 - 本地化配音流水线
 
-## When To Use
+## 使用时机
 
-Plan how each localized deliverable will handle timing, visible speech, subtitles, and on-screen text. This is where the pipeline decides whether to preserve the original cut, cover mouth-visible sections, or attempt lip sync.
+规划每个本地化交付物如何处理时序、可见嘴部动作、字幕和屏幕文字。这是流水线决定是保留原始剪辑、覆盖嘴部可见段落还是尝试唇形同步的阶段。
 
-## Reference Inputs
+## 参考输入
 
 - `docs/localization-dubbing-best-practices.md`
 - `skills/creative/video-editing.md`
 
-## Process
+## 流程
 
-### 1. Choose The Dub Mode Per Deliverable
+### 1. 为每个交付物选择配音模式
 
-Use one of:
+使用以下模式之一：
 
-- `subtitle_only`
-- `dub_audio_only`
-- `lip_synced`
-- `hybrid_covered`
+- `subtitle_only`（仅字幕）
+- `dub_audio_only`（仅配音音频）
+- `lip_synced`（唇形同步）
+- `hybrid_covered`（混合覆盖）
 
-`hybrid_covered` means using B-roll, graphics, or text coverage during sections where visible mouth mismatch would be distracting.
+`hybrid_covered` 指在嘴部可见且口型不匹配会造成干扰的段落，使用 B-roll、图形或文字覆盖。
 
-### 2. Map Timing Risk
+### 2. 映射时序风险
 
-Identify scenes likely to drift because of:
+识别可能因以下原因产生时间偏差的场景：
 
-- fast speech,
-- dense legal copy,
-- multiple speakers,
-- fast cuts,
-- visible close-up mouths.
+- 语速过快
+- 密集的法务文案
+- 多人对话
+- 快速剪辑
+- 可见的嘴部特写
 
-### 3. Note On-Screen Language Dependencies
+### 3. 标注屏幕文字语言依赖
 
-Record scenes that contain:
+记录包含以下内容的场景：
 
-- UI text,
-- lower thirds,
-- title cards,
-- baked-in subtitles,
-- charts or labels that may need replacement or coverage.
+- 界面文字
+- 底部字幕条
+- 标题卡片
+- 内嵌字幕
+- 可能需要替换或覆盖的图表或标签
 
-### 4. Use Metadata For Variant Planning
+### 4. 使用元数据进行变体规划
 
-Recommended metadata keys:
+推荐的元数据键：
 
 - `dub_mode_map`
 - `timing_risk_map`
 - `on_screen_text_replacement_map`
 - `language_variant_notes`
 
-### 5. Quality Gate
+### 5. 质量门禁
 
-- every deliverable has a defined localization treatment,
-- timing risks are mapped,
-- lip-sync usage is selective,
-- text replacement needs are not hidden.
+- 每个交付物都有确定的本地化处理方案
+- 时序风险已映射
+- 唇形同步的使用有选择性
+- 文字替换需求未被隐藏
 
-## Common Pitfalls
+## 常见陷阱
 
-- Assuming dubbed audio will fit the source timing exactly.
-- Choosing lip sync for every shot instead of only the shots that justify it.
-- Forgetting about baked-in text until compose time.
+- 假设配音音频能完全匹配源视频的时序
+- 在每一个镜头都使用唇形同步，而非仅用于值得如此处理的镜头
+- 到合成阶段才想起内嵌文字的问题

@@ -1,132 +1,130 @@
-# B-Roll Planning for OpenMontage
+# OpenMontage B-roll 规划
 
-> How to plan B-roll needs from a script, decide between stock and generated footage,
-> construct effective search queries, and evaluate footage quality.
+> 如何从脚本规划 B-roll 需求、在素材和生成素材之间做出决定、
+> 构建有效的搜索查询以及评估素材质量。
 
-## When to Use
+## 何时使用
 
-You are planning visual assets for a video and need supplementary footage (B-roll) to accompany
-narration, establish context, or add visual variety. This skill teaches you when to reach for
-stock footage vs. AI generation, and how to get good results from each.
+你正在为视频规划视觉资产，需要补充素材（B-roll）来配合旁白、建立背景或添加视觉多样性。本技能教你何时使用素材与 AI 生成，以及如何从每种方式获得良好结果。
 
-## The Decision Matrix: Stock vs. Generated
+## 决策矩阵：素材 vs 生成
 
-| Scene Need | Prefer Stock | Prefer Generated |
-|------------|-------------|-----------------|
-| Real-world establishing shot (city, office, nature) | **Yes** — stock excels here | Only if no good stock match |
-| People in realistic settings | **Yes** — generated humans often look uncanny | Only with high-quality models |
-| Abstract concept visualization | No | **Yes** — AI can create what doesn't exist |
-| Custom diagrams/infographics | No | **Yes** — use `diagram_gen` or `image_selector` |
-| Branded/stylized imagery | No | **Yes** — AI matches your playbook style |
-| Historical/archival footage | **Yes** — stock libraries have archives | No |
-| Specific technical equipment | **Yes** — real photos are more credible | Only if equipment doesn't exist |
-| Motion/action clips (waves, traffic, clouds) | **Yes** — stock video is perfect for this | AI video is catching up |
-| Metaphorical imagery (growth, connection) | Either works | **Yes** — more creative control |
+| 场景需求 | 优先素材 | 优先生成 |
+|----------|---------|---------|
+| 真实世界的定场镜头（城市、办公室、自然） | **是** — 素材擅长此处 | 仅在无好的素材匹配时 |
+| 真实场景中的人物 | **是** — 生成的人常看起来怪异 | 仅使用高质量模型时 |
+| 抽象概念可视化 | 否 | **是** — AI 可以创造不存在的东西 |
+| 自定义图表/信息图 | 否 | **是** — 使用 `diagram_gen` 或 `image_selector` |
+| 品牌化/风格化图像 | 否 | **是** — AI 匹配你的剧本风格 |
+| 历史/档案素材 | **是** — 素材库有档案 | 否 |
+| 特定技术设备 | **是** — 真实照片更可信 | 仅设备不存在时 |
+| 运动/动作片段（海浪、交通、云） | **是** — 素材视频非常适合此 | AI 视频正在追赶 |
+| 隐喻意象（成长、连接） | 两者皆可 | **是** — 更多创意控制 |
 
-**Rule of thumb:** If the scene needs to look _real_, use stock. If it needs to look _specific to your concept_, generate it.
+**经验法则：** 如果场景需要看起来_真实_，使用素材。如果需要看起来_对你的概念独特_，生成它。
 
-## Extracting B-Roll Needs from a Script
+## 从脚本提取 B-roll 需求
 
-Walk the script section by section. For each section, ask:
+逐段检查脚本。对每个段落，问：
 
-1. **What is the narrator talking about?** — The subject suggests the visual.
-2. **Is there an enhancement cue?** — The script writer may have embedded `[B-ROLL: ...]` cues.
-3. **Does this section reference something concrete?** — "servers in a data center" → stock footage of servers.
-4. **Does this section explain an abstract concept?** — "the algorithm weighs each factor" → generated diagram.
-5. **How long is this section?** — Determines clip duration needed.
+1. **叙述者在谈论什么？** — 主体提示视觉。
+2. **是否有增强提示？** — 脚本作者可能嵌入了 `[B-ROLL: ...]` 提示。
+3. **这段落是否引用具体内容？** — "数据中心中的服务器" → 服务器素材。
+4. **这段落是否解释抽象概念？** — "算法权衡每个因素" → 生成图表。
+5. **这段落有多长？** — 决定需要的片段时长。
 
-### Output: B-Roll Brief
+### 输出：B-roll 简报
 
-For each identified need, create an entry:
+对每个识别的需求，创建一个条目：
 
 ```
-Scene: s3 (15s-22s)
-Need: Establishing shot of a modern data center
-Source: stock
-Keywords: ["data center", "server room", "rack servers blue light"]
-Duration: 4-6 seconds
-Orientation: landscape
-Mood: cool, technological, clean
-Fallback: AI-generated image of server racks
+场景：s3（15秒-22秒）
+需求：现代化数据中心的定场镜头
+来源：素材
+关键词：["数据中心", "服务器机房", "机架服务器蓝光"]
+时长：4-6秒
+方向：横向
+情绪：冷静、科技感、干净
+回退：AI 生成的服务器机架图像
 ```
 
-## Constructing Effective Stock Search Queries
+## 构建有效的素材搜索查询
 
-### Query Construction Rules
+### 查询构建规则
 
-1. **Be specific but not too specific.** "aerial city skyline sunset" works. "aerial shot of downtown San Francisco financial district at 6:47pm golden hour" returns nothing.
+1. **要具体但不要过于具体。** "城市天际线日落航拍"有效。"旧金山金融中心下午6:47黄金时刻航拍"返回空结果。
 
-2. **Use 2-4 keywords.** Stock search is keyword-based, not semantic. More words = fewer results.
+2. **使用2-4个关键词。** 素材搜索基于关键词，而非语义。更多词 = 更少结果。
 
-3. **Lead with the subject.** "ocean waves" not "beautiful calm serene ocean waves at dawn."
+3. **以主体开头。** "海浪"而非"美丽平静清澈的海浪在黎明。"
 
-4. **Include the visual quality you need:**
-   - Add "aerial" or "drone" for overhead shots
-   - Add "close-up" or "macro" for detail shots
-   - Add "timelapse" for time-lapse footage
-   - Add "slow motion" for slow-mo clips
+4. **包含你需要的视觉质量：**
+   - 航拍或俯瞰镜头添加 "aerial" 或 "drone"
+   - 细节镜头添加 "close-up" 或 "macro"
+   - 延时摄影添加 "timelapse"
+   - 慢动作添加 "slow motion"
 
-5. **Try synonyms on failure.** If "programmer coding" returns poor results, try "developer laptop" or "software engineer workspace."
+5. **失败时尝试同义词。** 如果"程序员编码"返回差结果，尝试"开发者笔记本"或"软件工程师工作区。"
 
-### Query Templates by Scene Type
+### 按场景类型的查询模板
 
-Add a **POV keyword** to every query. Stock libraries (Pexels, Pixabay, Storyblocks, Artgrid) explicitly index POV terms — drone, aerial, OTS (over-the-shoulder), macro, top-down, dashcam, FPV, handheld, locked-off — and adding the POV often unlocks better matches than refining the subject. The CMU/Harvard CHAI taxonomy treats POV as a first-class Scene aspect for the same reason: it changes which library shelf you're searching.
+在每个查询中添加一个**视角关键词**。素材库明确索引视角术语 — 无人机、航拍、过肩、微距、俯视、行车记录仪、FPV、手持、锁定 — 添加视角通常比优化主体获得更好的匹配。CMU/Harvard CHAI 分类法将视角视为 Scene 的一等公民，原因相同：它改变了你搜索的库架。
 
-| Scene Type | Query Template | Example with POV |
-|-----------|---------------|---------|
-| Establishing | `[place] [time of day] [POV]` | "tokyo skyline night drone" |
-| Activity | `[person] [action] [POV]` | "scientist microscope OTS" |
-| Object | `[object] [style] [POV]` | "circuit board macro top-down" |
-| Nature | `[element] [quality] [POV]` | "ocean waves aerial drone" |
-| Abstract motion | `[movement] [style] [POV]` | "light trails timelapse locked-off" |
-| Workplace | `[setting] [activity] [POV]` | "modern office meeting handheld" |
+| 场景类型 | 查询模板 | 带视角的示例 |
+|----------|---------|---------|
+| 定场 | `[地点] [时间段] [视角]` | "tokyo skyline night drone" |
+| 活动 | `[人物] [动作] [视角]` | "scientist microscope OTS" |
+| 物体 | `[物体] [风格] [视角]` | "circuit board macro top-down" |
+| 自然 | `[元素] [品质] [视角]` | "ocean waves aerial drone" |
+| 抽象运动 | `[运动] [风格] [视角]` | "light trails timelapse locked-off" |
+| 工作场所 | `[环境] [活动] [视角]` | "modern office meeting handheld" |
 
-If the scene description doesn't already imply a POV, ask the script/scene director — don't default to "no POV." A wrong-POV match (handheld when the scene needs drone) is harder to fix than a wrong color grade.
+如果场景描述尚未暗示视角，询问剧本/场景导演 — 不要默认为"无视角。"错误的视角匹配（手持当场景需要无人机时）比错误的调色更难修复。
 
-## Evaluating Stock Footage Quality
+## 评估素材质量
 
-When the stock tool returns results, evaluate before using:
+当素材工具返回结果时，在使用前评估：
 
-### Image Criteria
-- **Resolution:** Meets target (1080p minimum for video frames)
-- **Relevance:** Actually depicts what the scene needs (not just keyword match)
-- **Style compatibility:** Doesn't clash with the playbook's visual style
-- **No watermarks:** Pexels/Pixabay are license-free, but verify
-- **Composition:** Subject is well-framed, not cut off awkwardly
-- **POV match:** Does the footage's actual POV (drone, OTS, macro, handheld, locked-off, etc.) match what the scene needs? A wrong POV — e.g., handheld when the scene wants drone — is **more costly to fix than a wrong color grade**. Reject and re-query rather than try to crop your way out of it.
+### 图像标准
+- **分辨率：** 满足目标（视频帧至少1080p）
+- **相关性：** 实际描绘场景需要的内容（不仅仅是关键词匹配）
+- **风格兼容性：** 不与剧本视觉风格冲突
+- **无水印：** Pexels/Pixabay 是免许可的，但需验证
+- **构图：** 主体构图良好，未尴尬裁剪
+- **视角匹配：** 素材的实际视角（无人机、过肩、微距、手持、锁定等）是否匹配场景需求？错误的视角 — 例如手持当场景想要无人机 — **比错误的调色更难修复**。拒绝并重新查询，而非试图通过裁剪来解决。
 
-### Video Criteria (all image criteria plus)
-- **Duration:** At least as long as the scene needs (can trim, can't extend)
-- **Motion:** Smooth, no jarring camera movement (unless that's the intent)
-- **Frame rate:** Matches target output (24/30fps standard)
-- **Audio:** Stock video audio is usually discarded — don't factor it in
+### 视频标准（所有图像标准外附加）
+- **时长：** 至少与场景需要一样长（可修剪，不可延长）
+- **运动：** 平滑，无突兀的相机运动（除非是有意的）
+- **帧率：** 匹配目标输出（24/30fps 标准）
+- **音频：** 素材视频音频通常被丢弃 — 不考虑它
 
-### Scoring Heuristic
+### 评分启发式
 
-Rate each result 1-5:
-- **5:** Perfect match, use immediately
-- **4:** Good match, minor crop or trim needed
-- **3:** Acceptable, would benefit from color grading to match playbook
-- **2:** Marginal — try different keywords first
-- **1:** Wrong — doesn't match the scene at all
+每项结果评分1-5：
+- **5：** 完美匹配，立即使用
+- **4：** 良好匹配，需轻微裁剪或修剪
+- **3：** 可接受，通过调色匹配剧本后会更好
+- **2：** 边缘 — 先尝试不同关键词
+- **1：** 错误 — 根本不匹配场景
 
-**Threshold:** Use results scoring 3+. Below 3, refine the query or switch to generated.
+**阈值：** 使用评分3+的结果。低于3，优化查询或切换到生成。
 
-## Failure Escalation
+## 失败升级
 
-When stock search fails (no results or all score below 3):
+当素材搜索失败（无结果或所有评分低于3）：
 
-1. **Retry with different keywords** — try synonyms, broader terms, or different angles
-2. **Try the other stock provider** — Pexels and Pixabay have different libraries
-3. **Switch to AI generation** — use `flux_image` or `openai_image` with the scene description
-4. **Escalate to user** — "I couldn't find good stock footage for [scene]. Here are the best options: [show results]. Or I can generate an image instead. What do you prefer?"
+1. **用不同关键词重试** — 尝试同义词、更广泛术语或不同角度
+2. **尝试另一个素材提供商** — Pexels 和 Pixabay 有不同的库
+3. **切换到 AI 生成** — 使用 `flux_image` 或 `openai_image` 配合场景描述
+4. **升级到用户** — "我找不到 [场景] 的好素材。以下是最佳选项：[显示结果]。或者我可以生成一个图像。你偏好哪种？"
 
-The agent should only ask the user when both stock search AND generation fallback would produce suboptimal results. For most cases, the fallback chain handles it silently.
+代理应仅在素材搜索和生成回退都会产生次优结果时才询问用户。对于大多数情况，回退链会静默处理。
 
-## Attribution Tracking
+## 归属追踪
 
-Both Pexels and Pixabay are free for commercial use with no required attribution.
-However, best practice is to track sources in the asset manifest:
+Pexels 和 Pixabay 均可免费用于商业用途，无需署名。
+但最佳实践是在资产清单中跟踪来源：
 
 ```json
 {
@@ -142,4 +140,4 @@ However, best practice is to track sources in the asset manifest:
 }
 ```
 
-This data is available in the tool's response (`photographer`, `pexels_url` / `page_url`). Include it in the asset manifest for transparency.
+此数据在工具的响应中可用（`photographer`、`pexels_url` / `page_url`）。为透明起见将其包含在资产清单中。

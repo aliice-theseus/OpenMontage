@@ -1,26 +1,23 @@
-# Publish Director - Character Animation Pipeline
+# 发布导演 - 角色动画管线
 
-## Goal
+## 目标
 
-Package the final character-animation deliverable with honest metadata and a
-strong character-forward thumbnail concept.
+打包最终的角色动画交付物，附带诚实的元数据和以角色为主的强缩略图概念。
 
-## Requirements
+## 要求
 
-- Mention the actual visual treatment: local rigged character animation,
-  procedural effects, Remotion/HyperFrames render, or mixed.
-- Pick a poster frame where the main character's emotion is readable.
-- If the output is a sample, label it as a sample.
-- If the final is inspired by a reference, describe the inspiration without
-  claiming duplication.
+- 说明实际的视觉处理方式：本地骨架角色动画、程序化特效、Remotion/HyperFrames 渲染，或混合方式。
+- 选取主要角色情绪可读的海报帧。
+- 如果输出是样片，请明确标注为样片。
+- 如果最终成品受参考素材启发，需描述灵感来源，但不得声称达到了复制效果。
 
-## Output
+## 输出
 
-Produce `publish_log` with:
+产出 `publish_log`，包含：
 
-- final video path,
-- thumbnail/poster-frame notes,
-- title ideas,
-- description,
-- platform-specific export notes,
-- limitations or follow-up recommendations.
+- 最终视频路径，
+- 缩略图/海报帧说明，
+- 标题创意，
+- 描述，
+- 特定平台的导出说明，
+- 局限性或后续改进建议。

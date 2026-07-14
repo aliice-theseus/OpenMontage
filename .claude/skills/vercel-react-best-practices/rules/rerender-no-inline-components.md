@@ -1,23 +1,23 @@
 ---
-title: Don't Define Components Inside Components
+title: 不要在组件内部定义组件
 impact: HIGH
-impactDescription: prevents remount on every render
+impactDescription: 防止每次渲染都重新挂载
 tags: rerender, components, remount, performance
 ---
 
-## Don't Define Components Inside Components
+## 不要在组件内部定义组件
 
-**Impact: HIGH (prevents remount on every render)**
+**影响：高（防止每次渲染都重新挂载）**
 
-Defining a component inside another component creates a new component type on every render. React sees a different component each time and fully remounts it, destroying all state and DOM.
+在另一个组件内部定义组件会在每次渲染时创建一个新的组件类型。React 每次都会看到不同的组件，并完全重新挂载它，销毁所有状态和 DOM。
 
-A common reason developers do this is to access parent variables without passing props. Always pass props instead.
+开发者这样做的一个常见原因是为了在不传递 props 的情况下访问父级变量。应始终传递 props 替代。
 
-**Incorrect (remounts on every render):**
+**错误做法（每次渲染都重新挂载）：**
 
 ```tsx
 function UserProfile({ user, theme }) {
-  // Defined inside to access `theme` - BAD
+  // 内部定义以访问 `theme` - 错误
   const Avatar = () => (
     <img
       src={user.avatarUrl}
@@ -25,11 +25,11 @@ function UserProfile({ user, theme }) {
     />
   )
 
-  // Defined inside to access `user` - BAD
+  // 内部定义以访问 `user` - 错误
   const Stats = () => (
     <div>
-      <span>{user.followers} followers</span>
-      <span>{user.posts} posts</span>
+      <span>{user.followers} 粉丝</span>
+      <span>{user.posts} 帖子</span>
     </div>
   )
 
@@ -42,9 +42,9 @@ function UserProfile({ user, theme }) {
 }
 ```
 
-Every time `UserProfile` renders, `Avatar` and `Stats` are new component types. React unmounts the old instances and mounts new ones, losing any internal state, running effects again, and recreating DOM nodes.
+每次 `UserProfile` 渲染时，`Avatar` 和 `Stats` 都是新的组件类型。React 卸载旧实例并挂载新实例，丢失所有内部状态，重新运行 effect，并重新创建 DOM 节点。
 
-**Correct (pass props instead):**
+**正确做法（改为传递 props）：**
 
 ```tsx
 function Avatar({ src, theme }: { src: string; theme: string }) {
@@ -59,8 +59,8 @@ function Avatar({ src, theme }: { src: string; theme: string }) {
 function Stats({ followers, posts }: { followers: number; posts: number }) {
   return (
     <div>
-      <span>{followers} followers</span>
-      <span>{posts} posts</span>
+      <span>{followers} 粉丝</span>
+      <span>{posts} 帖子</span>
     </div>
   )
 }
@@ -75,8 +75,8 @@ function UserProfile({ user, theme }) {
 }
 ```
 
-**Symptoms of this bug:**
-- Input fields lose focus on every keystroke
-- Animations restart unexpectedly
-- `useEffect` cleanup/setup runs on every parent render
-- Scroll position resets inside the component
+**此错误的症状：**
+- 输入字段每次按键都失去焦点
+- 动画意外重新开始
+- `useEffect` 清理/设置在每次父渲染时运行
+- 组件内的滚动位置重置

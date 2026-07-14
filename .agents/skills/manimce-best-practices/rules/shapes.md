@@ -1,13 +1,13 @@
 ---
 name: shapes
-description: Circle, Square, Rectangle, Polygon and geometric primitives
+description: Circle、Square、Rectangle、Polygon 和几何基本体
 metadata:
   tags: shapes, circle, square, rectangle, polygon, geometry
 ---
 
-# Geometric Shapes
+# 几何形状
 
-Basic geometric primitives in Manim.
+Manim 中的基本几何基本体。
 
 ## Circle
 
@@ -16,10 +16,10 @@ from manim import *
 
 class CircleExample(Scene):
     def construct(self):
-        # Default circle
+        # 默认圆
         c1 = Circle()
 
-        # With parameters
+        # 带参数
         c2 = Circle(
             radius=2,
             color=BLUE,
@@ -30,23 +30,23 @@ class CircleExample(Scene):
         self.add(c1, c2)
 ```
 
-### Circle Methods
+### Circle 方法
 
 ```python
 circle = Circle()
 
-# Get properties
+# 获取属性
 circle.get_radius()
 circle.get_center()
 
-# Create from points
+# 从点创建
 Circle.from_three_points(p1, p2, p3)
 
-# Surround another mobject
+# 包围另一个 mobject
 triangle = Triangle()
-circle = Circle().surround(triangle)  # Circle wraps around triangle
-circle = Circle().surround(triangle, buffer_factor=1.5)  # With padding
-circle = Circle().surround(triangle, stretch=True)  # Stretch to fit
+circle = Circle().surround(triangle)  # 圆包围三角形
+circle = Circle().surround(triangle, buffer_factor=1.5)  # 带边距
+circle = Circle().surround(triangle, stretch=True)  # 拉伸以适应
 ```
 
 ## Ellipse
@@ -67,10 +67,10 @@ class EllipseExample(Scene):
 ```python
 class SquareExample(Scene):
     def construct(self):
-        # Default square
+        # 默认正方形
         s1 = Square()
 
-        # With parameters
+        # 带参数
         s2 = Square(
             side_length=2,
             color=RED,
@@ -114,10 +114,10 @@ class RoundedRectExample(Scene):
 ```python
 class TriangleExample(Scene):
     def construct(self):
-        # Equilateral triangle
+        # 等边三角形
         tri = Triangle(color=PURPLE)
 
-        # Custom triangle (using Polygon)
+        # 自定义三角形（使用 Polygon）
         custom_tri = Polygon(
             ORIGIN, RIGHT * 2, UP * 3,
             color=GREEN
@@ -128,18 +128,18 @@ class TriangleExample(Scene):
 
 ## Polygon
 
-Create any polygon from vertices.
+从顶点创建任意多边形。
 
 ```python
 class PolygonExample(Scene):
     def construct(self):
-        # Pentagon
+        # 五边形
         pentagon = RegularPolygon(n=5, color=ORANGE)
 
-        # Hexagon
+        # 六边形
         hexagon = RegularPolygon(n=6, color=TEAL)
 
-        # Custom polygon
+        # 自定义多边形
         custom = Polygon(
             [-2, -1, 0],
             [2, -1, 0],
@@ -159,11 +159,11 @@ class PolygonExample(Scene):
 class RegularPolygonExamples(Scene):
     def construct(self):
         shapes = VGroup(
-            RegularPolygon(n=3),   # Triangle
-            RegularPolygon(n=4),   # Square
-            RegularPolygon(n=5),   # Pentagon
-            RegularPolygon(n=6),   # Hexagon
-            RegularPolygon(n=8),   # Octagon
+            RegularPolygon(n=3),   # 三角形
+            RegularPolygon(n=4),   # 正方形
+            RegularPolygon(n=5),   # 五边形
+            RegularPolygon(n=6),   # 六边形
+            RegularPolygon(n=8),   # 八边形
         ).arrange(RIGHT)
         self.add(shapes)
 ```
@@ -174,33 +174,33 @@ class RegularPolygonExamples(Scene):
 class StarExample(Scene):
     def construct(self):
         star = Star(
-            n=5,                    # Number of points
+            n=5,                    # 顶点数
             outer_radius=2,
-            inner_radius=1,         # Optional: auto-calculated if not specified
-            density=2,              # How vertices connect (affects shape)
+            inner_radius=1,         # 可选：未指定时自动计算
+            density=2,              # 顶点连接方式（影响形状）
             color=YELLOW,
             fill_opacity=1
         )
         self.add(star)
 
-        # Different densities create different star patterns
+        # 不同密度创建不同星形图案
         star_d2 = Star(7, outer_radius=2, density=2, color=RED)
         star_d3 = Star(7, outer_radius=2, density=3, color=PURPLE)
 ```
 
 ## RegularPolygram
 
-Star-like shapes with vertices connected by density.
+通过密度连接顶点的星形。
 
 ```python
 class PolygramExample(Scene):
     def construct(self):
-        # Pentagram (5-pointed star pattern)
+        # 五角星形（5角星图案）
         pentagram = RegularPolygram(5, radius=2)
         self.add(pentagram)
 ```
 
-## Annulus (Ring)
+## Annulus（圆环）
 
 ```python
 class AnnulusExample(Scene):
@@ -214,12 +214,12 @@ class AnnulusExample(Scene):
         self.add(ring)
 ```
 
-## Sector and Arc
+## Sector 和 Arc
 
 ```python
 class SectorArcExample(Scene):
     def construct(self):
-        # Sector (pie slice)
+        # Sector（扇形）
         sector = Sector(
             radius=2,
             angle=PI/2,
@@ -228,7 +228,7 @@ class SectorArcExample(Scene):
             fill_opacity=0.8
         ).shift(LEFT * 2)
 
-        # Arc (just the curve)
+        # Arc（仅曲线）
         arc = Arc(
             radius=2,
             angle=PI/2,
@@ -247,7 +247,7 @@ class ArcBetweenPointsExample(Scene):
         arc = ArcBetweenPoints(
             start=LEFT * 2,
             end=RIGHT * 2,
-            angle=PI/2,  # Curvature
+            angle=PI/2,  # 曲率
             color=GREEN
         )
         self.add(arc)
@@ -258,10 +258,10 @@ class ArcBetweenPointsExample(Scene):
 ```python
 class DotExample(Scene):
     def construct(self):
-        # Default dot
+        # 默认点
         d1 = Dot()
 
-        # Customized
+        # 自定义
         d2 = Dot(
             point=RIGHT * 2,
             radius=0.2,
@@ -271,30 +271,30 @@ class DotExample(Scene):
         self.add(d1, d2)
 ```
 
-## Common Shape Operations
+## 常用形状操作
 
 ```python
 shape = Square()
 
-# Transform
+# 变换
 shape.scale(2)
 shape.rotate(PI/4)
-shape.stretch(2, dim=0)  # Stretch horizontally
+shape.stretch(2, dim=0)  # 水平拉伸
 
-# Style
+# 样式
 shape.set_fill(RED, opacity=0.5)
 shape.set_stroke(WHITE, width=4)
 
-# Position
+# 定位
 shape.move_to(ORIGIN)
 shape.shift(UP * 2)
 shape.next_to(other, RIGHT)
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Use RegularPolygon for regular shapes** - More precise than manual Polygon
-2. **Set fill_opacity for visibility** - Default is often 0 (transparent)
-3. **Use Dot for points** - Better than Circle with small radius
-4. **Use RoundedRectangle for UI elements** - More polished look
-5. **Combine shapes with VGroup** - For complex figures
+1. **规则形状使用 RegularPolygon** - 比手动 Polygon 更精确
+2. **设置 fill_opacity 确保可见性** - 默认常为 0（透明）
+3. **点使用 Dot** - 比小半径 Circle 更好
+4. **UI 元素使用 RoundedRectangle** - 更精致的外观
+5. **使用 VGroup 组合形状** - 用于复杂图形
