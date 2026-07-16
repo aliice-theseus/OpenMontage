@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openmontage.artifacts/key_visual.schema.json",
+  "title": "Key Visual Manifest（关键视觉清单）",
+  "description": "OpenMontage 关键视觉（Key Visual）制品清单。定义在 edit 阶段生成的动画三视图角色概念图和场景关键帧，用于 compose 阶段前的审批确认。",
+  "type": "object",
+  "required": [
+    "version",
+    "character_visuals",
+    "scene_keyframes",
+    "approval"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+ "type": "string",
+      "const": "1.0",
+      "description": "清单格式版本（当前固定为 1.0）"
+    },
+    "character_visuals": {
+      "type": "array",
+      "description": "角色三视图概念图列表。每个角色需提供正面、侧面、背面三张视图，确保角色在视频生成前各角度造型已确定。",
+      "items": {
+        "type": "object",
+        "required": [
+          "character_id",
+          "name",
+          "description",
+          "image_path_front",
+          "image_path_side",
+          "image_path_back"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "character_id": {
+            "type": "string",
+            "description": "角色唯一标识符，对应剧本中的角色 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "角色名称"
+          },
+          "description": {
+            "type": "string",
+            "description": "角色外观描述，包含服装、发型、体型等特征"
+          },
+          "image_path_front": {
+            "type": "string",
+            "description": "正面视图（正面）图像文件路径"
+          },
+          "image_path_side": {
+            "type": "string",
+            "description": "侧面视图（侧面）图像文件路径"
+          },
+          "image_path_back": {
+            "type": "string",
+            "description": "背面视图（背面）图像文件路径"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "生成该角色三视图时使用的提示词"
+          },
+          "source_tool": {
+            "type": "string",
+            "description": "生成工具名称（如 Midjourney、DALL·E、Stable Diffusion 等）"
+          },
+          "cost_usd": {
+            "type": "number",
+            "description": "生成该角色三视图所消耗的美元费用"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "生成时使用的随机种子，用于复现结果"
+          }
+        }
+      }
+    },
+    "scene_keyframes": {
+      "type": "array",
+      "description": "场景关键帧列表。每个场景需提供一张或多张关键帧图像，用于预览镜头构图与氛围。",
+      "items": {
+        "type": "object",
+        "required": [
+          "scene_id",
+          "image_path",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "scene_id": {
+            "type": "string",
+            "description": "场景唯一标识符，对应剧本中的场景 ID"
+          },
+          "image_path": {
+            "type": "string",
+            "description": "关键帧图像文件路径"
+          },
+          "description": {
+            "type": "string",
+            "description": "该关键帧的画面内容描述，包含镜头角度、角色动作、背景等"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "生成该关键帧时使用的提示词"
+          },
+          "source_tool": {
+            "type": "string",
+            "description": "生成工具名称（如 Midjourney、DALL·E、Stable Diffusion 等）"
+          },
+          "cost_usd": {
+            "type": "number",
+            "description": "生成该关键帧所消耗的美元费用"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "生成时使用的随机种子，用于复现结果"
+          }
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "description": "关键视觉审批信息。用户需对角色三视图和场景关键帧进行审批，通过后方可进入 compose 阶段生成视频。",
+      "required": [
+        "status",
+        "reviewed_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected",
+            "pending"
+          ],
+          "description": "审批状态：approved（已通过）、rejected（已驳回）、pending（待审批）"
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "审批时间（ISO 8601 格式）"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "审批反馈意见，驳回时需说明修改方向"
+        },
+        "reviewer": {
+          "type": "string",
+          "description": "审批人姓名或标识"
+        }
+      }
+    }
+  }
+}

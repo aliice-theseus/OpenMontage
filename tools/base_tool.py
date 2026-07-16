@@ -139,6 +139,43 @@ class ToolResult:
 class BaseTool(ABC):
     """Abstract base class for all OpenMontage tools."""
 
+    # ------------------------------------------------------------------
+    # Pipeline gate — 自动包装子类的 execute() 以检查流水线门禁
+    # ------------------------------------------------------------------
+
+    def __init_subclass__(cls, **kwargs):
+        """Automatically wrap execute() with pipeline gate check.
+
+        Runs when ANY subclass of BaseTool is defined.  Wraps the subclass's
+        ``execute()`` so that if a :class:`PipelineContext` is active, the
+        tool name is checked against the current stage's allowed-tool list
+        before the real implementation runs.
+
+        Selectors (video_selector, image_selector etc.) bypass the gate for
+        their own ``execute()`` because they need to route to provider tools
+        that may not be in the stage list.  The provider tools they call
+        internally still get gated — see the selector's ``execute()`` for
+        the temporary bypass pattern.
+        """
+        super().__init_subclass__(**kwargs)
+
+        import functools
+        from lib.pipeline_context import get_pipeline_context, check_tool_permitted
+
+        original_execute = cls.execute
+        # 不包装抽象基类或已标记跳过门禁的工具
+        if getattr(original_execute, "__isabstractmethod__", False):
+            return
+
+        @functools.wraps(original_execute)
+        def _gated_execute(self, inputs, **kwargs):
+            ctx = get_pipeline_context()
+            if ctx is not None:
+                check_tool_permitted(self.name, ctx)
+            return original_execute(self, inputs, **kwargs)
+
+        cls.execute = _gated_execute
+
     # --- Identity (override in subclasses) ---
     name: str = ""
     version: str = "0.1.0"

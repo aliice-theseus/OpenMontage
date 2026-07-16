@@ -48,6 +48,7 @@ EP_STATE:
     scene_plan: null    # → scene_plan
     assets: null        # → asset_manifest
     edit: null          # → edit_decisions
+    key_visual: null    # → key_visual（角色三视图 + 场景关键帧 + 用户确认）
     compose: null       # → render_report
     publish: null       # → publish_log
 
@@ -77,7 +78,7 @@ EP_STATE:
 
 ### 阶段 1：串行执行阶段
 
-按顺序处理每个阶段：`research → proposal → script → scene_plan → assets → edit → compose → publish`
+按顺序处理每个阶段：`research → proposal → script → scene_plan → assets → edit → key_visual → compose → publish`
 
 **制作前阶段（research、proposal）** 在任何资金支出之前运行：
 - **research** 通过网络搜索收集原始数据 — 零成本，无工具

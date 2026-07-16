@@ -158,6 +158,34 @@ def get_stage_review_focus(manifest: dict, stage_name: str) -> list[str]:
     return []
 
 
+def get_stage_allowed_tools(manifest: dict, stage_name: str) -> set[str]:
+    """Get the set of tool names permitted in a given stage.
+
+    Collects from ALL tool-related fields on the stage and its sub-stages,
+    so the pipeline gate in ``BaseTool`` can authorise or deny a call.
+
+    Fields scanned on the stage itself:
+      ``tools_available``, ``required_tools``, ``optional_tools``,
+      ``preferred_tools``, ``fallback_tools``
+
+    Sub-stage tool lists are also included because a stage's sub-stages
+    share the same parent stage context.
+    """
+    tools: set[str] = set()
+    for stage in manifest["stages"]:
+        if stage["name"] != stage_name:
+            continue
+        # 主阶段的所有工具字段
+        for field in ("tools_available", "required_tools", "optional_tools",
+                      "preferred_tools", "fallback_tools"):
+            tools.update(stage.get(field, []))
+        # 子阶段的 tools_available
+        for sub in stage.get("sub_stages", []):
+            tools.update(sub.get("tools_available", []))
+        return tools  # 找到对应阶段后立即返回
+    return tools  # 没找到则返回空集
+
+
 # ---------------------------------------------------------------------------
 # Capability-Extension Enforcement
 # ---------------------------------------------------------------------------

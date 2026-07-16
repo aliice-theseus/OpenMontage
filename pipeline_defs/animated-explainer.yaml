@@ -34,6 +34,7 @@ required_skills:
   - pipelines/explainer/scene-director
   - pipelines/explainer/asset-director
   - pipelines/explainer/edit-director
+  - pipelines/explainer/key-visual-director
   - pipelines/explainer/compose-director
   - pipelines/explainer/publish-director
   - meta/reviewer
@@ -216,11 +217,46 @@ stages:
       - Schema-valid edit_decisions
       - Full video duration covered
 
+  - name: key_visual
+    skill: pipelines/explainer/key-visual-director
+    required_artifacts_in:
+      - scene_plan
+      - edit_decisions
+    optional_artifacts_in:
+      - asset_manifest
+      - script
+    produces:
+      - key_visual
+    required_tools:
+      - image_selector
+    tools_available:
+      - image_selector
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - "每个角色生成完整三视图: 正面、侧面、背面"
+      - "白底背景 — 三个视图均为纯白背景,无场景装饰"
+      - "面部同一 — 三个视图使用同一个面部设计,正面特征作为标准"
+      - "完整手脚 — 三个视图必须包含完整手部和脚部,不可裁切"
+      - "着装一致 — 三个视图的服装配色完全统一"
+      - "三视图风格一致,角色设计在三个视角中可识别"
+      - "关键帧构图与 scene_plan 中镜头语言匹配"
+      - "所有角色视觉设计与场景描述一致"
+      - "用户已确认关键图,approval.status 为 approved"
+      - "关键图可作为 Seedance 视频生成的参考图使用"
+    success_criteria:
+      - Schema 合法的 key_visual 产物
+      - 所有角色均有完整的 front/side/back 三视图
+      - 每个 scene_plan 中的场景至少有一张关键帧
+      - approval.status 为 "approved"
+      - 所有图片文件存在于磁盘
+
   - name: compose
     skill: pipelines/explainer/compose-director
     required_artifacts_in:
       - edit_decisions
       - asset_manifest
+      - key_visual
     optional_artifacts_in:
       - scene_plan
     produces:
