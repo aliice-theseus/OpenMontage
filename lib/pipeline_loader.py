@@ -158,6 +158,37 @@ def get_stage_review_focus(manifest: dict, stage_name: str) -> list[str]:
     return []
 
 
+def get_stage_required_artifacts(manifest: dict, stage_name: str) -> list[str]:
+    """Get the list of artifact names required as input for a stage.
+
+    Reads the ``required_artifacts_in`` field of the stage definition.
+    These are the artifacts that must exist (as completed checkpoints from
+    their producing stages) before the stage can begin.
+    """
+    for stage in manifest["stages"]:
+        if stage["name"] == stage_name:
+            return stage.get("required_artifacts_in", [])
+    return []
+
+
+def get_producing_stage(manifest: dict, artifact_name: str) -> Optional[str]:
+    """Find the stage that produces a given artifact.
+
+    Scans each stage's ``produces`` list for the artifact name.
+    Returns the first matching stage name, or ``None`` if not found.
+    """
+    for stage in manifest["stages"]:
+        produces = [a.strip() for a in stage.get("produces", [])]
+        if artifact_name in produces:
+            return stage["name"]
+    # Fallback: check CANONICAL_STAGE_ARTIFACTS reverse mapping
+    from lib.checkpoint import CANONICAL_STAGE_ARTIFACTS
+    for stage_name, produced_artifact in CANONICAL_STAGE_ARTIFACTS.items():
+        if produced_artifact == artifact_name:
+            return stage_name
+    return None
+
+
 def get_stage_allowed_tools(manifest: dict, stage_name: str) -> set[str]:
     """Get the set of tool names permitted in a given stage.
 

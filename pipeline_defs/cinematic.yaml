@@ -40,6 +40,8 @@ required_skills:
   - pipelines/cinematic/proposal-director
   - pipelines/cinematic/script-director
   - pipelines/cinematic/scene-director
+  - pipelines/cinematic/character-design-director
+  - pipelines/cinematic/scene-sketch-director
   - pipelines/cinematic/asset-director
   - pipelines/cinematic/edit-director
   - pipelines/cinematic/compose-director
@@ -157,13 +159,75 @@ stages:
       - Schema-valid scene_plan artifact
       - Every beat has a scene treatment and asset path
 
-  - name: assets
-    skill: pipelines/cinematic/asset-director
+  # ── Character Design & Scene Sketch (人物驱动视频专用) ──────────
+
+  - name: character_design
+    skill: pipelines/cinematic/character-design-director
     required_artifacts_in:
       - scene_plan
     optional_artifacts_in:
       - script
+    produces:
+      - character_design
+    required_tools:
+      - image_selector
+    tools_available:
+      - image_selector
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - "组合图: 左侧三视全身 + 右侧上半身正面特写, 同一画布"
+      - "纯白色背景, 无道具, 无文字"
+      - "人物比例协调"
+      - "极度写实, 不美化, 拒绝陶瓷肌"
+      - "面部同一 + 发型一致 + 着装完全统一"
+      - "视角绝对正对: 正面正对镜头, 侧面90度正侧面, 背面正对背面, 上半身特写也是正对镜头"
+      - "角色身份锁定包(identity_lock)已配置"
+      - "角色已注册到 character_registry.json"
+      - "用户已确认,approval.status 为 approved"
+    success_criteria:
+      - Schema 合法的 character_design 产物
+      - 所有主角均有完整组合图
+      - approval.status 为 "approved"
+      - 所有图片文件存在于磁盘
+
+  - name: scene_sketch
+    skill: pipelines/cinematic/scene-sketch-director
+    required_artifacts_in:
+      - scene_plan
+      - character_design
+    optional_artifacts_in:
+      - script
+    produces:
+      - scene_sketch
+    required_tools:
+      - image_selector
+    tools_available:
+      - image_selector
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - "每个 scene_plan 中的场景至少有一张草图"
+      - "草图宽高比与最终视频一致"
+      - "角色外观与 character_design 三视图一致"
+      - "用户已确认,approval.status 为 approved"
+    success_criteria:
+      - Schema 合法的 scene_sketch 产物
+      - 所有场景均有草图
+      - approval.status 为 "approved"
+      - 所有图片文件存在于磁盘
+
+  # ── Production ──────────────────────────────────────────────────
+
+  - name: assets
+    skill: pipelines/cinematic/asset-director
+    required_artifacts_in:
+      - scene_plan
+      - scene_sketch
+    optional_artifacts_in:
+      - script
       - brief
+      - character_design
     produces:
       - asset_manifest
     optional_tools:
@@ -189,6 +253,8 @@ stages:
       - Motion-required beats use actual video clips rather than still-image substitutes
       - Music and ambience plan matches the beat map
       - Optional generated inserts stay limited and justified
+      - "如有 character_design,视频生成素材的角色形象应与三视图一致"
+      - "scene_sketch 中的构图应在生成的视频片段中得到体现"
     success_criteria:
       - Schema-valid asset_manifest artifact
       - All referenced asset files exist on disk
@@ -220,6 +286,8 @@ stages:
       - asset_manifest
     optional_artifacts_in:
       - scene_plan
+      - character_design
+      - scene_sketch
     produces:
       - render_report
       - final_review

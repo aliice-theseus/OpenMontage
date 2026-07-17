@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "openmontage/artifacts/scene_sketch",
+  "title": "Scene Sketch（场景草图）",
+  "description": "OpenMontage 场景草图制品。在角色设计确认后、素材生成前，为每个场景生成的构图草图。用于提前对齐用户对场景镜头、角色位置、色调的预期，避免资产生成后返工。",
+  "type": "object",
+  "required": ["version", "scenes", "approval"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "scenes": {
+      "type": "array",
+      "description": "场景草图列表。每个场景对应 scene_plan 中的一个场景。",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["scene_id", "description", "image_path"],
+        "properties": {
+          "scene_id": {
+            "type": "string",
+            "description": "场景唯一标识符，对应 scene_plan 中的 scene ID"
+          },
+          "description": {
+            "type": "string",
+            "description": "草图画面内容描述（镜头角度、角色位置、背景、色调）"
+          },
+          "image_path": {
+            "type": "string",
+            "description": "草图图像文件路径"
+          },
+          "shot_language": {
+            "type": "object",
+            "description": "该场景的镜头语言参考",
+            "properties": {
+              "shot_size": { "type": "string" },
+              "camera_movement": { "type": "string" },
+              "framing": { "type": "string" },
+              "lighting_key": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "character_positions": {
+            "type": "array",
+            "description": "场景中角色的位置描述",
+            "items": {
+              "type": "object",
+              "required": ["character_id", "position"],
+              "properties": {
+                "character_id": { "type": "string" },
+                "position": { "type": "string", "description": "角色在画面中的位置描述（如'画面左侧、前景'）" },
+                "action": { "type": "string", "description": "角色在该场景中的动作" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "description": "生成该草图使用的提示词"
+          },
+          "source_tool": {
+            "type": "string",
+            "description": "生成工具名称"
+          },
+          "cost_usd": {
+            "type": "number",
+            "description": "生成该草图消耗的费用"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "生成时使用的随机种子"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "approval": {
+      "type": "object",
+      "description": "场景草图审批信息。全部场景草图通过后方可进入 assets 阶段。",
+      "required": ["status", "reviewed_at"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["approved", "rejected", "pending"],
+          "description": "审批状态"
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "审批反馈"
+        },
+        "reviewer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": false
+}

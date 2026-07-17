@@ -1,14 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "openmontage/artifacts/character_design",
-  "title": "Character Design",
-  "description": "Character definitions for local rigged animation.",
+  "title": "Character Design（角色设计）",
+  "description": "OpenMontage 角色设计制品。用于视频生成管道中的角色三视图概念设计，包含角色身份锁定包（三视图种子 + 提示词），供下游 assets 阶段使用 Seedance 等视频生成工具时保持角色一致性。",
   "type": "object",
   "required": ["version", "characters"],
   "properties": {
     "version": { "type": "string", "const": "1.0" },
     "style": {
       "type": "object",
+      "description": "整体视觉风格定义（character-animation 管道使用）",
       "properties": {
         "visual_style": { "type": "string" },
         "palette": { "type": "array", "items": { "type": "string" } },
@@ -22,11 +23,28 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "role", "body_type", "style", "required_emotions", "required_actions"],
+        "required": ["id", "role"],
         "properties": {
-          "id": { "type": "string" },
-          "display_name": { "type": "string" },
-          "role": { "type": "string" },
+          "id": { "type": "string", "description": "角色唯一标识符" },
+          "display_name": { "type": "string", "description": "角色显示名称" },
+          "role": { "type": "string", "description": "角色身份（protagonist/supporting/extra）" },
+          "description": { "type": "string", "description": "角色外观详细描述" },
+
+          "image_path_front": { "type": "string", "description": "正面视图图像路径" },
+          "image_path_side": { "type": "string", "description": "侧面视图图像路径" },
+          "image_path_back": { "type": "string", "description": "背面视图图像路径" },
+
+          "prompt": { "type": "string", "description": "生成三视图使用的提示词" },
+          "source_tool": { "type": "string", "description": "生成工具名称" },
+          "cost_usd": { "type": "number", "description": "生成该角色消耗的费用" },
+          "seed": { "type": "integer", "description": "生成时使用的随机种子" },
+
+          "identity_phrases": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "角色身份锁定短语，如 ['the same character', 'consistent across all shots']，用于 Seedance 等工具的 identity_lock"
+          },
+
           "body_type": { "type": "string" },
           "style": { "type": "string" },
           "silhouette_notes": { "type": "string" },
@@ -38,6 +56,60 @@
         },
         "additionalProperties": false
       }
+    },
+    "identity_lock": {
+      "type": "object",
+      "description": "角色身份锁定包。用于跨视频/跨场景保持同一角色形象",
+      "required": ["lock_id", "seed_image_path"],
+      "properties": {
+        "lock_id": {
+          "type": "string",
+          "description": "身份锁唯一标识。同一项目的后续视频可引用此 ID 复用角色"
+        },
+        "seed_image_path": {
+          "type": "string",
+          "description": "最清晰的角色正面照路径，用作 Seedance 等工具的 reference_image"
+        },
+        "identity_phrases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "推荐的身份锁定短语列表"
+        },
+        "prompt_template": {
+          "type": "string",
+          "description": "可复用的角色提示词模板"
+        },
+        "registered_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "注册时间"
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "description": "角色设计审批信息",
+      "required": ["status", "reviewed_at"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["approved", "rejected", "pending"],
+          "description": "审批状态"
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "审批反馈"
+        },
+        "reviewer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     },
     "metadata": { "type": "object" }
   },
