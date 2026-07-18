@@ -654,25 +654,25 @@ VIDEO_GEN_LOCAL_MODEL=cogvideo-2b      # 6GB+ VRAM（最轻量）
 
 ---
 
-### 本地扩散模型——离线图像生成（需要 GPU）
+### 本地 FLUX / Stable Diffusion——离线图像生成（需要 GPU）
 
-> **免费的 Stable Diffusion 图像生成。** 无 API 成本，完全离线。
+> **免费的本地 FLUX 图像生成。** 默认使用 `black-forest-labs/FLUX.1-schnell`，也可指定其他 FLUX 或旧版 Stable Diffusion 模型。
 
 **工具：** `local_diffusion`
-**运行时：** 本地 GPU（需要 CUDA）
+**运行时：** 本地 GPU（CUDA 或 Apple Silicon MPS；CPU 回退非常慢）
 **环境变量：** 无（通过安装依赖启用）
 
 #### 设置
 
 ```bash
-pip install diffusers transformers accelerate torch
+pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece protobuf safetensors
 ```
 
-首次运行下载模型（约 4GB）。后续运行使用缓存的模型。
+工具默认只读取本地缓存，不会自动下载。基础模型或 LoRA 不在缓存中时，会提示先确认下载；确认后使用 `allow_model_download: true` 重试。下载完成后的运行继续使用本地缓存，可离线生成。
 
-**VRAM 需求：** 4GB+（建议 8GB 用于 1024x1024 图像）
+**资源需求：** FLUX 的模型权重较大；默认启用 CUDA CPU offload，建议 12GB+ VRAM、24GB+ RAM 和约 30GB 磁盘空间。实际需求取决于模型和量化方式。
 
-**支持：** 负向提示词、种子、自定义尺寸。质量低于 FLUX 或 DALL-E 3，但完全免费且离线。
+**支持：** 种子、自定义尺寸、单个或多个 LoRA、LoRA 权重、FLUX/Stable Diffusion 管线路由。FLUX 不接收负向提示词；传统 Stable Diffusion 路径仍支持。
 
 ---
 

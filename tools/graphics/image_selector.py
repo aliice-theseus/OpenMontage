@@ -12,9 +12,12 @@ from typing import Any
 from tools.base_tool import BaseTool, ToolResult, ToolRuntime, ToolStability, ToolStatus, ToolTier
 
 
+_DEFAULT_TEXT_TO_IMAGE_PROVIDER = "local_diffusion"
+
+
 class ImageSelector(BaseTool):
     name = "image_selector"
-    version = "0.2.0"
+    version = "0.3.0"
     tier = ToolTier.GENERATE
     capability = "image_generation"
     provider = "selector"
@@ -30,6 +33,8 @@ class ImageSelector(BaseTool):
         "user_preference_routing": True,
         "offline_fallback": True,
         "stock_fallback": True,
+        "default_text_to_image_provider": _DEFAULT_TEXT_TO_IMAGE_PROVIDER,
+        "default_text_to_image_model_family": "FLUX",
     }
     best_for = [
         "preflight routing — pick the best image provider for the task",
@@ -82,7 +87,7 @@ class ImageSelector(BaseTool):
             "preferred_provider": {
                 "type": "string",
                 "description": "Provider name or 'auto'. Valid values are discovered at runtime from the registry.",
-                "default": "auto",
+                "default": _DEFAULT_TEXT_TO_IMAGE_PROVIDER,
             },
             "allowed_providers": {
                 "type": "array",
@@ -126,6 +131,26 @@ class ImageSelector(BaseTool):
                 "items": {"type": "object"},
                 "description": "Optional provenance metadata for custom workflow dependencies.",
             },
+            "model": {
+                "type": "string",
+                "description": "Optional provider model ID. Local text-to-image defaults to FLUX.",
+            },
+            "pipeline_type": {
+                "type": "string",
+                "enum": ["auto", "flux", "stable_diffusion"],
+            },
+            "num_inference_steps": {"type": "integer"},
+            "guidance_scale": {"type": "number"},
+            "enable_model_cpu_offload": {"type": "boolean"},
+            "allow_model_download": {
+                "type": "boolean",
+                "default": False,
+                "description": "Explicitly approve downloading missing local base-model or LoRA files.",
+            },
+            "lora_model": {"type": "string"},
+            "lora_weight_name": {"type": "string"},
+            "lora_scale": {"type": "number"},
+            "lora_models": {"type": "array", "items": {}},
             "output_path": {"type": "string"},
         },
     }
@@ -186,6 +211,24 @@ class ImageSelector(BaseTool):
         # Normal generation — use scored selection
         tool, score = self._select_best_tool(inputs, candidates, task_context)
         if tool is None:
+            preferred = self._resolve_preferred_provider(inputs)
+            if preferred != "auto":
+                preferred_tool = next(
+                    (candidate for candidate in candidates if candidate.provider == preferred),
+                    None,
+                )
+                if preferred_tool is not None:
+                    return ToolResult(
+                        success=False,
+                        error=(
+                            f"Preferred image provider '{preferred}' is unavailable. "
+                            f"{preferred_tool.install_instructions}"
+                        ),
+                    )
+                return ToolResult(
+                    success=False,
+                    error=f"Preferred image provider '{preferred}' was not discovered.",
+                )
             return ToolResult(success=False, error="No image provider available.")
 
         # Adapt input keys: stock tools use 'query' while generators use 'prompt'
@@ -222,6 +265,16 @@ class ImageSelector(BaseTool):
                 "workflow_name",
                 "workflow_model",
                 "workflow_model_stack",
+                "model",
+                "pipeline_type",
+                "num_inference_steps",
+                "guidance_scale",
+                "enable_model_cpu_offload",
+                "allow_model_download",
+                "lora_model",
+                "lora_weight_name",
+                "lora_scale",
+                "lora_models",
             ):
                 if passthrough_key in adapted and passthrough_key not in props:
                     stripped.append(f"{passthrough_key}={adapted.pop(passthrough_key)}")
@@ -264,7 +317,7 @@ class ImageSelector(BaseTool):
         """Select the best provider using scored ranking."""
         from lib.scoring import rank_providers
 
-        preferred = inputs.get("preferred_provider", "auto")
+        preferred = self._resolve_preferred_provider(inputs)
         allowed = set(inputs.get("allowed_providers") or [])
         if allowed:
             candidates = [tool for tool in candidates if tool.provider in allowed]
@@ -281,12 +334,31 @@ class ImageSelector(BaseTool):
             for score_item in rankings:
                 if score_item.provider == preferred and score_item.provider in tool_by_provider:
                     return tool_by_provider[score_item.provider], score_item
+            # A locked/default provider must not silently fall through to a
+            # different model family. The caller receives setup/download
+            # guidance from execute() and can explicitly approve an override.
+            return None, None
 
         for score_item in rankings:
             if score_item.provider in tool_by_provider:
                 return tool_by_provider[score_item.provider], score_item
 
         return None, None
+
+    def _resolve_preferred_provider(self, inputs: dict[str, Any]) -> str:
+        """Default pure text-to-image requests to local FLUX.
+
+        Explicit provider/allow-list choices win. Image editing and caller-supplied
+        ComfyUI workflows retain automatic capability routing because the default
+        local text-to-image pipeline does not implement those operations.
+        """
+        if "preferred_provider" in inputs:
+            return inputs.get("preferred_provider") or "auto"
+        if inputs.get("allowed_providers"):
+            return "auto"
+        if self._has_custom_workflow(inputs) or self._wants_image_edit(inputs):
+            return "auto"
+        return _DEFAULT_TEXT_TO_IMAGE_PROVIDER
 
     def _prepare_task_context(self, inputs: dict[str, Any]) -> dict[str, Any]:
         from lib.scoring import normalize_task_context
@@ -331,13 +403,7 @@ class ImageSelector(BaseTool):
         if self._has_custom_workflow(inputs):
             return [t for t in candidates if self._custom_workflow_eligible(t, inputs)]
 
-        wants_edit = (
-            inputs.get("generation_mode") == "edit"
-            or inputs.get("image_url")
-            or inputs.get("image_path")
-            or inputs.get("image_urls")
-            or inputs.get("image_paths")
-        )
+        wants_edit = self._wants_image_edit(inputs)
         if not wants_edit:
             return candidates
 
@@ -350,6 +416,16 @@ class ImageSelector(BaseTool):
             ):
                 filtered.append(tool)
         return filtered or candidates
+
+    @staticmethod
+    def _wants_image_edit(inputs: dict[str, Any]) -> bool:
+        return bool(
+            inputs.get("generation_mode") == "edit"
+            or inputs.get("image_url")
+            or inputs.get("image_path")
+            or inputs.get("image_urls")
+            or inputs.get("image_paths")
+        )
 
     @staticmethod
     def _has_custom_workflow(inputs: dict[str, Any]) -> bool:

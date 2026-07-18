@@ -13,7 +13,7 @@
 | `grok_image` | Grok Imagine Image (xAI) | $0.02/输出 + $0.002/输入编辑图像 | 约5-15秒 | 图像编辑、风格迁移、多图像合成 |
 | `openai_image` | GPT Image 1 (OpenAI) | 约$0.01-0.17 | 约5-15秒 | 复杂指令、图像中的文字、多元素 |
 | `recraft_image` | Recraft V4 通过 fal.ai | 约$0.04-0.25 | 约5-10秒 | Logo、SVG矢量、品牌资产、文字渲染（见下方注意事项） |
-| `local_diffusion` | Stable Diffusion（本地） | 免费 | 约30秒+ | 离线、隐私、免费 |
+| `local_diffusion` | FLUX.1-schnell（本地默认） | 免费 | 取决于 GPU | 视频流程默认文生图、离线、隐私、LoRA |
 | `image_gen` | 多（旧版，已弃用） | 不等 | 不等 | **已弃用** — 使用 `image_selector` 或按提供商工具 |
 
 ### 素材提供商（搜索和下载现有图像）
@@ -35,14 +35,14 @@
 |----------|-----------|------|------|
 | **真实照片**（城市、自然、人物） | `pexels_image` | 真实的照片 > AI 的真实感 | `pixabay_image` → `flux_image` |
 | **技术图表** | `diagram_gen` | 结构化、可编辑 | `flux_image` 配图表提示 |
-| **抽象/概念插图** | `flux_image` | AI 擅长自定义概念 | `openai_image` |
+| **抽象/概念插图** | `local_diffusion`（FLUX） | 视频流程统一默认、风格一致、支持 LoRA | 用户批准后可改用 `flux_image` |
 | **现有图像的风格迁移/重绘** | `grok_image` | 原生编辑流程，强大的可提示变换 | `openai_image` |
 | **多图像合并/合成** | `grok_image` | 可将多个源图像合成为一个场景 | `openai_image` |
 | **Logo 或品牌资产** | `recraft_image` | SVG 支持，文字准确性 | `openai_image` |
 | **带文字/标签的图像** | `openai_image` | 最佳文字渲染（GPT Image 1） | `recraft_image` |
 | **复杂多元素构图** | `openai_image` | 最佳指令遵循 | `flux_image` |
-| **主视觉图像（关键视觉）** | `flux_image` | 最高视觉质量 | `openai_image` |
-| **缩略图** | `flux_image` 或 `recraft_image` | 需要引人注目 | — |
+| **主视觉图像（关键视觉）** | `local_diffusion`（FLUX） | 视频流程统一默认、可复现 | 用户批准后可改用其他提供商 |
+| **缩略图** | `local_diffusion`（FLUX） | 与视频主视觉保持一致 | 用户批准后可改用其他提供商 |
 | **预算/免费项目** | `pexels_image` 或 `pixabay_image` | 免费、即时 | `local_diffusion` |
 | **离线/无网络** | `local_diffusion` | 无需网络 | — |
 
@@ -56,16 +56,16 @@
 
 ```
 生产路径：高级
-├── 主视觉图像：flux_image ($0.05/图)
-├── 辅助视觉：flux_image ($0.03/图)
-├── 文字叠加：openai_image ($0.04/图)
+├── 主视觉图像：local_diffusion / FLUX ($0.00/图)
+├── 辅助视觉：local_diffusion / FLUX ($0.00/图)
+├── 精确文字叠加：Remotion 原生文字 ($0.00)
 ├── B-roll 静态图：pexels_image ($0.00)
-└── 10张图像总计：约$0.35
+└── 10张图像 API 成本：$0.00
 
 生产路径：标准
-├── 全部生成：flux_image ($0.03/图)
+├── 全部生成：local_diffusion / FLUX ($0.00/图)
 ├── B-roll 静态图：pexels_image ($0.00)
-└── 10张图像总计：约$0.25
+└── 10张图像 API 成本：$0.00
 
 生产路径：预算
 ├── 全部素材：pexels_image + pixabay_image ($0.00)
@@ -82,18 +82,18 @@
 
 ## 使用图像选择器
 
-大多数情况下，使用 `image_selector` 并让其路由：
+大多数视频文生图调用使用 `image_selector`；未指定提供商时会默认路由到本地 FLUX：
 
 ```python
 # 选择器找到最佳可用提供商
 result = image_selector.execute({
     "prompt": "现代化数据中心鸟瞰图",
-    "preferred_provider": "auto",  # 或 "flux"、"pexels" 等
+    "preferred_provider": "local_diffusion",
     "output_path": "assets/images/scene-3.png"
 })
 ```
 
-当你已知哪个提供商最适合场景类型时，用 `preferred_provider` 覆盖。
+省略 `preferred_provider` 时，纯文生图同样默认使用 `local_diffusion`。只有用户明确批准其他生成提供商时才覆盖。图库搜索应明确指定 `pexels` / `pixabay`，图像编辑和自定义 ComfyUI 工作流按能力自动路由。
 使用 `allowed_providers` 限制为免费或本地选项：
 
 ```python

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flux.1 Dev 角色四视图"
+  short_description: "生成适用于建模、绑定及服装拆分的专业角色四视图参考图"
+  default_prompt: "使用 $flux-character-turnaround 生成一个统一角色与服装的建模四视图参考图。"

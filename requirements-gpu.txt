@@ -3,3 +3,9 @@
 torch>=2.0
 torchaudio>=2.0
 torchvision>=0.15
+diffusers>=0.31.0
+transformers
+accelerate
+sentencepiece
+protobuf
+safetensors

@@ -16,6 +16,7 @@
 | 前置产物 | `scene_plan` | 提取角色列表和描述 |
 | 可选 | 上一项目的 `character_registry.json` | 复用已有角色身份 |
 | 工具 | `image_selector` | 生成三视图 |
+| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.1 Dev 四视图提示模板、变量和验收规则 |
 
 ## 流程
 
@@ -52,6 +53,10 @@ if registry.has("hero"):
 
 ### 步骤 2：为每个角色生成角色形象图
 
+生成前必须完整读取 `.agents/skills/flux-character-turnaround/SKILL.md` 及其引用的
+`references/prompt-template.json`，按该技能组合变量与提示词。此角色建模参考场景固定使用
+`image_selector → local_diffusion → black-forest-labs/FLUX.1-dev`；不得改用通用 schnell 默认。
+
 对每个角色，调用 `image_selector` 生成一张组合图，包含：
 
 | 区域 | 内容 | 用途 |
@@ -60,9 +65,8 @@ if registry.has("hero"):
 | **画面右侧** | 上半身正面视角特写图 | 面部细节参考 |
 
 **画面布局：**
-- 同一画布下，左侧为三视全身图（三个视角并排），右侧为上半身正面特写
-- 三视全身图在左，上半身正面特写在右
-- 整体宽高比建议 **2:1**（横版）
+- 同一画布横向四栏：正面全身约 22%、90° 侧面全身约 22%、背面全身约 22%、胸部以上特写约 34%
+- 默认画布为 **16:9（1344×768）**；用户可按技能支持的比例覆盖
 
 **生成要求（硬性）：**
 - **纯白色背景** — 整张画布均为纯白背景，无任何场景装饰
@@ -79,21 +83,23 @@ if registry.has("hero"):
 
 ```python
 for char in characters:
+    # composed_prompt 由 flux-character-turnaround 技能的完整模板和动态变量生成。
     result = image_selector.execute({
-        "prompt": (
-            f"角色形象设计图, 纯白背景, "
-            f"左侧: {char['description']} 的三视图全身(正面/侧面/背面并排), "
-            f"正面必须是正对镜头, 侧面必须是90度正侧面, 背面必须是正对背面, "
-            f"发型在所有视角中完全一致, "
-            f"右侧: 同一角色的上半身正面特写也是正对镜头, "
-            f"极度写实, 照片级, 真实皮肤质感, 毛孔清晰可见, "
-            f"禁止任何文字, 禁止道具, 纯白背景, 无场景装饰, "
-            f"不美化, 不磨皮, 拒绝陶瓷肌"
-        ),
-        "operation": "text_to_image",
-        "aspect_ratio": "2:1",
+        "prompt": composed_prompt,
+        "preferred_provider": "local_diffusion",
+        "model": "black-forest-labs/FLUX.1-dev",
+        "pipeline_type": "flux",
+        "width": 1344,
+        "height": 768,
+        "num_inference_steps": 28,
+        "guidance_scale": 3.5,
+        "allow_model_download": False,
+        "output_path": f"projects/{project_id}/assets/images/{char['id']}-turnaround.png",
     })
 ```
+
+FLUX 不接收 `negative_prompt`。将技能配置中的负面模板作为禁用项和验收清单，
+把关键限制改写进正向提示词。模型未缓存时停止并请求用户确认下载。
 
 ### 步骤 3：构建角色身份锁定包
 
@@ -166,6 +172,7 @@ write_checkpoint(
 ## 验证清单
 
 - [ ] 每张图为同一画布：左侧三视全身 + 右侧上半身正面特写
+- [ ] 四栏实际面积接近 22% / 22% / 22% / 34%，而非仅在提示词中声明
 - [ ] **纯白色背景** — 整张画布无任何场景装饰
 - [ ] **人物比例协调** — 全身与半身比例统一
 - [ ] **禁止文字** — 画面中无任何文字

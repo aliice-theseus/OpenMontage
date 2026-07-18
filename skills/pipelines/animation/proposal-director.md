@@ -179,7 +179,7 @@ summary = registry.provider_menu_summary()  # 参见 AGENT_GUIDE.md > Mandatory 
 你需要：一个图像生成 API 密钥。
   → 你已有：{从 provider_menu_summary: 可用的 image_generation 提供商}
   → 替代方案：{从 setup_offers: 单环境变量的 image_generation 工具}
-  → 替代方案：本地 Stable Diffusion（参见 local_diffusion 工具的 install_instructions）
+  → 默认方案：本地 FLUX（`local_diffusion`，参见该工具的 install_instructions；缺少权重时先请求下载确认）
 
 30 秒视频的预估成本：从每个提供商的 `estimate_cost` 获取每张图像成本
 （不要硬编码——它们在不同版本之间会变化）。
@@ -275,7 +275,7 @@ summary = registry.provider_menu_summary()  # 参见 AGENT_GUIDE.md > Mandatory 
 为每个概念指定：
 - **动画方法**：`image_animation` / `clip_video` / `manim` / `remotion_dataviz` / `diagram_stills` / `mixed`
 - **为什么选择此方法**：基于技术调研和步骤 3 的工具可用性
-- **图像/视频生成提供商**：预检扫描中的具体提供商（例如"通过 fal.ai 的 FLUX"、"通过 OpenAI 的 gpt-image-1"、"本地 Stable Diffusion"）
+- **图像/视频生成提供商**：预检扫描中的具体提供商（文生图默认"本地 FLUX / local_diffusion"；用户明确覆盖时可使用其他已批准提供商）
 - **复用策略**：视觉系统是什么？（重复主题、布局网格、配色方案、转场系列）
 - **复杂度估算**：多少个独特场景类型 vs 可复用模板？
 - **视觉标识**：调色板、排版、纹理、运动能量，以及为什么它们适合此主题、受众和平台

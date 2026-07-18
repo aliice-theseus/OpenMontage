@@ -79,7 +79,7 @@
 | `text_card` | 陈述、结束语、关键术语 | Remotion TextCard（居中、弹簧动画） | 3-5 秒 |
 | `animation` | 需要运动的概念（数据流、数学） | Remotion、Manim | 4-10 秒 |
 | `diagram` | 过程、架构、关系 | `diagram_gen`（Mermaid）、`image_selector` | 4-8 秒 |
-| `generated` | 插图、隐喻、真实世界图像 | `image_selector`（FLUX/DALL-E） | 3-6 秒 |
+| `generated` | 插图、隐喻、真实世界图像 | `image_selector`（默认本地 FLUX） | 3-6 秒 |
 | `talking_head` | AI 头像说话（如果 HeyGen 可用） | HeyGen 工具 | 5-15 秒 |
 | `broll` | 上下文、真实世界示例 | 素材或生成的片段 | 3-6 秒 |
 | `screen_recording` | 代码演示、UI 导览 | 录制或模拟 | 5-15 秒 |
@@ -206,7 +206,7 @@
 **可行性检查：**
 - [ ] 每个 `required_asset` 且 `source: "generate"` 是可用工具可实现的
 - [ ] 图表描述对于 Mermaid 语法生成足够具体
-- [ ] 图像描述对于 FLUX/DALL-E 提示工程足够具体
+- [ ] 图像描述对于默认 FLUX 提示工程足够具体
 - [ ] 没有场景需要工具注册表中没有的工具
 
 ### 步骤 7：自我评估

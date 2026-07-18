@@ -16,6 +16,7 @@
 | 前置产物 | `scene_plan` | 提取角色列表和描述 |
 | 可选 | 上一项目的 `character_registry.json` | 复用已有角色身份 |
 | 工具 | `image_selector` | 生成三视图 |
+| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.1 Dev 四视图生成契约 |
 
 ## 流程
 
@@ -46,6 +47,9 @@ if registry.has("hero"):
 （同解说片流程 — 参见 `skills/pipelines/explainer/character-design-director.md` 步骤 2。
 同样要求：同一画布下，左侧三视全身 + 右侧上半身正面特写，
 纯白背景、禁止文字、禁止道具、极度写实、拒绝陶瓷肌。）
+
+执行前必须读取 `.agents/skills/flux-character-turnaround/SKILL.md` 和其提示模板，
+并固定使用本地 `black-forest-labs/FLUX.1-dev`。模型缺失时请求下载确认，不得静默换模型。
 
 ### 步骤 3：构建角色身份锁定包
 

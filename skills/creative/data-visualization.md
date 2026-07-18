@@ -9,7 +9,7 @@
 | 工具 | 作用 |
 |------|------|
 | `diagram_gen` | 通过 Mermaid 或 D3 生成图表 |
-| `image_selector` | 生成风格化的图表插图（FLUX/DALL-E） |
+| `image_selector` | 生成风格化的图表插图（默认本地 FLUX；其他模型需明确覆盖） |
 | Remotion | 动画图表组件（条形增长、线条绘制、饼图填充） |
 | Manim | 数学绘图、坐标系、函数图 |
 

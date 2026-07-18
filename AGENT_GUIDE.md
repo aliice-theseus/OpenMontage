@@ -494,6 +494,12 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 
 选择器根据以下规则路由：用户偏好 > 可用性 > 发现顺序。它们在提供商之间透明地适配输入模式。
 
+### 文生图默认模型（硬性规则）
+
+视频制作流程中的所有纯文生图请求必须通过 `image_selector`，默认使用 `preferred_provider="local_diffusion"`；该工具内部默认基础模型为 `black-forest-labs/FLUX.1-schnell`。用户明确指定其他提供商、`allowed_providers`、图像编辑输入或自定义 ComfyUI 工作流时，可以覆盖这个默认值。
+
+如果本地 FLUX 依赖、基础模型或 LoRA 不可用，不要静默切换到其他图像生成提供商。应上报阻塞并提示安装或确认模型下载；只有用户明确批准后才传递 `allow_model_download=true`。图库搜索（Pexels/Pixabay）、`diagram_gen`、`code_snippet`、Manim 和合成引擎原生图形不属于文生图，不受此默认值约束。
+
 ## 面向用户的规划协议
 
 在承诺执行之前，呈现：
@@ -651,7 +657,7 @@ OpenMontage 有三个指令层：
 | **合成运行时** | `remotion`, `remotion-best-practices`, `synthetic-screen-recording`（通过 Remotion TerminalScene 模拟终端/UI 演示） |
 | **动画知识（通用）** | `gsap-core`, `gsap-timeline`, `gsap-plugins`（SplitText / MorphSVG / DrawSVG / MotionPath / Flip / CustomEase）, `gsap-utils`, `gsap-react`, `gsap-performance`, `gsap-scrolltrigger`, `gsap-frameworks`, `framer-motion`（迪士尼12原则）, `lottie-bodymovin`（Lottie 导出） |
 | **角色动画** | `character-rigging`, `svg-character-animation`, `pose-library-design`, `canvas-procedural-animation`, `character-animation-qa` |
-| **图像生成** | `bfl-api`, `flux-best-practices` |
+| **图像生成** | `bfl-api`, `flux-best-practices`, `flux-character-turnaround`（角色建模三/四视图） |
 | **视频生成** | `seedance-2-0`（首选高级默认——电影级、预告片、多镜头、同步音频、唇同步）, `ai-video-gen`, `ltx2` |
 | **音频** | `elevenlabs`, `music`, `sound-effects`, `acestep`, `text-to-speech`, `setup-api-key` |
 | **虚拟形象/唇同步** | `avatar-video`, `heygen`, `create-video`, `faceswap`, `video-translate`, `speech-to-text`, `agents` |
