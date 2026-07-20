@@ -298,7 +298,6 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 ## 已安装的代理技能（第 3 层）
 
 所有代理技能位于 `.agents/skills/`，并通过 `npx skills add` 管理。
-Claude Code 通过 `.claude/skills/` 中的符号链接访问。
 
 | 类别 | 已安装技能 | 来源 |
 |----------|-----------------|--------|

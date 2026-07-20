@@ -602,8 +602,6 @@ OpenMontage 适用于任何可以读取文件并执行 Python 的 AI 编程助�
 
 | 平台 | 配置文件 |
 |----------|------------|
-| **Claude Code** | `CLAUDE.md` |
-| **Cursor** | `CURSOR.md` + `.cursor/rules/` |
 | **GitHub Copilot** | `COPILOT.md` + `.github/copilot-instructions.md` |
 | **Codex** | `CODEX.md` |
 | **Windsurf** | `.windsurfrules` |

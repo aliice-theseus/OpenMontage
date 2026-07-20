@@ -1,6 +1,6 @@
 # OpenMontage - 共享项目上下文
 
-这是项目架构和约定的唯一真实来源。所有特定于平台的代理文件（CLAUDE.md, CODEX.md, CURSOR.md, COPILOT.md）应指向此处，而不是重复这些内容。
+这是项目架构和约定的唯一真实来源。所有特定于平台的代理文件（CODEX.md, COPILOT.md）应指向此处，而不是重复这些内容。
 
 ## 身份定位
 

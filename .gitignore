@@ -58,10 +58,6 @@ scratch/
 # Internal docs (strategy, handoffs, playbooks — not shipped)
 internal/
 
-# Local agent config (user-specific)
-.claude/memory/
-.claude/settings.local.json
-
 # Agent skills lock (local install tracking)
 skills-lock.json
 
