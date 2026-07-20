@@ -2,9 +2,9 @@
 
 ## 适用场景
 
-你是**场景草图导演**。你在 `character_design` 确认之后、`assets` 之前工作。
+你是**场景草图导演**。你在 `scene_plan` 完成之后、`assets` 之前工作。
 你的工作是为 `scene_plan` 中的每一个场景生成**构图草图**，
-让用户在投入资产生成前确认镜头设计、角色位置和色调。
+让用户在投入资产生成前确认镜头设计和色调。
 
 ## 前置条件
 
@@ -12,7 +12,6 @@
 |-------|----------|---------|
 | 模式 | `schemas/artifacts/scene_sketch.schema.json` | 产物验证 |
 | 前置产物 | `scene_plan` | 场景列表和镜头语言 |
-| 前置产物 | `character_design`（如有） | 角色参考图 |
 | 工具 | `image_selector` | 生成草图 |
 
 ## 流程
@@ -59,5 +58,5 @@ write_checkpoint(
 
 - [ ] 每个 scene_plan 中的场景都有一张草图
 - [ ] 草图宽高比与最终视频一致
-- [ ] 角色外观与 character_design 一致
+- [ ] 草图中不包含角色，仅为纯场景搭建
 - [ ] `approval.status` 为 `"approved"`

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "openmontage/artifacts/scene_sketch",
   "title": "Scene Sketch（场景草图）",
-  "description": "OpenMontage 场景草图制品。在角色设计确认后、素材生成前，为每个场景生成的构图草图。用于提前对齐用户对场景镜头、角色位置、色调的预期，避免资产生成后返工。",
+  "description": "OpenMontage 场景草图制品。在场景规划完成后、素材生成前，为每个场景生成的纯场景构图草图。用于提前对齐用户对场景镜头、色调的预期，避免资产生成后返工。草图中不包含角色，仅聚焦场景搭建。",
   "type": "object",
   "required": ["version", "scenes", "approval"],
   "properties": {
@@ -12,7 +12,7 @@
     },
     "scenes": {
       "type": "array",
-      "description": "场景草图列表。每个场景对应 scene_plan 中的一个场景。",
+      "description": "场景草图列表。每个场景对应 scene_plan 中的一个场景。草图中不包含角色，仅为纯场景搭建。",
       "minItems": 1,
       "items": {
         "type": "object",
@@ -24,7 +24,7 @@
           },
           "description": {
             "type": "string",
-            "description": "草图画面内容描述（镜头角度、角色位置、背景、色调）"
+            "description": "草图画面内容描述（镜头角度、背景环境、空间布局、色调）"
           },
           "image_path": {
             "type": "string",
@@ -43,7 +43,7 @@
           },
           "character_positions": {
             "type": "array",
-            "description": "场景中角色的位置描述",
+            "description": "（已弃用）场景草图中不包含角色信息，此字段保留仅为向后兼容",
             "items": {
               "type": "object",
               "required": ["character_id", "position"],

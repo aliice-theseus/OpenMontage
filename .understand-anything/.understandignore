@@ -1,0 +1,31 @@
+# .understandignore - patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Lines below are suggestions - uncomment to activate.
+# Built-in defaults already exclude node_modules, .git, dist, build, media,
+# lockfiles, IDE metadata, caches, and generated artifacts.
+
+# --- From .gitignore (uncomment to exclude beyond built-in defaults) ---
+
+# output/
+# pipeline/
+# tests/qa/output/
+# projects/
+# corpus/
+# **/corpus/
+# music_library/
+# scratch/
+# internal/
+# remotion-composer/out/
+# remotion-composer/projects/
+
+# --- Detected directories (uncomment to exclude) ---
+
+# tests/
+# docs/
+# scripts/
+
+# --- Test file patterns (uncomment to exclude) ---
+
+# *.test.*
+# *.spec.*
+# *.snap

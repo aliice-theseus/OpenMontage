@@ -2,9 +2,9 @@
 
 ## 适用场景
 
-你是**场景草图导演**。你在 `character_design` 确认之后、`assets` 之前工作。
+你是**场景草图导演**。你在 `scene_plan` 完成之后、`assets` 之前工作。
 你的工作是为 `scene_plan` 中的每一个场景生成**构图草图**，
-让用户在投入资产生成前确认镜头设计、角色位置和色调。
+让用户在投入资产生成前确认镜头设计和色调。
 
 **这是强制阶段。** 每个场景都需要有一张草图，用户确认后方可进入 assets。
 
@@ -14,7 +14,6 @@
 |-------|----------|---------|
 | 模式 | `schemas/artifacts/scene_sketch.schema.json` | 产物验证 |
 | 前置产物 | `scene_plan` | 场景列表和镜头语言 |
-| 前置产物 | `character_design`（如有） | 角色参考图 |
 | 工具 | `image_selector` | 生成草图 |
 
 ## 流程
@@ -32,8 +31,8 @@ scenes = scene_plan["scenes"]
 
 ```python
 for scene in scenes:
-    # 构建提示词
-    sketch_prompt = build_sketch_prompt(scene, character_design)
+    # 构建提示词（纯场景，不包含角色）
+    sketch_prompt = build_sketch_prompt(scene)
     
     result = image_selector.execute({
         "prompt": sketch_prompt,
@@ -44,17 +43,16 @@ for scene in scenes:
 
 **草图要求：**
 - 宽高比与最终视频一致（默认 16:9）
-- 包含角色位置（如有角色）、背景环境、构图方式
+- 聚焦场景搭建：背景环境、空间布局、构图方式
 - 体现场景的色调和氛围
-- 角色外观应符合已确认的 `character_design` 中的四视图形象
+- **不包含角色** — 草图只呈现场景本身，角色由后续资产阶段处理
 
 **提示词结构参考：**
 ```
-场景草图, 构图预览, {scene_description},
-角色位置: {character_positions},
+场景构图草图, 纯场景, {scene_description},
 镜头: {shot_language},
 色调: {color_palette},
-电影级构图, 简要渲染
+无角色, 仅有场景和空间, 电影级构图, 简要渲染
 ```
 
 ### 步骤 3：整理产物
@@ -68,7 +66,6 @@ scene_sketch = {
             "description": scene["description"],
             "image_path": image_path,
             "shot_language": scene.get("shot_language"),
-            "character_positions": [...],
             "prompt": prompt,
             "source_tool": "image_selector",
             "cost_usd": 0.02,
@@ -86,16 +83,16 @@ scene_sketch = {
 ```
 === 场景草图确认 ===
 
-场景 1: 竹林对决
+场景 1: <场景标题>
   [草图预览]
-  镜头: 中景, 手持运镜
-  角色: 剑客(画面左侧), 反派(画面右侧)
+  镜头: <景别>, <运镜方式>
+  色调: <色调描述>
   费用: $0.02
 
-场景 2: 悬崖对峙
+场景 2: <场景标题>
   [草图预览]
-  镜头: 远景, 推轨
-  角色: 剑客(中心前景), 反派(远景)
+  镜头: <景别>, <运镜方式>
+  色调: <色调描述>
   费用: $0.02
 
 ...
@@ -134,8 +131,6 @@ video_selector.execute({
     "operation": "text_to_video",
     "operation_type": "text_to_video",
     "reference_image_urls": [
-        # 角色参考图（来自 character_design）
-        character_design["identity_lock"]["seed_image_path"],
         # 场景构图参考（来自 scene_sketch）
         scene_sketch["scenes"][i]["image_path"],
     ],
@@ -147,6 +142,6 @@ video_selector.execute({
 - [ ] 每个 scene_plan 中的场景都有一张草图
 - [ ] 草图宽高比与最终视频一致
 - [ ] 草图体现了场景的镜头语言和色调
-- [ ] 如有角色，角色外观与 character_design 一致
+- [ ] 草图中不包含角色，仅为纯场景搭建
 - [ ] 所有图片文件存在
 - [ ] `approval.status` 为 `"approved"`
