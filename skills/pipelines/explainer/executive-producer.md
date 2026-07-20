@@ -48,7 +48,7 @@ EP_STATE:
     scene_plan: null    # → scene_plan
     assets: null        # → asset_manifest
     edit: null          # → edit_decisions
-    key_visual: null    # → key_visual（角色三视图 + 场景关键帧 + 用户确认）
+    key_visual: null    # → key_visual（角色四视图 + 场景关键帧 + 用户确认）
     compose: null       # → render_report
     publish: null       # → publish_log
 

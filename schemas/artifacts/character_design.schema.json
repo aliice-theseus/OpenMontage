@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "openmontage/artifacts/character_design",
   "title": "Character Design（角色设计）",
-  "description": "OpenMontage 角色设计制品。用于视频生成管道中的角色三视图概念设计，包含角色身份锁定包（三视图种子 + 提示词），供下游 assets 阶段使用 Seedance 等视频生成工具时保持角色一致性。",
+  "description": "OpenMontage 角色设计制品。用于视频生成管道中的角色四视图概念设计，包含正面、侧面、背面、半身组合图和身份锁定包，供下游 assets 阶段保持角色一致性。",
   "type": "object",
   "required": ["version", "characters"],
   "properties": {
@@ -34,7 +34,7 @@
           "image_path_side": { "type": "string", "description": "侧面视图图像路径" },
           "image_path_back": { "type": "string", "description": "背面视图图像路径" },
 
-          "prompt": { "type": "string", "description": "生成三视图使用的提示词" },
+          "prompt": { "type": "string", "description": "生成四视图使用的提示词" },
           "source_tool": { "type": "string", "description": "生成工具名称" },
           "cost_usd": { "type": "number", "description": "生成该角色消耗的费用" },
           "seed": { "type": "integer", "description": "生成时使用的随机种子" },

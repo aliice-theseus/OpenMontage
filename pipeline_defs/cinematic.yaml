@@ -170,8 +170,9 @@ stages:
     produces:
       - character_design
     required_tools:
-      - image_selector
+      - character_ref_sheet
     tools_available:
+      - character_ref_sheet
       - image_selector
     checkpoint_required: true
     human_approval_default: true
@@ -209,7 +210,7 @@ stages:
     review_focus:
       - "每个 scene_plan 中的场景至少有一张草图"
       - "草图宽高比与最终视频一致"
-      - "角色外观与 character_design 三视图一致"
+      - "角色外观与 character_design 四视图一致"
       - "用户已确认,approval.status 为 approved"
     success_criteria:
       - Schema 合法的 scene_sketch 产物
@@ -253,7 +254,7 @@ stages:
       - Motion-required beats use actual video clips rather than still-image substitutes
       - Music and ambience plan matches the beat map
       - Optional generated inserts stay limited and justified
-      - "如有 character_design,视频生成素材的角色形象应与三视图一致"
+      - "如有 character_design,视频生成素材的角色形象应与四视图一致"
       - "scene_sketch 中的构图应在生成的视频片段中得到体现"
     success_criteria:
       - Schema-valid asset_manifest artifact

@@ -1,7 +1,8 @@
-"""Local FLUX and Stable Diffusion image generation via diffusers."""
+"""Local FLUX.1/FLUX.2 and Stable Diffusion generation via diffusers."""
 
 from __future__ import annotations
 
+import gc
 import time
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,7 @@ from tools.base_tool import (
 
 
 _DEFAULT_MODEL = "black-forest-labs/FLUX.1-schnell"
+_DEFAULT_FLUX2_MODEL = "black-forest-labs/FLUX.2-dev"
 
 
 def _is_flux_model(model_id: str, pipeline_type: str = "auto") -> bool:
@@ -28,6 +30,12 @@ def _is_flux_model(model_id: str, pipeline_type: str = "auto") -> bool:
     if pipeline_type != "auto":
         return pipeline_type == "flux"
     return "flux" in model_id.lower()
+
+
+def _is_flux2_model(model_id: str) -> bool:
+    """Return whether a model ID/path names the second-generation FLUX family."""
+    normalized = model_id.lower().replace("_", "").replace("-", "")
+    return "flux.2" in model_id.lower() or "flux2" in normalized
 
 
 def _default_generation_parameters(model_id: str, is_flux: bool) -> tuple[int, float]:
@@ -109,7 +117,7 @@ def _load_loras(
 
 class LocalDiffusion(BaseTool):
     name = "local_diffusion"
-    version = "0.2.0"
+    version = "0.3.0"
     tier = ToolTier.GENERATE
     capability = "image_generation"
     provider = "local_diffusion"
@@ -121,7 +129,7 @@ class LocalDiffusion(BaseTool):
     dependencies = []  # checked dynamically
     install_instructions = (
         "Install diffusers for local FLUX/Stable Diffusion:\n"
-        "  pip install 'diffusers>=0.31.0' transformers accelerate torch "
+        "  pip install 'diffusers>=0.36.0' transformers accelerate torch "
         "sentencepiece protobuf safetensors"
     )
     agent_skills = ["flux-best-practices"]
@@ -134,6 +142,9 @@ class LocalDiffusion(BaseTool):
         "custom_size": True,
         "lora": True,
         "multiple_loras": True,
+        "image_edit": True,
+        "image_edit_models": ["FLUX.2"],
+        "reference_images": True,
         "negative_prompt_for_flux": False,
         "explicit_download_approval": True,
     }
@@ -165,6 +176,20 @@ class LocalDiffusion(BaseTool):
                 "default": "auto",
                 "description": "Override auto-detection, especially for local model paths.",
             },
+            "generation_mode": {
+                "type": "string",
+                "enum": ["generate", "edit"],
+                "default": "generate",
+            },
+            "image_path": {
+                "type": "string",
+                "description": "Local reference image for FLUX.2 image-conditioned generation.",
+            },
+            "image_paths": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Local reference images for FLUX.2 multi-reference generation.",
+            },
             "seed": {"type": "integer"},
             "num_inference_steps": {
                 "type": "integer",
@@ -180,6 +205,24 @@ class LocalDiffusion(BaseTool):
                 "type": "boolean",
                 "default": True,
                 "description": "Reduce CUDA VRAM use by offloading model components to CPU.",
+            },
+            "offload_mode": {
+                "type": "string",
+                "enum": ["sequential", "model", "none"],
+                "description": (
+                    "CUDA memory strategy. Character reference generation uses sequential; "
+                    "when omitted, enable_model_cpu_offload preserves the legacy model/none behavior."
+                ),
+            },
+            "reuse_pipeline": {
+                "type": "boolean",
+                "default": False,
+                "description": "Reuse the loaded pipeline for a same-process multi-view batch.",
+            },
+            "release_pipeline_after": {
+                "type": "boolean",
+                "default": False,
+                "description": "Release any cached pipeline after this generation finishes.",
             },
             "allow_model_download": {
                 "type": "boolean",
@@ -222,7 +265,7 @@ class LocalDiffusion(BaseTool):
         cpu_cores=4, ram_mb=24000, vram_mb=12000, disk_mb=30000, network_required=False
     )
     retry_policy = RetryPolicy(max_retries=1)
-    idempotency_key_fields = ["prompt", "width", "height", "seed", "model"]
+    idempotency_key_fields = ["prompt", "width", "height", "seed", "model", "image_path"]
     side_effects = [
         "writes image file to output_path",
         "downloads model/LoRA weights only when allow_model_download=true",
@@ -236,6 +279,19 @@ class LocalDiffusion(BaseTool):
             return ToolStatus.AVAILABLE
         except (ImportError, RuntimeError):
             return ToolStatus.UNAVAILABLE
+
+    def release_cached_models(self) -> None:
+        """Release pipelines retained for an explicit multi-image batch."""
+        cache = getattr(self, "_pipeline_cache", None)
+        if cache is not None:
+            cache.clear()
+        gc.collect()
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except (ImportError, RuntimeError):
+            pass
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         return 0.0
@@ -251,7 +307,8 @@ class LocalDiffusion(BaseTool):
             )
 
         import torch
-        from diffusers import FluxPipeline, StableDiffusionPipeline
+        import diffusers
+        from PIL import Image
 
         start = time.time()
         prompt = inputs["prompt"]
@@ -262,11 +319,20 @@ class LocalDiffusion(BaseTool):
         model_id = inputs.get("model", _DEFAULT_MODEL)
         pipeline_type = inputs.get("pipeline_type", "auto")
         is_flux = _is_flux_model(model_id, pipeline_type)
+        is_flux2 = is_flux and _is_flux2_model(model_id)
         default_steps, default_guidance = _default_generation_parameters(model_id, is_flux)
         steps = inputs.get("num_inference_steps", default_steps)
         guidance = inputs.get("guidance_scale", default_guidance)
         allow_model_download = inputs.get("allow_model_download", False)
         local_files_only = not allow_model_download
+        reference_paths = inputs.get("image_paths") or []
+        if inputs.get("image_path"):
+            reference_paths = [inputs["image_path"]]
+        if reference_paths and not is_flux2:
+            return ToolResult(
+                success=False,
+                error="Local reference-image conditioning is supported only by FLUX.2 models.",
+            )
 
         try:
             if torch.cuda.is_available():
@@ -281,50 +347,80 @@ class LocalDiffusion(BaseTool):
             else:
                 dtype = torch.float32
 
-            pipeline_class = FluxPipeline if is_flux else StableDiffusionPipeline
-            try:
-                pipe = pipeline_class.from_pretrained(
-                    model_id,
-                    torch_dtype=dtype,
-                    local_files_only=local_files_only,
-                )
-            except Exception as exc:
-                if local_files_only:
-                    return ToolResult(
-                        success=False,
-                        error=(
-                            f"Model '{model_id}' is not available or complete in the local cache. "
-                            "Downloading is disabled by default. Confirm the download, then retry "
-                            "with allow_model_download=true. "
-                            f"Original error: {exc}"
-                        ),
-                    )
-                raise
-
             loras = _normalise_loras(inputs)
-            try:
-                _load_loras(pipe, loras, local_files_only=local_files_only)
-            except Exception as exc:
-                if local_files_only:
-                    lora_names = ", ".join(lora["model"] for lora in loras)
+            if is_flux2:
+                pipeline_class = getattr(diffusers, "Flux2Pipeline", None)
+                if pipeline_class is None:
                     return ToolResult(
                         success=False,
                         error=(
-                            f"LoRA model(s) '{lora_names}' are not available or complete in the "
-                            "local cache. Downloading is disabled by default. Confirm the download, "
-                            "then retry with allow_model_download=true. "
-                            f"Original error: {exc}"
+                            "Installed diffusers does not provide Flux2Pipeline. "
+                            "Upgrade to diffusers>=0.36.0."
                         ),
                     )
-                raise
-
-            use_cpu_offload = (
-                device == "cuda" and inputs.get("enable_model_cpu_offload", True)
-            )
-            if use_cpu_offload:
-                pipe.enable_model_cpu_offload()
+            elif is_flux:
+                pipeline_class = diffusers.FluxPipeline
             else:
-                pipe = pipe.to(device)
+                pipeline_class = diffusers.StableDiffusionPipeline
+
+            lora_key = tuple(
+                (item["model"], item["weight_name"], item["adapter_name"], item["scale"])
+                for item in loras
+            )
+            cache_key = (model_id, str(dtype), local_files_only, lora_key)
+            cache = getattr(self, "_pipeline_cache", None)
+            if cache is None:
+                cache = self._pipeline_cache = {}
+            pipe = cache.get(cache_key) if inputs.get("reuse_pipeline", False) else None
+            if pipe is None:
+                try:
+                    pipe = pipeline_class.from_pretrained(
+                        model_id,
+                        torch_dtype=dtype,
+                        local_files_only=local_files_only,
+                    )
+                except Exception as exc:
+                    if local_files_only:
+                        return ToolResult(
+                            success=False,
+                            error=(
+                                f"Model '{model_id}' is not available or complete in the local cache. "
+                                "Downloading is disabled by default. Confirm the download, then retry "
+                                "with allow_model_download=true. "
+                                f"Original error: {exc}"
+                            ),
+                        )
+                    raise
+
+                try:
+                    _load_loras(pipe, loras, local_files_only=local_files_only)
+                except Exception as exc:
+                    if local_files_only:
+                        lora_names = ", ".join(lora["model"] for lora in loras)
+                        return ToolResult(
+                            success=False,
+                            error=(
+                                f"LoRA model(s) '{lora_names}' are not available or complete in the "
+                                "local cache. Downloading is disabled by default. Confirm the download, "
+                                "then retry with allow_model_download=true. "
+                                f"Original error: {exc}"
+                            ),
+                        )
+                    raise
+
+                offload_mode = inputs.get("offload_mode")
+                if offload_mode is None:
+                    offload_mode = (
+                        "model" if inputs.get("enable_model_cpu_offload", True) else "none"
+                    )
+                if device == "cuda" and offload_mode == "sequential":
+                    pipe.enable_sequential_cpu_offload()
+                elif device == "cuda" and offload_mode == "model":
+                    pipe.enable_model_cpu_offload()
+                else:
+                    pipe = pipe.to(device)
+                if inputs.get("reuse_pipeline", False):
+                    cache[cache_key] = pipe
 
             generator = None
             if seed is not None:
@@ -340,14 +436,26 @@ class LocalDiffusion(BaseTool):
             }
             if not is_flux and negative:
                 generation_args["negative_prompt"] = negative
+            if reference_paths:
+                references = []
+                for reference_path in reference_paths:
+                    with Image.open(reference_path) as source:
+                        references.append(source.convert("RGB").resize((width, height), Image.LANCZOS))
+                generation_args["image"] = references[0] if len(references) == 1 else references
             image = pipe(**generation_args).images[0]
 
             output_path = Path(inputs.get("output_path", "generated_image.png"))
             output_path.parent.mkdir(parents=True, exist_ok=True)
             image.save(str(output_path))
 
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+
         except Exception as e:
             return ToolResult(success=False, error=f"Local diffusion generation failed: {e}")
+        finally:
+            if inputs.get("release_pipeline_after", False):
+                self.release_cached_models()
 
         return ToolResult(
             success=True,
@@ -357,6 +465,10 @@ class LocalDiffusion(BaseTool):
                 "prompt": prompt,
                 "output": str(output_path),
                 "pipeline_type": "flux" if is_flux else "stable_diffusion",
+                "pipeline_class": (
+                    "Flux2Pipeline" if is_flux2 else "FluxPipeline" if is_flux else "StableDiffusionPipeline"
+                ),
+                "reference_images": [str(path) for path in reference_paths],
                 "loras": loras,
             },
             artifacts=[str(output_path)],

@@ -142,6 +142,12 @@ class ImageSelector(BaseTool):
             "num_inference_steps": {"type": "integer"},
             "guidance_scale": {"type": "number"},
             "enable_model_cpu_offload": {"type": "boolean"},
+            "offload_mode": {
+                "type": "string",
+                "enum": ["sequential", "model", "none"],
+            },
+            "reuse_pipeline": {"type": "boolean"},
+            "release_pipeline_after": {"type": "boolean"},
             "allow_model_download": {
                 "type": "boolean",
                 "default": False,
@@ -270,6 +276,9 @@ class ImageSelector(BaseTool):
                 "num_inference_steps",
                 "guidance_scale",
                 "enable_model_cpu_offload",
+                "offload_mode",
+                "reuse_pipeline",
+                "release_pipeline_after",
                 "allow_model_download",
                 "lora_model",
                 "lora_weight_name",

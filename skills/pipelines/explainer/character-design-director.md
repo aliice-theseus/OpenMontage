@@ -3,7 +3,7 @@
 ## 适用场景
 
 你是**角色设计导演**。你在 `scene_plan` 完成之后、`scene_sketch` 之前工作。
-当剧本中出现人物角色（尤其是主角）时，你需要为**每个角色生成三视图概念设计**，
+当剧本中出现人物角色（尤其是主角）时，你需要为**每个角色生成四视图概念设计**，
 产出**角色身份锁定包**，提交用户确认后方可进入下一阶段。
 
 **这是强制阶段。** 当 `scene_plan` 分析出有人物主角时，此阶段不可跳过。
@@ -15,8 +15,8 @@
 | 模式 | `schemas/artifacts/character_design.schema.json` | 产物验证 |
 | 前置产物 | `scene_plan` | 提取角色列表和描述 |
 | 可选 | 上一项目的 `character_registry.json` | 复用已有角色身份 |
-| 工具 | `image_selector` | 生成三视图 |
-| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.1 Dev 四视图提示模板、变量和验收规则 |
+| 工具 | `character_ref_sheet`（内部使用 `image_selector`） | 分步生成并拼接四视图 |
+| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.2 Dev 四视图提示模板、变量和验收规则 |
 
 ## 流程
 
@@ -48,16 +48,16 @@ if registry.has("hero"):
     # 将 registry 中的信息注入 character_design 产物
 ```
 
-如果角色已注册，直接复用身份锁，无需重新生成三视图。
+如果角色已注册，直接复用身份锁，无需重新生成四视图。
 如果角色需要更新（例如新剧情需要不同服装），正常生成并更新注册表。
 
 ### 步骤 2：为每个角色生成角色形象图
 
 生成前必须完整读取 `.agents/skills/flux-character-turnaround/SKILL.md` 及其引用的
-`references/prompt-template.json`，按该技能组合变量与提示词。此角色建模参考场景固定使用
-`image_selector → local_diffusion → black-forest-labs/FLUX.1-dev`；不得改用通用 schnell 默认。
+`references/prompt-template.json`，按该技能组合稳定的 `character_core`。此角色建模参考场景固定使用
+`character_ref_sheet → image_selector → local_diffusion → black-forest-labs/FLUX.2-dev`；不得改用通用 Schnell 默认或云端模型。
 
-对每个角色，调用 `image_selector` 生成一张组合图，包含：
+对每个角色，先调用 `character_ref_sheet(operation="front_only")` 生成正面身份锚点并提交用户确认。正面批准后，调用 `operation="complete_from_front"` 并传入 `front_image_path`，以正面图为共同参考生成侧面、背面和半身，最后本地拼接。只有用户明确批准跳过中间检查时才使用 `operation="full"`：
 
 | 区域 | 内容 | 用途 |
 |------|------|------|
@@ -65,8 +65,9 @@ if registry.has("hero"):
 | **画面右侧** | 上半身正面视角特写图 | 面部细节参考 |
 
 **画面布局：**
-- 同一画布横向四栏：正面全身约 22%、90° 侧面全身约 22%、背面全身约 22%、胸部以上特写约 34%
-- 默认画布为 **16:9（1344×768）**；用户可按技能支持的比例覆盖
+- 四张源图分别生成：正面 `1024×1536`；侧面、背面、半身各 `832×1248`
+- 最终画布为 **1280×720**，四栏固定为 `281 / 281 / 281 / 437 px`，0 px 间距
+- 半身图拼接前保留顶部 80%，各栏采用 LANCZOS 缩放与居中裁切
 
 **生成要求（硬性）：**
 - **纯白色背景** — 整张画布均为纯白背景，无任何场景装饰
@@ -83,23 +84,35 @@ if registry.has("hero"):
 
 ```python
 for char in characters:
-    # composed_prompt 由 flux-character-turnaround 技能的完整模板和动态变量生成。
-    result = image_selector.execute({
-        "prompt": composed_prompt,
-        "preferred_provider": "local_diffusion",
-        "model": "black-forest-labs/FLUX.1-dev",
-        "pipeline_type": "flux",
-        "width": 1344,
-        "height": 768,
-        "num_inference_steps": 28,
+    front_result = character_ref_sheet.execute({
+        "character_id": char["id"],
+        "character_core": composed_character_core,
+        "output_dir": f"projects/{project_id}/assets/images/characters",
+        "model": "black-forest-labs/FLUX.2-dev",
+        "seed": character_seed,
+        "num_inference_steps": 20,
         "guidance_scale": 3.5,
         "allow_model_download": False,
-        "output_path": f"projects/{project_id}/assets/images/{char['id']}-turnaround.png",
+        "operation": "front_only",
+    })
+    # 展示 front_result.data["front_path"]，等待用户批准。
+    result = character_ref_sheet.execute({
+        "character_id": char["id"],
+        "character_core": composed_character_core,
+        "output_dir": f"projects/{project_id}/assets/images/characters",
+        "model": "black-forest-labs/FLUX.2-dev",
+        "seed": character_seed,
+        "num_inference_steps": 20,
+        "guidance_scale": 3.5,
+        "allow_model_download": False,
+        "operation": "complete_from_front",
+        "front_image_path": front_result.data["front_path"],
     })
 ```
 
 FLUX 不接收 `negative_prompt`。将技能配置中的负面模板作为禁用项和验收清单，
-把关键限制改写进正向提示词。模型未缓存时停止并请求用户确认下载。
+把关键限制改写进正向提示词。正面图失败时立即停止，不要用失败的身份锚点继续生成。
+模型未缓存时停止并请求用户确认下载。
 
 ### 步骤 3：构建角色身份锁定包
 

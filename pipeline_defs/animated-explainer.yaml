@@ -170,8 +170,9 @@ stages:
     produces:
       - character_design
     required_tools:
-      - image_selector
+      - character_ref_sheet
     tools_available:
+      - character_ref_sheet
       - image_selector
     checkpoint_required: true
     human_approval_default: true
@@ -210,7 +211,7 @@ stages:
     review_focus:
       - "每个 scene_plan 中的场景至少有一张草图"
       - "草图宽高比与最终视频一致(默认 16:9)"
-      - "角色外观与 character_design 三视图一致"
+      - "角色外观与 character_design 四视图一致"
       - "用户已确认,approval.status 为 approved"
     success_criteria:
       - Schema 合法的 scene_sketch 产物
@@ -256,7 +257,7 @@ stages:
       - Narration assets apply the approved voice performance plan and sample settings
       - Total cost within approved budget from proposal_packet
       - Image style consistency across all generated visuals
-      - "如有 character_design,视频生成素材的角色形象应与三视图一致(使用 identity_lock 和 reference_image)"
+      - "如有 character_design,视频生成素材的角色形象应与四视图一致(使用 identity_lock 和 reference_image)"
       - "scene_sketch 中的构图应在生成的视频片段中得到体现"
     success_criteria:
       - Schema-valid asset_manifest with all required assets generated

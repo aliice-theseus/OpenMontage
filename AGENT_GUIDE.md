@@ -498,6 +498,8 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 
 视频制作流程中的所有纯文生图请求必须通过 `image_selector`，默认使用 `preferred_provider="local_diffusion"`；该工具内部默认基础模型为 `black-forest-labs/FLUX.1-schnell`。用户明确指定其他提供商、`allowed_providers`、图像编辑输入或自定义 ComfyUI 工作流时，可以覆盖这个默认值。
 
+**人物角色参考图例外：** 人物三/四视图必须使用 `character_ref_sheet`，默认并锁定本地 `black-forest-labs/FLUX.2-dev`。该工具按“`front_only` 正面 T2I 与人工确认 → `complete_from_front` 正面参考驱动的侧面/背面/半身 → 1280×720 本地拼接”执行，并在内部逐张通过 `image_selector → local_diffusion`。只有用户明确批准跳过正面检查时才使用 `operation="full"`。不得退回 FLUX.1 Schnell/Dev，也不得让模型一次性生成四栏组合图。
+
 如果本地 FLUX 依赖、基础模型或 LoRA 不可用，不要静默切换到其他图像生成提供商。应上报阻塞并提示安装或确认模型下载；只有用户明确批准后才传递 `allow_model_download=true`。图库搜索（Pexels/Pixabay）、`diagram_gen`、`code_snippet`、Manim 和合成引擎原生图形不属于文生图，不受此默认值约束。
 
 ## 面向用户的规划协议

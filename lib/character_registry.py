@@ -7,7 +7,7 @@
 
     1. 第一个视频的 character_design 阶段锁定角色 → 写入注册表
     2. 后续视频的 character_design 阶段先查询注册表
-    3. 如果找到已有角色，复用 identity_lock 包，跳过生成三视图
+    3. 如果找到已有角色，复用 identity_lock 包，跳过生成四视图
     4. 如果需要新角色或更新现有角色，正常生成并更新注册表
 
 文件存储: ``projects/<project-id>/character_registry.json``
@@ -30,7 +30,7 @@ from typing import Any, Optional
 class CharacterIdentity:
     """角色身份锁定记录。
 
-    包含角色的三视图种子、提示词和参考图路径，
+    包含角色的四视图种子、提示词和参考图路径，
     供后续视频或同一视频的不同阶段复用。
     """
     character_id: str
@@ -39,7 +39,7 @@ class CharacterIdentity:
     image_path_front: str
     image_path_side: str
     image_path_back: str
-    prompt: str                   # 生成三视图使用的完整提示词
+    prompt: str                   # 生成四视图使用的完整提示词
     identity_phrases: list[str]   # 身份锁定短语列表
     source_tool: str
     seed: Optional[int] = None
@@ -187,7 +187,7 @@ class CharacterRegistry:
         for identity in identities:
             if identity.seed_image_path:
                 reference_image_urls.append(identity.seed_image_path)
-            # 也加入三视图中的正面照
+            # 也加入四视图中的正面照
             if identity.image_path_front and identity.image_path_front != identity.seed_image_path:
                 reference_image_urls.append(identity.image_path_front)
             all_phrases.extend(identity.identity_phrases)

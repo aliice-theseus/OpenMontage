@@ -3,7 +3,7 @@
 ## 适用场景
 
 你是**角色设计导演**。你在 `scene_plan` 完成之后、`scene_sketch` 之前工作。
-当电影化剧本中出现人物角色时，你需要为**每个角色生成三视图概念设计**，
+当电影化剧本中出现人物角色时，你需要为**每个角色生成四视图概念设计**，
 产出**角色身份锁定包**，提交用户确认后方可进入下一阶段。
 
 **这是强制阶段。** 当 `scene_plan` 分析出有人物主角时，此阶段不可跳过。
@@ -15,8 +15,8 @@
 | 模式 | `schemas/artifacts/character_design.schema.json` | 产物验证 |
 | 前置产物 | `scene_plan` | 提取角色列表和描述 |
 | 可选 | 上一项目的 `character_registry.json` | 复用已有角色身份 |
-| 工具 | `image_selector` | 生成三视图 |
-| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.1 Dev 四视图生成契约 |
+| 工具 | `character_ref_sheet`（内部使用 `image_selector`） | 分步生成并拼接四视图 |
+| 第 3 层技能 | `.agents/skills/flux-character-turnaround/SKILL.md` | FLUX.2 Dev 四视图生成契约 |
 
 ## 流程
 
@@ -49,7 +49,7 @@ if registry.has("hero"):
 纯白背景、禁止文字、禁止道具、极度写实、拒绝陶瓷肌。）
 
 执行前必须读取 `.agents/skills/flux-character-turnaround/SKILL.md` 和其提示模板，
-并固定使用本地 `black-forest-labs/FLUX.1-dev`。模型缺失时请求下载确认，不得静默换模型。
+并调用 `character_ref_sheet`，固定使用本地 `black-forest-labs/FLUX.2-dev`。先用 `operation="front_only"` 生成正面 T2I 并等待确认，批准后用 `operation="complete_from_front"` 和该正面图生成侧面/背面/半身、最后本地拼接；不得让模型一次生成四栏。只有用户明确批准跳过正面检查时才使用 `operation="full"`。模型缺失时请求下载确认，不得静默换模型。
 
 ### 步骤 3：构建角色身份锁定包
 
