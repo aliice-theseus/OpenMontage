@@ -21,6 +21,19 @@ SCHEMA_PATH = (
 )
 
 
+# Stages using these tools create new moving-image output.  They must declare
+# an explicit entry approval gate so generation cannot begin merely because an
+# earlier creative checkpoint was approved.
+VIDEO_GENERATION_ENTRY_TOOLS = frozenset({
+    "video_selector",
+    "talking_head",
+    "lip_sync",
+    "character_rig_renderer",
+    "video_compose",
+    "hyperframes_compose",
+})
+
+
 def _load_manifest_schema() -> dict:
     with open(SCHEMA_PATH, encoding="utf-8") as f:
         return json.load(f)
@@ -49,8 +62,57 @@ def load_pipeline(name: str, defs_dir: Optional[Path] = None) -> dict[str, Any]:
 
     schema = _load_manifest_schema()
     jsonschema.validate(instance=manifest, schema=schema)
+    _validate_video_generation_entry_gates(manifest)
 
     return manifest
+
+
+def _stage_declared_tools(stage: dict[str, Any]) -> set[str]:
+    """Collect every tool explicitly declared on a stage."""
+    tools: set[str] = set()
+    for field in (
+        "tools_available",
+        "required_tools",
+        "optional_tools",
+        "preferred_tools",
+        "fallback_tools",
+    ):
+        tools.update(stage.get(field, []))
+    return tools
+
+
+def _validate_video_generation_entry_gates(manifest: dict[str, Any]) -> None:
+    """Reject manifests that can generate video without an entry approval.
+
+    ``human_approval_default`` is an exit checkpoint and therefore cannot
+    protect the first generation call in a stage.  Every compose stage and
+    every stage exposing a moving-image generation tool must opt into the
+    dedicated entry gate.
+    """
+    for stage in manifest.get("stages", []):
+        declared_tools = _stage_declared_tools(stage)
+        creates_video = (
+            stage.get("name") == "compose"
+            or bool(declared_tools & VIDEO_GENERATION_ENTRY_TOOLS)
+        )
+        if creates_video and not stage.get("entry_human_approval_required", False):
+            raise jsonschema.ValidationError(
+                "Pipeline stage "
+                f"{manifest.get('name', '<unknown>')}.{stage.get('name', '<unknown>')} "
+                "can generate video and must set entry_human_approval_required: true"
+            )
+        for sub_stage in stage.get("sub_stages", []):
+            sub_tools = set(sub_stage.get("tools_available", []))
+            if (
+                sub_tools & VIDEO_GENERATION_ENTRY_TOOLS
+                and not sub_stage.get("entry_human_approval_required", False)
+            ):
+                raise jsonschema.ValidationError(
+                    "Pipeline sub-stage "
+                    f"{manifest.get('name', '<unknown>')}.{stage.get('name')}."
+                    f"{sub_stage.get('name', '<unknown>')} can generate video and must "
+                    "set entry_human_approval_required: true"
+                )
 
 
 def list_pipelines(defs_dir: Optional[Path] = None) -> list[str]:
@@ -206,9 +268,15 @@ def get_stage_allowed_tools(manifest: dict, stage_name: str) -> set[str]:
     share the same parent stage context.
     """
     tools: set[str] = set()
+    parent_name, separator, sub_stage_name = stage_name.partition(".")
     for stage in manifest["stages"]:
-        if stage["name"] != stage_name:
+        if stage["name"] != parent_name:
             continue
+        if separator:
+            for sub in stage.get("sub_stages", []):
+                if sub.get("name") == sub_stage_name:
+                    return set(sub.get("tools_available", []))
+            return tools
         # 主阶段的所有工具字段
         for field in ("tools_available", "required_tools", "optional_tools",
                       "preferred_tools", "fallback_tools"):
@@ -218,6 +286,23 @@ def get_stage_allowed_tools(manifest: dict, stage_name: str) -> set[str]:
             tools.update(sub.get("tools_available", []))
         return tools  # 找到对应阶段后立即返回
     return tools  # 没找到则返回空集
+
+
+def stage_requires_entry_human_approval(
+    manifest: dict[str, Any], stage_name: str,
+) -> bool:
+    """Return whether a stage is blocked until the user explicitly confirms."""
+    parent_name, separator, sub_stage_name = stage_name.partition(".")
+    for stage in manifest["stages"]:
+        if stage["name"] != parent_name:
+            continue
+        if separator:
+            for sub_stage in stage.get("sub_stages", []):
+                if sub_stage.get("name") == sub_stage_name:
+                    return bool(sub_stage.get("entry_human_approval_required", False))
+            return False
+        return bool(stage.get("entry_human_approval_required", False))
+    return False
 
 
 # ---------------------------------------------------------------------------

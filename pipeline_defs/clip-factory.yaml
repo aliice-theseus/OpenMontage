@@ -176,6 +176,7 @@ stages:
       - audio_enhance
       - color_grade
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - All clips rendered successfully

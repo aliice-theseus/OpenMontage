@@ -99,6 +99,7 @@ stages:
         description: "10-15 second character-animation proof before full production"
         condition: "approved_concept_exists"
         human_approval_default: true
+        entry_human_approval_required: true
         tools_available:
           - character_spec_generator
           - svg_rig_builder
@@ -212,6 +213,7 @@ stages:
       - music_gen
       - character_rig_renderer
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - Character parts, backgrounds, props, audio, and effects are linked to scenes
@@ -268,6 +270,7 @@ stages:
       - video_compose
       - audio_mixer
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - Runtime chosen in proposal is the runtime actually used

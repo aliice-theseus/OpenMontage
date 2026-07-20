@@ -109,6 +109,7 @@ stages:
         description: "10-15 second preview clip for reference-driven productions"
         condition: "video_analysis_brief_exists"
         human_approval_default: true
+        entry_human_approval_required: true
         tools_available: [tts_selector, image_selector, video_selector, video_compose, audio_mixer]
         review_focus:
           - "Sample represents the approved concept faithfully"
@@ -250,6 +251,7 @@ stages:
       - music_gen
       - math_animate
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - All asset files exist on disk
@@ -307,6 +309,7 @@ stages:
       - video_stitch
       - audio_mixer
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - Output video exists and is playable

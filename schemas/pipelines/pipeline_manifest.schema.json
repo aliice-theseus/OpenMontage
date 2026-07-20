@@ -110,6 +110,11 @@
           },
           "checkpoint_required": { "type": "boolean", "default": true },
           "human_approval_default": { "type": "boolean", "default": false },
+          "entry_human_approval_required": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether explicit user confirmation is required immediately before entering and executing this stage. This is an entry gate, unlike human_approval_default which applies after stage work is complete."
+          },
           "success_criteria": {
             "type": "array",
             "items": { "type": "string" }
@@ -125,6 +130,11 @@
                 "description": { "type": "string" },
                 "condition": { "type": "string", "description": "When this sub-stage activates (e.g., video_analysis_brief_exists)" },
                 "human_approval_default": { "type": "boolean", "default": true },
+                "entry_human_approval_required": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether explicit user confirmation is required before executing this sub-stage."
+                },
                 "tools_available": { "type": "array", "items": { "type": "string" } },
                 "review_focus": { "type": "array", "items": { "type": "string" } }
               }

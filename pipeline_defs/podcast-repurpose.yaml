@@ -182,6 +182,7 @@ stages:
       - video_trimmer
       - audio_enhance
     checkpoint_required: true
+    entry_human_approval_required: true
     human_approval_default: false
     review_focus:
       - All deliverables rendered (clips + full episode if planned)

@@ -41,11 +41,14 @@ class PipelineContext:
         current_stage: 当前阶段名，须与清单中的 ``stages[].name`` 匹配。
         project_id: 项目标识符，用于检查点路径解析。
         pipeline_dir: 流水线工作目录（含检查点子目录的根目录）。
+        entry_human_approved: 用户是否已明确确认进入当前阶段。每次创建
+            新阶段上下文时都必须重新设置，不能沿用上一阶段的批准。
     """
     pipeline_type: str
     current_stage: str
     project_id: str
     pipeline_dir: Path
+    entry_human_approved: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -138,6 +141,20 @@ class StagePrerequisiteError(PermissionError):
         )
 
 
+class StageEntryApprovalRequiredError(PermissionError):
+    """当前阶段必须先获得用户明确确认。"""
+
+    def __init__(self, current_stage: str, pipeline_type: str) -> None:
+        self.current_stage = current_stage
+        self.pipeline_type = pipeline_type
+        super().__init__(
+            f"[PIPELINE GATE] 流水线 '{pipeline_type}' 的阶段 "
+            f"'{current_stage}' 会生成视频，进入前必须获得用户明确确认。\n"
+            "请向用户展示将执行的生成动作、工具/提供商、预计成本和输出，"
+            "等待用户确认后，以 entry_human_approved=True 创建当前阶段上下文。"
+        )
+
+
 # ---------------------------------------------------------------------------
 # 门禁检查函数（由 BaseTool.execute() 调用）
 # ---------------------------------------------------------------------------
@@ -197,10 +214,26 @@ def check_stage_prerequisites(ctx: PipelineContext) -> None:
         )
 
 
+def check_stage_entry_approval(ctx: PipelineContext) -> None:
+    """阻止未获本阶段明确确认的视频生成阶段执行任何工具。"""
+    from lib.pipeline_loader import load_pipeline, stage_requires_entry_human_approval
+
+    manifest = load_pipeline(ctx.pipeline_type)
+    if (
+        stage_requires_entry_human_approval(manifest, ctx.current_stage)
+        and not ctx.entry_human_approved
+    ):
+        raise StageEntryApprovalRequiredError(
+            current_stage=ctx.current_stage,
+            pipeline_type=ctx.pipeline_type,
+        )
+
+
 def check_tool_permitted(tool_name: str, ctx: PipelineContext) -> None:
     """检查工具是否在当前流水线上下文中被允许。
 
-    做两层检查:
+    做三层检查:
+      0. 当前视频生成阶段是否已获得用户明确的入口确认。
       1. 工具是否在当前阶段的允许工具列表中。
          选择器（video_selector / image_selector / tts_selector）可绕过此项
          以便它们能路由到提供商工具。
@@ -212,6 +245,7 @@ def check_tool_permitted(tool_name: str, ctx: PipelineContext) -> None:
         ctx: 当前流水线上下文。
 
     Raises:
+        StageEntryApprovalRequiredError: 如果视频生成阶段尚未获得用户确认。
         ToolNotPermittedError: 如果工具不在当前阶段的允许列表中（非选择器）。
         StagePrerequisiteError: 如果前置产物不满足。
     """
@@ -219,6 +253,10 @@ def check_tool_permitted(tool_name: str, ctx: PipelineContext) -> None:
 
     manifest = load_pipeline(ctx.pipeline_type)
     allowed = get_stage_allowed_tools(manifest, ctx.current_stage)
+
+    # 第 0 层：视频生成阶段入口确认。该确认必须属于当前阶段，不能由
+    # proposal/scene_plan 等上游审批隐式代替。
+    check_stage_entry_approval(ctx)
 
     # 第 1 层：工具权限检查。
     # 选择器可在任何阶段调（它们负责路由到提供商工具），
