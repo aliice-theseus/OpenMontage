@@ -4,9 +4,8 @@ Replicate hosts ByteDance's published Seedance 2.0 models:
   - bytedance/seedance-2.0        (standard)
   - bytedance/seedance-2.0-fast   (fast tier)
 
-Same model family as the fal.ai path (tools/video/seedance_video.py) —
-if you have both FAL_KEY and REPLICATE_API_TOKEN the scoring engine
-deduplicates by provider=seedance and picks whichever registers first.
+Same model family as the Ark path (tools/video/seedance_video.py).
+If you have REPLICATE_API_TOKEN the scoring engine will use this provider.
 """
 
 from __future__ import annotations
@@ -69,7 +68,7 @@ class SeedanceReplicate(BaseTool):
         "consistent character identity across shots",
     ]
     not_good_for = ["offline generation", "budget-constrained projects"]
-    fallback_tools = ["seedance_video", "veo_video", "kling_video", "minimax_video"]
+    fallback_tools = ["seedance_video", "wan_video"]
     quality_score = 0.95
 
     input_schema = {
@@ -136,7 +135,7 @@ class SeedanceReplicate(BaseTool):
         variant = inputs.get("model_variant", "standard")
         duration = inputs.get("duration", "5")
         secs = 5 if duration == "auto" else int(duration)
-        # Replicate bills per-second at roughly the same rate as fal.ai for this model family.
+        # Replicate bills per-second for this model family.
         rate = 0.24 if variant == "fast" else 0.30
         return round(rate * secs, 2)
 

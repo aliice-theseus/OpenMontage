@@ -91,7 +91,7 @@ Python 仅提供**工具和持久化**。所有智能都在技能说明（Markdo
 
 ### 2. 运行时无 LLM API 密钥
 
-OpenMontage 在运行时不会调用 LLM API。在用户 IDE 中运行的编码助手_就是_LLM。需要生成能力（图像、视频、TTS）的工具直接调用领域特定 API（ElevenLabs、fal.ai、HeyGen 等），而不是通用 LLM 端点。
+OpenMontage 在运行时不会调用 LLM API。在用户 IDE 中运行的编码助手_就是_LLM。需要生成能力（图像、视频、TTS）的工具直接调用领域特定 API（ElevenLabs、HeyGen 等），而不是通用 LLM 端点。
 
 ### 3. 双提供商支持
 
@@ -158,11 +158,11 @@ OpenMontage 在运行时不会调用 LLM API。在用户 IDE 中运行的编码�
 
 **增强（5 个）：** upscale（Real-ESRGAN）、bg_remove（rembg/U2Net）、face_enhance、face_restore（CodeFormer/GFPGAN）、color_grade（FFmpeg LUTs）
 
-**图形（13 个）：** flux_image、grok_image、google_imagen、openai_image、recraft_image、local_diffusion、pexels_image、pixabay_image、image_selector、code_snippet、diagram_gen、math_animate（ManimCE）、image_gen（已弃用）
+**图形（11 个）：** grok_image、google_imagen、openai_image、local_diffusion、pexels_image、pixabay_image、image_selector、code_snippet、diagram_gen、math_animate（ManimCE）、image_gen（已弃用）
 
 **字幕（1 个）：** subtitle_gen
 
-**视频（18 个）：** grok_video、heygen_video、higgsfield_video、veo_video、kling_video、runway_video、minimax_video、wan_video、hunyuan_video、cogvideo_video、ltx_video_local、ltx_video_modal、pexels_video、pixabay_video、video_selector、video_compose（FFmpeg）、video_stitch、video_trimmer
+**视频（15 个）：** grok_video、heygen_video、higgsfield_video、runway_video、wan_video、hunyuan_video、cogvideo_video、ltx_video_local、ltx_video_modal、pexels_video、pixabay_video、video_selector、video_compose（FFmpeg）、video_stitch、video_trimmer
 
 ---
 
@@ -382,7 +382,7 @@ paths:
 | `ELEVENLABS_API_KEY` | elevenlabs_tts, music_gen | TTS、音乐、音效 |
 | `OPENAI_API_KEY` | openai_tts, openai_image | TTS 回退、DALL-E 3 |
 | `XAI_API_KEY` | grok_image, grok_video | Grok 图像编辑/生成、Grok 视频生成 |
-| `FAL_KEY` | flux_image, kling_video, veo_video, minimax_video, recraft_image | fal.ai 托管模型（FLUX、Veo、Kling、MiniMax、Recraft） |
+
 | `HEYGEN_API_KEY` | heygen_video | 多提供商视频生成 |
 | `PEXELS_API_KEY` | pexels_image, pexels_video | 素材库媒体 |
 | `PIXABAY_API_KEY` | pixabay_image, pixabay_video | 素材库媒体 |

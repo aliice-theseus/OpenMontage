@@ -14,7 +14,7 @@
 | 2 | **$0** | Google API 密钥 | TTS，700+ 种语音（每月 100 万字符免费）+ $300 新账户信用额度 |
 | 3 | **$0** | ElevenLabs | 高级 TTS + 音乐 + 音效（每月 1 万字符免费） |
 | 4 | **$0** | Piper（本地安装） | 完全离线 TTS——无需 API 密钥、无成本、无网络 |
-| 5 | **~$0.03/张** | fal.ai | FLUX 图像 + Kling/Veo/MiniMax 视频 + Recraft——单密钥覆盖广泛的图像和视频 |
+| 5 | — | — | — |
 | 6 | **~$0.04/张** | OpenAI | DALL-E 3 图像 + OpenAI TTS |
 | 7 | **~$0.04/张** | Google Imagen | Imagen 4 图像（与 Google API 密钥共享） |
 | 8 | **$12/月** | Runway | Gen-4 视频——最高质量 AI 视频 |
@@ -41,9 +41,6 @@ OPENAI_API_KEY=              # OpenAI TTS + DALL-E 3 图像
 XAI_API_KEY=                 # xAI Grok 图像生成/编辑 + Grok 视频生成
 DOUBAO_SPEECH_API_KEY=       # 火山引擎豆包语音 TTS（强大的普通话旁白）
 DOUBAO_SPEECH_VOICE_TYPE=    # 默认豆包说话人/语音类型
-
-# 多模型网关（一个密钥，6+ 个工具）
-FAL_KEY=                     # FLUX、Recraft、Kling、Veo、MiniMax 视频
 
 # 视频
 HEYGEN_API_KEY=              # HeyGen 虚拟形象视频网关
@@ -94,44 +91,7 @@ OpenMontage 现在在 Grok 工具估算器中使用这些已公布的价格。
 
 ---
 
-### fal.ai——多模型网关
 
-> **单密钥广泛覆盖。** 一个 API 密钥即可解锁跨多个模型的图像和视频提供商。
-
-**解锁的工具：** `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video`
-**环境变量：** `FAL_KEY`
-
-#### 设置
-
-1. 前往 [fal.ai](https://fal.ai/) 并点击**注册**（GitHub 或 Google）
-2. 导航至 [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
-3. 点击**创建密钥**，复制它
-4. 添加到 `.env`：`FAL_KEY=your-key-here`
-
-#### 定价
-
-无需订阅——纯按量付费，无最低消费。
-
-**图像生成：**
-
-| 模型 | 价格 | 每 $1 可生成 |
-|------|------|-------------|
-| FLUX Pro v1.1 | $0.05/张 | 20 张 |
-| FLUX Dev | $0.03/张 | 33 张 |
-| Recraft v3 | ~$0.04/张 | 25 张 |
-
-**视频生成：**
-
-| 模型 | 价格 | 每 $1 可生成 |
-|------|------|-------------|
-| Kling 2.5 Turbo Pro | $0.07/秒 | 14 秒 |
-| MiniMax | ~$0.05/秒 | 20 秒 |
-| Veo 3 | $0.40/秒 | 2.5 秒 |
-| WAN 2.5 | $0.05/秒 | 20 秒 |
-
-**免费层级：** 无——但 $0 即可开始，你只需为使用的部分付费。
-
----
 
 ### ElevenLabs——语音、音乐、音效
 
@@ -724,7 +684,7 @@ pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece prot
 | **Piper** | —（仅安装） | `piper_tts` | 免费 |
 | **Google** | `GOOGLE_API_KEY` | `google_tts`, `google_imagen` | 免费层级 + 付费 |
 | **ElevenLabs** | `ELEVENLABS_API_KEY` | `elevenlabs_tts`, `music_gen` | 免费层级 + 付费 |
-| **fal.ai** | `FAL_KEY` | `flux_image`, `recraft_image`, `kling_video`, `veo_video`, `minimax_video` | 按量付费 |
+
 | **OpenAI** | `OPENAI_API_KEY` | `openai_tts`, `openai_image` | 仅付费 |
 | **xAI** | `XAI_API_KEY` | `grok_image`, `grok_video` | 仅付费 |
 | **Runway** | `RUNWAY_API_KEY` | `runway_video` | 免费试用 + 付费 |
@@ -743,8 +703,8 @@ pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece prot
 
 | 能力 | 云提供商 | 本地提供商 | 免费选项 |
 |------|---------|-----------|---------|
-| **图像生成** | FLUX、Grok、Google Imagen、DALL-E 3、Recraft | 本地扩散模型 | Pexels、Pixabay（素材库） |
-| **视频生成** | Grok、Kling、Runway、Veo、Higgsfield、MiniMax、HeyGen | WAN、Hunyuan、CogVideo、LTX | Pexels、Pixabay（素材库） |
+| **图像生成** | Grok、Google Imagen、DALL-E 3 | 本地扩散模型 | Pexels、Pixabay（素材库） |
+| **视频生成** | Grok、Runway、Higgsfield、HeyGen | WAN、Hunyuan、CogVideo、LTX | Pexels、Pixabay（素材库） |
 | **文本转语音** | ElevenLabs、Google TTS、OpenAI | Piper | Piper、Google 免费层级、ElevenLabs 免费层级 |
 | **音乐生成** | ElevenLabs、Suno | — | ElevenLabs 免费层级 |
 | **后期制作** | — | FFmpeg（合成、拼接、裁剪、混音、增强、调色） | 全部免费 |
@@ -761,9 +721,6 @@ pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece prot
 
 **问：我没有配置任何视频生成提供商。还能制作视频吗？**
 答：可以。代理生成静态图像（通过任何图像提供商——甚至来自 Pexels/Pixabay 的免费素材库素材），Remotion 将它们合成为带有弹簧物理转场、文字卡片、统计卡片和图表的动画视频。当没有配置视频生成时，这是讲解和动画流水线的默认路径。
-
-**问：获取 AI 生成的图像和视频有什么低门槛的方法？**
-答：fal.ai（`FAL_KEY`）是一个按量付费选项，单密钥覆盖广泛。它解锁 FLUX 图像以及多个视频提供商。无需订阅——只为你生成的内容付费。
 
 **问：我有 GPU。本地可以免费运行什么？**
 答：设置 `VIDEO_GEN_LOCAL_ENABLED=true` 并安装 `diffusers`。你将获得 WAN 2.1、Hunyuan、CogVideo 和 LTX 视频生成，以及 Stable Diffusion 图像生成——全部免费，全部离线。

@@ -128,7 +128,7 @@ class ComfyUIClient:
 | stability | `EXPERIMENTAL` |
 | capabilities | `text_to_image`, `image_to_image` |
 | dependencies | （运行时：ComfyUI 服务器可访问） |
-| fallback_tools | `flux_image`, `local_diffusion`, `openai_image` |
+| fallback_tools | `openai_image`, `local_diffusion` |
 | cost | `$0.00`（本地计算） |
 
 **捆绑工作流：** `flux2-txt2img.json`

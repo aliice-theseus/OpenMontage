@@ -82,7 +82,7 @@ class GrokVideo(BaseTool):
         "cost-effective high-quality video ($0.07/s at 720p)",
     ]
     not_good_for = ["offline generation"]
-    fallback_tools = ["veo_video", "runway_video", "kling_video", "minimax_video"]
+    fallback_tools = ["runway_video", "wan_video"]
 
     input_schema = {
         "type": "object",

@@ -79,8 +79,8 @@ class ComfyUIImage(BaseTool):
         "setups without a running ComfyUI server",
         "CPU-only machines",
     ]
-    fallback = "flux_image"
-    fallback_tools = ["flux_image", "local_diffusion", "openai_image"]
+    fallback = "openai_image"
+    fallback_tools = ["openai_image", "local_diffusion"]
 
     input_schema = {
         "type": "object",

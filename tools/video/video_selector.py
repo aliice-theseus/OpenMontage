@@ -90,7 +90,7 @@ class VideoSelector(BaseTool):
             },
             "image_url": {
                 "type": "string",
-                "description": "Alias for reference_image_url (used by some providers like Kling via fal.ai).",
+                "description": "Alias for reference_image_url (used by some providers).",
             },
             "resolution": {
                 "type": "string",
@@ -211,8 +211,12 @@ class VideoSelector(BaseTool):
             # If the provider uses image_url (not reference_image_path), upload and convert
             if "image_url" in tool_props and "image_url" not in adapted:
                 try:
-                    from tools.video._shared import upload_image_fal
-                    adapted["image_url"] = upload_image_fal(adapted["reference_image_path"])
+                    from tools.video._shared import upload_image_heygen
+                    api_key = os.environ.get("HEYGEN_API_KEY")
+                    if api_key:
+                        adapted["image_url"] = upload_image_heygen(adapted["reference_image_path"], api_key)
+                    else:
+                        return ToolResult(success=False, error="HEYGEN_API_KEY required for image upload when using reference_image_path")
                 except Exception as e:
                     return ToolResult(success=False, error=f"Failed to upload reference image: {e}")
 

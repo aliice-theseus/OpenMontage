@@ -5,7 +5,7 @@
 
 ## 何时选择 Seedance 2.0
 
-Seedance 2.0（字节跳动 Seed 团队，2026年2月发布）是 OpenMontage 的**首选高级默认值，用于电影感、预告片、预告、热血剪辑和运动主导的片段工作**，只要配置了付费网关（通过 `seedance_video` 使用 `FAL_KEY`，或 HeyGen Video Agent / Avatar Shots）。它是产品线中唯一能同时交付以下所有功能的模型：
+Seedance 2.0（字节跳动 Seed 团队，2026年2月发布）是 OpenMontage 的**首选高级默认值，用于电影感、预告片、预告、热血剪辑和运动主导的片段工作**，只要配置了付费网关（通过 `seedance_video`，或 HeyGen Video Agent / Avatar Shots）。它是产品线中唯一能同时交付以下所有功能的模型：
 
 - 单次原生同步音频（语音 + 音效 + 环境一起，非后期同步）
 - 单个提示内的多镜头生成
@@ -129,7 +129,7 @@ Sokka, half a step behind, replies: "Then we fight."
 - **电影感流程：** Seedance 2.0 是默认值。21:9，蒙太奇多镜头，当简报有视觉圣经时使用参考转视频。
 - **动画讲解：** 仅将 Seedance 2.0 用于定场/情绪/冷开场片段 — 核心动态图形保持在 Remotion。
 - **屏幕演示/播客/片段工厂：** 不是正确的默认值。仅用于风格化冷开场。
-- **成本检查：** 10秒 `standard` ≈ fal.ai 上 $3.03/片段。5秒 `fast` ≈ $1.21。在提案阶段做预算。
+- **成本检查：** 在提案阶段做预算。
 
 ## 示例 — Airbender 预告片主镜头节拍（60秒总预告片，这是7个镜头中的第3个）
 

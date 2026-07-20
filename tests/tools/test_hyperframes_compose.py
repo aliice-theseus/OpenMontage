@@ -102,7 +102,7 @@ def test_animation_proposal_director_has_no_hardcoded_costs_or_keys():
         r"(?:\s*-\s*\$?\d+(?:[.,]\d+)?)?"   # optional range tail
     )
     env_var_pattern = re.compile(
-        r"\b(FAL_KEY|OPENAI_API_KEY|RUNWAY_API_KEY|KLING_API_KEY|"
+        r"\b(OPENAI_API_KEY|RUNWAY_API_KEY|KLING_API_KEY|"
         r"REPLICATE_API_TOKEN|ANTHROPIC_API_KEY|GEMINI_API_KEY|"
         r"ELEVENLABS_API_KEY|HEYGEN_API_KEY)\b"
     )

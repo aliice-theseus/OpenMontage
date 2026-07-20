@@ -48,7 +48,7 @@
   <video src="https://github.com/user-attachments/assets/8daca07f-cdf8-4bec-89c3-9dc2176363fa" width="100%" controls></video>
 </div>
 
-> **“最后的香蕉 (THE LAST BANANA)”** — 一部 60 秒皮克斯风格的动画短片，讲述了一根孤独的香蕉与奇异果建立友谊的故事。使用了 6 个 Kling v3 生成的动态片段（通过 fal.ai）、Google Chirp3-HD 旁白、免版税钢琴曲、TikTok 风格的词级字幕以及 Remotion 合成。总成本：**1.33 美元**。
+> **“最后的香蕉 (THE LAST BANANA)”** — 一部 60 秒皮克斯风格的动画短片，讲述了一根孤独的香蕉与奇异果建立友谊的故事。使用了 6 个 Kling v3 生成的动态片段、Google Chirp3-HD 旁白、免版税钢琴曲、TikTok 风格的词级字幕以及 Remotion 合成。总成本：**1.33 美元**。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/8a6d2cc3-7ad2-46f5-922f-a8e3e5848d9f" width="100%" controls></video>
@@ -161,9 +161,6 @@ make setup
 
 ```bash
 # .env — 每个密钥都是可选的，只需添加您拥有的即可
-
-# 图像 + 视频网关:
-FAL_KEY=your-key               # FLUX 图像 + Google Veo、Kling、MiniMax 视频 + Recraft 图像
 
 # 免费素材库:
 PEXELS_API_KEY=your-key        # 免费库存视频和图像
@@ -416,7 +413,7 @@ OpenMontage/
 |----------|------|-------|
 | **Kling** | 云端 API | 高质量，速度快 |
 | **Runway Gen-4** | 云端 API | 电影级质量，Gen-3 Alpha Turbo / Gen-4 Turbo / Gen-4 Aleph |
-| **Google Veo 3** | 云端 API | 长篇幅，电影级。通过 fal.ai 或 HeyGen 接入。 |
+| **Google Veo 3** | 云端 API | 长篇幅，电影级。通过 HeyGen 接入。 |
 | **Grok Imagine Video** | 云端 API | 强大的基于参考图的视频和 xAI 原生短视频生成 |
 | **Higgsfield** | 云端 API | 带 Soul ID 以实现角色一致性的多模型编排器 |
 | **MiniMax** | 云端 API | 极具成本效益 |

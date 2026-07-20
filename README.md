@@ -54,7 +54,7 @@
   <video src="https://github.com/user-attachments/assets/8daca07f-cdf8-4bec-89c3-9dc2176363fa" width="100%" controls></video>
 </div>
 
-> **"THE LAST BANANA"** — 一部60秒皮克斯风格的动画短片，讲述一根孤独的香蕉与一颗奇异果成为朋友的故事。6个 Kling v3 生成的动态片段（通过 fal.ai）、Google Chirp3-HD 旁白、免版税钢琴音乐、TikTok 风格逐字字幕和 Remotion 合成。总成本：**$1.33**。
+> **"THE LAST BANANA"** — 一部60秒皮克斯风格的动画短片，讲述一根孤独的香蕉与一颗奇异果成为朋友的故事。6个 Kling v3 生成的动态片段、Google Chirp3-HD 旁白、免版税钢琴音乐、TikTok 风格逐字字幕和 Remotion 合成。总成本：**$1.33**。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/e03b5d1f-1199-4093-9f31-a43aa9da2c68" width="100%" controls></video>
@@ -167,9 +167,6 @@ make setup
 
 ```bash
 # .env — 所有密钥都是可选的，添加你有的
-
-# 图像 + 视频网关：
-FAL_KEY=your-key               # FLUX 图像 + Google Veo, Kling, MiniMax 视频 + Recraft 图像
 
 # 免费库存媒体：
 PEXELS_API_KEY=your-key        # 免费库存素材和图像
@@ -422,7 +419,7 @@ OpenMontage/
 |----------|------|-------|
 | **Kling** | 云 API | 高质量，快速 |
 | **Runway Gen-4** | 云 API | 电影级质量，Gen-3 Alpha Turbo / Gen-4 Turbo / Gen-4 Aleph |
-| **Google Veo 3** | 云 API | 长格式，电影级。通过 fal.ai 或 HeyGen。 |
+| **Google Veo 3** | 云 API | 长格式，电影级。通过 HeyGen。 |
 | **Grok Imagine Video** | 云 API | 强大的参考图像视频和 xAI 原生短视频生成 |
 | **Higgsfield** | 云 API | 多模型编排器，具有用于角色一致性的 Soul ID |
 | **MiniMax** | 云 API | 成本效益高 |

@@ -3,13 +3,14 @@
 .. deprecated::
     Use ``image_selector`` instead. This monolithic tool has been replaced by
     the selector/provider pattern: ``image_selector`` routes to per-provider
-    tools (flux_image, openai_image, recraft_image, local_diffusion,
-    pexels_image, pixabay_image). This file is kept for backwards
-    compatibility and will be removed in a future release.
+    tools (grok_image, openai_image, local_diffusion, pexels_image,
+    pixabay_image). This file is kept for backwards compatibility and
+    will be removed
+    in a future release.
 
-Supports cloud API providers (FLUX via fal.ai/Replicate, OpenAI DALL-E)
-and local Stable Diffusion via diffusers. Reports unavailable with
-install instructions when no provider is configured.
+Supports cloud API providers (OpenAI DALL-E) and local Stable Diffusion via
+diffusers. Reports unavailable with install instructions when no provider
+is configured.
 """
 
 from __future__ import annotations
@@ -49,11 +50,10 @@ class ImageGen(BaseTool):
     install_instructions = (
         "Set one of these environment variables:\n"
         "  OPENAI_API_KEY — for DALL-E 3\n"
-        "  FAL_KEY — for FLUX via fal.ai\n"
         "Or install diffusers for local generation:\n"
         "  pip install diffusers transformers accelerate torch"
     )
-    agent_skills = ["flux-best-practices", "bfl-api"]
+    agent_skills = []
 
     capabilities = [
         "generate_image",
@@ -62,7 +62,7 @@ class ImageGen(BaseTool):
     ]
     best_for = [
         "DEPRECATED — prefer image_selector which routes to per-provider tools "
-        "(flux_image, openai_image, recraft_image, grok_image, local_diffusion, "
+        "(grok_image, openai_image, local_diffusion, "
         "pexels_image, pixabay_image).",
         "Kept only for backwards compatibility. New code should not call this.",
     ]
@@ -109,8 +109,6 @@ class ImageGen(BaseTool):
     def _detect_provider(self) -> Optional[str]:
         if os.environ.get("OPENAI_API_KEY"):
             return "openai"
-        if os.environ.get("FAL_KEY") or os.environ.get("FAL_AI_API_KEY"):
-            return "flux"
         try:
             import diffusers  # noqa: F401
             return "local"
@@ -122,8 +120,6 @@ class ImageGen(BaseTool):
         provider = inputs.get("provider") or self._detect_provider()
         if provider == "openai":
             return 0.04  # DALL-E 3 standard
-        if provider == "flux":
-            return 0.03
         return 0.0  # local
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
@@ -139,8 +135,7 @@ class ImageGen(BaseTool):
         try:
             if provider == "openai":
                 result = self._generate_openai(inputs)
-            elif provider == "flux":
-                result = self._generate_flux(inputs)
+
             elif provider == "local":
                 result = self._generate_local(inputs)
             else:
@@ -184,52 +179,6 @@ class ImageGen(BaseTool):
             },
             artifacts=[str(output_path)],
             model=model,
-        )
-
-    def _generate_flux(self, inputs: dict[str, Any]) -> ToolResult:
-        import requests
-
-        api_key = os.environ.get("FAL_KEY") or os.environ["FAL_AI_API_KEY"]
-        prompt = inputs["prompt"]
-        width = inputs.get("width", 1024)
-        height = inputs.get("height", 1024)
-        seed = inputs.get("seed")
-
-        payload = {
-            "prompt": prompt,
-            "image_size": {"width": width, "height": height},
-        }
-        if seed is not None:
-            payload["seed"] = seed
-
-        response = requests.post(
-            "https://fal.run/fal-ai/flux/dev",
-            headers={"Authorization": f"Key {api_key}", "Content-Type": "application/json"},
-            json=payload,
-            timeout=120,
-        )
-        response.raise_for_status()
-        data = response.json()
-
-        image_url = data["images"][0]["url"]
-        image_response = requests.get(image_url, timeout=60)
-        image_response.raise_for_status()
-
-        output_path = Path(inputs.get("output_path", "generated_image.png"))
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_bytes(image_response.content)
-
-        return ToolResult(
-            success=True,
-            data={
-                "provider": "flux",
-                "prompt": prompt,
-                "output": str(output_path),
-                "seed": data.get("seed"),
-            },
-            artifacts=[str(output_path)],
-            seed=data.get("seed"),
-            model="flux-dev",
         )
 
     def _generate_local(self, inputs: dict[str, Any]) -> ToolResult:

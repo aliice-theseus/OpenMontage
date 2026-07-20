@@ -70,7 +70,7 @@ class HiggsFieldVideo(BaseTool):
         "multi-model access through a single API (Seedance 2.0, Kling, Veo, Sora, WAN)",
     ]
     not_good_for = ["offline generation", "fine-grained model control", "budget projects without subscription"]
-    fallback_tools = ["seedance_video", "seedance_replicate", "kling_video", "veo_video", "minimax_video"]
+    fallback_tools = ["seedance_video", "seedance_replicate", "wan_video"]
     quality_score = 0.9
 
     input_schema = {

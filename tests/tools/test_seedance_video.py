@@ -159,7 +159,7 @@ class TestMetadata:
         assert "ai-video-gen" in tool.agent_skills
 
     def test_fallback_tools(self, tool):
-        assert "veo_video" in tool.fallback_tools
+        assert "wan_video" in tool.fallback_tools
 
 
 # ----------------------------------------------------------------------

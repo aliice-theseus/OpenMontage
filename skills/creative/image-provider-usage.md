@@ -9,10 +9,8 @@
 
 | 工具 | 提供商 | 费用 | 速度 | 最适合 |
 |------|--------|------|------|--------|
-| `flux_image` | FLUX 2 Pro 通过 fal.ai | 约$0.03-0.05 | 约5-10秒 | 照片级真实感，通用用途，主力 |
 | `grok_image` | Grok Imagine Image (xAI) | $0.02/输出 + $0.002/输入编辑图像 | 约5-15秒 | 图像编辑、风格迁移、多图像合成 |
 | `openai_image` | GPT Image 1 (OpenAI) | 约$0.01-0.17 | 约5-15秒 | 复杂指令、图像中的文字、多元素 |
-| `recraft_image` | Recraft V4 通过 fal.ai | 约$0.04-0.25 | 约5-10秒 | Logo、SVG矢量、品牌资产、文字渲染（见下方注意事项） |
 | `local_diffusion` | FLUX.1-schnell（本地默认） | 免费 | 取决于 GPU | 视频流程默认文生图、离线、隐私、LoRA |
 | `image_gen` | 多（旧版，已弃用） | 不等 | 不等 | **已弃用** — 使用 `image_selector` 或按提供商工具 |
 
@@ -33,14 +31,14 @@
 
 | 场景类型 | 主要提供商 | 原因 | 回退 |
 |----------|-----------|------|------|
-| **真实照片**（城市、自然、人物） | `pexels_image` | 真实的照片 > AI 的真实感 | `pixabay_image` → `flux_image` |
-| **技术图表** | `diagram_gen` | 结构化、可编辑 | `flux_image` 配图表提示 |
-| **抽象/概念插图** | `local_diffusion`（FLUX） | 视频流程统一默认、风格一致、支持 LoRA | 用户批准后可改用 `flux_image` |
+| **真实照片**（城市、自然、人物） | `pexels_image` | 真实的照片 > AI 的真实感 | `pixabay_image` → `openai_image` |
+| **技术图表** | `diagram_gen` | 结构化、可编辑 | `openai_image` 配图表提示 |
+| **抽象/概念插图** | `local_diffusion` | 视频流程统一默认、风格一致、支持 LoRA | `openai_image` |
 | **现有图像的风格迁移/重绘** | `grok_image` | 原生编辑流程，强大的可提示变换 | `openai_image` |
 | **多图像合并/合成** | `grok_image` | 可将多个源图像合成为一个场景 | `openai_image` |
-| **Logo 或品牌资产** | `recraft_image` | SVG 支持，文字准确性 | `openai_image` |
-| **带文字/标签的图像** | `openai_image` | 最佳文字渲染（GPT Image 1） | `recraft_image` |
-| **复杂多元素构图** | `openai_image` | 最佳指令遵循 | `flux_image` |
+| **Logo 或品牌资产** | `openai_image` | — | `grok_image` |
+| **带文字/标签的图像** | `openai_image` | 最佳文字渲染（GPT Image 1） | `grok_image` |
+| **复杂多元素构图** | `openai_image` | 最佳指令遵循 | `grok_image` |
 | **主视觉图像（关键视觉）** | `local_diffusion`（FLUX） | 视频流程统一默认、可复现 | 用户批准后可改用其他提供商 |
 | **缩略图** | `local_diffusion`（FLUX） | 与视频主视觉保持一致 | 用户批准后可改用其他提供商 |
 | **预算/免费项目** | `pexels_image` 或 `pixabay_image` | 免费、即时 | `local_diffusion` |
@@ -48,22 +46,20 @@
 
 ## 提供商特定注意事项
 
-### Recraft V4 通过 fal.ai
-- **`style` 参数会导致 422 错误**（截至2026年4月）。`style` 枚举值（`digital_illustration`、`realistic_image` 等）被 fal.ai 的 Recraft V4 端点拒绝。**解决方法：** 改为在提示文本中编码风格方向（例如，"牙齿横截面的数字插图"而非 `style="digital_illustration"`）。`image_size` 和 `colors` 参数正常工作。
-- **精确商业名称的文字渲染不可靠。** Recraft（如所有 AI 图像模型）可能生成错误的文字。对于文字必须逐字准确（行动号召屏幕、商业名称、电话号码）的任何场景，使用 Remotion `text_card` 而非生成带文字的图像。
+
 
 ## 费用-质量权衡
 
 ```
 生产路径：高级
-├── 主视觉图像：local_diffusion / FLUX ($0.00/图)
-├── 辅助视觉：local_diffusion / FLUX ($0.00/图)
+├── 主视觉图像：local_diffusion ($0.00/图)
+├── 辅助视觉：local_diffusion ($0.00/图)
 ├── 精确文字叠加：Remotion 原生文字 ($0.00)
 ├── B-roll 静态图：pexels_image ($0.00)
 └── 10张图像 API 成本：$0.00
 
 生产路径：标准
-├── 全部生成：local_diffusion / FLUX ($0.00/图)
+├── 全部生成：local_diffusion ($0.00/图)
 ├── B-roll 静态图：pexels_image ($0.00)
 └── 10张图像 API 成本：$0.00
 

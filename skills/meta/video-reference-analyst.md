@@ -274,7 +274,7 @@ LTX Distilled  较低       最快        $X.XX              $X.XX
 Tool              agent_skills              Read?
 ────────────      ────────────────────      ─────
 video_selector    ai-video-gen              [ ]
-flux_image        flux-best-practices       [ ]
+
 elevenlabs_tts    elevenlabs, text-to-speech [ ]
 video_compose     remotion-best-practices   [ ]
 ```

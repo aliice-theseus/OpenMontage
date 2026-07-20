@@ -10,14 +10,14 @@
 
 | 模型 | 指南 | 关键要点 |
 |------|------|----------|
-| **Seedance 2.0（标准/快速）** | `creative/prompting/seedance-prompting.md` + Layer 3 `.agents/skills/seedance-2-0/` | **首选高级默认值**，当配置了 `FAL_KEY` 或 HeyGen 时。单次同步音频、多镜头生成、导演级镜头、引用对话的唇形同步、参考转视频（9张图+3个视频+3个音频）。Elo 1269（Artificial Analysis 排名第一）。 |
+| **Seedance 2.0（标准/快速）** | `creative/prompting/seedance-prompting.md` + Layer 3 `.agents/skills/seedance-2-0/` | **首选高级默认值**，当配置了付费网关时。单次同步音频、多镜头生成、导演级镜头、引用对话的唇形同步、参考转视频（9张图+3个视频+3个音频）。Elo 1269（Artificial Analysis 排名第一）。 |
 | **Sora 2 / Sora 2 Pro** | [OpenAI Sora 2 Cookbook](https://developers.openai.com/cookbook/examples/sora/sora2_prompting_guide) | 最丰富的结构化模板。高级字段：镜头、滤镜、调色、剧情声、服装、后期。 |
 | **VEO 3.1 / VEO 3** | [Vertex AI 提示指南](https://cloud.google.com/vertex-ai/generative-ai/docs/video/video-gen-prompt-guide) | 最佳词汇参考表。14组件提示结构。 |
 | **Grok Imagine Video** | `creative/prompting/grok-prompting.md` | 当提示需要像 `<IMAGE_1>` 这样的参考图像占位符以及身份/产品延续时最佳。 |
 | **LTX-2** | [LTX 提示指南](https://docs.ltx.video/api-documentation/prompting-guide) | 6元素结构。音频/语音提示。强大的"应避免"章节。 |
 | **HunyuanVideo 1.5** | [Tencent 提示手册](https://github.com/Tencent-Hunyuan/HunyuanVideo-1.5/blob/main/assets/HunyuanVideo_1_5_Prompt_Handbook_EN.md) | 公式：主体 + 动作 + 场景 + [镜头类型] + [相机运动] + [光照] + [风格] + [氛围]。 |
 | **Runway Gen-4** | [Runway 提示指南](https://help.runwayml.com/hc/en-us/articles/39789879462419-Gen-4-Video-Prompting-Guide) | "关注运动，而非外观。"一个片段一个场景。简洁至上。 |
-| **Kling 2.6** | [Kling 提示指南](https://fal.ai/learn/devs/kling-2-6-pro-prompt-guide) | 4部分结构。支持 `++emphasis++` 语法用于关键元素。 |
+| **Kling 2.6** | — | 4部分结构。支持 `++emphasis++` 语法用于关键元素。 |
 | **Wan 2.1 / CogVideoX** | 使用本通用指南 | 无官方提示指南。标准电影摄影词汇即可。 |
 
 ## 顺序很重要

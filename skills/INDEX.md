@@ -311,5 +311,5 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 | **动画** | `framer-motion`, `lottie-bodymovin` | `pproenca/dot-skills`, `dylantarre/animation-principles` |
 | **设计** | `tailwind-design-system`, `web-design-guidelines`, `vercel-react-best-practices`, `vercel-composition-patterns` | `wshobson/agents`, `vercel-labs/agent-skills` |
 | **AI 视频（HeyGen）** | `heygen`, `avatar-video`, `create-video`, `faceswap`, `ai-video-gen`, `video-download`, `video-edit`, `video-translate`, `video-understand`, `visual-style` | `heygen-com/skills` |
-| **AI 视频（高级）** | `seedance-2-0` — 首选的付费默认值（电影感、预告片、多镜头、唇形同步、同步音频）；通过 `seedance_video`（fal.ai）或 `heygen_video` 虚拟形象镜头访问 | 本地 OpenMontage 技能 |
+| **AI 视频（高级）** | `seedance-2-0` — 首选的付费默认值（电影感、预告片、多镜头、唇形同步、同步音频）；通过 `seedance_video` 或 `heygen_video` 虚拟形象镜头访问 | 本地 OpenMontage 技能 |
 | **基础设施** | `acestep`, `ltx2`, `playwright-recording` | `digitalsamba/claude-code-video-toolkit` |

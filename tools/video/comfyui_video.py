@@ -132,7 +132,7 @@ class ComfyUIVideo(BaseTool):
         "running the bundled WAN 2.2 14B FP8 workflows on GPUs below 16GB VRAM",
     ]
     fallback = "wan_video"
-    fallback_tools = ["wan_video", "hunyuan_video", "ltx_video_local", "kling_video"]
+    fallback_tools = ["wan_video", "hunyuan_video", "ltx_video_local"]
 
     input_schema = {
         "type": "object",

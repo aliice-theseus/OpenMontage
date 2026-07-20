@@ -1,6 +1,6 @@
 """Seedance 2.0 (ByteDance) video generation via 火山引擎 Ark API.
 
-直接调用火山引擎 Ark 上的 Seedance 2.0 模型，无需经过 fal.ai。
+直接调用火山引擎 Ark 上的 Seedance 2.0 模型。
 适用于中国大陆网络环境。
 
 配置方式：
@@ -93,10 +93,10 @@ class SeedanceVideo(BaseTool):
         "lip-sync from quoted dialogue in prompts",
         "reference-conditioned generation (up to 9 images + 3 video clips + 3 audio clips)",
         "consistent character identity across shots",
-        "direct connection via 火山引擎 Ark, no fal.ai dependency",
+        "direct connection via 火山引擎 Ark",
     ]
     not_good_for = ["offline generation", "budget-constrained projects"]
-    fallback_tools = ["veo_video", "kling_video", "minimax_video"]
+    fallback_tools = ["wan_video"]
     # Premium model — beat out "experimental stability" baseline. The scoring
     # engine reads quality_score directly when present (see lib/scoring.py).
     quality_score = 0.95

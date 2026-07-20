@@ -312,7 +312,7 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
   视频生成（0/13 -> 解锁最大升级）：
     每个不可用提供商列出自己的 install_instructions。
     从 provider_menu 输出中读取它们，并按环境变量分组呈现。
-    示例：如果3个工具需要 FAL_KEY，分组说明："FAL_KEY 解锁3个提供商"
+   
 
   图像生成（1/7 -> 更多样式选项）：
     相同模式 — 从每个不可用工具读取 install_instructions。
@@ -648,7 +648,7 @@ OpenMontage 有三个指令层：
 
 **第3层不是可选的。** 每个生成工具（视频、图像、TTS、音乐）都有一个 `agent_skills` 字段列出其第3层技能。这些技能包含提供商特定的提示工程、参数调优和质量技术。在编写提示词之前阅读它们。通用提示词与了解技能的提示词之间的区别，就是"可用"与"电影级"之间的区别。
 
-示例：在调用 `kling_video` 之前，阅读其 `agent_skills` → `ai-video-gen` → 获取 Kling 特定的提示结构、摄像机方向语法和模型响应最佳的质量关键词。
+示例：在调用视频生成工具之前，阅读其 `agent_skills` → 相关技能 → 获取提供商特定的提示结构和质量关键词。
 
 ### 第3层技能，按类别分类
 
