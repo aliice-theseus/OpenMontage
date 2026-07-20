@@ -4,7 +4,7 @@
 
 时间线已存在。每个剪辑都有入/出点，过渡已选择，音乐基底已锁定。你现在必须渲染作品并应用基调平滑处理（统一的裁切 + LUT + 音频混音），使混合年代的语料库感觉像一部电影。
 
-输出是一个单独的 mp4 加上一个 `render_report` 工件。
+输出是一个单独的 mp4，加上 `render_report` 和 `final_review` 两个工件。必须检查实际渲染文件；不能只根据渲染调用成功就结束阶段。
 
 ## 运行时路由（硬约束）
 
@@ -18,7 +18,8 @@
 
 | 层 | 资源 | 用途 |
 |-------|----------|---------|
-| 模式 | `schemas/artifacts/render_report.schema.json` | 工件验证 |
+| 模式 | `schemas/artifacts/render_report.schema.json` | 渲染报告验证 |
+| 模式 | `schemas/artifacts/final_review.schema.json` | 最终成片审查验证 |
 | 前置工件 | `state.artifacts["edit"]["edit_decisions"]` | 剪辑、过渡、音乐、元数据提示 |
 | 前置工件 | `state.artifacts["assets"]["asset_manifest"]` | 文件路径、时长、提供者 |
 | 工具 | `video_compose`（Remotion 优先 + FFmpeg 回退） | 主要渲染引擎 |
@@ -264,6 +265,8 @@ video_compose.execute({
 
 ### 8. 质量门
 
+- 从 `video_compose.execute()` 的返回数据中提取 `final_review`，按 `schemas/artifacts/final_review.schema.json` 验证，并与 `render_report` 一起写入 compose 检查点。
+- `final_review.status` 必须为 `pass`；否则停止并按 `recommended_action` 修复或上报，不得把失败成片呈现为完成品。
 - 输出文件存在且可播放。
 - 时长在 `brief.duration_seconds` 的 ±1 秒内（主体 + 尾标合计）。
 - 分辨率与 `target_platform` 画布匹配。

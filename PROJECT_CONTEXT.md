@@ -90,6 +90,7 @@ AI 代理本身就是智能核心。Python 仅用于工具和持久化。其他�
 | `clip-factory` | `pipeline_defs/clip-factory.yaml` | 短视频批量提取 |
 | `podcast-repurpose` | `pipeline_defs/podcast-repurpose.yaml` | 播客二次利用 |
 | `cinematic` | `pipeline_defs/cinematic.yaml` | 电影级剪辑 |
+| `documentary-montage` | `pipeline_defs/documentary-montage.yaml` | 检索优先的纪录片蒙太奇 |
 | `animation` | `pipeline_defs/animation.yaml` | 动画优先 |
 | `character-animation` | `pipeline_defs/character-animation.yaml` | 本地骨骼角色动画 |
 | `hybrid` | `pipeline_defs/hybrid.yaml` | 素材加辅助视觉混合 |

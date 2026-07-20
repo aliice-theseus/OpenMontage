@@ -146,6 +146,7 @@ stages:
       - brief
     produces:
       - render_report
+      - final_review
     required_tools:
       - video_compose
     optional_tools:
@@ -172,6 +173,7 @@ stages:
       - No silent fallback from a motion-led promise
     success_criteria:
       - Schema-valid render_report artifact
+      - Schema-valid final_review artifact with status pass
       - Output file exists and passes ffprobe validation
       - render_report.end_tag_rendered = true (or explicit opt-out)
       - render_report.end_tag_mode = "overlay" or "concat"

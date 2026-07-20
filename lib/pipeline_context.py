@@ -177,7 +177,11 @@ def check_stage_prerequisites(ctx: PipelineContext) -> None:
             checkpoint = read_checkpoint(
                 ctx.pipeline_dir, ctx.project_id, producing_stage,
             )
-            cp_ok = checkpoint and checkpoint.get("status") == "completed"
+            cp_ok = bool(
+                checkpoint
+                and checkpoint.get("status") == "completed"
+                and artifact_name in checkpoint.get("artifacts", {})
+            )
         except Exception:
             # read_checkpoint 可能因 schema 验证失败而抛出异常，
             # 此时视为该阶段的 checkpoint 不存在或无效。

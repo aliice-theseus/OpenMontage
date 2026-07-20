@@ -238,7 +238,7 @@
 
 6. **运行时选择呈现了两个选项**（提案阶段，强制要求）：
    - 查询 `video_compose.get_info()["render_engines"]`。如果 `remotion` 和 `hyperframes` 都显示 `True`，则 `decision_log` 中的 `render_runtime_selection` 决策的 `options_considered` **必须**包含两个运行时。
-   - 当机器上两者都可用时，`render_runtime_selection` 的 `options_considered` 中只有一个运行时 → **关键**。agent 默默使用了默认值；用户没有被呈现备选方案。重新打开提案阶段并呈现两者。
+   - 当机器上两者都可用时，`render_runtime_selection` 的 `options_considered` 中只有一个运行时 → **CRITICAL（关键）**。agent 默默使用了默认值；用户没有被呈现备选方案。重新打开提案阶段并呈现两者。
    - 如果只有一个运行时可用，`options_considered` 仍然必须列出不可用的那个，并附带 `rejected_because: "runtime not available on this machine"`——否则审计跟踪会丢失选择是受限的而非自由的事实。
    - 根据 AGENT_GUIDE.md > "Present Both Composition Runtimes (HARD RULE)"：流水线建议的"默认"运行时**不是**跳过与用户对话的许可证。
 

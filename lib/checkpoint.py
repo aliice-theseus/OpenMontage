@@ -19,14 +19,14 @@ from schemas.artifacts import ARTIFACT_NAMES, validate_artifact
 # All known stages across all pipelines (used only for artifact name lookup).
 ALL_KNOWN_STAGES = frozenset([
     "research", "proposal", "idea", "script", "scene_plan",
-    "character_design", "scene_sketch",
+    "character_design", "rig_plan", "scene_sketch",
     "assets", "edit", "key_visual", "compose", "publish",
 ])
 
 # Backward-compatible alias — existing code / tests that import STAGES still work.
 # New code should use get_pipeline_stages(pipeline_type) instead.
 STAGES = ["research", "proposal", "idea", "script", "scene_plan",
-          "character_design", "scene_sketch",
+          "character_design", "rig_plan", "scene_sketch",
           "assets", "edit", "key_visual", "compose", "publish"]
 
 CANONICAL_STAGE_ARTIFACTS = {
@@ -36,6 +36,7 @@ CANONICAL_STAGE_ARTIFACTS = {
     "script": "script",
     "scene_plan": "scene_plan",
     "character_design": "character_design",
+    "rig_plan": "rig_plan",
     "scene_sketch": "scene_sketch",
     "assets": "asset_manifest",
     "edit": "edit_decisions",
@@ -56,14 +57,15 @@ SUPPLEMENTARY_ARTIFACTS = {
 def get_pipeline_stages(pipeline_type: str | None) -> list[str]:
     """Return the ordered stage list for a specific pipeline.
 
-    Falls back to STAGES (deterministic canonical order) when pipeline_type
-    is not provided or the manifest cannot be loaded.
+    Falls back to STAGES (deterministic canonical order) only when
+    ``pipeline_type`` is not provided.  An explicitly selected pipeline must
+    load and validate successfully; otherwise the error is propagated.
 
     Previous versions used a set intersection here, which produced
     nondeterministic ordering. The fallback now uses a stable list.
     """
     if pipeline_type is None:
-        # Deterministic canonical fallback — sorted to ensure stable ordering
+        # Deterministic canonical fallback with stable declared ordering.
         import logging
         logging.getLogger(__name__).warning(
             "get_pipeline_stages called without pipeline_type — "
@@ -71,13 +73,13 @@ def get_pipeline_stages(pipeline_type: str | None) -> list[str]:
         )
         return list(STAGES)
 
-    try:
-        from lib.pipeline_loader import load_pipeline, get_stage_order
-        manifest = load_pipeline(pipeline_type)
-        return get_stage_order(manifest)
-    except (FileNotFoundError, Exception):
-        # Graceful fallback: return all known stages in canonical order
-        return list(STAGES)
+    # An explicit pipeline type is authoritative.  Loading or validation
+    # failures must remain visible; silently replacing a broken manifest with
+    # the canonical order can execute stages that do not belong to the chosen
+    # pipeline.
+    from lib.pipeline_loader import load_pipeline, get_stage_order
+    manifest = load_pipeline(pipeline_type)
+    return get_stage_order(manifest)
 
 CHECKPOINT_SCHEMA_PATH = (
     Path(__file__).resolve().parent.parent
@@ -93,7 +95,7 @@ class CheckpointValidationError(ValueError):
 
 @lru_cache(maxsize=1)
 def _load_checkpoint_schema() -> dict[str, Any]:
-    with open(CHECKPOINT_SCHEMA_PATH) as f:
+    with open(CHECKPOINT_SCHEMA_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 

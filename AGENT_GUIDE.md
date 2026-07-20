@@ -114,9 +114,11 @@ OpenMontage 是一个指令驱动的视频制作系统。AI 代理**就是**智�
 
 在已批准的提供商/模型路径内的细微提示优化不需要单独批准，除非它们实质性地改变了创意方向。
 
-### 同时呈现两种合成运行时（硬性规则）
+### Present Both Composition Runtimes (HARD RULE) / 同时呈现两种合成运行时
 
 当 Remotion 和 HyperFrames 在机器上都可用时（检查 `video_compose.get_info()["render_engines"]`），代理**必须向用户呈现两个选项**，然后在提案阶段锁定 `render_runtime`。代理可以推荐其中一个并提供理由——但即使管道清单或导演技能建议了一个，也禁止默默选择"默认"。
+
+Never silently choose a default composition runtime when both are available.
 
 呈现内容必须包括每个运行时的以下信息：
 
@@ -238,6 +240,7 @@ music_library/
 | `clip-factory` | 从一个长源提取多个片段 | 测试版 |
 | `podcast-repurpose` | 播客精彩片段和衍生内容 | 测试版 |
 | `cinematic` | 预告片、宣传片和情绪主导的剪辑 | 生产就绪 |
+| `documentary-montage` | 真实素材检索与主题纪录片蒙太奇 | 测试版 |
 | `animation` | 动态图形和动画优先的视频 | 生产就绪 |
 | `character-animation` | 本地骨骼卡通角色和可复用的角色表演 | 测试版 |
 | `hybrid` | 源素材加辅助视觉内容 | 生产就绪 |
