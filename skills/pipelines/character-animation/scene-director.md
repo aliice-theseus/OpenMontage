@@ -1,5 +1,9 @@
 # 场景导演 - 角色动画管线
 
+## 导演技能路由
+
+读取 `.agents/skills/direct-camera-movement/SKILL.md` 规划每个场景的景别、机位、主运动和静止节拍。场景包含打斗、追逐、竞技或复杂身体互动时，必须读取 `.agents/skills/direct-action-scenes/SKILL.md`，将动作拆为角色骨架能够表达的“预备 → 动作 → 反应 → 收势”节拍；不能直接复制需要大量独特姿态的长连招。
+
 ## 目标
 
 产出 `scene_plan`，确保每个场景对于骨架角色动画来说是可行的。

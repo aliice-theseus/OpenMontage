@@ -6,6 +6,19 @@
 
 关于模型特定技巧，请参见下方链接的指南。
 
+## 导演技能路由
+
+这些 Layer 3 技能负责模型无关的导演决策，提供商技能负责把决策翻译成模型语法：
+
+| 流程环节 | 必须读取 | 条件读取 | 产出 |
+|---|---|---|---|
+| `proposal / visual treatment` | `.agents/skills/direct-visual-quality/SKILL.md` | — | 全片色调、光影、构图和材质锚点 |
+| `scene_plan / scene_sketch` | `direct-visual-quality`、`direct-camera-movement` | 动作、追逐、跑酷、枪战、武侠或竞技场景读取 `direct-action-scenes` | 景别、主运动、速度、起止构图、动作节拍 |
+| `assets` 中调用 `video_selector` 前 | 从工具 `required_agent_skills` 读取 `direct-visual-quality` 与 `direct-camera-movement` | 工具返回 `conditional_agent_skills.action_or_combat_scene` 且场景匹配时读取 `direct-action-scenes` | 提供商适配的最终生成提示 |
+| `edit` | — | 动作场景读取 `direct-action-scenes` | 一镜一主要动作节拍、攻防闭环和高潮节奏 |
+
+不要用导演技能替代提供商技能。先确定叙事、画面、运镜和动作设计，再按所选工具的 `agent_skills` 适配长度、参数和模型限制。
+
 ## 模型特定指南
 
 | 模型 | 指南 | 关键要点 |

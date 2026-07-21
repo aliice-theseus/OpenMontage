@@ -13,6 +13,10 @@
 | 工具 | `talking_head`、`lip_sync`、`tts_selector`、`subtitle_gen`、`image_selector`、`audio_enhance` — 选择器自动从注册表发现所有可用提供商 | 虚拟形象、旁白和辅助素材选项 |
 | 剧本 | 当前风格剧本 | 背景、文字和字幕规则 |
 
+### 辅助视频导演技能门控
+
+仅当辅助视觉使用 `video_selector` 时，读取其 `required_agent_skills` 中的画面质感与运镜技能。主持人口型同步片段保持稳定机位，不套用强运镜；动作场面技能只适用于独立 B-roll 中确实存在的动作或追逐内容。
+
 ## 流程
 
 ### 1. 锁定虚拟形象生成路径

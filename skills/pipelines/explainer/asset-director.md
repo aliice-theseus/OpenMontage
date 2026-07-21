@@ -34,6 +34,10 @@
 | 工具 | `tts_selector`、`image_selector`、`video_selector`、`diagram_gen`、`code_snippet`、`music_gen` — 选择器自动发现注册表中的所有可用提供者 | 生成能力 |
 | 成本跟踪器 | `tools/cost_tracker.py` | 预算治理 |
 
+### AI 视频导演技能门控
+
+调用 `video_selector` 前读取工具返回的全部 `required_agent_skills`，其中包括画面质感与运镜导演技能。若场景包含打斗、追逐、跑酷、枪战、武侠或竞技动作，再读取 `conditional_agent_skills.action_or_combat_scene` 指向的 `.agents/skills/direct-action-scenes/SKILL.md`，然后才编写最终提示词。
+
 ## 流程
 
 ### 步骤 1：盘点必需资产

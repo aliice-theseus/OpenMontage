@@ -20,7 +20,16 @@ class VideoSelector(BaseTool):
     provider = "selector"
     stability = ToolStability.BETA
     runtime = ToolRuntime.HYBRID
-    agent_skills = ["ai-video-gen", "create-video", "ltx2"]
+    agent_skills = [
+        "ai-video-gen",
+        "create-video",
+        "ltx2",
+        "direct-visual-quality",
+        "direct-camera-movement",
+    ]
+    conditional_agent_skills = {
+        "action_or_combat_scene": ["direct-action-scenes"],
+    }
 
     capabilities = [
         "text_to_video", "image_to_video", "stock_video",
@@ -157,6 +166,12 @@ class VideoSelector(BaseTool):
         if any(tool.get_status() == ToolStatus.AVAILABLE for tool in self._providers()):
             return ToolStatus.AVAILABLE
         return ToolStatus.UNAVAILABLE
+
+    def get_info(self) -> dict[str, object]:
+        """Expose conditional director knowledge during preflight discovery."""
+        info = super().get_info()
+        info["conditional_agent_skills"] = self.conditional_agent_skills
+        return info
 
     def estimate_cost(self, inputs: dict[str, object]) -> float:
         candidates = self._filter_candidates(inputs, self._providers())
@@ -316,12 +331,15 @@ class VideoSelector(BaseTool):
         rank_inputs["operation"] = inputs.get("target_operation", "text_to_video")
         return rank_inputs
 
-    @staticmethod
-    def _tool_context_payload(tool: BaseTool) -> dict[str, object]:
+    def _tool_context_payload(self, tool: BaseTool) -> dict[str, object]:
         info = tool.get_info()
+        required_agent_skills = list(dict.fromkeys(
+            [*self.agent_skills, *info.get("agent_skills", [])]
+        ))
         return {
             "selected_tool_agent_skills": info.get("agent_skills", []),
-            "required_agent_skills": info.get("agent_skills", []),
+            "required_agent_skills": required_agent_skills,
+            "conditional_agent_skills": self.conditional_agent_skills,
             "selected_tool_usage_location": info.get("usage_location"),
             "selected_tool_best_for": info.get("best_for", []),
         }

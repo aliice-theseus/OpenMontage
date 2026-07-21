@@ -9,6 +9,8 @@
 - `docs/avatar-spokesperson-best-practices.md`
 - `skills/creative/typography.md`
 
+当场景使用 `video_selector` 生成主持人之外的全幅 B-roll 或动态背景时，读取 `.agents/skills/direct-visual-quality/SKILL.md` 与 `.agents/skills/direct-camera-movement/SKILL.md`。保持主持人主画面的机位稳定；不要把强运镜应用到口型同步主体，除非所选提供商明确支持且样片已验证。
+
 ## 流程
 
 ### 1. 锁定主持人布局

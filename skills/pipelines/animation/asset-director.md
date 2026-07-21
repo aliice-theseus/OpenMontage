@@ -34,6 +34,10 @@
 | 工具 | `tts_selector`、`image_selector`、`video_selector`、`math_animate`、`diagram_gen`、`code_snippet`、`music_gen` — 选择器自动发现注册表中所有可用提供商 | 资产生产选项 |
 | 样式手册 | 活跃的样式手册 | 视觉一致性 |
 
+### AI 视频导演技能门控
+
+当动画模式会调用 `video_selector` 时，先读取工具返回的全部 `required_agent_skills`，用画面质感与运镜导演技能锁定视觉锚点和主运动。动作、追逐、跑酷、枪战、武侠或竞技镜头还必须读取 `conditional_agent_skills.action_or_combat_scene` 指向的 `direct-action-scenes`，再生成提示。
+
 ## 流程
 
 ### 1. 从确定性资产开始

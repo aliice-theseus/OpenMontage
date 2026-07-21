@@ -675,6 +675,7 @@ OpenMontage 有三个指令层：
 | **角色动画** | `character-rigging`, `svg-character-animation`, `pose-library-design`, `canvas-procedural-animation`, `character-animation-qa` |
 | **图像生成** | `bfl-api`, `flux-best-practices`, `flux-character-turnaround`（角色建模三/四视图） |
 | **视频生成** | `seedance-2-0`（首选高级默认——电影级、预告片、多镜头、同步音频、唇同步）, `ai-video-gen`, `ltx2` |
+| **视频导演语言** | `direct-visual-quality`（色调、光影、构图、留白、材质）, `direct-camera-movement`（景别、机位、速度、主运镜）, `direct-action-scenes`（动作因果、打击感、动作剪辑与安全线） |
 | **音频** | `elevenlabs`, `music`, `sound-effects`, `acestep`, `text-to-speech`, `setup-api-key` |
 | **虚拟形象/唇同步** | `avatar-video`, `heygen`, `create-video`, `faceswap`, `video-translate`, `speech-to-text`, `agents` |
 | **捕获** | `playwright-recording`（浏览器流程）, `ffmpeg`（后期） |

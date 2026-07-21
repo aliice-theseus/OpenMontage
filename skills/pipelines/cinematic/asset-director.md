@@ -30,6 +30,10 @@
 | 工具 | `subtitle_gen`, `audio_enhance`, `image_selector`, `video_selector`, `pixabay_music`（免费，默认）, `freesound_music`（免费）, `music_gen`（ElevenLabs，付费）— 选择器自动发现注册表中所有可用的提供商。**在求助于 `music_gen` 之前，默认使用 `pixabay_music`。** | 可选的支持资产创建 |
 | 手册 | 当前风格手册 | 品牌和排版一致性 |
 
+### AI 视频导演技能门控
+
+调用 `video_selector` 生成支持镜头前，读取工具返回的全部 `required_agent_skills`，先完成画面质感和运镜设计。若镜头属于打斗、追逐、跑酷、枪战、武侠或竞技动作，再读取 `conditional_agent_skills.action_or_combat_scene` 指向的 `direct-action-scenes`。这些模型无关导演决策完成后，再应用提供商特定技能。
+
 ## 流程
 
 ### 1. 优先处理源素材精选

@@ -1,5 +1,7 @@
 # 剪辑导演 - 角色动画管线
 
+动作场景在编译时间线前必须读取 `.agents/skills/direct-action-scenes/SKILL.md`。用该技能检查攻防因果、方向连续性、受击反应、环境反馈和疲劳曲线，再把每个节拍映射到现有姿态、循环或程序化效果。
+
 ## 目标
 
 产出 `edit_decisions` 和 `action_timeline`。

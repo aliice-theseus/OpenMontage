@@ -13,6 +13,10 @@
 | 工具 | `subtitle_gen`, `tts_selector`, `image_selector`, `video_selector`, `diagram_gen`, `code_snippet`, `music_gen`, `audio_enhance` — 选择器自动发现注册表中的所有可用提供商 | 可选的支援素材生产 |
 | Playbook | 当前样式 playbook | 一致性规则 |
 
+### AI 视频导演技能门控
+
+生成支持插片时读取 `video_selector.required_agent_skills` 中的画面质感与运镜技能，使新镜头匹配源素材。动作类插片还必须读取 `conditional_agent_skills.action_or_combat_scene` 指向的 `direct-action-scenes`。不得用新技能虚构或改写锚定素材本身的动作。
+
 ## 流程
 
 ### 1. 先构建共享支持素材
@@ -96,4 +100,3 @@
 - **Remotion 组件模式**——随着框架发展，新的合成技术不断涌现
 
 不要依赖过时的知识。有疑问时，先搜索。
-

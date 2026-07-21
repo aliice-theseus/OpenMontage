@@ -13,6 +13,10 @@
 | 工具 | `frame_sampler`, `scene_detect` | 可选的源素材检查 |
 | Playbook | 当前样式 playbook | 布局一致性 |
 
+## 生成镜头的导演技能
+
+如果支持层包含 AI 视频镜头，先读取 `.agents/skills/direct-visual-quality/SKILL.md` 和 `.agents/skills/direct-camera-movement/SKILL.md`，再填写色调/光源、景别、主运镜、速度和起止构图。若镜头包含打斗、追逐、跑酷、枪战或竞技动作，再读取 `.agents/skills/direct-action-scenes/SKILL.md`，把动作拆为因果清晰的单镜头节拍。源素材镜头只应用这些技能做分析和匹配，不得虚构原素材中不存在的运动。
+
 ## 流程
 
 ### 1. 保持锚定媒介可见
@@ -60,4 +64,3 @@
 - 将源主导场景变成叠加层混乱。
 - 直到合成阶段才想起多版本安全区域。
 - 每个过渡都用生成的内容插片。
-

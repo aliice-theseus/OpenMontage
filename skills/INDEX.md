@@ -38,6 +38,7 @@
 
 对于具有多个提供者的能力家族（TTS、视频生成），架构使用：
 - **选择器工具**（`tts_selector`、`video_selector`、`image_selector`）— 根据需求、API 密钥可用性和成本路由到提供者。选择器自动从注册表发现提供者。当用户未指定提供者时，代理应默认使用选择器；其中纯文生图由 `image_selector` 锁定到本地 FLUX（`local_diffusion`），不可用时提示安装/下载，不静默换模型。
+- **视频导演技能**（`.agents/skills/direct-visual-quality`、`direct-camera-movement`、`direct-action-scenes`）— 在提供商适配之前确定画面质感、运镜和动作因果。`video_selector` 始终要求前两项；动作场景按条件读取第三项。
 - **提供者工具** — 直接调用特定的提供者。当用户明确请求某个提供者或选择器的路由不适用时，代理使用这些工具。
 
 ### 能力家族参考
