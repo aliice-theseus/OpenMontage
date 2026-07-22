@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gc
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,20 @@ from tools.base_tool import (
 
 _DEFAULT_MODEL = "black-forest-labs/FLUX.1-schnell"
 _DEFAULT_FLUX2_MODEL = "black-forest-labs/FLUX.2-dev"
+
+
+def get_flux2_model_path() -> str:
+    """获取 FLUX.2-dev 模型路径/ID，优先使用环境变量配置。
+
+    可通过 FLUX2_MODEL_PATH 环境变量指向本地缓存路径（如 ModelScope 下载的权重），
+    避免每次从 Hugging Face Hub 下载。设置后所有使用 FLUX.2-dev 的工具都会
+    从此路径加载模型。
+
+    示例:
+        FLUX2_MODEL_PATH=~/.cache/modelscope/Black-Forest-Labs/FLUX___2-dev
+        FLUX2_MODEL_PATH=C:/Users/user/.cache/modelscope/Black-Forest-Labs/FLUX___2-dev
+    """
+    return os.environ.get("FLUX2_MODEL_PATH") or _DEFAULT_FLUX2_MODEL
 
 
 def _is_flux_model(model_id: str, pipeline_type: str = "auto") -> bool:
@@ -381,15 +396,35 @@ class LocalDiffusion(BaseTool):
                     )
                 except Exception as exc:
                     if local_files_only:
-                        return ToolResult(
-                            success=False,
-                            error=(
-                                f"Model '{model_id}' is not available or complete in the local cache. "
-                                "Downloading is disabled by default. Confirm the download, then retry "
-                                "with allow_model_download=true. "
-                                f"Original error: {exc}"
-                            ),
+                        hf_cache = os.environ.get(
+                            "HUGGINGFACE_HUB_CACHE",
+                            os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub"),
                         )
+                        msg = (
+                            f"Model '{model_id}' is not available or complete in the local cache.\n"
+                            f"  HF cache path     : {hf_cache}\n"
+                            f"  Configured path   : {model_id}\n"
+                        )
+                        # 如果是 FLUX.2-dev 模型，添加 FLUX2_MODEL_PATH 配置提示
+                        if _is_flux2_model(model_id):
+                            modelscope_hint = os.path.join(
+                                os.path.expanduser("~"), ".cache", "modelscope",
+                                "Black-Forest-Labs", "FLUX___2-dev",
+                            )
+                            msg += (
+                                f"\n"
+                                f"  To use a locally cached copy (e.g. downloaded via ModelScope),\n"
+                                f"  set FLUX2_MODEL_PATH to the local path before running:\n"
+                                f"    FLUX2_MODEL_PATH={modelscope_hint}\n"
+                                f"\n"
+                                f"  Current env FLUX2_MODEL_PATH={os.environ.get('FLUX2_MODEL_PATH', '(not set)')}\n"
+                            )
+                        msg += (
+                            f"\n"
+                            f"  To download from Hugging Face Hub, retry with allow_model_download=true.\n"
+                            f"  Original error: {exc}"
+                        )
+                        return ToolResult(success=False, error=msg)
                     raise
 
                 try:

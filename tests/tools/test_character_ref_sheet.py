@@ -42,6 +42,7 @@ def test_character_sheet_uses_front_as_flux2_reference_and_stitches(monkeypatch)
                 "character_core": "A 28-year-old woman with a high ponytail and layered white robes.",
                 "output_dir": "tests",
                 "seed": 77,
+                "_force_full_approval": True,  # 单元测试直接测试全量生成功能
             }
         )
 

@@ -163,8 +163,9 @@ def test_missing_cached_model_prompts_for_explicit_download(monkeypatch):
     result = LocalDiffusion().execute({"prompt": "portrait"})
 
     assert result.success is False
-    assert "Downloading is disabled by default" in result.error
+    assert "is not available or complete in the local cache" in result.error
     assert "allow_model_download=true" in result.error
+    assert "HF cache path" in result.error
 
 
 def test_explicit_download_approval_disables_local_only_mode(monkeypatch):

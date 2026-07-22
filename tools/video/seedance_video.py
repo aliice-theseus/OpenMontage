@@ -170,6 +170,17 @@ class SeedanceVideo(BaseTool):
                 "items": {"type": "string"},
                 "description": "参考音频 URL 列表，最多 3 个",
             },
+            "require_identity_lock": {
+                "type": "boolean",
+                "default": False,
+                "description": "强制角色身份锁。设为 true 时，建议通过 reference_image_urls/paths 传入四视图参考图；"
+                               "未传入时会提示用户确认，经用户批准后可通过 _confirm_skip_identity_lock=true 继续。",
+            },
+            "_confirm_skip_identity_lock": {
+                "type": "boolean",
+                "default": False,
+                "description": "内部标记。用户确认跳过角色身份锁、以纯 text_to_video 继续时设为 true。",
+            },
             # ----- 其他 -----
             "seed": {
                 "type": "integer",
@@ -337,6 +348,27 @@ class SeedanceVideo(BaseTool):
 
         start = time.time()
         endpoint_id = inputs.get("model") or self._get_endpoint_id()
+
+        # 身份锁守卫：require_identity_lock=true 但无参考图时提示用户确认
+        if inputs.get("require_identity_lock") and not inputs.get("_confirm_skip_identity_lock"):
+            has_ref = bool(
+                inputs.get("reference_image_urls")
+                or inputs.get("reference_image_paths")
+                or inputs.get("image_url")
+                or inputs.get("image_path")
+            )
+            if not has_ref:
+                return ToolResult(
+                    success=False,
+                    error=(
+                        "require_identity_lock=true 但未提供角色参考图。\n"
+                        "涉及角色的 Seedance 视频建议从 CharacterRegistry.build_reference_config()\n"
+                        "获取四视图参考图，通过 reference_image_urls 或 reference_image_paths 传入。\n"
+                        "\n"
+                        "如用户确认无需角色身份锁、以纯 text_to_video 继续，请传入\n"
+                        "_confirm_skip_identity_lock=true 后重试。"
+                    ),
+                )
 
         # 构建 content 数组
         try:

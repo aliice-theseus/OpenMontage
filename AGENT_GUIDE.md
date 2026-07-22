@@ -4,7 +4,40 @@
 
 有关架构、关键文件和约定，请参见 [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md)。
 
+## 第负一条规则 — 全局强制：所有输入触发全量视频制作流程
+
+**在当前 OpenMontage 项目下，所有文字输入都必须触发全量视频制作管道流程。没有例外。**
+
+这条规则覆盖所有下游路由规则（上手引导、参考视频入口、问答对话等）。具体含义：
+
+1. **无"非视频请求"分类。** 任何文字输入——无论是创意描述、URL、问题、指令、反馈还是单句消息——都被直接视为视频制作需求。
+2. **路由逻辑仅一步：** 分析输入内容 → 匹配最佳管道（pipeline）。
+3. **执行全量流程：** 选定管道后，严格按阶段执行 `research → proposal → script → scene_plan → assets → edit → compose`，一个阶段不能跳过。
+4. **禁止回退到对话模式。** 不得以"这个问题更适合直接回答"为由绕过管道。如果需要回答用户的问题，将答案融入视频制作流程（如 research 阶段的发现、旁白脚本的内容等）。
+
+### 工作流
+
+```
+用户输入文字
+  ↓
+分析内容 → 匹配管道 (pipeline_defs/*.yaml)
+  ↓
+执行完整管道流程 (research → proposal → script → scene_plan → assets → edit → compose)
+  ↓
+交付最终视频
+```
+
+### 例外（仅限以下情况可中断视频流程）
+
+- 用户明确要求修改系统配置/规则（如"修改这条规则"）——先执行配置变更，然后继续等待下次视频需求
+- 系统故障阻塞了管道执行——按"明确上报阻塞问题"协议处理
+- 用户主动要求停止当前制作
+
+---
+
 ## 首次交互 — 上手引导
+
+> **注意：以下上手引导规则仅在未触发"第负一条规则"时生效。在当前项目配置下，第负一条规则始终触发，因此上手引导不适用。**
 
 当用户的第一条消息模糊、试探性或询问你能做什么时（"帮我做个视频"、"你能做什么？"、"帮我创建点什么"、"我想做内容"），请在执行任何其他操作**之前**先阅读上手引导技能：
 
@@ -56,11 +89,16 @@
 2. **读取管道清单。** `pipeline_defs/<pipeline>.yaml`——了解阶段、工具和质量关卡。
 3. **运行预检。** 通过注册表发现可用工具。呈现能力菜单。
 4. **逐阶段执行。** 对于每个阶段，在该阶段做任何工作**之前**，先阅读阶段导演技能（`skills/pipelines/<pipeline>/<stage>-director.md`）。
-5. **在调用工具前阅读第3层技能。** 在使用任何带有 `agent_skills` 字段的工具之前，阅读 `.agents/skills/` 中引用的技能。这些包含提供商特定的提示指导、参数优化和质量技术，能显著改善输出。
+5. **阶段顺序强制。** 必须使用 `checkpoint.get_next_stage()` 确定下一阶段，严格按照管道清单中的阶段顺序执行。禁止跳过任何阶段，包括：
+   - `scene_sketch`（场景草图）— 在 `character_design` 之后、`assets` 之前，必须执行
+   - 任何 `checkpoint_required: true` 的阶段必须写入检查点后才能进入下一阶段
+   - 即使已生成角色四视图，`scene_sketch` 也不得跳过
+6. **在调用工具前阅读第3层技能。** 在使用任何带有 `agent_skills` 字段的工具之前，阅读 `.agents/skills/` 中引用的技能。这些包含提供商特定的提示指导、参数优化和质量技术，能显著改善输出。
 
 **不要：**
 - 编写临时 Python 脚本直接调用工具
 - 跳过管道直接进行 API 调用
+- 跳过或合并任何管道阶段（包括 `scene_sketch`）
 - 在未阅读阶段导演技能之前生成资产
 - 在不检查其第3层技能以获取提示指导的情况下使用工具
 - 绕过预检、检查点或审查
@@ -501,7 +539,25 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
 
 视频制作流程中的所有纯文生图请求必须通过 `image_selector`，默认使用 `preferred_provider="local_diffusion"`；该工具内部默认基础模型为 `black-forest-labs/FLUX.1-schnell`。用户明确指定其他提供商、`allowed_providers`、图像编辑输入或自定义 ComfyUI 工作流时，可以覆盖这个默认值。
 
-**人物角色参考图例外：** 人物三/四视图必须使用 `character_ref_sheet`，默认并锁定本地 `black-forest-labs/FLUX.2-dev`。该工具按“`front_only` 正面 T2I 与人工确认 → `complete_from_front` 正面参考驱动的侧面/背面/半身 → 1280×720 本地拼接”执行，并在内部逐张通过 `image_selector → local_diffusion`。只有用户明确批准跳过正面检查时才使用 `operation="full"`。不得退回 FLUX.1 Schnell/Dev，也不得让模型一次性生成四栏组合图。
+**人物角色参考图例外（强制合约）：** 人物三/四视图生成受以下硬性规则约束，不得违反。
+
+1. **前置条件** — 调用任何工具前，必须先加载 `flux-character-turnaround` skill 并完整阅读。
+2. **工具锁定** — 必须使用 `character_ref_sheet`，禁止直接调用 `image_selector` 或其他图像工具生成四视图。
+3. **模型锁定** — 默认并锁定使用本地 `black-forest-labs/FLUX.2-dev`。禁止回退到 FLUX.1-schnell/Dev、云端模型或其他扩散模型。
+4. **流程锁定** — 必须按分步流程执行：
+   `front_only`（正面 T2I + 人工确认）→ `complete_from_front`（正面参考驱动的侧面/背面/半身）→ 1280×720 本地拼接
+   只有用户明确批准且传入 `_force_full_approval=true` 时才可使用 `operation="full"`。
+5. **禁止清单**：
+   - 禁止一次性生成四栏组合图（让模型四合一输出）
+   - 禁止跳过正面审查直接生成全部视图
+   - 禁止静默切换到其他模型或提供商
+   - 禁止不读 skill 直接硬编码提示词调用工具
+6. **验收要求** — 生成后必须按 `flux-character-turnaround` skill 中的**验收清单**逐项检查。关键失败最多重试两轮。
+7. **Seedance 调用强制** — 当使用 Seedance 生成包含角色的视频时：
+   a. 必须先经过角色设计阶段（步骤 1-6），生成四视图并写入 `CharacterRegistry`。
+   b. 必须从 `CharacterRegistry.build_reference_config(character_ids)` 获取四视图参考图，作为 `reference_image_urls`/`reference_image_paths` 传入 Seedance。
+   c. 调用时设置 `require_identity_lock=true`。若无参考图，工具会返回提示，要求向用户确认；用户批准后传入 `_confirm_skip_identity_lock=true` 可继续。
+   d. 不允许代理静默以 `text_to_video` 模式无参考图生成含角色的视频。
 
 如果本地 FLUX 依赖、基础模型或 LoRA 不可用，不要静默切换到其他图像生成提供商。应上报阻塞并提示安装或确认模型下载；只有用户明确批准后才传递 `allow_model_download=true`。图库搜索（Pexels/Pixabay）、`diagram_gen`、`code_snippet`、Manim 和合成引擎原生图形不属于文生图，不受此默认值约束。
 

@@ -17,10 +17,11 @@ from tools.base_tool import (
     ToolStatus,
     ToolTier,
 )
-from tools.graphics.local_diffusion import _is_flux2_model
+from tools.graphics.local_diffusion import _is_flux2_model, get_flux2_model_path
 
 
-DEFAULT_CHARACTER_MODEL = "black-forest-labs/FLUX.2-dev"
+# 通过 get_flux2_model_path() 获取模型路径；可通过 FLUX2_MODEL_PATH 环境变量配置
+DEFAULT_CHARACTER_MODEL = get_flux2_model_path()
 _VIEW_SPECS = {
     "front": {
         "width": 1024,
@@ -143,6 +144,11 @@ class CharacterRefSheet(BaseTool):
                 "type": "string",
                 "description": "Approved front image required by complete_from_front.",
             },
+            "_force_full_approval": {
+                "type": "boolean",
+                "default": False,
+                "description": "内部标记。仅当用户明确批准跳过 front_only 审批时才设为 true，配合 operation='full' 使用。",
+            },
         },
     }
     output_schema = {
@@ -207,6 +213,16 @@ class CharacterRefSheet(BaseTool):
 
         seed = inputs.get("seed", 42)
         operation = inputs.get("operation", "full")
+        force_full = inputs.get("_force_full_approval", False)
+        # 流程守卫：禁止绕过 front_only 审批直接全量生成
+        if operation == "full" and not force_full:
+            return ToolResult(
+                success=False,
+                error=(
+                    "四视图生成必须经过 front_only 审批 → complete_from_front 分步流程。\n"
+                    "如已获得用户明确批准可跳过审批，请传入 _force_full_approval=true。"
+                ),
+            )
         prompts = {view: _compose_prompt(view, character_core) for view in _VIEW_SPECS}
         paths = {
             view: output_dir / f"{character_id}-{view}.png"
