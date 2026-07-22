@@ -416,7 +416,7 @@ class CorpusBuilder(BaseTool):
                     "cache_stats": cache_snapshot,
                     "errors": errors[:25],  # cap log noise
                 },
-                cost_usd=0.0,
+                cost_cny=0.0,
                 duration_seconds=round(elapsed, 2),
             )
         except Exception as e:

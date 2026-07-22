@@ -183,7 +183,7 @@ class DoubaoTTS(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         # Volcengine bills Doubao Speech 2.0 by characters. Keep this conservative
         # and prefer provider-returned usage when available.
-        return round(len(inputs.get("text", "")) * 0.000015, 4)
+        return round(len(inputs.get("text", "")) * 0.000002, 4)
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         api_key = os.environ.get("DOUBAO_SPEECH_API_KEY")
@@ -207,8 +207,8 @@ class DoubaoTTS(BaseTool):
             return ToolResult(success=False, error=f"Doubao TTS failed: {self._safe_error(exc)}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        if not result.cost_usd:
-            result.cost_usd = self.estimate_cost(inputs)
+        if not result.cost_cny:
+            result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate(self, inputs: dict[str, Any], *, api_key: str, voice_id: str) -> ToolResult:
@@ -287,7 +287,7 @@ class DoubaoTTS(BaseTool):
                 "url_expire_time": data.get("url_expire_time"),
             },
             artifacts=[str(output_path), str(metadata_path)],
-            cost_usd=cost,
+            cost_cny=cost,
             model=resource_id,
         )
 
@@ -417,4 +417,4 @@ class DoubaoTTS(BaseTool):
         text_words = usage.get("text_words")
         if not isinstance(text_words, (int, float)):
             return None
-        return round(float(text_words) * 0.000015, 4)
+        return round(float(text_words) * 0.000002, 4)

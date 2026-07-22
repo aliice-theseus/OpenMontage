@@ -351,7 +351,7 @@ class ComfyUIVideo(BaseTool):
                 "workflow_provenance": provenance,
             },
             artifacts=[str(p) for p in paths],
-            cost_usd=0.0,
+            cost_cny=0.0,
             duration_seconds=round(time.time() - start, 2),
             seed=seed,
             model=model_name,

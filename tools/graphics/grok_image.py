@@ -152,9 +152,9 @@ class GrokImage(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         output_count = int(inputs.get("n", 1))
         input_count = self._input_image_count(inputs)
-        # xAI currently publishes Grok Imagine Image at $0.02 per generated
-        # image plus $0.002 per input image for edits or composites.
-        return output_count * 0.02 + input_count * 0.002
+        # xAI Grok Imagine Image: ¥0.14 per generated image plus ¥0.014 per
+        # input image for edits or composites (≈ $0.02 / $0.002 at 7.2 rate).
+        return output_count * 0.14 + input_count * 0.014
 
     def _build_payload(self, inputs: dict[str, Any]) -> tuple[str, dict[str, Any]]:
         mode = inputs.get("generation_mode", "generate")
@@ -290,7 +290,7 @@ class GrokImage(BaseTool):
                 "images_generated": len(outputs),
             },
             artifacts=artifacts,
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=payload["model"],
         )

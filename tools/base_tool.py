@@ -130,7 +130,7 @@ class ToolResult:
     data: dict[str, Any] = field(default_factory=dict)
     artifacts: list[str] = field(default_factory=list)
     error: Optional[str] = None
-    cost_usd: float = 0.0
+    cost_cny: float = 0.0
     duration_seconds: float = 0.0
     seed: Optional[int] = None
     model: Optional[str] = None
@@ -315,7 +315,7 @@ class BaseTool(ABC):
     # ---- Cost estimation ----
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
-        """Estimate cost in USD for the given inputs. Override for paid tools."""
+        """Estimate cost in CNY for the given inputs. Override for paid tools."""
         return 0.0
 
     def estimate_runtime(self, inputs: dict[str, Any]) -> float:
@@ -341,7 +341,7 @@ class BaseTool(ABC):
         """Preflight check without side effects. Override for paid/publishing tools."""
         return {
             "tool": self.name,
-            "estimated_cost_usd": self.estimate_cost(inputs),
+            "estimated_cost_cny": self.estimate_cost(inputs),
             "estimated_runtime_seconds": self.estimate_runtime(inputs),
             "status": self.get_status().value,
             "would_execute": True,

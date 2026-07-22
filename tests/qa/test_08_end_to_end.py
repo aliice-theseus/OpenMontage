@@ -84,11 +84,11 @@ def ensure_video(path, duration=5, width=1280, height=720, color="blue"):
 print("--- Setup ---")
 cost_log = PIPELINE_DIR / PROJECT_ID / "cost_log.json"
 tracker = CostTracker(
-    budget_total_usd=5.0,
+    budget_total_cny=36.0,
     mode=BudgetMode.OBSERVE,
     cost_log_path=cost_log,
 )
-print(f"  Budget: ${tracker.budget_total_usd}")
+print(f"  Budget: ¥{tracker.budget_total_cny}")
 print(f"  Available schemas: {list_schemas()}")
 
 playbook = load_playbook("clean-professional")
@@ -213,17 +213,17 @@ proposal_packet = {
         ],
     },
     "cost_estimate": {
-        "total_estimated_usd": 0.50,
+        "total_estimated_cny": 3.60,
         "line_items": [
-            {"tool": "tts_selector", "operation": "narration", "estimated_usd": 0.10},
-            {"tool": "image_selector", "operation": "5 images", "estimated_usd": 0.30},
-            {"tool": "music_gen", "operation": "background track", "estimated_usd": 0.10},
+            {"tool": "tts_selector", "operation": "narration", "estimated_cny": 0.72},
+            {"tool": "image_selector", "operation": "5 images", "estimated_cny": 2.16},
+            {"tool": "music_gen", "operation": "background track", "estimated_cny": 0.72},
         ],
         "budget_verdict": "within_budget",
     },
     "approval": {
         "status": "approved",
-        "approved_budget_usd": 2.00,
+        "approved_budget_cny": 14.40,
     },
 }
 
@@ -380,7 +380,7 @@ clean_assets.append({
 asset_manifest = {
     "version": "1.0",
     "assets": clean_assets,
-    "total_cost_usd": 0.0,
+    "total_cost_cny": 0.0,
 }
 
 try:
@@ -394,7 +394,7 @@ all_exist = all(os.path.exists(a["path"]) for a in asset_manifest["assets"])
 check("All asset files exist on disk", all_exist)
 
 # Track costs
-eid = tracker.estimate("image_selector", "generate", 0.15)
+eid = tracker.estimate("image_selector", "generate", 1.08)
 tracker.approve_tool("image_selector")
 tracker.reserve(eid)
 tracker.reconcile(eid, 0.0, success=True)

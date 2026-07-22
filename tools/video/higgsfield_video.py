@@ -141,18 +141,17 @@ class HiggsFieldVideo(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         model = inputs.get("model", _DEFAULT_MODEL)
         duration = int(inputs.get("duration", "5"))
-        # Approximate per-clip costs based on Higgsfield credit pricing.
-        # Seedance 2.0 on Higgsfield runs ~50-80 credits per 5s clip ≈ $0.50-$1.20.
+        # Approximate per-clip costs based on Higgsfield credit pricing (CNY).
         base_costs = {
-            "seedance_2.0": 0.80,
-            "seedance_2.0_fast": 0.50,
-            "kling_3.0": 0.10,
-            "wan_2.5": 0.10,
-            "veo_3.1": 0.50,
-            "sora_2": 0.50,
-            "soul_cinema": 0.15,
+            "seedance_2.0": 5.76,
+            "seedance_2.0_fast": 3.60,
+            "kling_3.0": 0.72,
+            "wan_2.5": 0.72,
+            "veo_3.1": 3.60,
+            "sora_2": 3.60,
+            "soul_cinema": 1.08,
         }
-        base = base_costs.get(model, 0.15)
+        base = base_costs.get(model, 1.08)
         return base * (duration / 5)
 
     def estimate_runtime(self, inputs: dict[str, Any]) -> float:
@@ -258,7 +257,7 @@ class HiggsFieldVideo(BaseTool):
                 **probed,
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=model,
         )

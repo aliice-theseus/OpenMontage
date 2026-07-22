@@ -6,10 +6,10 @@
   "type": "object",
   "required": ["version", "entries"],
   "properties": {
-    "version": { "type": "string", "const": "1.0" },
-    "budget_total_usd": { "type": "number", "minimum": 0 },
-    "budget_reserved_usd": { "type": "number", "minimum": 0 },
-    "budget_spent_usd": { "type": "number", "minimum": 0 },
+    "version": { "type": "string", "const": "2.0" },
+    "budget_total_cny": { "type": "number", "minimum": 0 },
+    "budget_reserved_cny": { "type": "number", "minimum": 0 },
+    "budget_spent_cny": { "type": "number", "minimum": 0 },
     "entries": {
       "type": "array",
       "items": {
@@ -20,9 +20,9 @@
           "tool": { "type": "string" },
           "operation": { "type": "string" },
           "status": { "type": "string", "enum": ["estimated", "reserved", "completed", "failed", "refunded"] },
-          "estimated_usd": { "type": "number", "minimum": 0 },
-          "reserved_usd": { "type": "number", "minimum": 0 },
-          "actual_usd": { "type": "number", "minimum": 0 },
+          "estimated_cny": { "type": "number", "minimum": 0 },
+          "reserved_cny": { "type": "number", "minimum": 0 },
+          "actual_cny": { "type": "number", "minimum": 0 },
           "timestamp": { "type": "string", "format": "date-time" },
           "details": { "type": "string" }
         },

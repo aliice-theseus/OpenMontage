@@ -31,12 +31,12 @@ _RATIO_MAP = {
 }
 
 _COST_PER_SECOND = {
-    "gen3a_turbo": 0.05,
-    "gen4_turbo": 0.05,
-    "gen4_aleph": 0.15,
+    "gen3a_turbo": 0.36,
+    "gen4_turbo": 0.36,
+    "gen4_aleph": 1.08,
     # Third-party Seedance 2.0 inside Runway (Enterprise/Unlimited, non-US).
-    "seedance_2.0": 0.30,
-    "seedance_2.0_fast": 0.24,
+    "seedance_2.0": 2.16,
+    "seedance_2.0_fast": 1.73,
 }
 
 _RUNTIME_SECONDS = {
@@ -268,7 +268,7 @@ class RunwayVideo(BaseTool):
                 **probed,
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=model,
         )

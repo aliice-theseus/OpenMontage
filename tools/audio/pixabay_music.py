@@ -192,7 +192,7 @@ class PixabayMusic(BaseTool):
                 "results_after_filter": len(filtered),
             },
             artifacts=[str(output_path)],
-            cost_usd=0.0,
+            cost_cny=0.0,
             duration_seconds=round(time.time() - start, 2),
         )
 

@@ -96,8 +96,8 @@ class MusicGen(BaseTool):
                 "Derive it from the approved target runtime in the script/proposal. "
                 "Silent defaults are not permitted."
             )
-        # Approximate: ~$0.05 per 30 seconds
-        return round(duration / 30 * 0.05, 4)
+        # Approximate: ~¥0.36/30秒
+        return round(duration / 30 * 0.36, 4)
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         api_key = os.environ.get("ELEVENLABS_API_KEY")
@@ -115,7 +115,7 @@ class MusicGen(BaseTool):
             return ToolResult(success=False, error=f"Music generation failed: {e}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate(self, inputs: dict[str, Any], api_key: str) -> ToolResult:

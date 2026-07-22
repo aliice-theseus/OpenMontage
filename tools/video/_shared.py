@@ -212,12 +212,12 @@ def local_install_instructions() -> str:
 
 def estimate_quality_cost(quality: str) -> float:
     if quality == "highest":
-        return 0.50
+        return 3.60
     if quality == "high":
-        return 0.35
+        return 2.52
     if quality == "low":
-        return 0.15
-    return 0.20
+        return 1.08
+    return 1.44
 
 
 def estimate_speed_runtime(speed: str) -> float:

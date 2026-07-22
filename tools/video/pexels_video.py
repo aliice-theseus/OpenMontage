@@ -208,6 +208,6 @@ class PexelsVideo(BaseTool):
                 "pexels_url": video.get("url", ""),
             },
             artifacts=[str(output_path)],
-            cost_usd=0.0,
+            cost_cny=0.0,
             duration_seconds=round(time.time() - start, 2),
         )

@@ -434,7 +434,7 @@ class DirectClipSearch(BaseTool):
                     "clips": downloaded,
                     "errors": errors[:25],
                 },
-                cost_usd=0.0,
+                cost_cny=0.0,
                 duration_seconds=round(elapsed, 2),
             )
 

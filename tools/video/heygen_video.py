@@ -112,6 +112,6 @@ class HeyGenVideo(BaseTool):
         except Exception as exc:
             return ToolResult(success=False, error=f"HeyGen video generation failed: {exc}")
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 

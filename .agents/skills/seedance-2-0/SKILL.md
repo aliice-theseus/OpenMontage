@@ -1,20 +1,20 @@
 ---
 name: seedance-2-0
 description: |
-  使用字节跳动 Seedance 2.0 生成电影级剪辑 — 当配置了付费网关时，OpenMontage 中首选的高级视频模型。在以下情况下使用：(1) 制作预告片、预告花絮、宣传剪辑或高级电影片段，(2) 需要单次生成中自带原生同步音频（语音、音效、环境音），(3) 需要一次生成内包含多镜头切换，(4) 需要导演级摄像机控制，(5) 需要提示词中引用对话的口型同步，(6) 需要最多 9 张图片 + 3 个视频片段 + 3 个音频片段的参考条件生成，(7) 需要跨镜头一致的角色身份。可通过 fal.ai（`seedance_video` 工具）、HeyGen（Video Agent / Avatar Shots）、Replicate、Runway（企业版，非美国）、Freepik、BytePlus ModelArk、Higgsfield、Pollo 和其他聚合器访问。
+  使用字节跳动 Seedance 2.0 生成电影级剪辑 — OpenMontage 中首选的高级视频模型。在以下情况下使用：(1) 制作预告片、预告花絮、宣传剪辑或高级电影片段，(2) 需要单次生成中自带原生同步音频（语音、音效、环境音），(3) 需要一次生成内包含多镜头切换，(4) 需要导演级摄像机控制，(5) 需要提示词中引用对话的口型同步，(6) 需要最多 9 张图片 + 3 个视频片段 + 3 个音频片段的参考条件生成，(7) 需要跨镜头一致的角色身份。可通过火山引擎 Ark（`seedance_video` 工具，中国大陆直连）、HeyGen（Video Agent / Avatar Shots）、Replicate、Runway（企业版，非美国）、Freepik、BytePlus ModelArk、Higgsfield、Pollo 和其他聚合器访问。
 allowed-tools: Bash, Read, Write
 metadata:
   openclaw:
     requires:
       env_any:
-        - FAL_KEY
+        - ARK_API_KEY
         - HEYGEN_API_KEY
         - REPLICATE_API_TOKEN
 ---
 
 # Seedance 2.0（字节跳动）
 
-Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（2026 年 2 月发布，2026 年 4 月通过合作伙伴 API 全球可用）。它是 OpenMontage 中电影、预告片、预告花絮和运动导向工作的**首选高级默认**，只要配置了任何支持的网关。OpenMontage 直接封装了四个网关（`seedance_video` → fal.ai、`seedance_replicate` → Replicate、`runway_video` with `model="seedance_2.0"` → Runway、`higgsfield_video` with `model="seedance_2.0"` → Higgsfield）；BytePlus / Freepik / HeyGen-Video-Agent 封装在路线图中。评分引擎通过 `provider="seedance"` 去重，因此用户配置的任何网关都会自动胜出 — 代理应向 `video_selector` 传递 `preferred_provider="seedance"`（或让评分器选择），而不是按名称路由到特定网关。
+Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（2026 年 2 月发布，2026 年 4 月通过合作伙伴 API 全球可用）。它是 OpenMontage 中电影、预告片、预告花絮和运动导向工作的**首选高级默认**，只要配置了任何支持的网关。OpenMontage 直接封装了四个网关（`seedance_video` → 火山引擎 Ark、`seedance_replicate` → Replicate、`runway_video` with `model="seedance_2.0"` → Runway、`higgsfield_video` with `model="seedance_2.0"` → Higgsfield）；BytePlus / Freepik / HeyGen-Video-Agent 封装在路线图中。评分引擎通过 `provider="seedance"` 去重，因此用户配置的任何网关都会自动胜出 — 代理应向 `video_selector` 传递 `preferred_provider="seedance"`（或让评分器选择），而不是按名称路由到特定网关。
 
 ## 为什么它是 OpenMontage 高级默认
 
@@ -27,7 +27,7 @@ Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（
 | 参考条件 | 最多 9 张图片 + 3 个视频片段 + 3 个音频片段 | 12 资产多模态 |
 | 角色身份一致性 | 是 | 面部/主体跨镜头稳定 |
 | 最大镜头时长 | 15 秒 | auto / 4–15 秒 |
-| 分辨率上限 | 某些端点支持 1080p（fal.ai 默认 720p） | 取决于提供商 |
+| 分辨率上限 | 某些端点支持 1080p（Ark 默认 720p） | 取决于提供商 |
 | Elo（Artificial Analysis） | 1269（截至 2026 年 2 月 #1） | 超越 Veo 3、Sora 2、Runway Gen-4.5 |
 
 仅在以下原因时切换：预算严格（使用 `fast` 变体或 LTX）、用户偏好的提供商（VEO/Sora/Kling）、或风格适配更倾向于其他模型。
@@ -36,27 +36,27 @@ Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（
 
 | 界面 | 环境变量 | OpenMontage 工具 | 状态 | 备注 |
 |---|---|---|---|---|
-| **fal.ai**（主要） | `FAL_KEY` | `seedance_video` | ✅ 已封装 | 以下模型 ID。支持 T2V、I2V、参考转视频；`standard` 和 `fast` 变体。OpenMontage 中的默认。 |
+| **火山引擎 Ark**（主要） | `ARK_API_KEY` | `seedance_video` | ✅ 已封装 | 直连字节跳动 Seedance 2.0，中国大陆网络友好。支持 T2V、I2V、参考转视频；`standard` 和 `fast` 变体。OpenMontage 中的默认。 |
 | **Replicate** | `REPLICATE_API_TOKEN` | `seedance_replicate` | ✅ 已封装 | `bytedance/seedance-2.0` + `bytedance/seedance-2.0-fast`。标准 Replicate 预测 API。 |
 | **Runway** | `RUNWAY_API_KEY` | `runway_video` (model: `seedance_2.0`) | ✅ 已封装 | Runway 内的第三方 Seedance 2.0 模型。**无限/企业计划，仅限非美国地区**。通过 `model` 参数选择。 |
 | **Higgsfield** | `HIGGSFIELD_API_KEY` + `_SECRET` | `higgsfield_video` (model: `seedance_2.0`) | ✅ 已封装 | 此工具上 Seedance 2.0 是默认模型。强调角色身份 + 长格式链式生成。 |
 | **HeyGen** | `HEYGEN_API_KEY` | `heygen_video`（仅 1.x）+ TODO | ⚠️ 仅 1.x | HeyGen 上的 `seedance_pro` / `seedance_lite` 工作流提供商字符串映射到 Seedance 1.x。2.0 访问通过 Video Agent / Avatar Shots 端点 — 一个单独的 `seedance_heygen` 工具在路线图中。 |
 | **BytePlus ModelArk / 火山引擎** | BytePlus 令牌 | 未封装 | 🔜 路线图 | 字节跳动直连。Pro 约 $0.15 / 5 秒，Lite 约 $0.010/秒。基于令牌。 |
 | **Freepik** | Freepik 令牌 | 未封装 | 🔜 路线图 | `POST /v1/ai/image-to-video/seedance-pro-1080p` 用于 1080p I2V |
-| **Pollo / PiAPI / Atlas Cloud / AIMLAPI** | 各不不同 | 未封装 | 🔜 路线图 | 聚合器转售 fal.ai 或字节跳动端点 |
+| **Pollo / PiAPI / Atlas Cloud / AIMLAPI** | 各不不同 | 未封装 | 🔜 路线图 | 聚合器转售字节跳动端点 |
 
-### fal.ai 模型 ID（由 `seedance_video` 使用）
+### 火山引擎 Ark Endpoint ID（由 `seedance_video` 使用）
+
+`seedance_video` 工具通过火山引擎 Ark API 直连，使用推理接入点（Endpoint）调用模型：
 
 ```
-bytedance/seedance-2.0/text-to-video
-bytedance/seedance-2.0/image-to-video
-bytedance/seedance-2.0/reference-to-video        # 9 图 + 3 视频 + 3 音频
-bytedance/seedance-2.0/fast/text-to-video
-bytedance/seedance-2.0/fast/image-to-video
-bytedance/seedance-2.0/fast/reference-to-video
+# 默认 Endpoint ID 可通过环境变量 SEEDANCE_ENDPOINT_ID 覆盖
+ep-20260707160429-ghxd2
 ```
 
-定价（fal.ai，720p）：标准 $0.3034 / 秒（T2V），$0.3024 / 秒（I2V）。快速各端点 $0.2419 / 秒。
+支持的模型变体通过 Ark 的 content 参数控制。
+
+定价（火山引擎 Ark，720p）：标准约 $0.06 / 秒（T2V/I2V 同价）。快速变体约 $0.04 / 秒。
 `fast` 变体以部分镜头/运动保真度为代价换取延迟和成本 — **不要**将慢动作、多镜头或推拉密集提示首次尝试路由到 `fast`。
 
 ## 在 OpenMontage 中调用 Seedance 2.0
@@ -280,8 +280,8 @@ Shot 3 (extreme close-up, rack focus): hero's eyes open, wind whipping.
 
 ## 参考资料
 
-- fal.ai Seedance 2.0：https://fal.ai/seedance-2.0
-- fal.ai 使用指南：https://fal.ai/learn/tools/how-to-use-seedance-2-0
+- 火山引擎 Ark Seedance 2.0：https://console.volcengine.com/ark
+- 火山引擎 Ark API 文档：https://www.volcengine.com/docs/
 - Replicate bytedance 集合：https://replicate.com/bytedance
 - HeyGen Seedance 2.0：https://www.heygen.com/blog/introducing-seedance-2-and-heygen
 - Runway Seedance：https://runwayml.com/product/seedance

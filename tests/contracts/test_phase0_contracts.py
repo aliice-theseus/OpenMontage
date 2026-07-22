@@ -112,8 +112,8 @@ def sample_artifact(name: str) -> dict:
                 ],
             },
             "cost_estimate": {
-                "total_estimated_usd": 0.52,
-                "line_items": [{"tool": "elevenlabs_tts", "operation": "narration", "estimated_usd": 0.18}],
+                "total_estimated_cny": 3.74,
+                "line_items": [{"tool": "elevenlabs_tts", "operation": "narration", "estimated_cny": 1.30}],
                 "budget_verdict": "within_budget",
             },
             "approval": {"status": "approved"},
@@ -261,7 +261,7 @@ class TestConfig:
 
     def test_load_from_yaml(self):
         config = OpenMontageConfig.load()
-        assert config.budget.total_usd == 10.0
+        assert config.budget.total_cny == 70.0
 
 
 # ---- Schemas ----
@@ -476,34 +476,34 @@ class TestToolRegistry:
 
 class TestCostTracker:
     def test_estimate_reserve_reconcile(self):
-        tracker = CostTracker(budget_total_usd=10.0, mode=BudgetMode.OBSERVE)
-        entry_id = tracker.estimate("image_selector", "generate", 0.05)
+        tracker = CostTracker(budget_total_cny=70.0, mode=BudgetMode.OBSERVE)
+        entry_id = tracker.estimate("image_selector", "generate", 0.36)
         tracker.reserve(entry_id)
-        assert tracker.budget_reserved_usd == 0.05
-        tracker.reconcile(entry_id, 0.04, success=True)
-        assert tracker.budget_spent_usd == 0.04
-        assert tracker.budget_reserved_usd == 0.0
+        assert tracker.budget_reserved_cny == 0.36
+        tracker.reconcile(entry_id, 0.29, success=True)
+        assert tracker.budget_spent_cny == 0.29
+        assert tracker.budget_reserved_cny == 0.0
 
     def test_cap_mode_blocks_overspend(self):
         tracker = CostTracker(
-            budget_total_usd=1.0,
+            budget_total_cny=7.20,
             mode=BudgetMode.CAP,
-            single_action_approval_usd=10.0,  # raise threshold so budget check triggers
+            single_action_approval_cny=72.0,  # 提高阈值使预算检查触发
         )
         tracker.approve_tool("expensive")
-        eid = tracker.estimate("expensive", "op", 5.0)
+        eid = tracker.estimate("expensive", "op", 36.0)
         with pytest.raises(BudgetExceededError):
             tracker.reserve(eid)
 
     def test_persistence(self, tmp_path):
         log_path = tmp_path / "cost_log.json"
-        t1 = CostTracker(budget_total_usd=10.0, mode=BudgetMode.OBSERVE, cost_log_path=log_path)
-        eid = t1.estimate("tool", "op", 0.10)
+        t1 = CostTracker(budget_total_cny=70.0, mode=BudgetMode.OBSERVE, cost_log_path=log_path)
+        eid = t1.estimate("tool", "op", 0.72)
         t1.reserve(eid)
-        t1.reconcile(eid, 0.08)
+        t1.reconcile(eid, 0.58)
 
         t2 = CostTracker(cost_log_path=log_path)
-        assert t2.budget_spent_usd == 0.08
+        assert t2.budget_spent_cny == 0.58
 
     def test_reference_estimate_falls_back_when_scene_types_are_unclassified(self):
         tracker = CostTracker(mode=BudgetMode.OBSERVE)
@@ -518,10 +518,10 @@ class TestCostTracker:
             "replication_guidance": {"motion_required": True, "suggested_pipeline": "animation"},
         }
         plan = {
-            "video_generation": {"tool": "kling_fal", "cost_per_unit": 0.3, "clip_duration_seconds": 5},
-            "image_generation": {"tool": "flux_fal", "cost_per_unit": 0.05},
-            "tts": {"tool": "elevenlabs_tts", "cost_per_word": 0.00003},
-            "music": {"tool": "music_gen", "cost_per_track": 0.1},
+            "video_generation": {"tool": "kling_fal", "cost_per_unit": 2.16, "clip_duration_seconds": 5},
+            "image_generation": {"tool": "flux_fal", "cost_per_unit": 0.36},
+            "tts": {"tool": "doubao_tts", "cost_per_word": 0.0002},
+            "music": {"tool": "music_gen", "cost_per_track": 0.72},
         }
 
         estimate = tracker.estimate_from_reference(brief, 60, plan)

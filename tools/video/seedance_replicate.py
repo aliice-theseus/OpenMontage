@@ -135,8 +135,8 @@ class SeedanceReplicate(BaseTool):
         variant = inputs.get("model_variant", "standard")
         duration = inputs.get("duration", "5")
         secs = 5 if duration == "auto" else int(duration)
-        # Replicate bills per-second for this model family.
-        rate = 0.24 if variant == "fast" else 0.30
+        # Replicate bills per-second for this model family (CNY).
+        rate = 1.73 if variant == "fast" else 2.16
         return round(rate * secs, 2)
 
     def estimate_runtime(self, inputs: dict[str, Any]) -> float:
@@ -246,7 +246,7 @@ class SeedanceReplicate(BaseTool):
                 **probed,
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=model_slug,
         )

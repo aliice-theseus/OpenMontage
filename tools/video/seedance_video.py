@@ -224,12 +224,12 @@ class SeedanceVideo(BaseTool):
     # ------------------------------------------------------------------ #
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
-        """火山引擎 Ark Seedance 2.0 按 token 计费，此处保持同等量级估算。"""
+        """火山引擎 Ark Seedance 2.0 国内定价约 0.5元/秒，按时长和分辨率估算。"""
         duration = inputs.get("duration", 5)
         resolution = inputs.get("resolution", "720p")
-        # 粗略估算：时长 x 分辨率系数
+        # 粗略估算（CNY）：时长 x 分辨率系数
         res_factor = 1.5 if resolution == "1080p" else 1.0 if resolution == "720p" else 0.7
-        return round(0.06 * duration * res_factor, 2)
+        return round(0.50 * duration * res_factor, 2)
 
     def estimate_runtime(self, inputs: dict[str, Any]) -> float:
         """通常 5 秒视频约 60-120 秒，10 秒视频约 120-180 秒。"""
@@ -484,7 +484,7 @@ class SeedanceVideo(BaseTool):
                 **probed,
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=endpoint_id,
         )

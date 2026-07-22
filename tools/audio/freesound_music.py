@@ -168,7 +168,7 @@ class FreesoundMusic(BaseTool):
                 "results_found": len(search_result),
             },
             artifacts=[str(output_path)],
-            cost_usd=0.0,
+            cost_cny=0.0,
             duration_seconds=round(time.time() - start, 2),
         )
 

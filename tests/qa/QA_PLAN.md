@@ -9,7 +9,7 @@
 | 脚本 | 测试的工具 | 使用的 API 密钥 | 预估成本 |
 |------|----------|---------------|---------|
 | `test_01_tts.py` | `elevenlabs_tts`（ElevenLabs） | ELEVENLABS_API_KEY | ~$0.02 |
-| `test_02_image_gen.py` | `image_gen`（DALL-E 3 + FLUX） | OPENAI_API_KEY, FAL_AI_API_KEY | ~$0.15 |
+| `test_02_image_gen.py` | `image_gen`（DALL-E 3 + FLUX） | OPENAI_API_KEY | ~$0.15 |
 | `test_03_music.py` | `music_gen`（ElevenLabs） | ELEVENLABS_API_KEY | ~$0.10 |
 | `test_04_audio_mix.py` | `audio_mixer` | 无（仅 ffmpeg） | $0 |
 | `test_05_video_compose.py` | `video_compose` | 无（仅 ffmpeg） | $0 |

@@ -79,7 +79,7 @@ class GrokVideo(BaseTool):
         "cinematic clips with native synchronized audio (dialogue, SFX, music)",
         "reference-conditioned video with product/character consistency",
         "lip-synced dialogue and foley in a single generation pass",
-        "cost-effective high-quality video ($0.07/s at 720p)",
+        "cost-effective high-quality video (¥0.50/s at 720p)",
     ]
     not_good_for = ["offline generation"]
     fallback_tools = ["runway_video", "wan_video"]
@@ -164,10 +164,9 @@ class GrokVideo(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         duration = int(inputs.get("duration", 5))
         resolution = self._normalize_resolution(inputs.get("resolution"))
-        base_per_second = 0.07 if resolution == "720p" else 0.05
-        input_image_cost = self._input_image_count(inputs) * 0.002
-        # xAI currently publishes Grok Imagine Video at $0.05/sec for 480p,
-        # $0.07/sec for 720p, plus $0.002 per input image.
+        base_per_second = 0.50 if resolution == "720p" else 0.36
+        input_image_cost = self._input_image_count(inputs) * 0.014
+        # xAI Grok Imagine Video：720p 约 ¥0.50/秒，480p 约 ¥0.36/秒，每张输入图片加 ¥0.014
         return base_per_second * duration + input_image_cost
 
     def estimate_runtime(self, inputs: dict[str, Any]) -> float:
@@ -292,7 +291,7 @@ class GrokVideo(BaseTool):
                 **probed,
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=payload["model"],
         )

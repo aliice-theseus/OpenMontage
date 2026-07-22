@@ -140,8 +140,8 @@ class SunoMusic(BaseTool):
         return ToolStatus.UNAVAILABLE
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
-        # Suno credits cost $0.005 each; a generation is roughly 10 credits
-        return 0.05
+        # Suno credits cost ¥0.036/积分; a generation is roughly 10 credits
+        return 0.36
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         api_key = self._get_api_key()
@@ -194,7 +194,7 @@ class SunoMusic(BaseTool):
                 "tracks_generated": len(tracks),
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=duration,
             model=f"suno/{inputs.get('model', 'V4')}",
         )

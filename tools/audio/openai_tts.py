@@ -117,7 +117,7 @@ class OpenAITTS(BaseTool):
         return ToolStatus.UNAVAILABLE
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
-        return round(len(inputs.get("text", "")) * 0.000015, 4)
+        return round(len(inputs.get("text", "")) * 0.00011, 4)
 
     @staticmethod
     def _supports_instructions(model: str) -> bool:
@@ -134,7 +134,7 @@ class OpenAITTS(BaseTool):
             return ToolResult(success=False, error=f"OpenAI TTS failed: {exc}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate(self, inputs: dict[str, Any]) -> ToolResult:

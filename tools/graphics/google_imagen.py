@@ -149,10 +149,10 @@ class GoogleImagen(BaseTool):
         model = inputs.get("model", "imagen-4.0-generate-001")
         n = inputs.get("number_of_images", 1)
         if "ultra" in model:
-            return 0.06 * n
+            return 0.43 * n
         if "fast" in model:
-            return 0.02 * n
-        return 0.04 * n
+            return 0.14 * n
+        return 0.29 * n
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         # Two auth paths: an AI Studio API key, or a service-account JSON that
@@ -270,7 +270,7 @@ class GoogleImagen(BaseTool):
                 "images_generated": len(predictions),
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=model,
         )

@@ -260,7 +260,7 @@ def _compute_cost_efficiency(
     estimated_cost: float,
     budget_remaining: float | None,
 ) -> float:
-    """Score cost efficiency. Free is 1.0, over-budget is 0.0."""
+    """计算成本效率评分。免费为 1.0，超预算为 0.0。（单位：人民币 CNY）"""
     if estimated_cost <= 0:
         return 1.0
     if budget_remaining is not None and budget_remaining <= 0:
@@ -272,12 +272,12 @@ def _compute_cost_efficiency(
         if ratio > 0.2:
             return 0.5
         return 0.8
-    # No budget info — use absolute cost heuristic
-    if estimated_cost < 0.05:
+    # 无预算信息——使用绝对成本启发式（CNY）
+    if estimated_cost < 0.36:
         return 0.9
-    if estimated_cost < 0.20:
+    if estimated_cost < 1.44:
         return 0.7
-    if estimated_cost < 1.00:
+    if estimated_cost < 7.20:
         return 0.5
     return 0.3
 
@@ -344,8 +344,8 @@ def normalize_task_context(
     if "motion_required" not in context and capability == "video_generation":
         context["motion_required"] = True
 
-    if "budget_remaining_usd" not in context and context.get("budget_usd") is not None:
-        context["budget_remaining_usd"] = context["budget_usd"]
+    if "budget_remaining_cny" not in context and context.get("budget_cny") is not None:
+        context["budget_remaining_cny"] = context["budget_cny"]
 
     text_tokens = set(_tokenize_text(combined_text))
     context["prefers_generated_visuals"] = bool(text_tokens & _GENERATED_VISUAL_TERMS)
@@ -374,13 +374,13 @@ def score_provider(tool, task_context: dict[str, Any]) -> ProviderScore:
     """Score a provider against a task context.
 
     Args:
-        tool: A BaseTool instance.
-        task_context: Dict with keys:
-            - intent (str): What the asset is for
-            - style_keywords (list[str]): Visual/audio style descriptors
-            - budget_remaining_usd (float|None): Remaining budget
-            - locked_providers (set[str]): Providers already chosen
-            - motion_required (bool): Whether motion is a hard requirement
+        tool: BaseTool 实例。
+        task_context: 包含以下键的字典：
+            - intent (str): 资产用途
+            - style_keywords (list[str]): 视觉/音频风格描述
+            - budget_remaining_cny (float|None): 剩余预算（人民币）
+            - locked_providers (set[str]): 已锁定的提供商
+            - motion_required (bool): 是否需要动态
             - asset_type (str): "image", "video", "audio", "music", "voice"
     """
     task_context = normalize_task_context(task_context)
@@ -412,13 +412,13 @@ def score_provider(tool, task_context: dict[str, Any]) -> ProviderScore:
     # Control: from supports dict
     control = _compute_control(info.get("supports", {}))
 
-    # Cost efficiency
+    # 成本效率（单位 CNY）
     try:
         estimated_cost = tool.estimate_cost(task_context)
     except Exception:
         estimated_cost = 0.0
     cost_efficiency = _compute_cost_efficiency(
-        estimated_cost, task_context.get("budget_remaining_usd")
+        estimated_cost, task_context.get("budget_remaining_cny")
     )
 
     # Latency: uses measured p50 latency if available, else runtime class heuristic.

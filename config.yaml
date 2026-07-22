@@ -8,9 +8,9 @@ llm:
 
 budget:
   mode: warn                     # observe | warn | cap
-  total_usd: 10.00
+  total_cny: 70.00               # total budget CNY (approx 10 USD)
   reserve_pct: 0.10              # holdback for retries / cleanup
-  single_action_approval_usd: 0.50
+  single_action_approval_cny: 3.50  # single action approval threshold CNY (approx 0.5 USD)
   require_approval_for_new_paid_tool: true
 
 checkpoint:

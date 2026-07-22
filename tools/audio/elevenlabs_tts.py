@@ -140,7 +140,7 @@ class ElevenLabsTTS(BaseTool):
         return ToolStatus.UNAVAILABLE
 
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
-        return round(len(inputs.get("text", "")) * 0.0003, 4)
+        return round(len(inputs.get("text", "")) * 0.0022, 4)
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         api_key = os.environ.get("ELEVENLABS_API_KEY")
@@ -154,7 +154,7 @@ class ElevenLabsTTS(BaseTool):
             return ToolResult(success=False, error=f"TTS generation failed: {exc}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate(self, inputs: dict[str, Any], api_key: str) -> ToolResult:

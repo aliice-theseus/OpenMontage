@@ -219,7 +219,7 @@ class ClipSearch(BaseTool):
                     **payload,
                 },
                 duration_seconds=round(time.time() - start, 3),
-                cost_usd=0.0,
+                cost_cny=0.0,
             )
         except Exception as e:
             import traceback

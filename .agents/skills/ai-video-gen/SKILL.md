@@ -1,26 +1,25 @@
 ---
 name: ai-video-gen
 description: |
-  使用多个提供商网关从文本提示生成 AI 视频。在以下情况下使用：(1) 从文本描述生成视频，(2) 为内容制作创建 AI 生成的视频片段，(3) 使用参考图片进行图生视频生成，(4) 在视频生成提供商（VEO、Kling、Sora、Runway、Seedance、MiniMax）之间选择。支持两个网关：HeyGen API 和 fal.ai API。
+  使用 HeyGen API 网关从文本提示生成 AI 视频。在以下情况下使用：(1) 从文本描述生成视频，(2) 为内容制作创建 AI 生成的视频片段，(3) 使用参考图片进行图生视频生成，(4) 在视频生成提供商（VEO、Kling、Sora、Runway、Seedance、MiniMax）之间选择。Seedance 2.0 另可通过火山引擎 Ark 直连（`seedance_video` 工具）。
 allowed-tools: mcp__heygen__*
 metadata:
   openclaw:
     requires:
       env_any:
         - HEYGEN_API_KEY
-        - FAL_KEY
 ---
 
 # 视频生成（多网关）
 
-从文本提示生成 AI 视频。通过两个 API 网关支持多个提供商：
+从文本提示生成 AI 视频。通过 HeyGen API 网关支持多个提供商；Seedance 2.0 另可通过火山引擎 Ark 直连。
 
 | 网关 | 环境变量 | 提供商 | 工具 |
 |---------|-------------|-----------|------|
-| **fal.ai** | `FAL_KEY` | **Seedance 2.0**（标准 + 快速）、Kling v3/v2.1、MiniMax、VEO | `seedance_video`、`kling_video`、`minimax_video`、`veo_video` |
 | **HeyGen** | `HEYGEN_API_KEY` | VEO 3.1、Kling Pro、Sora v2、Runway Gen-4、Seedance Pro / Lite（1.x） | `heygen_video` |
+| **火山引擎 Ark**（直连） | `ARK_API_KEY` | **Seedance 2.0**（标准 + 快速） | `seedance_video` |
 
-**首选高级默认 — Seedance 2.0。** 当配置了任一高级网关（`FAL_KEY` → `seedance_video`，或 HeyGen 的视频代理/头像拍摄路径）时，Seedance 2.0 是电影、预告片和高保真片段工作的首选默认模型。它是整个产品线中唯一具备**单通道原生同步音频、多镜头生成、导演级摄像机控制和引用对话的口型同步**的模型，并在 2026 年初的 Artificial Analysis Elo 排行榜上排名第一。仅在用户有特定原因（预算、提供商偏好、风格适配如 VEO 适合写实风景、Kling 适合特定动漫风格）时才切换它。有关权威的提示词和参数指南，请参见第 3 层 `seedance-2-0`。
+**首选高级默认 — Seedance 2.0。** 当配置了 `ARK_API_KEY`（火山引擎 Ark 直连 `seedance_video`，或 HeyGen 的视频代理/头像拍摄路径）时，Seedance 2.0 是电影、预告片和高保真片段工作的首选默认模型。它是整个产品线中唯一具备**单通道原生同步音频、多镜头生成、导演级摄像机控制和引用对话的口型同步**的模型，并在 2026 年初的 Artificial Analysis Elo 排行榜上排名第一。仅在用户有特定原因（预算、提供商偏好、风格适配如 VEO 适合写实风景、Kling 适合特定动漫风格）时才切换它。有关权威的提示词和参数指南，请参见第 3 层 `seedance-2-0`。
 
 **重要提示：** 始终使用 `video_selector` 而不是直接调用提供商工具。选择器会处理可用性检查、成本比较和自动回退，其评分引擎已经偏向于电影意图下的 Seedance 2.0。
 
@@ -29,7 +28,7 @@ metadata:
 使用最能匹配用户可用提供商和成本/质量目标的已配置网关。
 
 - **HeyGen：** 设置 `HEYGEN_API_KEY` 以访问多模型网关。
-- **fal.ai：** 设置 `FAL_KEY` 以通过 fal.ai 访问 Kling、MiniMax 和 Veo。
+- **火山引擎 Ark（直连）：** 设置 `ARK_API_KEY` 以直连 Seedance 2.0。
 
 在检查注册表和当前任务适配度之前，不要将任一网关描述为默认或首选。
 
@@ -314,7 +313,7 @@ curl -X POST "https://api.heygen.com/v1/workflows/executions" \
 ## 最佳实践
 
 1. **在提示词中要描述详细** — 包含摄像机运动、光照、风格和情绪细节
-2. **默认使用 Seedance 2.0（通过 `seedance_video`）进行电影和运动导向的工作**，当已设置 `FAL_KEY` 时 — 单通道同步音频、多镜头、口型同步、导演级摄像机。当用户特别想要 Google 或 OpenAI 的运动角色时使用 VEO 3.1 / Sora V2 Pro；仅在速度是硬约束时使用 `ltx_distilled` 或 `veo3_fast`
+2. **默认使用 Seedance 2.0（通过 `seedance_video`）进行电影和运动导向的工作**，当已设置 `ARK_API_KEY` 时 — 单通道同步音频、多镜头、口型同步、导演级摄像机。当用户特别想要 Google 或 OpenAI 的运动角色时使用 VEO 3.1 / Sora V2 Pro；仅在速度是硬约束时使用 `ltx_distilled` 或 `veo3_fast`
 3. **使用参考图片** 进行图生视频 — 非常适合动画化产品照片或静态图像
 4. **视频生成是最慢的工作流** — 允许最多 5 分钟，每 10 秒轮询一次
 5. **宽高比很重要** — 社交媒体故事/短视频用 `9:16`，横屏用 `16:9`，方形用 `1:1`

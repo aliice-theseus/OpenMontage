@@ -156,17 +156,17 @@ class GoogleTTS(BaseTool):
         text = inputs.get("text", "")
         char_count = len(text)
         voice = inputs.get("voice", "en-US-Chirp3-HD-Orus")
-        # Pricing per million characters (approximate)
+        # Pricing per million characters (approximate, CNY)
         if "Chirp3-HD" in voice:
-            rate_per_char = 0.000030  # $30/1M chars
+            rate_per_char = 0.00022  # ¥220/百万字符
         elif "Studio" in voice:
-            rate_per_char = 0.000160  # $160/1M chars
+            rate_per_char = 0.00115  # ¥1150/百万字符
         elif "Neural2" in voice or "Journey" in voice:
-            rate_per_char = 0.000016  # $16/1M chars
+            rate_per_char = 0.00012  # ¥120/百万字符
         elif "WaveNet" in voice:
-            rate_per_char = 0.000016  # $16/1M chars
+            rate_per_char = 0.00012  # ¥120/百万字符
         else:
-            rate_per_char = 0.000004  # $4/1M chars (Standard)
+            rate_per_char = 0.00003  # ¥30/百万字符 (Standard)
         return round(char_count * rate_per_char, 4)
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
@@ -194,7 +194,7 @@ class GoogleTTS(BaseTool):
             return ToolResult(success=False, error=f"Google TTS failed: {exc}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate(

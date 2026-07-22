@@ -119,7 +119,7 @@ class ImageGen(BaseTool):
     def estimate_cost(self, inputs: dict[str, Any]) -> float:
         provider = inputs.get("provider") or self._detect_provider()
         if provider == "openai":
-            return 0.04  # DALL-E 3 standard
+            return 0.29  # DALL-E 3 standard
         return 0.0  # local
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
@@ -144,7 +144,7 @@ class ImageGen(BaseTool):
             return ToolResult(success=False, error=f"Generation failed: {e}")
 
         result.duration_seconds = round(time.time() - start, 2)
-        result.cost_usd = self.estimate_cost(inputs)
+        result.cost_cny = self.estimate_cost(inputs)
         return result
 
     def _generate_openai(self, inputs: dict[str, Any]) -> ToolResult:

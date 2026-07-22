@@ -182,7 +182,7 @@ class VideoStitch(BaseTool):
             "clip_count": len(clips),
             "transition": inputs.get("transition", "cut"),
             "auto_normalize": inputs.get("auto_normalize", False),
-            "estimated_cost_usd": self.estimate_cost(inputs),
+            "estimated_cost_cny": self.estimate_cost(inputs),
             "estimated_runtime_seconds": self.estimate_runtime(inputs),
             "status": self.get_status().value,
             "would_execute": True,

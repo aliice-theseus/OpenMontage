@@ -693,7 +693,7 @@ class CharacterRigRenderer(BaseTool):
                     "generation_summary": "HyperFrames SVG/GSAP character composition package.",
                 }
             ],
-            "total_cost_usd": 0,
+            "total_cost_cny": 0,
             "metadata": {"source": self.name, "workspace_path": str(workspace_path)},
         }
         edit_decisions = {
@@ -748,7 +748,7 @@ class CharacterRigRenderer(BaseTool):
                         "generation_summary": "Rendered from local SVG/GSAP character preview via Playwright frame capture and ffmpeg.",
                     }
                 ],
-                "total_cost_usd": 0,
+                "total_cost_cny": 0,
                 "metadata": {"source": self.name, "preview_path": str(output_path)},
             }
             video_edit_decisions = {

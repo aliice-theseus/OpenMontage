@@ -331,7 +331,7 @@ class ToolRegistry:
           },
           "capabilities": [
             {"capability": "video_generation", "configured": 10, "total": 16,
-             "available_providers": ["fal", "heygen", ...],
+             "available_providers": ["heygen", ...],
              "unavailable_providers": ["openai", ...]},
             ...
           ],
@@ -372,7 +372,7 @@ class ToolRegistry:
                 runtime_warnings.append(f"hyperframes: {reason}")
 
         # Capabilities rollup (configured/total + provider lists).
-        # When a provider has multiple tools (e.g. seedance-fal and
+        # When a provider has multiple tools (e.g. seedance-ark and
         # seedance-replicate both reporting provider="seedance"), a
         # naive set-split shows the provider in BOTH available and
         # unavailable — confusing for users. Dedupe: if the provider has

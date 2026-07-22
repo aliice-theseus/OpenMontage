@@ -104,11 +104,11 @@ class OpenAIImage(BaseTool):
         quality = inputs.get("quality", "high")
         n = inputs.get("n", 1)
         if model == "gpt-image-1":
-            cost_map = {"low": 0.011, "medium": 0.042, "high": 0.167, "auto": 0.042}
-            return cost_map.get(quality, 0.042) * n
+            cost_map = {"low": 0.08, "medium": 0.30, "high": 1.20, "auto": 0.30}
+            return cost_map.get(quality, 0.30) * n
         # dall-e-3 fallback pricing
-        quality_map = {"standard": 0.04, "hd": 0.08}
-        return quality_map.get(quality, 0.04) * n
+        quality_map = {"standard": 0.29, "hd": 0.58}
+        return quality_map.get(quality, 0.29) * n
 
     def execute(self, inputs: dict[str, Any]) -> ToolResult:
         if not os.environ.get("OPENAI_API_KEY"):
@@ -170,7 +170,7 @@ class OpenAIImage(BaseTool):
                 "output": str(output_path),
             },
             artifacts=[str(output_path)],
-            cost_usd=self.estimate_cost(inputs),
+            cost_cny=self.estimate_cost(inputs),
             duration_seconds=round(time.time() - start, 2),
             model=model,
         )
