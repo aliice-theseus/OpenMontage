@@ -649,3 +649,73 @@ def probe_output(path: Path) -> dict[str, Any]:
     except Exception:
         pass
     return info
+
+
+def extract_last_frame(
+    video_path: str,
+    output_path: str,
+    format: str = "jpg",
+) -> str:
+    """提取视频最后一帧并保存为图片。
+
+    使用 FFmpeg 定位到视频末尾并抽取一帧，用于分段视频间的
+    视觉连续性——将前一段的尾帧作为下一段的首帧参考图。
+
+    Args:
+        video_path: 源视频文件路径。
+        output_path: 输出图片路径（需包含扩展名）。
+        format: 输出图片格式（jpg / png）。
+
+    Returns:
+        成功时返回 output_path，失败时抛出 RuntimeError。
+
+    Raises:
+        FileNotFoundError: 源视频不存在。
+        RuntimeError: FFmpeg 执行失败。
+    """
+    src = Path(video_path)
+    if not src.exists():
+        raise FileNotFoundError(f"视频文件不存在: {video_path}")
+
+    dst = Path(output_path)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+
+    cmd = [
+        "ffmpeg", "-y",
+        "-sseof", "-0.5",          # 从末尾 0.5 秒开始（避免黑帧）
+        "-i", str(src),
+        "-frames:v", "1",
+        "-qscale:v", "2" if format == "jpg" else "1",
+        str(dst),
+    ]
+
+    proc = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    if proc.returncode != 0 or not dst.exists():
+        # 降级：尝试从末尾更远的位置提取
+        fallback_cmd = [
+            "ffmpeg", "-y",
+            "-sseof", "-2",
+            "-i", str(src),
+            "-frames:v", "1",
+            "-qscale:v", "2" if format == "jpg" else "1",
+            str(dst),
+        ]
+        fallback_proc = subprocess.run(
+            fallback_cmd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if fallback_proc.returncode != 0 or not dst.exists():
+            raise RuntimeError(
+                f"提取视频最后一帧失败: {video_path}\n"
+                f"FFmpeg stderr: {proc.stderr}"
+            )
+
+    return str(dst)

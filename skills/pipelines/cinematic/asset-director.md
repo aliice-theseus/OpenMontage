@@ -138,6 +138,100 @@
 
 视觉准确性很重要。如果剧本提到某个特定的地点、人物或物体，在生成图像前核实它的实际外观。不要依赖 AI 模型的训练数据——它可能是错误或过时的。
 
+## Seedance 提示词语言规则（硬性规则）
+
+当使用 `video_selector` 调用 Seedance 2.0 时：
+- ⚠️ **prompt 必须用中文编写**，仅专业影视术语可用英文
+- 允许的英文：`wide shot`、`close-up`、`dolly in`、`the same character`、`no drift` 等无优质中文替代的专业术语
+- 禁止的英文：场景描述、主体动作、环境氛围等**必须用中文**
+
+## Seedance 参考图限制 + Ark API role 规则（硬性规则）
+
+当使用 `video_selector` 调用 Seedance 2.0 时：
+
+1. **参考图片总计不得超过 9 张** — 包括首帧图（`image_url`/`image_path`）和多参考图
+   （`reference_image_urls`/`reference_image_paths`）在内，**统一计数**
+2. **所有参考图自动缩放到 1280×720 以内**（等比例） — `seedance_video` 会在转为
+   data URI 前用 Pillow 自动 resize，远程 URL 也会先下载再缩放
+3. **seedance_video.py 会严格校验** — 超限时抛出 `ValueError`，拒绝调用
+4. **Ark API role 区分**（火山引擎 v3 协议）：
+   - 首帧图（`image_url`/`image_path`）→ `role: "first_frame"` — 模型从此帧开始续接
+   - 多参考图（`reference_image_urls`/`reference_image_paths`）→ `role: "reference_image"` — 模型参考其视觉特征
+5. 参考图包括：角色四视图、场景关键帧、尾帧链式引用图等全部参考图片
+
+## 尾帧链式引用（跨片段视觉连续性）
+
+当按顺序生成多个 Seedance 视频片段时，将前一段的**尾帧**作为
+后一段的**首帧参考**，可显著提升跨片段一致性。
+
+### 工作流
+
+```python
+# 步骤 1：生成片段 N
+result_1 = video_selector.execute({
+    "prompt": "片段 1 提示词",
+    "operation": "reference_to_video",
+    "reference_image_paths": [char_front, keyframe_1],
+    "output_path": "projects/.../assets/video/clip_01.mp4",
+})
+
+# 步骤 2：提取片段 N 的尾帧
+from tools.video._shared import extract_last_frame
+
+last_frame = extract_last_frame(
+    video_path="projects/.../assets/video/clip_01.mp4",
+    output_path="projects/.../assets/images/clip_01_last_frame.jpg",
+)
+
+# 步骤 3：尾帧作为片段 N+1 的首帧参考
+# 注意 role 区分：
+#   image_path → Ark API role: "first_frame"（首帧锁定，模型从此帧续接）
+#   reference_image_paths → Ark API role: "reference_image"（多模态视觉参考）
+result_2 = video_selector.execute({
+    "prompt": "片段 2 提示词",
+    "operation": "reference_to_video",
+    "image_path": last_frame,              # ← role: first_frame，前一段尾帧
+    "reference_image_paths": [char_front, keyframe_2],  # ← role: reference_image
+    # 参考图总计：1（尾帧）+ 2（其他）= 3，≤ 9 ✓
+    "output_path": "projects/.../assets/video/clip_02.mp4",
+})
+```
+
+### 规则
+
+- **首帧图计入 9 张限制**：`image_path` + `reference_image_paths` 合计 ≤ 9
+- **首个片段无尾帧**：第一段不使用尾帧引用，可从第二个片段开始链式引用
+- **工具函数**：`tools.video._shared.extract_last_frame()` 或
+  `frame_sampler` 的 `strategy="last_frame"` 均可提取尾帧
+- **偏移量**：默认从末尾前移 0.5 秒提取，避免黑帧/淡出帧
+
+### 多角色四视图的引用
+
+当有多个角色时，在 prompt 中通过 `@ImageN` 语法引用参考图（序号为 content 数组中
+从 1 开始的顺序），并逐角色进行身份锁定：
+
+```python
+inputs = {
+    "prompt": (
+        # 角色 A
+        "@Image1 是角色「林月」— 黑色长发, 红色劲装, "
+        "the same character, consistent, no drift.\n"
+        # 角色 B  
+        "@Image2 是角色「云澈」— 银白短发, 蓝色长袍, "
+        "the same character, consistent, no drift.\n"
+        "Shot 1: 林月与云澈在竹林中对峙..."
+    ),
+    "reference_image_paths": [
+        "char_yue_combined.jpg",  # @Image1
+        "char_yun_combined.jpg",  # @Image2
+        "keyframe.jpg",           # @Image3
+    ],
+}
+```
+
+也可为每个角色上传独立的正面/侧面/背面四视图（占用更多参考位但细节更丰富）。
+详情见 `key-visual-director.md` → **多角色四视图的区分与引用**。
+
 ## 常见陷阱
 
 - 在证明源素材剪辑可行之前就生成额外的镜头。

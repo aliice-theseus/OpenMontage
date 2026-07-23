@@ -16,6 +16,24 @@ metadata:
 
 Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（2026 年 2 月发布，2026 年 4 月通过合作伙伴 API 全球可用）。它是 OpenMontage 中电影、预告片、预告花絮和运动导向工作的**首选高级默认**，只要配置了任何支持的网关。OpenMontage 直接封装了四个网关（`seedance_video` → 火山引擎 Ark、`seedance_replicate` → Replicate、`runway_video` with `model="seedance_2.0"` → Runway、`higgsfield_video` with `model="seedance_2.0"` → Higgsfield）；BytePlus / Freepik / HeyGen-Video-Agent 封装在路线图中。评分引擎通过 `provider="seedance"` 去重，因此用户配置的任何网关都会自动胜出 — 代理应向 `video_selector` 传递 `preferred_provider="seedance"`（或让评分器选择），而不是按名称路由到特定网关。
 
+## ⚠️ 提示词语言硬性规则
+
+**所有传递给 Seedance 的提示词必须使用中文编写。** 仅以下内容可用英文（专业影视术语）：
+
+✅ 允许的英文术语（仅限于无优质中文替代的专业词汇）：
+- 镜头语言：`wide shot`, `close-up`, `dolly in`, `tilt up`, `rack focus`, `handheld`, `slow motion`, `POV`, `low angle`, `bird's eye`
+- 拍摄术语：`ARRI ALEXA`, `anamorphic`, `cinematic`, `photorealistic`, `35mm film`, `chromatic aberration`, `motion blur`, `halation`, `vignette`
+- 身份锁定短语：`the same character`, `consistent across all shots`, `no drift`, `no deformation`, `no face morph`
+- 镜头编排：`Shot 1`, `Shot 2`, `Cut to`, `RAMPS TO SLOW MOTION`, `SNAPS BACK TO REAL TIME`
+
+❌ 禁止的英文用法：
+- 场景描述必须用中文（"a cat playing piano" → "一只猫在弹钢琴"）
+- 主体/动作/环境描述必须用中文
+- 风格/氛围/色调描述必须用中文
+- 提示词结构和格式说明必须用中文
+
+> **原因**：Seedance 2.0 通过火山引擎 Ark 调用，底层模型对中文的理解精度远高于英文。中文场景描述能更准确地控制生成结果，降低语义漂移。专业影视术语因在训练数据中以英文出现为主，保留英文能保持其精确含义。
+
 ## 为什么它是 OpenMontage 高级默认
 
 | 能力 | Seedance 2.0 | 备注 |
@@ -51,7 +69,7 @@ Seedance 2.0 是字节跳动 Seed 团队的统一多模态视频+音频模型（
 
 ```
 # 默认 Endpoint ID 可通过环境变量 SEEDANCE_ENDPOINT_ID 覆盖
-ep-20260707160429-ghxd2
+ep-20260707160030-dt7sw
 ```
 
 支持的模型变体通过 Ark 的 content 参数控制。
@@ -200,6 +218,36 @@ Sokka, half a step behind, replies: "Then we fight."
 叙事内音效：`boots crunching snow`、`staff planting on stone`、`wingbeats overhead`
 音乐方向（轻触）：`low orchestral swell building`、`taiko drums entering on Shot 3`
 **不要**请求复杂的多乐器配乐 — 保持音乐语言质感。
+
+### 多角色参考图引用（Ark API `@ImageN` 语法）
+
+火山引擎 Ark API 使用 content 数组的**图片顺序**作为引用标识：
+
+- content 中第 1 张参考图 → prompt 中用 `@Image1` 引用
+- content 中第 2 张参考图 → prompt 中用 `@Image2` 引用
+- 依此类推（序号从 1 开始，按在 `reference_image_paths`/`reference_image_urls` 中的顺序）
+
+```python
+inputs = {
+    "prompt": (
+        "@Image1 是角色「林月」— 黑色长发, 红色劲装, "
+        "the same character, maintain exact appearance, no drift.\n"
+        "@Image2 是角色「云澈」— 银白短发, 蓝色长袍, "
+        "the same character, maintain exact appearance, no drift.\n"
+        "Shot 1: 林月与云澈在竹林中对峙..."
+    ),
+    "reference_image_paths": [
+        "char_yue_combined.jpg",  # → @Image1
+        "char_yun_combined.jpg",  # → @Image2
+    ],
+}
+```
+
+每个角色必须有独立的身份锚定语句。关键短语：
+- `the same character`
+- `consistent across all shots`
+- `maintain exact appearance from @ImageN`
+- `no deformation, no drift, no face morph`
 
 ### 参考转视频
 

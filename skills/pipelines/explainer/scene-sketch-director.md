@@ -139,6 +139,15 @@ video_selector.execute({
 })
 ```
 
+### Seedance 参考图限制
+
+若在 `assets` 阶段通过 `video_selector` 使用 Seedance 2.0：
+
+- `reference_image_urls`/`reference_image_paths` + `image_url`/`image_path`（首帧）
+  **统一计数，合计不得超过 9 张**
+- 场景构图草图、角色四视图、尾帧引用图等全部计入此限制
+- 调用时注意控制参考图数量，超限会抛出 `ValueError`
+
 ## 验证清单
 
 - [ ] 每个 scene_plan 中的场景都有一张草图
