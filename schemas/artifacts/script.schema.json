@@ -42,6 +42,23 @@
           "text": { "type": "string" },
           "start_seconds": { "type": "number", "minimum": 0 },
           "end_seconds": { "type": "number", "minimum": 0 },
+          "section_type": {
+            "type": "string",
+            "enum": ["narration", "dialogue"],
+            "default": "narration",
+            "description": "narration=旁白（走TTS），dialogue=角色对话（嵌入Seedance视频生成）"
+          },
+          "dialogue": {
+            "type": "object",
+            "description": "section_type=dialogue 时必填",
+            "properties": {
+              "character_id": { "type": "string", "description": "角色ID，对应 character_design 中的 id" },
+              "line": { "type": "string", "description": "角色说的台词，用于 Seedance prompt 中 Character says: \"...\"" },
+              "emotion": { "type": "string", "description": "情绪提示，如 愤怒/平静/惊讶" }
+            },
+            "required": ["character_id", "line"],
+            "additionalProperties": false
+          },
           "speaker_directions": { "type": "string" },
           "delivery_cues": {
             "type": "object",

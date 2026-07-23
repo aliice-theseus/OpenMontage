@@ -175,6 +175,7 @@ stages:
     tools_available:
       - character_ref_sheet
       - image_selector
+      - cos_upload
     checkpoint_required: true
     human_approval_default: true
     review_focus:
@@ -207,6 +208,7 @@ stages:
       - image_selector
     tools_available:
       - image_selector
+      - cos_upload
     checkpoint_required: true
     human_approval_default: true
     review_focus:

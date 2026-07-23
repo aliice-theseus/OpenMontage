@@ -28,7 +28,11 @@
           },
           "image_path": {
             "type": "string",
-            "description": "草图图像文件路径"
+            "description": "草图图像本地文件路径"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "草图图像 COS 公开访问 URL，供 assets 阶段作为 reference_image_url 传入视频生成工具"
           },
           "shot_language": {
             "type": "object",

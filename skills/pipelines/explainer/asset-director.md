@@ -38,6 +38,85 @@
 
 调用 `video_selector` 前读取工具返回的全部 `required_agent_skills`，其中包括画面质感与运镜导演技能。若场景包含打斗、追逐、跑酷、枪战、武侠或竞技动作，再读取 `conditional_agent_skills.action_or_combat_scene` 指向的 `.agents/skills/direct-action-scenes/SKILL.md`，然后才编写最终提示词。
 
+### COS URL 预检门禁（硬性规则）
+
+**视频生成阶段的所有 `reference_image_urls` 必须使用 COS 公开 URL，严禁使用本地文件系统路径。** 在调用 `video_selector` 之前，必须通过以下预检：
+
+```python
+import re
+
+def validate_reference_urls(urls: list[str]) -> None:
+    """验证所有 reference URL 均为 COS 公开 URL，拒绝本地路径。"""
+    LOCAL_PATH_PATTERNS = [
+        r"^[a-zA-Z]:\\",       # Windows 路径如 C:\...
+        r"^/",                  # Unix 绝对路径
+        r"^\.\.?",              # 相对路径 ./ 或 ../
+        r"^projects/",          # 项目本地路径
+    ]
+    for url in urls:
+        for pattern in LOCAL_PATH_PATTERNS:
+            if re.match(pattern, url):
+                raise ValueError(
+                    f"检测到本地路径作为 reference_image_url: {url}\n"
+                    f"视频生成阶段只接受 COS 公开 URL（https://...）。\n"
+                    f"请确保角色图和场景草图已上传到 COS，并在产物中使用 image_url 字段。"
+                )
+```
+
+这段预检在入口处拦截本地路径，防止混合了本地路径的 reference list 传入视频生成工具。
+
+### 角色参考图 — 通过注册表获取 COS URL
+
+如果 `character_design` 阶段已执行（有角色身份注册表），在调用 `video_selector` 生成含角色的视频片段时，通过 `CharacterRegistry.build_reference_config(require_cos_urls=True)` 获取 COS URL：
+
+```python
+from lib.character_registry import CharacterRegistry
+
+registry = CharacterRegistry(Path(f"projects/{project_id}"))
+# require_cos_urls=True 时，如果角色没有 COS URL 会主动抛 ValueError
+# reference_mode="four_view" 只传四视图组合图（比单张正脸更完整的角色定义）
+ref_config = registry.build_reference_config(
+    character_ids=["hero"],
+    require_cos_urls=True,
+    reference_mode="four_view",
+)
+# ref_config["reference_image_urls"] 包含一个四视图组合图 URL
+
+validate_reference_urls(ref_config["reference_image_urls"])
+
+video_selector.execute({
+    "prompt": scene_prompt,
+    "operation": "text_to_video",
+    "reference_image_urls": ref_config["reference_image_urls"],
+    "identity_lock": ref_config["identity_lock"],
+    "require_identity_lock": True,
+})
+```
+
+### 场景草图参考 — 使用 image_url 字段
+
+场景草图同样**必须**使用 `scene_sketch.scenes[i].image_url`（COS 公开 URL）而非 `image_path`（本地路径）传入 `reference_image_urls`。详见 scene-sketch-director.md 的「与资产阶段的衔接」。
+
+```python
+# 收集场景草图的 COS URL
+sketch_urls = [
+    scene["image_url"]
+    for scene in scene_sketch["scenes"]
+    if scene.get("image_url")
+]
+
+validate_reference_urls(sketch_urls)
+
+video_selector.execute({
+    "prompt": scene_prompt,
+    "operation": "text_to_video",
+    "reference_image_urls": sketch_urls,
+    # ...
+})
+```
+
+**如果 `image_url` 字段为空或缺失，不得继续生成。** 必须回退到 COS 上传补全后重试。
+
 ## 流程
 
 ### 步骤 1：盘点必需资产
@@ -85,9 +164,12 @@
 
 此步骤通常花费 $0.03–0.08 总计，并防止 $1–3 的浪费生成。
 
-### 步骤 3：生成旁白
+### 步骤 3：生成旁白（仅 narration 章节）
 
-对于每个脚本章节：
+**跳过 dialogue 章节。** 遍历脚本章节时，只处理 `section_type` 为 `"narration"` 的章节。
+`section_type` 为 `"dialogue"` 的章节由步骤 4b 处理——对话语音直接嵌入 Seedance 视频生成，不使用 TTS。
+
+对于每个 `"narration"` 章节：
 1. 提取旁白文本
 2. 读取 `script.voice_performance` 和章节 `delivery_cues`
 3. 当存在时使用 `delivery_cues.provider_text`；否则用有目的的标点转换章节文本，仅在所选提供者支持时使用中断标签
@@ -105,9 +187,75 @@
 
 **平淡声音失败：** 如果批准的声音听起来单调、机械、匆忙或忽略预期的停顿，不要批量处理剩余章节。修订 `voice_performance` 计划或提供者参数并重新生成样本。
 
+### 步骤 3b：生成对话视频（dialogue 章节 — Seedance 原生音频）
+
+对于每个 `section_type` 为 `"dialogue"` 的章节，使用 `video_selector`（`preferred_provider="seedance"`）生成包含角色对话的视频片段。
+**不生成单独的 TTS 音频**——对话语音由 Seedance 在视频生成时原生合成，附带口型同步。
+
+```python
+for section in script["sections"]:
+    if section.get("section_type") != "dialogue":
+        continue
+
+    dialogue = section["dialogue"]
+    char_id = dialogue["character_id"]
+    line = dialogue["line"]
+
+    from lib.character_registry import CharacterRegistry
+
+    registry = CharacterRegistry(Path(f"projects/{project_id}"))
+
+    # 获取角色显示名（Seedance prompt 中使用 display_name 而非 ID）
+    identity = registry.get(char_id)
+    char_name = identity.display_name if identity else char_id
+
+    # 构建 Seedance 对话提示：Character says: "..."
+    prompt = f"{section['text']}\n{char_name} says: \"{line}\""
+    if dialogue.get("emotion"):
+        prompt += f"\n{char_name} speaks with {dialogue['emotion']} tone."
+
+    # 角色参考图（COS URL）— 使用 four_view 模式，只传四视图组合图
+    ref_config = registry.build_reference_config(
+        character_ids=[char_id],
+        require_cos_urls=True,
+        reference_mode="four_view",
+    )
+
+    # 场景构图参考（COS URL）
+    sketch_url = scene_sketch["scenes"][i].get("image_url", "")
+
+    all_refs = ref_config["reference_image_urls"] + ([sketch_url] if sketch_url else [])
+    validate_reference_urls(all_refs)  # 硬性门禁
+
+    result = video_selector.execute({
+        "prompt": prompt,
+        "preferred_provider": "seedance",
+        "operation": "text_to_video",
+        "generate_audio": True,       # 必须开启——对话音频由 Seedance 生成
+        "reference_image_urls": all_refs,
+        "identity_lock": ref_config["identity_lock"],
+        "require_identity_lock": True,
+        "aspect_ratio": "16:9",
+        "duration": str(section["end_seconds"] - section["start_seconds"]),
+        "output_path": f"projects/{project_id}/assets/video/dialogue_{section['id']}.mp4",
+    })
+```
+
+**关键规则：**
+- `generate_audio` **必须为 True**——Seedance 同时生成视频和对话音频，口型同步到 `Character says: "..."` 中的文本
+- `dialogue.line` 每行不超过 6 个词，超过会导致口型漂移
+- **不生成 TTS**——该场景的 `asset_manifest` 中 `audio` 类型资产为空，`video` 资产标记 `has_native_audio: true`
+- 视频片段时长约等于脚本章节的 `end_seconds - start_seconds`
+- 角色参考图通过 `CharacterRegistry.build_reference_config(require_cos_urls=True)` 获取，该函数无 COS URL 时会抛错
+
 ### 步骤 4：生成视觉资产
 
 按工具分组处理资产任务以提高效率：
+
+> **⚠️ 视频生成（video_selector）硬性前置校验：**
+> 在调用 `video_selector` 之前，必须调用本文档上方的 `validate_reference_urls()` 对所有 `reference_image_urls` 做校验。
+> 任何本地路径（`C:\...`、`/home/...`、`./...`、`projects/...`）都会触发 `ValueError` 并阻止调用。
+> 这是硬性门禁，禁止绕过。
 
 **图像（`image_selector`）：**
 1. 从场景的实际目的构建提示：

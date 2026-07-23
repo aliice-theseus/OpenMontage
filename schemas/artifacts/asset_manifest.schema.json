@@ -28,6 +28,11 @@
           "duration_seconds": { "type": "number", "minimum": 0 },
           "resolution": { "type": "string" },
           "format": { "type": "string" },
+          "has_native_audio": {
+            "type": "boolean",
+            "default": false,
+            "description": "视频片段是否已包含原生音频（如 Seedance 生成的对话），合成时不应叠加 TTS"
+          },
           "quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
           "subtype": { "type": "string", "description": "Sub-classification (e.g. 'background', 'stock', 'generated')" },
           "generation_summary": { "type": "string", "description": "Brief summary of how the asset was generated or sourced" },

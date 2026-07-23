@@ -30,18 +30,27 @@ from typing import Any, Optional
 class CharacterIdentity:
     """角色身份锁定记录。
 
-    包含角色的四视图种子、提示词和参考图路径，
+    包含角色的四视图种子、提示词、本地路径和 COS 公开 URL，
     供后续视频或同一视频的不同阶段复用。
+    COS URL 优先用于 Seedance 等云端视频生成工具的 reference_image_url。
     """
     character_id: str
     display_name: str
-    seed_image_path: str          # 最清晰的角色正面照路径
+    seed_image_path: str          # 最清晰的角色正面照本地路径
     image_path_front: str
     image_path_side: str
     image_path_back: str
+
     prompt: str                   # 生成四视图使用的完整提示词
     identity_phrases: list[str]   # 身份锁定短语列表
     source_tool: str
+
+    # COS 公开访问 URL（SDK/外部工具引用时优先使用）
+    seed_image_url: str = ""
+    image_url_front: str = ""
+    image_url_side: str = ""
+    image_url_back: str = ""
+
     seed: Optional[int] = None
     description: str = ""
     visual_style: str = ""
@@ -149,6 +158,11 @@ class CharacterRegistry:
                 prompt=char.get("prompt", ""),
                 identity_phrases=identity_lock.get("identity_phrases", []),
                 source_tool=char.get("source_tool", ""),
+                # COS 公开访问 URL
+                seed_image_url=identity_lock.get("seed_image_url", ""),
+                image_url_front=char.get("image_url_front", ""),
+                image_url_side=char.get("image_url_side", ""),
+                image_url_back=char.get("image_url_back", ""),
                 seed=char.get("seed"),
                 description=char.get("description", ""),
                 visual_style=char.get("style", ""),
@@ -165,15 +179,25 @@ class CharacterRegistry:
     def build_reference_config(
         self,
         character_ids: Optional[list[str]] = None,
+        *,
+        require_cos_urls: bool = True,
+        reference_mode: str = "four_view",
     ) -> dict[str, Any]:
         """构建视频生成工具（如 Seedance）的 reference 配置。
 
         Args:
             character_ids: 需要引用的角色 ID 列表。为 None 时使用所有已注册角色。
+            require_cos_urls: 为 True 时，如果角色没有 COS URL 则抛出 ValueError。
+                视频生成阶段（assets）必须传 True，严禁使用本地路径作为 reference。
+            reference_mode: 参考图模式。
+                - ``"four_view"``（默认）：仅返回四视图组合图（seed_image_url），
+                  Seedance 等视频生成工具应使用此模式。组合图包含正面/侧面/背面/半身，
+                  比单张正面照提供更完整的角色定义。
+                - ``"all"``：返回组合图 + 各视图独立图，仅用于其他需要分视图的场景。
 
         Returns:
             可直接传入 ``video_selector`` 或 ``seedance_video`` 的 ``reference_image_urls``
-            和 ``identity_lock`` 参数字段。
+            和 ``identity_lock`` 参数字段。所有 URL 均为 COS 公开 URL。
         """
         identities = (
             [self._identities[cid] for cid in character_ids if cid in self._identities]
@@ -185,11 +209,41 @@ class CharacterRegistry:
         all_phrases: list[str] = []
 
         for identity in identities:
-            if identity.seed_image_path:
-                reference_image_urls.append(identity.seed_image_path)
-            # 也加入四视图中的正面照
-            if identity.image_path_front and identity.image_path_front != identity.seed_image_path:
-                reference_image_urls.append(identity.image_path_front)
+            # **强制使用 COS URL** — 视频生成阶段需要公网可访问的 URL
+            if require_cos_urls:
+                if not identity.seed_image_url:
+                    raise ValueError(
+                        f"角色 '{identity.character_id}' 缺少 seed_image_url（COS 公开 URL）。"
+                        f"角色设计阶段必须将组合图上传到 COS 并填写 seed_image_url 字段。"
+                        f"本地路径 '{identity.seed_image_path}' 不允许作为视频生成的 reference。"
+                    )
+                seed_url = identity.seed_image_url
+            else:
+                seed_url = identity.seed_image_url or identity.seed_image_path
+
+            if seed_url:
+                reference_image_urls.append(seed_url)
+
+            # four_view 模式：只传四视图组合图，不传单张正脸
+            if reference_mode == "four_view":
+                pass  # 只有组合图，不再添加其他视图
+            elif reference_mode == "all":
+                # 四视图正面照（同样要求 COS URL）
+                if require_cos_urls:
+                    if not identity.image_url_front:
+                        raise ValueError(
+                            f"角色 '{identity.character_id}' 缺少 image_url_front（COS 公开 URL）。"
+                            f"角色设计阶段必须将正面图上传到 COS。"
+                        )
+                    front_url = identity.image_url_front
+                else:
+                    front_url = identity.image_url_front or identity.image_path_front
+
+                if front_url and front_url != seed_url:
+                    reference_image_urls.append(front_url)
+            else:
+                raise ValueError(f"未知的 reference_mode: {reference_mode!r}，可选: four_view, all")
+
             all_phrases.extend(identity.identity_phrases)
 
         return {

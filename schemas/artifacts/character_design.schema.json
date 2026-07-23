@@ -30,9 +30,12 @@
           "role": { "type": "string", "description": "角色身份（protagonist/supporting/extra）" },
           "description": { "type": "string", "description": "角色外观详细描述" },
 
-          "image_path_front": { "type": "string", "description": "正面视图图像路径" },
-          "image_path_side": { "type": "string", "description": "侧面视图图像路径" },
-          "image_path_back": { "type": "string", "description": "背面视图图像路径" },
+          "image_path_front": { "type": "string", "description": "正面视图图像本地路径" },
+          "image_path_side": { "type": "string", "description": "侧面视图图像本地路径" },
+          "image_path_back": { "type": "string", "description": "背面视图图像本地路径" },
+          "image_url_front": { "type": "string", "description": "正面视图 COS 公开访问 URL" },
+          "image_url_side": { "type": "string", "description": "侧面视图 COS 公开访问 URL" },
+          "image_url_back": { "type": "string", "description": "背面视图 COS 公开访问 URL" },
 
           "prompt": { "type": "string", "description": "生成四视图使用的提示词" },
           "source_tool": { "type": "string", "description": "生成工具名称" },
@@ -68,7 +71,11 @@
         },
         "seed_image_path": {
           "type": "string",
-          "description": "最清晰的角色正面照路径，用作 Seedance 等工具的 reference_image"
+          "description": "最清晰的角色正面照本地路径，用作 Seedance 等工具的 reference_image"
+        },
+        "seed_image_url": {
+          "type": "string",
+          "description": "最清晰的角色正面照 COS 公开访问 URL，用作 Seedance 等工具的 reference_image_url"
         },
         "identity_phrases": {
           "type": "array",

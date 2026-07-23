@@ -16,18 +16,32 @@
 
 ## 流程
 
-### 步骤 1：将资产映射到时间线
+### 步骤 1a：识别音频类型 — 旁白 vs 对话原生音频
+
+**关键区分：** 脚本中有两种音频来源：
+
+| 类型 | section_type | 音频来源 | 说明 |
+|------|-------------|----------|------|
+| **旁白（TTS）** | `"narration"` | `tts_selector` 生成的独立音频文件 | 传统画外音，assets 阶段生成 |
+| **对话（原生）** | `"dialogue"` | Seedance 视频片段内嵌的音频 | 角色对话附带口型同步，无独立音频文件 |
+
+遍历脚本的 `sections`，按 `section_type` 分类。对话章节对应的视频片段在 `asset_manifest` 中标记为 `has_native_audio: true`，这些片段在合成时不应叠加 TTS。
+
+### 步骤 1b：将资产映射到时间线
 
 对于场景计划中的每个场景：
 1. 从资产清单中找到匹配的资产（按 `scene_id`）
-2. 找到匹配的旁白音频（按脚本章节）
+2. 检查脚本章节的 `section_type`：
+   - `"narration"` → 找到匹配的旁白音频（按脚本章节）
+   - `"dialogue"` → 无旁白音频，视频片段自带对话音频
 3. 注意场景的时序（`start_seconds`、`end_seconds`）
 
-构建时间线映射：
+构建时间线映射（使用 `audio_source` 标注音频类型）：
 ```
-0s-10s：场景-1（talking_head）| 旁白-s1 | img-intro.png
-10s-18s：场景-2（diagram）| 旁白-s2 | diagram-flow.svg
-18s-22s：场景-3（text_card）| 旁白-s3 | [文字叠加]
+0s-10s：场景-1（talking_head） | 旁白(TTS) s1    | img-intro.png
+10s-18s：场景-2（diagram）      | 旁白(TTS) s2    | diagram-flow.svg
+18s-25s：场景-3（dialogue）     | 对话(原生) s3   | seedance_dialogue_s3.mp4 [has_native_audio]
+25s-35s：场景-4（animation）    | 旁白(TTS) s4    | img-animation.png
 ...
 ```
 
@@ -83,13 +97,17 @@
 
 ### 步骤 4：配置音频层
 
+**规则：对话片段不叠加 TTS。** 如果视频片段标记为 `has_native_audio: true`（即对话章节），其音频已在 Seedance 生成时嵌入。在编辑时间线中，该片段的时段不安排任何旁白音频。
+
 ```json
 {
   "audio": {
     "narration": {
       "segments": [
-        { "asset_id": "narration-s1", "start_seconds": 0 },
-        { "asset_id": "narration-s2", "start_seconds": 10 }
+        { "asset_id": "narration-s1", "start_seconds": 0, "end_seconds": 10 },
+        { "asset_id": "narration-s2", "start_seconds": 10, "end_seconds": 18 },
+        // 18-25s 是 dialogue 章节，无旁白
+        { "asset_id": "narration-s4", "start_seconds": 25, "end_seconds": 35 }
       ]
     },
     "music": {
@@ -110,7 +128,11 @@
 }
 ```
 
+**旁白时段**：narration 章节使用 TTS 生成的独立音频。dialogue 章节对应的时段在 `narration.segments` 中**跳过**。
+
 **音乐闪避**：旁白播放时音乐音量降低，停顿期间升高。使用剧本的 `audio.ducking_threshold_db`。
+- 对话片段播放时（18-25s）音乐应保持低位或静音，避免与 Seedance 原生对话音频冲突
+- 建议对话时音乐闪避更积极：`reduction_db: -12`，`threshold_db: -6`
 
 ### 步骤 5：应用节奏规则
 
@@ -136,8 +158,10 @@
 
 **音频同步：**
 - [ ] 旁白段落有序且不重叠
+- [ ] dialogue 章节对应的时段无旁白音频
+- [ ] 对话视频片段（`has_native_audio: true`）的音频未与 TTS 混叠
 - [ ] 旁白计时与对应的视觉剪辑对齐
-- [ ] 音乐闪避已配置
+- [ ] 音乐闪避已配置，对话期间闪避更积极
 
 **字幕：**
 - [ ] 字幕已启用

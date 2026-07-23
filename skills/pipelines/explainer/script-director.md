@@ -157,6 +157,49 @@ LANDING（最后 5 秒） → 核心信息快速回顾 + CTA。
 
 **密度规则**：每 8-10 秒至少一个增强提示。60 秒视频应有至少 6-8 个提示。如果视觉不变化，观众会失去兴趣。
 
+#### 角色对话章节（section_type: "dialogue"）
+
+当剧本需要角色说话时，将该章节的 `section_type` 设为 `"dialogue"`。
+**对话章节不走 TTS**，而是通过 Seedance 原生生成——对话语音直接嵌入视频片段中，附带口型同步。
+
+对话章节的 `text` 字段写旁白上下文（场景叙述），`dialogue.line` 写角色实际说的话：
+
+```json
+{
+  "id": "s3",
+  "label": "主角出场",
+  "section_type": "dialogue",
+  "text": "Aang stands on the cliff edge, staff raised, wind in his cloak.",
+  "start_seconds": 15,
+  "end_seconds": 22,
+  "dialogue": {
+    "character_id": "aang",
+    "line": "I won't run anymore.",
+    "emotion": "坚定"
+  },
+  "enhancement_cues": [
+    {
+      "type": "animation",
+      "description": "悬崖边，风吹斗篷，角色背影",
+      "timestamp_seconds": 15
+    }
+  ]
+}
+```
+
+**写作规则：**
+- `dialogue.line` 是 Seedance prompt 中 `Character says: "..."` 的引用文本，**每行不超过 6 个词**，较长台词在快速镜头中口型同步会漂移
+- 多角色对话时，每个 `dialogue` 章节只写一个角色的台词，**不同角色分行写在不同章节**
+- `text` 提供场景上下文，`section_type` 告诉 assets 阶段不走 TTS
+- `enhancement_cues` 指导视频生成时的视觉内容
+- 对话章节不计入 TTS 字数预算，但要为视频时长预留时间（对话比旁白慢，每秒约 2-3 词）
+
+**Seedance 对话提示格式**（assets 阶段会使用）：
+```
+Aang stands on the cliff edge, staff raised, wind in his cloak.
+Aang says: "I won't run anymore."
+```
+
 #### 发音指南
 
 对于技术术语、缩略词和非英语单词：
