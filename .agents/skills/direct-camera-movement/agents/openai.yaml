@@ -1,0 +1,4 @@
+interface:
+  display_name: "运镜导演"
+  short_description: "按镜头叙事任务规划景别、机位、速度、相机运动及稳定性约束"
+  default_prompt: "Use $direct-camera-movement to plan purposeful camera movement for every shot."

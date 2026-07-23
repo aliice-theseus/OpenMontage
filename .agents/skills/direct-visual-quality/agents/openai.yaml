@@ -1,0 +1,4 @@
+interface:
+  display_name: "画面质感导演"
+  short_description: "系统控制视频色调、光影、构图、留白与材质，建立统一电影质感"
+  default_prompt: "Use $direct-visual-quality to establish a coherent cinematic visual treatment for this video."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "动作场面导演"
+  short_description: "基于动作因果链设计有重量、可剪辑并符合内容安全规范的电影化动作场面"
+  default_prompt: "Use $direct-action-scenes to design a cinematic action sequence with clear cause, impact, and reaction."
