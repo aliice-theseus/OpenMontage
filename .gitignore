@@ -91,3 +91,4 @@ remotion-composer/public/demo-props/caption-burn-*
 venv/
 .venv/
 .omo/
+/.omo/
