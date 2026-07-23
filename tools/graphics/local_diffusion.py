@@ -100,6 +100,127 @@ def _normalise_loras(inputs: dict[str, Any]) -> list[dict[str, Any]]:
     return loras
 
 
+def _try_flux_server(inputs: dict[str, Any]) -> tuple[bool, Any]:
+    """检测 flux_server Unix socket，可用时转发请求。
+
+    Returns:
+        (True, ToolResult) — 服务已处理
+        (False, None)     — 服务不可用，回退到本地加载
+    """
+    import socket, struct, json, base64, io
+    sock_path = f"/tmp/flux_server_{os.environ.get('FLUX_SERVER_PORT', '19530')}.sock"
+    if not os.path.exists(sock_path):
+        return False, None
+    prompt = inputs.get("prompt", "")
+    if not prompt:
+        return False, None
+    try:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(120)
+        sock.connect(sock_path)
+        import torch as _torch
+        _torch.cuda.empty_cache()
+        req = json.dumps({
+            "prompt": prompt,
+            "params": {
+                "width": inputs.get("width", 1024),
+                "height": inputs.get("height", 1024),
+                "steps": inputs.get("num_inference_steps", 4),
+                "guidance": inputs.get("guidance_scale", 0.0),
+                "seed": inputs.get("seed"),
+            },
+        }).encode("utf-8")
+        sock.sendall(struct.pack("!I", len(req)))
+        sock.sendall(req)
+        raw_len = sock.recv(4)
+        resp_len = struct.unpack("!I", raw_len)[0]
+        raw_resp = b""
+        while len(raw_resp) < resp_len:
+            raw_resp += sock.recv(resp_len - len(raw_resp))
+        resp = json.loads(raw_resp.decode("utf-8"))
+        if not resp["success"]:
+            sock.close()
+            return True, ToolResult(success=False, error=resp.get("error", "flux_server error"))
+        raw_len = sock.recv(4)
+        img_len = struct.unpack("!I", raw_len)[0]
+        img_bytes = b""
+        while len(img_bytes) < img_len:
+            img_bytes += sock.recv(img_len - len(img_bytes))
+        sock.close()
+        output_path = inputs.get("output_path", "output.png")
+        Path(output_path).write_bytes(img_bytes)
+        return True, ToolResult(
+            success=True,
+            data={"output": output_path, "provider": "flux_server"},
+            artifacts=[output_path],
+        )
+    except (FileNotFoundError, ConnectionRefusedError, socket.timeout) as e:
+        return False, None
+    except Exception as e:
+        return True, ToolResult(success=False, error=f"flux_server error: {e}")
+
+
+# ── FLUX.2 多卡 dispatch ──────────────────────────────────
+
+def _dispatch_transformer(transformer: Any, num_gpus: int) -> None:
+    from accelerate import dispatch_model
+    dm = {}
+    dm.update({k: 0 for k in [
+        'time_guidance_embed', 'x_embedder', 'norm_out', 'proj_out',
+    ]})
+    dm.update({k: min(1, num_gpus - 1) for k in [
+        'double_stream_modulation_img', 'double_stream_modulation_txt',
+        'single_stream_modulation', 'context_embedder',
+    ]})
+    # double blocks — use actual list length
+    num_double = len(transformer.transformer_blocks) if hasattr(transformer, 'transformer_blocks') else 0
+    if num_double > 0:
+        per_gpu = [num_double // num_gpus + (1 if i < num_double % num_gpus else 0) for i in range(num_gpus)]
+        idx = 0
+        for gpu_id, cnt in enumerate(per_gpu):
+            for _ in range(cnt):
+                dm[f'transformer_blocks.{idx}'] = gpu_id
+                idx += 1
+    # single blocks
+    num_single = len(transformer.single_transformer_blocks) if hasattr(transformer, 'single_transformer_blocks') else 0
+    if num_single > 0:
+        for i in range(num_single):
+            dm[f'single_transformer_blocks.{i}'] = (i * num_gpus) // num_single
+    if not dm:
+        return  # no blocks found, fall through to CPU offload
+    dispatch_model(transformer, device_map=dm)
+
+
+def _dispatch_text_encoder(text_encoder: Any, num_gpus: int) -> None:
+    from accelerate import dispatch_model
+    dm = {}
+    # 头部 → GPU 0
+    for k in ['model.vision_tower', 'model.multi_modal_projector']:
+        if hasattr(text_encoder, k.split('.')[0]):
+            dm[k] = 0
+    te = getattr(text_encoder, 'model', None)
+    lm = getattr(te, 'language_model', None) if te else None
+    if lm is not None:
+        dm['model.language_model.embed_tokens'] = min(1, num_gpus - 1)
+        num_layers = len(lm.layers) if hasattr(lm, 'layers') else 0
+        if num_layers > 0:
+            base = num_layers // num_gpus
+            rem = num_layers % num_gpus
+            idx = 0
+            for gpu_id in range(num_gpus):
+                cnt = base + (1 if gpu_id < rem else 0)
+                for _ in range(cnt):
+                    dm[f'model.language_model.layers.{idx}'] = gpu_id
+                    idx += 1
+        dm['model.language_model.norm'] = num_gpus - 1
+        if hasattr(lm, 'rotary_emb'):
+            dm['model.language_model.rotary_emb'] = num_gpus - 1
+        dm['lm_head'] = num_gpus - 1
+    if not dm:
+        return
+    dispatch_model(text_encoder, device_map=dm)
+
+
 def _load_loras(
     pipe: Any,
     loras: list[dict[str, Any]],
@@ -229,6 +350,11 @@ class LocalDiffusion(BaseTool):
                     "when omitted, enable_model_cpu_offload preserves the legacy model/none behavior."
                 ),
             },
+            "num_gpus": {
+                "type": "integer",
+                "default": 6,
+                "description": "Multi-GPU dispatch. 0=auto (detect all GPUs), 1=单卡offload, 2+=多卡dispatch_model分发. 仅 FLUX.2 有效.",
+            },
             "reuse_pipeline": {
                 "type": "boolean",
                 "default": False,
@@ -238,6 +364,15 @@ class LocalDiffusion(BaseTool):
                 "type": "boolean",
                 "default": False,
                 "description": "Release any cached pipeline after this generation finishes.",
+            },
+            "allow_server_routing": {
+                "type": "boolean",
+                "default": True,
+                "description": (
+                    "Auto-detect flux_server Unix socket. "
+                    "When available, route requests through the persistent server "
+                    "to skip model loading (0→15s instead of 7min)."
+                ),
             },
             "allow_model_download": {
                 "type": "boolean",
@@ -362,6 +497,13 @@ class LocalDiffusion(BaseTool):
             else:
                 dtype = torch.float32
 
+            # 检测 flux_server 常驻服务，优先走 socket 避免模型重载
+            if is_flux2 and device == "cuda" and inputs.get("allow_server_routing", True):
+                server_ok, server_result = _try_flux_server(inputs)
+                if server_ok:
+                    return server_result
+                # 服务不可用则回退到本地加载
+
             loras = _normalise_loras(inputs)
             if is_flux2:
                 pipeline_class = getattr(diffusers, "Flux2Pipeline", None)
@@ -443,17 +585,28 @@ class LocalDiffusion(BaseTool):
                         )
                     raise
 
-                offload_mode = inputs.get("offload_mode")
-                if offload_mode is None:
-                    offload_mode = (
-                        "model" if inputs.get("enable_model_cpu_offload", True) else "none"
-                    )
-                if device == "cuda" and offload_mode == "sequential":
-                    pipe.enable_sequential_cpu_offload()
-                elif device == "cuda" and offload_mode == "model":
-                    pipe.enable_model_cpu_offload()
+                num_gpus = inputs.get("num_gpus", 0)
+                if num_gpus == 0:
+                    num_gpus = torch.cuda.device_count()
+                use_multi_gpu = num_gpus > 1 and is_flux2 and device == "cuda"
+
+                if use_multi_gpu:
+                    from accelerate import dispatch_model
+                    _dispatch_transformer(pipe.transformer, num_gpus)
+                    _dispatch_text_encoder(pipe.text_encoder, num_gpus)
+                    pipe.vae = pipe.vae.to("cuda:0")
                 else:
-                    pipe = pipe.to(device)
+                    offload_mode = inputs.get("offload_mode")
+                    if offload_mode is None:
+                        offload_mode = (
+                            "model" if inputs.get("enable_model_cpu_offload", True) else "none"
+                        )
+                    if device == "cuda" and offload_mode == "sequential":
+                        pipe.enable_sequential_cpu_offload()
+                    elif device == "cuda" and offload_mode == "model":
+                        pipe.enable_model_cpu_offload()
+                    else:
+                        pipe = pipe.to(device)
                 if inputs.get("reuse_pipeline", False):
                     cache[cache_key] = pipe
 

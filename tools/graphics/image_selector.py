@@ -277,6 +277,7 @@ class ImageSelector(BaseTool):
                 "guidance_scale",
                 "enable_model_cpu_offload",
                 "offload_mode",
+                "num_gpus",
                 "reuse_pipeline",
                 "release_pipeline_after",
                 "allow_model_download",

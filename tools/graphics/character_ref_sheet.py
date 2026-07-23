@@ -130,6 +130,7 @@ class CharacterRefSheet(BaseTool):
             "seed": {"type": "integer", "default": 42},
             "num_inference_steps": {"type": "integer", "default": 20},
             "guidance_scale": {"type": "number", "default": 3.5},
+            "num_gpus": {"type": "integer", "default": 6, "description": "Multi-GPU dispatch. 默认6卡."},
             "allow_model_download": {"type": "boolean", "default": False},
             "operation": {
                 "type": "string",
@@ -264,6 +265,7 @@ class CharacterRefSheet(BaseTool):
                     "seed": seed,
                     "num_inference_steps": inputs.get("num_inference_steps", 20),
                     "guidance_scale": inputs.get("guidance_scale", 3.5),
+                    "num_gpus": inputs.get("num_gpus", 6),
                     "offload_mode": "sequential",
                     "reuse_pipeline": True,
                     "allow_model_download": inputs.get("allow_model_download", False),

@@ -18,8 +18,16 @@
 | 场景构图未确认 | 生成的视频与用户预期不符 | 关键帧提前对齐预期 |
 | 无人工确认环节 | 返工成本高 | 审批关卡一次性确认 |
 
-**Seedance 2.0 参考转视频能力：**
-- 最多接受 9 张参考图片
+**Seedance 2.0 参考转视频能力（火山引擎 Ark API）：**
+- ⚠️ **提示词必须用中文**，仅专业影视术语（wide shot, close-up, dolly in, the same character 等）可用英文
+- 最多接受 **9 张参考图片（含首帧图）** — `image_url`/`image_path`（首帧）和
+  `reference_image_urls`/`reference_image_paths`（多参考图）统一计数，**合计不得超过 9**
+- 所有参考图自动缩放到 **1280×720 以内**（等比例，通过 `seedance_video` 内置逻辑）
+- **Ark API role 区分**：
+  - `image_url`/`image_path` → `role: "first_frame"`（首帧锁定，视频续接锚点）
+  - `reference_image_urls`/`reference_image_paths` → `role: "reference_image"`（多模态视觉参考）
+- 尾帧链式引用时，前一段尾帧通过 `image_path` 传入（role: first_frame），
+  角色四视图/关键帧通过 `reference_image_paths` 传入（role: reference_image）
 - `[identity_lock]` + `the same character` 语法锁定角色身份
 - 四视图作为参考图可显著减少面部漂移
 - 关键帧可作为场景构图参考
@@ -197,6 +205,176 @@ write_checkpoint(
     ],
 }
 ```
+
+## 尾帧链式引用（跨片段视觉连续性）
+
+当视频由多个 Seedance 片段按顺序拼接时，将前一段的**尾帧**作为
+后一段的**首帧参考图**，可显著提升跨片段的视觉连续性（角色外观、
+场景光照、色彩基调的一致性）。
+
+### 工作流
+
+```
+片段 N 生成完成
+  ↓
+frame_sampler.execute({strategy: "last_frame", input_path: clip_N.mp4})
+  → 提取 last_frame.png
+  ↓
+片段 N+1 以 last_frame.png 作为首帧参考：
+  video_selector.execute({
+    "image_path": "last_frame.png",        # ← 前一段尾帧
+    "reference_image_paths": [...],        # ← 其他参考图（四视图/关键帧等）
+    ...                                     # 注意：image_path + reference_image_paths
+  })                                        # 总计不超过 9 张
+  ↓
+重复直至所有片段生成完毕
+```
+
+### 具体实现
+
+在 `assets` 阶段按顺序生成视频片段时，对每个后续片段：
+
+```python
+from tools.analysis.frame_sampler import FrameSampler
+
+prev_clip_path = "projects/.../clip_01.mp4"
+next_clip_inputs = {
+    "prompt": "片段 2 的提示词",
+    "operation": "reference_to_video",
+    "reference_image_paths": [
+        # 角色/场景参考图
+        key_visual["character_visuals"][0]["image_path_front"],
+    ],
+}
+
+# 提取前一段的尾帧
+sampler = FrameSampler()
+last_frame_result = sampler.execute({
+    "input_path": prev_clip_path,
+    "strategy": "last_frame",
+    "output_dir": "projects/.../frames/",
+    "last_frame_offset_seconds": 0.5,
+})
+if last_frame_result.success and last_frame_result.data["frames"]:
+    last_frame = last_frame_result.data["frames"][0]["path"]
+    # 设为下一段的首帧参考
+    next_clip_inputs["image_path"] = last_frame
+
+# 确保总参考图数量 ≤ 9
+assert len(next_clip_inputs.get("reference_image_paths", [])) + \
+       (1 if next_clip_inputs.get("image_path") else 0) <= 9
+
+# 生成下一段
+result = video_selector.execute(next_clip_inputs)
+```
+
+### 注意事项
+
+- **首帧图也计入 9 张限制**：`image_path`（尾帧）+ `reference_image_paths`（其他参考图）
+  合计不得超过 9 张
+- **偏移量设置**：`last_frame_offset_seconds=0.5` 从末尾前移 0.5 秒提取，
+  避免视频末端的黑帧或淡出帧；若视频有较长的尾部转场，可增大偏移量
+- **首个片段无尾帧**：第一段视频片段使用 text_to_video 或
+   以关键帧/四视图作为首帧参考，从第二个片段开始链式引用
+
+## 多角色四视图的区分与引用
+
+当视频包含多个角色时，需要让 Seedance 正确区分每个角色的外观参考。
+Ark API 通过 **content 数组中的图片序号** + **提示词中的显式引用**
+来实现多角色绑定。
+
+### Ark API 图片引用语法
+
+在 prompt 中使用 `@ImageN` 引用 content 数组中第 N 张参考图（序号从 1 开始）：
+
+```
+@Image1 → content 数组中第 1 张参考图
+@Image2 → content 数组中第 2 张参考图
+...
+```
+
+### 方案一：独立视图（推荐，每个角色 4 张）
+
+每个角色的四视图作为独立图片上传，在 prompt 中用 `@Image` 语法绑定角色身份：
+
+```python
+inputs = {
+    "prompt": (
+        # === 角色 A 身份锁定 ===
+        "@Image1 @Image2 @Image3 @Image4 是角色「林月」，"
+        "the same character — 黑色长发, 红色劲装, 腰佩长剑, "
+        "consistent across all shots, no drift, no deformation.\n"
+        # === 角色 B 身份锁定 ===
+        "@Image5 @Image6 @Image7 @Image8 是角色「云澈」，"
+        "the same character — 银白短发, 蓝色长袍, 背负古琴, "
+        "consistent across all shots, no drift, no deformation.\n"
+        # === 镜头描述 ===
+        "Shot 1: 林月与云澈在竹林中对峙，风吹竹叶..."
+    ),
+    "reference_image_paths": [
+        # 角色 A 四视图（@Image1-@Image4）
+        "char_yue_front.png",
+        "char_yue_side.png",
+        "char_yue_back.png",
+        "char_yue_halfbody.png",
+        # 角色 B 四视图（@Image5-@Image8）
+        "char_yun_front.png",
+        "char_yun_side.png",
+        "char_yun_back.png",
+        "char_yun_halfbody.png",
+    ],
+}
+# 参考图总计：8 张，≤ 9 ✓
+```
+
+**优点**：每张视图分辨率高，模型能看到完整细节  
+**注意**：两个角色共占用 8 个参考位，剩余 1 个可用于关键帧
+
+### 方案二：合并四视图（省位，每个角色 1 张）
+
+将每个角色的正面/侧面/背面/半身合并为一张组合图，节省参考位：
+
+```python
+inputs = {
+    "prompt": (
+        "@Image1 是角色「林月」的完整外观 — 黑色长发, 红色劲装, 腰佩长剑, "
+        "the same character, consistent across all shots, no drift.\n"
+        "@Image2 是角色「云澈」的完整外观 — 银白短发, 蓝色长袍, 背负古琴, "
+        "the same character, consistent across all shots, no drift.\n"
+        "Shot 1: 林月与云澈在竹林中对峙..."
+    ),
+    "reference_image_paths": [
+        "char_yue_combined.jpg",   # ← 四合一组合图（@Image1）
+        "char_yun_combined.jpg",   # ← 四合一组合图（@Image2）
+        "scene_keyframe.jpg",      # ← 关键帧（@Image3）
+    ],
+}
+# 参考图总计：3 张，余量充足
+```
+
+**优点**：节省参考位，适合 3+ 角色场景  
+**注意事项**：
+- 组合图内各视图分辨率较低，建议每格不低于 300×300 px
+- 在 `key_visual` 阶段就生成组合图，而非在 assets 阶段临时拼接
+- 组合图需保持白底，四格布局清晰可辨
+
+### prompt 中的角色身份锚定
+
+无论哪种方案，都必须逐角色使用身份锁定语言：
+
+```
+@ImageN 是角色「角色名」— [关键外貌特征], 
+the same character, consistent across all shots and scenes,
+maintain exact appearance from reference image,
+no deformation, no drift, no face morph.
+Do not alter clothing category or primary color.
+```
+
+**关键原则：**
+- 每个角色在 prompt 中都要有一段独立的身份锚定语句
+- 描述角色的镜头中，持续使用角色名引用（"林月"而非"她"）
+- 如果多个角色共享同一场景，确保每个角色名称在 prompt 中明确出现
+- 引用图片的 `@ImageN` 语句放在 prompt 靠前位置，在所有镜头描述之前
 
 ## 验证清单
 

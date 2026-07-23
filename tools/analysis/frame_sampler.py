@@ -45,6 +45,7 @@ class FrameSampler(BaseTool):
         "extract_frames_count",
         "extract_frames_timestamps",
         "extract_frames_scene_guided",
+        "extract_frames_last_frame",
     ]
 
     input_schema = {
@@ -54,7 +55,7 @@ class FrameSampler(BaseTool):
             "input_path": {"type": "string"},
             "strategy": {
                 "type": "string",
-                "enum": ["interval", "count", "timestamps", "scene_guided"],
+                "enum": ["interval", "count", "timestamps", "scene_guided", "last_frame"],
             },
             "interval_seconds": {
                 "type": "number",
@@ -91,6 +92,11 @@ class FrameSampler(BaseTool):
             "output_dir": {"type": "string"},
             "format": {"type": "string", "enum": ["png", "jpg"], "default": "jpg"},
             "quality": {"type": "integer", "minimum": 1, "maximum": 31, "default": 2},
+            "last_frame_offset_seconds": {
+                "type": "number",
+                "default": 0.5,
+                "description": "从视频末尾往前偏移的秒数（默认 0.5，避免黑帧）",
+            },
         },
     }
 
@@ -119,6 +125,8 @@ class FrameSampler(BaseTool):
                 frames = self._extract_count(input_path, output_dir, fmt, quality, inputs)
             elif strategy == "timestamps":
                 frames = self._extract_timestamps(input_path, output_dir, fmt, quality, inputs)
+            elif strategy == "last_frame":
+                frames = self._extract_last_frame(input_path, output_dir, fmt, quality, inputs)
             elif strategy == "scene_guided":
                 frames = self._extract_scene_guided(input_path, output_dir, fmt, quality, inputs)
             else:
@@ -275,6 +283,71 @@ class FrameSampler(BaseTool):
         return self._extract_timestamps(
             input_path, output_dir, fmt, quality, {"timestamps": timestamps}
         )
+
+    def _extract_last_frame(
+        self,
+        input_path: Path,
+        output_dir: Path,
+        fmt: str,
+        quality: int,
+        inputs: dict,
+    ) -> list[dict]:
+        """Extract the last frame of a video.
+
+        用于分段视频间的视觉连续性——将前一段的尾帧作为
+        下一段的首帧参考图。使用 FFmpeg 的 -sseof 选项
+        从视频末尾指定偏移位置抽取一帧。
+        """
+        offset = inputs.get("last_frame_offset_seconds", 0.5)
+        output_file = output_dir / f"last_frame.{fmt}"
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-sseof", f"-{offset}",
+            "-i", str(input_path),
+            "-frames:v", "1",
+        ]
+        if fmt == "jpg":
+            cmd.extend(["-qscale:v", str(quality)])
+        cmd.append(str(output_file))
+
+        self.run_command(cmd)
+
+        # 获取视频时长用于元数据
+        duration = self._get_duration(input_path)
+        last_ts = round(max(0.0, duration - offset), 3)
+
+        if output_file.exists():
+            return [{
+                "path": str(output_file),
+                "timestamp_seconds": last_ts,
+                "label": "last_frame",
+                "index": 0,
+            }]
+
+        # 降级：尝试从末尾更远的位置提取
+        fallback_file = output_dir / f"last_frame_fallback.{fmt}"
+        fallback_cmd = [
+            "ffmpeg", "-y",
+            "-sseof", "-2",
+            "-i", str(input_path),
+            "-frames:v", "1",
+        ]
+        if fmt == "jpg":
+            fallback_cmd.extend(["-qscale:v", str(quality)])
+        fallback_cmd.append(str(fallback_file))
+
+        self.run_command(fallback_cmd)
+
+        if fallback_file.exists():
+            return [{
+                "path": str(fallback_file),
+                "timestamp_seconds": max(0.0, duration - 2.0),
+                "label": "last_frame",
+                "index": 0,
+            }]
+
+        raise RuntimeError(f"提取视频最后一帧失败: {input_path}")
 
     def _get_duration(self, input_path: Path) -> float:
         """Get video duration in seconds via ffprobe."""
