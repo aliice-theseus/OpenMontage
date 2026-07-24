@@ -53,6 +53,12 @@ SUPPLEMENTARY_ARTIFACTS = {
     "video_analysis_brief", # Reference-video grounding artifact carried alongside stages
 }
 
+# These pipelines use cloud video generation.  A character design checkpoint
+# is therefore not merely a written specification: it must carry a complete,
+# approved turnaround that can be supplied to Seedance, followed by approved
+# scene sketches for composition reference.
+REFERENCE_CONDITIONED_PIPELINES = frozenset({"animated-explainer", "cinematic"})
+
 
 def get_pipeline_stages(pipeline_type: str | None) -> list[str]:
     """Return the ordered stage list for a specific pipeline.
@@ -126,6 +132,60 @@ def _validate_artifacts_for_stage(
             ) from exc
 
 
+def _validate_reference_conditioning_gate(
+    stage: str,
+    status: str,
+    artifacts: dict[str, Any],
+    pipeline_type: str | None,
+) -> None:
+    """Require real character and scene reference artifacts before assets.
+
+    The schemas intentionally remain reusable by the local character-animation
+    pipeline, so this stronger contract is applied only to the two pipelines
+    that send the references to cloud video generation.
+    """
+    if status not in {"completed", "awaiting_human"} or pipeline_type not in REFERENCE_CONDITIONED_PIPELINES:
+        return
+
+    if stage == "character_design":
+        design = artifacts.get("character_design", {})
+        if design.get("approval", {}).get("status") != "approved":
+            raise CheckpointValidationError(
+                "character_design must be approved before a reference-conditioned video pipeline can continue"
+            )
+        for character in design.get("characters", []):
+            if character.get("role") == "extra":
+                continue
+            missing = [
+                field for field in (
+                    "image_path_front", "image_path_side", "image_path_back",
+                    "image_url_front", "image_url_side", "image_url_back",
+                )
+                if not character.get(field)
+            ]
+            if missing:
+                raise CheckpointValidationError(
+                    f"character {character.get('id', '<unknown>')!r} is missing required turnaround fields: {missing}"
+                )
+
+    if stage == "scene_sketch":
+        sketches = artifacts.get("scene_sketch", {})
+        if sketches.get("approval", {}).get("status") != "approved":
+            raise CheckpointValidationError(
+                "scene_sketch must be approved before a reference-conditioned video pipeline can continue"
+            )
+        missing_scene_urls = [
+            scene.get("scene_id", "<unknown>")
+            for scene in sketches.get("scenes", [])
+            if not scene.get("image_url")
+        ]
+        if missing_scene_urls:
+            raise CheckpointValidationError(
+                "scene_sketch scenes are missing required public image_url values: "
+                + ", ".join(missing_scene_urls)
+            )
+
+
 def validate_checkpoint(checkpoint: dict[str, Any]) -> None:
     """Validate checkpoint structure and canonical artifact payloads.
 
@@ -153,6 +213,7 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> None:
         raise CheckpointValidationError("Checkpoint artifacts must be a dictionary")
 
     _validate_artifacts_for_stage(stage, status, artifacts)
+    _validate_reference_conditioning_gate(stage, status, artifacts, pipeline_type)
 
     try:
         jsonschema.validate(instance=checkpoint, schema=_load_checkpoint_schema())

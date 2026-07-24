@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -24,8 +25,8 @@ from tools.graphics.local_diffusion import _is_flux2_model, get_flux2_model_path
 DEFAULT_CHARACTER_MODEL = get_flux2_model_path()
 _VIEW_SPECS = {
     "front": {
-        "width": 1024,
-        "height": 1536,
+        "width": 576,
+        "height": 864,
         "instruction": (
             "Create a full-body front view of this exact person, standing upright and facing "
             "the camera, with a neutral balanced stance, arms relaxed, and the complete head, "
@@ -33,8 +34,8 @@ _VIEW_SPECS = {
         ),
     },
     "side": {
-        "width": 832,
-        "height": 1248,
+        "width": 512,
+        "height": 768,
         "instruction": (
             "Using the reference image as the identity and wardrobe anchor, create the exact same "
             "person in a strict 90-degree left-facing full-body side profile, with a neutral "
@@ -42,8 +43,8 @@ _VIEW_SPECS = {
         ),
     },
     "back": {
-        "width": 832,
-        "height": 1248,
+        "width": 512,
+        "height": 768,
         "instruction": (
             "Using the reference image as the identity and wardrobe anchor, create the exact same "
             "person in a strict full-body back view, facing directly away from the camera, clearly "
@@ -51,15 +52,28 @@ _VIEW_SPECS = {
         ),
     },
     "closeup": {
-        "width": 832,
-        "height": 1248,
+        "width": 512,
+        "height": 768,
         "instruction": (
             "Using the reference image as the identity and wardrobe anchor, create a chest-up front "
-            "portrait of the exact same person, facing the camera, with the complete head and both "
-            "shoulders visible and clear facial, hair, collar, fabric, and accessory details."
+            "portrait of the exact same person, facing the camera, strictly from chest upwards, "
+            "no body below chest visible, with the complete head and both shoulders visible and "
+            "clear facial, hair, collar, fabric, and accessory details."
         ),
     },
 }
+
+
+def _configured_num_gpus() -> int:
+    """Read the FLUX.2 dispatch policy from the process/.env configuration."""
+    raw_value = os.environ.get("FLUX2_NUM_GPUS", "0")
+    try:
+        num_gpus = int(raw_value)
+    except ValueError as exc:
+        raise ValueError("FLUX2_NUM_GPUS must be a non-negative integer") from exc
+    if num_gpus < 0:
+        raise ValueError("FLUX2_NUM_GPUS must be a non-negative integer")
+    return num_gpus
 
 
 def _compose_prompt(view: str, character_core: str) -> str:
@@ -130,7 +144,6 @@ class CharacterRefSheet(BaseTool):
             "seed": {"type": "integer", "default": 42},
             "num_inference_steps": {"type": "integer", "default": 20},
             "guidance_scale": {"type": "number", "default": 3.5},
-            "num_gpus": {"type": "integer", "default": 6, "description": "Multi-GPU dispatch. 默认6卡."},
             "allow_model_download": {"type": "boolean", "default": False},
             "operation": {
                 "type": "string",
@@ -213,6 +226,10 @@ class CharacterRefSheet(BaseTool):
             return ToolResult(success=False, error="character_ref_sheet requires a FLUX.2 model")
 
         seed = inputs.get("seed", 42)
+        try:
+            configured_num_gpus = _configured_num_gpus()
+        except ValueError as exc:
+            return ToolResult(success=False, error=str(exc))
         operation = inputs.get("operation", "full")
         force_full = inputs.get("_force_full_approval", False)
         # 流程守卫：禁止绕过 front_only 审批直接全量生成
@@ -265,7 +282,9 @@ class CharacterRefSheet(BaseTool):
                     "seed": seed,
                     "num_inference_steps": inputs.get("num_inference_steps", 20),
                     "guidance_scale": inputs.get("guidance_scale", 3.5),
-                    "num_gpus": inputs.get("num_gpus", 6),
+                    # GPU dispatch is deployment policy, not creative input.
+                    # FLUX2_NUM_GPUS is loaded from .env by BaseTool.
+                    "num_gpus": configured_num_gpus,
                     "offload_mode": "sequential",
                     "reuse_pipeline": True,
                     "allow_model_download": inputs.get("allow_model_download", False),

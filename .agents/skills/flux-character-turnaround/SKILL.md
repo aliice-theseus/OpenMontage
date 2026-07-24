@@ -56,11 +56,10 @@ result = character_ref_sheet.execute({
 
 内部生成尺寸：
 
-- 正面 T2I：`1024 × 1536`
-- 侧面、背面、胸部以上参考生成：`832 × 1248`
+- 正面身份锚点：`576 × 864`；侧面、背面、胸部以上参考生成：`512 × 768`
 - 交付组合图：`1280 × 720`
 
-工具对四次生成复用同一个 `Flux2Pipeline`，采用 `enable_sequential_cpu_offload()`，结束后清空缓存。侧面、背面和胸部以上特写均使用正面图作为 `image` 条件，并保持同一 seed。模型缺失时必须请求下载确认，不得切换到 FLUX.1 或云端模型。
+工具对四次生成复用同一个 `Flux2Pipeline`。GPU 调度只读取 `.env` 中的 `FLUX2_NUM_GPUS`：未设置或 `0` 时自动检测全部可用 GPU；FLUX.2 且检测到多卡时通过 Accelerate `dispatch_model` 分发 transformer 与 text encoder，否则采用 CPU offload。调用参数不能覆盖该部署配置。侧面、背面和胸部以上特写均使用正面图作为 `image` 条件，并保持同一 seed。模型缺失时必须请求下载确认，不得切换到 FLUX.1 或云端模型。
 
 ## 硬性构图
 

@@ -40,6 +40,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -69,7 +70,7 @@ from tools.base_tool import (
 
 class SeedanceVideo(BaseTool):
     name = "seedance_video"
-    version = "0.3.0"
+    version = "0.4.0"
     tier = ToolTier.GENERATE
     capability = "video_generation"
     provider = "seedance"
@@ -121,6 +122,12 @@ class SeedanceVideo(BaseTool):
         "required": ["prompt"],
         "properties": {
             "prompt": {"type": "string", "description": "视频内容描述/提示词（必须用中文，仅专业影视术语可用英文）"},
+            "operation": {
+                "type": "string",
+                "enum": ["reference_to_video"],
+                "default": "reference_to_video",
+                "description": "仅支持带角色四视图与场景草图的参考转视频。",
+            },
             "model": {
                 "type": "string",
                 "description": "火山引擎 Ark 推理接入点 Endpoint ID（覆盖 SEEDANCE_ENDPOINT_ID 环境变量；未传时从环境变量读取）",
@@ -186,14 +193,22 @@ class SeedanceVideo(BaseTool):
             },
             "require_identity_lock": {
                 "type": "boolean",
-                "default": False,
-                "description": "强制角色身份锁。设为 true 时，建议通过 reference_image_urls/paths 传入四视图参考图；"
-                               "未传入时会提示用户确认，经用户批准后可通过 _confirm_skip_identity_lock=true 继续。",
+                "default": True,
+                "description": "角色身份锁门禁。Seedance 调用必须为 true，并提供角色四视图和场景草图。",
             },
-            "_confirm_skip_identity_lock": {
-                "type": "boolean",
-                "default": False,
-                "description": "内部标记。用户确认跳过角色身份锁、以纯 text_to_video 继续时设为 true。",
+            "reference_image_roles": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "enum": [
+                        "character_turnaround", "scene_sketch",
+                        "continuity_frame", "style_reference",
+                    ],
+                },
+                "description": (
+                    "与 reference_image_urls 后接 reference_image_paths 一一对应的用途。"
+                    "每次调用必须至少包含一个 character_turnaround 和一个 scene_sketch。"
+                ),
             },
             # ----- 其他 -----
             "seed": {
@@ -345,6 +360,53 @@ class SeedanceVideo(BaseTool):
         return str(tmp)
 
     @staticmethod
+    def _validate_reference_contract(inputs: dict[str, Any]) -> str | None:
+        """Validate the non-bypassable Seedance character/reference contract.
+
+        The director instructions are not sufficient on their own: direct
+        provider calls previously accepted text-to-video requests and a
+        private flag could bypass the identity lock.  This guard runs before
+        any request is constructed or sent to Ark.
+        """
+        reference_images = [
+            *(inputs.get("reference_image_urls") or []),
+            *(inputs.get("reference_image_paths") or []),
+        ]
+        roles = list(inputs.get("reference_image_roles") or [])
+        prompt = str(inputs.get("prompt", ""))
+
+        if inputs.get("operation") != "reference_to_video":
+            return "Seedance 必须使用 operation='reference_to_video'；禁止无参考图的 text_to_video。"
+        if inputs.get("require_identity_lock") is not True:
+            return "Seedance 必须设置 require_identity_lock=true；角色身份锁不可跳过。"
+        if not reference_images:
+            return "Seedance 必须同时提供角色四视图和场景草图到 reference_image_urls/paths。"
+        if len(reference_images) != len(roles):
+            return "reference_image_roles 必须与 reference_image_urls 后接 reference_image_paths 一一对应。"
+        if "character_turnaround" not in roles or "scene_sketch" not in roles:
+            return "Seedance 参考图必须同时包含 character_turnaround（角色四视图）和 scene_sketch（场景草图）。"
+
+        referenced_indices = {int(index) for index in re.findall(r"@Image(\d+)", prompt, re.IGNORECASE)}
+        expected_indices = set(range(1, len(reference_images) + 1))
+        if not expected_indices.issubset(referenced_indices):
+            return "提示词必须用 @ImageN 一对一标注每张角色四视图和场景草图。"
+
+        for index, role in enumerate(roles, start=1):
+            if role != "character_turnaround":
+                continue
+            image_marker = f"@image{index}"
+            lower_prompt = prompt.lower()
+            if image_marker not in lower_prompt or not all(
+                phrase in lower_prompt
+                for phrase in ("the same character", "no drift", "no face morph")
+            ):
+                return (
+                    f"{image_marker} 的角色四视图必须包含身份锁定短语："
+                    "the same character, no drift, no face morph。"
+                )
+        return None
+
+    @staticmethod
     def _file_to_data_uri(path: str) -> str:
         """将本地文件转为 data URI（不缩放，仅转换）。"""
         p = Path(path)
@@ -406,10 +468,20 @@ class SeedanceVideo(BaseTool):
         elif raw_image_url:
             first_frame_uri = self._process_image_to_data_uri(raw_image_url)
 
-        # 2. 多模态参考图（角色四视图、场景关键帧、风格参考等）
-        for url in inputs.get("reference_image_urls") or []:
+        # 2. 多模态参考图（角色四视图、场景关键帧、风格参考等）。
+        # Check the raw count before downloading any remote image so an
+        # invalid request is deterministic and never triggers network work.
+        reference_image_urls = list(inputs.get("reference_image_urls") or [])
+        reference_image_paths = list(inputs.get("reference_image_paths") or [])
+        total_images = (1 if first_frame_uri else 0) + len(reference_image_urls) + len(reference_image_paths)
+        if total_images > 9:
+            raise ValueError(
+                f"Seedance 2.0 最多接受 9 张参考图片（含首帧），"
+                f"收到 {total_images} 张"
+            )
+        for url in reference_image_urls:
             ref_image_uris.append(self._process_image_to_data_uri(url))
-        for local_path in inputs.get("reference_image_paths") or []:
+        for local_path in reference_image_paths:
             ref_image_uris.append(self._process_image_to_data_uri(local_path))
 
         # 3. 统一检查上限（首帧 + 参考图合计 ≤ 9）
@@ -502,26 +574,9 @@ class SeedanceVideo(BaseTool):
                 ),
             )
 
-        # 身份锁守卫：require_identity_lock=true 但无参考图时提示用户确认
-        if inputs.get("require_identity_lock") and not inputs.get("_confirm_skip_identity_lock"):
-            has_ref = bool(
-                inputs.get("reference_image_urls")
-                or inputs.get("reference_image_paths")
-                or inputs.get("image_url")
-                or inputs.get("image_path")
-            )
-            if not has_ref:
-                return ToolResult(
-                    success=False,
-                    error=(
-                        "require_identity_lock=true 但未提供角色参考图。\n"
-                        "涉及角色的 Seedance 视频建议从 CharacterRegistry.build_reference_config()\n"
-                        "获取四视图参考图，通过 reference_image_urls 或 reference_image_paths 传入。\n"
-                        "\n"
-                        "如用户确认无需角色身份锁、以纯 text_to_video 继续，请传入\n"
-                        "_confirm_skip_identity_lock=true 后重试。"
-                    ),
-                )
+        contract_error = self._validate_reference_contract(inputs)
+        if contract_error:
+            return ToolResult(success=False, error=contract_error)
 
         # 构建 content 数组
         try:

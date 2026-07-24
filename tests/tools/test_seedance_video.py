@@ -50,6 +50,22 @@ def sample_image(tmp_path) -> Path:
     return p
 
 
+def valid_reference_contract() -> dict:
+    return {
+        "operation": "reference_to_video",
+        "require_identity_lock": True,
+        "reference_image_urls": [
+            "https://example.com/character-turnaround.jpg",
+            "https://example.com/scene-sketch.jpg",
+        ],
+        "reference_image_roles": ["character_turnaround", "scene_sketch"],
+        "prompt": (
+            "@Image1 是角色四视图，the same character, no drift, no face morph。\n"
+            "@Image2 是场景草图，保持该构图。"
+        ),
+    }
+
+
 # ----------------------------------------------------------------------
 # Config resolution
 # ----------------------------------------------------------------------
@@ -140,7 +156,7 @@ class TestMetadata:
         assert tool.name == "seedance_video"
 
     def test_version(self, tool):
-        assert tool.version == "0.3.0"
+        assert tool.version == "0.4.0"
 
     def test_capabilities(self, tool):
         assert "text_to_video" in tool.capabilities
@@ -367,18 +383,45 @@ class TestExecute:
                 os.environ["ARK_API_KEY"] = original
 
     def test_execute_fails_with_bad_image_path(self, tool_with_key):
-        result = tool_with_key.execute({
-            "prompt": "test",
-            "image_path": "/nonexistent/path.png",
-        })
+        inputs = valid_reference_contract()
+        inputs["image_path"] = "/nonexistent/path.png"
+        result = tool_with_key.execute(inputs)
         assert result.success is False
-        assert "文件不存在" in result.error
+        assert "nonexistent/path.png" in result.error
 
     def test_execute_fails_with_too_many_images(self, tool_with_key):
         urls = [f"https://example.com/{i}.jpg" for i in range(10)]
-        result = tool_with_key.execute({
-            "prompt": "test",
-            "reference_image_urls": urls,
-        })
+        inputs = valid_reference_contract()
+        inputs["reference_image_urls"] = urls
+        inputs["reference_image_roles"] = [
+            "character_turnaround", "scene_sketch", *(["style_reference"] * 8)
+        ]
+        inputs["prompt"] = "\n".join(
+            [
+                "@Image1 是角色四视图，the same character, no drift, no face morph。",
+                "@Image2 是场景草图，保持该构图。",
+                *[f"@Image{i} 是风格参考。" for i in range(3, 11)],
+            ]
+        )
+        result = tool_with_key.execute(inputs)
         assert result.success is False
         assert "最多接受 9 张" in result.error
+
+    def test_execute_rejects_text_to_video_even_when_bypass_flag_is_set(self, tool_with_key):
+        result = tool_with_key.execute({
+            "prompt": "纯文本生成",
+            "operation": "text_to_video",
+            "_confirm_skip_identity_lock": True,
+        })
+
+        assert result.success is False
+        assert "reference_to_video" in result.error
+
+    def test_execute_requires_turnaround_and_scene_sketch(self, tool_with_key):
+        inputs = valid_reference_contract()
+        inputs["reference_image_roles"] = ["character_turnaround", "style_reference"]
+
+        result = tool_with_key.execute(inputs)
+
+        assert result.success is False
+        assert "scene_sketch" in result.error

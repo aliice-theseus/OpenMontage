@@ -30,6 +30,7 @@ class _FakeSelector:
 
 
 def test_character_sheet_uses_front_as_flux2_reference_and_stitches(monkeypatch):
+    monkeypatch.delenv("FLUX2_NUM_GPUS", raising=False)
     selector = _FakeSelector()
     monkeypatch.setattr(CharacterRefSheet, "_selector", staticmethod(lambda: selector))
     monkeypatch.setattr(CharacterRefSheet, "_release_local_pipeline", staticmethod(lambda: None))
@@ -55,17 +56,42 @@ def test_character_sheet_uses_front_as_flux2_reference_and_stitches(monkeypatch)
         assert all(call["preferred_provider"] == "local_diffusion" for call in selector.calls)
         assert all(call["offload_mode"] == "sequential" for call in selector.calls)
         assert all(call["reuse_pipeline"] is True for call in selector.calls)
+        assert all(call["num_gpus"] == 0 for call in selector.calls)
         assert [(call["width"], call["height"]) for call in selector.calls] == [
-            (1024, 1536),
-            (832, 1248),
-            (832, 1248),
-            (832, 1248),
+            (576, 864),
+            (512, 768),
+            (512, 768),
+            (512, 768),
         ]
 
         with Image.open(result.data["sheet_path"]) as sheet:
             assert sheet.size == (1280, 720)
         assert result.data["layout"]["columns"] == [281, 281, 281, 437]
         assert len(result.artifacts) == 5
+    finally:
+        for suffix in ("front", "side", "back", "closeup", "reference-sheet"):
+            Path(f"tests/{character_id}-{suffix}.png").unlink(missing_ok=True)
+
+
+def test_character_sheet_uses_env_gpu_policy_and_ignores_input(monkeypatch):
+    monkeypatch.setenv("FLUX2_NUM_GPUS", "2")
+    selector = _FakeSelector()
+    monkeypatch.setattr(CharacterRefSheet, "_selector", staticmethod(lambda: selector))
+    monkeypatch.setattr(CharacterRefSheet, "_release_local_pipeline", staticmethod(lambda: None))
+    character_id = "test-env-gpu-policy"
+    try:
+        result = CharacterRefSheet().execute(
+            {
+                "character_id": character_id,
+                "character_core": "A consistent adult character.",
+                "output_dir": "tests",
+                "num_gpus": 99,
+                "_force_full_approval": True,
+            }
+        )
+
+        assert result.success is True
+        assert all(call["num_gpus"] == 2 for call in selector.calls)
     finally:
         for suffix in ("front", "side", "back", "closeup", "reference-sheet"):
             Path(f"tests/{character_id}-{suffix}.png").unlink(missing_ok=True)
@@ -117,7 +143,7 @@ def test_complete_from_approved_front_skips_front_regeneration(monkeypatch):
     monkeypatch.setattr(CharacterRefSheet, "_release_local_pipeline", staticmethod(lambda: None))
     character_id = "test-approved-front"
     approved_front = Path(f"tests/{character_id}-approved.png")
-    Image.new("RGB", (1024, 1536), "#DDEEFF").save(approved_front)
+    Image.new("RGB", (576, 864), "#DDEEFF").save(approved_front)
     try:
         result = CharacterRefSheet().execute(
             {

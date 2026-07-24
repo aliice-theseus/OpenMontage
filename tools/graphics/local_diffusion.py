@@ -585,9 +585,12 @@ class LocalDiffusion(BaseTool):
                         )
                     raise
 
-                num_gpus = inputs.get("num_gpus", 0)
-                if num_gpus == 0:
-                    num_gpus = torch.cuda.device_count()
+                requested_gpus = inputs.get("num_gpus", 0)
+                available_gpus = torch.cuda.device_count()
+                # ``0`` means auto-detect.  Explicit values are capped at
+                # the hardware count so a stale "6 GPU" request cannot build
+                # an Accelerate device map that references absent devices.
+                num_gpus = available_gpus if requested_gpus == 0 else min(requested_gpus, available_gpus)
                 use_multi_gpu = num_gpus > 1 and is_flux2 and device == "cuda"
 
                 if use_multi_gpu:
