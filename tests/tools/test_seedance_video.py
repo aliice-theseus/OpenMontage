@@ -21,9 +21,7 @@ from pathlib import Path
 import pytest
 
 from tools.video.seedance_video import (
-    DEFAULT_ENDPOINT_ID,
     SeedanceVideo,
-    ARK_API_BASE,
 )
 
 
@@ -41,6 +39,7 @@ def tool() -> SeedanceVideo:
 def tool_with_key(monkeypatch) -> SeedanceVideo:
     monkeypatch.setenv("ARK_API_KEY", "ark-test-key-12345")
     monkeypatch.setenv("SEEDANCE_ENDPOINT_ID", "ep-test-endpoint-001")
+    monkeypatch.setenv("SEEDANCE_API_BASE", "https://ark-test.example.com/api/v3")
     return SeedanceVideo()
 
 
@@ -63,7 +62,6 @@ class TestConfig:
         assert t._get_api_key() == "ark-from-env"
 
     def test_api_key_missing(self):
-        # Ensure no key is set in this test environment
         original = os.environ.pop("ARK_API_KEY", None)
         try:
             t = SeedanceVideo()
@@ -77,14 +75,45 @@ class TestConfig:
         t = SeedanceVideo()
         assert t._get_endpoint_id() == "ep-custom"
 
-    def test_endpoint_id_default(self):
+    def test_endpoint_id_default_is_none(self):
         original = os.environ.pop("SEEDANCE_ENDPOINT_ID", None)
         try:
             t = SeedanceVideo()
-            assert t._get_endpoint_id() == DEFAULT_ENDPOINT_ID
+            assert t._get_endpoint_id() is None
         finally:
             if original is not None:
                 os.environ["SEEDANCE_ENDPOINT_ID"] = original
+
+    def test_api_base_from_env(self, monkeypatch):
+        monkeypatch.setenv("SEEDANCE_API_BASE", "https://ark-custom.example.com/api/v3")
+        t = SeedanceVideo()
+        assert os.environ.get("SEEDANCE_API_BASE") == "https://ark-custom.example.com/api/v3"
+
+    def test_execute_fails_without_endpoint_id(self, monkeypatch):
+        monkeypatch.setenv("ARK_API_KEY", "ark-test-key")
+        monkeypatch.setenv("SEEDANCE_API_BASE", "https://ark.example.com/api/v3")
+        original_eid = os.environ.pop("SEEDANCE_ENDPOINT_ID", None)
+        try:
+            t = SeedanceVideo()
+            result = t.execute({"prompt": "test"})
+            assert result.success is False
+            assert "SEEDANCE_ENDPOINT_ID" in result.error
+        finally:
+            if original_eid is not None:
+                os.environ["SEEDANCE_ENDPOINT_ID"] = original_eid
+
+    def test_execute_fails_without_api_base(self, monkeypatch):
+        monkeypatch.setenv("ARK_API_KEY", "ark-test-key")
+        monkeypatch.setenv("SEEDANCE_ENDPOINT_ID", "ep-test")
+        original_base = os.environ.pop("SEEDANCE_API_BASE", None)
+        try:
+            t = SeedanceVideo()
+            result = t.execute({"prompt": "test"})
+            assert result.success is False
+            assert "SEEDANCE_API_BASE" in result.error
+        finally:
+            if original_base is not None:
+                os.environ["SEEDANCE_API_BASE"] = original_base
 
     def test_status_available_when_key_set(self, monkeypatch):
         monkeypatch.setenv("ARK_API_KEY", "ark-any-key")

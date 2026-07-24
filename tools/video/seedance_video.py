@@ -36,7 +36,9 @@ Ark API 图片 role 区分：
 from __future__ import annotations
 
 import base64
+import hashlib
 import io
+import json
 import os
 import time
 from pathlib import Path
@@ -59,10 +61,10 @@ from tools.base_tool import (
     ToolTier,
 )
 
-# 默认火山引擎 Ark API 地址
-ARK_API_BASE = "https://ark.cn-beijing.volces.com/api/v3"
-# 默认推理接入点 Endpoint ID（用户可通过环境变量 SEEDANCE_ENDPOINT_ID 覆盖）
-DEFAULT_ENDPOINT_ID = "ep-20260707160030-dt7sw"
+# 火山引擎 Ark API 地址（通过环境变量 SEEDANCE_API_BASE 配置）
+# 默认推理接入点 Endpoint ID（通过环境变量 SEEDANCE_ENDPOINT_ID 配置）
+# 以上两项均在 seedance_video.py 中通过 os.environ.get() 读取，不在代码中硬编码。
+# 如需修改，请在 .env 中设置 SEEDANCE_API_BASE 和 SEEDANCE_ENDPOINT_ID。
 
 
 class SeedanceVideo(BaseTool):
@@ -100,13 +102,13 @@ class SeedanceVideo(BaseTool):
         "seed": True,
     }
     best_for = [
-        "preferred video gen in China when ARK_API_KEY is available",
-        "cinematic trailers, teasers, and high-fidelity clips with native synchronized audio",
-        "director-level camera control and multi-shot editing in a single generation",
-        "lip-sync from quoted dialogue in prompts",
-        "reference-conditioned generation (up to 9 total reference images + 3 video clips + 3 audio clips)",
-        "consistent character identity across shots",
-        "direct connection via 火山引擎 Ark",
+        "配置了 ARK_API_KEY 时在中国的首选视频生成模型",
+        "电影级预告片、预告花絮和带有原生同步音频的高保真片段",
+        "导演级摄像机控制和单次生成内的多镜头剪辑",
+        "提示词中引用对话的口型同步",
+        "多模态参考条件生成（最多 9 张参考图片 + 3 个视频片段 + 3 个音频片段）",
+        "跨镜头一致的角色身份",
+        "通过火山引擎 Ark 直连",
     ]
     not_good_for = ["offline generation", "budget-constrained projects"]
     fallback_tools = ["wan_video"]
@@ -121,8 +123,7 @@ class SeedanceVideo(BaseTool):
             "prompt": {"type": "string", "description": "视频内容描述/提示词（必须用中文，仅专业影视术语可用英文）"},
             "model": {
                 "type": "string",
-                "default": DEFAULT_ENDPOINT_ID,
-                "description": "火山引擎 Ark 推理接入点 Endpoint ID（覆盖 SEEDANCE_ENDPOINT_ID 环境变量）",
+                "description": "火山引擎 Ark 推理接入点 Endpoint ID（覆盖 SEEDANCE_ENDPOINT_ID 环境变量；未传时从环境变量读取）",
             },
             "duration": {
                 "type": "integer",
@@ -223,9 +224,9 @@ class SeedanceVideo(BaseTool):
     def _get_api_key(self) -> str | None:
         return os.environ.get("ARK_API_KEY")
 
-    def _get_endpoint_id(self) -> str:
-        """返回 Endpoint ID，优先级：环境变量 > 类默认值。"""
-        return os.environ.get("SEEDANCE_ENDPOINT_ID") or DEFAULT_ENDPOINT_ID
+    def _get_endpoint_id(self) -> str | None:
+        """从 SEEDANCE_ENDPOINT_ID 环境变量读取 Endpoint ID。未设置时返回 None。"""
+        return os.environ.get("SEEDANCE_ENDPOINT_ID") or None
 
     def get_status(self) -> ToolStatus:
         if self._get_api_key():
@@ -479,6 +480,27 @@ class SeedanceVideo(BaseTool):
 
         start = time.time()
         endpoint_id = inputs.get("model") or self._get_endpoint_id()
+        if not endpoint_id:
+            return ToolResult(
+                success=False,
+                error=(
+                    "未配置火山引擎推理接入点。\n"
+                    "请在 .env 中设置 SEEDANCE_ENDPOINT_ID，\n"
+                    "或在调用时传入 model 参数。"
+                ),
+            )
+
+        # 读取 API Base URL
+        api_base = os.environ.get("SEEDANCE_API_BASE")
+        if not api_base:
+            return ToolResult(
+                success=False,
+                error=(
+                    "未配置火山引擎 API 地址。\n"
+                    "请在 .env 中设置 SEEDANCE_API_BASE，\n"
+                    "例如 SEEDANCE_API_BASE=https://ark.cn-beijing.volces.com/api/v3"
+                ),
+            )
 
         # 身份锁守卫：require_identity_lock=true 但无参考图时提示用户确认
         if inputs.get("require_identity_lock") and not inputs.get("_confirm_skip_identity_lock"):
@@ -526,10 +548,27 @@ class SeedanceVideo(BaseTool):
             "Content-Type": "application/json",
         }
 
+        # 将本次请求的 payload 保存到项目的 assets/seedance-call/ 下
+        # 本段代码为测试使用，稳定后，不在使用此段代码
+        output_path_val = inputs.get("output_path")
+        if output_path_val:
+            try:
+                seedance_call_dir = Path(output_path_val).parent.parent / "seedance-call"
+                seedance_call_dir.mkdir(parents=True, exist_ok=True)
+                prompt_hash = hashlib.md5(inputs.get("prompt", "").encode()).hexdigest()[:8]
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                payload_path = seedance_call_dir / f"seedance_{timestamp}_{prompt_hash}.json"
+                payload_path.write_text(
+                    json.dumps(payload, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            except Exception:
+                pass  # payload 保存失败不应阻塞主流程
+
         try:
             # 步骤 1：创建视频生成任务
             submit_resp = requests.post(
-                f"{ARK_API_BASE}/contents/generations/tasks",
+                f"{api_base}/contents/generations/tasks",
                 headers=headers,
                 json=payload,
                 timeout=30,
@@ -544,7 +583,7 @@ class SeedanceVideo(BaseTool):
                 )
 
             # 步骤 2：轮询任务状态
-            status_url = f"{ARK_API_BASE}/contents/generations/tasks/{task_id}"
+            status_url = f"{api_base}/contents/generations/tasks/{task_id}"
             poll_interval = 5
             while True:
                 time.sleep(poll_interval)

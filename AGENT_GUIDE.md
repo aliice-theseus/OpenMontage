@@ -553,11 +553,19 @@ python -c "from tools.tool_registry import registry; import json; registry.disco
    - 禁止静默切换到其他模型或提供商
    - 禁止不读 skill 直接硬编码提示词调用工具
 6. **验收要求** — 生成后必须按 `flux-character-turnaround` skill 中的**验收清单**逐项检查。关键失败最多重试两轮。
-7. **Seedance 调用强制** — 当使用 Seedance 生成包含角色的视频时：
-   a. 必须先经过角色设计阶段（步骤 1-6），生成四视图并写入 `CharacterRegistry`。
-   b. 必须从 `CharacterRegistry.build_reference_config(character_ids)` 获取四视图参考图，作为 `reference_image_urls`/`reference_image_paths` 传入 Seedance。
-   c. 调用时设置 `require_identity_lock=true`。若无参考图，工具会返回提示，要求向用户确认；用户批准后传入 `_confirm_skip_identity_lock=true` 可继续。
-   d. 不允许代理静默以 `text_to_video` 模式无参考图生成含角色的视频。
+7. **Seedance 调用强制** — 所有 Seedance 视频生成调用必须携带参考图，不允许无参考图调用：
+   a. **必须先经过角色设计阶段**，生成角色四视图并写入 `CharacterRegistry`；同时必须先生成场景草图（scene_sketch 阶段产物）。
+   b. **必须包含的参考图：**
+      - 角色四视图（从 `CharacterRegistry.build_reference_config(character_ids)` 获取）
+      - 场景草图（从 scene_sketch 阶段产物中获取）
+      两者缺一不可，不得省略任何一种。
+   c. **必须将所有参考图传入 `reference_image_urls`/`reference_image_paths` 参数**，不得遗漏。
+   d. **提示词中必须用 `@ImageN` 语法明确标注每张参考图的用途：**
+      - 角色四视图 → `@ImageN` + 角色描述 + 身份锁定短语
+      - 场景草图 → `@ImageN` + 场景描述
+      - 每个 `@ImageN` 必须与实际传入的参考图顺序一一对应
+   e. 调用时设置 `require_identity_lock=true`。若用户未提供角色四视图或场景草图，应先上报阻塞，待用户确认后再执行。
+   f. 禁止代理以 `text_to_video` 模式无参考图调用 Seedance。
 
 如果本地 FLUX 依赖、基础模型或 LoRA 不可用，不要静默切换到其他图像生成提供商。应上报阻塞并提示安装或确认模型下载；只有用户明确批准后才传递 `allow_model_download=true`。图库搜索（Pexels/Pixabay）、`diagram_gen`、`code_snippet`、Manim 和合成引擎原生图形不属于文生图，不受此默认值约束。
 

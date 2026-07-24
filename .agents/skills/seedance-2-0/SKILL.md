@@ -278,13 +278,65 @@ Shot 3 (extreme close-up, rack focus): hero's eyes open, wind whipping.
 
 **抗漂移回退：** 如果面部在首次渲染时跨帧变形，降到更短的时长（5-6 秒而非 10 秒），收紧身份锁定语言，如果你有多张参考图片，减少到最一致的 3 张而非用 9 张泛滥。
 
+## 参考图强制规则（硬性规则）
+
+所有 Seedance 视频生成调用**必须**携带参考图，不得无参考图调用。
+
+### 必须包含的参考图
+
+| 参考图类型 | 来源 | 提示词中的引用方式 |
+|---|---|---|
+| **角色四视图** | `CharacterRegistry.build_reference_config(character_ids)` | `@ImageN 是角色「XX」— 外貌描述, the same character, no drift.` |
+| **场景草图** | scene_sketch 阶段产物 | `@ImageN 是场景「XX」— 场景描述, 构图参考.` |
+
+两类参考图**缺一不可**，不得省略任何一种。
+
+### 调用规则
+
+1. **检查参考图** — 调用前必须确认 `reference_image_paths`/`reference_image_urls` 中已包含角色四视图和场景草图。
+2. **`@ImageN` 一对一标注** — 提示词中必须为每张参考图使用 `@ImageN` 标注其身份/用途，`@Image1` 对应 `reference_image_paths` 列表中的第 1 张图，以此类推。
+3. **角色四视图必须加身份锁定短语** — 在 `@ImageN` 标注行末尾追加 `the same character, maintain exact appearance, no deformation, no drift, no face morph`。
+4. **场景草图必须加构图描述** — 在 `@ImageN` 标注行末尾追加构图提示，如 `follow this composition, maintain framing`。
+5. **禁止无参考图调用** — 不允许以 `text_to_video` 模式无参考图调用 Seedance。若用户未提供四视图或场景草图，应上报阻塞等待用户确认。
+
+### 完整调用示例
+
+```python
+from tools.tool_registry import registry
+registry.ensure_discovered()
+selector = registry.get("video_selector")
+
+result = selector.execute({
+    "prompt": (
+        "@Image1 是角色「林月」— 黑色长发, 红色劲装, "
+        "the same character, maintain exact appearance, no drift.\n"
+        "@Image2 是场景「竹林对决」— 竹林深处, 月光穿透竹叶, "
+        "follow this composition, maintain framing.\n"
+        "Shot 1 (medium wide, low angle): 林月立于竹梢, 衣袂翻飞..."
+    ),
+    "preferred_provider": "seedance",
+    "operation": "reference_to_video",   # 必须使用 reference_to_video
+    "reference_image_paths": [
+        "projects/xxx/assets/images/char_yue_4view.jpg",    # → @Image1 角色四视图
+        "projects/xxx/assets/images/scene_bamboo.jpg",       # → @Image2 场景草图
+    ],
+    "require_identity_lock": True,
+    "aspect_ratio": "16:9",
+    "duration": "10",
+    "resolution": "720p",
+    "output_path": "projects/xxx/assets/video/clip_01.mp4",
+})
+```
+
 ## 参数指导
+
+**默认配置规则：** 除非用户明确声明其他值，所有 Seedance 视频生成请求默认使用 `resolution=720p`、`aspect_ratio=16:9`。用户显式指定了 `resolution` 或 `aspect_ratio` 时，以用户指定值为准。
 
 | 参数 | 指导 |
 |---|---|
 | `duration` | 主角镜头用 `5`–`8`，带多镜头切换的全场景用 `10`–`12`，快速插入用 `4`。不确定时用 `auto`。 |
-| `aspect_ratio` | 电影预告片用 `21:9`，广播/YouTube 用 `16:9`，Reels/Shorts/TikTok 用 `9:16` |
-| `resolution` | `720p` 默认。降级到 `480p` 用于成本上限的批量预览，最终渲染不用 |
+| `aspect_ratio` | 默认 `16:9`。电影预告片用 `21:9`，广播/YouTube 用 `16:9`，Reels/Shorts/TikTok 用 `9:16` |
+| `resolution` | 默认 `720p`。降级到 `480p` 用于成本上限的批量预览，最终渲染不用 |
 | `generate_audio` | 保持**开启**，除非你有关闭音频的特定原因 — Seedance 的护城河是同步音频。如有需要可在合成中下游剥离音频。 |
 | `model_variant` | 主要/电影镜头用 `standard`；仅 B-roll、预览或延迟是硬约束时用 `fast` |
 | `seed` | 在迭代所选镜头的变体前设置种子 — 其他所有参数保持不变 |
