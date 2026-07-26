@@ -9,8 +9,8 @@
 
 | 工具 | 提供商 | 费用 | 速度 | 最适合 |
 |------|--------|------|------|--------|
-| `grok_image` | Grok Imagine Image (xAI) | $0.02/输出 + $0.002/输入编辑图像 | 约5-15秒 | 图像编辑、风格迁移、多图像合成 |
-| `openai_image` | GPT Image 1 (OpenAI) | 约$0.01-0.17 | 约5-15秒 | 复杂指令、图像中的文字、多元素 |
+| `grok_image` | Grok Imagine Image (xAI) | ¥0.02/输出 + ¥0.002/输入编辑图像 | 约5-15秒 | 图像编辑、风格迁移、多图像合成 |
+| `openai_image` | GPT Image 1 (OpenAI) | 约¥0.01-0.17 | 约5-15秒 | 复杂指令、图像中的文字、多元素 |
 | `local_diffusion` | FLUX.1-schnell（本地默认） | 免费 | 取决于 GPU | 视频流程默认文生图、离线、隐私、LoRA |
 | `image_gen` | 多（旧版，已弃用） | 不等 | 不等 | **已弃用** — 使用 `image_selector` 或按提供商工具 |
 
@@ -52,26 +52,26 @@
 
 ```
 生产路径：高级
-├── 主视觉图像：local_diffusion ($0.00/图)
-├── 辅助视觉：local_diffusion ($0.00/图)
-├── 精确文字叠加：Remotion 原生文字 ($0.00)
-├── B-roll 静态图：pexels_image ($0.00)
-└── 10张图像 API 成本：$0.00
+├── 主视觉图像：local_diffusion (¥0.00/图)
+├── 辅助视觉：local_diffusion (¥0.00/图)
+├── 精确文字叠加：Remotion 原生文字 (¥0.00)
+├── B-roll 静态图：pexels_image (¥0.00)
+└── 10张图像 API 成本：¥0.00
 
 生产路径：标准
-├── 全部生成：local_diffusion ($0.00/图)
-├── B-roll 静态图：pexels_image ($0.00)
-└── 10张图像 API 成本：$0.00
+├── 全部生成：local_diffusion (¥0.00/图)
+├── B-roll 静态图：pexels_image (¥0.00)
+└── 10张图像 API 成本：¥0.00
 
 生产路径：预算
-├── 全部素材：pexels_image + pixabay_image ($0.00)
-├── 图表：diagram_gen ($0.00)
-└── 总计：$0.00
+├── 全部素材：pexels_image + pixabay_image (¥0.00)
+├── 图表：diagram_gen (¥0.00)
+└── 总计：¥0.00
 
 生产路径：离线
-├── 全部生成：local_diffusion ($0.00)
-├── 图表：diagram_gen ($0.00)
-└── 总计：$0.00（但更慢、质量更低）
+├── 全部生成：local_diffusion (¥0.00)
+├── 图表：diagram_gen (¥0.00)
+└── 总计：¥0.00（但更慢、质量更低）
 ```
 
 当任务从现有图像开始并应仅路由到支持编辑的提供商时，使用 `generation_mode="edit"`。

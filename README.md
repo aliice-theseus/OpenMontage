@@ -54,31 +54,31 @@
   <video src="https://github.com/user-attachments/assets/8daca07f-cdf8-4bec-89c3-9dc2176363fa" width="100%" controls></video>
 </div>
 
-> **"THE LAST BANANA"** — 一部60秒皮克斯风格的动画短片，讲述一根孤独的香蕉与一颗奇异果成为朋友的故事。6个 Kling v3 生成的动态片段、Google Chirp3-HD 旁白、免版税钢琴音乐、TikTok 风格逐字字幕和 Remotion 合成。总成本：**$1.33**。
+> **"THE LAST BANANA"** — 一部60秒皮克斯风格的动画短片，讲述一根孤独的香蕉与一颗奇异果成为朋友的故事。6个 Kling v3 生成的动态片段、Google Chirp3-HD 旁白、免版税钢琴音乐、TikTok 风格逐字字幕和 Remotion 合成。总成本：**¥1.33**。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/e03b5d1f-1199-4093-9f31-a43aa9da2c68" width="100%" controls></video>
 </div>
 
-> **"The Library at Alexandria"** — 一部70秒的历史挽歌，讲述人类在一夜间失去的一切。五个手写场景——一页 illuminated 手稿、层叠的卷轴标签、蜡烛火焰中从700,000倒数到0的燃烧计数器、带有幸存希腊文本的烧焦羊皮纸碎片，以及一个空洞虚空——配以 OpenAI 'ash' 旁白和免费 Pixabay 弦乐配乐。总成本：**$0.02**。通过 OpenMontage 的定制工坊（bespoke）合成模式构建——每个场景从零开始创作，没有共享组件。
+> **"The Library at Alexandria"** — 一部70秒的历史挽歌，讲述人类在一夜间失去的一切。五个手写场景——一页 illuminated 手稿、层叠的卷轴标签、蜡烛火焰中从700,000倒数到0的燃烧计数器、带有幸存希腊文本的烧焦羊皮纸碎片，以及一个空洞虚空——配以 OpenAI 'ash' 旁白和免费 Pixabay 弦乐配乐。总成本：**¥0.02**。通过 OpenMontage 的定制工坊（bespoke）合成模式构建——每个场景从零开始创作，没有共享组件。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/8a6d2cc3-7ad2-46f5-922f-a8e3e5848d9f" width="100%" controls></video>
 </div>
 
-> **"VOID — Neural Interface"** — 仅使用一个 API 密钥（OpenAI）制作的产品广告。4张 AI 生成图像（gpt-image-1）、TTS 旁白、自动获取的免版税音乐、通过 WhisperX 生成的逐字字幕和 Remotion 数据可视化。总成本：**$0.69**。零手动资产工作。
+> **"VOID — Neural Interface"** — 仅使用一个 API 密钥（OpenAI）制作的产品广告。4张 AI 生成图像（gpt-image-1）、TTS 旁白、自动获取的免版税音乐、通过 WhisperX 生成的逐字字幕和 Remotion 数据可视化。总成本：**¥0.69**。零手动资产工作。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/3c5d7122-7198-43e2-a97d-ed27558dd324" width="100%" controls></video>
 </div>
 
-> **"Afternoon in Candyland"** — 一部吉卜力风格动漫动画。一个小女孩穿过糖果门、软糖河和棒棒糖花园的奇幻下午冒险。12张 FLUX 生成图像，配有多图交叉淡变、电影级摄像机运动（缩放、平移、Ken Burns）、闪光/花瓣/萤火虫粒子叠加和带有自动检测能量偏移的环境音乐。总成本：**$0.15**。无需视频生成，无需手动编辑。
+> **"Afternoon in Candyland"** — 一部吉卜力风格动漫动画。一个小女孩穿过糖果门、软糖河和棒棒糖花园的奇幻下午冒险。12张 FLUX 生成图像，配有多图交叉淡变、电影级摄像机运动（缩放、平移、Ken Burns）、闪光/花瓣/萤火虫粒子叠加和带有自动检测能量偏移的环境音乐。总成本：**¥0.15**。无需视频生成，无需手动编辑。
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/e8dc5e32-5c70-46de-bd52-eef887719d13" width="100%" controls></video>
 </div>
 
-> **"Mori no Seishin"** — 一部吉卜力风格动漫动画，讲述森林精灵穿越古老森林的旅程。12张 FLUX 生成图像，配有视差交叉淡变、漂移和平移摄像机运动、萤火虫和花瓣粒子、电影级暗角照明和环境森林配乐。总成本：**$0.15**。静态图像通过 Remotion 的动画引擎被赋予生命。
+> **"Mori no Seishin"** — 一部吉卜力风格动漫动画，讲述森林精灵穿越古老森林的旅程。12张 FLUX 生成图像，配有视差交叉淡变、漂移和平移摄像机运动、萤火虫和花瓣粒子、电影级暗角照明和环境森林配乐。总成本：**¥0.15**。静态图像通过 Remotion 的动画引擎被赋予生命。
 
 <p align="center">
   <a href="https://www.youtube.com/@OpenMontage?sub_confirmation=1"><strong>在 YouTube 上订阅 @OpenMontage</strong></a>，在新视频发布时及时观看——每个视频都包含完整的提示词、管道、使用工具和成本，方便你自己复现。
@@ -256,7 +256,7 @@ OpenMontage 在提案时选择 Remotion 和 HyperFrames（锁定为 `render_runt
 
 > "Cut together a dreamlike montage about coming home in the rain using real stock footage only. Music yes, narration no."
 
-### 配置了图像/视频提供商（约 $0.15–$1.50）
+### 配置了图像/视频提供商（约 ¥0.15–¥1.50）
 
 > "Create a 30-second Ghibli-style animated video of a magical floating library in the clouds at golden hour"
 
@@ -266,7 +266,7 @@ OpenMontage 在提案时选择 Remotion 和 HyperFrames（锁定为 `render_runt
 
 > "Make a product launch teaser for a fictional smart water bottle called AquaPulse"
 
-### 完整设置（约 $1–$3）
+### 完整设置（约 ¥1–¥3）
 
 > "Create a cinematic 30-second trailer for a sci-fi concept: humanity receives a warning from 1000 years in the future"
 
@@ -586,8 +586,8 @@ OpenMontage 将视频制作视为真正的工程——在每个阶段都有质�
 - **预留预算** — 在调用前锁定资金
 - **调用后对账** — 记录实际支出
 - **可配置模式** — `observe`（仅跟踪）、`warn`（记录超支）、`cap`（硬限制）
-- **每操作审批** — 超过阈值时暂停确认（默认：$0.50）
-- **总预算上限** — 默认 $10，完全可配置
+- **每操作审批** — 超过阈值时暂停确认（默认：¥0.50）
+- **总预算上限** — 默认 ¥10，完全可配置
 
 没有意外账单。代理在花钱之前会告诉你成本。
 

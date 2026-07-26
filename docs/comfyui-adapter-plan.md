@@ -129,7 +129,7 @@ class ComfyUIClient:
 | capabilities | `text_to_image`, `image_to_image` |
 | dependencies | （运行时：ComfyUI 服务器可访问） |
 | fallback_tools | `openai_image`, `local_diffusion` |
-| cost | `$0.00`（本地计算） |
+| cost | `¥0.00`（本地计算） |
 
 **捆绑工作流：** `flux2-txt2img.json`
 
@@ -185,7 +185,7 @@ workflow_model_stack: [] # 可选自定义依赖来源
 | capabilities | `text_to_video`, `image_to_video` |
 | dependencies | （运行时：ComfyUI 服务器可访问） |
 | fallback_tools | `wan_video`, `hunyuan_video`, `ltx_video_local` |
-| cost | `$0.00`（本地计算） |
+| cost | `¥0.00`（本地计算） |
 
 **捆绑工作流：**
 
@@ -313,7 +313,7 @@ COMFYUI_SERVER_URL=http://comfyui:8188      # 如果在同一个 docker 网络�
 | 质量 | 高 | 最新模型（FLUX 2, WAN 2.2 14B） |
 | 控制力 | 最高 | 完整的工作流自定义 |
 | 可靠性 | 高 | 经生产验证 |
-| 成本 | $0 | 本地计算 |
+| 成本 | ¥0 | 本地计算 |
 | 延迟 | 中等 | GPU 受限，无网络往返 |
 | 连续性 | 高 | 使用种子可确定性生成 |
 

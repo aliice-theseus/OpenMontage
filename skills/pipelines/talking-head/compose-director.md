@@ -219,7 +219,7 @@ remotion_caption_burn.execute({
         {
             "id": "stat-market-size",
             "type": "stat_card",
-            "stat": "$4.8B",
+            "stat": "¥4.8B",
             "subtitle": "全球 AI Agent 市场（2026）",
             "in_seconds": 35.0,
             "out_seconds": 39.0,
@@ -340,7 +340,7 @@ showcase_card.execute({
     "input_path": "<showcase_video>",
     "output_path": "<project>/assets/video/sc_<name>.mp4",
     "title": "视频标题",
-    "subtitle": "描述 | 风格 | 成本：$0.15",
+    "subtitle": "描述 | 风格 | 成本：¥0.15",
     "background_color": "0x0A0F1A",
 })
 ```

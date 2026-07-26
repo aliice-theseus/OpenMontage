@@ -351,12 +351,12 @@ reuse_strategy:
 stages:
   script:
     tools: [无 — 创意工作]
-    cost: $0
+    cost: ¥0
     notes: "剧本必须按动画节拍编写——每部分一个视觉想法"
 
   scene_plan:
     tools: [无 — 计划工作]
-    cost: $0
+    cost: ¥0
     notes: "场景计划必须按场景指定动画模式和复用模板引用"
 
   assets:
@@ -366,17 +366,17 @@ stages:
 
   edit:
     tools: [无 — 计划工作]
-    cost: $0
+    cost: ¥0
     notes: "剪辑必须保留停留时间和错开揭示"
 
   compose:
     tools: [video_compose, audio_mixer]
-    cost: $0（本地渲染）
+    cost: ¥0（本地渲染）
     notes: "文本和图表在最终分辨率下必须保持清晰"
 
   publish:
     tools: [无 — 元数据工作]
-    cost: $0
+    cost: ¥0
 ```
 
 ### 步骤 7：构建成本估算
@@ -390,8 +390,8 @@ stages:
 │   （N 个独特 + M 个复用 = 总场景数）
 ├── AI 视频片段：[提供商] × K 个片段（如有）   $X.XX
 ├── 音乐：music_gen × 1 首曲目                       $X.XX
-├── 数学动画：math_animate（本地/免费）        $0.00
-├── 图表生成：diagram_gen（本地/免费）     $0.00
+├── 数学动画：math_animate（本地/免费）        ¥0.00
+├── 图表生成：diagram_gen（本地/免费）     ¥0.00
 └── 总计估算                                  $X.XX
     预算上限：$X.XX
     结论：within_budget ✓ / over_budget ✗

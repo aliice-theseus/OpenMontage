@@ -292,7 +292,7 @@ const cleanProfessional = {
 
 ### 成本追踪
 
-Remotion 渲染是 CPU 密集型但 API 成本为 $0。通过 cost_tracker 追踪：
+Remotion 渲染是 CPU 密集型但 API 成本为 ¥0。通过 cost_tracker 追踪：
 - `estimate`：基于合成时长 × 分辨率级别
 - `reserve`：0（无 API 支出）
 - `reconcile`：壁钟渲染时间，用于基准测试

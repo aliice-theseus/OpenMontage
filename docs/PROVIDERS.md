@@ -10,18 +10,18 @@
 
 | 步骤 | 成本 | 设置内容 | 解锁功能 |
 |------|------|---------|---------|
-| 1 | **$0** | Pexels + Pixabay | 素材库照片和视频——足以制作基础视频 |
-| 2 | **$0** | Google API 密钥 | TTS，700+ 种语音（每月 100 万字符免费）+ $300 新账户信用额度 |
-| 3 | **$0** | ElevenLabs | 高级 TTS + 音乐 + 音效（每月 1 万字符免费） |
-| 4 | **$0** | Piper（本地安装） | 完全离线 TTS——无需 API 密钥、无成本、无网络 |
+| 1 | **¥0** | Pexels + Pixabay | 素材库照片和视频——足以制作基础视频 |
+| 2 | **¥0** | Google API 密钥 | TTS，700+ 种语音（每月 100 万字符免费）+ ¥300 新账户信用额度 |
+| 3 | **¥0** | ElevenLabs | 高级 TTS + 音乐 + 音效（每月 1 万字符免费） |
+| 4 | **¥0** | Piper（本地安装） | 完全离线 TTS——无需 API 密钥、无成本、无网络 |
 | 5 | — | — | — |
-| 6 | **~$0.04/张** | OpenAI | DALL-E 3 图像 + OpenAI TTS |
-| 7 | **~$0.04/张** | Google Imagen | Imagen 4 图像（与 Google API 密钥共享） |
-| 8 | **$12/月** | Runway | Gen-4 视频——最高质量 AI 视频 |
+| 6 | **~¥0.04/张** | OpenAI | DALL-E 3 图像 + OpenAI TTS |
+| 7 | **~¥0.04/张** | Google Imagen | Imagen 4 图像（与 Google API 密钥共享） |
+| 8 | **¥12/月** | Runway | Gen-4 视频——最高质量 AI 视频 |
 | 9 | **按量付费** | HeyGen | 虚拟形象视频、多模型视频网关 |
 | 10 | **按量付费** | Suno | 带人声和歌词的完整歌曲生成 |
-| 11 | **$0 + GPU** | 本地视频生成 | WAN 2.1、Hunyuan、CogVideo、LTX——免费、离线 |
-| 12 | **$0 + GPU** | 本地扩散模型 | Stable Diffusion 图像——免费、离线 |
+| 11 | **¥0 + GPU** | 本地视频生成 | WAN 2.1、Hunyuan、CogVideo、LTX——免费、离线 |
+| 12 | **¥0 + GPU** | 本地扩散模型 | Stable Diffusion 图像——免费、离线 |
 
 ### 环境变量汇总
 
@@ -81,11 +81,11 @@ VIDEO_GEN_LOCAL_MODEL=       # wan2.1-1.3b、wan2.1-14b、hunyuan-1.5、ltx2-loc
 
 | 模型 | 价格 |
 |------|------|
-| `grok-imagine-image` | 每张生成图像 $0.02 |
-| `grok-imagine-image` 输入图像（编辑/合成） | 每张输入图像 $0.002 |
-| `grok-imagine-video` 480p | $0.05/秒 |
-| `grok-imagine-video` 720p | $0.07/秒 |
-| `grok-imagine-video` 输入图像 | 每张输入图像 $0.002 |
+| `grok-imagine-image` | 每张生成图像 ¥0.02 |
+| `grok-imagine-image` 输入图像（编辑/合成） | 每张输入图像 ¥0.002 |
+| `grok-imagine-video` 480p | ¥0.05/秒 |
+| `grok-imagine-video` 720p | ¥0.07/秒 |
+| `grok-imagine-video` 输入图像 | 每张输入图像 ¥0.002 |
 
 OpenMontage 现在在 Grok 工具估算器中使用这些已公布的价格。
 
@@ -111,11 +111,11 @@ OpenMontage 现在在 Grok 工具估算器中使用这些已公布的价格。
 
 | 套餐 | 价格 | 字符数/月 | 主要功能 |
 |------|------|-----------|---------|
-| **免费** | $0 | 10,000 | 3 个自定义语音、API 访问、需注明来源 |
-| Starter | $5/月 | 30,000 | 无需注明来源 |
-| Creator | $22/月 | 100,000 | 专业语音克隆 |
-| Pro | $99/月 | 500,000 | 96kbps 音频、使用分析 |
-| Scale | $330/月 | 2,000,000 | 优先支持 |
+| **免费** | ¥0 | 10,000 | 3 个自定义语音、API 访问、需注明来源 |
+| Starter | ¥5/月 | 30,000 | 无需注明来源 |
+| Creator | ¥22/月 | 100,000 | 专业语音克隆 |
+| Pro | ¥99/月 | 500,000 | 96kbps 音频、使用分析 |
+| Scale | ¥330/月 | 2,000,000 | 优先支持 |
 
 **免费层级：** 每月 10,000 字符（约 2-3 分钟旁白）。包含 API 访问。音乐生成和音效在免费层级也可用，但有限额。
 
@@ -195,11 +195,11 @@ X-Api-Resource-Id: seed-tts-2.0
 
 | 语音类型 | 免费层级 | 付费（每百万字符） | 说明 |
 |---------|---------|------------------|------|
-| **Standard** | 每月 100 万字符 | $4.00 | 基础质量，快速 |
-| **WaveNet** | 每月 100 万字符 | $16.00 | 自然听感 |
-| **Neural2** | 每月 100 万字符 | $16.00 | 最佳质量 |
-| **Studio** | — | $24.00 | 专业录音室语音 |
-| **Chirp** | — | $4.00 | 对话风格 |
+| **Standard** | 每月 100 万字符 | ¥4.00 | 基础质量，快速 |
+| **WaveNet** | 每月 100 万字符 | ¥16.00 | 自然听感 |
+| **Neural2** | 每月 100 万字符 | ¥16.00 | 最佳质量 |
+| **Studio** | — | ¥24.00 | 专业录音室语音 |
+| **Chirp** | — | ¥4.00 | 对话风格 |
 
 免费层级是*独立*计算的——你每月免费获得 100 万 Standard AND 100 万 WaveNet AND 100 万 Neural2 字符。相当于每月约 250+ 分钟的免费旁白。
 
@@ -207,13 +207,13 @@ X-Api-Resource-Id: seed-tts-2.0
 
 | 模型 | 每张图像价格 |
 |------|-------------|
-| Imagen 4 Fast | $0.02 |
-| Imagen 4 Standard | $0.04 |
-| Imagen 4 Ultra | $0.06 |
+| Imagen 4 Fast | ¥0.02 |
+| Imagen 4 Standard | ¥0.04 |
+| Imagen 4 Ultra | ¥0.06 |
 
 **Imagen 免费层级：** 无。仅付费层级。
 
-**新账户奖励：** Google Cloud 为新账户提供 **$300 免费信用额度**（90 天试用），适用于 TTS 和 Imagen。
+**新账户奖励：** Google Cloud 为新账户提供 **¥300 免费信用额度**（90 天试用），适用于 TTS 和 Imagen。
 
 #### Google TTS 语音类型
 
@@ -253,20 +253,20 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 
 | 模型 | 每百万字符价格 |
 |------|--------------|
-| tts-1 | $15.00 |
-| tts-1-hd | $30.00 |
-| gpt-4o-mini-tts | $12.00 |
+| tts-1 | ¥15.00 |
+| tts-1-hd | ¥30.00 |
+| gpt-4o-mini-tts | ¥12.00 |
 
 #### 图像定价
 
 | 模型 | 尺寸 | 质量 | 每张图像价格 |
 |------|------|------|-------------|
-| DALL-E 3 | 1024x1024 | standard | $0.040 |
-| DALL-E 3 | 1024x1024 | hd | $0.080 |
-| DALL-E 3 | 1024x1792 | standard | $0.080 |
-| DALL-E 3 | 1024x1792 | hd | $0.120 |
+| DALL-E 3 | 1024x1024 | standard | ¥0.040 |
+| DALL-E 3 | 1024x1024 | hd | ¥0.080 |
+| DALL-E 3 | 1024x1792 | standard | ¥0.080 |
+| DALL-E 3 | 1024x1792 | hd | ¥0.120 |
 
-**免费层级：** 无。需要预付费账单。以前为新账户提供 $5 免费信用额度（大多数注册已停止）。
+**免费层级：** 无。需要预付费账单。以前为新账户提供 ¥5 免费信用额度（大多数注册已停止）。
 
 ---
 
@@ -288,18 +288,18 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 
 | 套餐 | 价格 | 信用额度/月 | 视频容量 |
 |------|------|------------|---------|
-| **免费** | $0 | 125（一次性） | Gen-4 约 5 秒 |
-| Standard | $12/月 | 625 | Gen-4 约 25 秒 |
-| Pro | $28/月 | 2,250 | Gen-4 约 90 秒 |
-| Unlimited | $76/月 | 无限（探索模式） | Gen-4 Turbo 无限 |
+| **免费** | ¥0 | 125（一次性） | Gen-4 约 5 秒 |
+| Standard | ¥12/月 | 625 | Gen-4 约 25 秒 |
+| Pro | ¥28/月 | 2,250 | Gen-4 约 90 秒 |
+| Unlimited | ¥76/月 | 无限（探索模式） | Gen-4 Turbo 无限 |
 
 **API 定价（约）：**
 
 | 模型 | 每秒价格 |
 |------|---------|
-| Gen-3 Alpha Turbo | ~$0.05 |
-| Gen-4 Turbo | ~$0.05 |
-| Gen-4 Aleph | ~$0.15 |
+| Gen-3 Alpha Turbo | ~¥0.05 |
+| Gen-4 Turbo | ~¥0.05 |
+| Gen-4 Aleph | ~¥0.15 |
 
 **免费层级：** 125 一次性信用额度（无月度续费）。足够生成约 5 秒的 Gen-4 视频。API 访问需要付费订阅。
 
@@ -328,20 +328,20 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 
 | 套餐 | 价格 | 说明 |
 |------|------|------|
-| 免费 | $0 | 有限信用额度 |
-| Starter | $15/月 | 基本配额 |
-| Plus | $34/月 | 中端，约 33-56 个 Kling 3.0 片段 |
-| Ultra | $84/月 | 高容量 |
+| 免费 | ¥0 | 有限信用额度 |
+| Starter | ¥15/月 | 基本配额 |
+| Plus | ¥34/月 | 中端，约 33-56 个 Kling 3.0 片段 |
+| Ultra | ¥84/月 | 高容量 |
 
 **每次生成成本（约，通过信用额度）：**
 
 | 模型 | 每片段成本 |
 |------|----------|
-| Kling 3.0 | ~$0.10（最便宜） |
-| WAN 2.5 | ~$0.10 |
-| Soul Cinema | ~$0.15 |
-| Veo 3.1 | ~$0.50 |
-| Sora 2 | ~$0.50 |
+| Kling 3.0 | ~¥0.10（最便宜） |
+| WAN 2.5 | ~¥0.10 |
+| Soul Cinema | ~¥0.15 |
+| Veo 3.1 | ~¥0.50 |
+| Sora 2 | ~¥0.50 |
 
 **免费层级：** 注册时有限信用额度。免费套餐无月度续费。
 
@@ -366,19 +366,19 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 
 | 服务 | 价格 |
 |------|------|
-| 虚拟形象视频（Engine III） | $0.017/秒 |
-| 虚拟形象视频（Engine IV） | $0.10/秒 |
-| 提示词转视频 | $0.033/秒 |
-| 视频翻译（快速） | $0.05/秒 |
-| 视频翻译（精确） | $0.10/秒 |
+| 虚拟形象视频（Engine III） | ¥0.017/秒 |
+| 虚拟形象视频（Engine IV） | ¥0.10/秒 |
+| 提示词转视频 | ¥0.033/秒 |
+| 视频翻译（快速） | ¥0.05/秒 |
+| 视频翻译（精确） | ¥0.10/秒 |
 
 **Web 套餐：**
 
 | 套餐 | 价格 | 说明 |
 |------|------|------|
-| 免费 | $0 | 1 信用额度（演示） |
-| Creator | $24/月 | 有限信用额度 |
-| Business | $72/月 | API 访问，更多信用额度 |
+| 免费 | ¥0 | 1 信用额度（演示） |
+| Creator | ¥24/月 | 有限信用额度 |
+| Business | ¥72/月 | API 访问，更多信用额度 |
 
 **免费层级：** Web 平台 1 信用额度。API 是基于预付费余额的按量付费。
 
@@ -396,7 +396,7 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 1. 前往 [suno.com](https://suno.com) 并创建 Suno 账户
 2. 对于 API 访问，前往 [sunoapi.org](https://sunoapi.org) 并创建账户
 3. 导航至仪表盘并复制你的 API 密钥
-4. 添加信用额度（1 信用额度 = $0.005 USD）
+4. 添加信用额度（1 信用额度 = ¥0.005 USD）
 5. 添加到 `.env`：`SUNO_API_KEY=your-key-here`
 
 #### 定价
@@ -405,11 +405,11 @@ Google TTS 提供 50 多种语言的 700+ 种语音。语音名称遵循 `{langu
 
 | 套餐 | 价格 | 信用额度 | 说明 |
 |------|------|---------|------|
-| 免费 | $0 | 50/天 | 约 10 首歌曲/天，仅非商业用途 |
-| Pro | $10/月 | 2,500/月 | 商业许可证 |
-| Premier | $30/月 | 10,000/月 | 商业许可证 |
+| 免费 | ¥0 | 50/天 | 约 10 首歌曲/天，仅非商业用途 |
+| Pro | ¥10/月 | 2,500/月 | 商业许可证 |
+| Premier | ¥30/月 | 10,000/月 | 商业许可证 |
 
-**API（通过 sunoapi.org）：** 按量付费，1 信用额度 = $0.005。每次生成产生 2 首曲目。
+**API（通过 sunoapi.org）：** 按量付费，1 信用额度 = ¥0.005。每次生成产生 2 首曲目。
 
 ---
 
@@ -650,7 +650,7 @@ pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece prot
 2. 部署 LTX-2 端点（参见 Modal 文档）
 3. 在 `.env` 中设置端点 URL：`MODAL_LTX2_ENDPOINT_URL=https://your-modal-endpoint`
 
-**Modal 定价：** A100 GPU 时间约 $0.99/小时。每个视频的成本取决于生成时间。
+**Modal 定价：** A100 GPU 时间约 ¥0.99/小时。每个视频的成本取决于生成时间。
 
 ---
 
@@ -688,7 +688,7 @@ pip install "diffusers>=0.31.0" transformers accelerate torch sentencepiece prot
 | **OpenAI** | `OPENAI_API_KEY` | `openai_tts`, `openai_image` | 仅付费 |
 | **xAI** | `XAI_API_KEY` | `grok_image`, `grok_video` | 仅付费 |
 | **Runway** | `RUNWAY_API_KEY` | `runway_video` | 免费试用 + 付费 |
-| **Higgsfield** | `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET` | `higgsfield_video` | 订阅（$15-84/月） |
+| **Higgsfield** | `HIGGSFIELD_API_KEY` + `HIGGSFIELD_API_SECRET` | `higgsfield_video` | 订阅（¥15-84/月） |
 | **HeyGen** | `HEYGEN_API_KEY` | `heygen_video` | 按量付费 |
 | **Suno** | `SUNO_API_KEY` | `suno_music` | 按量付费 |
 | **本地 GPU** | `VIDEO_GEN_LOCAL_ENABLED` | `wan_video`, `hunyuan_video`, `cogvideo_video`, `ltx_video_local` | 免费（需要 GPU） |

@@ -231,7 +231,7 @@ export const Root: React.FC = () => {
         defaultProps={{
           productImage: "airnothing/product.png",
           productName: "AirNothing Pro Max Ultra",
-          price: "Starting at $999",
+          price: "起售价 ¥999",
           tagline: "Nothing included.",
           closer: "Less is nothing.",
           accentColor: "#00D4FF",
@@ -247,7 +247,7 @@ export const Root: React.FC = () => {
         defaultProps={{
           productImage: "airnothing/product.png",
           productName: "AirNothing Pro Max Ultra",
-          price: "Starting at $999",
+          price: "起售价 ¥999",
           tagline: "Nothing included.",
           closer: "Less is nothing.",
           accentColor: "#00D4FF",

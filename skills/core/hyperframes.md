@@ -207,7 +207,7 @@ OpenMontage 风格手册目前会转换为 Remotion 的 `themeConfig` 对象。�
 
 ## 成本模型
 
-HyperFrames 渲染是本地进行的：API 成本为 $0，但属于 CPU 密集型（无头 Chrome + FFmpeg）。通过 `cost_tracker` 追踪：
+HyperFrames 渲染是本地进行的：API 成本为 ¥0，但属于 CPU 密集型（无头 Chrome + FFmpeg）。通过 `cost_tracker` 追踪：
 
 - `estimate`——基于合成时长 × 分辨率 × `--workers`
 - `reserve`——0（无 API 支出）

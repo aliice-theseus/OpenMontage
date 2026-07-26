@@ -221,14 +221,14 @@ registry.register_from_character_design(character_design_artifact)
 角色 1: 剑客
   [角色形象组合图 — 左侧三视全身 + 右侧上半身特写]
   风格: 极致写实, 古风
-  生成工具: image_selector | 费用: $0.03
+  生成工具: image_selector | 费用: ¥0.03
 
 角色 2: 反派
   [角色形象组合图 — 左侧三视全身 + 右侧上半身特写]
   风格: 极致写实, 暗色调
-  生成工具: image_selector | 费用: $0.03
+  生成工具: image_selector | 费用: ¥0.03
 
-总成本: $0.06
+总成本: ¥0.06
 
 请确认:
   [A] 全部批准 → 进入场景草图
